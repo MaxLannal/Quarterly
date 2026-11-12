@@ -20,6 +20,9 @@ class Settings(BaseSettings):
     session_secret: SecretStr = SecretStr("dev-only-session-secret")
     git_sha: str = Field(default="dev")
     environment: str = "development"
+    #: Serve program versions still in `review` (labelled by their status). Only `published`
+    #: versions reach students in production; M1 seed data awaits Richard's review.
+    show_unpublished_programs: bool = False
 
 
 @lru_cache
