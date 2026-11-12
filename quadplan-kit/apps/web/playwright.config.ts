@@ -11,7 +11,8 @@ export default defineConfig({
   use: { baseURL: `http://127.0.0.1:${port}`, trace: "retain-on-failure" },
   projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
   webServer: {
-    command: `npm run build && npx vite preview --host 127.0.0.1 --port ${port} --strictPort`,
+    // e2e runs against MSW mocks (VITE_MOCK_API=1); the Docker build calls the real API.
+    command: `VITE_MOCK_API=1 npm run build && npx vite preview --host 127.0.0.1 --port ${port} --strictPort`,
     url: `http://127.0.0.1:${port}`,
     reuseExistingServer: false,
     timeout: 120_000,

@@ -1,5 +1,5 @@
-import { Placeholder } from "./Placeholder";
+import { OnboardingWizard } from "@/features/onboarding/OnboardingWizard";
 
 export default function OnboardingPage() {
-  return <Placeholder title="Planner setup" route="/onboarding" prompt="03" />;
+  return <OnboardingWizard />;
 }

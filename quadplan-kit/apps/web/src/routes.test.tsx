@@ -1,11 +1,14 @@
-import { render, screen } from "@testing-library/react";
-import { createMemoryRouter, RouterProvider } from "react-router-dom";
-import { routes } from "./routes";
+import { screen } from "@testing-library/react";
+import { renderRoute } from "./test-utils";
 
 const CASES: [string, string][] = [
   ["/", "Quarterly"],
   ["/plan", "Planner"],
-  ["/courses/MATH%2020700", "Course"],
+  ["/onboarding", "Planner setup"],
+  ["/courses", "Course search"],
+  ["/courses/TEST%2010000", "TEST 10000 · Fake Introduction I"],
+  ["/programs", "Program explorer"],
+  ["/programs/fake-major", "Fake Program"],
   ["/courses/MATH%2020700/i/jane-doe/t/1", "Thread"],
   ["/admin/review", "Curator console"],
   ["/nope", "Page not found"],
@@ -13,8 +16,7 @@ const CASES: [string, string][] = [
 
 describe("routes", () => {
   it.each(CASES)("renders %s", async (path, heading) => {
-    const router = createMemoryRouter(routes, { initialEntries: [path] });
-    render(<RouterProvider router={router} />);
+    renderRoute(path);
     expect(await screen.findByRole("heading", { level: 1, name: heading })).toBeInTheDocument();
   });
 });
