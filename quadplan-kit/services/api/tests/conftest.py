@@ -14,6 +14,11 @@ from sqlalchemy import create_engine, text
 from sqlalchemy.engine import make_url
 from sqlalchemy.exc import OperationalError
 
+# Tests run with the development defaults; anything but an explicit development/test
+# environment refuses them at start-up (api.config). Set before any test module imports the app.
+os.environ["ENVIRONMENT"] = "test"
+get_settings.cache_clear()
+
 
 @pytest.fixture
 def fresh_db_url() -> Iterator[str]:

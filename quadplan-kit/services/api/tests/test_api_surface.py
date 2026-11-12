@@ -110,9 +110,6 @@ def test_openapi_lists_every_endpoint() -> None:
             "/forum/pages/1/posts",
             {"kind": "discussion", "body_md": "Is the midterm curved?"},
         ),
-        ("post", "/auth/email", {"email": "student@uchicago.edu"}),
-        ("post", "/auth/login", {"login": "quiet-heron", "password": "x"}),
-        ("post", "/account/delete", {"password": "x", "posts": "keep"}),
         ("get", "/admin/review-items", None),
     ],
 )

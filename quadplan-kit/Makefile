@@ -18,6 +18,7 @@ install:
 
 env:
 	@test -f .env || (cp .env.example .env && echo "created .env from .env.example")
+	@grep -q '^ENVIRONMENT=' .env || echo "note: .env has no ENVIRONMENT line; add ENVIRONMENT=development for local work (the API refuses development settings otherwise)"
 
 up: env
 	$(COMPOSE) up -d --build --wait
