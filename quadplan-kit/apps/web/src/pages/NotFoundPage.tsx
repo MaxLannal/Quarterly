@@ -1,5 +1,14 @@
-import { Placeholder } from "./Placeholder";
+import { Link } from "react-router-dom";
 
 export default function NotFoundPage() {
-  return <Placeholder title="Page not found" route="*" prompt="03" />;
+  return (
+    <section className="mx-auto max-w-3xl space-y-2 p-6">
+      <h1 className="text-2xl font-semibold">Page not found</h1>
+      <p>
+        <Link to="/" className="text-primary underline">
+          Go to the home page
+        </Link>
+      </p>
+    </section>
+  );
 }
