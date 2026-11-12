@@ -24,3 +24,12 @@ body {
   background: var(--background);
   color: var(--foreground);
 }
+
+/* Tailwind v4 borders default to currentColor; use the theme border color (shadcn convention). */
+@layer base {
+  *,
+  ::before,
+  ::after {
+    border-color: var(--border);
+  }
+}
