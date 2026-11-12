@@ -52,7 +52,9 @@ def run_golden(golden_root: Path, seed_root: Path, out: Callable[[str], None] = 
             year = golden.plan.catalog_year
             if year not in bundles:
                 raise SeedError(f"no seed for catalog year {year}")
-            bundle = loaded.setdefault(year, load_bundle(bundles[year]))
+            if year not in loaded:  # parse each catalog year once, not once per plan
+                loaded[year] = load_bundle(bundles[year])
+            bundle = loaded[year]
             if problems := _problems(golden, bundle):
                 raise SeedError("; ".join(problems))
         except (ValidationError, SeedError, OSError) as exc:

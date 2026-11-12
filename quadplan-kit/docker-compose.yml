@@ -22,8 +22,9 @@ services:
 
   redis:
     image: redis:7
+    # Rate-limit counters (keyed IP hashes) must never reach disk: no RDB snapshots, no AOF.
+    command: ["redis-server", "--save", "", "--appendonly", "no"]
     ports: ["6379:6379"]
-    volumes: [redis-data:/data]
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 3s
@@ -49,7 +50,9 @@ services:
   api:
     build: {context: ., dockerfile: services/api/Dockerfile}
     env_file: [{path: .env, required: false}]
-    environment: *app-env
+    environment:
+      <<: *app-env
+      TRUSTED_PROXY_HOPS: "1"  # nginx in the web service sets X-Forwarded-For
     ports: ["8000:8000"]
     depends_on:
       db: {condition: service_healthy}
@@ -80,5 +83,4 @@ services:
 
 volumes:
   db-data:
-  redis-data:
   minio-data:
