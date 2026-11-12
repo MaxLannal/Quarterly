@@ -128,7 +128,12 @@ def test_cmsc_bs_example_paths_and_roundtrip() -> None:
     assert electives.constraints.min_grade == "C-"
     assert program.policy.share[0].with_ == "type:minor"
     dumped = program.model_dump(mode="json")
-    assert dumped["policy"]["share"][0] == {"with": "type:minor", "max": 0, "except": []}
+    assert dumped["policy"]["share"][0] == {
+        "with": "type:minor",
+        "max": 0,
+        "except": [],
+        "source": None,
+    }
     assert dumped["rules"]["children"][1]["from"]["exclude"] == ["CMSC 29700"]
 
 

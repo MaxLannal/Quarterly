@@ -139,11 +139,23 @@ def integrity(bundle: SeedBundle) -> tuple[list[str], list[str]]:
                 refs = (set(node.any_of), set())
             elif (selector := getattr(node, "from_", None)) is not None:
                 refs = _selector_refs(selector)
-            for mf in node.constraints.max_from:
+            for i, mf in enumerate(node.constraints.max_from):
                 c, lst = _selector_refs(mf.selector)
                 refs = (refs[0] | c, refs[1] | lst)
+                if mf.source is None:
+                    errors.append(f"{path}: max_from[{i}] missing source")
             errors += [f"{path}: unknown course {c}" for c in sorted(refs[0] - codes)]
             errors += [f"{path}: unknown course list {n}" for n in sorted(refs[1] - lists)]
+        policy = program.policy
+        errors += [
+            f"program {program.id}: policy.share[{i}] missing source"
+            for i, limit in enumerate(policy.share)
+            if limit.source is None
+        ]
+        if policy.requires and policy.requires_source is None:
+            errors.append(f"program {program.id}: policy.requires without requires_source")
+        if policy.excludes and policy.excludes_source is None:
+            errors.append(f"program {program.id}: policy.excludes without excludes_source")
 
     if bundle.college is not None:
         if bundle.college.catalog_year != year:

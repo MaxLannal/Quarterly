@@ -1926,6 +1926,7 @@ export interface components {
             /** N */
             n: number;
             selector: components["schemas"]["Selector"];
+            source?: components["schemas"]["Source"] | null;
         };
         /** Meeting */
         Meeting: {
@@ -2285,8 +2286,10 @@ export interface components {
         Policy: {
             /** Excludes */
             excludes?: string[];
+            excludes_source?: components["schemas"]["Source"] | null;
             /** Requires */
             requires?: string[];
+            requires_source?: components["schemas"]["Source"] | null;
             residency?: components["schemas"]["Residency"] | null;
             /** Share */
             share?: components["schemas"]["ShareLimit"][];
@@ -2802,6 +2805,7 @@ export interface components {
             except?: string[];
             /** Max */
             max: number;
+            source?: components["schemas"]["Source"] | null;
             /** With */
             with: string;
         };

@@ -2945,6 +2945,16 @@
           },
           "selector": {
             "$ref": "#/components/schemas/Selector"
+          },
+          "source": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Source"
+              },
+              {
+                "type": "null"
+              }
+            ]
           }
         },
         "required": [
@@ -3991,12 +4001,32 @@
             "title": "Excludes",
             "type": "array"
           },
+          "excludes_source": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Source"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "requires": {
             "items": {
               "type": "string"
             },
             "title": "Requires",
             "type": "array"
+          },
+          "requires_source": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Source"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "residency": {
             "anyOf": [
@@ -5497,6 +5527,16 @@
             "minimum": 0.0,
             "title": "Max",
             "type": "integer"
+          },
+          "source": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Source"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "with": {
             "minLength": 1,

@@ -87,15 +87,10 @@ Choices made so work could continue; each is the conservative option and easy to
    minutes, 10 failed password confirmations per account per 15 minutes; per IP per day: 40
    email/reset starts, 40 registrations, 100 code checks, 300 logins. IP limits are loose because
    campus networks share addresses. Confirm or tune.
-9. **Client IP behind the proxy (needs a two-line change outside prompt 04's files).** The API
-   sees nginx's address unless nginx sends the client's: add
-   `proxy_set_header X-Forwarded-For $remote_addr;` to `apps/web/docker/nginx.conf` and set
-   `TRUSTED_PROXY_HOPS=1` for the `api` service. Until then every user behind the proxy shares one
-   IP bucket. With `TRUSTED_PROXY_HOPS=0` the header is ignored (it could be forged).
-10. **"IP counter never written to disk."** The app stores only `HMAC(key, day ‖ ip)` as a Redis
-    key with a 24-hour TTL, never the address. Redis itself snapshots to its volume by default;
-    for the letter of the spec, run Redis with `--save "" --appendonly no` (sessions and pending
-    codes are then lost on a Redis restart, which is acceptable) or accept the keyed hash on disk.
+9. **Client IP behind the proxy. Resolved (M1 integration).** nginx sends `X-Forwarded-For` and
+   the `api` service sets `TRUSTED_PROXY_HOPS: "1"`.
+10. **"IP counter never written to disk." Resolved (M1 integration).** Redis runs with
+    `--save "" --appendonly no`.
 11. **Session lifetime** is 30 days, fixed (not extended on use). Reset ends all sessions; a
     password change ends all but the current one.
 12. **Forum identity.** `api.auth.hashing.author_ref(account_id, page_id)` implements the SPEC's
@@ -201,10 +196,10 @@ their quotes in `data/seed/REVIEW.md`. Numbered P05-n so parallel prompts do not
 
 **Infrastructure note (not a catalog question)**
 
-- **P05-17. `make golden` takes about 5 minutes** with this seed because `api/golden.py` calls
-  `loaded.setdefault(year, load_bundle(...))`, which re-parses the whole seed for every plan
-  (`setdefault` evaluates its argument). Suggest `if year not in loaded: ...` and building the
-  catalog once per year.
+- **P05-17. `make golden` was slow. Resolved (M1 integration).** `golden.py` now parses the seed
+  once per catalog year.
+- **P05-17b. Still open:** `golden.py` still runs `build_catalog` once per plan; building it once
+  per catalog year would shorten `make golden` further.
 
 ## Prompt 02
 

@@ -94,6 +94,9 @@ rules:
         - 29999
       n: 2
       as_enrolled: true
+      source:
+        url: http://collegecatalog.uchicago.edu/thecollege/jointdegreecomsci/
+        quote: "In all options, at most two courses can be drawn from the 20000-level offerings."
   source:
     url: http://collegecatalog.uchicago.edu/thecollege/jointdegreecomsci/
     quote: 'The nine courses required for the MS degree under Option 3 are as follows: Discrete Mathematics (CMSC 27100, CMSC
@@ -104,6 +107,9 @@ policy:
   share:
   - with: type:major
     max: 2
+    source:
+      url: http://collegecatalog.uchicago.edu/thecollege/jointdegreecomsci/
+      quote: "In all options, at most two courses can be counted toward both a student’s Bx and MS degrees."
   timing:
     apply_by: Y3-WI
     source:
@@ -112,3 +118,6 @@ policy:
         in June to apply to the Winter Quarter start.'
   excludes:
   - cmsc-b?
+  excludes_source:
+    url: http://collegecatalog.uchicago.edu/thecollege/jointdegreecomsci/
+    quote: "Option 3 is designed for students who are not computer science majors and wish to combine a professionally oriented MS in computer science with their undergraduate major."

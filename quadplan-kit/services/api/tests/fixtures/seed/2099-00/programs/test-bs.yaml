@@ -32,4 +32,4 @@ rules:
             - {id: seq, source: {url: "https://example.invalid/fake-catalog", quote: "FAKE FIXTURE - not a real course"}, from: {list: fake-seqs}, count: [2, 2], same_sequence: true}
 policy:
   share:
-    - {with: "type:minor", max: 0}
+    - {with: "type:minor", max: 0, source: {url: "https://example.invalid/fake-catalog", quote: "FAKE FIXTURE - not a real share limit"}}

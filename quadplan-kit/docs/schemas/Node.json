@@ -269,6 +269,17 @@
         },
         "selector": {
           "$ref": "#/$defs/Selector"
+        },
+        "source": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Source"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
         }
       },
       "required": [

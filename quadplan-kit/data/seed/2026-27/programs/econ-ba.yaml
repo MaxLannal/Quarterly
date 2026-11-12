@@ -171,9 +171,15 @@ rules:
               - ECON 10200
             - subject: ECMA
           n: 2
+          source:
+            url: http://collegecatalog.uchicago.edu/thecollege/economics/
+            quote: "These courses must include at least two economics courses numbered higher than ECON 20210 and must follow guidelines in the preceding Electives section."
         - selector:
             list: econ-outside-electives
           n: 2
+          source:
+            url: http://collegecatalog.uchicago.edu/thecollege/economics/
+            quote: "These rules imply that at most two courses completed outside the University of Chicago Department of Economics may be used to satisfy the elective requirements of the major."
       source:
         url: http://collegecatalog.uchicago.edu/thecollege/economics/
         quote: All students in the economics major must complete a minimum of four additional economics courses to broaden

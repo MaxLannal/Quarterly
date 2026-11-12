@@ -438,7 +438,14 @@ def test_program_detail(client: TestClient) -> None:
     assert program["checksum"].startswith("sha256:")
     assert program["verified_by"] == "fake-curator" and program["verified_at"] == "2099-09-01"
     assert program["sources"] == [SRC_OUT]
-    assert program["policy"]["share"] == [{"with": "type:minor", "max": 0, "except": []}]
+    share_src = {
+        "url": "https://example.invalid/fake-catalog",
+        "snapshot_id": None,
+        "quote": "FAKE FIXTURE - not a real share limit",
+    }
+    assert program["policy"]["share"] == [
+        {"with": "type:minor", "max": 0, "except": [], "source": share_src}
+    ]
     rules = program["rules"]
     assert rules["kind"] == "group" and rules["all"] is True
     assert [c["id"] for c in rules["children"]] == ["intro", "electives", "sequence"]

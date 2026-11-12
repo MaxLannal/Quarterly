@@ -53,3 +53,6 @@ rules:
 policy:
   excludes:
   - civ-abroad-cordoba
+  excludes_source:
+    url: https://study-abroad.uchicago.edu/paris-migration-decolonization-and-diaspora-civilization
+    quote: "Because of the considerable demand for the Chicago civilization programs abroad, no student may participate in more than one of these programs."

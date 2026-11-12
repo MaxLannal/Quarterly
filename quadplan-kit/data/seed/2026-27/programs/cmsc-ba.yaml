@@ -142,15 +142,24 @@ rules:
             codes:
             - CMSC 29700
           n: 1
+          source:
+            url: http://collegecatalog.uchicago.edu/thecollege/computerscience/
+            quote: "Students may enroll in CMSC 29700 Reading and Research in Computer Science and CMSC 29900 Bachelor's Thesis for multiple quarters, but only one of each may be counted as a major elective."
         - selector:
             codes:
             - CMSC 29900
           n: 1
+          source:
+            url: http://collegecatalog.uchicago.edu/thecollege/computerscience/
+            quote: "Students may enroll in CMSC 29700 Reading and Research in Computer Science and CMSC 29900 Bachelor's Thesis for multiple quarters, but only one of each may be counted as a major elective."
         - selector:
             codes:
             - CMSC 22200
             - CMSC 22240
           n: 1
+          source:
+            url: http://collegecatalog.uchicago.edu/thecollege/computerscience/
+            quote: "Students may take either CMSC 22200 or CMSC 22240 for major or minor requirements, but not both."
       source:
         url: http://collegecatalog.uchicago.edu/thecollege/computerscience/
         quote: Eight electives, spanning at least five curriculum areas, numbered CMSC 20000 or above §

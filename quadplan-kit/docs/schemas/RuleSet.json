@@ -532,6 +532,17 @@
         },
         "selector": {
           "$ref": "#/$defs/Selector"
+        },
+        "source": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Source"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
         }
       },
       "required": [
@@ -686,12 +697,34 @@
           "title": "Excludes",
           "type": "array"
         },
+        "excludes_source": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Source"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
         "requires": {
           "items": {
             "type": "string"
           },
           "title": "Requires",
           "type": "array"
+        },
+        "requires_source": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Source"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
         },
         "residency": {
           "anyOf": [
@@ -1112,6 +1145,17 @@
           "minimum": 0,
           "title": "Max",
           "type": "integer"
+        },
+        "source": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Source"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
         },
         "with": {
           "minLength": 1,

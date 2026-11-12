@@ -217,6 +217,8 @@ class MaxFrom(Model):
     selector: Selector
     n: int = Field(ge=0)
     as_enrolled: bool = False
+    #: The sentence stating the cap (the seed requires it).
+    source: Source | None = None
 
 
 class Constraints(Model):
@@ -392,6 +394,8 @@ class ShareLimit(Model):
     with_: str = Field(alias="with", min_length=1)
     max: int = Field(ge=0)
     except_: list[str] = Field(default_factory=list, alias="except")
+    #: The sentence stating the limit (the seed requires it).
+    source: Source | None = None
 
 
 class Residency(Model):
@@ -415,6 +419,9 @@ class Policy(Model):
     requires: list[str] = Field(default_factory=list)
     #: Program ids this program cannot be combined with.
     excludes: list[str] = Field(default_factory=list)
+    #: Sentences stating `requires` / `excludes` (required by the seed when the list is set).
+    requires_source: Source | None = None
+    excludes_source: Source | None = None
 
 
 ProgramType = Literal[

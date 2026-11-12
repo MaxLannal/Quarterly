@@ -8,7 +8,7 @@ from api.db import models as m
 from api.seed.bundle import SeedError, build_catalog, build_rules, discover, integrity, load_bundle
 from api.seed.loader import upsert_bundle
 from api_test_support import FIXTURES
-from planner_core.models import ProgramRules, Source
+from planner_core.models import MaxFrom, ProgramRules, Selector, Source
 from sqlalchemy.orm import Session
 
 YEAR_DIR = FIXTURES / "seed" / "2099-00"
@@ -48,6 +48,42 @@ def test_integrity_catches_unknown_refs_and_missing_sources() -> None:
     assert "course list fake-seqs: missing source" in joined
     assert "course list fake-seq-a: unknown course TEST 10100" in joined
     assert "unknown sublist nope" in joined
+
+
+def test_integrity_requires_sources_on_policy_and_max_from() -> None:
+    bundle = load_bundle(YEAR_DIR)
+    fake = Source(url="https://example.invalid/fake-catalog", quote="FAKE FIXTURE")
+    broken = copy.deepcopy(bundle)
+    program = broken.programs[0]
+    program.policy.share[0].source = None
+    program.policy.requires = ["other-*"]
+    program.policy.excludes = ["third"]
+    electives = program.rules.children[1]  # type: ignore[union-attr]
+    electives.constraints.max_from = [
+        MaxFrom(selector=Selector(codes=["TEST 20100"]), n=1),
+        MaxFrom(selector=Selector(codes=["TEST 20200"]), n=1, source=fake),
+    ]
+    part = program.rules.children[2].parts[0]  # type: ignore[union-attr]
+    part.constraints.max_from = [MaxFrom(selector=Selector(codes=["TEST 10000"]), n=1)]
+    errors, _ = integrity(broken)
+    assert sorted(errors) == [
+        "program test-bs: policy.excludes without excludes_source",
+        "program test-bs: policy.requires without requires_source",
+        "program test-bs: policy.share[0] missing source",
+        "test-bs/electives: max_from[0] missing source",
+        "test-bs/sequence/seq: max_from[0] missing source",
+    ]
+
+    program.policy.share[0].source = fake
+    program.policy.requires_source = fake
+    program.policy.excludes_source = fake
+    electives.constraints.max_from[0].source = fake
+    part.constraints.max_from[0].source = fake
+    assert integrity(broken)[0] == []
+    # Empty lists need no source.
+    program.policy.requires, program.policy.requires_source = [], None
+    program.policy.excludes, program.policy.excludes_source = [], None
+    assert integrity(broken)[0] == []
 
 
 def test_bad_yaml_is_reported_with_file(tmp_path: Path) -> None:
