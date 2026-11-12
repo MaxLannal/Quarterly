@@ -1,0 +1,53 @@
+# Golden plan (prompt 05). Course facts: data/seed/2026-27; rules: data/seed/REVIEW.md.
+id: econ-ba-pass-02
+description: Honors core ECON 20010-20210, ECON 21030 via STAT 24400; electives include two pre-approved outside courses (CMSC
+  14100, STAT 25100)
+program: econ-ba
+expect: pass
+checks:
+- V01
+- V02
+- V03
+- V07
+- V08
+- V12
+plan:
+  catalog_year: 2026-27
+  entry_term: 2026-AU
+  programs:
+  - program_id: econ-ba
+  placements:
+  - MATH 16100
+  items:
+  - course: MATH 16100
+    term: 2026-AU
+  - course: MATH 16200
+    term: 2027-WI
+  - course: MATH 16300
+    term: 2027-SP
+  - course: CMSC 14100
+    term: 2027-SP
+  - course: ECON 20010
+    term: 2027-AU
+  - course: MATH 20250
+    term: 2027-AU
+  - course: MATH 20300
+    term: 2027-AU
+  - course: ECON 20110
+    term: 2028-WI
+  - course: STAT 24400
+    term: 2028-WI
+  - course: MATH 20400
+    term: 2028-WI
+  - course: ECON 20210
+    term: 2028-SP
+  - course: STAT 25100
+    term: 2028-SP
+  - course: ECON 21030
+    term: 2028-AU
+  - course: ECON 23950
+    term: 2028-AU
+  - course: ECON 21200
+    term: 2029-WI
+  - course: ECON 25000
+    term: 2029-WI

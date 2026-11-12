@@ -1,0 +1,58 @@
+# Golden plan (prompt 05). Course facts: data/seed/2026-27; rules: data/seed/REVIEW.md.
+id: cmsc-ba-pass-02
+description: Honors calculus and honors theory (CMSC 27130, 27230); CHEM 11100-11200 for physical sciences
+program: cmsc-ba
+expect: pass
+checks:
+- V01
+- V02
+- V03
+- V07
+- V08
+- V12
+plan:
+  catalog_year: 2026-27
+  entry_term: 2026-AU
+  programs:
+  - program_id: cmsc-ba
+  placements:
+  - MATH 16100
+  items:
+  - course: MATH 16100
+    term: 2026-AU
+  - course: CMSC 14100
+    term: 2026-AU
+  - course: MATH 16200
+    term: 2027-WI
+  - course: CMSC 14200
+    term: 2027-WI
+  - course: CMSC 14300
+    term: 2027-SP
+  - course: CMSC 14400
+    term: 2027-AU
+  - course: CMSC 27130
+    term: 2027-AU
+  - course: CHEM 11100
+    term: 2027-AU
+  - course: CMSC 27230
+    term: 2028-WI
+  - course: CHEM 11200
+    term: 2028-WI
+  - course: CMSC 23000
+    term: 2028-WI
+  - course: CMSC 23500
+    term: 2028-SP
+  - course: CMSC 22100
+    term: 2028-SP
+  - course: CMSC 20300
+    term: 2028-SP
+  - course: CMSC 23200
+    term: 2028-AU
+  - course: CMSC 25300
+    term: 2028-AU
+  - course: CMSC 21800
+    term: 2028-AU
+  - course: CMSC 22300
+    term: 2029-WI
+  - course: CMSC 23900
+    term: 2029-WI

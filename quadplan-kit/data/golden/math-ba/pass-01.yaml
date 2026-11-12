@@ -1,0 +1,57 @@
+# Golden plan (prompt 05). Course facts: data/seed/2026-27; rules: data/seed/REVIEW.md.
+id: math-ba-pass-01
+description: Honors calculus, CHEM 11100-11300, MATH 20300 analysis, 25400+25500, approved 27000 and 26200, PSCD CMSC 14100/14200
+  + PHYS 13100/13200
+program: math-ba
+expect: pass
+checks:
+- V01
+- V02
+- V03
+- V07
+- V08
+- V12
+plan:
+  catalog_year: 2026-27
+  entry_term: 2026-AU
+  programs:
+  - program_id: math-ba
+  placements:
+  - MATH 16100
+  items:
+  - course: MATH 16100
+    term: 2026-AU
+  - course: CHEM 11100
+    term: 2026-AU
+  - course: CMSC 14100
+    term: 2026-AU
+  - course: PHYS 13100
+    term: 2026-AU
+  - course: MATH 16200
+    term: 2027-WI
+  - course: CHEM 11200
+    term: 2027-WI
+  - course: CMSC 14200
+    term: 2027-WI
+  - course: PHYS 13200
+    term: 2027-WI
+  - course: MATH 16300
+    term: 2027-SP
+  - course: CHEM 11300
+    term: 2027-SP
+  - course: MATH 20250
+    term: 2027-AU
+  - course: MATH 20300
+    term: 2027-AU
+  - course: MATH 20400
+    term: 2028-WI
+  - course: MATH 25400
+    term: 2028-WI
+  - course: MATH 20500
+    term: 2028-SP
+  - course: MATH 25500
+    term: 2028-SP
+  - course: MATH 27000
+    term: 2028-AU
+  - course: MATH 26200
+    term: 2028-AU
