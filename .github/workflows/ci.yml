@@ -1,0 +1,40 @@
+name: ci
+on:
+  push:
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: quadplan-kit
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: quarterly
+          POSTGRES_PASSWORD: quarterly
+          POSTGRES_DB: quarterly
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U quarterly" --health-interval 3s --health-retries 30
+      redis:
+        image: redis:7
+        ports: ["6379:6379"]
+        options: --health-cmd "redis-cli ping" --health-interval 3s --health-retries 30
+    env:
+      DATABASE_URL: postgresql+psycopg://quarterly:quarterly@localhost:5432/quarterly
+      REDIS_URL: redis://localhost:6379/0
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with: {version: "0.12.21"}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: quadplan-kit/apps/web/package-lock.json
+      - run: uv python install 3.12
+      - run: make install
+      - run: make check

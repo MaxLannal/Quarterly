@@ -1,0 +1,105 @@
+{
+  "components": {
+    "schemas": {
+      "HealthOut": {
+        "properties": {
+          "db": {
+            "title": "Db",
+            "type": "boolean"
+          },
+          "redis": {
+            "title": "Redis",
+            "type": "boolean"
+          },
+          "status": {
+            "enum": [
+              "ok",
+              "degraded"
+            ],
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "status",
+          "db",
+          "redis"
+        ],
+        "title": "HealthOut",
+        "type": "object"
+      },
+      "VersionOut": {
+        "properties": {
+          "core_version": {
+            "title": "Core Version",
+            "type": "string"
+          },
+          "git_sha": {
+            "title": "Git Sha",
+            "type": "string"
+          },
+          "version": {
+            "title": "Version",
+            "type": "string"
+          }
+        },
+        "required": [
+          "version",
+          "core_version",
+          "git_sha"
+        ],
+        "title": "VersionOut",
+        "type": "object"
+      }
+    }
+  },
+  "info": {
+    "title": "Quarterly API",
+    "version": "0.1.0"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/health": {
+      "get": {
+        "operationId": "health_health_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Health",
+        "tags": [
+          "health"
+        ]
+      }
+    },
+    "/version": {
+      "get": {
+        "operationId": "version_version_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VersionOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Version",
+        "tags": [
+          "health"
+        ]
+      }
+    }
+  }
+}
