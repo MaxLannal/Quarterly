@@ -69,7 +69,7 @@ ignore_missing_imports = true
 
 [tool.pytest.ini_options]
 addopts = "-q --import-mode=importlib"
-pythonpath = ["services/api/tests"]
+pythonpath = ["services/api/tests", "packages/planner_core/tests"]
 testpaths = [
     "packages/planner_core/tests",
     "packages/llm_gateway/tests",

@@ -106,12 +106,14 @@ def test_apply_ops() -> None:
     )
 
 
-def test_verifier_entry_points_are_stubs_until_prompt_02() -> None:
+def test_empty_plan_verifies_and_certifies() -> None:
     rules = RuleSet(catalog_year="2026-27")
     catalog = Catalog(catalog_year="2026-27")
-    with pytest.raises(NotImplementedError):
-        verify(plan(), rules, catalog)
-    cert = Certificate(plan_hash="sha256:x", rules={})
-    with pytest.raises(NotImplementedError):
-        check_certificate(plan(), rules, catalog, cert)
-    assert CORE_VERSION
+    report = verify(plan(), rules, catalog)
+    assert report.status == "valid" and report.core_version == CORE_VERSION
+    assert report.plan_hash == plan_hash(plan())
+    assert report.certificate is not None
+    assert check_certificate(plan(), rules, catalog, report.certificate)
+    assert not check_certificate(
+        plan(), rules, catalog, Certificate(plan_hash="sha256:x", rules={})
+    )
