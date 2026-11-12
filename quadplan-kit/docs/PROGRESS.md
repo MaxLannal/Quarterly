@@ -20,4 +20,13 @@
 - Pre-added so parallel prompts 02-04 do not fight over lockfiles: `ortools`, `argon2-cffi`, `cryptography`, `@dnd-kit/*`, `msw`, `@axe-core/playwright`.
 - Naming per decision 12: user-facing "Quarterly"; Compose project and database `quarterly`.
 
-**Next:** prompt 01 (contracts).
+
+## Prompt 01 · Contracts — done (2026-11-12)
+
+- **planner_core models** (`models.py`): Atom, Expr, the four node kinds, Selector, Constraints, Policy, Source; PlanState, PlanItem, Credit, all 12 goal types, RuleSet, CollegePolicy, Catalog, Report, Issue (V01-V12), Certificate, NodeProgress, VerifyOptions, the change-set ops. Pure helpers: `terms`, `dsl` (node paths, human form), `hashing` (`plan_hash`, `rules_hash`), `changes.apply_ops`. `verify` and `check_certificate` are stubs for prompt 02. JSON Schemas are in `docs/schemas/`.
+- **Database:** SQLAlchemy 2 models for every SPEC table plus `course_list` and `college_policy`; one Alembic migration (`0001`) that enables `ltree` and `pg_trgm` and indexes course code and title (trigram), term, `course_instructor`, `plan_hash`. Accounts follow decision 5 (email stored only on `account`).
+- **Seed format** under `data/seed/<catalog_year>/`, with `make seed` validating and upserting idempotently; fake fixture `TEST`/`FAKE` courses, catalog year 2099-00. Golden plan format and runner (`make golden`; reports SKIP until the verifier exists).
+- **API surface:** every endpoint as a 501 stub with request and response schemas; SSE agent endpoints document `AgentEvent`. `make api-client` regenerates the OpenAPI document, `schema.d.ts` and the JSON Schemas; `make check` fails if they are stale.
+- **Docs:** `docs/CONTRACTS.md` (endpoint table and the decisions that are not obvious).
+- **Tests:** migration up, down and up again; models match the migration; day-level dates only on user tables; email only on `account`; YAML examples from the spec round-trip; invalid DSL rejected; loader runs twice on the fixture without changes; golden runner; API surface and 501 stubs.
+- Removed `@cloudflare/blindrsa-ts` (no blind signatures after decision 5).

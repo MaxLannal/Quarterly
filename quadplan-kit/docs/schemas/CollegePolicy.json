@@ -1,0 +1,373 @@
+{
+  "$defs": {
+    "OverloadReason": {
+      "additionalProperties": false,
+      "description": "A reason that permits a 500-unit quarter (SPEC V05). Conditions are optional; when set,\nthe verifier checks them (plan year, a course in that term matching a selector, or a course\nof at least `min_course_units`).",
+      "properties": {
+        "course_selector": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Selector"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "id": {
+          "pattern": "^[a-z0-9][a-z0-9-]*$",
+          "title": "Id",
+          "type": "string"
+        },
+        "label": {
+          "title": "Label",
+          "type": "string"
+        },
+        "min_course_units": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Min Course Units"
+        },
+        "source": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Source"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "year": {
+          "anyOf": [
+            {
+              "maximum": 6,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Year"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "title": "OverloadReason",
+      "type": "object"
+    },
+    "Selector": {
+      "additionalProperties": false,
+      "description": "Which catalog courses a node may draw from.\n\nA course matches when it is not in `exclude` (by cross-list group) and every criterion that\nis set holds: `codes` (any listed code, by cross-list group), `subject`, `number_range`\n(inclusive, on the 5-digit number), `tags` (has any), `list` (member of the named\n`course_list`, sublists included), `union` (matches at least one sub-selector).\n\nA course's tag set is `tags` plus `\"core:\" + t` for each of its `core_tags`, so\n`tags: [\"core:arts\"]` matches a course whose `core_tags` contains `arts`.",
+      "properties": {
+        "codes": {
+          "items": {
+            "examples": [
+              "CMSC 14100"
+            ],
+            "pattern": "^[A-Z]{2,5} \\d{5}$",
+            "type": "string"
+          },
+          "title": "Codes",
+          "type": "array"
+        },
+        "exclude": {
+          "items": {
+            "examples": [
+              "CMSC 14100"
+            ],
+            "pattern": "^[A-Z]{2,5} \\d{5}$",
+            "type": "string"
+          },
+          "title": "Exclude",
+          "type": "array"
+        },
+        "list": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "List"
+        },
+        "number_range": {
+          "anyOf": [
+            {
+              "maxItems": 2,
+              "minItems": 2,
+              "prefixItems": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "integer"
+                }
+              ],
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Number Range"
+        },
+        "subject": {
+          "anyOf": [
+            {
+              "pattern": "^[A-Z]{2,5}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Subject"
+        },
+        "tags": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Tags",
+          "type": "array"
+        },
+        "union": {
+          "items": {
+            "$ref": "#/$defs/Selector"
+          },
+          "title": "Union",
+          "type": "array"
+        }
+      },
+      "title": "Selector",
+      "type": "object"
+    },
+    "Source": {
+      "additionalProperties": false,
+      "description": "Where a rule came from. `quote` is copied verbatim from the page.",
+      "properties": {
+        "quote": {
+          "minLength": 1,
+          "title": "Quote",
+          "type": "string"
+        },
+        "snapshot_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Snapshot Id"
+        },
+        "url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Url"
+        }
+      },
+      "required": [
+        "quote"
+      ],
+      "title": "Source",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "College-wide rules. Every non-null value needs an entry in `sources` keyed by field\nname; null means \"not encoded yet\" and the related check reports it as an assumption.",
+  "properties": {
+    "catalog_year": {
+      "examples": [
+        "2026-27"
+      ],
+      "pattern": "^\\d{4}-\\d{2}$",
+      "title": "Catalog Year",
+      "type": "string"
+    },
+    "civ_abroad_year": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Civ Abroad Year"
+    },
+    "core_complete_by": {
+      "anyOf": [
+        {
+          "examples": [
+            "Y2-SP",
+            "2028-SP"
+          ],
+          "pattern": "^(\\d{4}|Y[1-6])-(AU|WI|SP|SU)$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Core Complete By"
+    },
+    "core_program_id": {
+      "default": "core",
+      "pattern": "^[a-z0-9][a-z0-9-]*$",
+      "title": "Core Program Id",
+      "type": "string"
+    },
+    "full_time_max_units": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Full Time Max Units"
+    },
+    "full_time_min_units": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Full Time Min Units"
+    },
+    "language_node": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Language Node"
+    },
+    "max_quarters": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Max Quarters"
+    },
+    "needs_review": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Needs Review",
+      "type": "array"
+    },
+    "overload_reasons": {
+      "items": {
+        "$ref": "#/$defs/OverloadReason"
+      },
+      "title": "Overload Reasons",
+      "type": "array"
+    },
+    "overload_units": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Overload Units"
+    },
+    "residency_min_fraction": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Residency Min Fraction"
+    },
+    "sources": {
+      "additionalProperties": {
+        "$ref": "#/$defs/Source"
+      },
+      "title": "Sources",
+      "type": "object"
+    },
+    "total_units": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Total Units"
+    },
+    "units_by_enrollment": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Units By Enrollment"
+    }
+  },
+  "required": [
+    "catalog_year"
+  ],
+  "title": "CollegePolicy",
+  "type": "object"
+}

@@ -1,0 +1,705 @@
+{
+  "$defs": {
+    "BoundedPartsNode": {
+      "additionalProperties": false,
+      "description": "Parts with [min, max] counts that sum to a total.",
+      "properties": {
+        "constraints": {
+          "$ref": "#/$defs/Constraints"
+        },
+        "id": {
+          "anyOf": [
+            {
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Id"
+        },
+        "kind": {
+          "const": "bounded_parts",
+          "default": "bounded_parts",
+          "title": "Kind",
+          "type": "string"
+        },
+        "label": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Label"
+        },
+        "needs_review": {
+          "default": false,
+          "title": "Needs Review",
+          "type": "boolean"
+        },
+        "parts": {
+          "items": {
+            "$ref": "#/$defs/Part"
+          },
+          "minItems": 1,
+          "title": "Parts",
+          "type": "array"
+        },
+        "source": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Source"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "total": {
+          "$ref": "#/$defs/Total"
+        },
+        "weight": {
+          "default": 1.0,
+          "exclusiveMinimum": 0,
+          "title": "Weight",
+          "type": "number"
+        }
+      },
+      "required": [
+        "total",
+        "parts"
+      ],
+      "title": "BoundedPartsNode",
+      "type": "object"
+    },
+    "Constraints": {
+      "additionalProperties": false,
+      "properties": {
+        "allow_double_count": {
+          "default": false,
+          "title": "Allow Double Count",
+          "type": "boolean"
+        },
+        "distinct_subjects": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Distinct Subjects"
+        },
+        "in_order": {
+          "default": false,
+          "title": "In Order",
+          "type": "boolean"
+        },
+        "max_from": {
+          "items": {
+            "$ref": "#/$defs/MaxFrom"
+          },
+          "title": "Max From",
+          "type": "array"
+        },
+        "min_grade": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Min Grade"
+        },
+        "no_pass_fail": {
+          "default": false,
+          "title": "No Pass Fail",
+          "type": "boolean"
+        },
+        "same_sequence": {
+          "default": false,
+          "title": "Same Sequence",
+          "type": "boolean"
+        }
+      },
+      "title": "Constraints",
+      "type": "object"
+    },
+    "GroupNode": {
+      "additionalProperties": false,
+      "description": "Children combined: all of them (`all: true`) or at least `n_of`.",
+      "properties": {
+        "all": {
+          "default": false,
+          "title": "All",
+          "type": "boolean"
+        },
+        "children": {
+          "items": {
+            "discriminator": {
+              "mapping": {
+                "bounded_parts": "#/$defs/BoundedPartsNode",
+                "group": "#/$defs/GroupNode",
+                "select": "#/$defs/SelectNode",
+                "slot": "#/$defs/SlotNode"
+              },
+              "propertyName": "kind"
+            },
+            "oneOf": [
+              {
+                "$ref": "#/$defs/GroupNode"
+              },
+              {
+                "$ref": "#/$defs/SlotNode"
+              },
+              {
+                "$ref": "#/$defs/SelectNode"
+              },
+              {
+                "$ref": "#/$defs/BoundedPartsNode"
+              }
+            ]
+          },
+          "minItems": 1,
+          "title": "Children",
+          "type": "array"
+        },
+        "constraints": {
+          "$ref": "#/$defs/Constraints"
+        },
+        "id": {
+          "anyOf": [
+            {
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Id"
+        },
+        "kind": {
+          "const": "group",
+          "default": "group",
+          "title": "Kind",
+          "type": "string"
+        },
+        "label": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Label"
+        },
+        "n_of": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "N Of"
+        },
+        "needs_review": {
+          "default": false,
+          "title": "Needs Review",
+          "type": "boolean"
+        },
+        "source": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Source"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "weight": {
+          "default": 1.0,
+          "exclusiveMinimum": 0,
+          "title": "Weight",
+          "type": "number"
+        }
+      },
+      "required": [
+        "children"
+      ],
+      "title": "GroupNode",
+      "type": "object"
+    },
+    "MaxFrom": {
+      "additionalProperties": false,
+      "description": "At most `n` of the node's courses may match `selector` (\"at most 2 from outside CMSC\").",
+      "properties": {
+        "n": {
+          "minimum": 0,
+          "title": "N",
+          "type": "integer"
+        },
+        "selector": {
+          "$ref": "#/$defs/Selector"
+        }
+      },
+      "required": [
+        "selector",
+        "n"
+      ],
+      "title": "MaxFrom",
+      "type": "object"
+    },
+    "Part": {
+      "additionalProperties": false,
+      "description": "One part of a bounded_parts node, e.g. `{id: huma, from: {list: ...}, count: [2, 3]}`.",
+      "properties": {
+        "constraints": {
+          "$ref": "#/$defs/Constraints"
+        },
+        "count": {
+          "maxItems": 2,
+          "minItems": 2,
+          "prefixItems": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "integer"
+            }
+          ],
+          "title": "Count",
+          "type": "array"
+        },
+        "from": {
+          "$ref": "#/$defs/Selector"
+        },
+        "id": {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$",
+          "title": "Id",
+          "type": "string"
+        },
+        "label": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Label"
+        },
+        "needs_review": {
+          "default": false,
+          "title": "Needs Review",
+          "type": "boolean"
+        },
+        "source": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Source"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "id",
+        "from",
+        "count"
+      ],
+      "title": "Part",
+      "type": "object"
+    },
+    "SelectNode": {
+      "additionalProperties": false,
+      "description": "Choose `count` courses (or `units` units) from a selector.",
+      "properties": {
+        "constraints": {
+          "$ref": "#/$defs/Constraints"
+        },
+        "count": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Count"
+        },
+        "from": {
+          "$ref": "#/$defs/Selector"
+        },
+        "id": {
+          "anyOf": [
+            {
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Id"
+        },
+        "kind": {
+          "const": "select",
+          "default": "select",
+          "title": "Kind",
+          "type": "string"
+        },
+        "label": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Label"
+        },
+        "needs_review": {
+          "default": false,
+          "title": "Needs Review",
+          "type": "boolean"
+        },
+        "source": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Source"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "units": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Units"
+        },
+        "weight": {
+          "default": 1.0,
+          "exclusiveMinimum": 0,
+          "title": "Weight",
+          "type": "number"
+        }
+      },
+      "required": [
+        "from"
+      ],
+      "title": "SelectNode",
+      "type": "object"
+    },
+    "Selector": {
+      "additionalProperties": false,
+      "description": "Which catalog courses a node may draw from.\n\nA course matches when it is not in `exclude` (by cross-list group) and every criterion that\nis set holds: `codes` (any listed code, by cross-list group), `subject`, `number_range`\n(inclusive, on the 5-digit number), `tags` (has any), `list` (member of the named\n`course_list`, sublists included), `union` (matches at least one sub-selector).\n\nA course's tag set is `tags` plus `\"core:\" + t` for each of its `core_tags`, so\n`tags: [\"core:arts\"]` matches a course whose `core_tags` contains `arts`.",
+      "properties": {
+        "codes": {
+          "items": {
+            "examples": [
+              "CMSC 14100"
+            ],
+            "pattern": "^[A-Z]{2,5} \\d{5}$",
+            "type": "string"
+          },
+          "title": "Codes",
+          "type": "array"
+        },
+        "exclude": {
+          "items": {
+            "examples": [
+              "CMSC 14100"
+            ],
+            "pattern": "^[A-Z]{2,5} \\d{5}$",
+            "type": "string"
+          },
+          "title": "Exclude",
+          "type": "array"
+        },
+        "list": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "List"
+        },
+        "number_range": {
+          "anyOf": [
+            {
+              "maxItems": 2,
+              "minItems": 2,
+              "prefixItems": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "integer"
+                }
+              ],
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Number Range"
+        },
+        "subject": {
+          "anyOf": [
+            {
+              "pattern": "^[A-Z]{2,5}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Subject"
+        },
+        "tags": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Tags",
+          "type": "array"
+        },
+        "union": {
+          "items": {
+            "$ref": "#/$defs/Selector"
+          },
+          "title": "Union",
+          "type": "array"
+        }
+      },
+      "title": "Selector",
+      "type": "object"
+    },
+    "SlotNode": {
+      "additionalProperties": false,
+      "description": "One specific course or alternatives.",
+      "properties": {
+        "any_of": {
+          "items": {
+            "examples": [
+              "CMSC 14100"
+            ],
+            "pattern": "^[A-Z]{2,5} \\d{5}$",
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Any Of",
+          "type": "array"
+        },
+        "constraints": {
+          "$ref": "#/$defs/Constraints"
+        },
+        "id": {
+          "anyOf": [
+            {
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Id"
+        },
+        "kind": {
+          "const": "slot",
+          "default": "slot",
+          "title": "Kind",
+          "type": "string"
+        },
+        "label": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Label"
+        },
+        "needs_review": {
+          "default": false,
+          "title": "Needs Review",
+          "type": "boolean"
+        },
+        "source": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Source"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "weight": {
+          "default": 1.0,
+          "exclusiveMinimum": 0,
+          "title": "Weight",
+          "type": "number"
+        }
+      },
+      "required": [
+        "any_of"
+      ],
+      "title": "SlotNode",
+      "type": "object"
+    },
+    "Source": {
+      "additionalProperties": false,
+      "description": "Where a rule came from. `quote` is copied verbatim from the page.",
+      "properties": {
+        "quote": {
+          "minLength": 1,
+          "title": "Quote",
+          "type": "string"
+        },
+        "snapshot_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Snapshot Id"
+        },
+        "url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Url"
+        }
+      },
+      "required": [
+        "quote"
+      ],
+      "title": "Source",
+      "type": "object"
+    },
+    "Total": {
+      "additionalProperties": false,
+      "properties": {
+        "courses": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Courses"
+        },
+        "units": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Units"
+        }
+      },
+      "title": "Total",
+      "type": "object"
+    }
+  },
+  "discriminator": {
+    "mapping": {
+      "bounded_parts": "#/$defs/BoundedPartsNode",
+      "group": "#/$defs/GroupNode",
+      "select": "#/$defs/SelectNode",
+      "slot": "#/$defs/SlotNode"
+    },
+    "propertyName": "kind"
+  },
+  "oneOf": [
+    {
+      "$ref": "#/$defs/GroupNode"
+    },
+    {
+      "$ref": "#/$defs/SlotNode"
+    },
+    {
+      "$ref": "#/$defs/SelectNode"
+    },
+    {
+      "$ref": "#/$defs/BoundedPartsNode"
+    }
+  ]
+}

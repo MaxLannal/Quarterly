@@ -52,7 +52,8 @@ select = ["E", "F", "W", "I", "B", "UP", "N", "SIM", "RUF"]
 ignore = ["RUF012"]
 
 [tool.ruff.lint.per-file-ignores]
-"**/tests/**" = ["N802", "N806"]
+"**/tests/**" = ["N802", "N806", "E501"]
+"services/api/api/migrations/**" = ["E501"]
 
 [tool.mypy]
 python_version = "3.12"
@@ -60,6 +61,7 @@ plugins = ["pydantic.mypy"]
 warn_unused_ignores = true
 warn_redundant_casts = true
 ignore_missing_imports = false
+exclude = ["services/api/api/migrations/"]
 
 [[tool.mypy.overrides]]
 module = ["arq.*", "ortools.*"]
@@ -67,6 +69,7 @@ ignore_missing_imports = true
 
 [tool.pytest.ini_options]
 addopts = "-q --import-mode=importlib"
+pythonpath = ["services/api/tests"]
 testpaths = [
     "packages/planner_core/tests",
     "packages/llm_gateway/tests",

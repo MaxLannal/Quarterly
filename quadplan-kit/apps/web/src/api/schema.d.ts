@@ -4,6 +4,468 @@
  */
 
 export interface paths {
+    "/account/delete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Delete Account */
+        post: operations["delete_account_account_delete_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/account/export": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Export Account */
+        get: operations["export_account_account_export_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/account/password": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Change Password */
+        post: operations["change_password_account_password_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/admin/program-versions/{version_id}/publish": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Publish Program Version */
+        post: operations["publish_program_version_admin_program_versions__version_id__publish_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/admin/review-items": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Review Items */
+        get: operations["list_review_items_admin_review_items_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/admin/review-items/{item_id}/decision": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Decide Review Item */
+        post: operations["decide_review_item_admin_review_items__item_id__decision_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/agents/chat": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Chat */
+        post: operations["chat_agents_chat_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/agents/generate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Generate */
+        post: operations["generate_agents_generate_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/email": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Start Email */
+        post: operations["start_email_auth_email_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/login": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Login */
+        post: operations["login_auth_login_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/logout": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Logout */
+        post: operations["logout_auth_logout_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/password-reset/finish": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Finish Password Reset */
+        post: operations["finish_password_reset_auth_password_reset_finish_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/password-reset/start": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Start Password Reset */
+        post: operations["start_password_reset_auth_password_reset_start_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/register": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Register */
+        post: operations["register_auth_register_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/session": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Current Session */
+        get: operations["current_session_auth_session_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/verify-code": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Verify Code */
+        post: operations["verify_code_auth_verify_code_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/catalog-years": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Catalog Years */
+        get: operations["list_catalog_years_catalog_years_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/course-lists/{name}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Course List */
+        get: operations["get_course_list_course_lists__name__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/courses": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Search Courses */
+        get: operations["search_courses_courses_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/courses/{code}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Course */
+        get: operations["get_course_courses__code__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/forum/pages": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Find Page */
+        get: operations["find_page_forum_pages_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/forum/pages/{page_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Page */
+        get: operations["get_page_forum_pages__page_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/forum/pages/{page_id}/posts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Posts */
+        get: operations["list_posts_forum_pages__page_id__posts_get"];
+        put?: never;
+        /** Create Post */
+        post: operations["create_post_forum_pages__page_id__posts_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/forum/posts/{post_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Post */
+        get: operations["get_post_forum_posts__post_id__get"];
+        put?: never;
+        post?: never;
+        /** Delete Post */
+        delete: operations["delete_post_forum_posts__post_id__delete"];
+        options?: never;
+        head?: never;
+        /** Update Post */
+        patch: operations["update_post_forum_posts__post_id__patch"];
+        trace?: never;
+    };
+    "/forum/posts/{post_id}/comments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create Comment */
+        post: operations["create_comment_forum_posts__post_id__comments_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/forum/reports": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Report */
+        post: operations["report_forum_reports_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/forum/votes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Vote */
+        post: operations["vote_forum_votes_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/health": {
         parameters: {
             query?: never;
@@ -15,6 +477,285 @@ export interface paths {
         get: operations["health_health_get"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/instructors": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Instructors */
+        get: operations["list_instructors_instructors_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/instructors/{slug}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Instructor */
+        get: operations["get_instructor_instructors__slug__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/plans": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Plans */
+        get: operations["list_plans_plans_get"];
+        put?: never;
+        /** Create Plan */
+        post: operations["create_plan_plans_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/plans/compare": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Compare Plans */
+        get: operations["compare_plans_plans_compare_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/plans/import": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Import Plans */
+        post: operations["import_plans_plans_import_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/plans/{plan_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Plan */
+        get: operations["get_plan_plans__plan_id__get"];
+        put?: never;
+        post?: never;
+        /** Delete Plan */
+        delete: operations["delete_plan_plans__plan_id__delete"];
+        options?: never;
+        head?: never;
+        /** Update Plan */
+        patch: operations["update_plan_plans__plan_id__patch"];
+        trace?: never;
+    };
+    "/plans/{plan_id}/changesets": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Change Sets */
+        get: operations["list_change_sets_plans__plan_id__changesets_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/plans/{plan_id}/changesets/{changeset_id}/apply": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Apply Change Set */
+        post: operations["apply_change_set_plans__plan_id__changesets__changeset_id__apply_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/plans/{plan_id}/changesets/{changeset_id}/discard": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Discard Change Set */
+        post: operations["discard_change_set_plans__plan_id__changesets__changeset_id__discard_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/plans/{plan_id}/duplicate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Duplicate Plan */
+        post: operations["duplicate_plan_plans__plan_id__duplicate_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/plans/{plan_id}/items": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Patch Items */
+        patch: operations["patch_items_plans__plan_id__items_patch"];
+        trace?: never;
+    };
+    "/programs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Programs */
+        get: operations["list_programs_programs_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/programs/{program_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Program */
+        get: operations["get_program_programs__program_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/programs/{program_id}/eligible": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Eligible Courses */
+        get: operations["eligible_courses_programs__program_id__eligible_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/terms": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Terms */
+        get: operations["list_terms_terms_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/verify": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Verify Plan
+         * @description Load the RuleSet for the plan's programs from Postgres, run planner_core.verify, cache the
+         *     Report in Redis by plan_hash.
+         */
+        post: operations["verify_plan_verify_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -42,6 +783,908 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /** AccountDelete */
+        AccountDelete: {
+            /** Password */
+            password: string;
+            /**
+             * Posts
+             * @enum {string}
+             */
+            posts: "delete" | "keep";
+        };
+        /** AccountExport */
+        AccountExport: {
+            account: components["schemas"]["AccountOut"];
+            /**
+             * Plans
+             * @default []
+             */
+            plans: components["schemas"]["PlanOut"][];
+        };
+        /** AccountOut */
+        AccountOut: {
+            /**
+             * Created Day
+             * Format: date
+             */
+            created_day: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Role
+             * @enum {string}
+             */
+            role: "user" | "curator" | "admin";
+            /** Username */
+            username: string;
+        };
+        /** AddOp */
+        AddOp: {
+            /** Course */
+            course?: string | null;
+            /**
+             * Grading
+             * @default letter
+             * @enum {string}
+             */
+            grading: "letter" | "pass_fail";
+            /**
+             * Locked
+             * @default false
+             */
+            locked: boolean;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            op: "add";
+            /** Slot Ref */
+            slot_ref?: string | null;
+            /**
+             * Status
+             * @default planned
+             * @enum {string}
+             */
+            status: "planned" | "in_progress" | "completed" | "transfer" | "exam";
+            /**
+             * Term
+             * @example 2026-AU
+             */
+            term: string;
+            /** Units */
+            units?: number | null;
+        };
+        /**
+         * AgentEvent
+         * @description One Server-Sent Event `data:` payload from /agents/generate or /agents/chat.
+         */
+        AgentEvent: components["schemas"]["StepEvent"] | components["schemas"]["VariantEvent"] | components["schemas"]["MessageEvent"] | components["schemas"]["ProposalEvent"] | components["schemas"]["DoneEvent"] | components["schemas"]["ErrorEvent"];
+        /** Assignment */
+        Assignment: {
+            /** Courses */
+            courses: string[];
+            /** Node */
+            node: string;
+        };
+        /**
+         * Atom
+         * @description `course`: met by a course completed, credited or planned in a strictly earlier term.
+         *     `concurrent`: same or earlier term. `placement`/`standing`: plan facts.
+         *     `program`: enrolment restriction (glob on program ids, e.g. `cmsc-*`).
+         *     `consent`: never blocks; always produces a warning.
+         */
+        Atom: {
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "course" | "concurrent" | "placement" | "standing" | "program" | "consent";
+            /** Min Grade */
+            min_grade?: string | null;
+            /** Value */
+            value: string;
+        };
+        /** AttributeValue */
+        AttributeValue: {
+            /** Ci High */
+            ci_high?: number | null;
+            /** Ci Low */
+            ci_low?: number | null;
+            /**
+             * Key
+             * @enum {string}
+             */
+            key: "workload_hours" | "difficulty" | "intellectual_intensity" | "pace" | "grading_strictness" | "recommend_rate";
+            /**
+             * Method
+             * @default prior
+             * @enum {string}
+             */
+            method: "prior" | "forum" | "blend";
+            /**
+             * N
+             * @default 0
+             */
+            n: number;
+            /** Subject Id */
+            subject_id: string;
+            /**
+             * Subject Type
+             * @default course
+             * @enum {string}
+             */
+            subject_type: "course" | "course_instructor";
+            /** Value */
+            value: number;
+        };
+        /**
+         * BoundedPartsNode
+         * @description Parts with [min, max] counts that sum to a total.
+         */
+        BoundedPartsNode: {
+            constraints?: components["schemas"]["Constraints"];
+            /** Id */
+            id?: string | null;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            kind: "bounded_parts";
+            /** Label */
+            label?: string | null;
+            /**
+             * Needs Review
+             * @default false
+             */
+            needs_review: boolean;
+            /** Parts */
+            parts: components["schemas"]["Part"][];
+            source?: components["schemas"]["Source"] | null;
+            total: components["schemas"]["Total"];
+            /**
+             * Weight
+             * @default 1
+             */
+            weight: number;
+        };
+        /** BxmsGoal */
+        BxmsGoal: {
+            /**
+             * Apply By
+             * @example Y2-SP
+             * @example 2028-SP
+             */
+            apply_by: string;
+            /**
+             * Hard
+             * @default false
+             */
+            hard: boolean;
+            /** Id */
+            id: string;
+            /** Program Id */
+            program_id: string;
+            /**
+             * Scope
+             * @default career
+             * @enum {string}
+             */
+            scope: "career" | "term";
+            /** Term */
+            term?: string | null;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "bxms";
+            /**
+             * Weight
+             * @default 1
+             */
+            weight: number;
+        };
+        /** CatalogYearOut */
+        CatalogYearOut: {
+            /** Id */
+            id: string;
+            /** Published At */
+            published_at?: string | null;
+        };
+        /** Certificate */
+        Certificate: {
+            /** Assignments */
+            assignments?: components["schemas"]["Assignment"][];
+            /** Goals */
+            goals?: components["schemas"]["GoalResult"][];
+            /** Loads */
+            loads?: components["schemas"]["LoadEntry"][];
+            /** Plan Hash */
+            plan_hash: string;
+            /** Prereq Witnesses */
+            prereq_witnesses?: components["schemas"]["PrereqWitness"][];
+            /** Rules */
+            rules: {
+                [key: string]: string;
+            };
+        };
+        /** ChallengeGoal */
+        ChallengeGoal: {
+            /**
+             * Hard
+             * @default false
+             */
+            hard: boolean;
+            /** Id */
+            id: string;
+            /** Min Index */
+            min_index: number;
+            /**
+             * Scope
+             * @default career
+             * @enum {string}
+             */
+            scope: "career" | "term";
+            /** Term */
+            term?: string | null;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "challenge";
+            /**
+             * Weight
+             * @default 1
+             */
+            weight: number;
+        };
+        /** ChangeSet */
+        ChangeSet: {
+            /** Base Plan Hash */
+            base_plan_hash: string;
+            /** Id */
+            id?: string | null;
+            /** Ops */
+            ops: (components["schemas"]["AddOp"] | components["schemas"]["MoveOp"] | components["schemas"]["RemoveOp"] | components["schemas"]["LockOp"] | components["schemas"]["UnlockOp"])[];
+            /**
+             * Origin
+             * @enum {string}
+             */
+            origin: "generate" | "chat" | "user";
+            /** Plan Id */
+            plan_id?: string | null;
+            preview_report?: components["schemas"]["Report"] | null;
+            /**
+             * Status
+             * @default proposed
+             * @enum {string}
+             */
+            status: "proposed" | "applied" | "discarded" | "stale";
+        };
+        /**
+         * ChangeSetApply
+         * @description Apply only if the plan still hashes to `base_plan_hash`. `confirmation_text` is the
+         *     student's typed confirmation, parsed deterministically and matched against the ops.
+         */
+        ChangeSetApply: {
+            /** Base Plan Hash */
+            base_plan_hash: string;
+            /** Confirmation Text */
+            confirmation_text?: string | null;
+            /** Terms */
+            terms?: string[] | null;
+        };
+        /** ChatRequest */
+        ChatRequest: {
+            /** Message */
+            message: string;
+            plan: components["schemas"]["PlanState"];
+            /** Plan Id */
+            plan_id?: string | null;
+            /** Run Id */
+            run_id?: string | null;
+        };
+        /** Citation */
+        Citation: {
+            /** Id */
+            id: string;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "attribute" | "post" | "course" | "program" | "summary";
+            /** Label */
+            label: string;
+        };
+        /** CommentCreate */
+        CommentCreate: {
+            /** Body Md */
+            body_md: string;
+            /** Parent Id */
+            parent_id?: number | null;
+        };
+        /** CommentOut */
+        CommentOut: {
+            /** Body Md */
+            body_md: string;
+            /**
+             * Created Day
+             * Format: date
+             */
+            created_day: string;
+            /** Depth */
+            depth: number;
+            /** Id */
+            id: number;
+            /**
+             * My Vote
+             * @default 0
+             * @enum {integer}
+             */
+            my_vote: -1 | 0 | 1;
+            /** Parent Id */
+            parent_id?: number | null;
+            /** Post Id */
+            post_id: number;
+            /** Pseudonym */
+            pseudonym: string;
+            /** Score */
+            score: number;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "visible" | "held" | "removed";
+        };
+        /** Constraints */
+        Constraints: {
+            /**
+             * Allow Double Count
+             * @default false
+             */
+            allow_double_count: boolean;
+            /** Distinct Subjects */
+            distinct_subjects?: number | null;
+            /**
+             * In Order
+             * @default false
+             */
+            in_order: boolean;
+            /** Max From */
+            max_from?: components["schemas"]["MaxFrom"][];
+            /** Min Grade */
+            min_grade?: string | null;
+            /**
+             * No Pass Fail
+             * @default false
+             */
+            no_pass_fail: boolean;
+            /**
+             * Same Sequence
+             * @default false
+             */
+            same_sequence: boolean;
+        };
+        /** CountsToward */
+        CountsToward: {
+            /** Label */
+            label?: string | null;
+            /** Node Id */
+            node_id: string;
+            /** Program Id */
+            program_id: string;
+            /** Program Name */
+            program_name: string;
+        };
+        /** CourseDetail */
+        CourseDetail: {
+            /**
+             * Attributes
+             * @default []
+             */
+            attributes: components["schemas"]["AttributeValue"][];
+            /** Catalog Year */
+            catalog_year: string;
+            /** Code */
+            code: string;
+            /**
+             * Core Tags
+             * @default []
+             */
+            core_tags: string[];
+            coreq?: components["schemas"]["Expr"] | null;
+            /**
+             * Counts Toward
+             * @default []
+             */
+            counts_toward: components["schemas"]["CountsToward"][];
+            /**
+             * Crosslists
+             * @default []
+             */
+            crosslists: string[];
+            /** Description */
+            description?: string | null;
+            /**
+             * Instructors
+             * @default []
+             */
+            instructors: components["schemas"]["CourseInstructorOut"][];
+            /**
+             * Needs
+             * @default []
+             */
+            needs: string[];
+            /** Notes */
+            notes?: string | null;
+            /**
+             * Offerings
+             * @default []
+             */
+            offerings: components["schemas"]["OfferingPattern"][];
+            prereq?: components["schemas"]["Expr"] | null;
+            /** Prereq Human */
+            prereq_human?: string | null;
+            /** Prereq Text */
+            prereq_text?: string | null;
+            /**
+             * Relations
+             * @default []
+             */
+            relations: components["schemas"]["CourseRelation"][];
+            restrictions?: components["schemas"]["Expr"] | null;
+            /**
+             * Sections
+             * @default []
+             */
+            sections: components["schemas"]["Section"][];
+            source?: components["schemas"]["Source"] | null;
+            /**
+             * Tags
+             * @default []
+             */
+            tags: string[];
+            /** Title */
+            title: string;
+            /** Units */
+            units: number;
+            /**
+             * Unlocks
+             * @default []
+             */
+            unlocks: string[];
+        };
+        /** CourseInstructorOut */
+        CourseInstructorOut: {
+            /** First Term */
+            first_term?: string | null;
+            instructor: components["schemas"]["InstructorSummary"];
+            /** Last Term */
+            last_term?: string | null;
+            /**
+             * N Terms
+             * @default 0
+             */
+            n_terms: number;
+            /** Page Id */
+            page_id: number;
+        };
+        /**
+         * CourseList
+         * @description A named list per catalog year. Members = `courses` plus every course of `sublists`.
+         *     A list of sequences (e.g. `core-huma-sequences`) has one sublist per sequence.
+         */
+        CourseList: {
+            /** Courses */
+            courses?: string[];
+            /** Label */
+            label?: string | null;
+            /** Name */
+            name: string;
+            /**
+             * Needs Review
+             * @default false
+             */
+            needs_review: boolean;
+            source?: components["schemas"]["Source"] | null;
+            /** Sublists */
+            sublists?: string[];
+        };
+        /** CourseLoadGoal */
+        CourseLoadGoal: {
+            /**
+             * Hard
+             * @default false
+             */
+            hard: boolean;
+            /** Id */
+            id: string;
+            /** Max Courses */
+            max_courses?: number | null;
+            /** Min Courses */
+            min_courses?: number | null;
+            /**
+             * Scope
+             * @default career
+             * @enum {string}
+             */
+            scope: "career" | "term";
+            /** Term */
+            term?: string | null;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "course_load";
+            /**
+             * Weight
+             * @default 1
+             */
+            weight: number;
+        };
+        /** CourseRelation */
+        CourseRelation: {
+            /**
+             * A
+             * @example CMSC 14100
+             */
+            a: string;
+            /**
+             * B
+             * @example CMSC 14100
+             */
+            b: string;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "equivalent" | "mutually_exclusive" | "replaces";
+            source?: components["schemas"]["Source"] | null;
+        };
+        /** CourseSummary */
+        CourseSummary: {
+            /**
+             * Attributes
+             * @default []
+             */
+            attributes: components["schemas"]["AttributeValue"][];
+            /** Code */
+            code: string;
+            /**
+             * Core Tags
+             * @default []
+             */
+            core_tags: string[];
+            /**
+             * Crosslists
+             * @default []
+             */
+            crosslists: string[];
+            /**
+             * Tags
+             * @default []
+             */
+            tags: string[];
+            /** Title */
+            title: string;
+            /** Units */
+            units: number;
+        };
+        /** Credit */
+        Credit: {
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "AP" | "placement" | "transfer";
+            /** Label */
+            label: string;
+            /** Maps To */
+            maps_to?: string | null;
+            /**
+             * Units
+             * @default 0
+             */
+            units: number;
+        };
+        /** DifficultyCapGoal */
+        DifficultyCapGoal: {
+            /**
+             * Hard
+             * @default false
+             */
+            hard: boolean;
+            /** Id */
+            id: string;
+            /** Max Index */
+            max_index?: number | null;
+            /** Max Very Hard */
+            max_very_hard?: number | null;
+            /**
+             * Scope
+             * @default career
+             * @enum {string}
+             */
+            scope: "career" | "term";
+            /** Term */
+            term?: string | null;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "difficulty_cap";
+            /** Very Hard Threshold */
+            very_hard_threshold?: number | null;
+            /**
+             * Weight
+             * @default 1
+             */
+            weight: number;
+        };
+        /** DoneEvent */
+        DoneEvent: {
+            /** Run Id */
+            run_id: string;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "done";
+        };
+        /** EmailStart */
+        EmailStart: {
+            /** Email */
+            email: string;
+        };
+        /** EmailStarted */
+        EmailStarted: {
+            /** Pending Id */
+            pending_id: string;
+        };
+        /** ErrorEvent */
+        ErrorEvent: {
+            /** Message */
+            message: string;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "error";
+        };
+        /** ErrorOut */
+        ErrorOut: {
+            /** Detail */
+            detail: string;
+        };
+        /**
+         * Expr
+         * @description Canonical form: `{op, n, children, atom}`. Shorthand accepted on input:
+         *     `"CMSC 14100"`, `{course: X, min_grade: G}`, `{concurrent: X}`, `{placement: X}`,
+         *     `{standing: X}`, `{program: X}`, `{consent: X}`, `{all: [...]}`, `{any: [...]}`,
+         *     `{n_of: k, of: [...]}`.
+         */
+        Expr: {
+            atom?: components["schemas"]["Atom"] | null;
+            /** Children */
+            children?: components["schemas"]["Expr"][];
+            /** N */
+            n?: number | null;
+            /**
+             * Op
+             * @enum {string}
+             */
+            op: "all" | "any" | "n_of" | "atom";
+        };
+        /** ForumPageOut */
+        ForumPageOut: {
+            /** Course Code */
+            course_code: string;
+            /** Course Title */
+            course_title: string;
+            /** Id */
+            id: number;
+            instructor: components["schemas"]["InstructorSummary"];
+            /**
+             * N Reviews
+             * @default 0
+             */
+            n_reviews: number;
+            /**
+             * Rating Distribution
+             * @default {}
+             */
+            rating_distribution: {
+                [key: string]: number[];
+            };
+            summary?: components["schemas"]["ForumSummaryOut"] | null;
+            /**
+             * Terms Taught
+             * @default []
+             */
+            terms_taught: string[];
+        };
+        /** ForumReportIn */
+        ForumReportIn: {
+            /** Reason */
+            reason: string;
+            /** Target Id */
+            target_id: number;
+            /**
+             * Target Type
+             * @enum {string}
+             */
+            target_type: "post" | "comment";
+        };
+        /** ForumReportOut */
+        ForumReportOut: {
+            /** Id */
+            id: number;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "open" | "upheld" | "dismissed";
+        };
+        /** ForumSummaryOut */
+        ForumSummaryOut: {
+            /**
+             * Citations
+             * @default []
+             */
+            citations: number[];
+            /**
+             * Computed Day
+             * Format: date
+             */
+            computed_day: string;
+            /** N Posts */
+            n_posts: number;
+            /** Text */
+            text: string;
+        };
+        /**
+         * GenerateRequest
+         * @description The Generate-plan popup: a form, never free text (SPEC "Generate-plan popup").
+         */
+        GenerateRequest: {
+            /**
+             * Allow Overload
+             * @default false
+             */
+            allow_overload: boolean;
+            /**
+             * Goals
+             * @default []
+             */
+            goals: (components["schemas"]["CourseLoadGoal"] | components["schemas"]["WorkloadHoursGoal"] | components["schemas"]["DifficultyCapGoal"] | components["schemas"]["ChallengeGoal"] | components["schemas"]["ProtectGpaGoal"] | components["schemas"]["GraduateByGoal"] | components["schemas"]["StudyAbroadGoal"] | components["schemas"]["BxmsGoal"] | components["schemas"]["PremedGoal"] | components["schemas"]["InterestGoal"] | components["schemas"]["LightQuarterGoal"] | components["schemas"]["LanguageGoal"])[];
+            /**
+             * Interests
+             * @default []
+             */
+            interests: string[];
+            /**
+             * Load
+             * @default 0
+             */
+            load: number;
+            /** Max Courses Per Term */
+            max_courses_per_term?: number | null;
+            /**
+             * Per Term Load
+             * @default {}
+             */
+            per_term_load: {
+                [key: string]: number;
+            };
+            plan: components["schemas"]["PlanState"];
+            /** Plan Id */
+            plan_id?: string | null;
+            /**
+             * Scope
+             * @default whole
+             * @enum {string}
+             */
+            scope: "whole" | "remaining" | "selected";
+            /**
+             * Selected Terms
+             * @default []
+             */
+            selected_terms: string[];
+            /**
+             * Variants
+             * @default 2
+             */
+            variants: number;
+        };
+        /** GoalResult */
+        GoalResult: {
+            /** Goal */
+            goal: string;
+            /** Limit */
+            limit?: number | null;
+            /** Pass */
+            pass: boolean;
+            /** Value */
+            value?: number | null;
+        };
+        /** GraduateByGoal */
+        GraduateByGoal: {
+            /**
+             * By Term
+             * @example Y2-SP
+             * @example 2028-SP
+             */
+            by_term: string;
+            /**
+             * Hard
+             * @default false
+             */
+            hard: boolean;
+            /** Id */
+            id: string;
+            /**
+             * Scope
+             * @default career
+             * @enum {string}
+             */
+            scope: "career" | "term";
+            /** Term */
+            term?: string | null;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "graduate_by";
+            /**
+             * Weight
+             * @default 1
+             */
+            weight: number;
+        };
+        /**
+         * GroupNode
+         * @description Children combined: all of them (`all: true`) or at least `n_of`.
+         */
+        GroupNode: {
+            /**
+             * All
+             * @default false
+             */
+            all: boolean;
+            /** Children */
+            children: (components["schemas"]["GroupNode"] | components["schemas"]["SlotNode"] | components["schemas"]["SelectNode"] | components["schemas"]["BoundedPartsNode"])[];
+            constraints?: components["schemas"]["Constraints"];
+            /** Id */
+            id?: string | null;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            kind: "group";
+            /** Label */
+            label?: string | null;
+            /** N Of */
+            n_of?: number | null;
+            /**
+             * Needs Review
+             * @default false
+             */
+            needs_review: boolean;
+            source?: components["schemas"]["Source"] | null;
+            /**
+             * Weight
+             * @default 1
+             */
+            weight: number;
+        };
+        /** HTTPValidationError */
+        HTTPValidationError: {
+            /** Detail */
+            detail?: components["schemas"]["ValidationError"][];
+        };
         /** HealthOut */
         HealthOut: {
             /** Db */
@@ -54,6 +1697,1320 @@ export interface components {
              */
             status: "ok" | "degraded";
         };
+        /** InstructorCourse */
+        InstructorCourse: {
+            /**
+             * Attributes
+             * @default []
+             */
+            attributes: components["schemas"]["AttributeValue"][];
+            /** Code */
+            code: string;
+            /**
+             * N Terms
+             * @default 0
+             */
+            n_terms: number;
+            /** Page Id */
+            page_id: number;
+            /** Title */
+            title: string;
+        };
+        /** InstructorDetail */
+        InstructorDetail: {
+            /**
+             * Courses
+             * @default []
+             */
+            courses: components["schemas"]["InstructorCourse"][];
+            /** Department */
+            department?: string | null;
+            /** Display Name */
+            display_name: string;
+            /** Slug */
+            slug: string;
+        };
+        /** InstructorSummary */
+        InstructorSummary: {
+            /** Department */
+            department?: string | null;
+            /** Display Name */
+            display_name: string;
+            /** Slug */
+            slug: string;
+        };
+        /** InterestGoal */
+        InterestGoal: {
+            /**
+             * Hard
+             * @default false
+             */
+            hard: boolean;
+            /** Id */
+            id: string;
+            /** Min Share */
+            min_share?: number | null;
+            /**
+             * Scope
+             * @default career
+             * @enum {string}
+             */
+            scope: "career" | "term";
+            /** Tags */
+            tags: string[];
+            /** Term */
+            term?: string | null;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "interest";
+            /**
+             * Weight
+             * @default 1
+             */
+            weight: number;
+        };
+        /** Issue */
+        Issue: {
+            /**
+             * Code
+             * @enum {string}
+             */
+            code: "V01" | "V02" | "V03" | "V04" | "V05" | "V06" | "V07" | "V08" | "V09" | "V10" | "V11" | "V12";
+            /** Course Ids */
+            course_ids?: string[];
+            /** Fix Hints */
+            fix_hints?: string[];
+            /** Goal Id */
+            goal_id?: string | null;
+            /**
+             * Level
+             * @enum {string}
+             */
+            level: "error" | "warning" | "info";
+            /** Message */
+            message: string;
+            /** Node Id */
+            node_id?: string | null;
+            /** Term Ids */
+            term_ids?: string[];
+        };
+        /** ItemsPatch */
+        ItemsPatch: {
+            /** Base Plan Hash */
+            base_plan_hash: string;
+            /** Ops */
+            ops: (components["schemas"]["AddOp"] | components["schemas"]["MoveOp"] | components["schemas"]["RemoveOp"] | components["schemas"]["LockOp"] | components["schemas"]["UnlockOp"])[];
+        };
+        /** LanguageGoal */
+        LanguageGoal: {
+            /**
+             * By Term
+             * @example Y2-SP
+             * @example 2028-SP
+             */
+            by_term: string;
+            /** Courses */
+            courses?: string[];
+            /**
+             * Hard
+             * @default false
+             */
+            hard: boolean;
+            /** Id */
+            id: string;
+            /** Language */
+            language: string;
+            /** Level */
+            level: string;
+            /** List */
+            list?: string | null;
+            /**
+             * Scope
+             * @default career
+             * @enum {string}
+             */
+            scope: "career" | "term";
+            /** Term */
+            term?: string | null;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "language";
+            /**
+             * Weight
+             * @default 1
+             */
+            weight: number;
+        };
+        /** LightQuarterGoal */
+        LightQuarterGoal: {
+            /**
+             * Hard
+             * @default false
+             */
+            hard: boolean;
+            /** Id */
+            id: string;
+            /** Max Courses */
+            max_courses: number;
+            /**
+             * Scope
+             * @default term
+             * @constant
+             */
+            scope: "term";
+            /** Term */
+            term?: string | null;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "light_quarter";
+            /**
+             * Weight
+             * @default 1
+             */
+            weight: number;
+        };
+        /** LoadEntry */
+        LoadEntry: {
+            /**
+             * Term
+             * @example 2026-AU
+             */
+            term: string;
+            /** Units */
+            units: number;
+        };
+        /** LockOp */
+        LockOp: {
+            /** Course */
+            course?: string | null;
+            /** Item Id */
+            item_id?: string | null;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            op: "lock";
+            /** Slot Ref */
+            slot_ref?: string | null;
+            /** Term */
+            term?: string | null;
+        };
+        /** Login */
+        Login: {
+            /** Login */
+            login: string;
+            /** Password */
+            password: string;
+        };
+        /**
+         * MaxFrom
+         * @description At most `n` of the node's courses may match `selector` ("at most 2 from outside CMSC").
+         */
+        MaxFrom: {
+            /** N */
+            n: number;
+            selector: components["schemas"]["Selector"];
+        };
+        /** Meeting */
+        Meeting: {
+            /** Days */
+            days: ("MO" | "TU" | "WE" | "TH" | "FR" | "SA" | "SU")[];
+            /** End */
+            end: string;
+            /** Start */
+            start: string;
+        };
+        /** MessageEvent */
+        MessageEvent: {
+            /**
+             * Citations
+             * @default []
+             */
+            citations: components["schemas"]["Citation"][];
+            /** Text */
+            text: string;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "message";
+        };
+        /** MoveOp */
+        MoveOp: {
+            /** Course */
+            course?: string | null;
+            /** From Term */
+            from_term?: string | null;
+            /** Item Id */
+            item_id?: string | null;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            op: "move";
+            /** Slot Ref */
+            slot_ref?: string | null;
+            /**
+             * To Term
+             * @example 2026-AU
+             */
+            to_term: string;
+        };
+        /**
+         * NodeProgress
+         * @description Per-node progress for the planner's requirement rail.
+         */
+        NodeProgress: {
+            /** Courses */
+            courses?: string[];
+            /** Have */
+            have: number;
+            /** Label */
+            label?: string | null;
+            /** Need */
+            need: number;
+            /** Node Id */
+            node_id: string;
+            /** Program Id */
+            program_id: string;
+            /** Satisfied */
+            satisfied: boolean;
+            /**
+             * Unit
+             * @default courses
+             * @enum {string}
+             */
+            unit: "courses" | "units";
+        };
+        /** OfferingPattern */
+        OfferingPattern: {
+            /**
+             * Course
+             * @example CMSC 14100
+             */
+            course: string;
+            /** Evidence Terms */
+            evidence_terms?: string[];
+            /**
+             * Method
+             * @default history
+             */
+            method: string;
+            /** P Offered */
+            p_offered: number;
+            /**
+             * Quarter
+             * @enum {string}
+             */
+            quarter: "AU" | "WI" | "SP" | "SU";
+        };
+        /** Page[CourseSummary] */
+        Page_CourseSummary_: {
+            /** Items */
+            items: components["schemas"]["CourseSummary"][];
+            /** Limit */
+            limit: number;
+            /** Offset */
+            offset: number;
+            /** Total */
+            total: number;
+        };
+        /** Page[InstructorSummary] */
+        Page_InstructorSummary_: {
+            /** Items */
+            items: components["schemas"]["InstructorSummary"][];
+            /** Limit */
+            limit: number;
+            /** Offset */
+            offset: number;
+            /** Total */
+            total: number;
+        };
+        /** Page[PostOut] */
+        Page_PostOut_: {
+            /** Items */
+            items: components["schemas"]["PostOut"][];
+            /** Limit */
+            limit: number;
+            /** Offset */
+            offset: number;
+            /** Total */
+            total: number;
+        };
+        /** Page[ReviewItemOut] */
+        Page_ReviewItemOut_: {
+            /** Items */
+            items: components["schemas"]["ReviewItemOut"][];
+            /** Limit */
+            limit: number;
+            /** Offset */
+            offset: number;
+            /** Total */
+            total: number;
+        };
+        /**
+         * Part
+         * @description One part of a bounded_parts node, e.g. `{id: huma, from: {list: ...}, count: [2, 3]}`.
+         */
+        Part: {
+            constraints?: components["schemas"]["Constraints"];
+            /** Count */
+            count: [
+                number,
+                number
+            ];
+            from: components["schemas"]["Selector"];
+            /** Id */
+            id: string;
+            /** Label */
+            label?: string | null;
+            /**
+             * Needs Review
+             * @default false
+             */
+            needs_review: boolean;
+            source?: components["schemas"]["Source"] | null;
+        };
+        /** PasswordChange */
+        PasswordChange: {
+            /** Current Password */
+            current_password: string;
+            /** New Password */
+            new_password: string;
+        };
+        /** PasswordResetFinish */
+        PasswordResetFinish: {
+            /** Code */
+            code: string;
+            /** New Password */
+            new_password: string;
+            /** Pending Id */
+            pending_id: string;
+        };
+        /** PasswordResetStart */
+        PasswordResetStart: {
+            /** Email */
+            email: string;
+        };
+        /** PlanComparison */
+        PlanComparison: {
+            a: components["schemas"]["PlanOut"];
+            b: components["schemas"]["PlanOut"];
+            /**
+             * Metrics
+             * @default {}
+             */
+            metrics: {
+                [key: string]: {
+                    [key: string]: number;
+                };
+            };
+            /**
+             * Ops A To B
+             * @default []
+             */
+            ops_a_to_b: (components["schemas"]["AddOp"] | components["schemas"]["MoveOp"] | components["schemas"]["RemoveOp"] | components["schemas"]["LockOp"] | components["schemas"]["UnlockOp"])[];
+        };
+        /** PlanCreate */
+        PlanCreate: {
+            /**
+             * Is Primary
+             * @default false
+             */
+            is_primary: boolean;
+            /** Name */
+            name: string;
+            state: components["schemas"]["PlanState"];
+        };
+        /**
+         * PlanImport
+         * @description Logged-out plans from localStorage, imported at login.
+         */
+        PlanImport: {
+            /** Plans */
+            plans: components["schemas"]["PlanCreate"][];
+        };
+        /**
+         * PlanItem
+         * @description A course (or an unfilled requirement slot, `slot_ref` = node path) in a term.
+         */
+        PlanItem: {
+            /** Course */
+            course?: string | null;
+            /** Grade */
+            grade?: string | null;
+            /**
+             * Grading
+             * @default letter
+             * @enum {string}
+             */
+            grading: "letter" | "pass_fail";
+            /** Id */
+            id?: string | null;
+            /**
+             * Locked
+             * @default false
+             */
+            locked: boolean;
+            /** Slot Ref */
+            slot_ref?: string | null;
+            /**
+             * Status
+             * @default planned
+             * @enum {string}
+             */
+            status: "planned" | "in_progress" | "completed" | "transfer" | "exam";
+            /**
+             * Term
+             * @example 2026-AU
+             */
+            term: string;
+            /** Units */
+            units?: number | null;
+        };
+        /** PlanOut */
+        PlanOut: {
+            /** Catalog Year */
+            catalog_year: string;
+            /** Entry Term */
+            entry_term: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Is Primary */
+            is_primary: boolean;
+            /** Name */
+            name: string;
+            /** Plan Hash */
+            plan_hash: string;
+            report?: components["schemas"]["Report"] | null;
+            state: components["schemas"]["PlanState"];
+            /**
+             * Updated Day
+             * Format: date
+             */
+            updated_day: string;
+        };
+        /** PlanProgram */
+        PlanProgram: {
+            /** Options */
+            options?: {
+                [key: string]: string;
+            };
+            /** Program Id */
+            program_id: string;
+            /** Version Id */
+            version_id?: number | null;
+        };
+        /** PlanState */
+        PlanState: {
+            /**
+             * Catalog Year
+             * @example 2026-27
+             */
+            catalog_year: string;
+            /** Credits */
+            credits?: components["schemas"]["Credit"][];
+            /**
+             * Entry Term
+             * @example 2026-AU
+             */
+            entry_term: string;
+            /**
+             * Entry Year Level
+             * @default 1
+             */
+            entry_year_level: number;
+            /** Goals */
+            goals?: (components["schemas"]["CourseLoadGoal"] | components["schemas"]["WorkloadHoursGoal"] | components["schemas"]["DifficultyCapGoal"] | components["schemas"]["ChallengeGoal"] | components["schemas"]["ProtectGpaGoal"] | components["schemas"]["GraduateByGoal"] | components["schemas"]["StudyAbroadGoal"] | components["schemas"]["BxmsGoal"] | components["schemas"]["PremedGoal"] | components["schemas"]["InterestGoal"] | components["schemas"]["LightQuarterGoal"] | components["schemas"]["LanguageGoal"])[];
+            /** Items */
+            items?: components["schemas"]["PlanItem"][];
+            /** Overload Reasons */
+            overload_reasons?: {
+                [key: string]: string;
+            };
+            /** Placements */
+            placements?: string[];
+            /** Programs */
+            programs?: components["schemas"]["PlanProgram"][];
+        };
+        /** PlanSummary */
+        PlanSummary: {
+            /** Catalog Year */
+            catalog_year: string;
+            /** Entry Term */
+            entry_term: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Is Primary */
+            is_primary: boolean;
+            /** Name */
+            name: string;
+            /**
+             * Updated Day
+             * Format: date
+             */
+            updated_day: string;
+        };
+        /** PlanUpdate */
+        PlanUpdate: {
+            /** Is Primary */
+            is_primary?: boolean | null;
+            /** Name */
+            name?: string | null;
+            state?: components["schemas"]["PlanState"] | null;
+        };
+        /** Policy */
+        Policy: {
+            /** Excludes */
+            excludes?: string[];
+            /** Requires */
+            requires?: string[];
+            residency?: components["schemas"]["Residency"] | null;
+            /** Share */
+            share?: components["schemas"]["ShareLimit"][];
+            timing?: components["schemas"]["Timing"] | null;
+        };
+        /**
+         * PostCreate
+         * @description A review requires structured ratings and the term taken; a discussion post has neither.
+         */
+        PostCreate: {
+            /** Body Md */
+            body_md: string;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "review" | "discussion";
+            ratings?: components["schemas"]["ReviewRatingIn"] | null;
+            /** Term Taken */
+            term_taken?: string | null;
+            /** Title */
+            title?: string | null;
+        };
+        /** PostDetail */
+        PostDetail: {
+            /** Body Md */
+            body_md: string;
+            /**
+             * Comments
+             * @default []
+             */
+            comments: components["schemas"]["CommentOut"][];
+            /**
+             * Created Day
+             * Format: date
+             */
+            created_day: string;
+            /** Id */
+            id: number;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "review" | "discussion";
+            /**
+             * My Vote
+             * @default 0
+             * @enum {integer}
+             */
+            my_vote: -1 | 0 | 1;
+            /**
+             * N Comments
+             * @default 0
+             */
+            n_comments: number;
+            /** Page Id */
+            page_id: number;
+            /** Pseudonym */
+            pseudonym: string;
+            ratings?: components["schemas"]["ReviewRatingIn"] | null;
+            /** Score */
+            score: number;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "visible" | "held" | "removed";
+            /** Term Taken */
+            term_taken?: string | null;
+            /** Title */
+            title?: string | null;
+        };
+        /** PostOut */
+        PostOut: {
+            /** Body Md */
+            body_md: string;
+            /**
+             * Created Day
+             * Format: date
+             */
+            created_day: string;
+            /** Id */
+            id: number;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "review" | "discussion";
+            /**
+             * My Vote
+             * @default 0
+             * @enum {integer}
+             */
+            my_vote: -1 | 0 | 1;
+            /**
+             * N Comments
+             * @default 0
+             */
+            n_comments: number;
+            /** Page Id */
+            page_id: number;
+            /** Pseudonym */
+            pseudonym: string;
+            ratings?: components["schemas"]["ReviewRatingIn"] | null;
+            /** Score */
+            score: number;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "visible" | "held" | "removed";
+            /** Term Taken */
+            term_taken?: string | null;
+            /** Title */
+            title?: string | null;
+        };
+        /** PostUpdate */
+        PostUpdate: {
+            /** Body Md */
+            body_md?: string | null;
+            ratings?: components["schemas"]["ReviewRatingIn"] | null;
+            /** Title */
+            title?: string | null;
+        };
+        /** PremedGoal */
+        PremedGoal: {
+            /**
+             * Complete By
+             * @example Y2-SP
+             * @example 2028-SP
+             */
+            complete_by: string;
+            /** Courses */
+            courses?: string[];
+            /**
+             * Hard
+             * @default false
+             */
+            hard: boolean;
+            /** Id */
+            id: string;
+            /** List */
+            list?: string | null;
+            /**
+             * Scope
+             * @default career
+             * @enum {string}
+             */
+            scope: "career" | "term";
+            /** Term */
+            term?: string | null;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "premed";
+            /**
+             * Weight
+             * @default 1
+             */
+            weight: number;
+        };
+        /**
+         * PrereqWitness
+         * @description `by` entries: `"CODE@TERM"` (a plan item), `"credit:CODE"`, `"placement:VALUE"`,
+         *     `"standing:VALUE"`, `"program:ID"` or `"consent:VALUE"`.
+         */
+        PrereqWitness: {
+            /** By */
+            by: string[];
+            /**
+             * Course
+             * @example CMSC 14100
+             */
+            course: string;
+            /**
+             * Term
+             * @example 2026-AU
+             */
+            term: string;
+        };
+        /** ProgramDetail */
+        ProgramDetail: {
+            /** Catalog Year */
+            catalog_year: string;
+            /** Checksum */
+            checksum: string;
+            /** Degree */
+            degree?: string | null;
+            /** Department */
+            department?: string | null;
+            /** Id */
+            id: string;
+            /** Name */
+            name: string;
+            /** Parent Id */
+            parent_id?: string | null;
+            policy: components["schemas"]["Policy"];
+            /** Rules */
+            rules: components["schemas"]["GroupNode"] | components["schemas"]["SlotNode"] | components["schemas"]["SelectNode"] | components["schemas"]["BoundedPartsNode"];
+            /**
+             * Sample Path
+             * @default []
+             */
+            sample_path: components["schemas"]["PlanItem"][];
+            /**
+             * Sources
+             * @default []
+             */
+            sources: components["schemas"]["Source"][];
+            /** Status */
+            status: string;
+            /**
+             * Type
+             * @enum {string}
+             */
+            type: "major" | "minor" | "bxms" | "joint" | "specialization" | "track" | "preprofessional" | "study_abroad_block" | "core";
+            /** Verified At */
+            verified_at?: string | null;
+            /** Verified By */
+            verified_by?: string | null;
+            /** Version Id */
+            version_id: number;
+        };
+        /** ProgramSummary */
+        ProgramSummary: {
+            /** Catalog Year */
+            catalog_year: string;
+            /** Degree */
+            degree?: string | null;
+            /** Department */
+            department?: string | null;
+            /** Id */
+            id: string;
+            /** Name */
+            name: string;
+            /** Parent Id */
+            parent_id?: string | null;
+            /** Status */
+            status: string;
+            /**
+             * Type
+             * @enum {string}
+             */
+            type: "major" | "minor" | "bxms" | "joint" | "specialization" | "track" | "preprofessional" | "study_abroad_block" | "core";
+            /** Verified At */
+            verified_at?: string | null;
+        };
+        /** ProgramVersionOut */
+        ProgramVersionOut: {
+            /** Catalog Year */
+            catalog_year: string;
+            /** Checksum */
+            checksum: string;
+            /** Id */
+            id: number;
+            /** Program Id */
+            program_id: string;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "draft" | "review" | "published";
+            /** Verified At */
+            verified_at?: string | null;
+            /** Verified By */
+            verified_by?: string | null;
+        };
+        /** ProposalEvent */
+        ProposalEvent: {
+            change_set: components["schemas"]["ChangeSet"];
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "proposal";
+        };
+        /** ProtectGpaGoal */
+        ProtectGpaGoal: {
+            /**
+             * Hard
+             * @default false
+             */
+            hard: boolean;
+            /** Id */
+            id: string;
+            /**
+             * Scope
+             * @default career
+             * @enum {string}
+             */
+            scope: "career" | "term";
+            /** Strictness Threshold */
+            strictness_threshold?: number | null;
+            /** Term */
+            term?: string | null;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "protect_gpa";
+            /**
+             * Weight
+             * @default 1
+             */
+            weight: number;
+        };
+        /** Register */
+        Register: {
+            /** Password */
+            password: string;
+            /** Ticket */
+            ticket: string;
+            /** Username */
+            username: string;
+        };
+        /** RegistrationTicket */
+        RegistrationTicket: {
+            /** Ticket */
+            ticket: string;
+        };
+        /** RemoveOp */
+        RemoveOp: {
+            /** Course */
+            course?: string | null;
+            /** Item Id */
+            item_id?: string | null;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            op: "remove";
+            /** Slot Ref */
+            slot_ref?: string | null;
+            /** Term */
+            term?: string | null;
+        };
+        /** Report */
+        Report: {
+            /** Assumptions */
+            assumptions?: string[];
+            certificate?: components["schemas"]["Certificate"] | null;
+            /** Core Version */
+            core_version: string;
+            /** Issues */
+            issues?: components["schemas"]["Issue"][];
+            /** Plan Hash */
+            plan_hash: string;
+            /** Progress */
+            progress?: components["schemas"]["NodeProgress"][];
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "valid" | "warnings" | "errors";
+        };
+        /** Residency */
+        Residency: {
+            /** Min Fraction */
+            min_fraction: number;
+            source?: components["schemas"]["Source"] | null;
+        };
+        /** ReviewDecision */
+        ReviewDecision: {
+            /**
+             * Decision
+             * @enum {string}
+             */
+            decision: "accept" | "reject" | "edit";
+            /** Edited */
+            edited?: {
+                [key: string]: unknown;
+            } | null;
+            /** Note */
+            note?: string | null;
+        };
+        /** ReviewItemOut */
+        ReviewItemOut: {
+            /** Decided At */
+            decided_at?: string | null;
+            /** Diff */
+            diff: {
+                [key: string]: unknown;
+            };
+            /** Id */
+            id: number;
+            /** Reason */
+            reason?: string | null;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "open" | "accepted" | "rejected";
+            /** Target Id */
+            target_id: string;
+            /** Target Type */
+            target_type: string;
+        };
+        /** ReviewRatingIn */
+        ReviewRatingIn: {
+            /** Difficulty */
+            difficulty: number;
+            /** Grade Bucket */
+            grade_bucket?: ("A-range" | "B-range" | "C or lower" | "P/F" | "prefer not to say") | null;
+            /** Intellectual Intensity */
+            intellectual_intensity: number;
+            /** Overall */
+            overall: number;
+            /** Workload Hours */
+            workload_hours: number;
+            /** Would Recommend */
+            would_recommend: boolean;
+        };
+        /** Section */
+        Section: {
+            /** Component */
+            component?: string | null;
+            /**
+             * Course
+             * @example CMSC 14100
+             */
+            course: string;
+            /** Instructor Ids */
+            instructor_ids?: string[];
+            /** Meetings */
+            meetings?: components["schemas"]["Meeting"][];
+            /** Section No */
+            section_no: string;
+            /** Status */
+            status?: string | null;
+            /**
+             * Term
+             * @example 2026-AU
+             */
+            term: string;
+        };
+        /**
+         * SelectNode
+         * @description Choose `count` courses (or `units` units) from a selector.
+         */
+        SelectNode: {
+            constraints?: components["schemas"]["Constraints"];
+            /** Count */
+            count?: number | null;
+            from: components["schemas"]["Selector"];
+            /** Id */
+            id?: string | null;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            kind: "select";
+            /** Label */
+            label?: string | null;
+            /**
+             * Needs Review
+             * @default false
+             */
+            needs_review: boolean;
+            source?: components["schemas"]["Source"] | null;
+            /** Units */
+            units?: number | null;
+            /**
+             * Weight
+             * @default 1
+             */
+            weight: number;
+        };
+        /**
+         * Selector
+         * @description Which catalog courses a node may draw from.
+         *
+         *     A course matches when it is not in `exclude` (by cross-list group) and every criterion that
+         *     is set holds: `codes` (any listed code, by cross-list group), `subject`, `number_range`
+         *     (inclusive, on the 5-digit number), `tags` (has any), `list` (member of the named
+         *     `course_list`, sublists included), `union` (matches at least one sub-selector).
+         *
+         *     A course's tag set is `tags` plus `"core:" + t` for each of its `core_tags`, so
+         *     `tags: ["core:arts"]` matches a course whose `core_tags` contains `arts`.
+         */
+        Selector: {
+            /** Codes */
+            codes?: string[];
+            /** Exclude */
+            exclude?: string[];
+            /** List */
+            list?: string | null;
+            /** Number Range */
+            number_range?: [
+                number,
+                number
+            ] | null;
+            /** Subject */
+            subject?: string | null;
+            /** Tags */
+            tags?: string[];
+            /** Union */
+            union?: components["schemas"]["Selector"][];
+        };
+        /** SessionOut */
+        SessionOut: {
+            account: components["schemas"]["AccountOut"];
+            /** Csrf Token */
+            csrf_token: string;
+        };
+        /**
+         * ShareLimit
+         * @description At most `max` courses shared with programs matching `with` (`type:minor`, `core`,
+         *     `program:<id>`), not counting nodes/parts named in `except` (e.g. `language`).
+         */
+        ShareLimit: {
+            /** Except */
+            except?: string[];
+            /** Max */
+            max: number;
+            /** With */
+            with: string;
+        };
+        /**
+         * SlotNode
+         * @description One specific course or alternatives.
+         */
+        SlotNode: {
+            /** Any Of */
+            any_of: string[];
+            constraints?: components["schemas"]["Constraints"];
+            /** Id */
+            id?: string | null;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            kind: "slot";
+            /** Label */
+            label?: string | null;
+            /**
+             * Needs Review
+             * @default false
+             */
+            needs_review: boolean;
+            source?: components["schemas"]["Source"] | null;
+            /**
+             * Weight
+             * @default 1
+             */
+            weight: number;
+        };
+        /**
+         * Source
+         * @description Where a rule came from. `quote` is copied verbatim from the page.
+         */
+        Source: {
+            /** Quote */
+            quote: string;
+            /** Snapshot Id */
+            snapshot_id?: string | null;
+            /** Url */
+            url?: string | null;
+        };
+        /** StepEvent */
+        StepEvent: {
+            /** Name */
+            name: string;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "started" | "done" | "failed";
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "step";
+        };
+        /** StudyAbroadGoal */
+        StudyAbroadGoal: {
+            /**
+             * Abroad Term
+             * @example Y2-SP
+             * @example 2028-SP
+             */
+            abroad_term: string;
+            /**
+             * Hard
+             * @default false
+             */
+            hard: boolean;
+            /** Id */
+            id: string;
+            /** Program Id */
+            program_id: string;
+            /**
+             * Scope
+             * @default career
+             * @enum {string}
+             */
+            scope: "career" | "term";
+            /** Term */
+            term?: string | null;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "study_abroad";
+            /**
+             * Weight
+             * @default 1
+             */
+            weight: number;
+        };
+        /** Term */
+        Term: {
+            /** End */
+            end?: string | null;
+            /**
+             * Id
+             * @example 2026-AU
+             */
+            id: string;
+            /** Start */
+            start?: string | null;
+        };
+        /** Timing */
+        Timing: {
+            /** Apply By */
+            apply_by?: string | null;
+            /** Apply Requires */
+            apply_requires?: string[];
+            /** Complete By */
+            complete_by?: string | null;
+            source?: components["schemas"]["Source"] | null;
+        };
+        /** Total */
+        Total: {
+            /** Courses */
+            courses?: number | null;
+            /** Units */
+            units?: number | null;
+        };
+        /** UnlockOp */
+        UnlockOp: {
+            /** Course */
+            course?: string | null;
+            /** Item Id */
+            item_id?: string | null;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            op: "unlock";
+            /** Slot Ref */
+            slot_ref?: string | null;
+            /** Term */
+            term?: string | null;
+        };
+        /** ValidationError */
+        ValidationError: {
+            /** Context */
+            ctx?: Record<string, never>;
+            /** Input */
+            input?: unknown;
+            /** Location */
+            loc: (string | number)[];
+            /** Message */
+            msg: string;
+            /** Error Type */
+            type: string;
+        };
+        /** VariantEvent */
+        VariantEvent: {
+            change_set: components["schemas"]["ChangeSet"];
+            /** Label */
+            label: string;
+            /**
+             * Metrics
+             * @default {}
+             */
+            metrics: {
+                [key: string]: number;
+            };
+            /**
+             * Rationale
+             * @default {}
+             */
+            rationale: {
+                [key: string]: string;
+            };
+            report: components["schemas"]["Report"];
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "variant";
+        };
+        /** VerifyCode */
+        VerifyCode: {
+            /** Code */
+            code: string;
+            /** Pending Id */
+            pending_id: string;
+        };
+        /** VerifyOptions */
+        VerifyOptions: {
+            /** Checks */
+            checks?: ("V01" | "V02" | "V03" | "V04" | "V05" | "V06" | "V07" | "V08" | "V09" | "V10" | "V11" | "V12")[] | null;
+            /**
+             * Include Certificate
+             * @default true
+             */
+            include_certificate: boolean;
+            /**
+             * Solver Time Limit S
+             * @default 2
+             */
+            solver_time_limit_s: number;
+            /**
+             * Strictness
+             * @default normal
+             * @enum {string}
+             */
+            strictness: "normal" | "strict";
+        };
+        /** VerifyRequest */
+        VerifyRequest: {
+            /**
+             * @default {
+             *       "include_certificate": true,
+             *       "solver_time_limit_s": 2,
+             *       "strictness": "normal"
+             *     }
+             */
+            options: components["schemas"]["VerifyOptions"];
+            plan: components["schemas"]["PlanState"];
+        };
         /** VersionOut */
         VersionOut: {
             /** Core Version */
@@ -62,6 +3019,72 @@ export interface components {
             git_sha: string;
             /** Version */
             version: string;
+        };
+        /** VoteIn */
+        VoteIn: {
+            /** Target Id */
+            target_id: number;
+            /**
+             * Target Type
+             * @enum {string}
+             */
+            target_type: "post" | "comment";
+            /**
+             * Value
+             * @enum {integer}
+             */
+            value: -1 | 0 | 1;
+        };
+        /** VoteOut */
+        VoteOut: {
+            /**
+             * My Vote
+             * @enum {integer}
+             */
+            my_vote: -1 | 0 | 1;
+            /** Score */
+            score: number;
+        };
+        /** WorkloadHoursGoal */
+        WorkloadHoursGoal: {
+            /**
+             * Aggregate
+             * @default per_term
+             * @enum {string}
+             */
+            aggregate: "per_term" | "career_average";
+            /**
+             * Hard
+             * @default false
+             */
+            hard: boolean;
+            /** Id */
+            id: string;
+            /** Max Hours */
+            max_hours: number;
+            /**
+             * Scope
+             * @default career
+             * @enum {string}
+             */
+            scope: "career" | "term";
+            /**
+             * Strict
+             * @default false
+             */
+            strict: boolean;
+            /** Term */
+            term?: string | null;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "workload_hours";
+            /**
+             * Weight
+             * @default 1
+             */
+            weight: number;
         };
     };
     responses: never;
@@ -72,6 +3095,1217 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    delete_account_account_delete_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AccountDelete"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Not implemented yet */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+        };
+    };
+    export_account_account_export_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AccountExport"];
+                };
+            };
+            /** @description Not implemented yet */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+        };
+    };
+    change_password_account_password_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PasswordChange"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Not implemented yet */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+        };
+    };
+    publish_program_version_admin_program_versions__version_id__publish_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                version_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProgramVersionOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Not implemented yet */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+        };
+    };
+    list_review_items_admin_review_items_get: {
+        parameters: {
+            query?: {
+                status?: ("open" | "accepted" | "rejected") | null;
+                limit?: number;
+                offset?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Page_ReviewItemOut_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Not implemented yet */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+        };
+    };
+    decide_review_item_admin_review_items__item_id__decision_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                item_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReviewDecision"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReviewItemOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Not implemented yet */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+        };
+    };
+    chat_agents_chat_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ChatRequest"];
+            };
+        };
+        responses: {
+            /** @description Server-Sent Events; each `data:` line is one AgentEvent as JSON. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AgentEvent"];
+                    "text/event-stream": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Not implemented yet */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+        };
+    };
+    generate_agents_generate_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["GenerateRequest"];
+            };
+        };
+        responses: {
+            /** @description Server-Sent Events; each `data:` line is one AgentEvent as JSON. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AgentEvent"];
+                    "text/event-stream": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Not implemented yet */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+        };
+    };
+    start_email_auth_email_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EmailStart"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EmailStarted"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Not implemented yet */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+        };
+    };
+    login_auth_login_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["Login"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SessionOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Not implemented yet */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+        };
+    };
+    logout_auth_logout_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not implemented yet */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+        };
+    };
+    finish_password_reset_auth_password_reset_finish_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PasswordResetFinish"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Not implemented yet */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+        };
+    };
+    start_password_reset_auth_password_reset_start_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PasswordResetStart"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EmailStarted"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Not implemented yet */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+        };
+    };
+    register_auth_register_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["Register"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SessionOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Not implemented yet */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+        };
+    };
+    current_session_auth_session_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SessionOut"];
+                };
+            };
+            /** @description Not implemented yet */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+        };
+    };
+    verify_code_auth_verify_code_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VerifyCode"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RegistrationTicket"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Not implemented yet */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+        };
+    };
+    list_catalog_years_catalog_years_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CatalogYearOut"][];
+                };
+            };
+            /** @description Not implemented yet */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+        };
+    };
+    get_course_list_course_lists__name__get: {
+        parameters: {
+            query?: {
+                catalog_year?: string | null;
+            };
+            header?: never;
+            path: {
+                name: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CourseList"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Not implemented yet */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+        };
+    };
+    search_courses_courses_get: {
+        parameters: {
+            query?: {
+                q?: string | null;
+                subject?: string | null;
+                /** @description 10000, 20000, ... */
+                level?: number | null;
+                quarter?: ("AU" | "WI" | "SP" | "SU") | null;
+                core_tag?: string | null;
+                max_workload_hours?: number | null;
+                max_difficulty?: number | null;
+                catalog_year?: string | null;
+                limit?: number;
+                offset?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Page_CourseSummary_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Not implemented yet */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+        };
+    };
+    get_course_courses__code__get: {
+        parameters: {
+            query?: {
+                catalog_year?: string | null;
+            };
+            header?: never;
+            path: {
+                code: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CourseDetail"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Not implemented yet */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+        };
+    };
+    find_page_forum_pages_get: {
+        parameters: {
+            query: {
+                course: string;
+                instructor: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ForumPageOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Not implemented yet */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+        };
+    };
+    get_page_forum_pages__page_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                page_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ForumPageOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Not implemented yet */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+        };
+    };
+    list_posts_forum_pages__page_id__posts_get: {
+        parameters: {
+            query?: {
+                kind?: ("review" | "discussion") | null;
+                sort?: "best" | "new" | "top" | "controversial" | "hot";
+                term?: string | null;
+                limit?: number;
+                offset?: number;
+            };
+            header?: never;
+            path: {
+                page_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Page_PostOut_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Not implemented yet */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+        };
+    };
+    create_post_forum_pages__page_id__posts_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                page_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PostCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PostOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Not implemented yet */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+        };
+    };
+    get_post_forum_posts__post_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                post_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PostDetail"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Not implemented yet */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+        };
+    };
+    delete_post_forum_posts__post_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                post_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Not implemented yet */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+        };
+    };
+    update_post_forum_posts__post_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                post_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PostUpdate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PostOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Not implemented yet */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+        };
+    };
+    create_comment_forum_posts__post_id__comments_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                post_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CommentCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CommentOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Not implemented yet */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+        };
+    };
+    report_forum_reports_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ForumReportIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ForumReportOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Not implemented yet */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+        };
+    };
+    vote_forum_votes_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VoteIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["VoteOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Not implemented yet */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+        };
+    };
     health_health_get: {
         parameters: {
             query?: never;
@@ -88,6 +4322,784 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HealthOut"];
+                };
+            };
+        };
+    };
+    list_instructors_instructors_get: {
+        parameters: {
+            query?: {
+                q?: string | null;
+                limit?: number;
+                offset?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Page_InstructorSummary_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Not implemented yet */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+        };
+    };
+    get_instructor_instructors__slug__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InstructorDetail"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Not implemented yet */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+        };
+    };
+    list_plans_plans_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlanSummary"][];
+                };
+            };
+            /** @description Not implemented yet */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+        };
+    };
+    create_plan_plans_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PlanCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlanOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Not implemented yet */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+        };
+    };
+    compare_plans_plans_compare_get: {
+        parameters: {
+            query: {
+                a: string;
+                b: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlanComparison"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Not implemented yet */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+        };
+    };
+    import_plans_plans_import_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PlanImport"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlanSummary"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Not implemented yet */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+        };
+    };
+    get_plan_plans__plan_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                plan_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlanOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Not implemented yet */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+        };
+    };
+    delete_plan_plans__plan_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                plan_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Not implemented yet */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+        };
+    };
+    update_plan_plans__plan_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                plan_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PlanUpdate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlanOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Not implemented yet */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+        };
+    };
+    list_change_sets_plans__plan_id__changesets_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                plan_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ChangeSet"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Not implemented yet */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+        };
+    };
+    apply_change_set_plans__plan_id__changesets__changeset_id__apply_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                plan_id: string;
+                changeset_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ChangeSetApply"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlanOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Not implemented yet */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+        };
+    };
+    discard_change_set_plans__plan_id__changesets__changeset_id__discard_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                plan_id: string;
+                changeset_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ChangeSet"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Not implemented yet */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+        };
+    };
+    duplicate_plan_plans__plan_id__duplicate_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                plan_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlanOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Not implemented yet */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+        };
+    };
+    patch_items_plans__plan_id__items_patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                plan_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ItemsPatch"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlanOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Not implemented yet */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+        };
+    };
+    list_programs_programs_get: {
+        parameters: {
+            query?: {
+                catalog_year?: string | null;
+                type?: ("major" | "minor" | "bxms" | "joint" | "specialization" | "track" | "preprofessional" | "study_abroad_block" | "core") | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProgramSummary"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Not implemented yet */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+        };
+    };
+    get_program_programs__program_id__get: {
+        parameters: {
+            query?: {
+                catalog_year?: string | null;
+            };
+            header?: never;
+            path: {
+                program_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProgramDetail"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Not implemented yet */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+        };
+    };
+    eligible_courses_programs__program_id__eligible_get: {
+        parameters: {
+            query: {
+                /** @description node path, e.g. cmsc-bs/electives */
+                node: string;
+                catalog_year?: string | null;
+                limit?: number;
+            };
+            header?: never;
+            path: {
+                program_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CourseSummary"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Not implemented yet */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+        };
+    };
+    list_terms_terms_get: {
+        parameters: {
+            query?: {
+                catalog_year?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Term"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Not implemented yet */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+        };
+    };
+    verify_plan_verify_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VerifyRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Report"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Not implemented yet */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
                 };
             };
         };

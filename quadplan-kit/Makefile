@@ -79,6 +79,7 @@ seed: env
 
 # Regenerate the OpenAPI document and the TypeScript types the frontend uses.
 api-client:
+	$(UV) run python -m api.cli schemas --out docs/schemas
 	$(UV) run python -m api.openapi_dump > $(WEB)/src/api/openapi.json
 	cd $(WEB) && npx openapi-typescript src/api/openapi.json -o src/api/schema.d.ts
 
@@ -89,4 +90,6 @@ api-client-check:
 	diff -q $$tmp/openapi.json $(WEB)/src/api/openapi.json >/dev/null || { echo "api-client-check: openapi.json is stale; run make api-client"; exit 1; }; \
 	(cd $(WEB) && npx openapi-typescript $$tmp/openapi.json -o $$tmp/schema.d.ts >/dev/null 2>&1); \
 	diff -q $$tmp/schema.d.ts $(WEB)/src/api/schema.d.ts >/dev/null || { echo "api-client-check: schema.d.ts is stale; run make api-client"; exit 1; }; \
-	echo "api-client-check: generated client is up to date"
+	mkdir -p $$tmp/schemas && $(UV) run python -m api.cli schemas --out $$tmp/schemas >/dev/null; \
+	diff -r -q $$tmp/schemas docs/schemas >/dev/null || { echo "api-client-check: docs/schemas is stale; run make api-client"; exit 1; }; \
+	echo "api-client-check: generated client and JSON Schemas are up to date"

@@ -1,0 +1,408 @@
+{
+  "$defs": {
+    "AddOp": {
+      "additionalProperties": false,
+      "properties": {
+        "course": {
+          "anyOf": [
+            {
+              "examples": [
+                "CMSC 14100"
+              ],
+              "pattern": "^[A-Z]{2,5} \\d{5}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Course"
+        },
+        "grading": {
+          "default": "letter",
+          "enum": [
+            "letter",
+            "pass_fail"
+          ],
+          "title": "Grading",
+          "type": "string"
+        },
+        "locked": {
+          "default": false,
+          "title": "Locked",
+          "type": "boolean"
+        },
+        "op": {
+          "const": "add",
+          "default": "add",
+          "title": "Op",
+          "type": "string"
+        },
+        "slot_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Slot Ref"
+        },
+        "status": {
+          "default": "planned",
+          "enum": [
+            "planned",
+            "in_progress",
+            "completed",
+            "transfer",
+            "exam"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "term": {
+          "examples": [
+            "2026-AU"
+          ],
+          "pattern": "^\\d{4}-(AU|WI|SP|SU)$",
+          "title": "Term",
+          "type": "string"
+        },
+        "units": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Units"
+        }
+      },
+      "required": [
+        "term"
+      ],
+      "title": "AddOp",
+      "type": "object"
+    },
+    "LockOp": {
+      "additionalProperties": false,
+      "properties": {
+        "course": {
+          "anyOf": [
+            {
+              "examples": [
+                "CMSC 14100"
+              ],
+              "pattern": "^[A-Z]{2,5} \\d{5}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Course"
+        },
+        "item_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Item Id"
+        },
+        "op": {
+          "const": "lock",
+          "default": "lock",
+          "title": "Op",
+          "type": "string"
+        },
+        "slot_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Slot Ref"
+        },
+        "term": {
+          "anyOf": [
+            {
+              "examples": [
+                "2026-AU"
+              ],
+              "pattern": "^\\d{4}-(AU|WI|SP|SU)$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Term"
+        }
+      },
+      "title": "LockOp",
+      "type": "object"
+    },
+    "MoveOp": {
+      "additionalProperties": false,
+      "properties": {
+        "course": {
+          "anyOf": [
+            {
+              "examples": [
+                "CMSC 14100"
+              ],
+              "pattern": "^[A-Z]{2,5} \\d{5}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Course"
+        },
+        "from_term": {
+          "anyOf": [
+            {
+              "examples": [
+                "2026-AU"
+              ],
+              "pattern": "^\\d{4}-(AU|WI|SP|SU)$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "From Term"
+        },
+        "item_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Item Id"
+        },
+        "op": {
+          "const": "move",
+          "default": "move",
+          "title": "Op",
+          "type": "string"
+        },
+        "slot_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Slot Ref"
+        },
+        "to_term": {
+          "examples": [
+            "2026-AU"
+          ],
+          "pattern": "^\\d{4}-(AU|WI|SP|SU)$",
+          "title": "To Term",
+          "type": "string"
+        }
+      },
+      "required": [
+        "to_term"
+      ],
+      "title": "MoveOp",
+      "type": "object"
+    },
+    "RemoveOp": {
+      "additionalProperties": false,
+      "properties": {
+        "course": {
+          "anyOf": [
+            {
+              "examples": [
+                "CMSC 14100"
+              ],
+              "pattern": "^[A-Z]{2,5} \\d{5}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Course"
+        },
+        "item_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Item Id"
+        },
+        "op": {
+          "const": "remove",
+          "default": "remove",
+          "title": "Op",
+          "type": "string"
+        },
+        "slot_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Slot Ref"
+        },
+        "term": {
+          "anyOf": [
+            {
+              "examples": [
+                "2026-AU"
+              ],
+              "pattern": "^\\d{4}-(AU|WI|SP|SU)$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Term"
+        }
+      },
+      "title": "RemoveOp",
+      "type": "object"
+    },
+    "UnlockOp": {
+      "additionalProperties": false,
+      "properties": {
+        "course": {
+          "anyOf": [
+            {
+              "examples": [
+                "CMSC 14100"
+              ],
+              "pattern": "^[A-Z]{2,5} \\d{5}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Course"
+        },
+        "item_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Item Id"
+        },
+        "op": {
+          "const": "unlock",
+          "default": "unlock",
+          "title": "Op",
+          "type": "string"
+        },
+        "slot_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Slot Ref"
+        },
+        "term": {
+          "anyOf": [
+            {
+              "examples": [
+                "2026-AU"
+              ],
+              "pattern": "^\\d{4}-(AU|WI|SP|SU)$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Term"
+        }
+      },
+      "title": "UnlockOp",
+      "type": "object"
+    }
+  },
+  "discriminator": {
+    "mapping": {
+      "add": "#/$defs/AddOp",
+      "lock": "#/$defs/LockOp",
+      "move": "#/$defs/MoveOp",
+      "remove": "#/$defs/RemoveOp",
+      "unlock": "#/$defs/UnlockOp"
+    },
+    "propertyName": "op"
+  },
+  "oneOf": [
+    {
+      "$ref": "#/$defs/AddOp"
+    },
+    {
+      "$ref": "#/$defs/MoveOp"
+    },
+    {
+      "$ref": "#/$defs/RemoveOp"
+    },
+    {
+      "$ref": "#/$defs/LockOp"
+    },
+    {
+      "$ref": "#/$defs/UnlockOp"
+    }
+  ]
+}

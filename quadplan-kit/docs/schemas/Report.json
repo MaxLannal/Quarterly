@@ -1,0 +1,404 @@
+{
+  "$defs": {
+    "Assignment": {
+      "additionalProperties": false,
+      "properties": {
+        "courses": {
+          "items": {
+            "examples": [
+              "CMSC 14100"
+            ],
+            "pattern": "^[A-Z]{2,5} \\d{5}$",
+            "type": "string"
+          },
+          "title": "Courses",
+          "type": "array"
+        },
+        "node": {
+          "title": "Node",
+          "type": "string"
+        }
+      },
+      "required": [
+        "node",
+        "courses"
+      ],
+      "title": "Assignment",
+      "type": "object"
+    },
+    "Certificate": {
+      "additionalProperties": false,
+      "properties": {
+        "assignments": {
+          "items": {
+            "$ref": "#/$defs/Assignment"
+          },
+          "title": "Assignments",
+          "type": "array"
+        },
+        "goals": {
+          "items": {
+            "$ref": "#/$defs/GoalResult"
+          },
+          "title": "Goals",
+          "type": "array"
+        },
+        "loads": {
+          "items": {
+            "$ref": "#/$defs/LoadEntry"
+          },
+          "title": "Loads",
+          "type": "array"
+        },
+        "plan_hash": {
+          "title": "Plan Hash",
+          "type": "string"
+        },
+        "prereq_witnesses": {
+          "items": {
+            "$ref": "#/$defs/PrereqWitness"
+          },
+          "title": "Prereq Witnesses",
+          "type": "array"
+        },
+        "rules": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Rules",
+          "type": "object"
+        }
+      },
+      "required": [
+        "plan_hash",
+        "rules"
+      ],
+      "title": "Certificate",
+      "type": "object"
+    },
+    "GoalResult": {
+      "additionalProperties": false,
+      "properties": {
+        "goal": {
+          "title": "Goal",
+          "type": "string"
+        },
+        "limit": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Limit"
+        },
+        "pass": {
+          "title": "Pass",
+          "type": "boolean"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Value"
+        }
+      },
+      "required": [
+        "goal",
+        "pass"
+      ],
+      "title": "GoalResult",
+      "type": "object"
+    },
+    "Issue": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "enum": [
+            "V01",
+            "V02",
+            "V03",
+            "V04",
+            "V05",
+            "V06",
+            "V07",
+            "V08",
+            "V09",
+            "V10",
+            "V11",
+            "V12"
+          ],
+          "title": "Code",
+          "type": "string"
+        },
+        "course_ids": {
+          "items": {
+            "examples": [
+              "CMSC 14100"
+            ],
+            "pattern": "^[A-Z]{2,5} \\d{5}$",
+            "type": "string"
+          },
+          "title": "Course Ids",
+          "type": "array"
+        },
+        "fix_hints": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Fix Hints",
+          "type": "array"
+        },
+        "goal_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Goal Id"
+        },
+        "level": {
+          "enum": [
+            "error",
+            "warning",
+            "info"
+          ],
+          "title": "Level",
+          "type": "string"
+        },
+        "message": {
+          "title": "Message",
+          "type": "string"
+        },
+        "node_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Node Id"
+        },
+        "term_ids": {
+          "items": {
+            "examples": [
+              "2026-AU"
+            ],
+            "pattern": "^\\d{4}-(AU|WI|SP|SU)$",
+            "type": "string"
+          },
+          "title": "Term Ids",
+          "type": "array"
+        }
+      },
+      "required": [
+        "code",
+        "level",
+        "message"
+      ],
+      "title": "Issue",
+      "type": "object"
+    },
+    "LoadEntry": {
+      "additionalProperties": false,
+      "properties": {
+        "term": {
+          "examples": [
+            "2026-AU"
+          ],
+          "pattern": "^\\d{4}-(AU|WI|SP|SU)$",
+          "title": "Term",
+          "type": "string"
+        },
+        "units": {
+          "title": "Units",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "term",
+        "units"
+      ],
+      "title": "LoadEntry",
+      "type": "object"
+    },
+    "NodeProgress": {
+      "additionalProperties": false,
+      "description": "Per-node progress for the planner's requirement rail.",
+      "properties": {
+        "courses": {
+          "items": {
+            "examples": [
+              "CMSC 14100"
+            ],
+            "pattern": "^[A-Z]{2,5} \\d{5}$",
+            "type": "string"
+          },
+          "title": "Courses",
+          "type": "array"
+        },
+        "have": {
+          "title": "Have",
+          "type": "integer"
+        },
+        "label": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Label"
+        },
+        "need": {
+          "title": "Need",
+          "type": "integer"
+        },
+        "node_id": {
+          "title": "Node Id",
+          "type": "string"
+        },
+        "program_id": {
+          "title": "Program Id",
+          "type": "string"
+        },
+        "satisfied": {
+          "title": "Satisfied",
+          "type": "boolean"
+        },
+        "unit": {
+          "default": "courses",
+          "enum": [
+            "courses",
+            "units"
+          ],
+          "title": "Unit",
+          "type": "string"
+        }
+      },
+      "required": [
+        "program_id",
+        "node_id",
+        "satisfied",
+        "have",
+        "need"
+      ],
+      "title": "NodeProgress",
+      "type": "object"
+    },
+    "PrereqWitness": {
+      "additionalProperties": false,
+      "description": "`by` entries: `\"CODE@TERM\"` (a plan item), `\"credit:CODE\"`, `\"placement:VALUE\"`,\n`\"standing:VALUE\"`, `\"program:ID\"` or `\"consent:VALUE\"`.",
+      "properties": {
+        "by": {
+          "items": {
+            "type": "string"
+          },
+          "title": "By",
+          "type": "array"
+        },
+        "course": {
+          "examples": [
+            "CMSC 14100"
+          ],
+          "pattern": "^[A-Z]{2,5} \\d{5}$",
+          "title": "Course",
+          "type": "string"
+        },
+        "term": {
+          "examples": [
+            "2026-AU"
+          ],
+          "pattern": "^\\d{4}-(AU|WI|SP|SU)$",
+          "title": "Term",
+          "type": "string"
+        }
+      },
+      "required": [
+        "course",
+        "term",
+        "by"
+      ],
+      "title": "PrereqWitness",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "assumptions": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Assumptions",
+      "type": "array"
+    },
+    "certificate": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Certificate"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "core_version": {
+      "title": "Core Version",
+      "type": "string"
+    },
+    "issues": {
+      "items": {
+        "$ref": "#/$defs/Issue"
+      },
+      "title": "Issues",
+      "type": "array"
+    },
+    "plan_hash": {
+      "title": "Plan Hash",
+      "type": "string"
+    },
+    "progress": {
+      "items": {
+        "$ref": "#/$defs/NodeProgress"
+      },
+      "title": "Progress",
+      "type": "array"
+    },
+    "status": {
+      "enum": [
+        "valid",
+        "warnings",
+        "errors"
+      ],
+      "title": "Status",
+      "type": "string"
+    }
+  },
+  "required": [
+    "status",
+    "plan_hash",
+    "core_version"
+  ],
+  "title": "Report",
+  "type": "object"
+}

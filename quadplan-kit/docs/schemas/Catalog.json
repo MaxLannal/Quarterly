@@ -1,0 +1,590 @@
+{
+  "$defs": {
+    "AttributeValue": {
+      "additionalProperties": false,
+      "properties": {
+        "ci_high": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Ci High"
+        },
+        "ci_low": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Ci Low"
+        },
+        "key": {
+          "enum": [
+            "workload_hours",
+            "difficulty",
+            "intellectual_intensity",
+            "pace",
+            "grading_strictness",
+            "recommend_rate"
+          ],
+          "title": "Key",
+          "type": "string"
+        },
+        "method": {
+          "default": "prior",
+          "enum": [
+            "prior",
+            "forum",
+            "blend"
+          ],
+          "title": "Method",
+          "type": "string"
+        },
+        "n": {
+          "default": 0,
+          "title": "N",
+          "type": "integer"
+        },
+        "subject_id": {
+          "title": "Subject Id",
+          "type": "string"
+        },
+        "subject_type": {
+          "default": "course",
+          "enum": [
+            "course",
+            "course_instructor"
+          ],
+          "title": "Subject Type",
+          "type": "string"
+        },
+        "value": {
+          "title": "Value",
+          "type": "number"
+        }
+      },
+      "required": [
+        "subject_id",
+        "key",
+        "value"
+      ],
+      "title": "AttributeValue",
+      "type": "object"
+    },
+    "Course": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "examples": [
+            "CMSC 14100"
+          ],
+          "pattern": "^[A-Z]{2,5} \\d{5}$",
+          "title": "Code",
+          "type": "string"
+        },
+        "core_tags": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Core Tags",
+          "type": "array"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        },
+        "repeatable": {
+          "default": false,
+          "title": "Repeatable",
+          "type": "boolean"
+        },
+        "source": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Source"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "tags": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Tags",
+          "type": "array"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "units": {
+          "default": 100,
+          "minimum": 0,
+          "title": "Units",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "code",
+        "title"
+      ],
+      "title": "Course",
+      "type": "object"
+    },
+    "CourseList": {
+      "additionalProperties": false,
+      "description": "A named list per catalog year. Members = `courses` plus every course of `sublists`.\nA list of sequences (e.g. `core-huma-sequences`) has one sublist per sequence.",
+      "properties": {
+        "courses": {
+          "items": {
+            "examples": [
+              "CMSC 14100"
+            ],
+            "pattern": "^[A-Z]{2,5} \\d{5}$",
+            "type": "string"
+          },
+          "title": "Courses",
+          "type": "array"
+        },
+        "label": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Label"
+        },
+        "name": {
+          "pattern": "^[a-z0-9][a-z0-9-]*$",
+          "title": "Name",
+          "type": "string"
+        },
+        "needs_review": {
+          "default": false,
+          "title": "Needs Review",
+          "type": "boolean"
+        },
+        "source": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Source"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "sublists": {
+          "items": {
+            "pattern": "^[a-z0-9][a-z0-9-]*$",
+            "type": "string"
+          },
+          "title": "Sublists",
+          "type": "array"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "title": "CourseList",
+      "type": "object"
+    },
+    "CourseRelation": {
+      "additionalProperties": false,
+      "properties": {
+        "a": {
+          "examples": [
+            "CMSC 14100"
+          ],
+          "pattern": "^[A-Z]{2,5} \\d{5}$",
+          "title": "A",
+          "type": "string"
+        },
+        "b": {
+          "examples": [
+            "CMSC 14100"
+          ],
+          "pattern": "^[A-Z]{2,5} \\d{5}$",
+          "title": "B",
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "equivalent",
+            "mutually_exclusive",
+            "replaces"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "source": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Source"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "a",
+        "b",
+        "kind"
+      ],
+      "title": "CourseRelation",
+      "type": "object"
+    },
+    "Meeting": {
+      "additionalProperties": false,
+      "properties": {
+        "days": {
+          "items": {
+            "enum": [
+              "MO",
+              "TU",
+              "WE",
+              "TH",
+              "FR",
+              "SA",
+              "SU"
+            ],
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Days",
+          "type": "array"
+        },
+        "end": {
+          "pattern": "^\\d{2}:\\d{2}$",
+          "title": "End",
+          "type": "string"
+        },
+        "start": {
+          "pattern": "^\\d{2}:\\d{2}$",
+          "title": "Start",
+          "type": "string"
+        }
+      },
+      "required": [
+        "days",
+        "start",
+        "end"
+      ],
+      "title": "Meeting",
+      "type": "object"
+    },
+    "OfferingPattern": {
+      "additionalProperties": false,
+      "properties": {
+        "course": {
+          "examples": [
+            "CMSC 14100"
+          ],
+          "pattern": "^[A-Z]{2,5} \\d{5}$",
+          "title": "Course",
+          "type": "string"
+        },
+        "evidence_terms": {
+          "items": {
+            "examples": [
+              "2026-AU"
+            ],
+            "pattern": "^\\d{4}-(AU|WI|SP|SU)$",
+            "type": "string"
+          },
+          "title": "Evidence Terms",
+          "type": "array"
+        },
+        "method": {
+          "default": "history",
+          "title": "Method",
+          "type": "string"
+        },
+        "p_offered": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "P Offered",
+          "type": "number"
+        },
+        "quarter": {
+          "enum": [
+            "AU",
+            "WI",
+            "SP",
+            "SU"
+          ],
+          "title": "Quarter",
+          "type": "string"
+        }
+      },
+      "required": [
+        "course",
+        "quarter",
+        "p_offered"
+      ],
+      "title": "OfferingPattern",
+      "type": "object"
+    },
+    "Section": {
+      "additionalProperties": false,
+      "properties": {
+        "component": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Component"
+        },
+        "course": {
+          "examples": [
+            "CMSC 14100"
+          ],
+          "pattern": "^[A-Z]{2,5} \\d{5}$",
+          "title": "Course",
+          "type": "string"
+        },
+        "instructor_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Instructor Ids",
+          "type": "array"
+        },
+        "meetings": {
+          "items": {
+            "$ref": "#/$defs/Meeting"
+          },
+          "title": "Meetings",
+          "type": "array"
+        },
+        "section_no": {
+          "title": "Section No",
+          "type": "string"
+        },
+        "status": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Status"
+        },
+        "term": {
+          "examples": [
+            "2026-AU"
+          ],
+          "pattern": "^\\d{4}-(AU|WI|SP|SU)$",
+          "title": "Term",
+          "type": "string"
+        }
+      },
+      "required": [
+        "term",
+        "course",
+        "section_no"
+      ],
+      "title": "Section",
+      "type": "object"
+    },
+    "Source": {
+      "additionalProperties": false,
+      "description": "Where a rule came from. `quote` is copied verbatim from the page.",
+      "properties": {
+        "quote": {
+          "minLength": 1,
+          "title": "Quote",
+          "type": "string"
+        },
+        "snapshot_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Snapshot Id"
+        },
+        "url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Url"
+        }
+      },
+      "required": [
+        "quote"
+      ],
+      "title": "Source",
+      "type": "object"
+    },
+    "Term": {
+      "additionalProperties": false,
+      "properties": {
+        "end": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "End"
+        },
+        "id": {
+          "examples": [
+            "2026-AU"
+          ],
+          "pattern": "^\\d{4}-(AU|WI|SP|SU)$",
+          "title": "Id",
+          "type": "string"
+        },
+        "start": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Start"
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "title": "Term",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "attributes": {
+      "items": {
+        "$ref": "#/$defs/AttributeValue"
+      },
+      "title": "Attributes",
+      "type": "array"
+    },
+    "catalog_year": {
+      "examples": [
+        "2026-27"
+      ],
+      "pattern": "^\\d{4}-\\d{2}$",
+      "title": "Catalog Year",
+      "type": "string"
+    },
+    "course_lists": {
+      "items": {
+        "$ref": "#/$defs/CourseList"
+      },
+      "title": "Course Lists",
+      "type": "array"
+    },
+    "courses": {
+      "items": {
+        "$ref": "#/$defs/Course"
+      },
+      "title": "Courses",
+      "type": "array"
+    },
+    "crosslist_groups": {
+      "items": {
+        "items": {
+          "examples": [
+            "CMSC 14100"
+          ],
+          "pattern": "^[A-Z]{2,5} \\d{5}$",
+          "type": "string"
+        },
+        "type": "array"
+      },
+      "title": "Crosslist Groups",
+      "type": "array"
+    },
+    "offerings": {
+      "items": {
+        "$ref": "#/$defs/OfferingPattern"
+      },
+      "title": "Offerings",
+      "type": "array"
+    },
+    "relations": {
+      "items": {
+        "$ref": "#/$defs/CourseRelation"
+      },
+      "title": "Relations",
+      "type": "array"
+    },
+    "sections": {
+      "items": {
+        "$ref": "#/$defs/Section"
+      },
+      "title": "Sections",
+      "type": "array"
+    },
+    "terms": {
+      "items": {
+        "$ref": "#/$defs/Term"
+      },
+      "title": "Terms",
+      "type": "array"
+    }
+  },
+  "required": [
+    "catalog_year"
+  ],
+  "title": "Catalog",
+  "type": "object"
+}

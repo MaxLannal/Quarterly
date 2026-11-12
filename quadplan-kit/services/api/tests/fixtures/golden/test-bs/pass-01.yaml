@@ -1,0 +1,14 @@
+id: test-bs-pass-01
+description: FAKE - intro in order, two electives
+program: test-bs
+expect: pass
+checks: [V01, V02, V03, V07]
+plan:
+  catalog_year: "2099-00"
+  entry_term: 2099-AU
+  programs: [{program_id: test-bs}]
+  items:
+    - {course: TEST 10000, term: 2099-AU}
+    - {course: TEST 10100, term: 2100-WI}
+    - {course: TEST 20000, term: 2100-SP}
+    - {course: TEST 20100, term: 2100-SP}

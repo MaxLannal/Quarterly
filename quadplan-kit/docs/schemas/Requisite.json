@@ -1,0 +1,213 @@
+{
+  "$defs": {
+    "Atom": {
+      "additionalProperties": false,
+      "description": "`course`: met by a course completed, credited or planned in a strictly earlier term.\n`concurrent`: same or earlier term. `placement`/`standing`: plan facts.\n`program`: enrolment restriction (glob on program ids, e.g. `cmsc-*`).\n`consent`: never blocks; always produces a warning.",
+      "properties": {
+        "kind": {
+          "enum": [
+            "course",
+            "concurrent",
+            "placement",
+            "standing",
+            "program",
+            "consent"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "min_grade": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Min Grade"
+        },
+        "value": {
+          "minLength": 1,
+          "title": "Value",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "value"
+      ],
+      "title": "Atom",
+      "type": "object"
+    },
+    "Expr": {
+      "additionalProperties": false,
+      "description": "Canonical form: `{op, n, children, atom}`. Shorthand accepted on input:\n`\"CMSC 14100\"`, `{course: X, min_grade: G}`, `{concurrent: X}`, `{placement: X}`,\n`{standing: X}`, `{program: X}`, `{consent: X}`, `{all: [...]}`, `{any: [...]}`,\n`{n_of: k, of: [...]}`.",
+      "properties": {
+        "atom": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Atom"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "children": {
+          "items": {
+            "$ref": "#/$defs/Expr"
+          },
+          "title": "Children",
+          "type": "array"
+        },
+        "n": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "N"
+        },
+        "op": {
+          "enum": [
+            "all",
+            "any",
+            "n_of",
+            "atom"
+          ],
+          "title": "Op",
+          "type": "string"
+        }
+      },
+      "required": [
+        "op"
+      ],
+      "title": "Expr",
+      "type": "object"
+    },
+    "Source": {
+      "additionalProperties": false,
+      "description": "Where a rule came from. `quote` is copied verbatim from the page.",
+      "properties": {
+        "quote": {
+          "minLength": 1,
+          "title": "Quote",
+          "type": "string"
+        },
+        "snapshot_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Snapshot Id"
+        },
+        "url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Url"
+        }
+      },
+      "required": [
+        "quote"
+      ],
+      "title": "Source",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "coreq": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Expr"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "course": {
+      "examples": [
+        "CMSC 14100"
+      ],
+      "pattern": "^[A-Z]{2,5} \\d{5}$",
+      "title": "Course",
+      "type": "string"
+    },
+    "needs_review": {
+      "default": false,
+      "title": "Needs Review",
+      "type": "boolean"
+    },
+    "prereq": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Expr"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "raw_text": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Raw Text"
+    },
+    "restrictions": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Expr"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "source": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Source"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    }
+  },
+  "required": [
+    "course"
+  ],
+  "title": "Requisite",
+  "type": "object"
+}

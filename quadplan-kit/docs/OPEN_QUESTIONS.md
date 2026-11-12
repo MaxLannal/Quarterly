@@ -17,3 +17,12 @@ Questions for Richard. Each has a default so work can continue; nothing here is 
 3. **OpenRouter model names** in `llm_routing.yaml` (`anthropic/claude-opus-5.5` style) are not
    verified against OpenRouter's catalog; confirm before prompt 07. `max_tokens` values there are
    starting defaults, not from the spec.
+
+## Contracts (prompt 01)
+
+4. **"Terms Offered" to `p_offered`.** Until schedule data exists, listed quarters get p = 0.95 and
+   unlisted Autumn/Winter/Spring get p = 0.05 (`method: catalog`), so V04 warns when a course is
+   placed outside its catalog quarters. Confirm this mapping or give another.
+5. **One `program_version` per program per catalog year.** Editing a published version in place
+   would change plans made under it; v1 relies on review items for such edits. Revisit before
+   prompt 09.

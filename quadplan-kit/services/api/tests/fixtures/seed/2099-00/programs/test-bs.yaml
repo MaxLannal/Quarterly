@@ -1,0 +1,33 @@
+# FAKE FIXTURE for loader tests. Not real catalog data.
+id: test-bs
+catalog_year: "2099-00"
+name: Test Studies BS (fake)
+type: major
+degree: BS
+department: Test Studies
+sources: [{url: "https://example.invalid/fake-catalog", quote: "FAKE FIXTURE - not a real course"}]
+rules:
+  source: {url: "https://example.invalid/fake-catalog", quote: "FAKE FIXTURE - not a real course"}
+  group:
+    all: true
+    children:
+      - id: intro
+        source: {url: "https://example.invalid/fake-catalog", quote: "FAKE FIXTURE - not a real course"}
+        group:
+          all: true
+          children:
+            - {source: {url: "https://example.invalid/fake-catalog", quote: "FAKE FIXTURE - not a real course"}, slot: {any_of: [TEST 10000]}}
+            - {source: {url: "https://example.invalid/fake-catalog", quote: "FAKE FIXTURE - not a real course"}, slot: {any_of: [TEST 10100]}}
+      - id: electives
+        source: {url: "https://example.invalid/fake-catalog", quote: "FAKE FIXTURE - not a real course"}
+        select: {count: 2, from: {subject: TEST, number_range: [20000, 29999], exclude: [TEST 20400]}}
+        constraints: {no_pass_fail: true}
+      - id: sequence
+        source: {url: "https://example.invalid/fake-catalog", quote: "FAKE FIXTURE - not a real course"}
+        bounded_parts:
+          total: {courses: 2}
+          parts:
+            - {id: seq, source: {url: "https://example.invalid/fake-catalog", quote: "FAKE FIXTURE - not a real course"}, from: {list: fake-seqs}, count: [2, 2], same_sequence: true}
+policy:
+  share:
+    - {with: "type:minor", max: 0}
