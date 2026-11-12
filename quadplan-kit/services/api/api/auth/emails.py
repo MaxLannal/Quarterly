@@ -5,6 +5,7 @@ from __future__ import annotations
 import logging
 import re
 import smtplib
+import ssl
 import sys
 from dataclasses import dataclass, field
 from email.message import EmailMessage
@@ -79,7 +80,7 @@ def render_body(message: OutgoingEmail) -> str:
 
 
 class SmtpEmailBackend:
-    """Any transactional provider's SMTP endpoint (STARTTLS)."""
+    """Any transactional provider's SMTP endpoint (STARTTLS, certificate verified)."""
 
     def __init__(self, settings: Settings) -> None:
         self._settings = settings
@@ -93,7 +94,7 @@ class SmtpEmailBackend:
         mail.set_content(render_body(message))
         try:
             with smtplib.SMTP(s.smtp_host, s.smtp_port, timeout=10) as smtp:
-                smtp.starttls()
+                smtp.starttls(context=ssl.create_default_context())
                 if s.smtp_username:
                     smtp.login(s.smtp_username, s.smtp_password.get_secret_value())
                 smtp.send_message(mail)

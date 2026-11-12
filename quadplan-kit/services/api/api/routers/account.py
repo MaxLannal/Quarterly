@@ -30,7 +30,8 @@ def _confirm_password(store: Store, account: Account, password: str) -> None:
     """Re-authentication for sensitive actions, with its own per-account failure limit."""
     subject = "account:" + subject_hash("account", str(account.id))
     PASSWORD_FAILURES.check(store, subject)
-    if not verify_password(account.password_hash, password):
+    # The frozen schemas put no length cap on these fields; do not hash huge inputs.
+    if len(password) > 256 or not verify_password(account.password_hash, password):
         PASSWORD_FAILURES.record(store, subject)
         raise HTTPException(status_code=403, detail="That password is wrong.")
 

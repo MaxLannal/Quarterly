@@ -3,10 +3,17 @@ backend, rate-limit counters and the production settings check."""
 
 import io
 import logging
+from typing import Any
 
 import fakeredis
 import pytest
-from api.auth.emails import ConsoleEmailBackend, OutgoingEmail, normalize_uchicago_email
+from api.auth import emails
+from api.auth.emails import (
+    ConsoleEmailBackend,
+    OutgoingEmail,
+    SmtpEmailBackend,
+    normalize_uchicago_email,
+)
 from api.auth.hashing import author_ref
 from api.auth.passwords import hash_password, verify_password
 from api.auth.ratelimit import HOUR, Limit
@@ -155,6 +162,54 @@ def test_console_backend_prints_code_and_pending_id_but_never_the_address(
     assert "424242" in out.out and "pend-123" in out.out
     assert "student" not in out.out + out.err and "@" not in out.out + out.err
     assert "student" not in repr(message)
+
+
+def test_smtp_backend_sends_a_minimal_message_and_logs_failures_without_the_address(
+    monkeypatch: pytest.MonkeyPatch, caplog: pytest.LogCaptureFixture
+) -> None:
+    sent: list[Any] = []
+
+    class FakeSmtp:
+        fail = False
+
+        def __init__(self, host: str, port: int, timeout: int) -> None:
+            self.tls = False
+
+        def __enter__(self) -> "FakeSmtp":
+            return self
+
+        def __exit__(self, *exc: object) -> None:
+            return None
+
+        def starttls(self, context: Any) -> None:
+            assert context.verify_mode.name == "CERT_REQUIRED"
+            self.tls = True
+
+        def login(self, user: str, password: str) -> None:
+            raise AssertionError("no username configured")
+
+        def send_message(self, mail: Any) -> None:
+            assert self.tls
+            if FakeSmtp.fail:
+                raise emails.smtplib.SMTPRecipientsRefused({mail["To"]: (550, b"no such user")})
+            sent.append(mail)
+
+    monkeypatch.setattr(emails.smtplib, "SMTP", FakeSmtp)
+    backend = SmtpEmailBackend(Settings(_env_file=None))
+    message = OutgoingEmail(
+        to="student@uchicago.edu", kind="signup_code", pending_id="pend-123", code="424242"
+    )
+    backend.send(message)
+    (mail,) = sent
+    assert mail["To"] == "student@uchicago.edu" and "code" in mail["Subject"]
+    assert mail.get_content().strip() == (
+        "Your Quarterly verification code is 424242. It expires in 10 minutes."
+    )
+    FakeSmtp.fail = True
+    with caplog.at_level(logging.ERROR):
+        backend.send(message)  # does not raise
+    assert "SMTPRecipientsRefused" in caplog.text
+    assert "student" not in caplog.text and "424242" not in caplog.text
 
 
 # ------------------------------------------------------------------------------- passwords
