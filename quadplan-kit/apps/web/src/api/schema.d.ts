@@ -1912,8 +1912,17 @@ export interface components {
         /**
          * MaxFrom
          * @description At most `n` of the node's courses may match `selector` ("at most 2 from outside CMSC").
+         *
+         *     With `as_enrolled`, a course counts only when the code the student enrolled under matches
+         *     the selector's subject, number range and tags: a course cross-listed as CMSC 23500 /
+         *     CMSC 33550 and taken as CMSC 33550 is not "from the 20000 level".
          */
         MaxFrom: {
+            /**
+             * As Enrolled
+             * @default false
+             */
+            as_enrolled: boolean;
             /** N */
             n: number;
             selector: components["schemas"]["Selector"];

@@ -1,6 +1,6 @@
 [project]
 name = "planner-core"
-version = "0.1.0"
+version = "0.1.1"
 description = "Trusted core: requirements DSL, verifier V01-V12, CP-SAT model, certificate checker. No I/O."
 requires-python = ">=3.12,<3.13"
 dependencies = ["pydantic>=2.9,<3", "ortools>=9.11"]

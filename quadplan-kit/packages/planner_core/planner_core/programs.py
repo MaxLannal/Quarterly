@@ -10,7 +10,10 @@ How codes are assigned:
   the shared courses, and the program that declares the limit also gets a V07 error at its
   root: it is complete only on paper. `requires` / `excludes` between programs are V08 too.
 - V12: a course taken Pass/Fail never counts toward a node that forbids it. It is an error
-  only where the plan relies on it: the course would fit a requirement that is still unmet.
+  only where the plan relies on it: the course would fit a requirement that is still unmet,
+  or the program is unmet but would be met if its Pass/Fail courses had letter grades (the
+  solver may have filled the course's own requirement with another course and left a
+  different one open; the second test finds the course whatever the solver picked).
 
 Progress shown for an unmet unit is tentative (eligible courses not used elsewhere in the
 program, chosen greedily); only the solver's assignments enter the certificate.
@@ -131,6 +134,7 @@ def check_programs(
             walker.walk(c.program.rules, pid)
             out.v07 += walker.issues
             out.v12 += walker.pass_fail_issues()
+            out.v12 += _relied_on_pass_fail(c, out.v12, facts, idx, rules.college, time_limit_s)
         elif pid in out.blocked:
             out.v07.append(
                 Issue(
@@ -143,6 +147,44 @@ def check_programs(
                 )
             )
     return out
+
+
+def _pass_fail_issue(taken: Taken, unit: Unit) -> Issue:
+    return Issue(
+        code="V12",
+        level="error",
+        message=f"{taken.code} is taken Pass/Fail, so it cannot count toward "
+        f"{unit.label or unit.path}, which requires a letter grade.",
+        course_ids=[taken.code],
+        term_ids=[taken.term] if taken.term else [],
+        node_id=unit.path,
+        fix_hints=[f"Take {taken.code} for a letter grade."],
+    )
+
+
+def _relied_on_pass_fail(
+    compiled: Compiled,
+    known: list[Issue],
+    facts: PlanFacts,
+    idx: Index,
+    college: CollegePolicy | None,
+    time_limit_s: float,
+) -> list[Issue]:
+    """V12 for an unmet program that would be met if its Pass/Fail courses had letter grades:
+    one issue per Pass/Fail course that the "what if" assignment puts where it is forbidden."""
+    if not any(unit.blocked_pass_fail for unit in compiled.units.values()):
+        return []
+    what_if = compile_program(compiled.program, facts, idx, count_pass_fail=True)
+    sol = solve([what_if], facts, idx, college, time_limit_s=time_limit_s, exact_only=True)
+    if not sol.satisfied.get(compiled.program.id, False):
+        return []
+    seen = {(issue.node_id, code) for issue in known for code in issue.course_ids}
+    return [
+        _pass_fail_issue(taken, unit)
+        for path, unit in compiled.units.items()
+        for taken in sol.assignments.get(path, [])
+        if taken in unit.blocked_pass_fail and (path, taken.code) not in seen
+    ]
 
 
 def _relations(plan: PlanState, programs: list[ProgramRules]) -> list[Issue]:
@@ -199,7 +241,7 @@ def _tentative(compiled: Compiled, sol: Solution, idx: Index) -> dict[str, list[
         if _unit_satisfied(compiled, path, sol):
             shown[path] = sol.assignments.get(path, [])
             continue
-        pool = [t for t in unit.eligible if unit.double_count or t.key not in used]
+        pool = [t for t in unit.eligible if unit.double_count or t.uid not in used]
         if path in same_sequence:
             sequences = idx.sequences(selectors_below(compiled, same_sequence[path]))
             groups = [[t for t in pool if t.key in members] for members in sequences.values()]
@@ -213,7 +255,7 @@ def _tentative(compiled: Compiled, sol: Solution, idx: Index) -> dict[str, list[
                 room[parent] -= min(cap, len(pool))
         shown[path] = pool[:cap]
         if not unit.double_count:
-            used |= {t.key for t in shown[path]}
+            used |= {t.uid for t in shown[path]}
     return shown
 
 
@@ -310,7 +352,8 @@ def describe_constraints(c: Constraints, unit: Unit | None = None) -> str:
     if c.in_order:
         notes.append("taken in order")
     for limit in c.max_from:
-        notes.append(f"at most {limit.n} from {describe_selector(limit.selector)}")
+        how = " (by the code enrolled under)" if limit.as_enrolled else ""
+        notes.append(f"at most {limit.n} from {describe_selector(limit.selector)}{how}")
     if c.distinct_subjects:
         notes.append(f"from at least {c.distinct_subjects} subjects")
     if unit is not None and unit.no_pass_fail:
@@ -444,19 +487,7 @@ class _Unmet:
         issues: list[Issue] = []
         for path in self.unmet_units:
             unit = self.c.units[path]
-            for taken in unit.blocked_pass_fail:
-                issues.append(
-                    Issue(
-                        code="V12",
-                        level="error",
-                        message=f"{taken.code} is taken Pass/Fail, so it cannot count toward "
-                        f"{unit.label or path}, which requires a letter grade.",
-                        course_ids=[taken.code],
-                        term_ids=[taken.term] if taken.term else [],
-                        node_id=path,
-                        fix_hints=[f"Take {taken.code} for a letter grade."],
-                    )
-                )
+            issues += [_pass_fail_issue(taken, unit) for taken in unit.blocked_pass_fail]
         return issues
 
 

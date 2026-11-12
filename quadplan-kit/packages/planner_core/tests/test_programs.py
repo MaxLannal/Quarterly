@@ -4,6 +4,8 @@ from typing import Any
 
 from core_support import T, catalog, course, error_codes, found, plan, program, ruleset
 from planner_core import check_certificate, verify
+from planner_core.certificate import certificate_problems
+from planner_core.hashing import program_key, rules_hash
 from planner_core.models import Catalog, PlanState, Report, RuleSet, VerifyOptions
 
 OPTS = VerifyOptions(checks=["V01", "V02", "V03", "V07", "V08", "V12"])
@@ -634,3 +636,151 @@ def test_solver_time_limit_is_reported_not_guessed(monkeypatch: Any) -> None:
     monkeypatch.setattr(programs_module, "solve", feasible)
     report = verify(p, ruleset(two("fake-ba")), BASE, OPTS)
     assert report.status == "valid" and "work limit" in report.assumptions[0]
+
+
+# ------------------------------------------------------------------- M1 integration fixes
+
+
+def test_max_from_as_enrolled_counts_the_code_the_student_enrolled_under() -> None:
+    """A level cap ("at most one from the 20000 level") on a course cross-listed at two
+    levels: with `as_enrolled` only the code as written in the plan counts."""
+    level = {"subject": "FAKE", "number_range": [20000, 29999]}
+
+    def capped(**limit: Any) -> RuleSet:
+        cap = {"selector": level, "n": 1, **limit}
+        pick = {"count": 2, "from": {"union": [{"subject": "FAKE"}, {"subject": "FKE"}]}}
+        return ruleset(program("p", {"select": pick, "constraints": {"max_from": cap}}))
+
+    upper = plan({T[0]: ["FAKE 20100", "FKE 30000"]}, programs=["p"])  # cross-listed, as FKE
+    lower = plan({T[0]: ["FAKE 20100", "FAKE 20000"]}, programs=["p"])  # the same course, as FAKE
+    # default: a cross-listed code matches wherever its partner does, so both plans break the cap
+    assert error_codes(run(upper, capped(), BASE)) == {"V07"}
+    assert error_codes(run(lower, capped(), BASE)) == {"V07"}
+    # as_enrolled: FKE 30000 is not "from FAKE 20000-29999"; FAKE 20000 still is
+    enrolled = capped(as_enrolled=True)
+    report = run(upper, enrolled, BASE)
+    assert report.status == "valid" and assigned(report)["p"] == ["FAKE 20100", "FKE 30000"]
+    issue = found(run(lower, enrolled, BASE), "V07")[0]
+    assert "at most 1 from FAKE 20000-29999 (by the code enrolled under)" in issue.message
+    # the checker applies the same reading: the certificate of `upper` does not fit `lower`
+    cert = report.certificate.model_copy(deep=True)  # type: ignore[union-attr]
+    cert.plan_hash = verify(lower, enrolled, BASE, OPTS).plan_hash
+    cert.assignments[0].courses = ["FAKE 20100", "FAKE 20000"]
+    assert not check_certificate(lower, enrolled, BASE, cert)
+    # a union limit looks inside its sub-selectors for the code as written
+    either = {"union": [level, {"subject": "MATH"}]}
+    rules = ruleset(
+        program(
+            "p",
+            {
+                "select": {"count": 2, "from": {"number_range": [20000, 39999]}},
+                "constraints": {"max_from": {"selector": either, "n": 1, "as_enrolled": True}},
+            },
+        )
+    )
+    assert run(upper, rules, BASE).status == "valid"
+    assert error_codes(run(lower, rules, BASE)) == {"V07"}
+    both = plan({T[0]: ["FAKE 20100", "MATH 20000"]}, programs=["p"])
+    assert error_codes(run(both, rules, BASE)) == {"V07"}
+
+
+REPEAT = catalog(["FAKE 10000", course("SEMR 19100", repeatable=True, units=0), "SEMR 19200"])
+
+
+def test_each_enrolment_of_a_repeatable_course_counts() -> None:
+    """A "two-quarter series" under one course number: `count: 2` from that one code."""
+    series = {"id": "series", "select": {"count": 2, "from": {"codes": ["SEMR 19100"]}}}
+    rules = ruleset(program("p", series))
+    once = plan({T[0]: ["SEMR 19100"]}, programs=["p"])
+    report = run(once, rules, REPEAT)
+    assert error_codes(report) == {"V07"} and progress(report)["p"] == (False, 1, 2)
+    twice = plan({T[0]: ["SEMR 19100"], T[1]: ["SEMR 19100"]}, programs=["p"])
+    report = run(twice, rules, REPEAT)
+    assert report.status == "valid" and assigned(report)["p"] == ["SEMR 19100", "SEMR 19100"]
+    # the checker needs as many enrolments as the certificate lists
+    cert = report.certificate.model_copy(deep=True)  # type: ignore[union-attr]
+    cert.plan_hash = verify(once, rules, REPEAT, OPTS).plan_hash
+    assert not check_certificate(once, rules, REPEAT, cert)
+    # a course that is not repeatable still counts once (and V02 reports the duplicate)
+    other = ruleset(program("p", {"select": {"count": 2, "from": {"codes": ["SEMR 19200"]}}}))
+    dup = plan({T[0]: ["SEMR 19200"], T[1]: ["SEMR 19200"]}, programs=["p"])
+    assert error_codes(run(dup, other, REPEAT)) == {"V02", "V07"}
+
+
+def test_repeat_enrolments_count_in_order_and_one_unit_each() -> None:
+    graded = {
+        "group": {
+            "all": True,
+            "children": [
+                {"id": "a", "slot": {"any_of": ["SEMR 19100"]}},
+                {"id": "b", "slot": {"any_of": ["SEMR 19100"]}},
+            ],
+        },
+        "constraints": {"no_pass_fail": True},
+    }
+    rules = ruleset(program("p", graded))
+    # two slots cannot be filled by two enrolments: the second counts only where the first does
+    twice = plan({T[0]: ["SEMR 19100"], T[1]: ["SEMR 19100"]}, programs=["p"])
+    report = run(twice, rules, REPEAT)
+    assert error_codes(report) == {"V07"}
+    # the checker agrees: one enrolment listed in both slots fills two units
+    shared = {**graded, "constraints": {"no_pass_fail": True, "allow_double_count": True}}
+    loose = ruleset(program("p", shared))
+    cert = run(twice, loose, REPEAT).certificate.model_copy(deep=True)  # type: ignore[union-attr]
+    assert {a.node: a.courses for a in cert.assignments} == {
+        "p/a": ["SEMR 19100"],
+        "p/b": ["SEMR 19100"],
+    }
+    cert.rules = {program_key(p): rules_hash(p) for p in rules.programs}
+    assert "SEMR 19100 fills 2 units of p" in certificate_problems(twice, rules, REPEAT, cert)
+    # a second enrolment does not make up for a first one taken Pass/Fail
+    series = {"select": {"count": 1, "from": {"codes": ["SEMR 19100"]}}}
+    strict = ruleset(program("p", {**series, "constraints": {"no_pass_fail": True}}))
+    mixed = plan(
+        {T[0]: [{"course": "SEMR 19100", "grading": "pass_fail"}], T[1]: ["SEMR 19100"]},
+        programs=["p"],
+    )
+    assert error_codes(run(mixed, strict, REPEAT)) == {"V07", "V12"}
+
+
+def test_v12_when_the_solver_fills_the_pass_fail_courses_slot_with_another_course() -> None:
+    """Golden cmsc-bxms-2/fail-03: Algorithms taken Pass/Fail while the major's algorithms
+    course is in the plan. The solver may put that course in the slot and leave another
+    requirement open; the plan still relies on the Pass/Fail course."""
+    rules = ruleset(
+        program(
+            "p",
+            {
+                "group": {
+                    "all": True,
+                    "children": [
+                        {
+                            "id": "alg",
+                            "label": "Algorithms",
+                            "weight": 5,
+                            "slot": {"any_of": ["MATH 20000", "FAKE 20100"]},
+                        },
+                        {"id": "sys", "select": {"count": 2, "from": {"subject": "FAKE"}}},
+                    ],
+                },
+                "constraints": {"no_pass_fail": True},
+            },
+        )
+    )
+    pass_fail = {"course": "MATH 20000", "grading": "pass_fail"}
+    items: list[Any] = [pass_fail, "FAKE 20100", "FAKE 20200"]
+    report = run(plan({T[0]: items}, programs=["p"]), rules, BASE)
+    assert error_codes(report) == {"V07", "V12"}
+    assert [i.node_id for i in found(report, "V07")] == ["p/sys"]  # the slot itself is filled
+    (v12,) = found(report, "V12")
+    assert (v12.node_id, v12.course_ids) == ("p/alg", ["MATH 20000"])
+    assert "cannot count toward Algorithms" in v12.message
+    # for a letter grade the same plan is valid
+    letter = plan({T[0]: ["MATH 20000", "FAKE 20100", "FAKE 20200"]}, programs=["p"])
+    assert run(letter, rules, BASE).status == "valid"
+    # no V12 when letter grades would not complete the program either
+    short = plan({T[0]: [pass_fail, "FAKE 20100"]}, programs=["p"])
+    assert error_codes(run(short, rules, BASE)) == {"V07"}
+    # and a Pass/Fail course that fits the open requirement itself is reported once
+    open_slot = plan({T[0]: [pass_fail, "FAKE 20200", "FAKE 20300"]}, programs=["p"])
+    assert [i.node_id for i in found(run(open_slot, rules, BASE), "V12")] == ["p/alg"]

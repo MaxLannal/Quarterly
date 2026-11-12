@@ -2931,8 +2931,13 @@
       },
       "MaxFrom": {
         "additionalProperties": false,
-        "description": "At most `n` of the node's courses may match `selector` (\"at most 2 from outside CMSC\").",
+        "description": "At most `n` of the node's courses may match `selector` (\"at most 2 from outside CMSC\").\n\nWith `as_enrolled`, a course counts only when the code the student enrolled under matches\nthe selector's subject, number range and tags: a course cross-listed as CMSC 23500 /\nCMSC 33550 and taken as CMSC 33550 is not \"from the 20000 level\".",
         "properties": {
+          "as_enrolled": {
+            "default": false,
+            "title": "As Enrolled",
+            "type": "boolean"
+          },
           "n": {
             "minimum": 0.0,
             "title": "N",

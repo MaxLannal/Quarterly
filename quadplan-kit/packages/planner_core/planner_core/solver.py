@@ -19,6 +19,8 @@ Node semantics:
   node is satisfied only if its courses span n subjects (the subject of the code as written
   in the plan).
 - Within a program a course fills at most one unit, except units with `allow_double_count`.
+  Each enrolment of a repeatable course is a course of its own (`Taken.uid`), and the n-th
+  enrolment may be used in a unit only if the (n-1)-th is used there too.
 - Share limit m between P and Q: `sum z[c] <= m + over` with `z[c] >= y[c, P] + y[c, Q] - 1`,
   where `y` leaves out units named in the limit's `except` and `over >= 0` is penalized.
   A solution with `over > 0` breaks the limit; the verifier reports it as V08.
@@ -48,7 +50,7 @@ outputs.
 from __future__ import annotations
 
 from collections.abc import Callable
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from fractions import Fraction
 from typing import Any
 
@@ -92,7 +94,7 @@ class Solution:
         found: dict[str, Taken] = {}
         for path in compiled.units:
             for taken in self.assignments.get(path, []):
-                found[taken.key] = taken
+                found[taken.uid] = taken
         return found
 
 
@@ -146,8 +148,12 @@ class _Model:
     def vars_for(self, compiled: Compiled, path: str) -> dict[str, Any]:
         unit = compiled.units[path]
         pool = [t for t in unit.eligible if self.allowed is None or self.allowed(t)]
-        self.x[path] = {t.key: self.bool() for t in pool}
-        return self.x[path]
+        xs = self.x[path] = {t.uid: self.bool() for t in pool}
+        for taken in pool:  # enrolments of a repeatable course count in order within a unit
+            if taken.nth > 1:
+                earlier = xs.get(replace(taken, nth=taken.nth - 1).uid, 0)
+                self.model.add(xs[taken.uid] <= earlier)
+        return xs
 
     def node(self, compiled: Compiled, node: AnyNode, path: str, active: Any) -> Any:
         """Add the node's constraints; returns its satisfaction variable, or None when the
@@ -178,7 +184,7 @@ class _Model:
             s = self._bounded(compiled, node, path)
         else:
             unit = compiled.units[path]
-            units = {t.key: t.units for t in unit.eligible}
+            units = {t.uid: t.units for t in unit.eligible}
             xs = self.vars_for(compiled, path)
             if unit.need_units is None and len(xs) >= unit.need:
                 s = self.bool()
@@ -213,7 +219,7 @@ class _Model:
         by_key: dict[str, list[Any]] = {}
         for part in node.parts:
             unit = compiled.units[f"{path}/{part.id}"]
-            units = {t.key: t.units for t in unit.eligible}
+            units = {t.uid: t.units for t in unit.eligible}
             xs = parts[part.id]
             count = sum(xs.values())
             m.add(count >= part.count[0] * s)
@@ -270,9 +276,7 @@ class _Model:
                     if out_of_order(a, b):
                         m.add_at_most_one([var_a, var_b])
         for limit in c.max_from:
-            m.add(
-                sum(var for t, var in pairs if self.idx.matches(limit.selector, t.code)) <= limit.n
-            )
+            m.add(sum(var for t, var in pairs if self.idx.counts(limit, t.code)) <= limit.n)
         owner = self.s.get(scope.owner)
         if c.distinct_subjects is not None and owner is not None:
             by_subject: dict[str, list[Any]] = {}
@@ -319,14 +323,28 @@ def solve(
     *,
     time_limit_s: float = 2.0,
     allowed: Callable[[Taken], bool] | None = None,
+    exact_only: bool = False,
 ) -> Solution:
     """Solve the assignment for the given programs. `allowed` restricts which plan courses
-    may be used (the timing check re-solves with on-time courses only)."""
+    may be used (the timing check re-solves with on-time courses only). `exact_only` skips
+    the best-effort solve: when the programs cannot all be satisfied the answer is an empty
+    Solution (nothing satisfied), for callers that only ask "can they be?"."""
     if not programs:
         return Solution()
-    exact = _solve(programs, facts, idx, college, allowed, time_limit_s, require_roots=True)
+    exact = _solve(
+        programs,
+        facts,
+        idx,
+        college,
+        allowed,
+        time_limit_s,
+        require_roots=True,
+        exact_only=exact_only,
+    )
     if exact is not None:
         return exact
+    if exact_only:
+        return Solution()
     best = _solve(programs, facts, idx, college, allowed, time_limit_s, require_roots=False)
     assert best is not None
     return best
@@ -341,6 +359,7 @@ def _solve(
     time_limit_s: float,
     *,
     require_roots: bool,
+    exact_only: bool = False,
 ) -> Solution | None:
     """One CP-SAT solve. With `require_roots` it returns None when the solver proves that
     not every program can be satisfied (the caller then runs the best-effort solve). A solve
@@ -351,6 +370,8 @@ def _solve(
         b.program(compiled)
     roots = [b.s[c.program.id] for c in programs]
     if any(root is None for root in roots):
+        if exact_only:
+            return None
         require_roots = False  # some program cannot be satisfied: go straight to best effort
     for root in roots if require_roots else []:
         m.add(root == 1)
@@ -425,7 +446,7 @@ def _solve(
     out.residency_ok = {p: solver.boolean_value(flag) for p, flag in residency.items()}
     for p, q, most, skip in limits:
         in_q = {
-            t.key
+            t.uid
             for path in q.units
             if not excepted(path, list(skip))
             for t in out.assignments.get(path, [])
@@ -436,7 +457,7 @@ def _solve(
                 for path in p.units
                 if not excepted(path, list(skip))
                 for t in out.assignments.get(path, [])
-                if t.key in in_q
+                if t.uid in in_q
             }
         )
         if len(shared) > most:

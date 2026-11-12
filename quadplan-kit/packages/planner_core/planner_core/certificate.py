@@ -8,7 +8,8 @@ A certificate is accepted when all of this holds:
     the hashes of the rules given here.
  2. Every assigned course is in the plan, matches the selector of its unit (slot, select or
     bounded_parts part), is letter-graded and meets the grade minimum where the rules ask.
- 3. Within a program a course fills one unit only, unless the rule allows double counting.
+ 3. Within a program a course fills one unit only, unless the rule allows double counting
+    (a repeatable course listed n times in a unit stands for its first n enrolments).
  4. With these assignments every program's root node is satisfied: counts, units, part
     bounds and totals, group `all` / `n_of`, and the set constraints of every node.
  5. Every share limit between two of the plan's programs holds.
@@ -177,15 +178,17 @@ class _Tree:
     def keys(self, skip: list[str]) -> set[str]:
         """Courses used in the program, leaving out units a share limit excepts."""
         return {
-            t.key for path, used in self.units.items() if not excepted(path, skip) for t in used
+            t.uid for path, used in self.units.items() if not excepted(path, skip) for t in used
         }
 
     def unit(self, path: str, selector: Selector, rules: Constraints) -> list[Taken]:
         """The courses assigned to one unit, each checked against the plan and the selector."""
         used: list[Taken] = []
         for code in self.assigned.get(path, []):
-            taken = self.facts.taken.get(self.idx.canon(code))
-            if taken is None or taken in used:
+            key = self.idx.canon(code)
+            nth = 1 + sum(t.key == key for t in used)  # n-th listing = n-th enrolment
+            taken = self.facts.taken.get(key if nth == 1 else f"{key}#{nth}")
+            if taken is None:
                 self.problems.append(f"{path}: {code} is not in the plan, or is listed twice")
                 continue
             if not self.idx.matches(selector, code):
@@ -195,7 +198,7 @@ class _Tree:
             if not grade_ok(taken.grade, rules.min_grade):
                 self.problems.append(f"{path}: {code} is below the grade minimum")
             if not rules.allow_double_count:
-                self.single[taken.key] = self.single.get(taken.key, 0) + 1
+                self.single[taken.uid] = self.single.get(taken.uid, 0) + 1
             used.append(taken)
         self.units[path] = used
         return used
@@ -241,7 +244,7 @@ class _Tree:
                 ok = ok and self.holds(rules, mine, [part.from_])
                 used += mine
                 selectors.append(part.from_)
-            ok = ok and len({t.key for t in used}) == len(used)  # one part per course
+            ok = ok and len({t.uid for t in used}) == len(used)  # one part per course
             if node.total.courses is not None:
                 ok = ok and len(used) == node.total.courses
             else:
@@ -257,7 +260,7 @@ class _Tree:
         if rules.in_order and any(out_of_order(a, b) for a in used for b in used):
             return False
         for limit in rules.max_from:
-            if sum(self.idx.matches(limit.selector, t.code) for t in used) > limit.n:
+            if sum(self.idx.counts(limit, t.code) for t in used) > limit.n:
                 return False
         subjects = {t.code.split(" ")[0] for t in used}
         return rules.distinct_subjects is None or len(subjects) >= rules.distinct_subjects

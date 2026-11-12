@@ -208,10 +208,15 @@ class Selector(Model):
 
 
 class MaxFrom(Model):
-    """At most `n` of the node's courses may match `selector` ("at most 2 from outside CMSC")."""
+    """At most `n` of the node's courses may match `selector` ("at most 2 from outside CMSC").
+
+    With `as_enrolled`, a course counts only when the code the student enrolled under matches
+    the selector's subject, number range and tags: a course cross-listed as CMSC 23500 /
+    CMSC 33550 and taken as CMSC 33550 is not "from the 20000 level"."""
 
     selector: Selector
     n: int = Field(ge=0)
+    as_enrolled: bool = False
 
 
 class Constraints(Model):

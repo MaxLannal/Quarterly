@@ -11,16 +11,20 @@ Semantics fixed here (see docs/CONTRACTS.md "Verifier semantics"):
   and deadlines (`alts`), but not for selectors: selectors match on cross-list groups only.
 - Enrolled statuses (planned, in_progress, completed) carry quarter load and count as units
   "by enrollment" and "in residence"; transfer and exam items and `credits` do not.
+- Each enrolment of a `repeatable` course is a course of its own for program requirements
+  (`Taken.uid`); for everything else (prerequisites, relations, sequences) it is the one
+  course `Taken.key`. A course that is not repeatable counts once, at its earliest record.
 """
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 
 from planner_core.models import (
     AttributeValue,
     Catalog,
     Course,
+    MaxFrom,
     PlanItem,
     PlanState,
     Requisite,
@@ -198,6 +202,20 @@ class Index:
             return False
         return any(self._member_matches(selector, member) for member in group)
 
+    def matches_enrolled(self, selector: Selector, code: str) -> bool:
+        """`matches`, and the code as written in the plan itself meets the selector's subject,
+        number range and tags (cross-listed partners are not looked at). Used by `max_from`
+        limits that set `as_enrolled`."""
+        if not self.matches(selector, code) or not self._member_matches(selector, code):
+            return False
+        return not selector.union or any(self.matches_enrolled(s, code) for s in selector.union)
+
+    def counts(self, limit: MaxFrom, code: str) -> bool:
+        """Does a course taken as `code` count toward a `max_from` limit?"""
+        if limit.as_enrolled:
+            return self.matches_enrolled(limit.selector, code)
+        return self.matches(limit.selector, code)
+
     def _member_matches(self, selector: Selector, code: str) -> bool:
         subject, number = code.split(" ")
         if selector.subject is not None and subject != selector.subject:
@@ -280,6 +298,13 @@ class Taken:
     units: int
     grading: str = "letter"
     grade: str | None = None
+    #: 1 for the first record of the course; 2, 3, ... for later enrolments of a repeatable one.
+    nth: int = 1
+
+    @property
+    def uid(self) -> str:
+        """Identity for program requirements: the key, or `KEY#n` for the n-th enrolment."""
+        return self.key if self.nth == 1 else f"{self.key}#{self.nth}"
 
     @property
     def enrolled(self) -> bool:
@@ -325,11 +350,20 @@ class PlanFacts:
             if c.maps_to is not None
         ]
         self.placeholders: list[PlanItem] = [i for i in plan.items if i.course is None]
-        #: Earliest occurrence of each known course (credits first).
+        #: `uid` -> record, for every known course: its earliest record under its key
+        #: (credits first), and later enrolments of a repeatable course under `KEY#n`.
         self.taken: dict[str, Taken] = {}
+        seen: dict[str, int] = {}
         for taken in [*self.credits, *self.items]:
-            if idx.known(taken.code):
-                self.taken.setdefault(taken.key, taken)
+            course = idx.course(taken.code)
+            if course is None:
+                continue
+            seen[taken.key] = seen.get(taken.key, 0) + 1
+            if seen[taken.key] == 1:
+                self.taken[taken.key] = taken
+            elif course.repeatable:
+                again = replace(taken, nth=seen[taken.key])
+                self.taken[again.uid] = again
         #: Load-bearing course items per term (enrolled statuses only).
         self.by_term: dict[str, list[Taken]] = {}
         #: Units per term: enrolled course items plus placeholders.

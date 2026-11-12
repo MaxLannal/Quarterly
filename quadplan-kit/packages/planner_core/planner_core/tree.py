@@ -80,7 +80,12 @@ def has_set_constraints(c: Constraints) -> bool:
     return bool(c.same_sequence or c.in_order or c.max_from or c.distinct_subjects)
 
 
-def compile_program(program: ProgramRules, facts: PlanFacts, idx: Index) -> Compiled:
+def compile_program(
+    program: ProgramRules, facts: PlanFacts, idx: Index, *, count_pass_fail: bool = False
+) -> Compiled:
+    """`count_pass_fail` keeps Pass/Fail courses eligible where they are forbidden: the
+    "what if they were taken for a letter grade" tree V12 uses, never the one that is solved
+    for the report or the certificate."""
     out = Compiled(program=program)
 
     def unit(path: str, node: SlotNode | SelectNode | Part, inherited: Constraints) -> None:
@@ -109,12 +114,15 @@ def compile_program(program: ProgramRules, facts: PlanFacts, idx: Index) -> Comp
         for taken in _candidates(selector, facts, idx):
             if not idx.matches(selector, taken.code):
                 continue
-            if made.no_pass_fail and taken.grading == "pass_fail":
+            blocked = made.no_pass_fail and taken.grading == "pass_fail"
+            if blocked:
                 made.blocked_pass_fail.append(taken)
-            elif not grade_ok(taken.grade, made.min_grade):
-                made.blocked_grade.append(taken)
-            else:
+            if blocked and not count_pass_fail:
+                continue
+            if blocked or grade_ok(taken.grade, made.min_grade):
                 made.eligible.append(taken)
+            else:
+                made.blocked_grade.append(taken)
         out.units[path] = made
         out.below[path] = [path]
         if has_set_constraints(own):
@@ -157,7 +165,7 @@ def _candidates(selector: Selector, facts: PlanFacts, idx: Index) -> list[Taken]
         keys = idx.list_members(selector.list_)
     if keys is None:
         return list(facts.taken.values())
-    return [facts.taken[k] for k in sorted(keys) if k in facts.taken]
+    return sorted((t for t in facts.taken.values() if t.key in keys), key=lambda t: t.uid)
 
 
 def selectors_below(compiled: Compiled, scope: Scope) -> list[Selector]:
