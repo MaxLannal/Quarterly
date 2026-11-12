@@ -1,8 +1,9 @@
 # Golden plan (prompt 05). Course facts: data/seed/2026-27; rules: data/seed/REVIEW.md.
 id: cmsc-bxms-1-fail-05
-description: Major and MS share three courses (discrete, algorithms and ML from the major) (Only CMSC 27100/27200 and 25300/25400
-  from the major can fill discrete, algorithms and ML, so at least three courses are shared; the same three are 20000-level,
-  so V07 may appear too.)
+description: 'Major and MS share three courses: discrete (CMSC 27100), algorithms (CMSC 27200) and machine learning (CMSC
+  35300, cross-listed with CMSC 25300). The major has no spare course, so it needs all three; they are the only courses in
+  the plan that can fill the MS discrete, algorithms and ML requirements. Only two of the three are 20000-level as enrolled,
+  so the 20000-level cap holds and the share limit (at most two) is what fails.'
 program: cmsc-bxms-1
 expect: fail
 expected_codes:
@@ -43,7 +44,7 @@ plan:
     term: 2027-AU
   - course: CMSC 27200
     term: 2027-AU
-  - course: CMSC 25300
+  - course: CMSC 35300
     term: 2027-AU
   - course: CMSC 23000
     term: 2028-WI

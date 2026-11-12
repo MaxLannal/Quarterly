@@ -92,6 +92,7 @@ rules:
         - 20000
         - 29999
       n: 2
+      as_enrolled: true
   source:
     url: http://collegecatalog.uchicago.edu/thecollege/jointdegreecomsci/
     quote: 'The nine courses required for the MS degree under Option 2 are as follows: Discrete Mathematics (CMSC 27100, CMSC

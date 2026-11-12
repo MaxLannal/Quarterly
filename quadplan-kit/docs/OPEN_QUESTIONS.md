@@ -133,6 +133,7 @@ their quotes in `data/seed/REVIEW.md`. Numbered P05-n so parallel prompts do not
 - **P05-2. Group-level constraints.** `econ-ba/empirical` has `in_order`, and the three Bx/MS roots
   have `max_from` ("at most two courses from the 20000-level offerings"), on `group` nodes. Please
   confirm the verifier applies group-level constraints to all courses used under the group.
+  *(M1 integration: confirmed, it does. See M1-1 for how cross-listed courses count toward the cap.)*
 - **P05-3. Rules the DSL cannot express (left out):** "enrollment limited to first-year students"
   (a maximum standing; CHEM 10100/10200); "beyond their first year" for study abroad; HIST
   13500-13700 needs two *consecutive* quarters; Econ empirical methods "in consecutive quarters";
@@ -161,7 +162,8 @@ their quotes in `data/seed/REVIEW.md`. Numbered P05-n so parallel prompts do not
   study-abroad and proficiency routes are not plan items. Model them as `credits` that satisfy
   `core/language`, and seed every language's third quarter?
 - **P05-9. Writing Grey track.** HUMA 19100 is one course number taken in two quarters; it is marked
-  `repeatable` (the catalog says "two-quarter series", not "repeatable").
+  `repeatable` (the catalog says "two-quarter series", not "repeatable"). *(M1 integration: the
+  verifier now counts each enrolment of a repeatable course, see M1-2.)*
 - **P05-10. Computer Science.** BA electives must "span at least five curriculum areas", and areas and
   PhD Core/Elective designations are published only on course-info.cs.uchicago.edu, not in the
   catalog. Encoded: BA electives = any 8 CMSC 20000-29999 (breadth not checked); specialization lists
@@ -240,3 +242,36 @@ Verifier readings that are choices, not catalog facts. Each is implemented as st
     report says so. The benchmark instance (60 courses, 201 nodes, 3 programs) is proven optimal.
 11. **`VerifyOptions.strictness`.** `strict` currently only makes workload goals use the upper
     confidence bound. Should it also turn V04 / V10 warnings into errors?
+
+## M1 integration
+
+Decisions taken while making the nine failing golden plans pass. Each is implemented and tested;
+please confirm or overturn.
+
+- **M1-1. Level caps and cross-listed courses (`max_from.as_enrolled`).** The contract matches
+  selectors on cross-list groups, so "at most two courses from the 20000-level offerings" also
+  counted CMSC 33550 (cross-listed with CMSC 23500) and CMSC 33380 (with CMSC 23380). Under that
+  reading Bx/MS Option 3 cannot be satisfied at all from the seeded lists: it needs three Core
+  Systems courses and every course on the major's Systems list is a 20000-level number (the PhD and
+  MPCS Core Systems lists are not in the catalog, P05-11b). The prompt-05 golden plans assumed the
+  other reading: a course counts under the number the student enrolled in. Implemented as an
+  opt-in flag on the limit (`as_enrolled: true`, set on the three Bx/MS roots only, still
+  `needs_review`); every other `max_from` (e.g. the Economics ECMA / outside-elective caps) keeps the
+  stricter group reading. To confirm with the department: does a cross-listed course taken under
+  its 30000-level number escape the 20000-level cap? If not, Option 3 needs the PhD / MPCS Core
+  Systems lists before any plan can pass.
+- **M1-2. Repeatable courses count once per enrolment.** `core/writing/grey` is `count: 2` from the
+  single code HUMA 19100, which no plan could satisfy while a course counted once. Each enrolment
+  of a `repeatable` course is now a course of its own for program requirements (the n-th counts
+  only in the unit where the (n-1)-th does). This also lets CMSC 29700 / CMSC 29900 taken twice
+  count twice toward electives; the CS majors already cap each at one with `max_from`. Is "counts
+  once per enrolment" right for every repeatable course, or should the DSL say how often?
+- **M1-3. V12 when another course takes the Pass/Fail course's place.** `cmsc-bxms-2/fail-03`
+  (Algorithms CMSC 37000 taken Pass/Fail, CMSC 27200 also in the plan) reported only V07 on Core
+  Systems: the solver put CMSC 27200 in the Algorithms slot, which pushed the plan over the
+  20000-level cap elsewhere. V12 now also fires when the program is unmet but would be met if its
+  Pass/Fail courses had letter grades (checked for that program alone, share limits ignored).
+- **M1-4. A share-limit must-fail for Bx/MS Option 1 needs a 30000-level number.** Discrete,
+  Algorithms and ML taken as CMSC 27100 / 27200 / 25300 are three 20000-level courses, so the cap
+  (V07) fails before the share limit (V08) can. `cmsc-bxms-1/fail-05` now takes ML as CMSC 35300
+  (cross-listed with CMSC 25300, which the major needs), so exactly the share limit fails.
