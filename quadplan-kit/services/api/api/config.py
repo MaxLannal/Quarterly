@@ -1,6 +1,7 @@
 """Typed settings read from the environment (and `.env` for local runs)."""
 
 from functools import lru_cache
+from typing import Literal
 
 from pydantic import Field, SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -23,6 +24,36 @@ class Settings(BaseSettings):
     #: Serve program versions still in `review` (labelled by their status). Only `published`
     #: versions reach students in production; M1 seed data awaits Richard's review.
     show_unpublished_programs: bool = False
+
+    # Accounts (prompt 04)
+    #: Send the session cookie only over https. Turn off only for local http development.
+    session_cookie_secure: bool = True
+    session_ttl_seconds: int = 30 * 24 * 3600
+    #: "console" prints codes to stdout (development only); "smtp" uses the settings below.
+    email_backend: Literal["console", "smtp"] = "console"
+    email_from: str = "Quarterly <no-reply@localhost>"
+    smtp_host: str = "localhost"
+    smtp_port: int = 587
+    smtp_username: str = ""
+    smtp_password: SecretStr = SecretStr("")
+    #: Reverse proxies in front of the API that append the client address to X-Forwarded-For
+    #: (0 = use the socket address). Used for rate limiting only; addresses are never stored.
+    trusted_proxy_hops: int = 0
+
+    def production_problems(self) -> list[str]:
+        """Settings that are unsafe outside development (checked at start-up)."""
+        if self.environment != "production":
+            return []
+        problems = [
+            f"{name.upper()} still has its development value"
+            for name in ("server_hmac_key", "issuance_hmac_key", "session_secret")
+            if getattr(self, name).get_secret_value().startswith("dev-only-")
+        ]
+        if self.email_backend == "console":
+            problems.append("EMAIL_BACKEND=console would print verification codes")
+        if not self.session_cookie_secure:
+            problems.append("SESSION_COOKIE_SECURE must be true")
+        return problems
 
 
 @lru_cache
