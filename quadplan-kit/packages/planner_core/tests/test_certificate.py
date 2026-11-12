@@ -292,10 +292,15 @@ def test_verify_checked_enforces_the_hard_rule(monkeypatch: pytest.MonkeyPatch) 
         PLAN, RULES, CAT, OPTS.model_copy(update={"include_certificate": False})
     )
     assert hidden.status == "valid" and hidden.certificate is None
-    # a restricted run cannot prove validity
+    # a restricted run is still certified, because the certificate's own checks hold ...
     partial, _ = verify_checked(PLAN, RULES, CAT, VerifyOptions(checks=["V01", "V02"]))
-    assert partial.status == "warnings" and partial.certificate is None
-    assert "Partial check" in partial.issues[-1].message
+    assert partial.status == "valid" and partial.certificate is not None
+    # ... and never "valid" when a check it left out fails
+    gap, _ = verify_checked(plan(programs=["fake-ba"]), RULES, CAT, VerifyOptions(checks=["V01"]))
+    assert gap.status == "warnings" and gap.certificate is None
+    assert "Partial check" in gap.issues[-1].message
+    late = plan({T[0]: ["FAKE 10100", "FAKE 10000"]}, placements=["FAKE 20300"])
+    assert verify(late, RULES, CAT, VerifyOptions(checks=["V07"])).certificate is None
     # errors stay errors
     bad, _ = verify_checked(plan(programs=["fake-ba"]), RULES, CAT, OPTS)
     assert bad.status == "errors" and bad.certificate is None

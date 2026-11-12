@@ -8,9 +8,10 @@ What `verify` settles (details in docs/CONTRACTS.md "Verifier semantics"):
   plan that passes V07 has no V08 or V12 error.
 - `Report.status` is "errors" if any issue is an error, else "warnings" if any is a warning,
   else "valid". Info issues never change the status.
-- A certificate is attached only when it can be complete: no errors, V03 and V07 ran, every
-  listed program has rules and every hard goal holds. `verify` does not call the checker;
-  callers that show "Valid" use `verify_checked`, which does.
+- A certificate is attached only when it can be complete: no reported errors, prerequisites
+  and program requirements hold (they are evaluated for the certificate even when
+  `options.checks` leaves V03 or V07 out), every listed program has rules and every hard goal
+  holds. `verify` does not call the checker; callers that show "Valid" use `verify_checked`.
 - `Report.progress` and `Report.assumptions` are filled whatever the status, so a partial
   plan still shows how far it is.
 """
@@ -50,9 +51,6 @@ from planner_core.version import CORE_VERSION
 
 ALL_CHECKS = ("V01", "V02", "V03", "V04", "V05", "V06", "V07", "V08", "V09", "V10", "V11", "V12")
 GRADE_ASSUMPTION = "Courses without a recorded grade are assumed to meet grade minimums."
-#: The certificate attests prerequisites (V03) and program satisfaction (V07, with V08 and V12
-#: inside the model), so both checks must have run.
-CERTIFICATE_NEEDS = frozenset({"V03", "V07"})
 
 Status = Literal["valid", "warnings", "errors"]
 
@@ -82,11 +80,17 @@ def verify(
         issues += check_v01(plan, rules, catalog, facts, idx)
     if "V02" in run:
         issues += check_v02(facts, idx)
-    if "V03" in run:
+    # The certificate attests prerequisites and program satisfaction, so both are evaluated
+    # whenever a certificate is wanted; their issues are reported only if the check was asked.
+    wanted = options.include_certificate
+    prereqs_hold = False
+    if "V03" in run or wanted:
         found, witnesses, assumed = check_v03(facts, idx)
-        issues += found
-        if assumed:
-            assumptions.append(GRADE_ASSUMPTION)
+        prereqs_hold = not any(issue.level == "error" for issue in found)
+        if "V03" in run:
+            issues += found
+            if assumed:
+                assumptions.append(GRADE_ASSUMPTION)
     if "V04" in run:
         issues += check_v04(facts, idx)
     if college is None and run & {"V05", "V09", "V10"}:
@@ -102,7 +106,7 @@ def verify(
         issues += check_v06(facts, idx)
 
     result = ProgramsResult()
-    if run & {"V07", "V08", "V09", "V10", "V12"} or plan.goals:
+    if run & {"V07", "V08", "V09", "V10", "V12"} or plan.goals or wanted:
         result = check_programs(plan, rules, facts, idx, limit)
         assumptions += result.assumptions
         for code, found in (("V07", result.v07), ("V08", result.v08), ("V12", result.v12)):
@@ -135,9 +139,11 @@ def verify(
     status = _status(issues)
     programs = plan_programs(plan, rules)
     certifiable = (
-        options.include_certificate
+        wanted
         and status != "errors"
-        and run >= CERTIFICATE_NEEDS
+        and prereqs_hold
+        and not result.v07
+        and not result.v08
         and len(programs) == len({p.program_id for p in plan.programs})
         and all(o.result.pass_ for goal, o in zip(plan.goals, outcomes, strict=True) if goal.hard)
     )
@@ -172,8 +178,9 @@ def verify_checked(
 
     - The certificate is rejected: it is dropped, the status becomes "errors", a V07 error
       explains it, and the problems are returned so the caller can raise an alert.
-    - No certificate and no errors (a restricted `checks` run): the status is downgraded to
-      "warnings" with a note, because a partial run proves nothing about validity.
+    - No certificate and no reported errors (a restricted `checks` run that hides a failed
+      prerequisite or program requirement): the status is downgraded to "warnings" with a
+      note, because such a run proves nothing about validity.
     - `include_certificate=False` only hides the certificate; it is still built and checked."""
     options = options or VerifyOptions()
     report = verify(plan, rules, catalog, options.model_copy(update={"include_certificate": True}))
@@ -193,8 +200,9 @@ def verify_checked(
         extra = Issue(
             code="V07",
             level="warning",
-            message="Partial check: prerequisites (V03) and program requirements (V07) must "
-            "both run and pass before a plan can be shown as valid.",
+            message="Partial check: the plan could not be certified, because prerequisites "
+            "(V03) or program requirements (V07, V08) outside the requested checks do not hold.",
+            fix_hints=["Run all checks to see what is missing."],
         )
     updates: dict[str, object] = {}
     if extra is not None:

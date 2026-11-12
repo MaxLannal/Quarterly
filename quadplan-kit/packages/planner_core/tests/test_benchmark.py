@@ -138,7 +138,7 @@ def test_benchmark_60_courses_200_nodes_3_programs() -> None:
     # the unmet set is proven minimal (no work-limit note)
     short = p.model_copy(update={"items": p.items[:50]})
     report, ms = timed(short, rules, cat)
-    BENCHMARK["verify, 50 of the 60 courses, unsatisfied (two solves)"] = ms
+    BENCHMARK["verify, 50 of the 60 courses, incomplete (best-effort solve)"] = ms
     print(f"benchmark: verify (unsatisfied plan) median {ms:.1f} ms")
     assert report.status == "errors" and ms < BUDGET_MS
     assert any(i.code == "V07" for i in report.issues)

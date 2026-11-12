@@ -60,7 +60,9 @@ def check_v01(
         if other != year:
             issues.append(
                 _error(
-                    "V01", f"The plan is for catalog year {year} but the {name} are for {other}."
+                    "V01",
+                    f"The plan is for catalog year {year} but the {name} are for {other}.",
+                    fix_hints=[f"Verify the plan against the {year} rules and catalog."],
                 )
             )
     unknown: dict[str, list[str]] = {}

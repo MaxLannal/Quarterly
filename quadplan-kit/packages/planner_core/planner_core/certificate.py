@@ -43,6 +43,9 @@ from planner_core.models import (
 )
 from planner_core.tree import out_of_order, stricter
 
+#: Course key -> the plan's records of that course (credits and items).
+Records = dict[str, list[Taken]]
+
 
 def check_certificate(
     plan: PlanState,
@@ -102,8 +105,11 @@ def certificate_problems(
 
     # 6. Prerequisite witnesses.
     witnesses = {(w.course, w.term): set(w.by) for w in cert.prereq_witnesses}
-    records = [t for t in [*facts.credits, *facts.items] if idx.known(t.code)]
-    refs = {t.ref for t in records}
+    records: Records = {}
+    for t in [*facts.credits, *facts.items]:
+        if idx.known(t.code):
+            records.setdefault(t.key, []).append(t)
+    refs = {t.ref for found in records.values() for t in found}
     for item in facts.items:
         requisite = idx.requisite(item.code)
         if item.status not in ("planned", "in_progress") or requisite is None:
@@ -272,22 +278,19 @@ def _is_fact(token: str, item: Taken, facts: PlanFacts) -> bool:
     return kind == "program" and any(fnmatchcase(p.program_id, value) for p in plan.programs)
 
 
-def _holds(
-    expr: Expr, item: Taken, tokens: set[str], records: list[Taken], idx: Index, coreq: bool
-) -> bool:
-    """Does `expr` hold for `item` when only the cited `tokens` may be used?"""
+def _holds(expr: Expr, item: Taken, by: set[str], recs: Records, idx: Index, coreq: bool) -> bool:
+    """Does `expr` hold for `item` when only the facts cited in `by` may be used?"""
     if expr.atom is None:
-        met = sum(_holds(child, item, tokens, records, idx, coreq) for child in expr.children)
+        met = sum(_holds(child, item, by, recs, idx, coreq) for child in expr.children)
         return met >= {"all": len(expr.children), "any": 1, "n_of": expr.n or 0}[expr.op]
     atom = expr.atom
     if atom.kind not in ("course", "concurrent"):
-        return f"{atom.kind}:{atom.value}" in tokens
+        return f"{atom.kind}:{atom.value}" in by
     same_term_ok = atom.kind == "concurrent" or coreq
     return any(
-        t.ref in tokens
-        and t.key in idx.alts(atom.value)
-        and t.key != item.key
+        t.ref in by
         and (t.order < item.order or (same_term_ok and t.order == item.order))
         and grade_ok(t.grade, atom.min_grade)
-        for t in records
+        for key in idx.alts(atom.value) - {item.key}
+        for t in recs.get(key, [])
     )

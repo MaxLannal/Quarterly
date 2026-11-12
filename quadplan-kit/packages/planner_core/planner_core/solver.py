@@ -328,9 +328,8 @@ def solve(
     if exact is not None:
         return exact
     best = _solve(programs, facts, idx, college, allowed, time_limit_s, require_roots=False)
-    return best or Solution(
-        status="unknown", satisfied={p: False for c in programs for p in c.below}
-    )
+    assert best is not None
+    return best
 
 
 def _solve(
@@ -343,18 +342,18 @@ def _solve(
     *,
     require_roots: bool,
 ) -> Solution | None:
-    """One CP-SAT solve; None when it finds no solution (phase 1: not every program can be
-    satisfied; phase 2: no solution within the limits)."""
+    """One CP-SAT solve. With `require_roots` it returns None when the solver proves that
+    not every program can be satisfied (the caller then runs the best-effort solve). A solve
+    that ends without any answer returns a Solution with status "unknown"."""
     b = _Model(facts, idx, college, allowed)
     m = b.model
     for compiled in programs:
         b.program(compiled)
     roots = [b.s[c.program.id] for c in programs]
-    if require_roots:
-        if any(root is None for root in roots):
-            return None
-        for root in roots:
-            m.add(root == 1)
+    if any(root is None for root in roots):
+        require_roots = False  # some program cannot be satisfied: go straight to best effort
+    for root in roots if require_roots else []:
+        m.add(root == 1)
 
     used = [(c, key, b.y(c, key)) for c in programs for key in b.keys(c)]
     residency: dict[str, Any] = {}
@@ -404,17 +403,18 @@ def _solve(
 
     solver = cp_model.CpSolver()
     solver.parameters.num_workers = 1
+    # The model is close to a matching problem: a full LP relaxation, loaded up front, lets
+    # the solver prove optimality (or infeasibility) several times faster than the defaults.
     solver.parameters.linearization_level = 2
+    solver.parameters.add_lp_constraints_lazily = False
     solver.parameters.max_time_in_seconds = time_limit_s
     if not require_roots:
         solver.parameters.max_deterministic_time = BEST_EFFORT_WORK
     status = solver.solve(m)
     if status not in (cp_model.OPTIMAL, cp_model.FEASIBLE):
-        if require_roots and status != cp_model.INFEASIBLE:
-            return Solution(
-                status="unknown", satisfied={p: False for c in programs for p in c.below}
-            )
-        return None
+        if require_roots and status == cp_model.INFEASIBLE:
+            return None
+        return Solution(status="unknown", satisfied={p: False for c in programs for p in c.below})
 
     out = Solution(status="optimal" if status == cp_model.OPTIMAL else "feasible")
     for path, xs in b.x.items():
