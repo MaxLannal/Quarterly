@@ -1,0 +1,393 @@
+# Generated from the 2026-2027 UChicago College Catalog (fetched 2026-11-12) by hand-checked scripts;
+# every source.quote is copied verbatim (whitespace collapsed) from source.url. See data/seed/REVIEW.md.
+id: cmsc-bs
+catalog_year: 2026-27
+name: Computer Science (BS)
+type: major
+degree: BS
+department: Computer Science
+status: review
+sources:
+- url: http://collegecatalog.uchicago.edu/thecollege/computerscience/
+  quote: The computer science program offers BA and BS degrees.
+rules:
+  id: cmsc-bs
+  label: Computer Science BS
+  group:
+    all: true
+    children:
+    - id: gened-math
+      label: 'General education: two-quarter calculus sequence'
+      select:
+        count: 2
+        from:
+          list: calc-two-quarter-sequences
+      constraints:
+        same_sequence: true
+        no_pass_fail: true
+      source:
+        url: http://collegecatalog.uchicago.edu/thecollege/computerscience/
+        quote: Both the BA and BS in computer science require the general education requirement in the mathematical sciences
+          to be fulfilled by an approved two-quarter Calculus Sequence.
+    - id: gened-phys
+      label: 'General education: physical sciences sequence for science majors'
+      select:
+        count: 2
+        from:
+          list: core-phys-science-major-sequences
+      constraints:
+        same_sequence: true
+        no_pass_fail: true
+      source:
+        url: http://collegecatalog.uchicago.edu/thecollege/computerscience/
+        quote: To earn a BS in computer science, the general education requirement in the physical sciences must be satisfied
+          by completing a two-quarter sequence chosen from the General Education Sequences for Science Majors.
+    - id: intro
+      label: Introductory Sequence
+      group:
+        all: true
+        children:
+        - id: '1'
+          slot:
+            any_of:
+            - CMSC 14100
+          constraints:
+            min_grade: C-
+            no_pass_fail: true
+          source:
+            url: http://collegecatalog.uchicago.edu/thecollege/computerscience/
+            quote: CMSC 14100
+        - id: '2'
+          slot:
+            any_of:
+            - CMSC 14200
+          constraints:
+            min_grade: C-
+            no_pass_fail: true
+          source:
+            url: http://collegecatalog.uchicago.edu/thecollege/computerscience/
+            quote: CMSC 14200
+        - id: '3'
+          slot:
+            any_of:
+            - CMSC 14300
+          constraints:
+            min_grade: C-
+            no_pass_fail: true
+          source:
+            url: http://collegecatalog.uchicago.edu/thecollege/computerscience/
+            quote: CMSC 14300
+        - id: '4'
+          slot:
+            any_of:
+            - CMSC 14400
+          constraints:
+            min_grade: C-
+            no_pass_fail: true
+          source:
+            url: http://collegecatalog.uchicago.edu/thecollege/computerscience/
+            quote: CMSC 14400
+      source:
+        url: http://collegecatalog.uchicago.edu/thecollege/computerscience/
+        quote: 'Students who major in computer science (either BA or BS) must complete the introductory sequence:'
+      needs_review: true
+    - id: systems
+      label: Systems Requirement
+      select:
+        count: 1
+        from:
+          list: cmsc-systems
+      constraints:
+        min_grade: C-
+        no_pass_fail: true
+      source:
+        url: http://collegecatalog.uchicago.edu/thecollege/computerscience/
+        quote: BS students are required to take one of the following systems programming courses.
+    - id: theory
+      label: Theory Requirement (A, B and C)
+      group:
+        all: true
+        children:
+        - id: theory-a
+          label: Theory Area A
+          slot:
+            any_of:
+            - CMSC 27100
+            - CMSC 27130
+          constraints:
+            min_grade: C-
+            no_pass_fail: true
+          source:
+            url: http://collegecatalog.uchicago.edu/thecollege/computerscience/
+            quote: Area A
+          needs_review: true
+        - id: theory-b
+          label: Theory Area B
+          slot:
+            any_of:
+            - CMSC 27200
+            - CMSC 27230
+          constraints:
+            min_grade: C-
+            no_pass_fail: true
+          source:
+            url: http://collegecatalog.uchicago.edu/thecollege/computerscience/
+            quote: Area B
+        - id: theory-c
+          label: Theory Area C
+          select:
+            count: 1
+            from:
+              list: cmsc-theory-c
+          constraints:
+            min_grade: C-
+            no_pass_fail: true
+          source:
+            url: http://collegecatalog.uchicago.edu/thecollege/computerscience/
+            quote: Area C
+      source:
+        url: http://collegecatalog.uchicago.edu/thecollege/computerscience/
+        quote: BA students must choose two courses from the following (one course each from areas A and B). BS students must
+          choose three courses from the following (one course each from areas A, B, and C).
+    - id: ml
+      label: Machine Learning Requirement
+      slot:
+        any_of:
+        - CMSC 25300
+        - CMSC 25400
+        - TTIC 31020
+      constraints:
+        min_grade: C-
+        no_pass_fail: true
+      source:
+        url: http://collegecatalog.uchicago.edu/thecollege/computerscience/
+        quote: BS students are required to take one of the following machine learning courses.
+      needs_review: true
+    - id: specialization
+      label: Specialization (three courses from one area)
+      group:
+        n_of: 1
+        children:
+        - id: security
+          label: Computer Security and Privacy
+          group:
+            all: true
+            children:
+            - id: required
+              slot:
+                any_of:
+                - CMSC 23200
+              constraints:
+                min_grade: C-
+                no_pass_fail: true
+              source:
+                url: http://collegecatalog.uchicago.edu/thecollege/computerscience/
+                quote: CMSC 23200 Introduction to Computer Security (required for this specialization)
+            - id: more
+              select:
+                count: 2
+                from:
+                  codes:
+                  - CMSC 23206
+                  - CMSC 23210
+                  - CMSC 23218
+                  - CMSC 23260
+                  - CMSC 25800
+                  - CMSC 25910
+                  - CMSC 28400
+              constraints:
+                min_grade: C-
+                no_pass_fail: true
+              source:
+                url: http://collegecatalog.uchicago.edu/thecollege/computerscience/
+                quote: CMSC 23206 Security, Privacy, and Consumer Protection
+          source:
+            url: http://collegecatalog.uchicago.edu/thecollege/computerscience/
+            quote: Computer Security and Privacy *
+        - id: systems
+          label: Computer Systems
+          select:
+            count: 3
+            from:
+              codes:
+              - CMSC 22200
+              - CMSC 22240
+              - CMSC 23000
+              - CMSC 23010
+              - CMSC 23310
+              - CMSC 23320
+              - CMSC 23380
+              - CMSC 23500
+              - CMSC 23530
+              - CMSC 25422
+          constraints:
+            min_grade: C-
+            no_pass_fail: true
+          source:
+            url: http://collegecatalog.uchicago.edu/thecollege/computerscience/
+            quote: Computer Systems *
+        - id: data-science
+          label: Data Science
+          group:
+            all: true
+            children:
+            - id: required
+              slot:
+                any_of:
+                - CMSC 21800
+              constraints:
+                min_grade: C-
+                no_pass_fail: true
+              source:
+                url: http://collegecatalog.uchicago.edu/thecollege/computerscience/
+                quote: CMSC 21800 Data Science for Computer Scientists (required for this specialization)
+            - id: more
+              select:
+                count: 2
+                from:
+                  codes:
+                  - CMSC 23900
+                  - CMSC 25300
+                  - CMSC 25400
+                  - STAT 37601
+              constraints:
+                min_grade: C-
+                no_pass_fail: true
+              source:
+                url: http://collegecatalog.uchicago.edu/thecollege/computerscience/
+                quote: STAT 37601 Machine Learning and Large-Scale Data Analysis
+          source:
+            url: http://collegecatalog.uchicago.edu/thecollege/computerscience/
+            quote: Data Science *
+        - id: hci
+          label: Human Computer Interaction
+          group:
+            all: true
+            children:
+            - id: required
+              slot:
+                any_of:
+                - CMSC 20300
+                - CMSC 20310
+              constraints:
+                min_grade: C-
+                no_pass_fail: true
+              source:
+                url: http://collegecatalog.uchicago.edu/thecollege/computerscience/
+                quote: CMSC 20300 Introduction to Human-Computer Interaction (either CMSC 20300 or CMSC 20310 is required
+                  for this specialization)
+            - id: more
+              select:
+                count: 2
+                from:
+                  codes:
+                  - CMSC 20300
+                  - CMSC 20310
+                  - CMSC 20360
+                  - CMSC 20370
+                  - CMSC 20380
+                  - CMSC 20630
+                  - CMSC 20900
+                  - CMSC 23210
+                  - CMSC 23218
+                  - CMSC 23220
+                  - CMSC 23230
+                  - CMSC 23400
+                  - CMSC 23900
+              constraints:
+                min_grade: C-
+                no_pass_fail: true
+              source:
+                url: http://collegecatalog.uchicago.edu/thecollege/computerscience/
+                quote: CMSC 20360 Creating Interactive Systems With User-Centered Design
+          source:
+            url: http://collegecatalog.uchicago.edu/thecollege/computerscience/
+            quote: Human Computer Interaction *
+        - id: machine-learning
+          label: Machine Learning
+          select:
+            count: 3
+            from:
+              codes:
+              - CMSC 25040
+              - CMSC 25300
+              - CMSC 25400
+              - CMSC 25460
+              - CMSC 25500
+              - CMSC 25700
+              - CMSC 25750
+              - CMSC 25800
+              - STAT 37601
+          constraints:
+            min_grade: C-
+            no_pass_fail: true
+          source:
+            url: http://collegecatalog.uchicago.edu/thecollege/computerscience/
+            quote: Machine Learning *
+        - id: programming-languages
+          label: Programming Languages
+          select:
+            count: 3
+            from:
+              codes:
+              - CMSC 22100
+              - CMSC 22300
+              - CMSC 22400
+              - CMSC 22450
+              - CMSC 22500
+              - CMSC 22600
+          constraints:
+            min_grade: C-
+            no_pass_fail: true
+          source:
+            url: http://collegecatalog.uchicago.edu/thecollege/computerscience/
+            quote: Programming Languages *
+        - id: theory
+          label: Theory
+          select:
+            count: 3
+            from:
+              list: cmsc-theory-c
+          constraints:
+            min_grade: C-
+            no_pass_fail: true
+          source:
+            url: http://collegecatalog.uchicago.edu/thecollege/computerscience/
+            quote: Theory *
+      source:
+        url: http://collegecatalog.uchicago.edu/thecollege/computerscience/
+        quote: A specialization requires choosing three courses from one of the following designated curriculum areas.
+      needs_review: true
+    - id: electives
+      label: Three CMSC electives numbered 20000 or above
+      select:
+        count: 3
+        from:
+          subject: CMSC
+          number_range:
+          - 20000
+          - 29999
+      constraints:
+        min_grade: C-
+        no_pass_fail: true
+        max_from:
+        - selector:
+            codes:
+            - CMSC 29700
+          n: 1
+        - selector:
+            codes:
+            - CMSC 29900
+          n: 1
+        - selector:
+            codes:
+            - CMSC 22200
+            - CMSC 22240
+          n: 1
+      source:
+        url: http://collegecatalog.uchicago.edu/thecollege/computerscience/
+        quote: Three electives numbered CMSC 20000 or above §
+      needs_review: true
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/computerscience/
+    quote: BS students take at least 15 computer science courses as described below.

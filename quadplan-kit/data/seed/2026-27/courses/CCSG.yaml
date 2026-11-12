@@ -1,0 +1,67 @@
+# Generated from the 2026-2027 UChicago College Catalog (fetched 2026-11-12) by hand-checked scripts;
+# every source.quote is copied verbatim (whitespace collapsed) from source.url. See data/seed/REVIEW.md.
+courses:
+- code: CCSG 19000
+  title: The Climate and Growth Challenge
+  units: 100
+  notes: Cross-listed with ECON 16550 (its catalog block lists CCSG 19000 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from ECON 16550.
+  crosslists:
+  - ECON 16550
+  prereq_text: 'BPRO 22510: third or fourth-year status. CEGU 22510, CCSG 19000, ECON 16550, PBPL 22510: First-year student
+    by permission of instructor only.'
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: 'Equivalent Course(s): CCSG 19000, CEGU 22510, PBPL 22510, BPRO 22510'
+  needs_review: true
+- code: CCSG 21025
+  title: 'Climate Crossroads: Policy, Diplomacy, and the Global Future'
+  units: 100
+  notes: Cross-listed with ECON 26740 (its catalog block lists CCSG 21025 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from ECON 26740.
+  crosslists:
+  - ECON 26740
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: 'Equivalent Course(s): CEGU 21025, PBPL 21025, GLST 21025, CCSG 21025'
+- code: CCSG 22301
+  title: Sustainability and Computing
+  units: 100
+  notes: Cross-listed with CMSC 29520 (its catalog block lists CCSG 22301 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from CMSC 29520.
+  crosslists:
+  - CMSC 29520
+  prereq:
+    any:
+    - standing: third-year
+    - standing: fourth-year
+  prereq_text: Students must be in their third or fourth year of study.
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/computerscience/
+    quote: 'Equivalent Course(s): CMSC 39520, CEGU 29520, BPRO 29520, CCSG 22301'
+- code: CCSG 22702
+  title: 'Science Communication: Crafting a Science Think Piece'
+  units: 100
+  notes: Cross-listed with PHSC 28104 (its catalog block lists CCSG 22702 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from PHSC 28104.
+  crosslists:
+  - PHSC 28104
+  prereq:
+    any:
+    - standing: third-year
+    - standing: fourth-year
+    - consent: instructor
+  prereq_text: Three quarters of physical or biological (including neuroscience) sciences. Third- or fourth-year standing
+    or consent of instructor.
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: 'Equivalent Course(s): SCPD 11300, HIPS 11300, CCSG 22702'
+  needs_review: true

@@ -1,0 +1,93 @@
+# Generated from the 2026-2027 UChicago College Catalog (fetched 2026-11-12) by hand-checked scripts;
+# every source.quote is copied verbatim (whitespace collapsed) from source.url. See data/seed/REVIEW.md.
+courses:
+- code: CLCV 20700
+  title: 'Ancient Mediterranean World I: Greece'
+  units: 100
+  notes: Cross-listed with HIST 16700 (its catalog block lists CLCV 20700 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from HIST 16700.
+  crosslists:
+  - HIST 16700
+  prereq_text: This sequence meets the general education requirement in civilization studies.
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): SOSC 27710, CLCV 20700'
+  needs_review: true
+- code: CLCV 20800
+  title: 'Ancient Mediterranean World II: Rome'
+  units: 100
+  notes: Cross-listed with HIST 16800 (its catalog block lists CLCV 20800 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from HIST 16800.
+  crosslists:
+  - HIST 16800
+  prereq_text: This sequence meets the general education requirement in civilization studies.
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): CLCV 20800, SOSC 16800'
+  needs_review: true
+- code: CLCV 20900
+  title: 'Ancient Mediterranean World III: Late Antiquity'
+  units: 100
+  notes: Cross-listed with HIST 16900 (its catalog block lists CLCV 20900 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from HIST 16900.
+  crosslists:
+  - HIST 16900
+  prereq_text: This sequence meets the general education requirement in civilization studies.
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): CLCV 20900, RLST 20690, MDVL 16900, SOSC 27910'
+  needs_review: true
+- code: CLCV 21722
+  title: 'Ancient Empires IV: the Achaemenid Empire'
+  units: 100
+  notes: Cross-listed with NEHC 20014 (its catalog block lists CLCV 21722 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from NEHC 20014.
+  crosslists:
+  - NEHC 20014
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): CLCV 21722, HIST 25602'
+- code: CLCV 25700
+  title: 'Ancient Empires I: The Hittite Empire'
+  units: 100
+  notes: Cross-listed with NEHC 20011 (its catalog block lists CLCV 25700 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from NEHC 20011.
+  crosslists:
+  - NEHC 20011
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): SOSC 20011, HIST 15602, CLCV 25700'
+- code: CLCV 25800
+  title: 'Ancient Empires II: The Ottoman Empire'
+  units: 100
+  notes: Cross-listed with NEHC 20012 (its catalog block lists CLCV 25800 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from NEHC 20012.
+  crosslists:
+  - NEHC 20012
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): MDVL 20012, HIST 15603, SOSC 20012, CLCV 25800'
+- code: CLCV 25900
+  title: Ancient Empires III :The Egyptian Empire of the New Kingdom
+  units: 100
+  notes: Cross-listed with NEHC 20013 (its catalog block lists CLCV 25900 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from NEHC 20013.
+  crosslists:
+  - NEHC 20013
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): HIST 15604, SOSC 20013, CLCV 25900'

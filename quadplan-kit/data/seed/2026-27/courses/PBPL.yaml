@@ -1,0 +1,284 @@
+# Generated from the 2026-2027 UChicago College Catalog (fetched 2026-11-12) by hand-checked scripts;
+# every source.quote is copied verbatim (whitespace collapsed) from source.url. See data/seed/REVIEW.md.
+courses:
+- code: PBPL 21025
+  title: 'Climate Crossroads: Policy, Diplomacy, and the Global Future'
+  units: 100
+  notes: Cross-listed with ECON 26740 (its catalog block lists PBPL 21025 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from ECON 26740.
+  crosslists:
+  - ECON 26740
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: 'Equivalent Course(s): CEGU 21025, PBPL 21025, GLST 21025, CCSG 21025'
+- code: PBPL 21300
+  title: Cost-Benefit Analysis
+  units: 100
+  notes: Cross-listed with ECON 26015 (its catalog block lists PBPL 21300 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from ECON 26015.
+  crosslists:
+  - ECON 26015
+  prereq_text: 'Recommended Coursework: PBPL 20000 Economics for Public Policy or ECON 20000 The Elements of Economic Analysis
+    I'
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: 'Equivalent Course(s): PBPL 21300'
+  needs_review: true
+- code: PBPL 22510
+  title: The Climate and Growth Challenge
+  units: 100
+  notes: Cross-listed with ECON 16550 (its catalog block lists PBPL 22510 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from ECON 16550.
+  crosslists:
+  - ECON 16550
+  prereq_text: 'BPRO 22510: third or fourth-year status. CEGU 22510, CCSG 19000, ECON 16550, PBPL 22510: First-year student
+    by permission of instructor only.'
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: 'Equivalent Course(s): CCSG 19000, CEGU 22510, PBPL 22510, BPRO 22510'
+  needs_review: true
+- code: PBPL 22521
+  title: History of Financial Crises
+  units: 100
+  notes: Cross-listed with ECON 22010 (its catalog block lists PBPL 22521 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from ECON 22010.
+  crosslists:
+  - ECON 22010
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: 'Equivalent Course(s): PBPL 22521'
+- code: PBPL 23215
+  title: Poverty and Public Policy
+  units: 100
+  notes: Cross-listed with ECON 25540 (its catalog block lists PBPL 23215 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from ECON 25540.
+  crosslists:
+  - ECON 25540
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: 'Equivalent Course(s): PBPL 23215'
+- code: PBPL 25510
+  title: Evidence in Health Policy
+  units: 100
+  notes: Cross-listed with ECON 17720 (its catalog block lists PBPL 25510 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from ECON 17720.
+  crosslists:
+  - ECON 17720
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: 'Equivalent Course(s): PBPL 25510, PPHA 38050'
+- code: PBPL 25585
+  title: The Chinese Economy
+  units: 100
+  notes: Cross-listed with ECON 22030 (its catalog block lists PBPL 25585 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from ECON 22030.
+  crosslists:
+  - ECON 22030
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: 'Equivalent Course(s): PPHA 35585, PBPL 25585'
+- code: PBPL 25640
+  title: 'Labor Markets: a Global Perspective'
+  units: 100
+  notes: Cross-listed with ECON 14020 (its catalog block lists PBPL 25640 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from ECON 14020.
+  crosslists:
+  - ECON 14020
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: 'Equivalent Course(s): PBPL 25640, PPHA 44302'
+- code: PBPL 25695
+  title: The Workplace and Family Policy
+  units: 100
+  notes: Cross-listed with ECON 14030 (its catalog block lists PBPL 25695 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from ECON 14030.
+  crosslists:
+  - ECON 14030
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: 'Equivalent Course(s): GNSE 25695, PBPL 25695'
+- code: PBPL 26002
+  title: 'Urban Design Studio: Reconstructing Chicago''s Lost Neighborhoods Using Machine Learning'
+  units: 100
+  notes: Cross-listed with SOSC 26002 (its catalog block lists PBPL 26002 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from SOSC 26002.
+  crosslists:
+  - SOSC 26002
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: 'Equivalent Course(s): PBPL 26002, PPHA 36002, GEOG 24200, CHST 26002'
+- code: PBPL 26004
+  title: History of City Planning
+  units: 100
+  notes: Cross-listed with SOSC 26004 (its catalog block lists PBPL 26004 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from SOSC 26004.
+  crosslists:
+  - SOSC 26004
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: 'Equivalent Course(s): PBPL 26004, GEOG 26200, SOSC 36004'
+- code: PBPL 26021
+  title: Sense & Sensibility & Science
+  units: 100
+  notes: Cross-listed with SOSC 26021 (its catalog block lists PBPL 26021 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from SOSC 26021.
+  crosslists:
+  - SOSC 26021
+  prereq_text: 'PQ: Third or fourth-year standing.'
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: 'Equivalent Course(s): SCPD 26021, PBPL 26021, BPRO 26021, DIGS 26021, HIPS 26021'
+  needs_review: true
+- code: PBPL 26420
+  title: Why Nations Fail or Succeed
+  units: 100
+  notes: Cross-listed with ECON 22850 (its catalog block lists PBPL 26420 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from ECON 22850.
+  crosslists:
+  - ECON 22850
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: 'Equivalent Course(s): PBPL 26420, PLSC 26420'
+- code: PBPL 26705
+  title: Economics of Education
+  units: 100
+  notes: Cross-listed with ECON 26700 (its catalog block lists PBPL 26705 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from ECON 26700.
+  crosslists:
+  - ECON 26700
+  prereq:
+    any:
+    - ECON 21020
+    - ECON 21030
+  prereq_text: ECON 21020 or ECON 21030
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: 'Equivalent Course(s): PBPL 26705, EDSO 26700'
+- code: PBPL 27000
+  title: International Economics
+  units: 100
+  notes: Cross-listed with ECON 27000 (its catalog block lists PBPL 27000 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from ECON 27000.
+  crosslists:
+  - ECON 27000
+  prereq:
+    any:
+    - ECON 20100
+    - ECON 20110
+  prereq_text: ECON 20100/20110
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: 'Equivalent Course(s): PBPL 27000'
+- code: PBPL 27300
+  title: Regulation of Vice
+  units: 100
+  notes: Cross-listed with ECON 27300 (its catalog block lists PBPL 27300 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from ECON 27300.
+  crosslists:
+  - ECON 27300
+  prereq:
+    any:
+    - ECON 20000
+    - PBPL 20000
+  prereq_text: ECON 20000 or PBPL 20000
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: 'Equivalent Course(s): PBPL 27300'
+- code: PBPL 28300
+  title: Health Economics and Public Policy
+  units: 100
+  notes: Cross-listed with ECON 27700 (its catalog block lists PBPL 28300 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from ECON 27700.
+  crosslists:
+  - ECON 27700
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: 'Equivalent Course(s): CCTS 38300, PBPL 28300, PPHA 38300'
+- code: PBPL 28350
+  title: Education and Economic Development
+  units: 100
+  notes: Cross-listed with ECON 16710 (its catalog block lists PBPL 28350 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from ECON 16710.
+  crosslists:
+  - ECON 16710
+  prereq_text: 'Recommended prerequisite courses: Microeconomics and econometrics. Students in their last years will be given
+    priority.'
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: 'Equivalent Course(s): EDSO 28350, PBPL 28350'
+  needs_review: true
+- code: PBPL 28528
+  title: 'Household Finance: Theory and Applications'
+  units: 100
+  notes: Cross-listed with ECON 13110 (its catalog block lists PBPL 28528 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from ECON 13110.
+  crosslists:
+  - ECON 13110
+  prereq_text: 'Prerequisite(s): PBPL 20000 (PBPL 22200 preferred) or ECON 20000 and one undergraduate course in quantitative
+    research methods (Statistics or Econometrics) or the equivalent or consent of the instructor.'
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: 'Equivalent Course(s): PBPL 28528'
+  needs_review: true
+- code: PBPL 28670
+  title: Markets and Regulation
+  units: 100
+  notes: Cross-listed with ECON 28030 (its catalog block lists PBPL 28670 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from ECON 28030.
+  crosslists:
+  - ECON 28030
+  prereq_text: 'PQ: PBPL 20000 or equivalent'
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: 'Equivalent Course(s): PBPL 28670'
+  needs_review: true
+- code: PBPL 28805
+  title: Behavioral Economics and Policy
+  units: 100
+  notes: Cross-listed with ECON 26920 (its catalog block lists PBPL 28805 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from ECON 26920.
+  crosslists:
+  - ECON 26920
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: 'Equivalent Course(s): PBPL 28805'

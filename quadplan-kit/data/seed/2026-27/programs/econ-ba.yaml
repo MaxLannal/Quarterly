@@ -1,0 +1,184 @@
+# Generated from the 2026-2027 UChicago College Catalog (fetched 2026-11-12) by hand-checked scripts;
+# every source.quote is copied verbatim (whitespace collapsed) from source.url. See data/seed/REVIEW.md.
+id: econ-ba
+catalog_year: 2026-27
+name: Economics (BA, standard track)
+type: major
+degree: BA
+department: Economics
+status: review
+sources:
+- url: http://collegecatalog.uchicago.edu/thecollege/economics/
+  quote: 'Our economics program offers four distinct degree options: the standard track, the business economics specialization,
+    the data science specialization, and the politics and policy specialization.'
+rules:
+  id: econ-ba
+  label: Economics BA (standard track)
+  group:
+    all: true
+    children:
+    - id: gened-calc
+      label: 'General education: two-quarter calculus sequence'
+      select:
+        count: 2
+        from:
+          list: calc-two-quarter-sequences
+      constraints:
+        same_sequence: true
+        no_pass_fail: true
+      source:
+        url: http://collegecatalog.uchicago.edu/thecollege/economics/
+        quote: 'Summary of Requirements: BA in Economics, Standard Track'
+    - id: calc-third
+      label: Third quarter of calculus
+      slot:
+        any_of:
+        - MATH 13300
+        - MATH 15300
+        - MATH 16300
+        - MATH 16310
+        - MATH 18300
+      constraints:
+        min_grade: C-
+        no_pass_fail: true
+      source:
+        url: http://collegecatalog.uchicago.edu/thecollege/economics/
+        quote: 'The fundamentals sequence consists of the following courses. The first two are required; the second two are
+          strongly recommended:'
+    - id: math-methods
+      label: MATH 15250 or alternative
+      slot:
+        any_of:
+        - MATH 15250
+        - MATH 18400
+        - MATH 20400
+        - MATH 20410
+        - MATH 20800
+      constraints:
+        min_grade: C-
+        no_pass_fail: true
+      source:
+        url: http://collegecatalog.uchicago.edu/thecollege/economics/
+        quote: 'The fundamentals sequence consists of the following courses. The first two are required; the second two are
+          strongly recommended:'
+      needs_review: true
+    - id: core
+      label: Elements of Economic Analysis (standard or honors)
+      select:
+        count: 3
+        from:
+          list: econ-core-sequences
+      constraints:
+        min_grade: C-
+        no_pass_fail: true
+        same_sequence: true
+      source:
+        url: http://collegecatalog.uchicago.edu/thecollege/economics/
+        quote: The core curriculum consists of three courses. Students may use the standard or honors sequence to satisfy
+          this requirement.
+      needs_review: true
+    - id: empirical
+      label: Empirical Methods
+      group:
+        all: true
+        children:
+        - id: linear-algebra
+          slot:
+            any_of:
+            - MATH 19620
+            - STAT 24300
+            - MATH 18500
+            - MATH 20250
+            - MATH 20700
+          constraints:
+            min_grade: C-
+            no_pass_fail: true
+          source:
+            url: http://collegecatalog.uchicago.edu/thecollege/economics/
+            quote: MATH 19620
+        - id: statistics
+          slot:
+            any_of:
+            - STAT 23400
+            - STAT 24400
+            - STAT 24410
+          constraints:
+            min_grade: C-
+            no_pass_fail: true
+          source:
+            url: http://collegecatalog.uchicago.edu/thecollege/economics/
+            quote: STAT 23400
+        - id: econometrics
+          slot:
+            any_of:
+            - ECON 21020
+            - ECON 21030
+          constraints:
+            min_grade: C-
+            no_pass_fail: true
+          source:
+            url: http://collegecatalog.uchicago.edu/thecollege/economics/
+            quote: ECON 21020
+      constraints:
+        in_order: true
+      source:
+        url: http://collegecatalog.uchicago.edu/thecollege/economics/
+        quote: 'In order to satisfy the empirical methods component of the standard economics major, students must complete
+          the following sequence of courses in consecutive quarters, beginning with Linear Algebra and concluding with Econometrics:'
+      needs_review: true
+    - id: policy
+      label: Economic Policy
+      slot:
+        any_of:
+        - ECON 23950
+        - ECON 23200
+        - ECMA 33220
+        - ECMA 33330
+      constraints:
+        min_grade: C-
+        no_pass_fail: true
+      source:
+        url: http://collegecatalog.uchicago.edu/thecollege/economics/
+        quote: Most students will complete the economic policy requirement with ECON 23950 Economic Policy Analysis, but students
+          interested in learning more formal approaches may use one of the other macroeconomics courses listed below to satisfy
+          the requirement.
+    - id: electives
+      label: Four electives
+      select:
+        count: 4
+        from:
+          union:
+          - subject: ECON
+            number_range:
+            - 20211
+            - 99999
+            exclude:
+            - ECON 21020
+            - ECON 21030
+            - ECON 23950
+          - subject: ECMA
+          - codes:
+            - ECON 10200
+          - list: econ-outside-electives
+      constraints:
+        min_grade: C-
+        no_pass_fail: true
+        max_from:
+        - selector:
+            union:
+            - list: econ-outside-electives
+            - codes:
+              - ECON 10200
+            - subject: ECMA
+          n: 2
+        - selector:
+            list: econ-outside-electives
+          n: 2
+      source:
+        url: http://collegecatalog.uchicago.edu/thecollege/economics/
+        quote: All students in the economics major must complete a minimum of four additional economics courses to broaden
+          their exposure to areas of applied economics or economic theory.
+      needs_review: true
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: 'The program in economics can be divided into five component parts:'

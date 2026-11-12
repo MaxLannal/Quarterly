@@ -1,0 +1,333 @@
+# Generated from the 2026-2027 UChicago College Catalog (fetched 2026-11-12) by hand-checked scripts;
+# every source.quote is copied verbatim (whitespace collapsed) from source.url. See data/seed/REVIEW.md.
+courses:
+- code: MADD 10006
+  title: Contemporary Art
+  units: 100
+  description: This course will consider the practice and theory of visual art in the late twentieth and early twenty-first
+    centuries. Among the subjects that will drive our narrative will be the rise of postmodernism, pop art, the aesthetics
+    of the social movements of the 1960s, institutional critique, the relationship between reproductive media and Feminism,
+    the concept of spectacle, conceptual art, the appearance of a global art industry after 1989, the connections between
+    art school and art-making, "relational aesthetics," the fate of art in the age of the Internet, the art of the post-studio
+    moment, and what happens to art when it engages with *everything*.
+  crosslists:
+  - ARTV 20006
+  - ARTH 15800
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/MediaArtsandDesign/
+    quote: MADD 10006. Contemporary Art. 100 Units.
+- code: MADD 10630
+  title: 'Understanding Digital Media: An Introduction to Contemporary Media Aesthetics'
+  units: 100
+  description: 'This course offers an introduction to the aesthetics and theory of digital media. We explore how the digital
+    revolution has transformed media aesthetics across film, television, online environments and the arts. Through a blend
+    of philosophical, political, and aesthetic inquiry, we investigate how the digital society redefines what it means to
+    be human, how we interact socially, and how we conceptualize reality itself. Our exploration is guided by several questions:
+    Is reality a simulation? Can humans be "upgraded" through merger with digital technology? Are algorithms and A.I. ushering
+    in a post-human social reality? We will also address the political dimensions of these shifts, specifically how computational
+    power has fueled "cybernetic capitalism" and the rise of the "control society". We engage with these concepts through
+    a diverse range of media, including film (Inception, The Matrix, Ex Machina, Edge of Tomorrow, Everything Everywhere All
+    at Once), television (Black Mirror, The Rehearsal), digital media examples and A.I., video games, and the arts. Along
+    the way we discuss media theory and cybernetic theory (e.g. Katherine Hayles, Niklas Luhmann) in pursuit of our themes
+    and questions. No prior background is required - only curiosity about our digital world and its future. HUMA 16300 can
+    qualify for a third Humanities general education requirement if the student completed HUMA 16000 and HUMA 16100. HUMA
+    16300 may also be taken as an independent elective.'
+  crosslists:
+  - HUMA 16300
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/MediaArtsandDesign/
+    quote: 'MADD 10630. Understanding Digital Media: An Introduction to Contemporary Media Aesthetics. 100 Units.'
+- code: MADD 14207
+  title: 'Mindfulness: Experience and Media'
+  units: 100
+  description: How do we experience media (of all kinds) with (or without) awareness? Methods of mindfulness offer principles
+    and practices of awareness focusing on mind, body, and embodied mind. Mindfulness (a flexible, moment-to-moment, non-judging
+    awareness) is an individual experience and at the same time, practices of mindfulness can be a mode of public health intervention.
+    Mindfulness involves social epistemologies of how we know (or don't know) collectively, as we interact with immediate
+    sensory experience as well as with mediated communication technologies generating various sorts of virtual realities (from
+    books to VR). In addition to readings and discussions, this course teaches embodied practices of attention and awareness
+    through the curriculum of Mindfulness-Based Stress Reduction.
+  crosslists:
+  - HLTH 25207
+  - HUMA 25207
+  - HIPS 25207
+  - TAPS 20507
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/MediaArtsandDesign/
+    quote: 'MADD 14207. Mindfulness: Experience and Media. 100 Units.'
+- code: MADD 14570
+  title: 'Special Topics: Animation Theory'
+  units: 100
+  description: Due to the ubiquity and pervasiveness of animation in contemporary media ecologies, recent years have seen
+    a surge of interest in animation theory. But animation theory presents a vast and turbulent domain of inquiry, because
+    animation may be narrowly defined as a set of objects or techniques or broadly conceptualized to embrace questions about
+    life and death, about more-than-human animals, artificial life, and animism, for instance. This topics course has two
+    aims. The first aim is to provide an overview of the key problematics of and approaches to animation theory in a global
+    and historical perspective. The second aim is to develop tools for doing animation theory in a more localized manner.
+    To this end, course will highlight theories of character and characterization with an emphasis on how the inherent tension
+    between individual and type in animation affects our understanding race and racism.
+  notes: Not offered in 2023-24.
+  crosslists:
+  - EALC 14570
+  - CMST 14570
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/MediaArtsandDesign/
+    quote: 'MADD 14570. Special Topics: Animation Theory. 100 Units.'
+- code: MADD 20310
+  title: Introduction to Designing Interaction
+  units: 100
+  description: We are surrounded by interactive systems and designs, from the user interfaces for our computers and smartphones
+    to home appliances, doors, and furniture. This class will introduce basic techniques, theories, and practices in designing
+    interactive objects and systems. Specifically, it will introduce students to developing user experience-centric perspectives
+    on critically reflecting on existing (and future) interactive designs. It also provides practices for students to ideate
+    new design solutions and prototype them using design and engineering methods. Centered in interaction design, the class
+    covers broad topics touching human-computer interaction, industrial design, user experience design, and communication
+    design.
+  crosslists:
+  - CMSC 20310
+  prereq:
+    any:
+    - CMSC 15200
+    - CMSC 15400
+    - CMSC 14200
+    - CMSC 14300
+    - CMSC 14400
+  prereq_text: CMSC 15200, CMSC 15400, CMSC 14200, CMSC 14300, or CMSC 14400.
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/MediaArtsandDesign/
+    quote: MADD 20310. Introduction to Designing Interaction. 100 Units.
+- code: MADD 20360
+  title: Creating Interactive Systems With User-Centered Design
+  units: 100
+  description: Creating technologies that fit into people's lives involves more than having technically sophisticated algorithms,
+    systems, and infrastructure. It involves deeply understanding various community needs and using this understanding coupled
+    with our knowledge of how people think and behave to design user-facing interfaces that can enhance and augment human
+    capabilities. When dealing with different kinds of users, achieving these goals requires us to think through how different
+    constraints such as costs, access to resources, and various cognitive and physical capabilities shape what socio-technical
+    systems can best address a particular issue. This course leverages human-computer interaction and the tools, techniques,
+    and principles that guide research on people to introduce you to the concepts of user centered design. You will learn
+    about different user groups such as children, older adults, users facing financial constraints as well as those needing
+    assistive technology and their particular needs. In addition, you will learn how to be mindful of working with different
+    types of user populations and how to think creatively of technology solutions that enhance human capabilities while minimizing
+    harm. You will also put your skills into practice in a quarter long group project involving the creation of an interactive
+    system for one of the user populations we study.
+  notes: Students who have taken 20370 may not enroll in 20360.
+  crosslists:
+  - CMSC 30360
+  - CMSC 20360
+  prereq:
+    any:
+    - CMSC 14400
+    - CMSC 15400
+    - CMSC 12300
+    - CMSC 22000
+    - CMSC 20300
+    - CMSC 20310
+  prereq_text: CMSC 14400 or CMSC 15400 or CMSC 12300 or CMSC 22000 or CMSC 20300 or CMSC 20310.
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/MediaArtsandDesign/
+    quote: MADD 20360. Creating Interactive Systems With User-Centered Design. 100 Units.
+- code: MADD 20370
+  title: 'Inclusive Technology: Designing for Underserved and Marginalized Populations'
+  units: 100
+  description: Creating technologies that are inclusive of people in marginalized communities involves more than having technically
+    sophisticated algorithms, systems, and infrastructure. It involves deeply understanding various community needs and using
+    this understanding coupled with our knowledge of how people think and behave to design user-facing interfaces that can
+    enhance and augment human capabilities. When dealing with under-served and marginalized communities, achieving these goals
+    requires us to think through how different constraints such as costs, access to resources, and various cognitive and physical
+    capabilities shape what socio-technical systems can best address a particular issue. This course leverages human-computer
+    interaction and the tools, techniques, and principles that guide research on people to introduce you to the concepts of
+    inclusive technology design. You will learn about different underserved and marginalized communities such as children,
+    the elderly, those needing assistive technology, and users in developing countries, and their particular needs. In addition,
+    you will learn how to be mindful of working with populations that can easily be exploited and how to think creatively
+    of inclusive technology solutions. You will also put your skills into practice in a semester long group project involving
+    the creation of an interactive system for one of the user populations we study.
+  crosslists:
+  - CMSC 20370
+  - CMSC 30370
+  prereq:
+    any:
+    - CMSC 14400
+    - CMSC 15400
+    - CMSC 12300
+    - CMSC 22000
+    - CMSC 20300
+    - CMSC 20310
+  prereq_text: CMSC 14400 or CMSC 15400 or CMSC 12300 or CMSC 22000 or CMSC 20300 or CMSC 20310
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/MediaArtsandDesign/
+    quote: 'MADD 20370. Inclusive Technology: Designing for Underserved and Marginalized Populations. 100 Units.'
+- code: MADD 20380
+  title: Actuated User Interfaces and Technology
+  units: 100
+  description: The recent advancement in interactive technologies allows computer scientists, designers, and researchers to
+    prototype and experiment with future user interfaces that can dynamically move and shape-change. This class offers hands-on
+    experience in learning and employing actuated and shape-changing user interface technologies to build interactive user
+    experiences. The class provides a range of basic engineering techniques to allow students to develop their own actuated
+    user interface systems, including 3D mechanical design, digital fabrication (e.g. 3D Printing), electronics (Arduino microcontroller),
+    and actuator control (utilizing different kinds of motors). Through multiple project-based assignments, students practice
+    the acquired techniques to build interactive tangible experiences of their own.
+  crosslists:
+  - CMSC 20380
+  - CMSC 30380
+  prereq:
+    any:
+    - CMSC 20300
+    - CMSC 20310
+  prereq_text: CMSC 20300 or CMSC 20310
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/MediaArtsandDesign/
+    quote: MADD 20380. Actuated User Interfaces and Technology. 100 Units.
+- code: MADD 20900
+  title: Computers for Learning
+  units: 100
+  description: 'Over time, technology has occupied an increasing role in education, with mixed results. Massive Open Online
+    Courses (MOOCs) were created to bring education to those without access to universities, yet most of the students who
+    succeed in them are those who are already successful in the current educational model. This course focuses on one intersection
+    of technology and learning: computer games. This course covers education theory, psychology (e.g., motivation, engagement),
+    and game design so that students can design and build an educational learning application. Labs focus on developing expertise
+    in technology, and readings supplement lecture discussions on the human components of education.'
+  crosslists:
+  - CMSC 20900
+  - CMSC 30900
+  prereq:
+    any:
+    - CMSC 14300
+    - CMSC 15400
+    - CMSC 22000
+  prereq_text: CMSC 14300 or CMSC 15400 or CMSC 22000
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/MediaArtsandDesign/
+    quote: MADD 20900. Computers for Learning. 100 Units.
+- code: MADD 21111
+  title: Creative Coding
+  units: 100
+  description: This course is an introduction to programming, using exercises in graphic design and digital art to motivate
+    and employ basic tools of computation (such as variables, conditional logic, and procedural abstraction). We will write
+    code in JavaScript and related languages, and we will work with a variety of digital media, including vector graphics,
+    raster images, animations, and web applications. Students who have taken or are taking CMSC 14100 may not enroll in CMSC
+    11111.
+  crosslists:
+  - CMSC 11111
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/MediaArtsandDesign/
+    quote: MADD 21111. Creative Coding. 100 Units.
+- code: MADD 23218
+  title: 'Surveillance Aesthetics: Provocations About Privacy and Security in the Digital Age'
+  units: 100
+  description: In the modern world, individuals' activities are tracked, surveilled, and computationally modeled to both beneficial
+    and problematic ends. Jointly with the School of the Art Institute of Chicago (SAIC), this course will examine privacy
+    and security issues at the intersection of the physical and digital worlds. Through both computer science and studio art,
+    students will design algorithms, implement systems, and create interactive artworks that communicate, provoke, and reframe
+    pervasive issues in modern privacy and security. The course will unpack and re-entangle computational connections and
+    data-driven interactions between people, built space, sensors, structures, devices, and data. Synthesizing technology
+    and aesthetics, we will communicate our findings to the broader public not only through academic avenues, but also via
+    public art and media. The first phase of the course will involve prompts in which students design and program small-scale
+    artworks in various contexts, including (1) data collected from web browsing; (2) mobility data; (3) data collected about
+    consumers by major companies; and (4) raw sensor data. Students will receive detailed feedback on their work from computer
+    scientists, artists, and curators at the Museum of Science & Industry (MSI). The course culminates in the production and
+    presentation of a capstone interactive artwork by teams of computer scientists and artists; successful products may be
+    considered for prototyping at the MSI.
+  notes: 'Students interested in this class should complete this form to request permission to enroll: https://uchicago.co1.qualtrics.com/jfe/form/SV_5jPT8gRDXDKQ26a'
+  crosslists:
+  - CMSC 33218
+  - CMSC 23218
+  prereq_text: One of CMSC 23200, CMSC 23210, CMSC 25900, CMSC 28400, CMSC 33210, CMSC 33250, or CMSC 33251 recommended, but
+    not required.
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/MediaArtsandDesign/
+    quote: 'MADD 23218. Surveillance Aesthetics: Provocations About Privacy and Security in the Digital Age. 100 Units.'
+  needs_review: true
+- code: MADD 23220
+  title: Inventing, Engineering and Understanding Interactive Devices
+  units: 100
+  description: A physical computing class, dedicated to micro-controllers, sensors, actuators and fabrication techniques.
+    The objective is that everyone creates their own, custom-made, functional I/O device.
+  crosslists:
+  - CMSC 33222
+  - CMSC 23220
+  prereq:
+    any:
+    - CMSC 14400
+    - CMSC 15400
+  prereq_text: CMSC 14400 or CMSC 15400
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/MediaArtsandDesign/
+    quote: MADD 23220. Inventing, Engineering and Understanding Interactive Devices. 100 Units.
+- code: MADD 23620
+  title: Internet Censorship and Online Speech
+  units: 100
+  description: Information dissemination and online discourse on the Internet are subject to the algorithms and filters that
+    operate on Internet infrastructure, from network firewalls to search engines. This course will explore the technologies
+    that are used to control access to online speech and information, and cutting-edge technologies that can empower citizens
+    in the face of these information controls. Students will learn about and experiment with technologies to control online
+    discourse, ranging from firewalls that perform network traffic filtering to algorithms for content personalization and
+    content moderation. We will also explore underlying technical trends, such as the increasing consolidation of Internet
+    infrastructure and protocols, and the implications of consolidation for control over online discourse. Each course meeting
+    will include a technical overview, reading discussion, and a hands-on laboratory activity.
+  crosslists:
+  - PARR 33260
+  - CMSC 33260
+  - CMSC 23260
+  prereq_text: None
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/MediaArtsandDesign/
+    quote: MADD 23620. Internet Censorship and Online Speech. 100 Units.
+  needs_review: true
+- code: MADD 25300
+  title: Introduction to Human-Computer Interaction
+  units: 100
+  description: 'An introduction to the field of Human-Computer Interaction (HCI), with an emphasis in understanding, designing
+    and programming user-facing software and hardware systems. This class covers the core concepts of HCI: affordances, mental
+    models, selection techniques (pointing, touch, menus, text entry, widgets, etc), conducting user studies (psychophysics,
+    basic statistics, etc), rapid prototyping (3D printing, etc), and the fundamentals of 3D interfaces (optics for VR, AR,
+    etc). We compliment the lectures with weekly programming assignments and two larger projects, in which we build/program/test
+    user-facing interactive systems.'
+  crosslists:
+  - CMSC 30300
+  - CMSC 20300
+  prereq:
+    any:
+    - CMSC 14200
+    - CMSC 15400
+    - CMSC 22000
+  prereq_text: CMSC 14200 or CMSC 15400 or CMSC 22000
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/MediaArtsandDesign/
+    quote: MADD 25300. Introduction to Human-Computer Interaction. 100 Units.
+- code: MADD 26210
+  title: Media Art and Design Practice
+  units: 100
+  description: 'This studio-based course explores the practice, conventions, and boundaries of contemporary media art and
+    design. This can encompass areas as diverse as interactive installation, app design, and the Internet meme. Through projects
+    and critical discussion, students engage with the problems and opportunities of digitally driven content creation. Fundamental
+    elements of digital production are introduced, including basic properties of image, video, and the global network. Further
+    topics as varied as--though not limited to--web production, digital fabrication, interfaces, the glitch, and gaming may
+    be considered. Sections will vary based on the instructor''s fields of expertise. This course meets the general education
+    requirement in the arts. This course may not double count for general education requirements and the Media Arts and Design
+    minor. However, it is a great way for students to explore a potential interest in these areas. During the academic year,
+    students must attend the first course session to confirm enrollment. Students aiming to get into the course after registration
+    or during drop/add must use the waitlist to request to enroll. WAITLIST: https://forms.gle/WjLWCguW42GpcoRBA'
+  core_tags:
+  - arts
+  crosslists:
+  - ARTV 16210
+  prereq_text: 'MADD 26210 Media Art and Design Practice is affiliated with HUMA 16000-16100-16200 Media Aesthetics: Image,
+    Text, Sound I-II-III. Students satisfying the general education requirement in the humanities will have priority in enrollment
+    for Media Arts and Design Practice.'
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/MediaArtsandDesign/
+    quote: MADD 26210. Media Art and Design Practice. 100 Units.
+  needs_review: true

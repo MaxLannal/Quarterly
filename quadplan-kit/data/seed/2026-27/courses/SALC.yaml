@@ -1,0 +1,94 @@
+# Generated from the 2026-2027 UChicago College Catalog (fetched 2026-11-12) by hand-checked scripts;
+# every source.quote is copied verbatim (whitespace collapsed) from source.url. See data/seed/REVIEW.md.
+courses:
+- code: SALC 20100
+  title: Introduction to the Civilizations of South Asia I
+  units: 100
+  description: The first quarter focuses on Islam in South Asia, Hindu-Muslim interaction, Mughal political and literary traditions,
+    and South Asia's early encounters with Europe.
+  core_tags:
+  - civilization
+  crosslists:
+  - SALC 30100
+  - HIST 10800
+  - SOSC 23000
+  - MDVL 20100
+  - ANTH 24101
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: SALC 20100. Introduction to the Civilizations of South Asia I. 100 Units.
+- code: SALC 20200
+  title: Introduction to the Civilizations of South Asia II
+  units: 100
+  description: The second quarter analyzes the colonial period (i.e., reform movements, the rise of nationalism, communalism,
+    caste, and other identity movements) up to the independence and partition of India.
+  core_tags:
+  - civilization
+  crosslists:
+  - SOSC 23100
+  - SALC 30200
+  - HIST 10900
+  - ANTH 24102
+  prereq_text: SALC 20100,ANTH 24101,HIST 10800,SASC 20000,SOSC 23000
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: SALC 20200. Introduction to the Civilizations of South Asia II. 100 Units.
+  needs_review: true
+- code: SALC 20702
+  title: 'Colonizations III: Decolonization, Revolution, Freedom'
+  units: 100
+  notes: Cross-listed with RDIN 24003 (its catalog block lists SALC 20702 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from RDIN 24003.
+  crosslists:
+  - RDIN 24003
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): SALC 20702, SOSC 24003, ANTH 24003, HIST 18303'
+- code: SALC 24002
+  title: 'Colonizations II: Imperial Expansion, Anti-Imperialism, and Nation in Asia'
+  units: 100
+  notes: Cross-listed with RDIN 24002 (its catalog block lists SALC 24002 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from RDIN 24002.
+  crosslists:
+  - RDIN 24002
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): SALC 24002, SOSC 24002, ANTH 24002, HIST 18302'
+- code: SALC 30100
+  title: Introduction to the Civilizations of South Asia I
+  units: 100
+  notes: Cross-listed with SALC 20100 (its catalog block lists SALC 30100 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from SALC 20100.
+  crosslists:
+  - SALC 20100
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): SALC 30100, HIST 10800, SOSC 23000, MDVL 20100, ANTH 24101'
+- code: SALC 30200
+  title: Introduction to the Civilizations of South Asia II
+  units: 100
+  notes: Cross-listed with SALC 20200 (its catalog block lists SALC 30200 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from SALC 20200.
+  crosslists:
+  - SALC 20200
+  prereq_text: SALC 20100,ANTH 24101,HIST 10800,SASC 20000,SOSC 23000
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): SOSC 23100, SALC 30200, HIST 10900, ANTH 24102'
+  needs_review: true

@@ -1,0 +1,15 @@
+# Generated from the 2026-2027 UChicago College Catalog (fetched 2026-11-12) by hand-checked scripts;
+# every source.quote is copied verbatim (whitespace collapsed) from source.url. See data/seed/REVIEW.md.
+courses:
+- code: CCTS 38300
+  title: Health Economics and Public Policy
+  units: 100
+  notes: Cross-listed with ECON 27700 (its catalog block lists CCTS 38300 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from ECON 27700.
+  crosslists:
+  - ECON 27700
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: 'Equivalent Course(s): CCTS 38300, PBPL 28300, PPHA 38300'

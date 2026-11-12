@@ -1,0 +1,138 @@
+# Generated from the 2026-2027 UChicago College Catalog (fetched 2026-11-12) by hand-checked scripts;
+# every source.quote is copied verbatim (whitespace collapsed) from source.url. See data/seed/REVIEW.md.
+courses:
+- code: TAPS 10100
+  title: 'Drama: Embodiment and Transformation'
+  units: 100
+  description: This course introduces students to a range of theatrical concepts and techniques, including script analysis
+    and its application to staging, design and acting. Throughout, we investigate how theater - as a collaborative art form
+    - tells stories. Students will act, direct, and design. In doing so, they will gain an understanding of a variety of processes
+    by which scripts are realized in the theater, with an emphasis on the text's role in production rather than as literature.
+  notes: 'Attendance at first class meeting is mandatory. This course meets the general education requirement in the arts.
+    Waitlists for TAPS core courses open after resolution for that quarter is complete. To be considered for the waitlist
+    you must sign up here: https://forms.gle/G62skjnAZFmhHcL88 (do NOT send a consent request to the instructor).'
+  core_tags:
+  - arts
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  - SU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/theaterperformancestudies/
+    quote: 'TAPS 10100. Drama: Embodiment and Transformation. 100 Units.'
+- code: TAPS 10200
+  title: Acting Fundamentals
+  units: 100
+  description: This course introduces fundamental concepts of performance in the theater with emphasis on the development
+    of creative faculties and techniques of observation, as well as vocal and physical interpretation. Concepts are introduced
+    through directed reading, improvisation, and scene study.
+  notes: 'Attendance at first class meeting is mandatory. This course meets the general education requirement in the arts.
+    Waitlists for TAPS core courses open after resolution for that quarter is complete. To be considered for the waitlist
+    you must sign up here: https://forms.gle/G62skjnAZFmhHcL88 (do NOT send a consent request to the instructor).'
+  core_tags:
+  - arts
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  - SU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/theaterperformancestudies/
+    quote: TAPS 10200. Acting Fundamentals. 100 Units.
+- code: TAPS 10300
+  title: Text and Performance
+  units: 100
+  description: 'This course offers an introduction to a number of significant dramatic works and seminal figures in the theorization
+    of theater and performance. But the course''s aspirations go much further: we will be concentrating upon the intersection
+    of interpretation and enactment, asking how these pieces appear on stage and why. This will not be merely descriptive
+    work, but crucially it will be interpretive and physical work. Students will prepare and present applied interpretations-that
+    is, interpretations that enable conceptual insights to take artistic form. Throughout, we will be searching for that elusive
+    combination of philological rigor, theoretical sophistication, and creative inspiration-probing the theoretical stakes
+    of creativity and testing the creative implications of analytic insights.'
+  notes: 'Attendance at first class meeting is mandatory. This course meets the general education requirement in the arts.
+    Waitlists for TAPS core courses open after resolution for that quarter is complete. To be considered for the waitlist
+    you must sign up here: https://forms.gle/G62skjnAZFmhHcL88 (do NOT send a consent request to the instructor).'
+  core_tags:
+  - arts
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/theaterperformancestudies/
+    quote: TAPS 10300. Text and Performance. 100 Units.
+- code: TAPS 10700
+  title: Introduction to Stage Design
+  units: 100
+  description: 'Approaching theatrical design as a visual art, we will achieve a basic understanding of the theory, methodology
+    and artistic expression fundamental to each area of design for the stage: scenic, costume, lighting, sound, and projections.
+    We will learn how each discipline approaches and executes visual (aural in the case of sound) communication involved in
+    the design process. Students will learn the professional design process, from contracting through production. Projects
+    for this course will be completed using a combination of mediums and materials. Creativity in the execution of visual
+    communication will be of great importance. Students will learn to show collaborators ideas instead of talking about them.'
+  notes: 'Attendance at first class meeting is mandatory. This course meets the general education requirement in the arts.
+    Waitlists for TAPS core courses open after resolution for that quarter is complete. To be considered for the waitlist
+    you must sign up here: https://forms.gle/G62skjnAZFmhHcL88 (do NOT send a consent request to the instructor).'
+  core_tags:
+  - arts
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/theaterperformancestudies/
+    quote: TAPS 10700. Introduction to Stage Design. 100 Units.
+- code: TAPS 10800
+  title: Contemporary Dance Practices
+  units: 100
+  description: This hybrid studio/seminar course offers an overview of the formal techniques, cultural contexts, and social
+    trends that shape current dance practices. Through both scholarly and practical approaches to course content, students
+    will gain a working knowledge of a wide range of formal and aesthetic approaches to dance. Other topics include the influence
+    of pop culture, the role of cultural appropriation, and the privileging of Western-based perspectives within dance presentation,
+    education, scholarship, and criticism. Selected readings and viewings will supplement movement practice. No previous experience
+    with dance or performance is required. This course meets the general education requirement in the arts.
+  notes: Attendance at first class meeting is mandatory. This course meets the general education requirement in the arts.
+    Wait list requests for TAPS core courses are due several weeks before the quarter begins. Sign up for the wait list at
+    https://forms.gle/G62skjnAZFmhHcL88
+  core_tags:
+  - arts
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/theaterperformancestudies/
+    quote: TAPS 10800. Contemporary Dance Practices. 100 Units.
+- code: TAPS 10900
+  title: Moving and Thinking / Thinking and Moving
+  units: 100
+  description: 'Though we often imagine a divide between the physical practice of dance training and the intellectual practice
+    of dance history and theorization, in reality they overlap: movement training is embodied research and a form of intellectual
+    labor, while dance theorization and scholarship is deeply connected to the physicality of thought. This course offers
+    an introduction to dance with an integrated approach to thinking and doing. Students will explore a range of embodied
+    research methodologies that draw from improvisational forms, codified techniques, and social and cultural dance practices.
+    No prior dance experience is required for this hybrid seminar/ studio course.'
+  notes: 'Attendance at first class meeting is mandatory. This course meets the general education requirement in the arts.
+    For questions regarding this class please contact Vicki Walden, vwalden@uchicago.edu. Waitlists for TAPS core courses
+    open after resolution for that quarter is complete. To be considered for the waitlist, you must sign up here: https://forms.gle/G62skjnAZFmhHcL88
+    (do NOT send a consent request to the instructor).'
+  core_tags:
+  - arts
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/theaterperformancestudies/
+    quote: TAPS 10900. Moving and Thinking / Thinking and Moving. 100 Units.
+- code: TAPS 20507
+  title: 'Mindfulness: Experience and Media'
+  units: 100
+  notes: Cross-listed with HUMA 25207 (its catalog block lists TAPS 20507 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from HUMA 25207.
+  crosslists:
+  - HUMA 25207
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/humanities/
+    quote: 'Equivalent Course(s): HLTH 25207, MADD 14207, HIPS 25207, TAPS 20507'

@@ -1,0 +1,17 @@
+# Generated from the 2026-2027 UChicago College Catalog (fetched 2026-11-12) by hand-checked scripts;
+# every source.quote is copied verbatim (whitespace collapsed) from source.url. See data/seed/REVIEW.md.
+courses:
+- code: DIGS 26021
+  title: Sense & Sensibility & Science
+  units: 100
+  notes: Cross-listed with SOSC 26021 (its catalog block lists DIGS 26021 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from SOSC 26021.
+  crosslists:
+  - SOSC 26021
+  prereq_text: 'PQ: Third or fourth-year standing.'
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: 'Equivalent Course(s): SCPD 26021, PBPL 26021, BPRO 26021, DIGS 26021, HIPS 26021'
+  needs_review: true

@@ -1,0 +1,37 @@
+# Generated from the 2026-2027 UChicago College Catalog (fetched 2026-11-12) by hand-checked scripts;
+# every source.quote is copied verbatim (whitespace collapsed) from source.url. See data/seed/REVIEW.md.
+courses:
+- code: CAPP 30300
+  title: Data Science Clinic I
+  units: 100
+  notes: Cross-listed with DATA 27100 (its catalog block lists CAPP 30300 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from DATA 27100.
+  crosslists:
+  - DATA 27100
+  prereq_text: DATA 12000, DATA 13600, DATA 21100, DATA 21200, DATA 23100 (or equivalent) and by permission of instructor
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/datascience/
+    quote: 'Equivalent Course(s): MACS 30300, CAPP 30300, MPCS 57300, PPHA 30581'
+  needs_review: true
+- code: CAPP 30350
+  title: Security, Privacy, and Consumer Protection
+  units: 100
+  notes: Cross-listed with CMSC 23206 (its catalog block lists CAPP 30350 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from CMSC 23206.
+  crosslists:
+  - CMSC 23206
+  prereq:
+    all:
+    - any:
+      - CMSC 14300
+      - CMSC 15400
+    - consent: instructor
+  prereq_text: CMSC 14300 or CMSC 15400 or equivalent, and instructor consent.
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/computerscience/
+    quote: 'Equivalent Course(s): CMSC 30350, CAPP 30350'
+  needs_review: true

@@ -1,0 +1,81 @@
+# Generated from the 2026-2027 UChicago College Catalog (fetched 2026-11-12) by hand-checked scripts;
+# every source.quote is copied verbatim (whitespace collapsed) from source.url. See data/seed/REVIEW.md.
+courses:
+- code: GNSE 12159
+  title: 'Reading as a Writer: The Bad Girls Club'
+  units: 100
+  notes: Cross-listed with CRWR 12159 (its catalog block lists GNSE 12159 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from CRWR 12159.
+  crosslists:
+  - CRWR 12159
+  prereq_text: If the course is listed as consent required or closed, please reach out to the instructor to enroll or to be
+    added to the waitlist. Attendance on the first day is mandatory.
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/creativewriting/
+    quote: 'Equivalent Course(s): GNSE 12159'
+  needs_review: true
+- code: GNSE 15002
+  title: Gender and Sexuality in World Civilizations I
+  units: 100
+  description: The first quarter of the GNSE Civ sequence offers a historical examination of bodies, sex, and gender. Through
+    a series of readings that include historical primary sources and examples of cultural production from antiquity to the
+    present, we will investigate how bodies across a variety of cultures become sexed and gendered. In particular, we will
+    ask how the very categories of sex and gender not only produce social meaning from bodies and their anatomical differences
+    but may also be complicit in acts violence, oppression, and colonization. Thematically we will pay attention to the emergence
+    and critique of the distinction between sex and gender; resistances to the gender binary; the relationship between gender,
+    power, and authority; feminism and critiques of Western feminism; the category of woman as an object of scientific knowledge;
+    and the flourishing of and violence against trans life. Finally, while we will be dealing with historical accounts in
+    this course, the aim is to understand how the regulation of bodies in the past has informed and may challenge our understanding
+    of the diversity of embodied experience in the present.
+  notes: This sequence meets the general education requirement in civilization studies. This course is not available for First
+    Year Preregistration.
+  core_tags:
+  - civilization
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: GNSE 15002. Gender and Sexuality in World Civilizations I. 100 Units.
+- code: GNSE 15003
+  title: Gender and Sexuality in World Civilizations II
+  units: 100
+  description: 'The second half of the civ sequence will extend our earlier interrogation of bodies, sex, and gender into
+    an examination of sexualities and socialities. Through an encounter with theoretical texts, literature, and art, we will
+    investigate a series of important critiques of biopower, or statist strategies for regulating bodies and controlling populations.
+    These interventions include critiques of nationalism, colonialism, capitalism, and heteronormativity, all of which, as
+    we will see, contribute to our understanding of sexuality. Throughout the course, feminist and queer critique will fundamentally
+    frame our analyses of power, desire, and sexuality. PQ: GNSE 15002.'
+  notes: This sequence meets the general education requirement in civilization studies.
+  core_tags:
+  - civilization
+  prereq: GNSE 15002
+  prereq_text: GNSE 15002
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: GNSE 15003. Gender and Sexuality in World Civilizations II. 100 Units.
+- code: GNSE 20145
+  title: Women in 20th-Century Architecture
+  units: 100
+  notes: Cross-listed with ARTH 17781 (its catalog block lists GNSE 20145 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from ARTH 17781.
+  crosslists:
+  - ARTH 17781
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/arthistory/
+    quote: 'Equivalent Course(s): ARCH 17781, GNSE 20145'
+- code: GNSE 25695
+  title: The Workplace and Family Policy
+  units: 100
+  notes: Cross-listed with ECON 14030 (its catalog block lists GNSE 25695 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from ECON 14030.
+  crosslists:
+  - ECON 14030
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: 'Equivalent Course(s): GNSE 25695, PBPL 25695'

@@ -1,0 +1,35 @@
+# Generated from the 2026-2027 UChicago College Catalog (fetched 2026-11-12) by hand-checked scripts;
+# every source.quote is copied verbatim (whitespace collapsed) from source.url. See data/seed/REVIEW.md.
+courses:
+- code: EDSO 26700
+  title: Economics of Education
+  units: 100
+  notes: Cross-listed with ECON 26700 (its catalog block lists EDSO 26700 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from ECON 26700.
+  crosslists:
+  - ECON 26700
+  prereq:
+    any:
+    - ECON 21020
+    - ECON 21030
+  prereq_text: ECON 21020 or ECON 21030
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: 'Equivalent Course(s): PBPL 26705, EDSO 26700'
+- code: EDSO 28350
+  title: Education and Economic Development
+  units: 100
+  notes: Cross-listed with ECON 16710 (its catalog block lists EDSO 28350 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from ECON 16710.
+  crosslists:
+  - ECON 16710
+  prereq_text: 'Recommended prerequisite courses: Microeconomics and econometrics. Students in their last years will be given
+    priority.'
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: 'Equivalent Course(s): EDSO 28350, PBPL 28350'
+  needs_review: true

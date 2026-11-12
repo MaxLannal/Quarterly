@@ -1,0 +1,156 @@
+# Generated from the 2026-2027 UChicago College Catalog (fetched 2026-11-12) by hand-checked scripts;
+# every source.quote is copied verbatim (whitespace collapsed) from source.url. See data/seed/REVIEW.md.
+courses:
+- code: PHYS 12100
+  title: General Physics I
+  units: 100
+  description: This course covers Newtonian mechanics and fluid dynamics. (L)
+  core_tags:
+  - physical_sciences
+  prereq:
+    all:
+    - any:
+      - MATH 13200
+      - MATH 15200
+      - MATH 16200
+    - any:
+      - CHEM 11300
+      - CHEM 12300
+  prereq_text: MATH 13200 or 15200 or 16200; CHEM 11300 or 12300.
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physics/
+    quote: PHYS 12100. General Physics I. 100 Units.
+- code: PHYS 12200
+  title: General Physics II
+  units: 100
+  description: This course covers electric and magnetic fields. (L).
+  core_tags:
+  - physical_sciences
+  prereq: PHYS 12100
+  prereq_text: PHYS 12100
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physics/
+    quote: PHYS 12200. General Physics II. 100 Units.
+- code: PHYS 12300
+  title: General Physics III
+  units: 100
+  description: This course covers waves, optics, and modern physics. (L)
+  prereq: PHYS 12200
+  prereq_text: PHYS 12200
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physics/
+    quote: PHYS 12300. General Physics III. 100 Units.
+- code: PHYS 13100
+  title: Mechanics
+  units: 100
+  description: Topics include particle motion, Newton's Laws, work and energy, systems of particles, rigid-body motion, gravitation,
+    oscillations, and special relativity. (L)
+  core_tags:
+  - physical_sciences
+  prereq:
+    any:
+    - MATH 13300
+    - concurrent: MATH 15100
+    - concurrent: MATH 16100
+  prereq_text: MATH 13300 or 15100 or 16100 (may be concurrent with MATH 15100 or 16100).
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physics/
+    quote: PHYS 13100. Mechanics. 100 Units.
+- code: PHYS 13200
+  title: Electricity and Magnetism
+  units: 100
+  description: Topics include electric fields, Gauss' law, electric potential, capacitors, DC circuits, magnetic fields, Ampere's
+    law, induction, Faraday's law, AC circuits, Maxwell's equations, and electromagnetic waves. (L)
+  core_tags:
+  - physical_sciences
+  prereq:
+    all:
+    - any:
+      - course: PHYS 13100
+        min_grade: C-
+      - course: PHYS 14100
+        min_grade: C-
+      - consent: instructor
+    - any:
+      - MATH 13300
+      - concurrent: MATH 15200
+      - concurrent: MATH 16200
+  prereq_text: Minimum grade of C- in PHYS 13100 or 14100, or consent of instructor. MATH 13300 or 15200 or 16200 (may be
+    concurrent with MATH 15200 or 16200).
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physics/
+    quote: PHYS 13200. Electricity and Magnetism. 100 Units.
+- code: PHYS 14100
+  title: Honors Mechanics
+  units: 100
+  description: Topics include particle motion, Newton's Laws, work and energy, systems of particles, rigid-body motion, gravitation,
+    oscillations, and special relativity. (L)
+  core_tags:
+  - physical_sciences
+  prereq:
+    placement: PHYS 14100
+  prereq_text: Placement required.
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physics/
+    quote: PHYS 14100. Honors Mechanics. 100 Units.
+- code: PHYS 14200
+  title: Honors Electricity and Magnetism
+  units: 100
+  description: Topics include electric fields, Gauss' law, electric potential, capacitors, DC circuits, magnetic fields, Ampere's
+    law, induction, Faraday's law, AC circuits, Maxwell's equations, and electromagnetic waves. (L)
+  core_tags:
+  - physical_sciences
+  prereq: PHYS 14100
+  prereq_text: PHYS 14100
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physics/
+    quote: PHYS 14200. Honors Electricity and Magnetism. 100 Units.
+- code: PHYS 21400
+  title: Creative Machines and Innovative Instrumentation
+  units: 100
+  description: An understanding of the techniques, tricks, and traps of building creative machines and innovative instrumentation
+    is essential for a range of fields from the physical sciences to the arts. In this hands-on, practical course, you will
+    design and build functional devices as a means to learn the systematic processes of engineering and fundamentals of design
+    and construction. The kinds of things you will learn may include mechanical design and machining, computer-aided design,
+    rapid prototyping, circuitry, electrical measurement methods, and other techniques for resolving real-world design problems.
+    In collaboration with others, you will complete a mini-project and a final project, which will involve the design and
+    fabrication of a functional scientific instrument. The course will be taught at an introductory level; no previous experience
+    is expected. The iterative nature of the design process will require an appreciable amount of time outside of class for
+    completing projects. The course is open to undergraduates in all majors (subject to the pre-requisites), as well as Master's
+    and Ph.D. students.
+  crosslists:
+  - PSMS 31400
+  - CMSC 21400
+  - ASTR 31400
+  - ASTR 21400
+  prereq:
+    any:
+    - PHYS 12200
+    - PHYS 13200
+    - PHYS 14200
+    - CMSC 12100
+    - CMSC 12200
+    - CMSC 12300
+    - consent: instructor
+  prereq_text: PHYS 12200 or PHYS 13200 or PHYS 14200; or CMSC 12100 or CMSC 12200 or CMSC 12300; or consent of instructor.
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physics/
+    quote: PHYS 21400. Creative Machines and Innovative Instrumentation. 100 Units.

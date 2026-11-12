@@ -1,0 +1,99 @@
+# Generated from the 2026-2027 UChicago College Catalog (fetched 2026-11-12) by hand-checked scripts;
+# every source.quote is copied verbatim (whitespace collapsed) from source.url. See data/seed/REVIEW.md.
+courses:
+- code: SOCI 20288
+  title: 'PIR: Contemporary and Research Applications'
+  units: 100
+  notes: Cross-listed with SOSC 25500 (its catalog block lists SOCI 20288 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from SOSC 25500.
+  crosslists:
+  - SOSC 25500
+  prereq_text: SOSC 11400, SOSC 11500, SOSC 11600
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: 'Equivalent Course(s): SOCI 20288'
+  needs_review: true
+- code: SOCI 20602
+  title: Thinking like a Computational Social Scientist
+  units: 100
+  notes: Cross-listed with DATA 20602 (its catalog block lists SOCI 20602 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from DATA 20602.
+  crosslists:
+  - DATA 20602
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/datascience/
+    quote: 'Equivalent Course(s): MACS 30267, SOCI 40267, MACS 20267, PSYC 38520, SOCI 20602, HIST 49307, PSYC 28520'
+- code: SOCI 20620
+  title: Artificial Intelligence, Innovation, and Growth
+  units: 100
+  notes: Cross-listed with DATA 20620 (its catalog block lists SOCI 20620 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from DATA 20620.
+  crosslists:
+  - DATA 20620
+  prereq:
+    all:
+    - any:
+      - MATH 13200
+      - MATH 15200
+      - MATH 16200
+      - MATH 15910
+      - MATH 20250
+      - MATH 20300
+    - any:
+      - ECON 11010
+      - STAT 22000
+      - STAT 23400
+      - STAT 24400
+      - SOCI 20004
+      - SOCI 20602
+      - SOCI 20596
+  prereq_text: '[MATH 13200 or MATH 15200 or MATH 16200 or MATH 15910 or MATH 20250 or MATH 20300] and [ECON 11010 or STAT
+    22000 or STAT 23400 or STAT 24400 or SOCI 20004 or SOCI 20602 or SOCI 20596]'
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/datascience/
+    quote: 'Equivalent Course(s): SOCI 20620, ECMA 33050, ECON 23050, SOCI 30620, MACS 23050, MACS 33050'
+- code: SOCI 30620
+  title: Artificial Intelligence, Innovation, and Growth
+  units: 100
+  notes: Cross-listed with DATA 20620 (its catalog block lists SOCI 30620 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from DATA 20620.
+  crosslists:
+  - DATA 20620
+  prereq:
+    all:
+    - any:
+      - MATH 13200
+      - MATH 15200
+      - MATH 16200
+      - MATH 15910
+      - MATH 20250
+      - MATH 20300
+    - any:
+      - ECON 11010
+      - STAT 22000
+      - STAT 23400
+      - STAT 24400
+      - SOCI 20004
+      - SOCI 20602
+      - SOCI 20596
+  prereq_text: '[MATH 13200 or MATH 15200 or MATH 16200 or MATH 15910 or MATH 20250 or MATH 20300] and [ECON 11010 or STAT
+    22000 or STAT 23400 or STAT 24400 or SOCI 20004 or SOCI 20602 or SOCI 20596]'
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/datascience/
+    quote: 'Equivalent Course(s): SOCI 20620, ECMA 33050, ECON 23050, SOCI 30620, MACS 23050, MACS 33050'
+- code: SOCI 40267
+  title: Thinking like a Computational Social Scientist
+  units: 100
+  notes: Cross-listed with DATA 20602 (its catalog block lists SOCI 40267 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from DATA 20602.
+  crosslists:
+  - DATA 20602
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/datascience/
+    quote: 'Equivalent Course(s): MACS 30267, SOCI 40267, MACS 20267, PSYC 38520, SOCI 20602, HIST 49307, PSYC 28520'

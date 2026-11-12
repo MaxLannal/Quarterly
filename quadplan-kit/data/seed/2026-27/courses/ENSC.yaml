@@ -1,0 +1,158 @@
+# Generated from the 2026-2027 UChicago College Catalog (fetched 2026-11-12) by hand-checked scripts;
+# every source.quote is copied verbatim (whitespace collapsed) from source.url. See data/seed/REVIEW.md.
+courses:
+- code: ENSC 13400
+  title: 'Global Warming: Understanding the Forecast'
+  units: 100
+  notes: Cross-listed with PHSC 13400 (its catalog block lists ENSC 13400 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from PHSC 13400.
+  crosslists:
+  - PHSC 13400
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: 'Equivalent Course(s): ENSC 13400, GEOS 13400'
+- code: ENSC 13410
+  title: 'Global Warming: Understanding the Forecast (Flipped Class)'
+  units: 100
+  notes: Cross-listed with PHSC 13410 (its catalog block lists ENSC 13410 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from PHSC 13410.
+  crosslists:
+  - PHSC 13410
+  prereq_text: Some knowledge of chemistry or physics helpful.
+  terms_offered:
+  - AU
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: 'Equivalent Course(s): GEOS 13410, ENSC 13410'
+- code: ENSC 23820
+  title: "Biogeochemical Analysis in Terrestrial and Aquatic Ecosystems \x96 Marine Biological Laboratory"
+  units: 100
+  notes: Cross-listed with BIOS 27711 (its catalog block lists ENSC 23820 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from BIOS 27711.
+  crosslists:
+  - BIOS 27711
+  prereq_text: Consent only. Admission by application to the Semester in Environmental Science program at the Marine Biological
+    Laboratory in Woods Hole, MA; concurrent registration in BIOS 27710 and BIOS 27712 along with one of BIOS 27713, BIOS
+    27714 or BIOS 27715.
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: 'Equivalent Course(s): ENSC 23820'
+  needs_review: true
+- code: ENSC 24100
+  title: Ecology - Marine Biological Laboratory
+  units: 100
+  notes: Cross-listed with BIOS 27710 (its catalog block lists ENSC 24100 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from BIOS 27710.
+  crosslists:
+  - BIOS 27710
+  prereq_text: Consent only. Admission by application to the Semester in Environmental Science program at the Marine Biological
+    Laboratory in Woods Hole, MA; concurrent registration in BIOS 27711 and BIOS 27712 along with one of BIOS 27713, BIOS
+    27714 or BIOS 27715.
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: 'Equivalent Course(s): ENSC 24100'
+  needs_review: true
+- code: ENSC 24200
+  title: Methods in Microbial Ecology - Marine Biological Laboratory
+  units: 100
+  notes: Cross-listed with BIOS 27714 (its catalog block lists ENSC 24200 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from BIOS 27714.
+  crosslists:
+  - BIOS 27714
+  prereq_text: Consent only. Admission by application to the Semester in Environmental Science program at the Marine Biological
+    Laboratory in Woods Hole, MA; concurrent registration in BIOS 27710, BIOS 27711 and BIOS 27712.
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: 'Equivalent Course(s): ENSC 24200'
+  needs_review: true
+- code: ENSC 24300
+  title: "Roles of Animals in Ecosystems \x96 Marine Biological Laboratory"
+  units: 100
+  notes: Cross-listed with BIOS 27715 (its catalog block lists ENSC 24300 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from BIOS 27715.
+  crosslists:
+  - BIOS 27715
+  prereq_text: Consent only. Admission by application to the Semester in Environmental Science program at the Marine Biological
+    Laboratory in Woods Hole, MA; concurrent registration in BIOS 27710, BIOS 27711, and BIOS 27712.
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: 'Equivalent Course(s): ENSC 24300'
+  needs_review: true
+- code: ENSC 24450
+  title: Marine Resource Use and Conservation- at Marine Biological Laboratory
+  units: 100
+  notes: Cross-listed with BIOS 27717 (its catalog block lists ENSC 24450 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from BIOS 27717.
+  crosslists:
+  - BIOS 27717
+  prereq_text: Consent only. Admission by application to the Semester in Environmental Science program at the Marine Biological
+    Laboratory in Woods Hole, MA
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: 'Equivalent Course(s): ENSC 24450'
+  needs_review: true
+- code: ENSC 24600
+  title: 'Marine Ecosystems: From Microbiomes, to Conservation, Climate & Beyond'
+  units: 100
+  notes: Cross-listed with BIOS 27726 (its catalog block lists ENSC 24600 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from BIOS 27726.
+  crosslists:
+  - BIOS 27726
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: 'Equivalent Course(s): ENSC 24600'
+- code: ENSC 25100
+  title: Methods and Concepts in Oceanography- at Marine Biological Laboratory
+  units: 100
+  notes: Cross-listed with BIOS 27716 (its catalog block lists ENSC 25100 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from BIOS 27716.
+  crosslists:
+  - BIOS 27716
+  prereq_text: Consent only. Admission by application to the Semester in Environmental Science program at the Marine Biological
+    Laboratory in Woods Hole, MA; concurrent registration in BIOS 27710, BIOS 27711 and BIOS 27712.
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: 'Equivalent Course(s): ENSC 25100'
+  needs_review: true
+- code: ENSC 28100
+  title: "Quantitative Environmental Analyses \x96 Marine Biological Laboratory"
+  units: 100
+  notes: Cross-listed with BIOS 27713 (its catalog block lists ENSC 28100 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from BIOS 27713.
+  crosslists:
+  - BIOS 27713
+  prereq_text: Consent Only. Admission by application to the Semester in Environmental Science program at the Marine Biological
+    Laboratory in Woods Hole, MA; concurrent registration in BIOS 27710, BIOS 27711 and BIOS 27712.
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: 'Equivalent Course(s): ENSC 28100'
+  needs_review: true
+- code: ENSC 29800
+  title: Independent Undergraduate Research in Environmental Sciences Marine Biological Laboratory
+  units: 100
+  notes: Cross-listed with BIOS 27712 (its catalog block lists ENSC 29800 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from BIOS 27712.
+  crosslists:
+  - BIOS 27712
+  prereq_text: Consent only. Admission by application to the Semester in Environmental Science program at the Marine Biological
+    Laboratory in Woods Hole, MA; concurrent registration in BIOS 27710 and BIOS 27711 along with one of BIOS 27713 or BIOS
+    27714.
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: 'Equivalent Course(s): ENSC 29800'
+  needs_review: true

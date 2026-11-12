@@ -1,0 +1,110 @@
+# Generated from the 2026-2027 UChicago College Catalog (fetched 2026-11-12) by hand-checked scripts;
+# every source.quote is copied verbatim (whitespace collapsed) from source.url. See data/seed/REVIEW.md.
+courses:
+- code: GEOS 13100
+  title: Physical Geology
+  units: 100
+  description: 'This course introduces plate tectonics; the geologic cycle; and the internal and surface processes that make
+    minerals and rocks, as well as that shape the scenery. Topics include: plate tectonics; Earth structure; natural hazards
+    including earthquakes and volcanoes; crustal deformation and mountain building; and surface processes (erosion, groundwater).
+    Laboratory exercises introduce identifying features of rocks and minerals, and interpreting geological maps. (L)'
+  core_tags:
+  - physical_sciences
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/geophysicalsciences/
+    quote: GEOS 13100. Physical Geology. 100 Units.
+- code: GEOS 13200
+  title: Earth History
+  units: 100
+  description: This courses covers principles of historical inference in Earth science; the physical, chemical, and biological
+    data that are used to reconstruct Earth history; and the geographic, biotic, and environmental development of Earth. Weekly
+    labs focus on observation and interpretation of sedimentary rocks and fossil assemblages in hand samples. (L)
+  core_tags:
+  - physical_sciences
+  prereq: GEOS 13100
+  prereq_text: GEOS 13100
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/geophysicalsciences/
+    quote: GEOS 13200. Earth History. 100 Units.
+- code: GEOS 13400
+  title: 'Global Warming: Understanding the Forecast'
+  units: 100
+  description: 'The future of human civilization depends on its ability to avoid, or adapt to, climate change associated with
+    fossil-fuel (carbon) emissions. With so much at stake, it is important that citizens of the world understand the science
+    which forms the foundation of what is understood about global climate change. The learning objectives of this course are
+    to develop understanding of: (1) the historical and pre-historical records of global climate change, (2) the Earth''s
+    carbon budget, (3) how the greenhouse effect determines temperature in Earth''s atmosphere and at the land and sea surface,
+    (4) how climate projections are made, and (5) how present-day activities, both in the scientific research realm and in
+    the socio-economic/political realm are shaping what will happen in the future. Course activity is partitioned into lectures
+    (given by the course instructor), weekly laboratory-section activity (run by graduate teaching assistants), outside reading,
+    and occasional homework. Assessment leading to a course grade will focus primarily on student performance in completing
+    laboratory exercises and on a midterm and final exam. (L)'
+  crosslists:
+  - PHSC 13400
+  - ENSC 13400
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/geophysicalsciences/
+    quote: 'GEOS 13400. Global Warming: Understanding the Forecast. 100 Units.'
+- code: GEOS 13410
+  title: 'Global Warming: Understanding the Forecast (Flipped Class)'
+  units: 100
+  description: This course presents the science behind the forecast of global warming to enable the student to evaluate the
+    likelihood and potential severity of anthropogenic climate change in the coming centuries. It includes an overview of
+    the physics of the greenhouse effect, including comparisons with Venus and Mars; predictions and reliability of climate
+    model forecasts of the greenhouse world. This course is part of the College Course Cluster program, Climate Change, Culture,
+    and Society. This course covers the same material as PHSC 13400, but is organized using a flipped classroom approach in
+    order to increase student engagement and learning.
+  crosslists:
+  - PHSC 13410
+  - ENSC 13410
+  prereq_text: Some knowledge of chemistry or physics helpful.
+  terms_offered:
+  - AU
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/geophysicalsciences/
+    quote: 'GEOS 13410. Global Warming: Understanding the Forecast (Flipped Class)'
+  needs_review: true
+- code: GEOS 13900
+  title: Biological Evolution
+  units: 100
+  description: 'This course is an introduction to evolutionary processes and patterns in present-day organisms and in the
+    fossil record and how they are shaped by biological and physical forces. Topics emphasize evolutionary principles. They
+    include DNA and the genetic code, the genetics of populations, the origins of species, and evolution above the species
+    level. We also discuss major events in the history of life, such as the origin of complex cells, invasion of land, and
+    mass extinction. This course is part of the College Course Cluster program: Climate Change, Culture and Society. (L)'
+  notes: No Biological Sciences majors except by petition to the BSCD Senior Advisers. Due to significant overlap of course
+    content, students may register for only one of PHSC 11000, BIOS 12117, or GEOS 13900/BIOS 13123. Students using this course
+    for credit in the GEOS or ENSC major register for GEOS 27300; additional work, including a term paper, will be required.
+  crosslists:
+  - BIOS 13123
+  prereq:
+    any:
+    - BIOS 10130
+    - BIOS 10140
+  prereq_text: BIOS 10130 or BIOS 10140
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/geophysicalsciences/
+    quote: GEOS 13900. Biological Evolution. 100 Units.
+- code: GEOS 25600
+  title: Getting Something for Nothing
+  units: 100
+  description: We can learn an incredible amount about the physical world with simple tools of estimation. So-called Fermi
+    problems involve estimating quantities of interest to within an order of magnitude, or factor of 10, on the "back of an
+    envelope." There are leanable techniques that we can use to approach these problems. Developing these skills is incredibly
+    useful for physical scientists because it allows us to quickly estimate whether an idea is worth pursuing with expensive
+    resources and time. More generally, order-of-magnitude estimation can keep you from getting fooled by journalists and
+    politicians, or give you a trading edge in a competitive market. Finally, Fermi problems are common in interviews for
+    jobs in finance, consulting, and software. Students in this course will develop techniques to quickly estimate physical
+    science quantities to within an order of magnitude.
+  crosslists:
+  - PHSC 11900
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/geophysicalsciences/
+    quote: GEOS 25600. Getting Something for Nothing. 100 Units.

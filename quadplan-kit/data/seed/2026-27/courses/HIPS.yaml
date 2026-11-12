@@ -1,0 +1,93 @@
+# Generated from the 2026-2027 UChicago College Catalog (fetched 2026-11-12) by hand-checked scripts;
+# every source.quote is copied verbatim (whitespace collapsed) from source.url. See data/seed/REVIEW.md.
+courses:
+- code: HIPS 11300
+  title: 'Science Communication: Crafting a Science Think Piece'
+  units: 100
+  notes: Cross-listed with PHSC 28104 (its catalog block lists HIPS 11300 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from PHSC 28104.
+  crosslists:
+  - PHSC 28104
+  prereq:
+    any:
+    - standing: third-year
+    - standing: fourth-year
+    - consent: instructor
+  prereq_text: Three quarters of physical or biological (including neuroscience) sciences. Third- or fourth-year standing
+    or consent of instructor.
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: 'Equivalent Course(s): SCPD 11300, HIPS 11300, CCSG 22702'
+  needs_review: true
+- code: HIPS 17521
+  title: Energy in World Civilizations I
+  units: 100
+  notes: Cross-listed with HIST 17521 (its catalog block lists HIPS 17521 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from HIST 17521.
+  crosslists:
+  - HIST 17521
+  prereq_text: Parts I and II should be taken in sequence. This sequence meets the general education requirement in civilization
+    studies.
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): SOSC 27521, CEGU 27521, HIPS 17521'
+  needs_review: true
+- code: HIPS 17522
+  title: Energy in World Civilizations II
+  units: 100
+  notes: Cross-listed with HIST 17522 (its catalog block lists HIPS 17522 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from HIST 17522.
+  crosslists:
+  - HIST 17522
+  prereq_text: Parts I and II should be taken in sequence. This sequence meets the general education requirement in civilization
+    studies.
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): ANTH 17522, CEGU 27522, HIPS 17522, SOSC 27522'
+  needs_review: true
+- code: HIPS 25207
+  title: 'Mindfulness: Experience and Media'
+  units: 100
+  notes: Cross-listed with HUMA 25207 (its catalog block lists HIPS 25207 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from HUMA 25207.
+  crosslists:
+  - HUMA 25207
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/humanities/
+    quote: 'Equivalent Course(s): HLTH 25207, MADD 14207, HIPS 25207, TAPS 20507'
+- code: HIPS 25600
+  title: History of Statistics
+  units: 100
+  notes: Cross-listed with STAT 26700 (its catalog block lists HIPS 25600 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from STAT 26700.
+  crosslists:
+  - STAT 26700
+  prereq_text: Prior statistics course
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/statistics/
+    quote: 'Equivalent Course(s): HIPS 25600, CHSS 32900, STAT 36700'
+  needs_review: true
+- code: HIPS 26021
+  title: Sense & Sensibility & Science
+  units: 100
+  notes: Cross-listed with SOSC 26021 (its catalog block lists HIPS 26021 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from SOSC 26021.
+  crosslists:
+  - SOSC 26021
+  prereq_text: 'PQ: Third or fourth-year standing.'
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: 'Equivalent Course(s): SCPD 26021, PBPL 26021, BPRO 26021, DIGS 26021, HIPS 26021'
+  needs_review: true

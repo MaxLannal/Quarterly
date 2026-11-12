@@ -1,0 +1,352 @@
+# Generated from the 2026-2027 UChicago College Catalog (fetched 2026-11-12) by hand-checked scripts;
+# every source.quote is copied verbatim (whitespace collapsed) from source.url. See data/seed/REVIEW.md.
+courses:
+- code: CRWR 12112
+  title: 'Reading as a Writer: Chicago "City on the Remake"'
+  units: 100
+  description: This course invites writers to reconsider the influence of Chicago's public spaces on artistic impulse. In
+    particular this quarter, we will examine aspects and depictions of a "fantastic Chicago." If Chicago is a city that "dreams
+    itself," what do its spaces of violence and environmental degradation say about that dream? Students will analyze and
+    explore Chicago writers' work in prose and poetry, then develop their own creative responses, building connections to
+    adopted critical approaches. To these ends, we will examine work by writers including Daniel Borzutzky, Barry Pearce,
+    Sterling Plumpp, Ed Roberson, and Ava Tomasula y Garcia, as well as the city's rich legacies in documentary and the visual
+    arts.
+  core_tags:
+  - arts
+  crosslists:
+  - AMER 12112
+  - CHST 12112
+  prereq_text: If the course is listed as consent required or closed, please reach out to the instructor to enroll or to be
+    added to the waitlist. Attendance on the first day is mandatory.
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/creativewriting/
+    quote: 'CRWR 12112. Reading as a Writer: Chicago "City on the Remake"'
+  needs_review: true
+- code: CRWR 12136
+  title: 'Reading as a Writer: Adaptation as Form'
+  units: 100
+  description: The main goal of this course will be to understand the reasons, traditions and methods behind the practice
+    of literary adaptations. From Joyce Carol Oates's "Blue Bearded Lover," to Anne Sexton's "Cinderella", to Angela Carter's
+    "Wolf-Alice" and Marina Carr's "By the Bog of Cats," there are stories that continue to resonate through the centuries,
+    and others that are made to resonate through the labor of new story tellers. Each text will be explored both independently
+    and within the context of its adaptive genealogy. Students will be expected to read each text carefully, come prepared
+    to actively participate in class discussion and respond to both academic and creative writing prompts based on assigned
+    texts and class lecture.
+  core_tags:
+  - arts
+  prereq_text: If the course is listed as consent required or closed, please reach out to the instructor to enroll or to be
+    added to the waitlist. Attendance on the first day is mandatory.
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/creativewriting/
+    quote: 'CRWR 12136. Reading as a Writer: Adaptation as Form. 100 Units.'
+  needs_review: true
+- code: CRWR 12138
+  title: 'Intro to Genres: Evil Incarnate'
+  units: 100
+  description: Some of the most compelling pieces of writing across all genres deal with, and often feature, the concept of
+    Evil at their center. Whether they address it directly through a character, like Bulgakov's Professor Woland in Master
+    and Margarita, or as a concept in Arendt's Eichmann in Jerusalem. Whether the narratives are anchored in the concreteness
+    of real crime, like in Capote's In Cold Blood, and sometimes they revel in the abstraction of sin, as in Milton's Paradise
+    Lost, they always dare to ask, "What and why is evil?" Why might character cower at the thought of that which awaits us
+    in the dark, like in HP Lovecraft's Dagon, and why might a real 19-year-old woman in Bute, Montana anticipate it with
+    bated breath, like in Mary MacLane's I Await the Devil's Coming. This course is designed to explore this question alongside
+    authors who devoted their lives to understanding the role of evil in literature and life, to contemplating its necessity,
+    its appeal, its frivolity, and its betrayal. The course will be divided into three sections, each section devoted to a
+    specific genre during which two to three texts will be explored, discussed, and analyzed in class, and at the end of which
+    one analysis paper will be due, culminating in a final analytical and creative piece.
+  core_tags:
+  - arts
+  prereq_text: This course meets the general education requirement in the arts. If this course is listed as “consent required”
+    or “closed,” please reach out to the instructor directly to enroll in the class or to be added to the waitlist. Attendance
+    on the first day is mandatory.
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/creativewriting/
+    quote: 'CRWR 12138. Intro to Genres: Evil Incarnate. 100 Units.'
+  needs_review: true
+- code: CRWR 12147
+  title: 'Intro to Genres: The River''s Running Course'
+  units: 100
+  description: 'Rivers move--over land, through history, among peoples--and they make: landscapes and civilizations. They
+    are the boundaries on our maps, the dividers of nations, of families, of the living and the dead, but they are also the
+    arteries that connect us. They are meditative, meandering journeys and implacable, surging power. They are metaphors but
+    also so plainly, corporeally themselves. In this course, we will encounter creative work about rivers, real and imaginary,
+    from the Styx to the Amazon. Through poetry, fiction, nonfiction, and drama, we will consider what rivers are, what they
+    mean to us, and how they are represented in art and literature. Rivers will be the topic and inspiration for our own creative
+    writing, too. The goal for this course is to further your understanding of creative writing genres and the techniques
+    that creative writers employ to produce meaningful work in each of those genres. You will also practice those techniques
+    yourselves as write your own creative work in each genre. Our weekly sessions will involve a mixture of discussions, brief
+    lectures, student presentations, mini-workshops and in-class exercises. Most weeks, you will be responsible for a creative
+    and/or critical response (300-500 words) to the reading, and the quarter will culminate in a final project (7-10 pages)
+    in the genre of your choice, inspired by the Chicago River.'
+  core_tags:
+  - arts
+  crosslists:
+  - CHST 12147
+  prereq_text: If the course is listed as consent required or closed, please reach out to the instructor to enroll or to be
+    added to the waitlist. Attendance on the first day is mandatory.
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/creativewriting/
+    quote: 'CRWR 12147. Intro to Genres: The River''s Running Course. 100 Units.'
+  needs_review: true
+- code: CRWR 12150
+  title: 'Intro to Genres: Writing for TV: The Writers'' Room'
+  units: 100
+  description: In this course, you'll learn the craft of writing for television by collaboratively developing a pilot script
+    for an original television series set in the South Side of Chicago. Modeled on the "writers' room," we'll research and
+    develop the concept, characters, the outline, and create a plan for the series. In addition to being introduced to the
+    fundamentals of storytelling through lectures, discussions, screenings, and script analysis, you'll also learn to work
+    collaboratively with a team, constructing a daily agenda, brainstorming, researching, pitching, discussing ideas, and
+    composing in screenwriting format. By the end of this hands-on course, you will be armed with a set of techniques and
+    skills that will support your professional development as a writer.
+  core_tags:
+  - arts
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/creativewriting/
+    quote: 'CRWR 12150. Intro to Genres: Writing for TV: The Writers'' Room. 100 Units.'
+- code: CRWR 12151
+  title: 'Intro to Genres: The Gothic Lens'
+  units: 100
+  description: Like the monsters it so often portrays, Gothic fiction is at once a transgressive, seductive, and mutable genre-blending
+    horror, mystery, and romance and using supernatural elements to blur the line between realism and fantasy. It's amid this
+    ambiguity that the Gothic is at its most evocative and visceral, powerfully dramatizing our encounters with the irrational
+    and inexplicable in nature, in others, and in ourselves. This Arts Core course will focus on these psychologically provocative
+    aspects of the genre. As we read Gothic works from different eras and cultures, we'll examine what these stories of extraordinary
+    conflict might reveal about the horrors and mysteries of ordinary life-of our hidden desires, anxieties, and pathologies.
+    Crucially, we'll approach them from the writer's perspective and consider what the Gothic enables a writer to explore
+    and express that other genres may not. With this in mind, students will write their "Gothic Scenes" throughout the quarter,
+    applying their own intimate Gothic lens to elusive encounters from their past.
+  core_tags:
+  - arts
+  prereq_text: If the course is listed as consent required or closed, please reach out to the instructor to enroll or to be
+    added to the waitlist. Attendance on the first day is mandatory.
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/creativewriting/
+    quote: 'CRWR 12151. Intro to Genres: The Gothic Lens. 100 Units.'
+  needs_review: true
+- code: CRWR 12159
+  title: 'Reading as a Writer: The Bad Girls Club'
+  units: 100
+  description: 'Jezebels, witches, femme fatales, nasty women, sirens, madwomen, and murderesses: the world over, these women
+    of many names-whom we''ll collectively refer to as "the Bad Girls Club"-have alternately inspired the disdain and delight
+    of multitudes. Whether jailed, expelled, excommunicated, or burned at the stake, their antiheroic antics have challenged,
+    critiqued, or, some might say, corrupted the laws, mores, and sensibilities of societies. If it is true that polite, well-behaved
+    women rarely make history, then what do impolite, badly-behaved women teach us about the construction of his story? In
+    this course, we''ll examine literature from around the world featuring members of the "Bad Girls Club," who, in opposing
+    complimentary constructions of femininity, femaleness, and power invite introspection on the gendered nature of story
+    and storytelling. In short critical papers, we''ll analyze the tropes, features, and conventions of literature featuring
+    these bad characters, and in short exercises, you''ll write stories, poetry, and essays inspired by them.'
+  core_tags:
+  - arts
+  crosslists:
+  - GNSE 12159
+  prereq_text: If the course is listed as consent required or closed, please reach out to the instructor to enroll or to be
+    added to the waitlist. Attendance on the first day is mandatory.
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/creativewriting/
+    quote: 'CRWR 12159. Reading as a Writer: The Bad Girls Club. 100 Units.'
+  needs_review: true
+- code: CRWR 12165
+  title: 'Intro to Genres: Short Form Screenwriting'
+  units: 100
+  description: This course explores short form screenwriting, as distinct from feature-length or episodic screenwriting. In
+    addition to studying the essential elements of a screenplay, we will read, view, and discuss approaches to scripting brief
+    documentary, poetic, and fictional time-based works. This work will prepare us for in- and out-of-class writing exercises
+    in these modes, which students will often discuss in a workshop environment. Students will respond in creative and critical
+    ways to the screenings and readings; present on a specific time-based work or creator; and write in the short screenwriting
+    formats under study, culminating in a final creative project.
+  core_tags:
+  - arts
+  prereq_text: This course meets the general education requirement in the arts. If this course is listed as “consent required”
+    or “closed,” please reach out to the instructor directly to enroll in the class or to be added to the waitlist. Attendance
+    on the first day is mandatory.
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/creativewriting/
+    quote: 'CRWR 12165. Intro to Genres: Short Form Screenwriting. 100 Units.'
+  needs_review: true
+- code: CRWR 12170
+  title: 'Reading as a Writer: Literary Tyrants'
+  units: 100
+  description: 'This course explores the characteristics and features of non-democratic regimes and tyrannies as they are
+    reflected in literature and film: how and why they come about, what sustains them, why some resist them and others do
+    not, and how/why they fall. Analyzing films, novels, and articles left in the wake of dictatorships like those of Julius
+    Caesar, Hitler, and Rafael Trujillo, we will investigate the effects of absolute authority, how ordinary people react
+    to repression, and the shaky transition from despotism to freedom. We will consider a diverse range of writers including
+    Suetonius, Shakespeare, Gabriel Garcia Marquez, Hannah Arendt, and George Orwell. Assignments include critical essays,
+    creative exercises, and a final creative piece.'
+  core_tags:
+  - arts
+  prereq_text: This course meets the general education requirement in the arts. If this course is listed as “consent required”
+    or “closed,” please reach out to the instructor directly to enroll in the class or to be added to the waitlist. Attendance
+    on the first day is mandatory.
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/creativewriting/
+    quote: 'CRWR 12170. Reading as a Writer: Literary Tyrants. 100 Units.'
+  needs_review: true
+- code: CRWR 12171
+  title: 'Intro to Genres: True Crime Fiction'
+  units: 100
+  description: From 19th century penny dreadfuls to the more recent explosion of podcasts and documentaries, True Crime has
+    long endured as a popular narrative genre. Yet, despite the genre's popularity, there is contention around its potential
+    exploitation of victims, romanticization of violence, and lurid positioning as "entertainment." This course aims to critically
+    examine the narrative tropes, appeals, and language of the true crime genre by engaging with works of True Crime fiction,
+    including both works of fiction based on "true" events (such as Underneath by Lily Hoang, Butter by Asako Yuzuki, and
+    My Men by Victoria Kielland) and entirely fictionalized works that develop themselves as convincing True Crime facsimiles
+    (such as Defiance by Carole Maso, My Sister, the Serial Killer by Oyinkan Braithwaite, and Death in Her Hands by Ottessa
+    Moshfegh). The course will include reading discussions, short weekly written responses, and a project wherein students
+    compare and contrast two alternate "versions" of a True Crime story.
+  core_tags:
+  - arts
+  prereq_text: This course meets the general education requirement in the arts. If this course is listed as “consent required”
+    or “closed,” please reach out to the instructor directly to enroll in the class or to be added to the waitlist. Attendance
+    on the first day is mandatory.
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/creativewriting/
+    quote: 'CRWR 12171. Intro to Genres: True Crime Fiction. 100 Units.'
+  needs_review: true
+- code: CRWR 12173
+  title: 'Intro to Genres: You Didn''t Hear This From Me'
+  units: 100
+  description: 'Gossip, rumor, scandal, hearsay: from Heian period Japan to contemporary gossip columns, marginal channels
+    of information have been an essential vehicle for storytelling, information transmission, and entertainment. In this class,
+    we will explore the role of marginal, subversive, and communal forms of communication as both a tool and a topic in literature.
+    From pushing plot forward to challenging power dynamics, we will examine the practical and ethical potential of gossip
+    in fiction, poetry, and nonfiction. Students will read broadly across genres and styles then apply what they''ve learned
+    in two creative pieces culminating in a final reflective paper that details the writer''s choices in revision and their
+    creative pieces''s connection to the class topic.'
+  core_tags:
+  - arts
+  prereq_text: This course meets the general education requirement in the arts. If this course is listed as “consent required”
+    or “closed,” please reach out to the instructor directly to enroll in the class or to be added to the waitlist. Attendance
+    on the first day is mandatory.
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/creativewriting/
+    quote: 'CRWR 12173. Intro to Genres: You Didn''t Hear This From Me. 100 Units.'
+  needs_review: true
+- code: CRWR 12180
+  title: 'Reading as a Writer: Losers'
+  units: 100
+  description: It's very boring to talk about winners," Umberto Ecco once said. "The real literature always talks about losers."
+    In this class, we shall embrace all manner of failures, no-accounts, and deadbeats, those unlikely 'heroes' around which
+    good fiction often rotates, considering how they intrigue us with their flaws and failings, but also how they can present
+    pitfalls at the levels of plot (lack of agency), tone (reward vs. punishment), and reader sympathy. Through an array of
+    short fiction, as well as films and a hybrid novel, this course aims to uncover the ways narrative craft can infuse stories
+    about shiftless and inept protagonists with a sense of curation, poignancy, and meaning. Students will also attempt their
+    own short story versions of "loser lit," to be workshopped by the class. Expectations will, of course, be very low.
+  core_tags:
+  - arts
+  prereq_text: If the course is listed as consent required or closed, please reach out to the instructor to enroll or to be
+    added to the waitlist. Attendance on the first day is mandatory.
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/creativewriting/
+    quote: 'CRWR 12180. Reading as a Writer: Losers. 100 Units.'
+  needs_review: true
+- code: CRWR 12182
+  title: 'Intro to Genres: Parody'
+  units: 100
+  description: Beginning writers are often told to imitate 'great authors' to discover their voices. One way to reconcile
+    imitation with originality is to copy works from literary history with a comic touch. In this course, students will satirize
+    poetry, fiction, and nonfiction from the history of Western literature to learn how art works. Parodying Stein's portraiture
+    illuminates the workings of literary mimesis; satirizing Lispector's proliferating points of view adumbrates perspectival
+    horizons in narrative; satirizing Tanizaki's praise of shadows illustrates the mechanics of nonfiction polemic. Students
+    will write imitations of literary works and a final mock-academic essay on parody and mimesis.
+  core_tags:
+  - arts
+  prereq_text: This course meets the general education requirement in the arts. If this course is listed as “consent required”
+    or “closed,” please reach out to the instructor directly to enroll in the class or to be added to the waitlist. Attendance
+    on the first day is mandatory.
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/creativewriting/
+    quote: 'CRWR 12182. Intro to Genres: Parody. 100 Units.'
+  needs_review: true
+- code: CRWR 12183
+  title: 'Intro to Genres: The Grammars of Narrative'
+  units: 100
+  description: Ever since humans were drawing on cave walls, the ways in which we communicate meaning through stories has
+    been evolving. This class will look at three forms of narrative-fiction, narrative poetry, and film-and explore their
+    "grammars" (i.e. the modes, tools, elements of craft, etc. that a particular genre uses to convey meaning or achieve certain
+    effects). How does film (a visual medium that offers a voyeuristic experience) tell a story differently than does fiction
+    (which invites the reader to participate more in an act of shared imagination), differently than poetry (which condenses
+    a story to its essences)? How is meaning or emotion conveyed differently through each? How do different grammars influence
+    the effects they achieve? Students will look at and discuss various works of fiction, poetry, and film, read critical
+    and craft-oriented texts, complete weekly reading responses, and write creative exercises. A hybrid creative/analytical
+    paper will be due at the end of the course.
+  core_tags:
+  - arts
+  prereq_text: If the course is listed as consent required or closed, please reach out to the instructor to enroll or to be
+    added to the waitlist. Attendance on the first day is mandatory.
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/creativewriting/
+    quote: 'CRWR 12183. Intro to Genres: The Grammars of Narrative. 100 Units.'
+  needs_review: true
+- code: CRWR 12184
+  title: 'Reading as a Writer: Violence and Comedy'
+  units: 100
+  description: According to Mel Brooks, "Tragedy is when I cut my finger. Comedy is when you fall into an open sewer and die."
+    It isn't easy to argue with Brooks, yet there exist numerous wildly successful marriages between violence and comedy for
+    which his maxim doesn't fully account. In this class, we will explore such marriages-works by Helen Garner, Juan Pablo
+    Villalobos, Laura Vasquez, Daniil Kharms, Franz Kafka, Ludmilla Petrushevskaya, Isaac Babel, Ralph Ellison, and more-and
+    we'll attempt to better understand their success. In the process, we'll seek to develop a clearer sense of the twisting
+    border that separates comedic from tragic violence. Students will read the assigned works closely, discuss them with rigor,
+    and write violent and comic fiction of their own.
+  core_tags:
+  - arts
+  prereq_text: If the course is listed as consent required or closed, please reach out to the instructor to enroll or to be
+    added to the waitlist. Attendance on the first day is mandatory.
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/creativewriting/
+    quote: 'CRWR 12184. Reading as a Writer: Violence and Comedy. 100 Units.'
+  needs_review: true
+- code: CRWR 12185
+  title: 'Intro to Genres: Games People Play'
+  units: 100
+  description: Description TBA.
+  core_tags:
+  - arts
+  prereq_text: Creative Writing Arts Core courses are open to all undergraduate students. If this course is listed as “consent
+    required” or “closed,” please reach out to the instructor directly to enroll or to be added to the waitlist. Attendance
+    on the first day is mandatory.
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/creativewriting/
+    quote: 'CRWR 12185. Intro to Genres: Games People Play. 100 Units.'
+  needs_review: true
+- code: CRWR 18200
+  title: Poetry and the Human III
+  units: 100
+  notes: No course block on the Creative Writing page; title and units from the Arts Core course table.
+  core_tags:
+  - arts
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/artscore/
+    quote: 'MADD 26210 Media Art and Design Practice and CRWR 18200 Poetry and the Human III are affiliated with HUMA 16000-16100-16200
+      Media Aesthetics: Image, Text, Sound I-II-III and HUMA 18000-18100-18200 Poetry and the Human I-II-III, respectively.'
+  needs_review: true

@@ -1,0 +1,691 @@
+# Generated from the 2026-2027 UChicago College Catalog (fetched 2026-11-12) by hand-checked scripts;
+# every source.quote is copied verbatim (whitespace collapsed) from source.url. See data/seed/REVIEW.md.
+courses:
+- code: PHSC 10100
+  title: Origin and Evolution of the Solar System and the Earth
+  units: 100
+  description: 'This course examines the physical and chemical origins of planetary systems, the role of meteorite studies
+    in this context, and a comparison of the Earth with neighboring planets. It then turns to chemical and physical processes
+    that lead to internal differentiation of the Earth. Further topics include the thermal balance at the Earth''s surface
+    (glaciation and the greenhouse effect), and the role of liquid water in controlling crustal geology and evolution. (L)
+    Note: This course includes a lab section, but the labs can be done at home at any time with no need for specialized equipment.'
+  notes: Under no circumstances may a student receive credit for both PHSC 10100 and PHSC 10800.
+  core_tags:
+  - physical_sciences
+  mutually_exclusive:
+  - PHSC 10800
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: PHSC 10100. Origin and Evolution of the Solar System and the Earth. 100 Units.
+- code: PHSC 10800
+  title: 'Earth as a Planet: Exploring Our Place in the Universe'
+  units: 100
+  description: 'This course explores the diversity of bodies in our Solar System, and the physical and chemical processes
+    that have shaped them over their histories. We will also discuss how these studies have carried us away from an Earth-centered
+    view of the universe to one where Earth is just one of billions of planets that exist in our galaxy. Topics to be covered
+    include: early observations of the Solar System and the laws of planetary motion, the formation and evolution of the Moon,
+    the structure and geophysical evolution of the planets, and the search for habitable environments outside of Earth.'
+  notes: Under no circumstances may a student receive credit for both PHSC 10100 and PHSC 10800.
+  core_tags:
+  - physical_sciences
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: 'PHSC 10800. Earth as a Planet: Exploring Our Place in the Universe. 100 Units.'
+- code: PHSC 11000
+  title: Environmental History of the Earth
+  units: 100
+  description: This course considers how physical and biological processes determine environmental conditions at the surface
+    of the Earth. The Spring Quarter version stresses how environments and life have changed over the 4.5 billion-year history
+    of Earth (Webster). Topics include the methods of historical inference in geology; major transitions in the history of
+    life, including the origin of life, the evolution of oxygen-producing photosynthesis, the origin of animals, and the series
+    of massive extinctions that have repeatedly re-set ecosystems both on land and in the sea; and ecosystem evolution, including
+    the environmental effects of human evolution. The Autumn Quarter version covers the same methodological ground but places
+    greater stress on evaluating environmental and ecological changes within our present-day, increasingly human-dominated
+    Anthropocene (Kidwell). In both versions, labs involve hands-on study of rock and fossil specimens, and analysis and interpretation
+    of datasets drawn from the scientific literature and/or faculty research programs.
+  notes: Due to significant overlap of course content, students may register for only one of PHSC 11000, BIOS 12117, or GEOS
+    13900/BIOS 13123
+  core_tags:
+  - physical_sciences
+  terms_offered:
+  - AU
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: PHSC 11000. Environmental History of the Earth. 100 Units.
+- code: PHSC 11600
+  title: 'Physics for Future Presidents: Fundamental Concepts and Applications'
+  units: 100
+  description: This algebra-based course presents an introduction to many of the foundational concepts of physics with applications
+    to modern society. These concepts include energy and power, heat, sound, gravity, electromagnetism and light, nuclear
+    physics and radioactivity, and Newton's laws.
+  core_tags:
+  - physical_sciences
+  prereq_text: none
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: 'PHSC 11600. Physics for Future Presidents: Fundamental Concepts and Applications. 100 Units.'
+- code: PHSC 11700
+  title: 'Physics for Future Presidents: Energy and Sustainability'
+  units: 100
+  description: This course treats both the past and future of how the principles that govern the conversion of energy to useful
+    work have impacted and will impact civilization. The principles of kinetic, potential, thermal, mechanical, and nuclear
+    energies will be considered in the contexts of societal issues such as energy sustainability, modern technologies, war,
+    information, food, and health.
+  notes: PHSC 11600-11700 is an approved two-quarter sequence which will satisfy the general education requirement in the
+    physical sciences.
+  core_tags:
+  - physical_sciences
+  prereq_text: none
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: 'PHSC 11700. Physics for Future Presidents: Energy and Sustainability. 100 Units.'
+- code: PHSC 11800
+  title: Physics and Contemporary Architecture
+  units: 100
+  description: Architectural structures form the built environment around us and in many ways create the backbone of our civilization.
+    They push the limits of form and function on the largest human scales, often leading to iconic masterpieces that symbolize
+    the aesthetics as well as the technical achievements of a period. Many architectural advances have been made possible
+    by breakthroughs in the science of materials, which then led to innovation in construction and fabrication techniques.
+    This course will introduce the physics principles that have enabled some of the most innovative architecture of our time.
+    This course will take key ideas and tools from physics and demonstrate their power and relevance in a broader context
+    familiar from everyday experience. The course will challenge students to recognize physics concepts in the built structures
+    that make up the urban environment we live in. Chicago is a most appropriate place for this study; it was the birthplace
+    of the first skyscraper, and ever since it has played an internationally celebrated role in pushing the limits of the
+    architectural state of the art. A long succession of renowned Chicago architects and structural engineers has turned this
+    city into a premier laboratory for architectural innovation. Against this backdrop, the course will show how science,
+    and physics in particular, delivers the conceptual foundations that drive current directions in architecture and open
+    up new opportunities.
+  notes: The course will consist of two lectures per week plus a weekly hands-on workshop (lab) component. The Monday lectures
+    will introduce the physics principles to be explored that week. The Thursday lectures will be delivered by distinguished
+    guest speakers, including renowned architects and engineers. These lectures will be public lectures. They will relate
+    to the physics principle introduced that Monday and explore its ramification within the broader context of contemporary
+    architectural practice. The Thursday afternoon workshop component will involve team-based, hands-on construction projects
+    to develop a better understanding and intuition of the physics principles introduced in the lectures and to obtain a sense
+    of their real-life implications. The workshops will also provide an opportunity to interact with the guest lecturers.
+    Attendance at Thursday lectures is required. This course meets the general education requirement in the physical sciences
+    and may be paired with PHSC 11600, 11700, 12600, or 13400 in order to complete the requirement. This course can be taken
+    for credit towards either the general education requirement in the physical sciences or the Architectural Studies minor,
+    but not both. Students intending to receive physical sciences general education credit should register for PHSC 11800;
+    students intending to receive credit towards the Architectural Studies Minor should register for ARCH 11800.
+  core_tags:
+  - physical_sciences
+  crosslists:
+  - CHST 11800
+  - ARCH 11800
+  prereq_text: Some exposure to high-school physics is recommended
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: PHSC 11800. Physics and Contemporary Architecture. 100 Units.
+- code: PHSC 11900
+  title: Getting Something for Nothing
+  units: 100
+  description: We can learn an incredible amount about the physical world with simple tools of estimation. So-called Fermi
+    problems involve estimating quantities of interest to within an order of magnitude, or factor of 10, on the "back of an
+    envelope." There are leanable techniques that we can use to approach these problems. Developing these skills is incredibly
+    useful for physical scientists because it allows us to quickly estimate whether an idea is worth pursuing with expensive
+    resources and time. More generally, order-of-magnitude estimation can keep you from getting fooled by journalists and
+    politicians, or give you a trading edge in a competitive market. Finally, Fermi problems are common in interviews for
+    jobs in finance, consulting, and software. Students in this course will develop techniques to quickly estimate physical
+    science quantities to within an order of magnitude.
+  core_tags:
+  - physical_sciences
+  crosslists:
+  - GEOS 25600
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: PHSC 11900. Getting Something for Nothing. 100 Units.
+- code: PHSC 12200
+  title: The Chemistry of Food and Cooking
+  units: 100
+  description: The goals of this course are for students to understand the everyday chemistry involved in food and cooking,
+    gain science literacy, and critically evaluate food marketing. The first part of the course will explore the basics of
+    food chemistry, establishing how the structure and properties of water, fats, proteins, and other macromolecules influence
+    our eating and cooking experiences. We will also investigate the chemical components that contribute to color, flavor,
+    and aroma in food. The rest of the course will examine consumer issues related to food science. What do the food labels
+    organic, all-natural, and non-GMO actually mean from a chemistry perspective? What is the science involved in the plant-based
+    meat industry? How can we use chemistry to be a more thoughtful consumer of food? Additional topics will be driven by
+    student interest. The course will include a both a lecture and laboratory component. The laboratory sessions will involve
+    case studies and application of lecture topics in a collaborative environment. Course assignments will include readings,
+    class discussions, written papers, and a final presentation.
+  notes: 'In order to complete the Physical Sciences Core Requirement, this course may be paired with: PHSC 11600, PHSC 11700,
+    PHSC 12400, PHSC 12500, PHSC13400, PHSC 13600'
+  core_tags:
+  - physical_sciences
+  crosslists:
+  - CHEM 12600
+  prereq_text: Some previous background in Chemistry is recommended
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: PHSC 12200. The Chemistry of Food and Cooking. 100 Units.
+- code: PHSC 12400
+  title: The Chemistry of Big Problems
+  units: 100
+  description: This course will discuss the chemistry of big problems that impact human life and society, such as the future
+    accessibility of personal genetic sequence information, genetically modified organisms, or plastics and polymers and alternative
+    sources of energy. We will use each of these topics as a window to grasp the underlying chemistry, reaction mechanisms,
+    analytical methods, and quantitative chemical principles applied to major scientific issues that impact the world around
+    us. Relevant examples will be considered in a discussion-oriented format to bring out chemical and analytical principles
+    associated with big problems. The course will have a classroom lecture component as well as a laboratory component. The
+    laboratory component will involve case studies and problem solving by application of analytical principles and independent
+    work or teams of students. (L)
+  notes: 'Note(s): In order to satisfy the general education requirements in the physical sciences PHSC 12400 may be combined
+    with PHSC 12300 Chemistry for an Alternative Energy Source or PHSC 12500 Molecular Mechanisms of Human Disease. If a student
+    does not wish to continue with CHEM 10100 Introductory General Chemistry, CHEM 11100 Comprehensive General Chemistry,
+    or CHEM 12100 Honors General Chemistry sequence, they may take PHSC 12400 as the second course.,'
+  core_tags:
+  - physical_sciences
+  crosslists:
+  - CHEM 12400
+  prereq_text: Some previous background in Chemistry is recommended.
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: PHSC 12400. The Chemistry of Big Problems. 100 Units.
+- code: PHSC 12500
+  title: Molecular Mechanisms of Human Disease
+  units: 100
+  description: This course will examine the molecular basis for a few specific instances of human disease. We will use each
+    of these molecular case studies as a vehicle to demonstrate quantitative chemical principles such as thermodynamics, chemical
+    equilibrium, chemical kinetics, diffusive dynamics, and DNA damage and repair. The goal of the course will be to use well-understood
+    biological and medical examples to illustrate chemical principles and to give students a toolbox and techniques to understand
+    molecular systems more broadly. The course will have a classroom lecture component as well as a laboratory component.
+    The laboratory component will involve specific case studies and mechanistic proposals that represent exploratory independent
+    work by teams of students. (L)
+  notes: 'Note(s): In order to satisfy the general education requirements in the physical sciences PHSC 12500 may be combined
+    with PHSC 123 Chemistry for an Alternative Energy Source or PHSC 12400 The Chemistry of Big Problems, If a student does
+    not wish to continue with CHEM 10100 Introductory General Chemistry, CHEM 11100 Comprehensive General Chemistry, or CHEM
+    12100 Honors General Chemistry sequence, they may take PHSC 12500 as the second course.'
+  core_tags:
+  - physical_sciences
+  crosslists:
+  - CHEM 12500
+  prereq_text: Some previous background in Chemistry recommended
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: PHSC 12500. Molecular Mechanisms of Human Disease. 100 Units.
+- code: PHSC 12600
+  title: Matter, Energy, Space, and Time
+  units: 100
+  description: 'A comprehensive survey of how the physical world works, and how matter, energy, space, and time evolved from
+    the beginning to the present. A brief survey of the historical development of mathematics, physics, and astronomy leads
+    to a conceptual survey of the modern theory of the physical universe: space and time in relativity; the quantum theory
+    of matter and energy; and the evolution of cosmic structure and composition. The major theme of this course is the understanding
+    of all nature, from the prosaic to the exotic, using powerful quantitative theory grounded in precise experiments. Although
+    quantitative analysis will be an important part of the course, students will not be expected to employ mathematics beyond
+    algebra. (L)'
+  core_tags:
+  - physical_sciences
+  crosslists:
+  - ASTR 12600
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: PHSC 12600. Matter, Energy, Space, and Time. 100 Units.
+- code: PHSC 12610
+  title: Black Holes
+  units: 100
+  description: The past decade has seen the stunning discovery of gravitational waves from black holes merging together, allowing
+    physical theory to be tested in the most exotic and extreme environment in the universe. Black holes are mathematically
+    the most perfectly understood of any physical structure, but their visible effects can be extraordinarily complex. This
+    course will survey the physics of space and time; the nature of black holes, neutron stars, and white dwarf stars; their
+    effects on surrounding matter and light; the astrophysical contexts in which they are observed; and frontier areas of
+    research. The development of Albert Einstein's theory of General Relativity will be placed in historical context, including
+    a review of observational confirmation of predictions of the theory. Experimental work will include use of a robotic telescope
+    to observe circumstances related to extreme gravity, such as supernovae and the centers of giant galaxies that harbor
+    super-massive black holes. Quantitative analysis will be an important part of the course, but mathematics beyond algebra
+    will not be required. (L)
+  core_tags:
+  - physical_sciences
+  crosslists:
+  - ASTR 12610
+  prereq:
+    any:
+    - PHSC 12600
+    - PHSC 12700
+  prereq_text: PHSC 12600 or PHSC 12700
+  terms_offered:
+  - WI
+  - SU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: PHSC 12610. Black Holes. 100 Units.
+- code: PHSC 12620
+  title: The Big Bang
+  units: 100
+  description: The Big Bang model describes the Universe on the largest scales and its evolution from the earliest observationally
+    accessible times through the formation of the complex world we live in today. This powerful framework allows us to interpret
+    a wide range of observations and to make detailed and precise predictions for new experiments. The key motivating observations
+    include the expansion of the Universe and how it has changed with time; the existence of radiation indicating a hot and
+    dense early phase; the abundance of the light elements; and how matter is organized over a wide range of physical scales.
+    The model naturally incorporates dark matter and dark energy, two surprising and poorly understood components that govern
+    the growth of structure over time. The course will explore the history of scientific cosmology and the evidence for the
+    Big Bang model, its consequences for the earliest moments after the Big Bang, and its predictions for the eventual fate
+    of the Universe. Labs will include a hands-on measurement of the relic cosmic microwave background radiation from the
+    early universe and the use of astronomical data to verify key discoveries in the history of Big Bang cosmology. Quantitative
+    analysis will be an important part of the course, but prior experience with mathematics beyond algebra will not be required.
+    (L)
+  core_tags:
+  - physical_sciences
+  crosslists:
+  - ASTR 12620
+  prereq: PHSC 12600
+  prereq_text: Must have ASTR/PHSC 12600 Matter, Energy, Space and Time as the pre-requisite for ASTR/PHSC The Big Bang.
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: PHSC 12620. The Big Bang. 100 Units.
+- code: PHSC 12700
+  title: Stars
+  units: 100
+  description: 'Elements such as carbon and oxygen are created in fusion reactions at high temperatures and pressures in the
+    deep interiors of stars, conditions that naturally arise in stars like the Sun. This course will outline the physical
+    principles at work and the history of the development of the key ideas: how nuclear physics and the theory of stellar
+    interiors account for how stars shine, why they live for such long times, and how the heavy elements in their cores are
+    dispersed to form a new generation of stars. Gravity assembles stars out of more diffuse material, a process that includes
+    the formation of planetary systems. The course shows how, taken together, these physical processes naturally lead to the
+    ingredients necessary for the emergence of life, namely elements like carbon, nitrogen, and oxygen, and planets in stable
+    orbits around long-lived stars. The course features quantitative analysis of data; any tools needed beyond pre-calculus
+    algebra will be taught as part of the course. (L) This course will be offered in the Spring 2027 Study Abroad Paris Astronomy
+    program.'
+  core_tags:
+  - physical_sciences
+  crosslists:
+  - ASTR 12700
+  terms_offered:
+  - AU
+  - SU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: PHSC 12700. Stars. 100 Units.
+- code: PHSC 12710
+  title: Galaxies
+  units: 100
+  description: Galaxies have been called island universes, places where stars are concentrated, where they are born, and where
+    they die. The study of galaxies reaches back to the Renaissance; Galileo Galilei first pointed a telescope skyward in
+    1610 and confirmed a then 2000 year-old Greek conjecture about the nature of our own galaxy -- the Milky Way. This course
+    will use extensive modern observational data from a wide range of telescopes to trace the modern picture for the formation
+    and evolution of galaxies and the stars in them. Galaxies will then be used as markers of yet larger scale structures,
+    in order to explore the influence of gravity over cosmic time. The object of study in this course is galaxies, and the
+    narrative arc traced through that extensive data and understanding will highlight our profound discovery that most of
+    the mass in galaxies (and the Universe as a whole) is in fact an exotic form of matter -- dark matter -- that we cannot
+    directly see. Quantitative analysis will be an important part of the course in both laboratory work and lectures, but
+    mathematics beyond algebra and some geometric understanding will not be required. This course will feature several observationally-oriented
+    labs that will allow students to directly experience how some of the modern understanding of galaxies has arisen. (L)
+    This course will be offered in the Spring 2027 Study Abroad Paris Astronomy program.
+  core_tags:
+  - physical_sciences
+  crosslists:
+  - ASTR 12710
+  prereq:
+    any:
+    - PHSC 10800
+    - PHSC 12600
+    - PHSC 12700
+  prereq_text: PHSC 10800, PHSC 12600 or PHSC 12700. PHSC 12710 can be taken as the first course in a sequence combined with
+    PHSC 12720.
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: PHSC 12710. Galaxies. 100 Units.
+  needs_review: true
+- code: PHSC 12720
+  title: Exoplanets
+  units: 100
+  description: The discovery of planets in orbit around other stars is one of the newest developments in astronomy, which
+    set off a race to characterize these "exoplanetary" systems. The architectures of planetary systems are set by the formation
+    of the parent star and its protoplanetary disk, but they also encode subsequent evolution. We are now able to place our
+    Solar System into the context of other worlds, and we find some aspects familiar and other aspects quite alien. A challenging
+    next step is to find planets like the Earth in orbit around stars like the Sun. This course will review the techniques
+    for discovery of planets around other stars, what we have learned so far about exoplanetary systems, and the driving questions
+    for the future, including the quest for habitable environments elsewhere. Although quantitative analysis will be an important
+    part of the course, students will not be expected to employ mathematics beyond algebra. (L) This course will be offered
+    in the Spring 2027 Study Abroad Paris Astronomy program.
+  core_tags:
+  - physical_sciences
+  crosslists:
+  - ASTR 12720
+  prereq:
+    any:
+    - PHSC 10800
+    - PHSC 10100
+    - PHSC 12700
+    - PHSC 12710
+  prereq_text: PHSC 10800, PHSC 10100, PHSC 12700 or PHSC 12710.
+  terms_offered:
+  - SP
+  - SU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: PHSC 12720. Exoplanets. 100 Units.
+- code: PHSC 12900
+  title: The Chemistry of Artists' Materials
+  units: 100
+  description: The goal of this course is to understand the fundamentals of molecular structure as applied to dyes, pigments,
+    and other materials used in art and crafts. Students will gain general scientific literacy skills and engage with fundamental
+    laboratory techniques in an inherently interdisciplinary way. The first part of the course will delve into molecular structure
+    of organic dyes and inorganic pigments as well as principles behind how visible light interacts with these compounds to
+    produce the colors we see. The fundamental set of techniques used to probe and explore these processes is called spectroscopy;
+    these techniques will play a large role in the laboratory component. Throughout the rest of the course, a number of case
+    studies of these principles will be investigated, including natural v. synthetic dyes and historical dye extraction processes,
+    conservation and restoration of fine art, pigments and materials used in pottery, and the chemistry of stained glass.
+    Additional topics will be driven by student interest. Course assignments will include readings, class discussions, homework
+    sets, lab reports, and a final written pape
+  notes: PHSC 12200 The Chemistry of Food and Cooking PHSC 12400 The Chemistry of Big Problems, and PHSC 12500 Molecular Mechanisms
+    of Human Disease. Students who have credit for CHEM 10100, 11100, or 12100 by either taking the course or by AP credit
+    (for CHEM 11100) and do not wish to take CHEM 10200, 11200, or 12200 may complete the general education requirement with
+    any of the PHSC courses offered by the Department of Chemistry.
+  core_tags:
+  - physical_sciences
+  crosslists:
+  - CHEM 12900
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: PHSC 12900. The Chemistry of Artists' Materials. 100 Units.
+- code: PHSC 13000
+  title: 'Exploring the Organic Chemistry of Medicinal Plants: From Field to Laboratory'
+  units: 100
+  description: This course is designed to provide students with a unique and hands-on experience that combines ecology, ethnobotany,
+    and organic chemistry, offering a comprehensive exploration of medicinal plants. Students will have the opportunity to
+    visit Schulenberg Prairie at the Morton Arboretum to explore indigenous and folkloric medicinal plants, identify their
+    medicinal properties, and then delve into the chemical structures that make these plants effective. The course will culminate
+    in a lab component where students will utilize the knowledge gained to create their own herbal salve/balm, with a strong
+    focus on the organic chemistry involved. The course will emphasize an exploration of the chemical basis of medicinal plants
+    along with the significance of ecological restoration and sustainability in traditional medicinal plant harvesting and
+    utilization.
+  core_tags:
+  - physical_sciences
+  crosslists:
+  - CHEM 13000
+  terms_offered:
+  - SU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: 'PHSC 13000. Exploring the Organic Chemistry of Medicinal Plants: From Field to Laboratory. 100 Units.'
+- code: PHSC 13400
+  title: 'Global Warming: Understanding the Forecast'
+  units: 100
+  description: 'The future of human civilization depends on its ability to avoid, or adapt to, climate change associated with
+    fossil-fuel (carbon) emissions. With so much at stake, it is important that citizens of the world understand the science
+    which forms the foundation of what is understood about global climate change. The learning objectives of this course are
+    to develop understanding of: (1) the historical and pre-historical records of global climate change, (2) the Earth''s
+    carbon budget, (3) how the greenhouse effect determines temperature in Earth''s atmosphere and at the land and sea surface,
+    (4) how climate projections are made, and (5) how present-day activities, both in the scientific research realm and in
+    the socio-economic/political realm are shaping what will happen in the future. Course activity is partitioned into lectures
+    (given by the course instructor), weekly laboratory-section activity (run by graduate teaching assistants), outside reading,
+    and occasional homework. Assessment leading to a course grade will focus primarily on student performance in completing
+    laboratory exercises and on a midterm and final exam. (L)'
+  core_tags:
+  - physical_sciences
+  crosslists:
+  - ENSC 13400
+  - GEOS 13400
+  mutually_exclusive:
+  - PHSC 13410
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: 'PHSC 13400. Global Warming: Understanding the Forecast. 100 Units.'
+- code: PHSC 13410
+  title: 'Global Warming: Understanding the Forecast (Flipped Class)'
+  units: 100
+  description: This course presents the science behind the forecast of global warming to enable the student to evaluate the
+    likelihood and potential severity of anthropogenic climate change in the coming centuries. It includes an overview of
+    the physics of the greenhouse effect, including comparisons with Venus and Mars; predictions and reliability of climate
+    model forecasts of the greenhouse world. This course is part of the College Course Cluster program, Climate Change, Culture,
+    and Society. This course covers the same material as PHSC 13400, but is organized using a flipped classroom approach in
+    order to increase student engagement and learning.
+  core_tags:
+  - physical_sciences
+  crosslists:
+  - GEOS 13410
+  - ENSC 13410
+  prereq_text: Some knowledge of chemistry or physics helpful.
+  terms_offered:
+  - AU
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: 'PHSC 13410. Global Warming: Understanding the Forecast (Flipped Class)'
+- code: PHSC 13600
+  title: Natural Hazards
+  units: 100
+  description: This course presents the current understanding of high-impact weather and geologic events and an introduction
+    to risk assessment and mitigation. Topics include an overview of geography, statistics, and societal impacts of the world's
+    natural hazards; physics and forecasts of hurricanes, extratropical cyclones, tornadoes, earthquakes, tsunamis, volcanic
+    eruptions, droughts, floods and wildfires; climate change and extreme weather events; quantifying and managing risks.
+    (L)
+  core_tags:
+  - physical_sciences
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: PHSC 13600. Natural Hazards. 100 Units.
+- code: PHSC 13800
+  title: 'GeoSciFi: Earth Science through the Lens of Science Fiction'
+  units: 100
+  description: GeoSciFi uses science fiction as a gateway to understanding how the Earth works and how physical laws constrain
+    what is possible on other worlds. Familiar films and books provide starting points for exploring earthquakes, volcanoes,
+    climate feedbacks, the origins of life, biological evolution, and planetary habitability. Rather than focusing on cinematic
+    accuracy for its own sake, this course, instead, asks what real scientific processes underlie fictional scenarios and
+    what would need to be true for them to occur. Through weekly lectures and a hands-on discussion/lab section, students
+    will learn to reason from basic physical, chemical, and biological principles, interpret maps and data, and, ultimately,
+    evaluate scientific claims in popular media. Labs emphasize low-math, conceptual engagement through experiments, measurements,
+    and guided analysis. The course is open to all students, and no prior science coursework is required.
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: 'PHSC 13800. GeoSciFi: Earth Science through the Lens of Science Fiction. 100 Units.'
+- code: PHSC 15100
+  title: Machine Learning and Artificial Intelligence for Molecular Discovery and Engineering
+  units: 100
+  description: The foundations of artificial intelligence can be dated back to Alan Turing's seminal 1950 paper in which the
+    concept of "thinking machines" was first introduced and the 1956 Dartmouth Summer Conference in which the term artificial
+    intelligence was first coined. The field has since passed through multiple epochs of development, and today artificial
+    intelligence and machine learning are ubiquitous and enabling tools that pervade all corners of engineering discovery
+    and practice. This course will survey the conceptual and historical basis of artificial intelligence and machine learning;
+    the role, integration, and ethics of these approaches in modern engineering practice; the mathematical and algorithmic
+    underpinnings of some popular machine learning techniques; and selected applications of these tools in particular applications
+    in molecular engineering drawn from areas such as energy and sustainability, drug discovery, quantum science and information,
+    materials science, and bioengineering.
+  core_tags:
+  - physical_sciences
+  crosslists:
+  - MENG 15100
+  prereq_text: Quantitative analysis and numerical calculations will be an important part of the course, but mathematics beyond
+    algebra will not be required and any necessary mathematics will be reviewed as part of the course.
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: PHSC 15100. Machine Learning and Artificial Intelligence for Molecular Discovery and Engineering. 100 Units.
+- code: PHSC 15200
+  title: Engineering for Human Health
+  units: 100
+  description: This course is designed to introduce undergraduates to the types of clinical problems that engineers solve
+    and the physical concepts they apply to solve them. Various types of devices - from genetically engineered bacteria to
+    biosensors - will be discussed, and we will explore the physics and chemistry necessary to understand and design each
+    of these devices. We will also discuss many of the more practical concerns that influence the development of therapies,
+    including intellectual property, regulation, and clinical trial design. In addition, students will learn how to work effectively
+    in groups and to communicate their findings in a professional manner.
+  core_tags:
+  - physical_sciences
+  crosslists:
+  - MENG 15200
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: PHSC 15200. Engineering for Human Health. 100 Units.
+- code: PHSC 18000
+  title: The Search for Extraterrestrial Life
+  units: 100
+  description: The origin of life is one of the biggest questions of modern science. While substantial progress has been made
+    in understanding how life arose on our planet, such research represents just a single case study in how life originates
+    and evolves. This course covers the search for life beyond Earth from the planets and moons of the Solar System to planets
+    orbiting other stars and intelligent life that may have left its mark on macroscopic scales. The discovery of life beyond
+    Earth would be transformative for our understanding of humanity's place in the universe. A range of ongoing and planned
+    experiments have the potential to detect or put strong constraints on the existence of life during the next few decades.
+    This class will mix traditional lectures with flipped classroom problem-solving sessions.
+  crosslists:
+  - ASTR 18000
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: PHSC 18000. The Search for Extraterrestrial Life. 100 Units.
+- code: PHSC 18100
+  title: The Milky Way
+  units: 100
+  description: Within a largely empty universe, we live in a vast stellar "island" that we call the Milky Way. As we survey
+    the stellar and interstellar components of the Milky Way-the distribution and motions of stars and interstellar gas, and
+    how these dynamic, ever-changing components interact with each other during their life cycles inside the Milky Way-we
+    will follow the path of ancient astronomers, wonder at their mistakes and prejudices, and form our own understanding.
+  crosslists:
+  - ASTR 18100
+  prereq_text: Any two-course 10000-level general education sequence in chemistry, geophysical sciences, physical sciences,
+    or physics. Can be used as a third course in physical sciences to meet the general education requirement (of six courses
+    total in the biological, physical, and mathematical sciences).
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: PHSC 18100. The Milky Way. 100 Units.
+  needs_review: true
+- code: PHSC 18200
+  title: The Origin and Evolution of the Universe
+  units: 100
+  description: This course provides a comprehensive introduction to modern cosmology. It will discuss how the fundamental
+    laws of physics allow us to understand the origin, evolution, and large-scale structure of the universe. After a brief
+    review of the history of cosmology, the course will cover the expansion of the universe, Newtonian cosmology, Einstein's
+    Special and General Relativity, black holes, dark matter, dark energy, the Cosmic Microwave Background radiation, Big
+    Bang nucleosynthesis, the early universe, primordial inflation, the origin and evolution of large-scale structure in the
+    universe, and cosmic surveys that are probing inflation and cosmic acceleration.
+  crosslists:
+  - ASTR 18200
+  prereq_text: No pre-requisites. May not be taken if previous enrollment in ASTR/PHSC 12620 Big Bang.
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: PHSC 18200. The Origin and Evolution of the Universe. 100 Units.
+  needs_review: true
+- code: PHSC 28102
+  title: 'Science Communication: Producing a Science Video Story'
+  units: 100
+  description: Students will gain skills in oral communication and will apply these skills to produce a video communicating
+    primary research in a scientific area of the student's choice. The goal is effective, engaging communication of science
+    to a general audience without sacrificing scientific accuracy or complexity. Students will work with faculty to write
+    scripts and design visual and audio elements. The talks will be filmed and edited in collaboration with UChicago Creative,
+    who will assist with visual aids and animation. Students will leave the course with a professionally produced video that
+    they can use to advance their career and promote their topic. While this course naturally follows BIOS 28101, that course
+    is not a pre-requisite.
+  crosslists:
+  - BIOS 28102
+  - SCPD 11200
+  prereq:
+    any:
+    - standing: third-year
+    - standing: fourth-year
+  prereq_text: Three quarters of a Biological Sciences Fundamentals sequence. Third- or fourth-year standing. This course
+    does not satisfy the general education requirement in the physical sciences.
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: 'PHSC 28102. Science Communication: Producing a Science Video Story. 100 Units.'
+  needs_review: true
+- code: PHSC 28104
+  title: 'Science Communication: Crafting a Science Think Piece'
+  units: 100
+  description: Science think pieces are an important genre of public writing. Think pieces are longform journalism typically
+    ranging between 2,000 and 5,000 words that appear in print and online publications. Readers of all kinds turn to science
+    think pieces to understand critical issues in STEM fields and get a big picture perspective. Science think pieces provide
+    deep context, informed perspective, and expert synthesis of the most recent data and findings. They have the power to
+    shape public opinion and influence science policy. This course guides students through the process of conceiving, developing,
+    pitching, writing, and potentially publishing an engaging and persuasive science think piece. Through reading-inspired
+    group discussions and instructor-led writing projects, the course introduces students to current theories and best practices
+    of science communication as well as everyday processes in science journalism and public-facing science writing. Students
+    will finish the course with a polished science think piece ready for submission to potential venues for publication. No
+    prior knowledge of science communication is required.
+  crosslists:
+  - SCPD 11300
+  - HIPS 11300
+  - CCSG 22702
+  prereq:
+    any:
+    - standing: third-year
+    - standing: fourth-year
+    - consent: instructor
+  prereq_text: Three quarters of physical or biological (including neuroscience) sciences. Third- or fourth-year standing
+    or consent of instructor.
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: 'PHSC 28104. Science Communication: Crafting a Science Think Piece. 100 Units.'
+  needs_review: true
+- code: PHSC 28500
+  title: Effective Writing in the Sciences
+  units: 100
+  description: 'This course will help undergraduates majoring in the sciences write effectively in major-level coursework
+    and thesis research. The course is in its pilot year; in future years, the course''s graduates may be eligible to serve
+    as teaching assistants in it. For this reason, although the course is mostly devoted to scientific writing, it will include
+    a component on how to teach writing, potentially helping undergraduate science students obtain broader impacts opportunities
+    in science communication. Our reading texts will range from lab reports and posters to advanced scientific work such as
+    research articles, review articles, and grant proposals. We''ll analyze how these documents are structured, discuss strategies
+    for reading them efficiently, and discuss what makes them succeed (or not). We''ll develop strategies for note- taking,
+    drafting, and revision. Our ultimate purposes: communicating complex information clearly, articulating research questions,
+    justifying the plausibility of methods, and explaining how new research contributes to the advancement of a field. All
+    these writing tasks must ultimately be tailored to meet the needs of the many audiences that working scientists address,
+    including not only researchers in the field but funding agencies, policymakers, and the general public."'
+  terms_offered:
+  - SU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: PHSC 28500. Effective Writing in the Sciences. 100 Units.
+- code: PHSC 29103
+  title: 'Science Communication: Building a Science Exhibit'
+  units: 100
+  description: Students will work as a class to create an interactive physical exhibit that communicates a particular scientific
+    topic to the public. The student-created exhibit will be displayed either on campus or across the city of Chicago. We
+    will welcome guest speakers who are experts in data visualization, visual arts, and museum exhibits to demonstrate the
+    variety of ways science can be communicated. Students will also take field trips to the local museums to observe the different
+    ways in which research and science communication work together. Students will critically analyze exhibits, evaluate how
+    exhibits and approaches across the city are similar and different, and reflect on the variety of approaches. An advisory
+    board of researchers from local Chicagoland museums will inform and review the final exhibits.
+  notes: This course does not meet the requirements for the Biological Sciences major. This course does not satisfy the general
+    education requirement in the physical sciences.
+  crosslists:
+  - BIOS 29103
+  prereq:
+    any:
+    - standing: third-year
+    - standing: fourth-year
+  prereq_text: Third- or fourth-year standing.
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: 'PHSC 29103. Science Communication: Building a Science Exhibit. 100 Units.'

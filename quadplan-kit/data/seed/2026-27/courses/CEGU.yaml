@@ -1,0 +1,131 @@
+# Generated from the 2026-2027 UChicago College Catalog (fetched 2026-11-12) by hand-checked scripts;
+# every source.quote is copied verbatim (whitespace collapsed) from source.url. See data/seed/REVIEW.md.
+courses:
+- code: CEGU 13132
+  title: Ecology in the Anthropocene
+  units: 100
+  notes: Cross-listed with BIOS 13132 (its catalog block lists CEGU 13132 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from BIOS 13132.
+  crosslists:
+  - BIOS 13132
+  prereq_text: BIOS 10130 or BIOS 10140. NO BIOLOGICAL SCIENCES MAJORS OR NON-BIOLOGY PRE-MED STUDENTS, except by petition.
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: 'Equivalent Course(s): CEGU 13132'
+  needs_review: true
+- code: CEGU 21025
+  title: 'Climate Crossroads: Policy, Diplomacy, and the Global Future'
+  units: 100
+  notes: Cross-listed with ECON 26740 (its catalog block lists CEGU 21025 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from ECON 26740.
+  crosslists:
+  - ECON 26740
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: 'Equivalent Course(s): CEGU 21025, PBPL 21025, GLST 21025, CCSG 21025'
+- code: CEGU 22510
+  title: The Climate and Growth Challenge
+  units: 100
+  notes: Cross-listed with ECON 16550 (its catalog block lists CEGU 22510 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from ECON 16550.
+  crosslists:
+  - ECON 16550
+  prereq_text: 'BPRO 22510: third or fourth-year status. CEGU 22510, CCSG 19000, ECON 16550, PBPL 22510: First-year student
+    by permission of instructor only.'
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: 'Equivalent Course(s): CCSG 19000, CEGU 22510, PBPL 22510, BPRO 22510'
+  needs_review: true
+- code: CEGU 24193
+  title: Water Water Everywhere?
+  units: 100
+  notes: Cross-listed with SOSC 21005 (its catalog block lists CEGU 24193 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from SOSC 21005.
+  crosslists:
+  - SOSC 21005
+  prereq_text: Third- or fourth-year standing
+  terms_offered:
+  - AU
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: 'Equivalent Course(s): BPRO 24193, CHST 24193, CEGU 24193, ARTH 24193, HMRT 24193'
+  needs_review: true
+- code: CEGU 27521
+  title: Energy in World Civilizations I
+  units: 100
+  notes: Cross-listed with HIST 17521 (its catalog block lists CEGU 27521 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from HIST 17521.
+  crosslists:
+  - HIST 17521
+  prereq_text: Parts I and II should be taken in sequence. This sequence meets the general education requirement in civilization
+    studies.
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): SOSC 27521, CEGU 27521, HIPS 17521'
+  needs_review: true
+- code: CEGU 27522
+  title: Energy in World Civilizations II
+  units: 100
+  notes: Cross-listed with HIST 17522 (its catalog block lists CEGU 27522 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from HIST 17522.
+  crosslists:
+  - HIST 17522
+  prereq_text: Parts I and II should be taken in sequence. This sequence meets the general education requirement in civilization
+    studies.
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): ANTH 17522, CEGU 27522, HIPS 17522, SOSC 27522'
+  needs_review: true
+- code: CEGU 27728
+  title: 'The Meaning of Life: Experimenting with the History of Biology in Woods Hole'
+  units: 100
+  notes: Cross-listed with BIOS 27728 (its catalog block lists CEGU 27728 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from BIOS 27728.
+  crosslists:
+  - BIOS 27728
+  prereq_text: This course can be counted as a biology topics course or as an upper-level elective for biology majors.
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: 'Equivalent Course(s): CEGU 27728'
+  needs_review: true
+- code: CEGU 27761
+  title: 'Introduction to Modern Architecture: Modernity and Its Other'
+  units: 100
+  notes: Cross-listed with ARTH 17761 (its catalog block lists CEGU 27761 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from ARTH 17761.
+  crosslists:
+  - ARTH 17761
+  prereq_text: 'Fulfills the following requirements in the ARTH major and minor: African, Asian, modern (post-1800), European
+    and American, modern (post-1800), Latin American, Theory and Historiography'
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/arthistory/
+    quote: 'Equivalent Course(s): CEGU 27761, ARCH 17761'
+  needs_review: true
+- code: CEGU 29520
+  title: Sustainability and Computing
+  units: 100
+  notes: Cross-listed with CMSC 29520 (its catalog block lists CEGU 29520 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from CMSC 29520.
+  crosslists:
+  - CMSC 29520
+  prereq:
+    any:
+    - standing: third-year
+    - standing: fourth-year
+  prereq_text: Students must be in their third or fourth year of study.
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/computerscience/
+    quote: 'Equivalent Course(s): CMSC 39520, CEGU 29520, BPRO 29520, CCSG 22301'

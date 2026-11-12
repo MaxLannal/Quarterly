@@ -1,0 +1,179 @@
+# Generated from the 2026-2027 UChicago College Catalog (fetched 2026-11-12) by hand-checked scripts;
+# every source.quote is copied verbatim (whitespace collapsed) from source.url. See data/seed/REVIEW.md.
+courses:
+- code: MACS 10150
+  title: Perspectives on Computational Modeling for Economics
+  units: 100
+  notes: Cross-listed with ECMA 31140 (its catalog block lists MACS 10150 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from ECMA 31140.
+  crosslists:
+  - ECMA 31140
+  prereq:
+    all:
+    - any:
+      - ECON 20200
+      - ECON 20210
+    - any:
+      - MATH 19620
+      - STAT 24300
+      - MATH 20250
+    - any:
+      - STAT 23400
+      - STAT 24400
+      - STAT 24410
+  prereq_text: 'PQ for undergraduates: Econ 20200/20210 and MATH 19620/Stat 24300/Math 20250 and Stat 23400/Stat 24400/Stat
+    24410.'
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: 'Equivalent Course(s): MACS 10150, MACS 30150'
+- code: MACS 20267
+  title: Thinking like a Computational Social Scientist
+  units: 100
+  notes: Cross-listed with DATA 20602 (its catalog block lists MACS 20267 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from DATA 20602.
+  crosslists:
+  - DATA 20602
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/datascience/
+    quote: 'Equivalent Course(s): MACS 30267, SOCI 40267, MACS 20267, PSYC 38520, SOCI 20602, HIST 49307, PSYC 28520'
+- code: MACS 23050
+  title: Artificial Intelligence, Innovation, and Growth
+  units: 100
+  notes: Cross-listed with DATA 20620 (its catalog block lists MACS 23050 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from DATA 20620.
+  crosslists:
+  - DATA 20620
+  prereq:
+    all:
+    - any:
+      - MATH 13200
+      - MATH 15200
+      - MATH 16200
+      - MATH 15910
+      - MATH 20250
+      - MATH 20300
+    - any:
+      - ECON 11010
+      - STAT 22000
+      - STAT 23400
+      - STAT 24400
+      - SOCI 20004
+      - SOCI 20602
+      - SOCI 20596
+  prereq_text: '[MATH 13200 or MATH 15200 or MATH 16200 or MATH 15910 or MATH 20250 or MATH 20300] and [ECON 11010 or STAT
+    22000 or STAT 23400 or STAT 24400 or SOCI 20004 or SOCI 20602 or SOCI 20596]'
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/datascience/
+    quote: 'Equivalent Course(s): SOCI 20620, ECMA 33050, ECON 23050, SOCI 30620, MACS 23050, MACS 33050'
+- code: MACS 27005
+  title: AI Agents for Social Science & Society
+  units: 100
+  notes: Cross-listed with DATA 27005 (its catalog block lists MACS 27005 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from DATA 27005.
+  crosslists:
+  - DATA 27005
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/datascience/
+    quote: 'Equivalent Course(s): DATA 37005, MACS 37005, MACS 27005'
+- code: MACS 30150
+  title: Perspectives on Computational Modeling for Economics
+  units: 100
+  notes: Cross-listed with ECMA 31140 (its catalog block lists MACS 30150 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from ECMA 31140.
+  crosslists:
+  - ECMA 31140
+  prereq:
+    all:
+    - any:
+      - ECON 20200
+      - ECON 20210
+    - any:
+      - MATH 19620
+      - STAT 24300
+      - MATH 20250
+    - any:
+      - STAT 23400
+      - STAT 24400
+      - STAT 24410
+  prereq_text: 'PQ for undergraduates: Econ 20200/20210 and MATH 19620/Stat 24300/Math 20250 and Stat 23400/Stat 24400/Stat
+    24410.'
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: 'Equivalent Course(s): MACS 10150, MACS 30150'
+- code: MACS 30267
+  title: Thinking like a Computational Social Scientist
+  units: 100
+  notes: Cross-listed with DATA 20602 (its catalog block lists MACS 30267 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from DATA 20602.
+  crosslists:
+  - DATA 20602
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/datascience/
+    quote: 'Equivalent Course(s): MACS 30267, SOCI 40267, MACS 20267, PSYC 38520, SOCI 20602, HIST 49307, PSYC 28520'
+- code: MACS 30300
+  title: Data Science Clinic I
+  units: 100
+  notes: Cross-listed with DATA 27100 (its catalog block lists MACS 30300 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from DATA 27100.
+  crosslists:
+  - DATA 27100
+  prereq_text: DATA 12000, DATA 13600, DATA 21100, DATA 21200, DATA 23100 (or equivalent) and by permission of instructor
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/datascience/
+    quote: 'Equivalent Course(s): MACS 30300, CAPP 30300, MPCS 57300, PPHA 30581'
+  needs_review: true
+- code: MACS 33050
+  title: Artificial Intelligence, Innovation, and Growth
+  units: 100
+  notes: Cross-listed with DATA 20620 (its catalog block lists MACS 33050 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from DATA 20620.
+  crosslists:
+  - DATA 20620
+  prereq:
+    all:
+    - any:
+      - MATH 13200
+      - MATH 15200
+      - MATH 16200
+      - MATH 15910
+      - MATH 20250
+      - MATH 20300
+    - any:
+      - ECON 11010
+      - STAT 22000
+      - STAT 23400
+      - STAT 24400
+      - SOCI 20004
+      - SOCI 20602
+      - SOCI 20596
+  prereq_text: '[MATH 13200 or MATH 15200 or MATH 16200 or MATH 15910 or MATH 20250 or MATH 20300] and [ECON 11010 or STAT
+    22000 or STAT 23400 or STAT 24400 or SOCI 20004 or SOCI 20602 or SOCI 20596]'
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/datascience/
+    quote: 'Equivalent Course(s): SOCI 20620, ECMA 33050, ECON 23050, SOCI 30620, MACS 23050, MACS 33050'
+- code: MACS 37005
+  title: AI Agents for Social Science & Society
+  units: 100
+  notes: Cross-listed with DATA 27005 (its catalog block lists MACS 37005 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from DATA 27005.
+  crosslists:
+  - DATA 27005
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/datascience/
+    quote: 'Equivalent Course(s): DATA 37005, MACS 37005, MACS 27005'
