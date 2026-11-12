@@ -30,3 +30,72 @@
 - **Docs:** `docs/CONTRACTS.md` (endpoint table and the decisions that are not obvious).
 - **Tests:** migration up, down and up again; models match the migration; day-level dates only on user tables; email only on `account`; YAML examples from the spec round-trip; invalid DSL rejected; loader runs twice on the fixture without changes; golden runner; API surface and 501 stubs.
 - Removed `@cloudflare/blindrsa-ts` (no blind signatures after decision 5).
+
+## Milestone M1 · planner without AI — ready for Richard's review (2026-11-12)
+
+M1 was run with `claude-code-prompts/MASTER-orchestrator.md`. Prompts 00 and 01 were built and committed on `main` first. Then prompts 02-05 ran in parallel, each in its own git worktree, and were merged into `main` one by one.
+
+**What works now**
+- **Planner** (`/plan`): a 4-year grid (Autumn/Winter/Spring, collapsible Summer, optional Year 5) on the real 2026-27 seed data.
+  - Drag and drop, plus a keyboard "Move to..." menu; lock, mark completed, remove.
+  - A requirement rail with per-node progress from the verifier.
+  - A debounced (300 ms) `POST /verify` after every edit. The badge shows Valid / warnings / errors, and an issue highlights the cards it is about.
+  - Logged-out plans live in localStorage and are imported on login (import is 501 until plans CRUD exists).
+- **Verifier** (`planner_core`): checks V01-V12, a CP-SAT program model, the 12 goal predicates, and a certificate builder. `check_certificate` is under 300 lines and imports no solver. `POST /verify` loads rules from Postgres, runs `verify_checked` (verify plus the checker), and caches results in Redis. A plan shows "Valid" only when the checker accepts its certificate.
+- **Catalog API:** course search (code or title, typo-tolerant), course detail (prerequisites in plain English, needs and unlocks, offerings, counts toward), course lists, programs with their rule trees, and eligible courses per node.
+- **Accounts:** decision 5, email + password. Sign-up (email → 6-digit code → username + password), login, password reset, sessions in Redis with CSRF, rate limits, account export and delete, and a `/privacy` page. The security review findings (1 medium, 3 low) are all fixed.
+- **Seed data** for catalog year 2026-27, fetched 2026-11-12: College policy, the Core, CS BA/BS, three CS Bx/MS options, Math BA/BS, Economics BA, and two civilization programs abroad. Every rule node carries a verbatim quote (1,620 quotes, all re-checked against their pages). There are 115 golden plans.
+
+**Screenshots (real API, real seed data):** `docs/screenshots/planner.png`, `docs/screenshots/planner-issues.png`, `docs/screenshots/course-page.png`, `docs/screenshots/program-page.png`.
+
+**For Richard to check before prompt 06:** `data/seed/REVIEW.md` (one table per program: node, rule in plain English, quote, URL, needs_review) and `docs/OPEN_QUESTIONS.md`. Seed program versions have status `review`. They show to students only because `SHOW_UNPUBLISHED_PROGRAMS=true` in development.
+
+### Prompt 02 · Verifier — done
+Built V01-V12, the CP-SAT model (two phases: an exact solve, then max-satisfied under a deterministic work limit when that is infeasible), all 12 goal predicates, and the certificate builder plus checker. The checker passed a fuzz test against brute force: 1,600 random cases, 827 of them cross-checked. Semantics are recorded in `docs/CONTRACTS.md` "Verifier semantics": V05 skips empty quarters and Summer, V09 stays an error on partial plans with distance messages, share limits are reported as V08, and a certificate needs V03 and V07 to hold. Benchmark (60 courses, 201 nodes, 3 programs): median 127 ms for a complete plan, `check_certificate` 7 ms, against a 300 ms budget.
+
+### Prompt 03 · Frontend — done
+App shell, planner, Generate popup (form + SSE results with Apply / View diff), Advisor panel (messages, citation chips, proposal cards), a 5-step onboarding, course search and course page (prerequisite mini-graph, offerings, attribute card), and the program explorer and program page. A TypeScript port of `apply_ops` and the term helpers. The app calls the real API by default. MSW mocks, typed from the generated client, are used in vitest and e2e, and when `VITE_MOCK_API=1`. Endpoints that stay 501 in M1 show "not available yet". axe found 0 violations on the planner.
+
+### Prompt 04 · Accounts (decision 5) — done
+Backend in `services/api/api/auth/`: domain checks, hashed codes in Redis, argon2id, `__Host-` session cookies with rotation, CSRF on every cookie-authenticated state-changing request, Redis rate limits (keyed hashes, 24 h), and a process-wide log filter that redacts emails and IPs. Tests prove no email or IP reaches the logs, and that an email reaches only `account.email`. The `security-privacy-reviewer` found no high issues; its medium (no long-run cap on code guessing) and its three lows (login race, ban evasion by deletion, the production check failing open) are fixed. Integration: nginx forwards the client address (`TRUSTED_PROXY_HOPS=1`), and Redis runs without persistence so the counters never reach disk.
+
+### Prompt 05 · Seed data and golden plans — done
+`data/seed/2026-27/`: 1,273 courses (including 366 copies of cross-listed partners), 176 course lists, 11 programs, 112 rule nodes, and the College policy. 55 `needs_review` rule rows, plus 53 hand-encoded prerequisites flagged for review. 261 prerequisite sentences are kept verbatim but not formalized, none of them on courses a requirement names directly. `data/golden/`: 115 plans, at least 5 must-pass and 5 must-fail per program. Not encoded yet (open questions): Economics specializations, physical-sciences three-course combinations, placement-dependent rules, the CS curriculum-area breadth rule, and study-abroad language courses.
+
+### M1 integration
+- Catalog read endpoints (`services/api/api/repo/catalog.py`), built by a separate agent because prompts 02-05 left them as stubs and the planner needs them.
+- Golden-runner fix: the seed is parsed once per run, not once per plan.
+- Golden triage: the first run against the real verifier gave 106 of 115 passing. The 9 failures were fixed as follows:
+  - **Bx/MS "at most two 20000-level" cap:** it counted a cross-listed 3xxxx enrollment as 20000-level. Added an opt-in `max_from.as_enrolled` (open question M1-1).
+  - **Repeatable courses:** each enrollment of a `repeatable` course now counts. The Core Grey track takes HUMA 19100 twice (M1-2).
+  - **V12:** it now also fires when the program would be met with letter grades (M1-3).
+  - **cmsc-bxms-1 fail-05:** the plan was wrong and was corrected (M1-4).
+  - Every verifier fix has a unit test. `CORE_VERSION` went to 0.1.1, which invalidates cached reports.
+- Screenshots come from `apps/web/scripts/screenshots.mjs`, run against the Docker build with the real API.
+- Known UI nits, not fixed: the course page's "Counts toward" lists Mathematics BA/BS twice, and a rail label reads "from from the list".
+
+### How this run deviated from the kit
+- The six subagents in `.claude/agents/` are not registered in this Claude Code session, because the session's root is the parent folder. Each was run as a general agent that read its definition file and used the model and effort it names: Fable 5.2 for the verifier and accounts work (prompt 04 asks for Fable), Opus for the rest.
+- Subagents cannot start other subagents. So each parallel agent reviewed its own diff against `spec-reviewer.md`. The orchestrator ran the independent `spec-reviewer` on prompts 00 and 01 and on the whole M1 scope, and the `security-privacy-reviewer` on prompt 04.
+- Decision 5 changed (Richard, 2026-11-12): prompt 04 was built as email + password, not blind signatures.
+- Some merged commits carry a `Co-Authored-By: Claude Fable 5.2` trailer, because those agents ran on Fable.
+
+### M1 gate (final run on `main`)
+Run on `main` at `dbd2a56` (2026-11-12). Every command exited 0.
+- `make up`: api, db, minio, redis, web and worker are `(healthy)`; the scraper, in its own profile, is also healthy.
+- `make seed`: loaded terms=24, courses=1273, crosslist_groups=261, relations=7, requisites=833, offering_patterns=2762, course_lists=176, programs=11, college_policy=1.
+- `make check`: ruff and mypy clean; generated client and JSON Schemas up to date. planner_core: 154 passed, coverage 99.72%. API and services: 194 passed. Web vitest: 59 passed. Golden: PASS=115.
+- `make golden`: PASS=115, with at least 5 must-pass and 5 must-fail plans for each of the 11 programs.
+- `make e2e`: 36 passed in Playwright, including axe on the planner and a phone-width check.
+
+### Final spec review (whole M1 scope)
+- The first full-scope review found 2 should-fix issues, no blockers:
+  - Share limits, `requires`/`excludes` and `max_from` caps had no `source.quote` in the seed.
+  - Three open questions were stale.
+- Both were fixed in `dbd2a56`:
+  - 19 verbatim quotes were added; each was fetched again and checked.
+  - The loader now rejects these rules when they have no source.
+  - The three stale items are marked resolved.
+- The closing review of that fix reported: **"No unresolved correctness findings."**
+
+**Next:** wait for Richard to review `data/seed/REVIEW.md` and `docs/OPEN_QUESTIONS.md`. Do not start prompt 06 until he replies.
