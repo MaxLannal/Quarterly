@@ -9174,7 +9174,7 @@
     },
     "/verify": {
       "post": {
-        "description": "Load the RuleSet for the plan's programs from Postgres, run planner_core.verify, cache the\nReport in Redis by plan_hash.",
+        "description": "Verify a plan against the rules of its catalog year. The report is \"valid\" only if\nthe independent checker accepted the solver's certificate. A program the catalog year\ndoes not have (or has only as an unpublished version) is a 422.",
         "operationId": "verify_plan_verify_post",
         "requestBody": {
           "content": {
@@ -9206,16 +9206,6 @@
               }
             },
             "description": "Validation Error"
-          },
-          "501": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorOut"
-                }
-              }
-            },
-            "description": "Not implemented yet"
           }
         },
         "summary": "Verify Plan",

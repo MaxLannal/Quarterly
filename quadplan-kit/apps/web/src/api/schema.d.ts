@@ -752,8 +752,9 @@ export interface paths {
         put?: never;
         /**
          * Verify Plan
-         * @description Load the RuleSet for the plan's programs from Postgres, run planner_core.verify, cache the
-         *     Report in Redis by plan_hash.
+         * @description Verify a plan against the rules of its catalog year. The report is "valid" only if
+         *     the independent checker accepted the solver's certificate. A program the catalog year
+         *     does not have (or has only as an unpublished version) is a 422.
          */
         post: operations["verify_plan_verify_post"];
         delete?: never;
@@ -5091,15 +5092,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-            /** @description Not implemented yet */
-            501: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorOut"];
                 };
             };
         };

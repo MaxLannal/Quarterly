@@ -94,7 +94,6 @@ def test_openapi_lists_every_endpoint() -> None:
         ("get", "/courses", None),
         ("get", "/courses/CMSC%2014100", None),
         ("get", "/programs/cmsc-bs", None),
-        ("post", "/verify", {"plan": PLAN}),
         ("post", "/plans", {"name": "My plan", "state": PLAN}),
         (
             "patch",
