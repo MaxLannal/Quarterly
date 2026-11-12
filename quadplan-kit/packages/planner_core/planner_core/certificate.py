@@ -218,7 +218,7 @@ class _Tree:
             selectors = [node.from_]
             used = self.unit(path, node.from_, passed)
             if node.count is not None:
-                ok = len(used) >= node.count
+                ok = len(used) == node.count  # exactly: constraints apply to these
             else:
                 ok = sum(t.units for t in used) >= (node.units or 0)
         elif isinstance(node, GroupNode):

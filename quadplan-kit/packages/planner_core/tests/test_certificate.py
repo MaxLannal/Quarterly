@@ -138,6 +138,14 @@ def test_rejects_bad_assignments() -> None:
     reused["assignments"][1]["node"] = "fake-ba/electives"
     reused["assignments"][0]["node"] = "fake-ba/intro"
     assert "does not match the selector" in problems(reused)
+    # a select by count takes exactly `count` courses: a third one does not sneak in
+    extra = plan(
+        {T[0]: ["FAKE 10000"], T[3]: ["FAKE 20000", "FAKE 20100", "FAKE 20200"]},
+        programs=["fake-ba"],
+    )
+    padded = cert_of(extra)
+    padded["assignments"][0]["courses"] = ["FAKE 20000", "FAKE 20100", "FAKE 20200"]
+    assert "fake-ba is not satisfied by the assignments" in problems(padded, extra)
 
 
 def test_rejects_a_course_below_the_grade_minimum() -> None:

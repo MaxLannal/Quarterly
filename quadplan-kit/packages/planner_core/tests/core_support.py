@@ -18,8 +18,8 @@ from planner_core.models import (
 
 YEAR = "2026-27"
 ENTRY = "2026-AU"
-#: Benchmark name -> milliseconds, filled by test_benchmark and printed by conftest.py.
-BENCHMARK: dict[str, float] = {}
+#: Benchmark name -> (median ms, best ms), filled by test_benchmark, printed by conftest.py.
+BENCHMARK: dict[str, tuple[float, float]] = {}
 SRC = {"url": "https://example.invalid/fake", "quote": "FAKE"}
 #: Plan years 1-4, quarters in order: T[0] = 2026-AU, T[1] = 2027-WI, T[2] = 2027-SP, ...
 T = [f"{2026 + y + (q != 'AU')}-{q}" for y in range(4) for q in ("AU", "WI", "SP")]
