@@ -1,0 +1,57 @@
+# Golden plan (prompt 05). Course facts: data/seed/2026-27; rules: data/seed/REVIEW.md.
+id: core-fail-05
+description: Social sciences sequence in the third year (Core should be finished by the end of the second year)
+program: core
+expect: fail
+expected_codes:
+- V10
+checks:
+- V01
+- V02
+- V03
+- V07
+- V08
+- V12
+- V10
+plan:
+  catalog_year: 2026-27
+  entry_term: 2026-AU
+  programs:
+  - program_id: core
+  placements:
+  - MATH 15100
+  items:
+  - course: HUMA 11000
+    term: 2026-AU
+  - course: MATH 15100
+    term: 2026-AU
+  - course: WRIT 10100
+    term: 2026-AU
+  - course: HUMA 11100
+    term: 2027-WI
+  - course: MATH 15200
+    term: 2027-WI
+  - course: BIOS 10130
+    term: 2027-WI
+  - course: HUMA 11200
+    term: 2027-SP
+  - course: ARTV 10100
+    term: 2027-SP
+  - course: BIOS 11125
+    term: 2027-SP
+  - course: HIST 13100
+    term: 2027-AU
+  - course: PHSC 11600
+    term: 2027-AU
+  - course: HIST 13200
+    term: 2028-WI
+  - course: PHSC 11700
+    term: 2028-WI
+  - course: SPAN 10300
+    term: 2028-SP
+  - course: SOSC 12400
+    term: 2028-AU
+  - course: SOSC 12500
+    term: 2029-WI
+  - course: SOSC 12600
+    term: 2029-SP

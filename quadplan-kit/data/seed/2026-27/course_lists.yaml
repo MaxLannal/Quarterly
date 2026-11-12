@@ -1,0 +1,1854 @@
+# Generated from the 2026-2027 UChicago College Catalog (fetched 2026-11-12) by hand-checked scripts;
+# every source.quote is copied verbatim (whitespace collapsed) from source.url. See data/seed/REVIEW.md.
+course_lists:
+- name: huma-11000
+  label: HUMA 11000-11100-11200
+  courses:
+  - HUMA 11000
+  - HUMA 11100
+  - HUMA 11200
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/humanities/
+    quote: HUMA 11000-11100-11200
+- name: huma-11500
+  label: HUMA 11500-11600-11700
+  courses:
+  - HUMA 11500
+  - HUMA 11600
+  - HUMA 11700
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/humanities/
+    quote: HUMA 11500-11600-11700
+- name: huma-12050
+  label: HUMA 12050-12150-12250
+  courses:
+  - HUMA 12050
+  - HUMA 12150
+  - HUMA 12250
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/humanities/
+    quote: HUMA 12050-12150-12250
+- name: huma-12300
+  label: HUMA 12300-12400-12500
+  courses:
+  - HUMA 12300
+  - HUMA 12400
+  - HUMA 12500
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/humanities/
+    quote: HUMA 12300-12400-12500
+- name: huma-14000
+  label: HUMA 14000-14100-14200
+  courses:
+  - HUMA 14000
+  - HUMA 14100
+  - HUMA 14200
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/humanities/
+    quote: HUMA 14000-14100-14200
+- name: huma-16000
+  label: HUMA 16000-16100-16200
+  courses:
+  - HUMA 16000
+  - HUMA 16100
+  - HUMA 16200
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/humanities/
+    quote: HUMA 16000-16100-16200
+- name: huma-17000
+  label: HUMA 17000-17100-17200
+  courses:
+  - HUMA 17000
+  - HUMA 17100
+  - HUMA 17200
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/humanities/
+    quote: HUMA 17000-17100-17200
+- name: huma-18000
+  label: HUMA 18000-18100-18200
+  courses:
+  - HUMA 18000
+  - HUMA 18100
+  - HUMA 18200
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/humanities/
+    quote: HUMA 18000-18100-18200
+- name: core-huma-sequences
+  label: Humanities Core sequences
+  sublists:
+  - huma-11000
+  - huma-11500
+  - huma-12050
+  - huma-12300
+  - huma-14000
+  - huma-16000
+  - huma-17000
+  - huma-18000
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/humanities/
+    quote: The sequences that fulfill the general education requirements in Humanities are listed here.
+- name: civ-gnse-15002
+  label: GNSE 15002-15003
+  courses:
+  - GNSE 15002
+  - GNSE 15003
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: GNSE 15002-15003.
+- name: civ-rdin-24001
+  label: RDIN 24001-24002-24003
+  courses:
+  - RDIN 24001
+  - RDIN 24002
+  - RDIN 24003
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: RDIN 24001-24002-24003.
+- name: civ-hist-10101
+  label: HIST 10101-10102-10103
+  courses:
+  - HIST 10101
+  - HIST 10102
+  - HIST 10103
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: HIST 10101-10102-10103.
+- name: civ-hist-13100
+  label: HIST 13100-13200-13300
+  courses:
+  - HIST 13100
+  - HIST 13200
+  - HIST 13300
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: HIST 13100-13200-13300.
+- name: civ-hist-13500
+  label: HIST 13500-13600-13700
+  courses:
+  - HIST 13500
+  - HIST 13600
+  - HIST 13700
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: HIST 13500-13600-13700.
+- name: civ-hist-13900
+  label: HIST 13900-14000-14100
+  courses:
+  - HIST 13900
+  - HIST 14000
+  - HIST 14100
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: HIST 13900-14000-14100.
+- name: civ-hist-15411
+  label: HIST 15411-15412-15413
+  courses:
+  - HIST 15411
+  - HIST 15412
+  - HIST 15413
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: HIST 15411-15412-15413.
+- name: civ-hist-16700
+  label: HIST 16700-16800-16900
+  courses:
+  - HIST 16700
+  - HIST 16800
+  - HIST 16900
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: HIST 16700-16800-16900.
+- name: civ-hist-17521
+  label: HIST 17521-17522
+  courses:
+  - HIST 17521
+  - HIST 17522
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: HIST 17521-17522.
+- name: civ-hmrt-10100
+  label: HMRT 10100-10200
+  courses:
+  - HMRT 10100
+  - HMRT 10200
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: HMRT 10100-10200.
+- name: civ-lacs-16100
+  label: LACS 16100-16200-16300
+  courses:
+  - LACS 16100
+  - LACS 16200
+  - LACS 16300
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: LACS 16100-16200-16300.
+- name: civ-musi-12100
+  label: MUSI 12100-12200
+  courses:
+  - MUSI 12100
+  - MUSI 12200
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: MUSI 12100-12200.
+- name: civ-nehc-20004
+  label: NEHC 20004-20005-20006
+  courses:
+  - NEHC 20004
+  - NEHC 20005
+  - NEHC 20006
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: NEHC 20004-20005-20006.
+- name: civ-nehc-20601
+  label: NEHC 20601-20602-20603
+  courses:
+  - NEHC 20601
+  - NEHC 20602
+  - NEHC 20603
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: NEHC 20601-20602-20603.
+- name: civ-salc-20100
+  label: SALC 20100-20200
+  courses:
+  - SALC 20100
+  - SALC 20200
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: SALC 20100-20200.
+- name: civ-jwsc-12000
+  label: JWSC 12000, JWSC 12001 (Jewish Civilization I-II)
+  courses:
+  - JWSC 12000
+  - JWSC 12001
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'JWSC 12000. Jewish Civilization I: Ancient Beginnings to Medieval Period.'
+  needs_review: true
+- name: civ-nehc-ancient-empires
+  label: NEHC 20011-20018 (Ancient Empires I-VIII)
+  courses:
+  - NEHC 20011
+  - NEHC 20012
+  - NEHC 20013
+  - NEHC 20014
+  - NEHC 20015
+  - NEHC 20016
+  - NEHC 20017
+  - NEHC 20018
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: Taking these courses in sequence is not required. This sequence meets the general education requirement in civilization
+      studies.
+  needs_review: true
+- name: civ-abroad-cordoba
+  label: civ-abroad-cordoba
+  courses:
+  - SOSC 19082
+  - SOSC 19083
+  - SOSC 19084
+  source:
+    url: https://study-abroad.uchicago.edu/cordoba-crossroads-mediterranean-civilizations
+    quote: The civilization sequence meets the College’s civilization requirement.
+- name: civ-abroad-paris-mdd
+  label: civ-abroad-paris-mdd
+  courses:
+  - SOSC 19076
+  - SOSC 19077
+  - SOSC 19078
+  source:
+    url: https://study-abroad.uchicago.edu/paris-migration-decolonization-and-diaspora-civilization
+    quote: The College’s Migration, Decolonization, and Diaspora Civilization program in Paris is a three-course sequence
+      that fulfills the Core’s Civilization requirement.
+- name: core-civ-sequences
+  label: Civilization Studies Core sequences
+  sublists:
+  - civ-gnse-15002
+  - civ-rdin-24001
+  - civ-hist-10101
+  - civ-hist-13100
+  - civ-hist-13500
+  - civ-hist-13900
+  - civ-hist-15411
+  - civ-hist-16700
+  - civ-hist-17521
+  - civ-hmrt-10100
+  - civ-lacs-16100
+  - civ-musi-12100
+  - civ-nehc-20004
+  - civ-nehc-20601
+  - civ-salc-20100
+  - civ-jwsc-12000
+  - civ-nehc-ancient-empires
+  - civ-abroad-cordoba
+  - civ-abroad-paris-mdd
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: Because civilization studies sequences offer an integrated, coherent approach to the study of a civilization, students
+      cannot change sequences.
+  needs_review: true
+- name: core-arts
+  label: Arts Core course options (explicit codes)
+  courses:
+  - ARCH 11000
+  - ARTH 10100
+  - ARTV 10100
+  - ARTV 10200
+  - ARTV 10300
+  - CMST 14400
+  - CRWR 18200
+  - MADD 26210
+  - MUSI 10100
+  - MUSI 10200
+  - MUSI 10300
+  - MUSI 10400
+  - MUSI 10500
+  - TAPS 10100
+  - TAPS 10200
+  - TAPS 10700
+  - TAPS 10800
+  - TAPS 10900
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/artscore/
+    quote: For that reason, only these courses can be used to satisfy the general education requirement in the arts.
+- name: sosc-11400
+  label: SOSC 11400-11500-11600
+  courses:
+  - SOSC 11400
+  - SOSC 11500
+  - SOSC 11600
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: SOSC 11400-11500-11600
+- name: sosc-12400
+  label: SOSC 12400-12500-12600
+  courses:
+  - SOSC 12400
+  - SOSC 12500
+  - SOSC 12600
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: SOSC 12400-12500-12600
+- name: sosc-13100
+  label: SOSC 13100-13200-13300
+  courses:
+  - SOSC 13100
+  - SOSC 13200
+  - SOSC 13300
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: SOSC 13100-13200-13300
+- name: sosc-13110
+  label: SOSC 13110-13210-13310
+  courses:
+  - SOSC 13110
+  - SOSC 13210
+  - SOSC 13310
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: SOSC 13110-13210-13310
+- name: sosc-14100
+  label: SOSC 14100-14200-14300
+  courses:
+  - SOSC 14100
+  - SOSC 14200
+  - SOSC 14300
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: SOSC 14100-14200-14300
+- name: sosc-15100
+  label: SOSC 15100-15200-15300
+  courses:
+  - SOSC 15100
+  - SOSC 15200
+  - SOSC 15300
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: SOSC 15100-15200-15300
+- name: sosc-16100
+  label: SOSC 16100-16200-16300
+  courses:
+  - SOSC 16100
+  - SOSC 16200
+  - SOSC 16300
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: SOSC 16100-16200-16300
+- name: sosc-17100
+  label: SOSC 17100-17200-17300
+  courses:
+  - SOSC 17100
+  - SOSC 17200
+  - SOSC 17300
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: SOSC 17100-17200-17300
+- name: sosc-18400
+  label: SOSC 18400-18500-18600
+  courses:
+  - SOSC 18400
+  - SOSC 18500
+  - SOSC 18600
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: SOSC 18400-18500-18600
+- name: core-sosc-sequences
+  label: Social Sciences Core sequences
+  sublists:
+  - sosc-11400
+  - sosc-12400
+  - sosc-13100
+  - sosc-13110
+  - sosc-14100
+  - sosc-15100
+  - sosc-16100
+  - sosc-17100
+  - sosc-18400
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: All three courses in a SOSC sequence must be taken in order. Once students begin a sequence, they are expected
+      to remain in the same sequence.
+- name: math-calc-13100
+  label: MATH 13100-13200
+  courses:
+  - MATH 13100
+  - MATH 13200
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematicalsciencescore/
+    quote: MATH 13100-13200
+- name: math-calc-15100
+  label: MATH 15100-15200
+  courses:
+  - MATH 15100
+  - MATH 15200
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematicalsciencescore/
+    quote: MATH 15100-15200
+- name: math-calc-16110
+  label: MATH 16110-16210
+  courses:
+  - MATH 16110
+  - MATH 16210
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematicalsciencescore/
+    quote: MATH 16110-16210
+- name: math-calc-16100
+  label: MATH 16100-16200
+  courses:
+  - MATH 16100
+  - MATH 16200
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematicalsciencescore/
+    quote: MATH 16100-16200
+- name: math-cmsc-14100
+  label: CMSC 14100 & 14200
+  courses:
+  - CMSC 14100
+  - CMSC 14200
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematicalsciencescore/
+    quote: CMSC 14100
+- name: math-nc-cmsc-11111
+  label: CMSC 11111
+  courses:
+  - CMSC 11111
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematicalsciencescore/
+    quote: All non-calculus options may be taken individually or, when available, as a sequence.
+- name: math-nc-data-11800
+  label: DATA 11800
+  courses:
+  - DATA 11800
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematicalsciencescore/
+    quote: All non-calculus options may be taken individually or, when available, as a sequence.
+- name: math-nc-math-11200
+  label: MATH 11200
+  courses:
+  - MATH 11200
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematicalsciencescore/
+    quote: All non-calculus options may be taken individually or, when available, as a sequence.
+- name: math-nc-math-11300
+  label: MATH 11300
+  courses:
+  - MATH 11300
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematicalsciencescore/
+    quote: All non-calculus options may be taken individually or, when available, as a sequence.
+- name: math-nc-stat-20000
+  label: STAT 20000
+  courses:
+  - STAT 20000
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematicalsciencescore/
+    quote: All non-calculus options may be taken individually or, when available, as a sequence.
+- name: math-nc-stat-20010
+  label: STAT 20010
+  courses:
+  - STAT 20010
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematicalsciencescore/
+    quote: All non-calculus options may be taken individually or, when available, as a sequence.
+- name: math-nc-stat-22000
+  label: STAT 22000
+  courses:
+  - STAT 22000
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematicalsciencescore/
+    quote: All non-calculus options may be taken individually or, when available, as a sequence.
+- name: math-nc-cmsc-11111-11800
+  label: CMSC 11111 + DATA 11800
+  courses:
+  - CMSC 11111
+  - DATA 11800
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematicalsciencescore/
+    quote: These courses may also be combined to fulfill 200 units of general education requirements (i.e., MATH 11200 and
+      STAT 20000).
+- name: math-nc-cmsc-11111-11200
+  label: CMSC 11111 + MATH 11200
+  courses:
+  - CMSC 11111
+  - MATH 11200
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematicalsciencescore/
+    quote: These courses may also be combined to fulfill 200 units of general education requirements (i.e., MATH 11200 and
+      STAT 20000).
+- name: math-nc-cmsc-11111-11300
+  label: CMSC 11111 + MATH 11300
+  courses:
+  - CMSC 11111
+  - MATH 11300
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematicalsciencescore/
+    quote: These courses may also be combined to fulfill 200 units of general education requirements (i.e., MATH 11200 and
+      STAT 20000).
+- name: math-nc-cmsc-11111-20000
+  label: CMSC 11111 + STAT 20000
+  courses:
+  - CMSC 11111
+  - STAT 20000
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematicalsciencescore/
+    quote: These courses may also be combined to fulfill 200 units of general education requirements (i.e., MATH 11200 and
+      STAT 20000).
+- name: math-nc-cmsc-11111-20010
+  label: CMSC 11111 + STAT 20010
+  courses:
+  - CMSC 11111
+  - STAT 20010
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematicalsciencescore/
+    quote: These courses may also be combined to fulfill 200 units of general education requirements (i.e., MATH 11200 and
+      STAT 20000).
+- name: math-nc-cmsc-11111-22000
+  label: CMSC 11111 + STAT 22000
+  courses:
+  - CMSC 11111
+  - STAT 22000
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematicalsciencescore/
+    quote: These courses may also be combined to fulfill 200 units of general education requirements (i.e., MATH 11200 and
+      STAT 20000).
+- name: math-nc-data-11800-11200
+  label: DATA 11800 + MATH 11200
+  courses:
+  - DATA 11800
+  - MATH 11200
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematicalsciencescore/
+    quote: These courses may also be combined to fulfill 200 units of general education requirements (i.e., MATH 11200 and
+      STAT 20000).
+- name: math-nc-data-11800-11300
+  label: DATA 11800 + MATH 11300
+  courses:
+  - DATA 11800
+  - MATH 11300
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematicalsciencescore/
+    quote: These courses may also be combined to fulfill 200 units of general education requirements (i.e., MATH 11200 and
+      STAT 20000).
+- name: math-nc-data-11800-20000
+  label: DATA 11800 + STAT 20000
+  courses:
+  - DATA 11800
+  - STAT 20000
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematicalsciencescore/
+    quote: These courses may also be combined to fulfill 200 units of general education requirements (i.e., MATH 11200 and
+      STAT 20000).
+- name: math-nc-data-11800-20010
+  label: DATA 11800 + STAT 20010
+  courses:
+  - DATA 11800
+  - STAT 20010
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematicalsciencescore/
+    quote: These courses may also be combined to fulfill 200 units of general education requirements (i.e., MATH 11200 and
+      STAT 20000).
+- name: math-nc-data-11800-22000
+  label: DATA 11800 + STAT 22000
+  courses:
+  - DATA 11800
+  - STAT 22000
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematicalsciencescore/
+    quote: These courses may also be combined to fulfill 200 units of general education requirements (i.e., MATH 11200 and
+      STAT 20000).
+- name: math-nc-math-11200-11300
+  label: MATH 11200 + MATH 11300
+  courses:
+  - MATH 11200
+  - MATH 11300
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematicalsciencescore/
+    quote: These courses may also be combined to fulfill 200 units of general education requirements (i.e., MATH 11200 and
+      STAT 20000).
+- name: math-nc-math-11200-20000
+  label: MATH 11200 + STAT 20000
+  courses:
+  - MATH 11200
+  - STAT 20000
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematicalsciencescore/
+    quote: These courses may also be combined to fulfill 200 units of general education requirements (i.e., MATH 11200 and
+      STAT 20000).
+- name: math-nc-math-11200-20010
+  label: MATH 11200 + STAT 20010
+  courses:
+  - MATH 11200
+  - STAT 20010
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematicalsciencescore/
+    quote: These courses may also be combined to fulfill 200 units of general education requirements (i.e., MATH 11200 and
+      STAT 20000).
+- name: math-nc-math-11200-22000
+  label: MATH 11200 + STAT 22000
+  courses:
+  - MATH 11200
+  - STAT 22000
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematicalsciencescore/
+    quote: These courses may also be combined to fulfill 200 units of general education requirements (i.e., MATH 11200 and
+      STAT 20000).
+- name: math-nc-math-11300-20000
+  label: MATH 11300 + STAT 20000
+  courses:
+  - MATH 11300
+  - STAT 20000
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematicalsciencescore/
+    quote: These courses may also be combined to fulfill 200 units of general education requirements (i.e., MATH 11200 and
+      STAT 20000).
+- name: math-nc-math-11300-20010
+  label: MATH 11300 + STAT 20010
+  courses:
+  - MATH 11300
+  - STAT 20010
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematicalsciencescore/
+    quote: These courses may also be combined to fulfill 200 units of general education requirements (i.e., MATH 11200 and
+      STAT 20000).
+- name: math-nc-math-11300-22000
+  label: MATH 11300 + STAT 22000
+  courses:
+  - MATH 11300
+  - STAT 22000
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematicalsciencescore/
+    quote: These courses may also be combined to fulfill 200 units of general education requirements (i.e., MATH 11200 and
+      STAT 20000).
+- name: core-math-options
+  label: Mathematical Sciences Core options (one sublist per allowed combination)
+  sublists:
+  - math-calc-13100
+  - math-calc-15100
+  - math-calc-16110
+  - math-calc-16100
+  - math-cmsc-14100
+  - math-nc-cmsc-11111
+  - math-nc-data-11800
+  - math-nc-math-11200
+  - math-nc-math-11300
+  - math-nc-stat-20000
+  - math-nc-stat-20010
+  - math-nc-stat-22000
+  - math-nc-cmsc-11111-11800
+  - math-nc-cmsc-11111-11200
+  - math-nc-cmsc-11111-11300
+  - math-nc-cmsc-11111-20000
+  - math-nc-cmsc-11111-20010
+  - math-nc-cmsc-11111-22000
+  - math-nc-data-11800-11200
+  - math-nc-data-11800-11300
+  - math-nc-data-11800-20000
+  - math-nc-data-11800-20010
+  - math-nc-data-11800-22000
+  - math-nc-math-11200-11300
+  - math-nc-math-11200-20000
+  - math-nc-math-11200-20010
+  - math-nc-math-11200-22000
+  - math-nc-math-11300-20000
+  - math-nc-math-11300-20010
+  - math-nc-math-11300-22000
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematicalsciencescore/
+    quote: Students may select from the following lists of courses.
+  needs_review: true
+- name: phys-chem-10100
+  label: CHEM 10100 & 10200
+  courses:
+  - CHEM 10100
+  - CHEM 10200
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: CHEM 10100
+- name: phys-chem-11100
+  label: CHEM 11100-11200
+  courses:
+  - CHEM 11100
+  - CHEM 11200
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: CHEM 11100-11200
+- name: phys-chem-12100
+  label: CHEM 12100 & 12200
+  courses:
+  - CHEM 12100
+  - CHEM 12200
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: CHEM 12100
+- name: phys-geos-13100
+  label: GEOS 13100 & 13200
+  courses:
+  - GEOS 13100
+  - GEOS 13200
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: GEOS 13100
+- name: phys-phys-12100
+  label: PHYS 12100-12200
+  courses:
+  - PHYS 12100
+  - PHYS 12200
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: PHYS 12100-12200
+- name: phys-phys-13100
+  label: PHYS 13100-13200
+  courses:
+  - PHYS 13100
+  - PHYS 13200
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: PHYS 13100-13200
+- name: phys-phys-14100
+  label: PHYS 14100-14200
+  courses:
+  - PHYS 14100
+  - PHYS 14200
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: PHYS 14100-14200
+- name: core-phys-science-major-sequences
+  label: General Education Sequences for Science Majors (physical sciences)
+  sublists:
+  - phys-chem-10100
+  - phys-chem-11100
+  - phys-chem-12100
+  - phys-geos-13100
+  - phys-phys-12100
+  - phys-phys-13100
+  - phys-phys-14100
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: The following introductory sequences may be used to satisfy the Core requirement in the physical sciences for all
+      students, although these tend to be taken by science majors or by students who have a particular need for science (namely,
+      premeds).
+- name: phys-chem-10100-phsc-12200
+  label: CHEM 10100 + PHSC 12200
+  courses:
+  - CHEM 10100
+  - PHSC 12200
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: '#Students who have credit for CHEM 10100, 11100, or 12100 (either by taking the course or by AP credit) and do
+      not wish to progress in the CHEM sequences above may satisfy the Core requirement with any of the following courses
+      offered by the Department of Chemistry:'
+- name: phys-chem-10100-phsc-12400
+  label: CHEM 10100 + PHSC 12400
+  courses:
+  - CHEM 10100
+  - PHSC 12400
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: '#Students who have credit for CHEM 10100, 11100, or 12100 (either by taking the course or by AP credit) and do
+      not wish to progress in the CHEM sequences above may satisfy the Core requirement with any of the following courses
+      offered by the Department of Chemistry:'
+- name: phys-chem-10100-phsc-12500
+  label: CHEM 10100 + PHSC 12500
+  courses:
+  - CHEM 10100
+  - PHSC 12500
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: '#Students who have credit for CHEM 10100, 11100, or 12100 (either by taking the course or by AP credit) and do
+      not wish to progress in the CHEM sequences above may satisfy the Core requirement with any of the following courses
+      offered by the Department of Chemistry:'
+- name: phys-chem-10100-phsc-12900
+  label: CHEM 10100 + PHSC 12900
+  courses:
+  - CHEM 10100
+  - PHSC 12900
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: '#Students who have credit for CHEM 10100, 11100, or 12100 (either by taking the course or by AP credit) and do
+      not wish to progress in the CHEM sequences above may satisfy the Core requirement with any of the following courses
+      offered by the Department of Chemistry:'
+- name: phys-chem-10100-phsc-13000
+  label: CHEM 10100 + PHSC 13000
+  courses:
+  - CHEM 10100
+  - PHSC 13000
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: '#Students who have credit for CHEM 10100, 11100, or 12100 (either by taking the course or by AP credit) and do
+      not wish to progress in the CHEM sequences above may satisfy the Core requirement with any of the following courses
+      offered by the Department of Chemistry:'
+- name: phys-chem-11100-phsc-12200
+  label: CHEM 11100 + PHSC 12200
+  courses:
+  - CHEM 11100
+  - PHSC 12200
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: '#Students who have credit for CHEM 10100, 11100, or 12100 (either by taking the course or by AP credit) and do
+      not wish to progress in the CHEM sequences above may satisfy the Core requirement with any of the following courses
+      offered by the Department of Chemistry:'
+- name: phys-chem-11100-phsc-12400
+  label: CHEM 11100 + PHSC 12400
+  courses:
+  - CHEM 11100
+  - PHSC 12400
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: '#Students who have credit for CHEM 10100, 11100, or 12100 (either by taking the course or by AP credit) and do
+      not wish to progress in the CHEM sequences above may satisfy the Core requirement with any of the following courses
+      offered by the Department of Chemistry:'
+- name: phys-chem-11100-phsc-12500
+  label: CHEM 11100 + PHSC 12500
+  courses:
+  - CHEM 11100
+  - PHSC 12500
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: '#Students who have credit for CHEM 10100, 11100, or 12100 (either by taking the course or by AP credit) and do
+      not wish to progress in the CHEM sequences above may satisfy the Core requirement with any of the following courses
+      offered by the Department of Chemistry:'
+- name: phys-chem-11100-phsc-12900
+  label: CHEM 11100 + PHSC 12900
+  courses:
+  - CHEM 11100
+  - PHSC 12900
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: '#Students who have credit for CHEM 10100, 11100, or 12100 (either by taking the course or by AP credit) and do
+      not wish to progress in the CHEM sequences above may satisfy the Core requirement with any of the following courses
+      offered by the Department of Chemistry:'
+- name: phys-chem-11100-phsc-13000
+  label: CHEM 11100 + PHSC 13000
+  courses:
+  - CHEM 11100
+  - PHSC 13000
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: '#Students who have credit for CHEM 10100, 11100, or 12100 (either by taking the course or by AP credit) and do
+      not wish to progress in the CHEM sequences above may satisfy the Core requirement with any of the following courses
+      offered by the Department of Chemistry:'
+- name: phys-chem-12100-phsc-12200
+  label: CHEM 12100 + PHSC 12200
+  courses:
+  - CHEM 12100
+  - PHSC 12200
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: '#Students who have credit for CHEM 10100, 11100, or 12100 (either by taking the course or by AP credit) and do
+      not wish to progress in the CHEM sequences above may satisfy the Core requirement with any of the following courses
+      offered by the Department of Chemistry:'
+- name: phys-chem-12100-phsc-12400
+  label: CHEM 12100 + PHSC 12400
+  courses:
+  - CHEM 12100
+  - PHSC 12400
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: '#Students who have credit for CHEM 10100, 11100, or 12100 (either by taking the course or by AP credit) and do
+      not wish to progress in the CHEM sequences above may satisfy the Core requirement with any of the following courses
+      offered by the Department of Chemistry:'
+- name: phys-chem-12100-phsc-12500
+  label: CHEM 12100 + PHSC 12500
+  courses:
+  - CHEM 12100
+  - PHSC 12500
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: '#Students who have credit for CHEM 10100, 11100, or 12100 (either by taking the course or by AP credit) and do
+      not wish to progress in the CHEM sequences above may satisfy the Core requirement with any of the following courses
+      offered by the Department of Chemistry:'
+- name: phys-chem-12100-phsc-12900
+  label: CHEM 12100 + PHSC 12900
+  courses:
+  - CHEM 12100
+  - PHSC 12900
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: '#Students who have credit for CHEM 10100, 11100, or 12100 (either by taking the course or by AP credit) and do
+      not wish to progress in the CHEM sequences above may satisfy the Core requirement with any of the following courses
+      offered by the Department of Chemistry:'
+- name: phys-chem-12100-phsc-13000
+  label: CHEM 12100 + PHSC 13000
+  courses:
+  - CHEM 12100
+  - PHSC 13000
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: '#Students who have credit for CHEM 10100, 11100, or 12100 (either by taking the course or by AP credit) and do
+      not wish to progress in the CHEM sequences above may satisfy the Core requirement with any of the following courses
+      offered by the Department of Chemistry:'
+- name: phys-phsc-11600-phsc-11700
+  label: PHSC 11600 + PHSC 11700
+  courses:
+  - PHSC 11600
+  - PHSC 11700
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: The PHSC courses and approved sequences in the Physics category are listed below. Other sequences are not permitted*.
+- name: phys-phsc-11600-phsc-11800
+  label: PHSC 11600 + PHSC 11800
+  courses:
+  - PHSC 11600
+  - PHSC 11800
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: The PHSC courses and approved sequences in the Physics category are listed below. Other sequences are not permitted*.
+- name: phys-phsc-11700-phsc-11800
+  label: PHSC 11700 + PHSC 11800
+  courses:
+  - PHSC 11700
+  - PHSC 11800
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: The PHSC courses and approved sequences in the Physics category are listed below. Other sequences are not permitted*.
+- name: phys-phsc-11800-phsc-12600
+  label: PHSC 11800 + PHSC 12600
+  courses:
+  - PHSC 11800
+  - PHSC 12600
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: The PHSC courses and approved sequences in the Physics category are listed below. Other sequences are not permitted*.
+- name: phys-phsc-11800-phsc-13400
+  label: PHSC 11800 + PHSC 13400
+  courses:
+  - PHSC 11800
+  - PHSC 13400
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: The PHSC courses and approved sequences in the Physics category are listed below. Other sequences are not permitted*.
+- name: phys-phsc-11800-phsc-13410
+  label: PHSC 11800 + PHSC 13410
+  courses:
+  - PHSC 11800
+  - PHSC 13410
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: The PHSC courses and approved sequences in the Physics category are listed below. Other sequences are not permitted*.
+- name: phys-phsc-12200-phsc-11600
+  label: PHSC 12200 + PHSC 11600
+  courses:
+  - PHSC 12200
+  - PHSC 11600
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: Sequences of PHSC courses with a focus on Chemistry are listed below. The courses in these sequences can be taken
+      in any order.
+- name: phys-phsc-12200-phsc-11700
+  label: PHSC 12200 + PHSC 11700
+  courses:
+  - PHSC 12200
+  - PHSC 11700
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: Sequences of PHSC courses with a focus on Chemistry are listed below. The courses in these sequences can be taken
+      in any order.
+- name: phys-phsc-12200-phsc-12400
+  label: PHSC 12200 + PHSC 12400
+  courses:
+  - PHSC 12200
+  - PHSC 12400
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: Sequences of PHSC courses with a focus on Chemistry are listed below. The courses in these sequences can be taken
+      in any order.
+- name: phys-phsc-12200-phsc-12500
+  label: PHSC 12200 + PHSC 12500
+  courses:
+  - PHSC 12200
+  - PHSC 12500
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: Sequences of PHSC courses with a focus on Chemistry are listed below. The courses in these sequences can be taken
+      in any order.
+- name: phys-phsc-12200-phsc-12900
+  label: PHSC 12200 + PHSC 12900
+  courses:
+  - PHSC 12200
+  - PHSC 12900
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: Sequences of PHSC courses with a focus on Chemistry are listed below. The courses in these sequences can be taken
+      in any order.
+- name: phys-phsc-12200-phsc-13000
+  label: PHSC 12200 + PHSC 13000
+  courses:
+  - PHSC 12200
+  - PHSC 13000
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: Sequences of PHSC courses with a focus on Chemistry are listed below. The courses in these sequences can be taken
+      in any order.
+- name: phys-phsc-12200-phsc-13400
+  label: PHSC 12200 + PHSC 13400
+  courses:
+  - PHSC 12200
+  - PHSC 13400
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: Sequences of PHSC courses with a focus on Chemistry are listed below. The courses in these sequences can be taken
+      in any order.
+- name: phys-phsc-12200-phsc-13410
+  label: PHSC 12200 + PHSC 13410
+  courses:
+  - PHSC 12200
+  - PHSC 13410
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: Sequences of PHSC courses with a focus on Chemistry are listed below. The courses in these sequences can be taken
+      in any order.
+- name: phys-phsc-12200-phsc-13600
+  label: PHSC 12200 + PHSC 13600
+  courses:
+  - PHSC 12200
+  - PHSC 13600
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: Sequences of PHSC courses with a focus on Chemistry are listed below. The courses in these sequences can be taken
+      in any order.
+- name: phys-phsc-12400-phsc-12500
+  label: PHSC 12400 + PHSC 12500
+  courses:
+  - PHSC 12400
+  - PHSC 12500
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: Sequences of PHSC courses with a focus on Chemistry are listed below. The courses in these sequences can be taken
+      in any order.
+- name: phys-phsc-12400-phsc-12900
+  label: PHSC 12400 + PHSC 12900
+  courses:
+  - PHSC 12400
+  - PHSC 12900
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: Sequences of PHSC courses with a focus on Chemistry are listed below. The courses in these sequences can be taken
+      in any order.
+- name: phys-phsc-12400-phsc-13000
+  label: PHSC 12400 + PHSC 13000
+  courses:
+  - PHSC 12400
+  - PHSC 13000
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: Sequences of PHSC courses with a focus on Chemistry are listed below. The courses in these sequences can be taken
+      in any order.
+- name: phys-phsc-12500-phsc-12900
+  label: PHSC 12500 + PHSC 12900
+  courses:
+  - PHSC 12500
+  - PHSC 12900
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: Sequences of PHSC courses with a focus on Chemistry are listed below. The courses in these sequences can be taken
+      in any order.
+- name: phys-phsc-12500-phsc-13000
+  label: PHSC 12500 + PHSC 13000
+  courses:
+  - PHSC 12500
+  - PHSC 13000
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: Sequences of PHSC courses with a focus on Chemistry are listed below. The courses in these sequences can be taken
+      in any order.
+- name: phys-phsc-15100-phsc-15200
+  label: PHSC 15100 + PHSC 15200
+  courses:
+  - PHSC 15100
+  - PHSC 15200
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: The options below can be taken in any order. Courses may not be paired with those from other sequences to satisfy
+      the Core requirement.
+- name: phys-phsc-10100-phsc-11000
+  label: PHSC 10100 + PHSC 11000
+  courses:
+  - PHSC 10100
+  - PHSC 11000
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: The PHSC courses and approved sequences in the Geosciences category are listed below. The courses in these sequences
+      can be taken in any order.
+- name: phys-phsc-10100-phsc-11900
+  label: PHSC 10100 + PHSC 11900
+  courses:
+  - PHSC 10100
+  - PHSC 11900
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: The PHSC courses and approved sequences in the Geosciences category are listed below. The courses in these sequences
+      can be taken in any order.
+- name: phys-phsc-10100-phsc-13400
+  label: PHSC 10100 + PHSC 13400
+  courses:
+  - PHSC 10100
+  - PHSC 13400
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: The PHSC courses and approved sequences in the Geosciences category are listed below. The courses in these sequences
+      can be taken in any order.
+- name: phys-phsc-10100-phsc-13410
+  label: PHSC 10100 + PHSC 13410
+  courses:
+  - PHSC 10100
+  - PHSC 13410
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: The PHSC courses and approved sequences in the Geosciences category are listed below. The courses in these sequences
+      can be taken in any order.
+- name: phys-phsc-10800-phsc-11000
+  label: PHSC 10800 + PHSC 11000
+  courses:
+  - PHSC 10800
+  - PHSC 11000
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: The PHSC courses and approved sequences in the Geosciences category are listed below. The courses in these sequences
+      can be taken in any order.
+- name: phys-phsc-10800-phsc-11900
+  label: PHSC 10800 + PHSC 11900
+  courses:
+  - PHSC 10800
+  - PHSC 11900
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: The PHSC courses and approved sequences in the Geosciences category are listed below. The courses in these sequences
+      can be taken in any order.
+- name: phys-phsc-10800-phsc-13400
+  label: PHSC 10800 + PHSC 13400
+  courses:
+  - PHSC 10800
+  - PHSC 13400
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: The PHSC courses and approved sequences in the Geosciences category are listed below. The courses in these sequences
+      can be taken in any order.
+- name: phys-phsc-10800-phsc-13410
+  label: PHSC 10800 + PHSC 13410
+  courses:
+  - PHSC 10800
+  - PHSC 13410
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: The PHSC courses and approved sequences in the Geosciences category are listed below. The courses in these sequences
+      can be taken in any order.
+- name: phys-phsc-10800-phsc-13600
+  label: PHSC 10800 + PHSC 13600
+  courses:
+  - PHSC 10800
+  - PHSC 13600
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: The PHSC courses and approved sequences in the Geosciences category are listed below. The courses in these sequences
+      can be taken in any order.
+- name: phys-phsc-11000-phsc-11900
+  label: PHSC 11000 + PHSC 11900
+  courses:
+  - PHSC 11000
+  - PHSC 11900
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: The PHSC courses and approved sequences in the Geosciences category are listed below. The courses in these sequences
+      can be taken in any order.
+- name: phys-phsc-11000-phsc-13400
+  label: PHSC 11000 + PHSC 13400
+  courses:
+  - PHSC 11000
+  - PHSC 13400
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: The PHSC courses and approved sequences in the Geosciences category are listed below. The courses in these sequences
+      can be taken in any order.
+- name: phys-phsc-11000-phsc-13410
+  label: PHSC 11000 + PHSC 13410
+  courses:
+  - PHSC 11000
+  - PHSC 13410
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: The PHSC courses and approved sequences in the Geosciences category are listed below. The courses in these sequences
+      can be taken in any order.
+- name: phys-phsc-11000-phsc-13600
+  label: PHSC 11000 + PHSC 13600
+  courses:
+  - PHSC 11000
+  - PHSC 13600
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: The PHSC courses and approved sequences in the Geosciences category are listed below. The courses in these sequences
+      can be taken in any order.
+- name: phys-phsc-11900-phsc-13600
+  label: PHSC 11900 + PHSC 13600
+  courses:
+  - PHSC 11900
+  - PHSC 13600
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: The PHSC courses and approved sequences in the Geosciences category are listed below. The courses in these sequences
+      can be taken in any order.
+- name: phys-phsc-11900-phsc-13400
+  label: PHSC 11900 + PHSC 13400
+  courses:
+  - PHSC 11900
+  - PHSC 13400
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: The PHSC courses and approved sequences in the Geosciences category are listed below. The courses in these sequences
+      can be taken in any order.
+- name: phys-phsc-11900-phsc-13410
+  label: PHSC 11900 + PHSC 13410
+  courses:
+  - PHSC 11900
+  - PHSC 13410
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: The PHSC courses and approved sequences in the Geosciences category are listed below. The courses in these sequences
+      can be taken in any order.
+- name: phys-phsc-13600-phsc-13400
+  label: PHSC 13600 + PHSC 13400
+  courses:
+  - PHSC 13600
+  - PHSC 13400
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: The PHSC courses and approved sequences in the Geosciences category are listed below. The courses in these sequences
+      can be taken in any order.
+- name: phys-phsc-13600-phsc-13410
+  label: PHSC 13600 + PHSC 13410
+  courses:
+  - PHSC 13600
+  - PHSC 13410
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: The PHSC courses and approved sequences in the Geosciences category are listed below. The courses in these sequences
+      can be taken in any order.
+- name: phys-phsc-12600-phsc-12610
+  label: PHSC 12600 + PHSC 12610
+  courses:
+  - PHSC 12600
+  - PHSC 12610
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: 'Students can build two- or three-quarter sequences most naturally from the two progressions above, but they may
+      also mix the two in the following ways:'
+- name: phys-phsc-12600-phsc-12620
+  label: PHSC 12600 + PHSC 12620
+  courses:
+  - PHSC 12600
+  - PHSC 12620
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: 'Students can build two- or three-quarter sequences most naturally from the two progressions above, but they may
+      also mix the two in the following ways:'
+- name: phys-phsc-12700-phsc-12710
+  label: PHSC 12700 + PHSC 12710
+  courses:
+  - PHSC 12700
+  - PHSC 12710
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: 'Students can build two- or three-quarter sequences most naturally from the two progressions above, but they may
+      also mix the two in the following ways:'
+- name: phys-phsc-12700-phsc-12720
+  label: PHSC 12700 + PHSC 12720
+  courses:
+  - PHSC 12700
+  - PHSC 12720
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: 'Students can build two- or three-quarter sequences most naturally from the two progressions above, but they may
+      also mix the two in the following ways:'
+- name: phys-phsc-12600-phsc-12710
+  label: PHSC 12600 + PHSC 12710
+  courses:
+  - PHSC 12600
+  - PHSC 12710
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: 'Students can build two- or three-quarter sequences most naturally from the two progressions above, but they may
+      also mix the two in the following ways:'
+- name: phys-phsc-12700-phsc-12610
+  label: PHSC 12700 + PHSC 12610
+  courses:
+  - PHSC 12700
+  - PHSC 12610
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: 'Students can build two- or three-quarter sequences most naturally from the two progressions above, but they may
+      also mix the two in the following ways:'
+- name: phys-phsc-12600-phsc-12700
+  label: PHSC 12600 + PHSC 12700
+  courses:
+  - PHSC 12600
+  - PHSC 12700
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: 'Students can build two- or three-quarter sequences most naturally from the two progressions above, but they may
+      also mix the two in the following ways:'
+- name: phys-phsc-12710-phsc-12720
+  label: PHSC 12710 + PHSC 12720
+  courses:
+  - PHSC 12710
+  - PHSC 12720
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: 'Students can build two- or three-quarter sequences most naturally from the two progressions above, but they may
+      also mix the two in the following ways:'
+- name: phys-phsc-10800-phsc-12710
+  label: PHSC 10800 + PHSC 12710
+  courses:
+  - PHSC 10800
+  - PHSC 12710
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: 'Students may also pair certain Geosciences and Astronomy and Astrophysics courses in approved sequences:'
+- name: phys-phsc-10800-phsc-12720
+  label: PHSC 10800 + PHSC 12720
+  courses:
+  - PHSC 10800
+  - PHSC 12720
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: 'Students may also pair certain Geosciences and Astronomy and Astrophysics courses in approved sequences:'
+- name: phys-phsc-10100-phsc-12720
+  label: PHSC 10100 + PHSC 12720
+  courses:
+  - PHSC 10100
+  - PHSC 12720
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: 'Students may also pair certain Geosciences and Astronomy and Astrophysics courses in approved sequences:'
+- name: phys-phsc-10800-phsc-12710-phsc-12720
+  label: PHSC 10800 + PHSC 12710 + PHSC 12720
+  courses:
+  - PHSC 10800
+  - PHSC 12710
+  - PHSC 12720
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: PHSC 10800 + PHSC 12710 + PHSC 12720 is the only three-quarter sequence possible for approved sequences numbered
+      in the 10000s.
+- name: phys-phsc-12600-phsc-12610-phsc-12700
+  label: PHSC 12600 + PHSC 12610 + PHSC 12700
+  courses:
+  - PHSC 12600
+  - PHSC 12610
+  - PHSC 12700
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: Three-quarter sequences may be created by adding any Astro course numbered in the 12000s to an approved sequence
+      also numbered in the 12000s.
+- name: phys-phsc-12600-phsc-12700-phsc-12710
+  label: PHSC 12600 + PHSC 12700 + PHSC 12710
+  courses:
+  - PHSC 12600
+  - PHSC 12700
+  - PHSC 12710
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: Three-quarter sequences may be created by adding any Astro course numbered in the 12000s to an approved sequence
+      also numbered in the 12000s.
+- name: phys-phsc-12700-phsc-12710-phsc-12720
+  label: PHSC 12700 + PHSC 12710 + PHSC 12720
+  courses:
+  - PHSC 12700
+  - PHSC 12710
+  - PHSC 12720
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: Three-quarter sequences may be created by adding any Astro course numbered in the 12000s to an approved sequence
+      also numbered in the 12000s.
+- name: phys-phsc-11600-phsc-11700-phsc-11800
+  label: PHSC 11600 + PHSC 11700 + PHSC 11800
+  courses:
+  - PHSC 11600
+  - PHSC 11700
+  - PHSC 11800
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: '* Students wishing to take a three-quarter Physical Sciences sequence may combine PHSC 11600-PHSC 11700 with any
+      other Physical Sciences Core course.'
+- name: phys-phsc-11600-phsc-11700-phsc-12200
+  label: PHSC 11600 + PHSC 11700 + PHSC 12200
+  courses:
+  - PHSC 11600
+  - PHSC 11700
+  - PHSC 12200
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: '* Students wishing to take a three-quarter Physical Sciences sequence may combine PHSC 11600-PHSC 11700 with any
+      other Physical Sciences Core course.'
+- name: core-phys-sequences
+  label: Physical Sciences Core sequences (one sublist per approved combination)
+  sublists:
+  - phys-chem-10100
+  - phys-chem-11100
+  - phys-chem-12100
+  - phys-geos-13100
+  - phys-phys-12100
+  - phys-phys-13100
+  - phys-phys-14100
+  - phys-chem-10100-phsc-12200
+  - phys-chem-10100-phsc-12400
+  - phys-chem-10100-phsc-12500
+  - phys-chem-10100-phsc-12900
+  - phys-chem-10100-phsc-13000
+  - phys-chem-11100-phsc-12200
+  - phys-chem-11100-phsc-12400
+  - phys-chem-11100-phsc-12500
+  - phys-chem-11100-phsc-12900
+  - phys-chem-11100-phsc-13000
+  - phys-chem-12100-phsc-12200
+  - phys-chem-12100-phsc-12400
+  - phys-chem-12100-phsc-12500
+  - phys-chem-12100-phsc-12900
+  - phys-chem-12100-phsc-13000
+  - phys-phsc-11600-phsc-11700
+  - phys-phsc-11600-phsc-11800
+  - phys-phsc-11700-phsc-11800
+  - phys-phsc-11800-phsc-12600
+  - phys-phsc-11800-phsc-13400
+  - phys-phsc-11800-phsc-13410
+  - phys-phsc-12200-phsc-11600
+  - phys-phsc-12200-phsc-11700
+  - phys-phsc-12200-phsc-12400
+  - phys-phsc-12200-phsc-12500
+  - phys-phsc-12200-phsc-12900
+  - phys-phsc-12200-phsc-13000
+  - phys-phsc-12200-phsc-13400
+  - phys-phsc-12200-phsc-13410
+  - phys-phsc-12200-phsc-13600
+  - phys-phsc-12400-phsc-12500
+  - phys-phsc-12400-phsc-12900
+  - phys-phsc-12400-phsc-13000
+  - phys-phsc-12500-phsc-12900
+  - phys-phsc-12500-phsc-13000
+  - phys-phsc-15100-phsc-15200
+  - phys-phsc-10100-phsc-11000
+  - phys-phsc-10100-phsc-11900
+  - phys-phsc-10100-phsc-13400
+  - phys-phsc-10100-phsc-13410
+  - phys-phsc-10800-phsc-11000
+  - phys-phsc-10800-phsc-11900
+  - phys-phsc-10800-phsc-13400
+  - phys-phsc-10800-phsc-13410
+  - phys-phsc-10800-phsc-13600
+  - phys-phsc-11000-phsc-11900
+  - phys-phsc-11000-phsc-13400
+  - phys-phsc-11000-phsc-13410
+  - phys-phsc-11000-phsc-13600
+  - phys-phsc-11900-phsc-13600
+  - phys-phsc-11900-phsc-13400
+  - phys-phsc-11900-phsc-13410
+  - phys-phsc-13600-phsc-13400
+  - phys-phsc-13600-phsc-13410
+  - phys-phsc-12600-phsc-12610
+  - phys-phsc-12600-phsc-12620
+  - phys-phsc-12700-phsc-12710
+  - phys-phsc-12700-phsc-12720
+  - phys-phsc-12600-phsc-12710
+  - phys-phsc-12700-phsc-12610
+  - phys-phsc-12600-phsc-12700
+  - phys-phsc-12710-phsc-12720
+  - phys-phsc-10800-phsc-12710
+  - phys-phsc-10800-phsc-12720
+  - phys-phsc-10100-phsc-12720
+  - phys-phsc-10800-phsc-12710-phsc-12720
+  - phys-phsc-12600-phsc-12610-phsc-12700
+  - phys-phsc-12600-phsc-12700-phsc-12710
+  - phys-phsc-12700-phsc-12710-phsc-12720
+  - phys-phsc-11600-phsc-11700-phsc-11800
+  - phys-phsc-11600-phsc-11700-phsc-12200
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: Students are required to take an approved two- or three-course sequence in the physical sciences to satisfy the
+      Core requirement.
+  needs_review: true
+- name: bio-gened-topics
+  label: bio-gened-topics
+  courses:
+  - BIOS 10130
+  - BIOS 10140
+  - BIOS 11125
+  - BIOS 11136
+  - BIOS 11140
+  - BIOS 11142
+  - BIOS 11143
+  - BIOS 11144
+  - BIOS 12115
+  - BIOS 12121
+  - BIOS 12124
+  - BIOS 13111
+  - BIOS 13112
+  - BIOS 13123
+  - BIOS 13128
+  - BIOS 13132
+  - BIOS 13134
+  - BIOS 13135
+  - BIOS 13140
+  - BIOS 13142
+  - BIOS 13143
+  - BIOS 14112
+  - BIOS 14117
+  - BIOS 14118
+  - BIOS 15115
+  - BIOS 15126
+  - BIOS 15127
+  - BIOS 15128
+  - BIOS 27710
+  - BIOS 27711
+  - BIOS 27712
+  - BIOS 27713
+  - BIOS 27714
+  - BIOS 27715
+  - BIOS 27716
+  - BIOS 27717
+  - BIOS 27720
+  - BIOS 27723
+  - BIOS 27724
+  - BIOS 27725
+  - BIOS 27726
+  - BIOS 27727
+  - BIOS 27728
+  - BIOS 27750
+  - BIOS 27752
+  - BIOS 27753
+  - BIOS 27760
+  - BIOS 27761
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: AND any Topics course (course numbers BIOS 11125-BIOS 16120 and BIOS 27710-27779)
+  needs_review: true
+- name: bio-human-body
+  label: bio-human-body
+  courses:
+  - BIOS 10501
+  - BIOS 10500
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: BIOS 10501 Systems of the Human Body and BIOS 10500 Metabolism and Exercise
+- name: bio-computing
+  label: bio-computing
+  courses:
+  - BIOS 10602
+  - BIOS 10603
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: 'OR BIOS 10602 Computing the Living World: Quantitative Approaches to Biology I and BIOS 10603 Computing the Living
+      World: Quantitative Approaches to Biology II)'
+- name: bio-health-professions
+  label: bio-health-professions
+  courses:
+  - BIOS 20170
+  - BIOS 20171
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: For students who take the whole sequence (BIOS 20170 Microbial and Human Cell Biology through BIOS 20175 Biochemistry
+      and Metabolism), BIOS 20170 and BIOS 20171 satisfy the general education requirement in the biological sciences.
+- name: bio-fundamentals
+  label: bio-fundamentals
+  courses:
+  - BIOS 20153
+  - BIOS 20151
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: '4. The first two courses in a Fundamentals Sequence for Biological Sciences majors: BIOS 20153 Fundamentals of
+      Ecology and Evolutionary Biology and BIOS 20151 Introduction to Quantitative Modeling in Biology. Note: Non-majors may
+      not use BIOS 20151 as a topics course.'
+- name: core-bio-sequences
+  label: Biological Sciences Core options
+  sublists:
+  - bio-gened-topics
+  - bio-human-body
+  - bio-computing
+  - bio-health-professions
+  - bio-fundamentals
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: 'Most students complete the General Education requirement in the Biological Sciences in one of five ways:'
+  needs_review: true
+- name: language-competence-courses
+  label: Third course of a first-year language sequence (seeded languages only)
+  courses:
+  - FREN 10300
+  - SPAN 10300
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/languagecompetency/
+    quote: completing (with a quality grade) the third course of a first-year language sequence or a higher-level course offered
+      at the University of Chicago;
+  needs_review: true
+- name: calc-two-quarter-sequences
+  label: Two-quarter calculus sequences that meet the mathematical sciences requirement
+  sublists:
+  - math-calc-13100
+  - math-calc-15100
+  - math-calc-16110
+  - math-calc-16100
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematicalsciencescore/
+    quote: Those who take calculus must earn credit for the first two quarters of a calculus sequence (200 units).
+- name: cmsc-systems
+  label: Computer Science Systems Requirement courses
+  courses:
+  - CMSC 22200
+  - CMSC 22240
+  - CMSC 22600
+  - CMSC 23000
+  - CMSC 23320
+  - CMSC 23380
+  - CMSC 23500
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/computerscience/
+    quote: BS students are required to take one of the following systems programming courses.
+- name: cmsc-theory-c
+  label: Computer Science Theory Area C
+  courses:
+  - CMSC 27410
+  - CMSC 27500
+  - CMSC 27502
+  - CMSC 27530
+  - CMSC 28000
+  - CMSC 28100
+  - CMSC 28130
+  - CMSC 28400
+  - MATH 27700
+  - MATH 27800
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/computerscience/
+    quote: Area C
+- name: math-analysis-20300
+  label: MATH 20300-20400-20500
+  courses:
+  - MATH 20300
+  - MATH 20400
+  - MATH 20500
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 20300-20400-20500
+- name: math-analysis-20310
+  label: MATH 20310-20410-20510
+  courses:
+  - MATH 20310
+  - MATH 20410
+  - MATH 20510
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 20310-20410-20510
+- name: math-analysis-20320
+  label: MATH 20320-20420-20520
+  courses:
+  - MATH 20320
+  - MATH 20420
+  - MATH 20520
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 20320-20420-20520
+- name: math-analysis-20700
+  label: MATH 20700-20800-20900
+  courses:
+  - MATH 20700
+  - MATH 20800
+  - MATH 20900
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 20700-20800-20900
+- name: math-analysis-sequences
+  label: Three-quarter analysis sequences (Mathematics major)
+  sublists:
+  - math-analysis-20300
+  - math-analysis-20310
+  - math-analysis-20320
+  - math-analysis-20700
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: 'A three-quarter sequence in analysis:'
+- name: math-algebra-25400
+  label: MATH 25400-25500
+  courses:
+  - MATH 25400
+  - MATH 25500
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 25400-25500
+- name: math-algebra-25700
+  label: MATH 25700-25800
+  courses:
+  - MATH 25700
+  - MATH 25800
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 25700-25800
+- name: math-basic-algebra-pairs
+  label: First two quarters of a basic algebra sequence (Mathematics BS)
+  sublists:
+  - math-algebra-25400
+  - math-algebra-25700
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: whereas candidates for the BS degree must take the first two quarters of one of the two sequences.
+- name: math-approved-courses
+  label: Mathematics List of Approved Courses (MATH 29700 'as approved' left out)
+  courses:
+  - MATH 17500
+  - MATH 17600
+  - MATH 21100
+  - MATH 21200
+  - MATH 23500
+  - MATH 23700
+  - MATH 23900
+  - MATH 24200
+  - MATH 24400
+  - MATH 25900
+  - MATH 26200
+  - MATH 26300
+  - MATH 26500
+  - MATH 26700
+  - MATH 27000
+  - MATH 27100
+  - MATH 27200
+  - MATH 27300
+  - MATH 27400
+  - MATH 27500
+  - MATH 27600
+  - MATH 27700
+  - MATH 27800
+  - MATH 28000
+  - MATH 28130
+  - MATH 28410
+  - MATH 28530
+  - MATH 31200
+  - MATH 31300
+  - MATH 31400
+  - MATH 31700
+  - MATH 31800
+  - MATH 31900
+  - MATH 32500
+  - MATH 32600
+  - MATH 32700
+  - CMSC 27230
+  - CMSC 28130
+  - STAT 25100
+  - STAT 25150
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: List of Approved Courses
+  needs_review: true
+- name: math-gened-phys-sequences
+  label: First-year chemistry or physics sequences (Mathematics majors)
+  sublists:
+  - phys-chem-10100
+  - phys-chem-11100
+  - phys-phys-12100
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: The general education sequence in the physical sciences must be selected from either first-year chemistry or first-year
+      physics.
+  needs_review: true
+- name: econ-core-20000
+  label: ECON 20000-20100-20200
+  courses:
+  - ECON 20000
+  - ECON 20100
+  - ECON 20200
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 20000-20100-20200
+- name: econ-core-20010
+  label: ECON 20010-20110-20210
+  courses:
+  - ECON 20010
+  - ECON 20110
+  - ECON 20210
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 20010-20110-20210
+- name: econ-core-sequences
+  label: Economics core sequences (standard or honors)
+  sublists:
+  - econ-core-20000
+  - econ-core-20010
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: The core curriculum consists of three courses. Students may use the standard or honors sequence to satisfy this
+      requirement.
+  needs_review: true
+- name: econ-outside-electives
+  label: Pre-approved outside electives, Economics standard track (BUSN 3xxxx alternates not encoded)
+  courses:
+  - CMSC 14100
+  - BUSN 20550
+  - STAT 24500
+  - STAT 24510
+  - STAT 25100
+  - STAT 25150
+  - STAT 25300
+  - STAT 26100
+  - MATH 20500
+  - MATH 20510
+  - MATH 20520
+  - MATH 20900
+  - MATH 27300
+  - BUSN 20410
+  - BUSN 20620
+  - BUSN 20710
+  - BUSN 20800
+  - BUSN 20820
+  - BUSN 20810
+  - BUSN 20900
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: 'The following are pre-approved outside electives for the standard economics track:'
+  needs_review: true
+- name: overload-reading-research-thesis
+  label: Seeded courses titled 'Reading and Research' or 'Bachelor's Thesis'
+  courses:
+  - CMSC 29700
+  - CMSC 29900
+  - DATA 29700
+  - ECON 29700
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/gradingandacademicstatus/
+    quote: One or more of the courses includes a Reading and Research or B.A. Thesis/Colloquium course (third- and fourth-year
+      students only)
+  needs_review: true

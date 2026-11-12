@@ -1,0 +1,176 @@
+# Generated from the 2026-2027 UChicago College Catalog (fetched 2026-11-12) by hand-checked scripts;
+# every source.quote is copied verbatim (whitespace collapsed) from source.url. See data/seed/REVIEW.md.
+courses:
+- code: ARCH 11000
+  title: Architecture, Drawing, and Design
+  units: 100
+  description: Drawing has shaped architecture for centuries. This course introduces students to architecture through the
+    practice and critical discussion of drawing. Studio exercises will introduce media ranging from hand-sketching to digital
+    modeling; representational conventions such as plans, sections, and diagrams; and the roles of drawings as creative tools
+    and conveyors of ideas, visions, and technical information. Students will engage with historical and contemporary precedents,
+    with fundamental texts about architecture and drawing, and with the built environment on campus and in Chicago.
+  core_tags:
+  - arts
+  prereq_text: This course meets the general education requirement in the arts.
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/architecturalstudies/
+    quote: ARCH 11000. Architecture, Drawing, and Design. 100 Units.
+  needs_review: true
+- code: ARCH 11800
+  title: Physics and Contemporary Architecture
+  units: 100
+  description: Architectural structures form the built environment around us and in many ways create the backbone of our civilization.
+    They push the limits of form and function on the largest human scales, often leading to iconic masterpieces that symbolize
+    the aesthetics as well as the technical achievements of a period. Many architectural advances have been made possible
+    by breakthroughs in the science of materials, which then led to innovation in construction and fabrication techniques.
+    This course will introduce the physics principles that have enabled some of the most innovative architecture of our time.
+    This course will take key ideas and tools from physics and demonstrate their power and relevance in a broader context
+    familiar from everyday experience. The course will challenge students to recognize physics concepts in the built structures
+    that make up the urban environment we live in. Chicago is a most appropriate place for this study; it was the birthplace
+    of the first skyscraper, and ever since it has played an internationally celebrated role in pushing the limits of the
+    architectural state of the art. A long succession of renowned Chicago architects and structural engineers has turned this
+    city into a premier laboratory for architectural innovation. Against this backdrop, the course will show how science,
+    and physics in particular, delivers the conceptual foundations that drive current directions in architecture and open
+    up new opportunities.
+  notes: The course will consist of two lectures per week plus a weekly hands-on workshop (lab) component. The Monday lectures
+    will introduce the physics principles to be explored that week. The Thursday lectures will be delivered by distinguished
+    guest speakers, including renowned architects and engineers. These lectures will be public lectures. They will relate
+    to the physics principle introduced that Monday and explore its ramification within the broader context of contemporary
+    architectural practice. The Thursday afternoon workshop component will involve team-based, hands-on construction projects
+    to develop a better understanding and intuition of the physics principles introduced in the lectures and to obtain a sense
+    of their real-life implications. The workshops will also provide an opportunity to interact with the guest lecturers.
+    Attendance at Thursday lectures is required. This course meets the general education requirement in the physical sciences
+    and may be paired with PHSC 11600, 11700, 12600, or 13400 in order to complete the requirement. This course can be taken
+    for credit towards either the general education requirement in the physical sciences or the Architectural Studies minor,
+    but not both. Students intending to receive physical sciences general education credit should register for PHSC 11800;
+    students intending to receive credit towards the Architectural Studies Minor should register for ARCH 11800.
+  crosslists:
+  - CHST 11800
+  - PHSC 11800
+  prereq_text: Some exposure to high-school physics is recommended
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/architecturalstudies/
+    quote: ARCH 11800. Physics and Contemporary Architecture. 100 Units.
+  needs_review: true
+- code: ARCH 15631
+  title: Intro South Asian Art and Architecture I
+  units: 100
+  description: This core class introduces students to the visual arts of early South Asia (Paleolithic period to circa first
+    millennium CE). During this time period, South Asia gave birth to three major world religions-Hinduism, Jainism, and Buddhism.
+    Christianity and Islam too made it to South Asia and the arts of these religious traditions flourished in various pockets
+    of the Indian subcontinent. In the class, we will look at paintings, buildings, and other objects that continue to beguile
+    researchers, such as the paintings of Bhimbetka Caves (ca. 10,000 BCE); the enigmatic seals from Indus Valley (ca. 2000
+    BCE), and the high polish of Mauryan sculptures. The latter-half of the course is devoted to specific studies on "masterpieces"
+    of early Indian art, such as the Buddhist stupas at Sanchi (ca. third to first cent. BCE), the extraordinary rock-cut
+    temples of Ajanta and Ellora (fifth to thirteenth centuries), and the sizeable and distinctive temple complex of Bodh
+    Gaya, Khajuraho, Mamallapuram, and Brihadeshwara (seventh to eleventh centuries). The course will explore many themes
+    in the study of early South Asian art; some prominent ones are the role of politics, nature, and religion in shaping artistic
+    practices. Conversely, we will also look at how artistic practices impacted civic institutions and religious organizations,
+    while exploring what art can reveal about how natural resources were viewed, extracted, and preserved in early South Asia.
+  crosslists:
+  - ARTH 15631
+  prereq_text: 'This course fulfills the following requirements in the ARTH major and minor: Asian, premodern (pre-1800)'
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/architecturalstudies/
+    quote: ARCH 15631. Intro South Asian Art and Architecture I. 100 Units.
+  needs_review: true
+- code: ARCH 17512
+  title: Modern Architecture in Algeria, France, French Algeria, and Algerian France
+  units: 100
+  description: This course invites students to consider the intertwined architectural histories of France and Algeria in the
+    colonial and postcolonial eras. From colonial designs in French Algeria to counterhegemonic spaces of Algerian communities
+    in postcolonial France, students will examine how architecture engages with fraught historical episodes and contested
+    cultural landscapes. Case studies include Paris as a Eurocentric paradigm for the modern city, dialectics of construction
+    and destruction in Algiers under colonial rule, and urban multiplicity in Marseille. Protagonists include Le Corbusier,
+    arguably the most canonical architect of the 20th century, and underexamined figures like Abderrahmane Bouchama, who declared
+    being the sole Muslim Algerian architect at the independence. By the end of the quarter, students will have gained substantial
+    knowledge of the history of these two countries, their architecture, and the historiographical stakes of connective architectural
+    history.
+  crosslists:
+  - ARTH 17512
+  prereq_text: 'Fulfills the following categories in the ARTH major and minor: African, European and American, modern (post-1800)
+    and is an Art in Context Seminar'
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/architecturalstudies/
+    quote: ARCH 17512. Modern Architecture in Algeria, France, French Algeria, and Algerian France. 100 Units.
+  needs_review: true
+- code: ARCH 17761
+  title: 'Introduction to Modern Architecture: Modernity and Its Other'
+  units: 100
+  description: 'This course invites students to reflect on the idea of modernity in architecture as it developed from the
+    15th century to the late 20th century. Its aims are twofold: first, to introduce students to selected architectural episodes
+    across time and space; second, to demonstrate that modernity is a concept deeply charged with power dynamics. Historically,
+    the idea of modernity has defined its margins by systematically portraying certain people, cultures, and places as deficient
+    in the modern mind, techniques, or aesthetics. In this respect, modernity and its antonyms are inseparable, like two sides
+    of the same coin. Over the quarter, we will examine exclusionary visions of modernity, challenge their claims to universality,
+    and amplify the voices of those who proposed alternative models for modernity in architecture.'
+  crosslists:
+  - CEGU 27761
+  - ARTH 17761
+  prereq_text: 'Fulfills the following requirements in the ARTH major and minor: African, Asian, modern (post-1800), European
+    and American, modern (post-1800), Latin American, Theory and Historiography'
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/architecturalstudies/
+    quote: 'ARCH 17761. Introduction to Modern Architecture: Modernity and Its Other. 100 Units.'
+  needs_review: true
+- code: ARCH 17781
+  title: Women in 20th-Century Architecture
+  units: 100
+  description: From the Renaissance to the present day, architecture has been a blatantly male-centric field. This course
+    invites students to consider women who overcame systemic barriers to become figures of agency in 20th-century architecture.
+    We will examine the lives and works of women who have managed to attend architecture schools, despite historical gender-based
+    exclusion or restriction on enrollment, as well as those who found impactful ways to play architectural roles without
+    academic training. We will pay particular attention to how these protagonists add necessary complexity to the modernist
+    canon. The course will start with a first module on positionality (women as architects, women as clients, and women as
+    residents) followed by a second module with a biographical scope (Minnette De Silva, Eileen Gray, bell hooks, and Sibyl
+    Moholy-Nagy).
+  notes: 'This course fulfills the Art In Context Core Requirement: European and American, modern (post-1800), Theory and
+    Historiography'
+  crosslists:
+  - ARTH 17781
+  - GNSE 20145
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/architecturalstudies/
+    quote: ARCH 17781. Women in 20th-Century Architecture. 100 Units.
+- code: ARCH 17904
+  title: 'Chinatown, the Japanese Garden, the Period Room: Diasporic Architecture from East Asia'
+  units: 100
+  description: The built environment serves as a powerful connection to its time, place, and cultural origins. This course
+    examines East Asian architecture and landscapes that have transcended their native contexts, as well as East Asian-style
+    buildings designed for cultural others. From the bustling streets of Chinatown to the serene Japanese gardens and the
+    meticulously curated period rooms showcasing East Asia's arts and cultures, the course explores a wide range of architectural
+    forms, urban designs, and landscapes spanning two centuries. These structures are studied not as static artifacts but
+    as dynamic platforms for social events, cultural debates, and political opportunities, shaped by historical and ongoing
+    negotiations between their home and host contexts. Central to the course is the concept of diaspora, through which we
+    investigate how the experience of living outside one's home country-sometimes in foreign or even unwelcoming environments-can
+    be understood through the lens of the built environment. In this framework, architecture becomes a reflection of the dynamic
+    experiences of immigration, racialization, cultural exchange, and confrontation. It is also subject to processes of representation,
+    appropriation, modification, and reinvention. Through immersive field trips in the Chicago metropolitan area, students
+    will critically analyze the formal language, spatial experiences, cultural symbolism, and social dynamics embedded in
+    East Asian-style architecture and landscapes.
+  crosslists:
+  - CHST 17904
+  - ARTH 17904
+  - RDIN 17904
+  prereq_text: 'Fulfills the following categories in the ARTH major and minor: Asian, modern (post-1800), European and American,
+    modern (post-1800). This course is an Art in Context seminar'
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/architecturalstudies/
+    quote: 'ARCH 17904. Chinatown, the Japanese Garden, the Period Room: Diasporic Architecture from East Asia. 100 Units.'
+  needs_review: true

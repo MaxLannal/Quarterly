@@ -1,0 +1,112 @@
+# Generated from the 2026-2027 UChicago College Catalog (fetched 2026-11-12) by hand-checked scripts;
+# every source.quote is copied verbatim (whitespace collapsed) from source.url. See data/seed/REVIEW.md.
+id: cmsc-bxms-2
+catalog_year: 2026-27
+name: 'Computer Science Bx/MS, Option 2: Professionally Oriented Computer Science Majors'
+type: bxms
+degree: MS
+department: Computer Science
+status: review
+sources:
+- url: http://collegecatalog.uchicago.edu/thecollege/jointdegreecomsci/
+  quote: Option 2 is designed for computer science majors who are seeking the opportunity to build upon their foundational
+    skills and take some industry-oriented electives.
+rules:
+  id: cmsc-bxms-2
+  label: Computer Science Bx/MS, Option 2 (professional, CS majors)
+  group:
+    all: true
+    children:
+    - id: discrete
+      label: Discrete Mathematics
+      slot:
+        any_of:
+        - CMSC 27100
+        - CMSC 27130
+        - CMSC 37115
+      constraints:
+        min_grade: C+
+        no_pass_fail: true
+      source:
+        url: http://collegecatalog.uchicago.edu/thecollege/jointdegreecomsci/
+        quote: Discrete Mathematics (CMSC 27100, CMSC 27130, or CMSC 37115)
+    - id: algorithms
+      label: Algorithms
+      slot:
+        any_of:
+        - CMSC 27200
+        - CMSC 27230
+        - CMSC 37000
+      constraints:
+        min_grade: C+
+        no_pass_fail: true
+      source:
+        url: http://collegecatalog.uchicago.edu/thecollege/jointdegreecomsci/
+        quote: Algorithms (CMSC 27200, CMSC 27230, or CMSC 37000)
+    - id: core-systems
+      label: Two Core Systems courses
+      select:
+        count: 2
+        from:
+          list: cmsc-systems
+      constraints:
+        min_grade: C+
+        no_pass_fail: true
+      source:
+        url: http://collegecatalog.uchicago.edu/thecollege/jointdegreecomsci/
+        quote: In all options, courses that can be counted as Core Systems courses in the computer science major or the PhD
+          program can be counted as Core Systems courses in the Bx/MS program.
+      needs_review: true
+    - id: electives
+      label: Five electives
+      select:
+        count: 5
+        from:
+          union:
+          - subject: CMSC
+            number_range:
+            - 20000
+            - 29999
+            exclude:
+            - CMSC 29700
+            - CMSC 29900
+          - subject: CMSC
+            number_range:
+            - 30000
+            - 39999
+          - subject: MPCS
+          - subject: TTIC
+      constraints:
+        min_grade: C+
+        no_pass_fail: true
+      source:
+        url: http://collegecatalog.uchicago.edu/thecollege/jointdegreecomsci/
+        quote: Option 2 allows students to take electives from the Computer Science Department’s CMSC 30000-level and MPCS
+          50000-level offerings and selected TTIC offerings.
+      needs_review: true
+  constraints:
+    max_from:
+    - selector:
+        subject: CMSC
+        number_range:
+        - 20000
+        - 29999
+      n: 2
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/jointdegreecomsci/
+    quote: 'The nine courses required for the MS degree under Option 2 are as follows: Discrete Mathematics (CMSC 27100, CMSC
+      27130, or CMSC 37115); Algorithms (CMSC 27200, CMSC 27230, or CMSC 37000); two Core Systems courses (see Allowed Courses
+      below); and five electives.'
+  needs_review: true
+policy:
+  share:
+  - with: type:major
+    max: 2
+  timing:
+    apply_by: Y3-WI
+    source:
+      url: http://collegecatalog.uchicago.edu/thecollege/jointdegreecomsci/
+      quote: 'This program has two admissions cycles: one in January/February to apply to the Autumn Quarter start, and one
+        in June to apply to the Winter Quarter start.'
+  requires:
+  - cmsc-b?

@@ -1,0 +1,2234 @@
+# Generated from the 2026-2027 UChicago College Catalog (fetched 2026-11-12) by hand-checked scripts;
+# every source.quote is copied verbatim (whitespace collapsed) from source.url. See data/seed/REVIEW.md.
+courses:
+- code: ECON 10000
+  title: Principles of Microeconomics
+  units: 100
+  description: 'This course introduces the principles and applications of price theory, which is a fundamental framework to
+    analyze the decision-making of individuals and firms. The course is designed to develop problem-solving skills, both analytically
+    and numerically, for students to be successful in subsequent coursework in the major. Coverage includes consumer theory,
+    producer theory, determinants of demand and supply, market structures, equilibrium and welfare analysis, government intervention,
+    international trade policy, and market failure and externalities. Students may substitute "Econ 20000: The Elements of
+    Economic Analysis I" for this course in the business economics track.'
+  terms_offered:
+  - AU
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 10000. Principles of Microeconomics. 100 Units.
+- code: ECON 10200
+  title: Principles of Macroeconomics
+  units: 100
+  description: 'Building on the analytical framework developed in Econ 10000, this course introduces macroeconomic theory
+    and its applications in public policy. Coverage includes measurements, the determination of income, output, unemployment
+    and inflation, long-run economic growth, business cycles, financial market and banking, monetary policy, fiscal policy,
+    international trade and finance, and history of thought. Students may substitute "Econ 20200: The Elements of Economic
+    Analysis III" for this course in the business economics track.'
+  prereq:
+    any:
+    - ECON 10000
+    - ECON 20000
+    - ECON 20010
+  prereq_text: ECON 10000/20000/20010
+  terms_offered:
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 10200. Principles of Macroeconomics. 100 Units.
+- code: ECON 10700
+  title: Introductory Game Theory
+  units: 100
+  description: How should one bid at an auction in order to win at the lowest possible hammer price? How do firms behave when
+    they possess market power but also face competition? Why do companies engage in R&D races in order to release their new
+    products sooner than their competitors? Why do the Republicans and the Democrats almost always ended up choosing moderates
+    as their party nominees in presidential races? To what extent can the veto power of presidents allow them to influence
+    legislative outcomes? To answer these questions, we study Games of Strategies, and explore how lessons learned from such
+    games can guide one's thinking in everyday strategic interactions.
+  notes: Student may count only one of [ECON 10700 or ECON 20700 or ECON 20770] toward the 42 credits required for graduation.
+  prereq:
+    any:
+    - ECON 10000
+    - ECON 20000
+    - ECON 20010
+  prereq_text: ECON 10000/20000/20010
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 10700. Introductory Game Theory. 100 Units.
+- code: ECON 11010
+  title: Introduction to Statistical Methods in Economics
+  units: 100
+  description: This course provides a solid foundation in probability and statistics for economists. We emphasize topics needed
+    for further study of econometrics in ECON 11020.
+  prereq:
+    all:
+    - any:
+      - ECON 10000
+      - ECON 20000
+      - ECON 20010
+    - any:
+      - ECON 10200
+      - ECON 20200
+      - ECON 20210
+  prereq_text: ECON 10000/20000/20010 and ECON 10200/20200/20210
+  terms_offered:
+  - AU
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 11010. Introduction to Statistical Methods in Economics. 100 Units.
+- code: ECON 11020
+  title: Introduction to Econometrics
+  units: 100
+  description: 'The objective of this course is to introduce students to the practice of econometrics. The course will focus
+    on the use of multiple regression as a tool to establish causal relations. The course emphasizes all steps of the process
+    of empirical research: data collection, analysis, and presentation (both written and oral). Multiple examples of this
+    process will be discussed and students will be expected to read and evaluate existing research. Students will apply the
+    techniques discussed in class to a topic of their choosing. They will write a paper and present results to the class.'
+  prereq:
+    all:
+    - any:
+      - ECON 10000
+      - ECON 20000
+      - ECON 20010
+    - any:
+      - ECON 10200
+      - ECON 20200
+      - ECON 20210
+    - any:
+      - ECON 11010
+      - ECON 21010
+      - STAT 22000
+      - STAT 23400
+      - STAT 24400
+  prereq_text: ECON 10000/20000/20010 and ECON 10200/20200/20210; ECON 11010 or ECON 21010 or STAT 22000 or STAT 23400 or
+    STAT 24400
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 11020. Introduction to Econometrics. 100 Units.
+- code: ECON 11300
+  title: Correlation or Causation? Applied Causal Reasoning in Economics
+  units: 100
+  description: 'Every day we are surrounded by claims about what causes what: from "minimum wages raise unemployment levels"
+    to "new supplement in the market improves focus and grades." But how do we know which of these claims are true? In a world
+    with abundance of data, the challenge is not finding information, but correctly assessing patterns from the real world.
+    This course gives you the tools to do exactly that. You will learn how economists separate coincidence from real cause-and-effect
+    using modern techniques that power today''s most influential research in the field.Throughout the program, you will explore
+    real-world questions, work hands-on with data, and practice methods used to evaluate everything from education policies
+    to health interventions. The course builds toward a collaborative class paper, where you will investigate a causal question
+    and present your findings. By the end of this course, you will have the foundational skills beyond only understanding
+    the difference between correlation and causation - you will know how to test it yourself. These skills will stay with
+    you well beyond the classroom, helping you make sense of the news, analyze studies you encounter online, and succeed in
+    future college-level coursework."'
+  terms_offered:
+  - SU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 11300. Correlation or Causation? Applied Causal Reasoning in Economics. 100 Units.
+- code: ECON 11310
+  title: Big Data and Better Decisions
+  units: 100
+  description: 'This course will introduce students to advanced methods for data driven decision making with an emphasis on
+    business applications. Students will learn how to build and interpret models that address two fundamental categories of
+    business questions: (i) causal analysis and (ii) forecasting and prediction. The first portion of the course will cover
+    experimental design, as well as non-experimental causal inference (e.g. matching, fixed effects, differences-in-differences,
+    synthetic control). The second portion of the course will focus on machine learning topics including linear regularization,
+    cross validation, tree models, random forests and boosting. The course will also explore cutting edge methods at the intersection
+    of causal inference and machine learning. Heavy emphasis will be placed on discussion of real examples and business applications
+    of these methodologies. The course work will include writing code and analyzing data in R to learn how these techniques
+    are implemented in practice.'
+  prereq:
+    all:
+    - any:
+      - ECON 10000
+      - ECON 20000
+      - ECON 20010
+    - any:
+      - ECON 11020
+      - ECON 21020
+      - ECON 21030
+  prereq_text: ECON 10000/20000/20010 and ECON 11020/21020/21030
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 11310. Big Data and Better Decisions. 100 Units.
+- code: ECON 11600
+  title: Experimental Design
+  units: 100
+  description: The course equips students with the necessary skills to design and execute experiments effectively. In the
+    first part of the course, students will learn why experiments are conducted and explore different types of experiments
+    along with their respective advantages and disadvantages. Students will gain insights into choosing appropriate incentive
+    structures and appropriate sample sizes. The course addresses critical issues, including internal and external validity,
+    scalability concerns, and the risks of P-hacking and multiple hypothesis testing. Students will also learn about Institutional
+    Review Board procedures. In the second part of the course, students will learn how to measure time preferences, risk preferences,
+    subjective expectations, other-regarding preferences, competitiveness, and discrimination.
+  prereq:
+    all:
+    - any:
+      - ECON 10000
+      - ECON 20000
+      - ECON 20010
+    - any:
+      - STAT 22000
+      - STAT 23400
+      - STAT 24400
+      - ECON 11010
+  prereq_text: Econ 10000/20000/20010 and STAT 22000/STAT 23400/STAT 24400/ECON 11010
+  terms_offered:
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 11600. Experimental Design. 100 Units.
+- code: ECON 11700
+  title: Introduction to Behavioral and Experimental Economics
+  units: 100
+  description: This is an introductory course to experimental economics and on how to gather your own data using experimental
+    methods to answer important economic questions. This methodology will be applied to learn the main topics in behavioral
+    economics that leverages psychological insights to decision making and its effects on markets. Students may use this course
+    to satisfy the microeconomics method requirement for the business economics specialization.
+  notes: Students may count either ECON 11700 or ECON 21800, but not both, toward the 42 credits required for graduation.
+  prereq:
+    any:
+    - ECON 10000
+    - ECON 19800
+    - ECON 20000
+    - ECON 20010
+  prereq_text: ECON 10000 or ECON 19800 or ECON 20000 or ECON 20010
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 11700. Introduction to Behavioral and Experimental Economics. 100 Units.
+- code: ECON 11710
+  title: The Psychology of Negotiation
+  units: 100
+  description: Negotiation is ubiquitous in interpersonal interactions, from making plans for a trip with friends or family,
+    to determining working conditions with an employer, to managing international conflicts. In this course we examine the
+    structure of different negotiations and the psychology that governs the processes and outcomes of a negotiation. For instance,
+    we consider the role of perceptions, expectations, intuitions, and biases. We evaluate the role of information processing,
+    modes of communication, and power in influencing a negotiated outcome. We see how the psychology of trust, reciprocity,
+    fairness, cooperation, and competition can affect our ability to benefit from an exchange or contribute to the escalation
+    of conflict. To better understand the dynamics of the negotiation process, we learn both through engaging in a variety
+    of negotiation role-plays and relating these experiences to research findings. Third- or fourth-year students only. Priority
+    will be given to fourth-year students.
+  crosslists:
+  - PSYC 25700
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 11710. The Psychology of Negotiation. 100 Units.
+- code: ECON 11850
+  title: Behavioral Economics and Welfare Analysis
+  units: 100
+  description: 'This course studies economic approaches to welfare analysis when people do not choose what is best for themselves.
+    Students will extend standard economic models to accommodate psychological phenomena like overoptimism and inattention,
+    focusing on implications for welfare analysis. They will also learn about modern empirical methods for measuring these
+    phenomena in the real world. The course applies these theoretical and empirical methods to the welfare analysis of several
+    policies, including: the taxation of sugary beverages, bans on so-called "junk fees," and compulsory savings programs
+    (like the U.S. social security system). Students may use this course to satisfy the microeconomics method requirement
+    for the business economics specialization.'
+  prereq:
+    all:
+    - any:
+      - ECON 10000
+      - ECON 20000
+      - ECON 20010
+    - any:
+      - ECON 11010
+      - STAT 22000
+      - STAT 23400
+      - STAT 24400
+  prereq_text: '[ECON 10000 or ECON 20000 or ECON 20010] and [ECON 11010 or STAT 22000 or STAT 23400 or STAT 24400]'
+  terms_offered:
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 11850. Behavioral Economics and Welfare Analysis. 100 Units.
+- code: ECON 12410
+  title: Pathways in Economics
+  units: 100
+  description: This program introduces students to the approaches to economic research and experimentation that make UChicago
+    a world leader in the field. Full-time lecturers in the Department of Economics teach classes on topics in macroeconomics,
+    microeconomics, game theory, and field experiments, which are supplemented by guest lectures delivered by preeminent UChicago
+    faculty in economics and other departments whose research applies the tools and insights of the field in new and exciting
+    ways. Participants can apply what they hear about in lectures during small group discussion sections facilitated by a
+    team of outstanding current UChicago students, as well as in labs and site visits to locations such as the Federal Reserve
+    Bank of Chicago.
+  terms_offered:
+  - SU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 12410. Pathways in Economics. 100 Units.
+- code: ECON 12411
+  title: Pathways in Economics C
+  units: 100
+  description: This program introduces students to the approaches to economic research and experimentation that make UChicago
+    a world leader in the field. Full-time lecturers in the Department of Economics teach classes on topics in macroeconomics,
+    microeconomics, game theory, and field experiments, which are supplemented by guest lectures delivered by preeminent UChicago
+    faculty in economics and other departments whose research applies the tools and insights of the field in new and exciting
+    ways. Participants can apply what they hear about in lectures during small group discussion sections facilitated by a
+    team of outstanding current UChicago students, as well as in labs and site visits to locations such as the Federal Reserve
+    Bank of Chicago.
+  terms_offered:
+  - SU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 12411. Pathways in Economics C. 100 Units.
+- code: ECON 12412
+  title: A Survey of Chicago Economics
+  units: 50
+  description: 'This two-week program will provide an introduction to UChicago-style, rigorous economics education; it is
+    open only to approved visiting third-year students from Universidad Panamericana. Led by a team of full-time lecturers
+    from the Department of Economics, this course will explore topics in four foundational areas: price theory, game theory,
+    experimental economics, and macroeconomics. Participants will also develop skills that will prepare them for further graduate
+    study or other professional pursuits, such as interviewing, networking, and academic and professional communications.
+    Evening and weekend residential program activities will enable students to experience American life and culture and explore
+    the vibrant city of Chicago. Throughout the program, students will have the opportunity to practice both academic and
+    informal spoken English.'
+  terms_offered:
+  - SU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 12412. A Survey of Chicago Economics. 50 Units.
+- code: ECON 12413
+  title: A Survey of Chicago Economics and its Business Applications
+  units: 0
+  description: 'This two-week program will provide an introduction to UChicago-style, rigorous economics education, as well
+    as its business applications. Fulltime lecturers in the Department of Economics will explore topics in four foundational
+    areas: price theory, game theory, experimental economics, and macroeconomics. Evening and weekend residential program
+    activities will enable students to experience American life and culture and explore the vibrant city of Chicago. Throughout
+    the program, students will have the opportunity to practice both academic and informal spoken English.'
+  terms_offered:
+  - SU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 12413. A Survey of Chicago Economics and its Business Applications. 000 Units.
+- code: ECON 13000
+  title: Introduction to Money and Banking
+  units: 100
+  description: The course focuses on monetary policy and central bank's attempts to stabilize prices and promote maximum sustainable
+    economic growth. Topics include the structure of the Federal Reserve, the conduct of monetary policy, the term structure
+    of interest rates, risk valuation, management of banking, and financial crises.
+  prereq:
+    any:
+    - ECON 10200
+    - ECON 19900
+    - ECON 20200
+    - ECON 20210
+  prereq_text: Econ 10200/19900/20200/20210
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 13000. Introduction to Money and Banking. 100 Units.
+- code: ECON 13110
+  title: 'Household Finance: Theory and Applications'
+  units: 100
+  description: 'This course will examine the choices households make about important financial decisions and how these individual
+    choices can impact the aggregate economy. Each week, basic predictions from economic theory will be discussed and compared
+    with empirical findings. Topics will include: asset market participation and household portfolio choice; human capital
+    and student loans; housing and mortgages; retirement planning; credit card debt; payday loans; and the gig/sharing economy.
+    Focus will also be placed on government policies affecting these topics, including so-called household financial engineering,
+    the creation of Government Sponsored Enterprises (GSEs) like "Fannie" and "Freddie," and regulatory agencies like the
+    Consumer Financial Protection Bureau (CFPB). The course will provide an introduction to structural modeling for conducting
+    policy counterfactuals. Assessment will be based on problem sets, a midterm and a final. These problem sets will require
+    students to work in R, Stata or other statistical package of the student''s choice (with permission of instructor).'
+  crosslists:
+  - PBPL 28528
+  prereq_text: 'Prerequisite(s): PBPL 20000 (PBPL 22200 preferred) or ECON 20000 and one undergraduate course in quantitative
+    research methods (Statistics or Econometrics) or the equivalent or consent of the instructor.'
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: 'ECON 13110. Household Finance: Theory and Applications. 100 Units.'
+  needs_review: true
+- code: ECON 13210
+  title: Introduction to Macroeconomic Models
+  units: 100
+  description: 'This course offers a comprehensive exploration of neoclassical macroeconomic models. The course is divided
+    into five key modules: (i) economic growth and production, (ii) consumption and savings, (iii) business cycles and unemployment,
+    (iv) fiscal policy, and (v) monetary policy and forecasting. Throughout each module, we extensively utilize relevant data
+    to enhance the understanding of theoretical concepts. By the end of the course, students will be able to interpret macroeconomic
+    news and articles and analyze policies through a model-based framework.'
+  terms_offered:
+  - SU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 13210. Introduction to Macroeconomic Models. 100 Units.
+- code: ECON 13300
+  title: Introduction to the Macroeconomics of Monetary and Fiscal Policy
+  units: 100
+  description: This course examines monetary and fiscal issues in the macroeconomy. The first part of the course will focus
+    on long-run topics in monetary economics, such as the nature of a monetary economy, inflation, the quantity theory of
+    money, and the welfare cost of inflation. The second part of the course will focus on the macroeconomic implications of
+    government expenditure, supply side economics, the Laffer curve, and the Ricardian equivalence theorem. An effort will
+    be made to tackle these issues within unified and simple dynamic frameworks.
+  prereq:
+    all:
+    - any:
+      - ECON 10000
+      - ECON 20000
+      - ECON 20010
+    - any:
+      - ECON 10200
+      - ECON 20200
+      - ECON 20210
+  prereq_text: ECON 10000/20000/20010 and Econ 10200/20200/20210
+  terms_offered:
+  - AU
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 13300. Introduction to the Macroeconomics of Monetary and Fiscal Policy. 100 Units.
+- code: ECON 13310
+  title: 'Introduction to Macroeconomic Analysis: A Data Driven Approach'
+  units: 100
+  description: 'This course offers a comprehensive exploration of neoclassical macroeconomic models, designed for students
+    who have previously studied the principles of macroeconomics. The course is divided into five key modules: (i) economic
+    growth and production, (ii) consumption and savings, (iii) government finances, (iv) money and the price level, and (v)
+    unemployment. Throughout each module, we extensively utilize relevant data to enhance the understanding of theoretical
+    concepts. By the end of the course, students will not only possess the ability to interpret macroeconomic news and articles
+    but also analyze policies through a model-based framework.'
+  prereq:
+    all:
+    - any:
+      - ECON 10200
+      - ECON 20200
+      - ECON 20210
+    - any:
+      - STAT 22000
+      - STAT 23400
+      - STAT 24400
+      - ECON 11010
+  prereq_text: Econ 10200/20200/20210 and STAT 22000/STAT 23400/STAT 24400/ECON 11010
+  terms_offered:
+  - AU
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: 'ECON 13310. Introduction to Macroeconomic Analysis: A Data Driven Approach. 100 Units.'
+- code: ECON 14000
+  title: Introduction to Labor Economics
+  units: 100
+  description: 'This course is an introduction to labor economics with an emphasis on applied microeconomic theory and empirical
+    analysis. Topics to be covered include: labor supply and demand, taxes and transfers, minimum wages, immigration, human
+    capital, creativity over the lifecycle and unemployment. For each topic we will describe the basic economic framework
+    used in the analysis, analyze associated cases of study and drawn conclusions about what we have learned. Most of the
+    examples will be taken from U.S. labor data and special attention will be given to randomized trials and experimental
+    methods to infer causality.'
+  prereq:
+    any:
+    - ECON 10000
+    - ECON 20000
+    - ECON 20010
+  prereq_text: ECON 10000/20000/20010
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 14000. Introduction to Labor Economics. 100 Units.
+- code: ECON 14020
+  title: 'Labor Markets: a Global Perspective'
+  units: 100
+  description: In this course we will explore standard models that form the core of labor economics including labor supply,
+    labor demand, job search models, wage setting, discrimination, and migration. For each topic we will then examine empirical
+    applications of these models with a focus on middle and low-income countries. We will discuss how these traditional models
+    are useful, or not, in understanding labor market outcomes in these settings and how they can be expanded to better capture
+    relevant features of labor markets outside high-income countries.
+  crosslists:
+  - PBPL 25640
+  - PPHA 44302
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: 'ECON 14020. Labor Markets: a Global Perspective. 100 Units.'
+- code: ECON 14030
+  title: The Workplace and Family Policy
+  units: 100
+  description: 'The topics covered in the course will include: the demographic transition, human capital accumulation, gender
+    wage and employment gaps, discrimination in the workplace, family leave and childcare policies, tax policies including
+    subsidies like the Earned Income Tax Credit (ETIC), and related welfare policies. We will draw on the theory of static
+    and dynamic labor supply, theories of labor demand, and labor market equilibrium to guide its investigation, and use empirical
+    tools to answer research questions. For each topic covered in this course, I will introduce an elementary treatment of
+    the canonical theoretical model and give examples of its empirical application. In studiying empirical applications, we
+    will often draw on analysis from international experience.'
+  crosslists:
+  - GNSE 25695
+  - PBPL 25695
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 14030. The Workplace and Family Policy. 100 Units.
+- code: ECON 14050
+  title: Introduction to Labor Economics and the Firms
+  units: 100
+  description: This course will focus on the most important topics in labor economics such as the determination of levels
+    of employment and wages, compensating wage differentials, human capital, migration, and discrimination. Moreover, the
+    course will investigate the decision-making process of both workers and firms and their impact on the wage distribution
+  prereq:
+    any:
+    - ECON 10000
+    - ECON 20000
+    - ECON 20010
+  prereq_text: Econ 10000 or Econ 20000 or Econ 20010
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 14050. Introduction to Labor Economics and the Firms. 100 Units.
+- code: ECON 15010
+  title: 'Investments: From Economics to Finance'
+  units: 100
+  description: 'This course studies finance and investments through the lens of economic equilibrium methods. We look at how
+    the general equilibrium framework in economics gives rise to the factor pricing models in finance, the no-arbitrage framework
+    in economics gives rise to the option pricing models in finance, and the Nash equilibrium framework in economics gives
+    rise to the microstructure trading models in finance. Trillions of dollar worth of financial products ride on these financial
+    models, and we trace the path from the basic models of equilibrium in economic theory to these applied models in finance
+    that have found immense use in practice. The course combines a theoretical framework with applied analysis. Topics covered
+    include: basics of general equilibrium with uncertainty, mean-variance utility, portfolio optimization, capital asset
+    pricing model, no-arbitrage equilibrium, fundamental theorem of asset pricing, binomial option pricing, Black-Scholes-Merton
+    options theory, Bayes Nash equilibrium, Kyle and Glosten-Milgrom models of trading.'
+  prereq:
+    all:
+    - any:
+      - ECON 10000
+      - ECON 20000
+      - ECON 20010
+    - any:
+      - STAT 22000
+      - STAT 23400
+      - ECON 11010
+  prereq_text: ECON 10000/20000/20010 and STAT 22000/STAT 23400/ECON 11010.
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: 'ECON 15010. Investments: From Economics to Finance. 100 Units.'
+- code: ECON 15020
+  title: 'Trading: From Game Theory to Finance'
+  units: 100
+  description: 'This course studies trading in financial markets through the lens of game theory and asymmetric information.
+    Trading models are at the heart of financial markets, and we trace the path from basic models in game theory and equilibrium
+    economics to applied trading models in finance that have found immense use in practice. We look at how the asymmetric
+    information framework gives rise to market microstructure trading, equilibrium tatonnement process gives rise to arbitrage
+    trading, general equilibrium framework gives rise to beta-based trading, model uncertainty gives rise to alpha-based trading,
+    and event uncertainty gives rise to option trading. The course combines a theoretical framework with applied analysis.
+    Topics covered include: information structures, Bayesian probability, Blackwell''s theorem, basics of rational expectations
+    equilibrium, Bayes Nash equilibrium, limit order books, bid-ask spread formation, asymmetric information models of microstructure
+    trading, PIN model, capital asset pricing model, beta and index fund trading, alpha and hedge fund trading, speculative
+    trading with options, high-frequency trading, arbitrage and behavioral trading models.'
+  prereq:
+    all:
+    - any:
+      - ECON 10000
+      - ECON 20000
+      - ECON 20010
+    - any:
+      - STAT 22000
+      - STAT 23400
+      - STAT 24400
+      - ECON 11010
+  prereq_text: Econ 10000/20000/20010 and STAT 22000/STAT 23400/STAT 24400/ECON 11010
+  terms_offered:
+  - AU
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: 'ECON 15020. Trading: From Game Theory to Finance. 100 Units.'
+- code: ECON 15030
+  title: Basics of Corporate, Banking and Investment Finance
+  units: 100
+  description: This course introduces the basics of corporate finance, investments, and banking, with an emphasis on real-world
+    applications. The aim is to prepare students for a career in financial economics and allied industries including banking,
+    investment management, and capital markets. We shall discuss capital structure, corporate valuation, financial statement
+    analysis, cost of capital, interest rates, yield curve analysis, monetary policy impact, risk and return analysis, portfolio
+    theory, capital asset pricing model and financial instruments. The course is a rigorous introduction to various facets
+    of financial economics that a practitioner in the field handles, and it serves as a gateway to the more advanced courses
+    on these topics. The course includes Friday lab sessions that will include a case study, discussions with industry alumni,
+    and preparation for upcoming recruiting cycles.
+  prereq:
+    all:
+    - any:
+      - ECON 10000
+      - ECON 20000
+      - ECON 20010
+    - any:
+      - ECON 10200
+      - ECON 20200
+      - ECON 20210
+    - any:
+      - ECON 11010
+      - STAT 22000
+      - STAT 23400
+      - STAT 24400
+  prereq_text: Econ 10000/20000/20010 and Econ 10200/20200/20210 and Econ 11010/STAT 22000/STAT 23400/STAT 24400
+  terms_offered:
+  - SU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 15030. Basics of Corporate, Banking and Investment Finance. 100 Units.
+- code: ECON 15500
+  title: Introduction to Development Economics
+  units: 100
+  description: 'The course explores one of the most pressing global challenges: poverty. Through a microeconomic and empirical
+    lens, students learn to analyze the economic lives of the poor, examining why poverty persists, and which interventions
+    have been effective to sustainably improve the lives of poor people in low- and middle-income countries (LMIC). The course
+    employs economic theory and econometric methods to analyze consumption, health, education, access to credit, entrepreneurship,
+    and migration. The course places the microeconomic issues in the context of the macroeconomic context of economic institutions,
+    e.g., security of property rights, and political institutions, e.g., electoral empowerment. Using both historical perspectives
+    and contemporary studies, students learn about the frontier of knowledge at the frontier of development economics, emphasizing
+    empirical research and data analysis. The course prioritizes close reading of accessible articles from top economics journals
+    and includes data analysis interpretation exercises. Class discussions apply the frontier state of knowledge to real-world
+    cases to prepare students for further study and careers in policy and economic development.'
+  prereq:
+    all:
+    - any:
+      - ECON 10000
+      - ECON 20000
+      - ECON 20010
+    - any:
+      - STAT 22000
+      - STAT 23400
+      - STAT 24400
+      - ECON 11010
+  prereq_text: ECON 10000/20000/20010 and STAT 22000/STAT 23400/STAT 24400/ECON 11010
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 15500. Introduction to Development Economics. 100 Units.
+- code: ECON 16000
+  title: 'Elements of Human Capital Theory: The Economic Science of People'
+  units: 100
+  description: 'Many believe economics is a discipline mostly concerned with money, finance, taxes, international trade, and
+    industrial policy. This course explores how economics is, above all, about people. It covers a wide range of topics, all
+    seen through the lens of human capital theory to demonstrate its importance in the economy: parental investment in children,
+    nature versus nurture, aging, education, health, marriage, fertility, preference formation, specialization, and economic
+    growth. In addition to discussing economic theory, students will gather and analyze data, consider applicable examples
+    in literature, movies, sports, or popular culture, and write short essays. No prior knowledge of calculus, economic theory,
+    or econometrics is required.'
+  terms_offered:
+  - SU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: 'ECON 16000. Elements of Human Capital Theory: The Economic Science of People. 100 Units.'
+- code: ECON 16040
+  title: Introduction to Human Capital
+  units: 100
+  description: This course introduces the concept of human capital, its accumulation process, its role in family decisions,
+    and its impact on the economy. The insights of several models are explained and discussed, covering a wide range of topics,
+    including parental altruism, education, bequests, health, fertility, support in old age, income inequality, intergenerational
+    transmission of wealth, specialization, division of labor, and economic growth. The theory is complemented with historical
+    evidence from different countries and periods.
+  prereq:
+    all:
+    - any:
+      - ECON 10000
+      - ECON 20000
+      - ECON 20010
+    - any:
+      - STAT 22000
+      - STAT 23400
+      - STAT 24400
+      - ECON 11010
+  prereq_text: ECON 10000/20000/20010 and STAT 22000/STAT 23400/STAT 24400/ECON 11010
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 16040. Introduction to Human Capital. 100 Units.
+- code: ECON 16050
+  title: Why aren't humans replacing themselves? What are the consequences?
+  units: 100
+  description: The human fertility rate has fallen in half in the last 50 years, and is below replacement in more and more
+    countries. These declines imply that the human population on Earth will peak at roughly 12 billion around 2075. Will the
+    human population stabilize or collapse after it peaks? Will human civilization survive? This course will examine this
+    Big Question in depth. We will first review the data demonstrating the decline in total fertility rate in countries around
+    the world, then consider the multitude of explanations that have been proposed for this decline. Next, we will explore
+    the consequences for human well-being and civilization of population decline. Finally, we will investigate potential solutions
+    to the problem, with an eye to the underlying causes of fertility decline. Students from a wide variety of fields are
+    welcome, including those with knowledge of partial differential equations, data analysis, or programming skills, but no
+    prior experience in demography or related areas. Students will write a final paper that examines a particular cause of
+    fertility decline and critically evaluates it, providing the best evidence for and against it. This course is cross-listed
+    with the McKeon Center in the UChicago College.
+  crosslists:
+  - BPRO 27450
+  prereq_text: 'PQ: Third or fourth-year standing.'
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 16050. Why aren't humans replacing themselves? What are the consequences?
+  needs_review: true
+- code: ECON 16550
+  title: The Climate and Growth Challenge
+  units: 100
+  description: The global energy and climate challenge is perhaps the most important problem society faces. It requires identifying
+    approaches to ensure people have access to the inexpensive and reliable energy critical for human development, without
+    causing disruptive climate change or unduly compromising health and the environment. The course pairs technical and economic
+    analysis to develop an understanding of policy challenges in this area. Lecture topics will include the past, present,
+    and future of energy supply and demand, global climate change, air pollution and its health consequences, selected energy
+    technologies such as solar photovoltaics, nuclear power, unconventional oil and gas, and an analysis of theoretical and
+    practical policy solutions in developed and emerging economies.
+  crosslists:
+  - CCSG 19000
+  - CEGU 22510
+  - PBPL 22510
+  - BPRO 22510
+  prereq_text: 'BPRO 22510: third or fourth-year status. CEGU 22510, CCSG 19000, ECON 16550, PBPL 22510: First-year student
+    by permission of instructor only.'
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 16550. The Climate and Growth Challenge. 100 Units.
+  needs_review: true
+- code: ECON 16560
+  title: Consumers, Firms, and the Environment
+  units: 100
+  description: This course applies microeconomic analysis to energy markets and environmental problems like climate change.
+    Using theory and data, we examine how consumers and firms make decisions about pollution, energy use, and clean technology
+    adoption. We also study how government policies like taxes, regulations, and subsidies shape these decisions. Students
+    may use this course to satisfy the microeconomics method requirement for the business economics specialization.
+  prereq_text: ECON 10000 or ECON 20000 or ECON 20010) and (STAT 22000 or STAT 23400 or STAT 24400 or ECON 11010).
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 16560. Consumers, Firms, and the Environment. 100 Units.
+  needs_review: true
+- code: ECON 16700
+  title: Introduction to Economics of Education
+  units: 100
+  description: This course investigates economic issues related to education. We will first discuss the theory behind the
+    decision to invest in education. We will talk about private and social returns to education as well as signaling value
+    of education. Then, we will investigate which factors (class size, teachers, incentives, peers, beliefs, etc.) matter
+    in determining the success of students. Throughout the course, we will learn how different methods (experiments, difference-in-differences,
+    instrumental variables, and regression discontinuity) are used to answer the economics of education questions.
+  prereq:
+    all:
+    - any:
+      - ECON 10000
+      - ECON 20000
+      - ECON 20010
+    - any:
+      - ECON 11010
+      - STAT 22000
+      - STAT 23400
+      - STAT 24400
+  prereq_text: ECON 10000/20000/20010 and ECON 11010/STAT 22000/STAT 23400/STAT 24400
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 16700. Introduction to Economics of Education. 100 Units.
+- code: ECON 16710
+  title: Education and Economic Development
+  units: 100
+  description: This course covers policy issues related to education in developing contexts. We will analyze education policies
+    and reforms, develop skills to be a critical consumer of relevant research on each topic, and examine implications of
+    the findings to policy and practice. Topics include discrimination and inclusion in education, understanding factors that
+    influence educational decisions, provision of basic needs in schools, teacher pay and incentives, education in emergency
+    settings, and school choice.
+  crosslists:
+  - EDSO 28350
+  - PBPL 28350
+  prereq_text: 'Recommended prerequisite courses: Microeconomics and econometrics. Students in their last years will be given
+    priority.'
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 16710. Education and Economic Development. 100 Units.
+  needs_review: true
+- code: ECON 17100
+  title: Introduction to International Trade
+  units: 100
+  description: This course covers international economics with an emphasis on international trade. The basic theories of international
+    trade are introduced and used to analyze welfare and distributional effects of international trade, government policies,
+    and technology diffusion. In addition, this course also discusses the main empirical patterns of international trade and
+    international investment.
+  prereq:
+    all:
+    - any:
+      - ECON 10000
+      - ECON 19800
+      - ECON 20000
+      - ECON 20010
+    - any:
+      - ECON 10200
+      - ECON 19900
+      - ECON 20200
+      - ECON 20210
+  prereq_text: ECON 10000/19800/20000/20010 and ECON 10200/19900/20200/20210
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 17100. Introduction to International Trade. 100 Units.
+- code: ECON 17700
+  title: Introduction to Health Economics
+  units: 100
+  description: This course will introduce students to the economics of health care provision and payment. We will use methods
+    from microeconomics to investigate how different aspects of the health care system function and to assess the implications
+    for different policies designed to improve that functioning. We will use economic tools and techniques from the sub-disciplines
+    of information economics, industrial organization, labor economics, public economics, behavioral economics, and decision
+    theory to think about these questions. The primary goals of the course will be to (i) master different economic techniques
+    in the context of health care markets and (ii) learn about the specific institutional details and policies relevant to
+    those markets.
+  prereq:
+    all:
+    - any:
+      - ECON 10000
+      - ECON 20000
+      - ECON 20010
+    - any:
+      - ECON 11010
+      - STAT 22000
+      - STAT 23400
+      - STAT 24400
+  prereq_text: ECON 10000/20000/20010 and ECON 11010/STAT 22000/STAT 23400/STAT 24400
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 17700. Introduction to Health Economics. 100 Units.
+- code: ECON 17720
+  title: Evidence in Health Policy
+  units: 100
+  description: In this course, we will consider the role of evidence and empirical studies in helping inform us about important
+    health policy topics, such as the consequences of expanding the Medicaid program, the effects of private equity acquisitions
+    of medical facilities, and the burden of medical debt. The course will be divided into two-lecture modules where, in the
+    first, we will read an editorial or descriptive piece that helps introduce a health policy context, and, in the second,
+    we will read a study that confronts the topic using modern empirical methods. In class, we will learn both about health
+    policy and how to read and understand evidence in support or opposition of those policies. Out of class activities will
+    including synthesizing studies to inform a prospective policy proposal and reanalyzing prior studies using actual data
+    and statistical programming. This course was previously named Issues in Health Policy.
+  crosslists:
+  - PBPL 25510
+  - PPHA 38050
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 17720. Evidence in Health Policy. 100 Units.
+- code: ECON 18010
+  title: Introduction to Managerial Microeconomics
+  units: 100
+  description: This course presents several classic microeconomic models applicable in business contexts. The topics covered
+    include self-selection, commitment, product differentiation, matching, and mechanism design, among others. The theoretical
+    insights of each model are analyzed. Real-world applicability is discussed using practical examples. Students are required
+    to write short papers applying the models presented in the course to real-world situations in the context of business.
+  prereq:
+    any:
+    - ECON 10000
+    - ECON 19800
+    - ECON 20000
+    - ECON 20010
+  prereq_text: ECON 10000 or ECON 19800 or ECON 20000 or ECON 20010
+  terms_offered:
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 18010. Introduction to Managerial Microeconomics. 100 Units.
+- code: ECON 18020
+  title: Introduction to Applied Empirical Industrial Organization
+  units: 100
+  description: In this course, students will learn how to apply techniques and models developed in industrial organization
+    and law and economics to important questions that arise in litigation and government regulation. We will be guided and
+    informed by pure theory underlying industrial organization and implement it in a world of partial information, incomplete
+    data, and even contradictory data, among other complexities. Students will learn how to develop inferences by applying
+    the models to real world cases and data - ie, extracting the most information possible from partial, imperfect data, frequently
+    with missing values or poorly-measured data points. These fact patterns will not always result in an incontrovertible
+    answer. Thus, students will be expected to identify and express the "best argument for" and "best argument against" the
+    questions posed to them. This means that students will be expected to (i) use theory as a guideline to assess the relevant
+    facts, circumstances, and data, (ii) reach a view, (iii) succinctly express that view in writing and acknowledge and address
+    contrary theory and empirical results. Students will also see actual expert reports and/or white papers that have been
+    prepared in actual disputes and investigations. Part of the grade will be based on an "expert report" written by the students
+    in small teams.
+  notes: Business Economics specialization students should register for Econ 18020.
+  prereq:
+    all:
+    - any:
+      - ECON 10000
+      - ECON 20000
+    - any:
+      - ECON 11020
+      - ECON 21020
+  prereq_text: Econ 10000/20000 and Econ 11020/21020
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 18020. Introduction to Applied Empirical Industrial Organization. 100 Units.
+- code: ECON 18650
+  title: Law and Economics of Business
+  units: 100
+  description: This course will introduce students to the economic analysis of business law. Students will be introduced to
+    basic concepts of private law, including contracts, property, and remedies. They will then learn the basic tools of law
+    and economics. With those skills they will explore the law of for-profit businesses, including corporate governance, mergers
+    and acquisitions, and corporate bankruptcy. Students may use this course to satisfy the microeconomics method requirement
+    for the business economics specialization.
+  prereq:
+    any:
+    - ECON 10000
+    - ECON 20000
+    - ECON 20010
+  prereq_text: Econ 10000 or Econ 20000 or Econ 20010
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 18650. Law and Economics of Business. 100 Units.
+- code: ECON 19000
+  title: 'Economics for Everyone: Micro'
+  units: 100
+  description: The field of economics has generated a powerful set of insights which have fundamentally shaped the modern
+    world. Because modern economics puts such a heavy stress on mathematical rigor, the most interesting economic ideas often
+    get pushed to the background. In this course, we will explore these big economic ideas, without the math. Our goal is
+    to make the beauty and power of economic thinking available to everyone. We will discuss what it means to think like an
+    economist, how you can use economic thinking to make the world a better place (or to take advantage of your friends and
+    enemies, if you prefer), and also how sometimes thinking like an economist can get you into trouble.
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: 'ECON 19000. Economics for Everyone: Micro. 100 Units.'
+- code: ECON 19100
+  title: 'Economics for Everyone: Macro'
+  units: 100
+  description: 'This course explores the big ideas in macroeconomics in a way that is enjoyable and accessible, with minimal
+    reliance on mathematics. The goal is to provide an introduction to macroeconomic issues for people who have never before
+    studied macroeconomics (and who might never study it again), so that they can understand and contribute to ongoing discussions
+    in the news and on social media. We will demystify some of the major macroeconomic questions of our times: Why is there
+    unemployment? Why are some countries poor? What''s the big deal about government debt? How high should we set taxes? What
+    gives money and stocks their value? What does the Fed do? And why did all those economists win Nobel Prizes? We will show
+    the fun, interesting, and strange sides of macroeconomics.'
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: 'ECON 19100. Economics for Everyone: Macro. 100 Units.'
+- code: ECON 19200
+  title: Introduction to Issues and Methods in Microeconomics
+  units: 100
+  description: Microeconomics is the study of how agents make optimal choices when facing constraints. The course will start
+    by developing the "Economic Approach" as the basic tool for analysis in economics. We will continue with a model of causal
+    inference, and link it with concepts students have learned in the econometrics course. Then, we introduce the use of experiments
+    as an alternative methodology for the researchers to gather their own data. Finally, we cover some major topics in behavioral
+    economics.
+  notes: Study Abroad
+  prereq:
+    any:
+    - ECON 10000
+    - ECON 20000
+    - ECON 20010
+  prereq_text: Econ 10000/20000/20010.
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 19200. Introduction to Issues and Methods in Microeconomics. 100 Units.
+- code: ECON 19300
+  title: Introduction to Issues and Methods in Macroeconomics
+  units: 100
+  description: We will develop basic tools and methods in economics and study issues in macroeconomics and international trade
+    and finance. The topics we cover include both contemporary and classical issues such as tax incidence and distortions,
+    optimal taxation, inflation, monetary policy, patterns and benefits of trade, and exchange rate determination. The objective
+    of the course is to train students with analytical tools in macroeconomics so that they can understand, analyze, and evaluate
+    various policies and policy proposals. To make the subject matters relevant and practical, students are strongly encouraged
+    to read the Wall Street Journal and the Economist regularly to keep up with current events and controversies.
+  notes: Study Abroad
+  prereq:
+    any:
+    - ECON 10200
+    - ECON 20200
+    - ECON 20210
+  prereq_text: Econ 10200/20200/20210
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 19300. Introduction to Issues and Methods in Macroeconomics. 100 Units.
+- code: ECON 19500
+  title: Practice of Risk Management and Investing
+  units: 100
+  description: Principles and practices for financial decision-making under uncertainty. This course provides a foundational
+    understanding of investment strategies and risk management. It is designed to give a perspective on the complexities surrounding
+    financial decision making amidst uncertain market conditions. Students will learn about different types of risks that
+    impact investments, and best practices for risk management under a range of real market conditions, always under the foundations
+    of a robust theoretical framework. We will draw insights from real market events that have significantly influenced the
+    investment landscape, such as the financial crisis of 2008-2009, the pandemic of 2020 and other ruptures that impacted
+    markets in the past. Once familiarized with concepts in investing such as portfolio response to risks, yield curves, credit
+    risk, tail and normal risks, and portfolio diversification, the class will be divided in teams to "play" a portfolio challenge
+    game. Teams will manage a portfolio of bonds and navigate it as market conditions are perceived to change, protect the
+    portfolio against market downturns and produce the best possible return at the end of the market cycle. The market conditions
+    in this game are real, and we will be able to, together, appreciate the difficulties in forecasting the future of markets
+    and manage investment risks under real uncertainties.
+  prereq:
+    all:
+    - any:
+      - ECON 10000
+      - ECON 20000
+      - ECON 20010
+    - any:
+      - STAT 22000
+      - STAT 23400
+      - STAT 24400
+      - STAT 24410
+      - ECON 11010
+    - any:
+      - ECON 11020
+      - ECON 21020
+      - ECON 15010
+      - ECON 15020
+  prereq_text: (ECON 10000/20000/20010) and (STAT 22000/STAT 23400/STAT 24400/STAT 24410/ECON 11010) and (ECON 11020 or ECON
+    21020 or ECON 15010 or ECON 15020)
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 19500. Practice of Risk Management and Investing. 100 Units.
+- code: ECON 20000
+  title: The Elements of Economic Analysis I
+  units: 100
+  description: This course develops the economic theory of consumer choice. This theory characterizes optimal choices for
+    consumers given their incomes and preferences, as well as the relative prices of different goods. This course develops
+    tools for analyzing how these optimal choices change when relative prices and consumer incomes change. Finally, this course
+    presents several measures of consumer welfare. Students learn how to evaluate the impact of taxes and subsidies using
+    these measures. Completion of ECON 10000 is strongly recommended of students without a prior microeconomics course.
+  notes: Students who matriculated prior to 2022-2023 and have completed MATH 15100-15200-15300 may replace the MATH 19520
+    requirement with MATH 15250. They may take MATH 15250 prior to or concurrently with ECON 20000/20010.
+  prereq:
+    any:
+    - all:
+      - MATH 13300
+      - concurrent: MATH 15250
+    - MATH 15200
+    - MATH 16300
+    - MATH 15250
+    - MATH 15910
+    - MATH 18300
+    - MATH 18400
+    - MATH 20300
+    - MATH 20310
+    - MATH 20700
+  prereq_text: MATH 13300 (with prior completion of or at least concurrent with MATH 15250), MATH 15200, MATH 16300, MATH
+    15250, MATH 15910, MATH 18300, MATH 18400, MATH 20300, MATH 20310, or MATH 20700. First year students may enroll in Econ
+    20000 concurrently with Math 16300/16310 if they have received an A/A- in both Math 16100/16110 and Math 16200/16210.
+  terms_offered:
+  - AU
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 20000. The Elements of Economic Analysis I. 100 Units.
+  needs_review: true
+- code: ECON 20010
+  title: The Elements of Economic Analysis I Honors
+  units: 100
+  description: The scope of the honors section is the same as the standard section, but it covers material at greater depth
+    and using more sophisticated mathematical methods. This course develops the economic theory of consumer choice. This theory
+    characterizes optimal choices for consumers given their incomes and preferences, as well as the relative prices of different
+    goods. This course develops tools for analyzing how these optimal choices change when relative prices and consumer incomes
+    change. Finally, this course presents several measures of consumer welfare. Students learn how to evaluate the impact
+    of taxes and subsidies using these measures. Completion of ECON 10000 (or ECON 19800) is strongly recommended of students
+    without a prior microeconomics course.
+  notes: Students who matriculated prior to 2022-2023 and have completed MATH 15100-15200-15300 may replace the MATH 19520
+    requirement with MATH 15250. They may take MATH 15250 prior to or concurrently with ECON 20000/20010.
+  prereq:
+    any:
+    - all:
+      - MATH 13300
+      - concurrent: MATH 15250
+    - MATH 15200
+    - MATH 16300
+    - MATH 15250
+    - MATH 15910
+    - MATH 18300
+    - MATH 18400
+    - MATH 20300
+    - MATH 20310
+    - MATH 20700
+  prereq_text: MATH 13300 (with prior completion of or at least concurrent with MATH 15250), MATH 15200, MATH 16300, MATH
+    15250, MATH 15910, MATH 18300, MATH 18400, MATH 20300, MATH 20310, or MATH 20700. First year students may enroll in Econ
+    20000 concurrently with Math 16300/16310 if they have received an A/A- in both Math 16100/16110 and Math 16200/16210.
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 20010. The Elements of Economic Analysis I Honors. 100 Units.
+  needs_review: true
+- code: ECON 20100
+  title: The Elements of Economic Analysis II
+  units: 100
+  description: This course is a continuation of ECON 20000. The first part of this course discusses markets with one or a
+    few suppliers. The second part focuses on demand and supply for factors of production and the distribution of income in
+    the economy. This course also includes some elementary general equilibrium theory and welfare economics.
+  prereq:
+    any:
+    - ECON 20000
+    - ECON 20010
+  prereq_text: ECON 20000 or 20010
+  terms_offered:
+  - AU
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 20100. The Elements of Economic Analysis II. 100 Units.
+- code: ECON 20110
+  title: The Elements of Economic Analysis II Honors
+  units: 100
+  description: The scope of the honors section is the same as the standard section, but it covers material at greater depth
+    and using more sophisticated mathematical methods. This course is a continuation of ECON 20000/20010. The first part of
+    this course discusses markets with one or a few suppliers. The second part focuses on demand and supply for factors of
+    production and the distribution of income in the economy. This course also includes some elementary general equilibrium
+    theory of welfare economics.
+  prereq:
+    any:
+    - ECON 20000
+    - ECON 20010
+  prereq_text: ECON 20000 or 20010
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 20110. The Elements of Economic Analysis II Honors. 100 Units.
+- code: ECON 20200
+  title: The Elements of Economic Analysis III
+  units: 100
+  description: As an introduction to macroeconomic theory and policy, this course covers the determination of aggregate demand
+    (i.e., consumption, investment, the demand for money); aggregate supply; and the interaction between aggregate demand
+    and supply. We also discuss economic growth, business cycle, inflation and money. Completion of ECON 19900 is strongly
+    recommended of students without a prior macroeconomics course.
+  prereq:
+    any:
+    - ECON 20100
+    - ECON 20110
+  prereq_text: ECON 20100 or 20110
+  terms_offered:
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 20200. The Elements of Economic Analysis III. 100 Units.
+- code: ECON 20210
+  title: The Elements of Economic Analysis III Honors
+  units: 100
+  description: The scope of the honors section is the same as the standard section, but it covers material at greater depth
+    and using more sophisticated mathematical methods. As an introduction to macroeconomic theory and policy, this course
+    covers the determination of aggregate demand (i.e., consumption, investment, the demand for money); aggregate supply;
+    and the interaction between aggregate demand and supply. We also discuss economic growth, business cycle, inflation and
+    money. Completion of ECON 10200 (or ECON 19900) is strongly recommended of students without a prior macroeconomics course.
+  prereq:
+    any:
+    - ECON 20100
+    - ECON 20110
+  prereq_text: ECON 20100 or 20110
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 20210. The Elements of Economic Analysis III Honors. 100 Units.
+- code: ECON 20300
+  title: Elements of Economic Analysis IV
+  units: 100
+  description: This is a course in money and banking, monetary theories, the determinants of the supply and demand for money,
+    the operation of the banking system, monetary policies, financial markets, and portfolio choice.
+  prereq:
+    any:
+    - ECON 20200
+    - ECON 20210
+  prereq_text: ECON 20200 or 20210
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 20300. Elements of Economic Analysis IV. 100 Units.
+- code: ECON 20520
+  title: Formal Models of Political Economics
+  units: 100
+  description: Why do the Republicans and the Democrats almost always ended up choosing moderates as their party nominees
+    in presidential races? How do "checks and balances" such as a legislative committee's power to set the agenda or a president's
+    power to veto a bill affect policy outcomes? What leads to coalition building in a legislature and how does it affect
+    the result of legislative bargaining? When can a legislature optimally delegate its power to a bureaucratic agency who
+    has its own interests and agenda? To answer questions like these, we study formal models of political economics. Such
+    models examine explicitly the incentives of participants in political processes and generate predictions of their behavior
+    based on such incentives and any confounding strategic considerations. Our approach is largely game theoretical. Familiarity
+    with fundamental game theoretical ideas like the strategic and extensive games, the Nash Equilibrium, and the Subgame
+    Perfect Equilibrium is essential and assumed.
+  notes: Students may count either ECON 20510 or ECON 20520, but not both, toward the 42 credits required for graduation.
+  prereq:
+    any:
+    - ECON 10700
+    - ECON 20100
+    - ECON 20110
+    - ECON 20700
+  prereq_text: ECON 10700 or ECON 20100 or ECON 20110 or ECON 20700
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 20520. Formal Models of Political Economics. 100 Units.
+- code: ECON 20700
+  title: Game Theory and Economic Applications
+  units: 100
+  description: This course introduces the basic ideas and applications of game theory. Topics include models of games in extensive
+    and strategic form, equilibria with randomization, signaling and beliefs, reputation in repeated games, bargaining games,
+    investment hold-up problems, and mediation and incentive constraints.
+  prereq:
+    any:
+    - ECON 20100
+    - ECON 20110
+  prereq_text: ECON 20100/20110
+  terms_offered:
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 20700. Game Theory and Economic Applications. 100 Units.
+- code: ECON 20770
+  title: Decision and Strategy
+  units: 100
+  description: This course provides a formal introduction to game theory with applications in economics. We will study models
+    of how individuals make decisions, and how those decisions are shaped by strategic concerns and uncertainty about the
+    world. The topics will include the theory of individual choice, games of complete and incomplete information, and equilibrium
+    concepts such as Nash equilibrium. The applications will include oligopoly, auctions, and bargaining. The course is appropriate
+    for advanced undergraduates who are interested in a rigorous mathematical approach to understanding human behavior.
+  crosslists:
+  - ECMA 30770
+  prereq_text: 'Prerequsites for Undergraduates: ECON 20100/ECON 20110 and MATH 20300/MATH 20310/MATH 20700, or consent of
+    instructor'
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 20770. Decision and Strategy. 100 Units.
+  needs_review: true
+- code: ECON 20780
+  title: Decision and Strategy II
+  units: 100
+  description: We continue the formal introduction to decision theory and game theory begun in ECMA 30780, with a specific
+    focus on models of incomplete information. Topics covered include subjective expected utility, Bayesian games, contract
+    theory, and mechanism design. Among the applications we will consider are auctions, collusion, entry deterrence, and strategic
+    communication. The course is appropriate for advanced undergraduates who are interested in a rigorous mathematical approach
+    to decision making in strategic situations.
+  crosslists:
+  - ECMA 30780
+  prereq:
+    any:
+    - ECON 20770
+    - ECMA 30770
+    - consent: instructor
+  prereq_text: ECON 20770/ECMA 30770 or consent of instructor
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 20780. Decision and Strategy II. 100 Units.
+- code: ECON 21020
+  title: Econometrics
+  units: 100
+  description: Required of students who are majoring in economics; those students are encouraged to meet this requirement
+    by the end of their third year. This course covers the single and multiple linear regression model, the associated distribution
+    theory, and testing procedures; corrections for heteroskedasticity, autocorrelation, and simultaneous equations; and other
+    extensions as time permits. Students also apply the techniques to a variety of data sets using PCs.
+  prereq:
+    all:
+    - any:
+      - ECON 20100
+      - ECON 20110
+    - any:
+      - MATH 19620
+      - MATH 18500
+      - MATH 20000
+      - MATH 20250
+      - MATH 20700
+      - STAT 24300
+    - any:
+      - STAT 23400
+      - STAT 24400
+      - STAT 24410
+  prereq_text: '[Econ 20100 or Econ 20110] and [Math 19620 or Math 18500 or Math 20000 or Math 20250 or Math 20700 or Stat
+    24300 ] and [Stat 23400 or Stat 24400 or Stat 24410]'
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 21020. Econometrics. 100 Units.
+- code: ECON 21030
+  title: Econometrics - Honors
+  units: 100
+  description: The topics are essentially the same as those covered in ECON 21020, but this foundations course in econometrics
+    gives a more systematic introduction to the application of statistical theory to economic applications. This course is
+    intended for students who are planning to study economics at the graduate level.
+  prereq:
+    any:
+    - all:
+      - any:
+        - ECON 20100
+        - ECON 20110
+      - any:
+        - STAT 24400
+        - STAT 24410
+        - STAT 24500
+      - any:
+        - MATH 19620
+        - MATH 20250
+        - STAT 24300
+    - consent: instructor
+  prereq_text: ECON 20100/20110, and STAT 24400/24410/24500, and MATH 19620/20250/STAT 24300; or consent of instructor
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 21030. Econometrics - Honors. 100 Units.
+- code: ECON 21031
+  title: Econometrics II-Honors
+  units: 100
+  description: This course is a continuation of ECON 21030. The topics covered include additional applications of linear regression
+    to descriptive and causal inference. Other topics may include nonlinear models, panel data, quantile regression, time
+    series, the bootstrap, and nonparametric regression. This course is intended for students who are planning to study economics
+    at the graduate level.
+  prereq:
+    any:
+    - ECON 21020
+    - ECON 21030
+  prereq_text: ECON 21020/21030
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 21031. Econometrics II-Honors. 100 Units.
+- code: ECON 21110
+  title: Applied Microeconometrics
+  units: 100
+  description: This course will cover a broad set of applications in labor economics, public economics, industrial organization,
+    economics of education, environmental economics, and development economics. There will be a strong focus on how economic
+    theory, institutional details, and experiments can be used to draw causal inferences on economic relationships. There
+    will be emphasis on applying a number of commonly used microeconometric methods to economic data; including the linear
+    regression model, fixed and random effects models, instrumental variables, and discrete choice models. When interpreting
+    the empirical results, we will also discuss the importance of omitted variables bias and measurement error.
+  prereq:
+    any:
+    - ECON 21020
+    - ECON 21030
+  prereq_text: ECON 21020 or ECON 21030
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 21110. Applied Microeconometrics. 100 Units.
+- code: ECON 21160
+  title: Topics in Causal Inference
+  units: 100
+  description: This course covers selected topics on causal inference and econometrics. Special attention will be given to
+    the use of economic models in causal inference. This course is intended for students who are planning to study economics
+    at the graduate level.
+  prereq:
+    any:
+    - ECON 21030
+    - all:
+      - ECON 21020
+      - consent: instructor
+  prereq_text: ECON 21030 (or ECON 21020 with instructor consent)
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 21160. Topics in Causal Inference. 100 Units.
+- code: ECON 21200
+  title: Time Series Econometrics
+  units: 100
+  description: This course focuses on theory, and covers a broad range of topics, both mathematical and statistical, on stationary
+    time series models in time and frequency domains. The models include ARMA, VAR, ARCH/GARCH and their variants. It also
+    covers nonstationary time series models with unit roots and cointegration, and the theories and methodologies to estimate
+    and test them statistically.
+  prereq:
+    all:
+    - any:
+      - ECON 20200
+      - ECON 20210
+    - any:
+      - ECON 21020
+      - ECON 21030
+  prereq_text: ECON 20200/20210 and ECON 21020/21030
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 21200. Time Series Econometrics. 100 Units.
+- code: ECON 21315
+  title: Econometric Applications I
+  units: 100
+  description: Course one of a two-quarter sequence designed to guide students through the steps of writing a research paper
+    that applies econometric methods to study an economic question of interest. In the course, we will review and supplement
+    our understanding of econometric methods that are frequently used in applied work, along with readings and in-class discussions
+    of research papers to illustrate how applied research is conducted and presented. Along with homework assignments and
+    required readings, during the first quarter, students will identify a topic of interest, locate data sources, review relevant
+    literature, and make a presentation of their research proposal.
+  prereq:
+    any:
+    - ECON 21030
+    - consent: instructor
+  prereq_text: ECON 21030 or consent of instructor
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 21315. Econometric Applications I. 100 Units.
+- code: ECON 21316
+  title: Econometric Applications II
+  units: 100
+  description: This course is a continuation of ECON 21315. Students will refine and execute their proposal (from ECON 21315),
+    resulting in a final presentation and a final paper that will undergo peer review.
+  crosslists:
+  - ECMA 31316
+  prereq_text: ECON 21315 or consent of instructor (if they have taken ECMA 31320)
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 21316. Econometric Applications II. 100 Units.
+  needs_review: true
+- code: ECON 21410
+  title: Computational Methods in Economics
+  units: 100
+  description: This course introduces the empirical and computational techniques necessary for numerical estimation and simulation
+    in economics. Through examples in economics, the course covers topics such as optimization, function approximation, and
+    monte carlo techniques. Emphasis will be placed on developing effective programming and research practices. The course
+    is structured through a series of applications in such topics as segregation, occupational choice, and repeated games.
+    The course will be taught in R and STATA. Though helpful, no previous experience with R or STATA is required.
+  prereq:
+    all:
+    - any:
+      - ECON 20100
+      - ECON 20110
+    - any:
+      - ECON 21020
+      - ECON 21030
+  prereq_text: ECON 20100/20110 and ECON 21020/21030
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 21410. Computational Methods in Economics. 100 Units.
+- code: ECON 21730
+  title: Applied Behavioral Economics
+  units: 100
+  description: This class covers recent work in behavioral economics. Topics include discrimination, social pressure, social
+    norms, identity and gender. Applications will cover a wide range of fields, including labor economics, finance, and political
+    economy.
+  prereq:
+    all:
+    - any:
+      - ECON 20100
+      - ECON 20110
+    - any:
+      - ECON 21020
+      - ECON 21030
+  prereq_text: ECON 20100/20110 and ECON 21020/21030
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 21730. Applied Behavioral Economics. 100 Units.
+- code: ECON 21740
+  title: Behavioral Economics and Experiments
+  units: 100
+  description: This is a hands-on course in behavioral economics. Basic concepts of preferences, traits, and behavioral biases
+    are reviewed that link economics and psychology. Methods for eliciting traits and preferences will be taught and implemented
+    in actual lab experiments. Grade will be determined by reports and quality of lab work.
+  prereq_text: ECON 10000/19800/20000/20010 AND STAT 22000/23400/24300/24400/24410/ECON 21010 (Lab students require one economics
+    course.)
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 21740. Behavioral Economics and Experiments. 100 Units.
+  needs_review: true
+- code: ECON 21800
+  title: Experimental Economics
+  units: 100
+  description: This course provides the necessary tools to be an avid consumer of the experimental literature and instructs
+    students on how to become a producer of that literature. Topics include a summary of recent experimental findings and
+    details on how to gather and analyze data using experimental methods.
+  notes: Students may count either ECON 11700 or ECON 21800, but not both, toward the 42 credits required for graduation.
+  prereq_text: ECON 20100/20110 and ECON 21020/21030; ECON 10000/20000 and ECON 11020 for declared business economics students.
+    No first-year students.
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 21800. Experimental Economics. 100 Units.
+  needs_review: true
+- code: ECON 22010
+  title: History of Financial Crises
+  units: 100
+  description: 'This course has an ambitious goal - to investigate both the tools of risk management at the firm level through
+    hands-on training and practice, and the lessons of macroeconomic or systemic risk through examination of financial crises
+    throughout history. These lessons are important - whether it is the South Sea Company crisis of 1700s or the mortgage
+    debt crisis in the United States in the 2000s, financial crises have shaped our world. Understanding history is the first
+    step towards intelligent policy. To examine the financial and economic history we will read some of the classic (and also
+    some of the newer) texts in this area: A Monetary History of the United States, 1857-1960 by Milton Friedman and Anna
+    Jacobson Schwartz; Manias, Panics, and Crashes by Charles P. Kindleberger (for a history of financial panics); Extraordinary
+    Popular Delusions and the Madness of Crowds by Charles Mackay (for a history of the 18th century South Sea Bubble in Britain
+    and the Sword Blade Bank and Mississippi Company in France); This Time is Different - Eight Centuries of Financial Folly
+    by Carmen Reinhart and Kenneth Rogoff (for why this time is not different - financial folly has a long history); and Fragile
+    by Design by Charles Calomiris and Stephen Haber (for a cogent and disciplined analysis of banking systems across time
+    and across countries - US, Canada, UK, Mexico, and Brazil).'
+  crosslists:
+  - PBPL 22521
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 22010. History of Financial Crises. 100 Units.
+- code: ECON 22030
+  title: The Chinese Economy
+  units: 100
+  description: This course provides an overview of the Chinese economy, with two main focuses. First, we will review the significant
+    reforms that happened in China in the past four decades, which fundamentally reshaped the modern China as we see today.
+    Second, we will discuss some of China's key political and economic institutions, and their implications on China and the
+    rest of the world. Throughout the course, special emphasis will be given to the role of the state in China's growth experience,
+    at both the central- and local-levels.
+  crosslists:
+  - PPHA 35585
+  - PBPL 25585
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 22030. The Chinese Economy. 100 Units.
+- code: ECON 22850
+  title: Why Nations Fail or Succeed
+  units: 100
+  description: This course is an overview of world economic and political history over the past ten thousand years and it
+    presents a simple theory which can account for the major patters. Part of the theory was presented in my book with Daron
+    Acemoglu Why Nations Fail, but the course will be much more than this since our thinking has evolved quite a bit since
+    then. In particular, WNF emphasized power relations and the material basis of both power and interests and how these were
+    structured through institutions. Our current research, which you will see represented in this course, examines the ideational
+    and cultural foundations for, power, interests and institutions. I hope what comes out of this is a much richer cross-cultural
+    understanding of comparative economic and political development. You might think of it as WNF 2.0. This is not a simple
+    economic history course, but you might be inspired, as we were, by some of the great modern accounts of economic history.
+  crosslists:
+  - PBPL 26420
+  - PLSC 26420
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 22850. Why Nations Fail or Succeed. 100 Units.
+- code: ECON 23000
+  title: Money and Banking
+  units: 100
+  description: This course covers economic theories and topical issues in money and banking. We discuss such "traditional"
+    topics as the quantity theory, the Phillips curve, and the money creation process. We also investigate models of bank
+    runs and financial crises, the tradeoff between rules and discretion, and the New Macroeconomic Synthesis of New Classical.
+    Other topics include New Keynesian approaches to modeling money and monetary policy, practical and institutional issues
+    in European and U.S. monetary policy, and the 2008 financial crisis.
+  prereq:
+    any:
+    - ECON 20200
+    - ECON 20210
+  prereq_text: ECON 20200 (or ECON 20210); ECON 21020 and ECON 23950 are strongly recommended.
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 23000. Money and Banking. 100 Units.
+- code: ECON 23050
+  title: Artificial Intelligence, Innovation, and Growth
+  units: 100
+  description: Social and cultural innovation, alongside economic growth, are among the most compelling, critical and challenging
+    phenomena in modern social science. Innovation has always been associated with unleashing transformative growth in art,
+    science, and the economy, and in this class we explore these issues in the context of the contemporary emergence of Artificial
+    Intelligence (AI). AI represents a novel source of innovation in economy and society, but also a powerful tool for understanding,
+    modeling, and steering innovation in new ways. The primary purpose of this course is to enable students to understand
+    innovation and growth in the age of AI, and with tools from AI alongside theoretical frameworks and methods from economics,
+    sociology, evolution, and complex systems necessary for study them. The course strives to provide students with a background
+    in dynamic analysis, data analysis, and modern AI requisite for studying innovation in the modern age. We will also consider
+    a number of compelling theoretical and empirical challenges, ranging from the paradox of institutionalizing innovation
+    to inequalities that emerging AI capacities could create or remove to advances it could unleash in science and technology
+    to the spread of misinformation to consequences of AI tools and "agents" in all domains of modern life to existential
+    risks associated with AI. We will cover theories and models at an abstract and advanced level.
+  crosslists:
+  - DATA 20620
+  - SOCI 20620
+  - ECMA 33050
+  - SOCI 30620
+  - MACS 23050
+  - MACS 33050
+  prereq:
+    all:
+    - any:
+      - MATH 13200
+      - MATH 15200
+      - MATH 16200
+      - MATH 15910
+      - MATH 20250
+      - MATH 20300
+    - any:
+      - ECON 11010
+      - STAT 22000
+      - STAT 23400
+      - STAT 24400
+      - SOCI 20004
+      - SOCI 20602
+      - SOCI 20596
+  prereq_text: '[MATH 13200 or MATH 15200 or MATH 16200 or MATH 15910 or MATH 20250 or MATH 20300] and [ECON 11010 or STAT
+    22000 or STAT 23400 or STAT 24400 or SOCI 20004 or SOCI 20602 or SOCI 20596]'
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 23050. Artificial Intelligence, Innovation, and Growth. 100 Units.
+- code: ECON 23200
+  title: Topics in Macroeconomics
+  units: 100
+  description: This course focuses on the use of dynamic general equilibrium models to study questions in macroeconomics.
+    Topics include long-run growth and dynamic fiscal policy (Ricardian equivalence, tax smoothing, capital taxation), labor
+    market search, industry investment, and asset pricing. On the technical side, we cover basic optimal control (Hamiltonians)
+    and dynamic programming (Bellman equations).
+  prereq:
+    all:
+    - any:
+      - ECON 20200
+      - ECON 20210
+    - any:
+      - MATH 20300
+      - MATH 20310
+      - MATH 20700
+  prereq_text: ECON 20200 (or ECON 20210) and MATH 20300 (or MATH 20310 or MATH 20700)
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 23200. Topics in Macroeconomics. 100 Units.
+- code: ECON 23410
+  title: Economic Growth
+  units: 100
+  description: The process of economic growth and the sources of differences in economic performance across nations are some
+    of the most interesting, important and challenging areas in modern social science. You cannot travel or read the news
+    without wondering why differences in standards of living among countries are so large. The primary purpose of this course
+    is to introduce undergraduate students to these major issues and to the theoretical tools necessary for studying them.
+    The course therefore strives to provide students with a solid background in dynamic economic analysis, as well as empirical
+    examples and data analysis. We will cover models at an abstract and advanced level. You must have the degree of mathematical
+    maturity associated with the concepts of functions, derivatives, integrals, Taylor series, optimization, ordinary differential
+    equations. Some basic knowledge on regression analysis is also required.
+  prereq:
+    all:
+    - any:
+      - ECON 20200
+      - ECON 20210
+    - any:
+      - ECON 21020
+      - ECON 21030
+  prereq_text: ECON 20200 (or ECON 20210) and ECON 21020 (or ECON 21030)
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 23410. Economic Growth. 100 Units.
+- code: ECON 23950
+  title: Economic Policy Analysis
+  units: 100
+  description: Building on the tools and methods that are developed in the core courses, this course analyzes fiscal and monetary
+    policy and other topical issues. We use both theoretical and empirical approaches to understand the real-world problems.
+  notes: This course does not apply toward the economics major elective requirement. Students may not receive credit for both
+    Econ 13000 and Econ 23950 toward the 42 degree credits.
+  prereq:
+    any:
+    - ECON 20200
+    - ECON 20210
+  prereq_text: ECON 20200/20210; ECON 21020 or 21030 strongly recommended.
+  terms_offered:
+  - AU
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 23950. Economic Policy Analysis. 100 Units.
+- code: ECON 24000
+  title: Labor Economics
+  units: 100
+  description: 'This course is an introduction to labor economics with an emphasis on applied microeconomic theory and empirical
+    analysis. Topics to be covered include: labor supply and demand, taxes and transfers, minimum wages, immigration, human
+    capital, creativity over the lifecycle and unemployment. For each topic we will describe the basic economic framework
+    used in the analysis, analyze associated cases of study and drawn conclusions about what we have learned. Most of the
+    examples will be taken from U.S. labor data and special attention will be given to randomized trials and experimental
+    methods to infer causality.'
+  prereq:
+    any:
+    - ECON 10000
+    - ECON 20000
+    - ECON 20010
+  prereq_text: ECON 10000/20000/20010
+  terms_offered:
+  - SU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 24000. Labor Economics. 100 Units.
+- code: ECON 24450
+  title: 'Inequality and the Social Safety Net: Theory, Empirics, and Policies'
+  units: 100
+  description: This course will introduce students to key economic and conceptual issues surrounding inequality and the social
+    safety net. We will study the theoretical underpinnings and empirical analysis of the social safety net, focusing on the
+    effects of social insurance and public assistance programs on individual and societal outcomes. After studying models
+    of the insurance-incentive tradeoff, we will apply these models and econometric strategies to the empirical analysis of
+    social safety net programs. We will study how social safety net programs interact with labor markets, specifically human
+    capital investment and work decisions, and how they affect long-term outcomes such as income, health, well-being, and
+    inequality. Students will learn how to analyze the tradeoffs involved in social safety net programs and will learn the
+    current state of evidence on these programs.
+  prereq:
+    all:
+    - any:
+      - ECON 20100
+      - ECON 20110
+    - any:
+      - ECON 21020
+      - ECON 21030
+  prereq_text: ECON 20100/20110 and ECON 21020/21030
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: 'ECON 24450. Inequality and the Social Safety Net: Theory, Empirics, and Policies. 100 Units.'
+- code: ECON 25000
+  title: Introduction To Finance
+  units: 100
+  description: This course develops the tools to quantify the risk and return of financial instruments. These are applied
+    to standard financial problems faced by firms and investors. Topics include arbitrage pricing, the capital asset pricing
+    model, and the theory of efficient markets and option pricing.
+  prereq:
+    all:
+    - any:
+      - ECON 20200
+      - ECON 20210
+    - any:
+      - ECON 21020
+      - ECON 21030
+  prereq_text: ECON 20200/20210 and ECON 21020/21030
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 25000. Introduction To Finance. 100 Units.
+- code: ECON 25100
+  title: Financial Economics; Speculative Markets
+  units: 100
+  description: This course focuses on the description, pricing, and hedging of basic derivative claims on financial assets.
+    We study the characteristics, uses, and payoffs of a variety of contracts where the underlying claims include commodities,
+    foreign currencies, bonds, stocks, or stock indices. We examine contracts such as options, swaps, and futures contracts.
+    We use a unified approach (the technique of portfolio replication) to study pricing of these claims. Students also gain
+    an understanding of strategies for hedging of the risks inherent in holding these derivative claims.
+  prereq:
+    all:
+    - any:
+      - ECON 20100
+      - ECON 20110
+    - any:
+      - STAT 23400
+      - STAT 24400
+      - STAT 24410
+      - ECON 21010
+  prereq_text: ECON 20100/20110 and STAT 23400/24400/24410/ECON 21010
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 25100. Financial Economics; Speculative Markets. 100 Units.
+- code: ECON 25120
+  title: Options and Volatility Products
+  units: 100
+  description: This class covers the pricing and hedging of different type of financial options, as well as of volatility
+    products. The class will develop the analytical tools necessary to understand the basic properties of prices and hedging
+    portfolios, and to write computer code for the valuation and hedging of a very large class of derivatives. The first part
+    of the course covers the valuation of European and American options on Stocks, Commodities, Futures. The second step is
+    to extends it to arbitrary derivative contracts. We will start with the binomial model, and then we will introduces its
+    continuous time limit, as in Black-Scholes. We will proceed to study the valuation of an arbitrary general derivative
+    where the underlying follows a continuous time process. We will further extend it to the case where the derivative depends
+    on several stochastic process, which is required for some cases such as interest rate products, exotic options, and most
+    importantly stochastic volatility. The last part of the class develops the theory of volatility products, with emphasis
+    on variance and volatility swaps, the role of VIX, and derivatives written on VIX over them.
+  notes: While students don’t need to take any other finance class as prerequisite, Introduction to Finance, and especially
+    Speculative Markets are very helpful as background. Students are not required to take advanced calculus or partial differential
+    equations, but any knowledge in those areas will help them to take the material beyond the parts covered in class. Finally,
+    I will start with basic codes in excel, and move to the codes in Matlab, but only a minimum of familiarity with writing
+    computer codes is necessary.
+  prereq:
+    any:
+    - ECON 10000
+    - ECON 20000
+    - ECON 20010
+  prereq_text: ECON 10000/20000/20010.
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 25120. Options and Volatility Products. 100 Units.
+- code: ECON 25520
+  title: Development Economics and Data Analysis
+  units: 100
+  description: 'Why do some countries grow faster than others? Why do farmers not adopt new technologies that generate higher
+    yields? What is the most effective way to improve health, education and women''s empowerment in middle and low income
+    countries? We will examine these questions by applying the tools of economics to the best available data. In addition
+    to mastering the economic literature on development economics, students will learn applied econometric techniques and
+    how to apply them in practice. They will learn how to critically evaluate data analysis and spot potential biases: is
+    the outcome variable likely to be subject to social desirability bias? is there potential selection bias or attrition
+    bias? What techniques are best adapted to addressing these potential biases in the data? In the final part of the course
+    we will cover the role of the International Financial Institutions (the IMF and World Bank) in international development.
+    The course is designed for undergraduates with a strong interest in economics and data and previous experience using statistical
+    software (such as R or Stata).'
+  prereq:
+    all:
+    - any:
+      - ECON 20100
+      - ECON 20110
+    - any:
+      - ECON 21020
+      - ECON 21030
+  prereq_text: ECON 20100/20110 and ECON 21020/21030
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 25520. Development Economics and Data Analysis. 100 Units.
+- code: ECON 25530
+  title: Behavioral Development Economics (Undergraduate)
+  units: 100
+  description: This course will focus on the intersection of two rapidly growing and recently Nobel Prize-winning fields in
+    economics - development, and behavioral economics. Behavioral development economics brings insights and tools from psychology
+    and behavioral economics to the study of developing economies and poverty more generally. The class is aimed at students
+    interested in either (or both) of the fields. A decent part of lectures will be focused on introducing and describing
+    tools of behavioral economics, before moving to applications in low-and middle-income countries.
+  prereq:
+    all:
+    - any:
+      - ECON 20100
+      - ECON 20110
+    - any:
+      - ECON 21020
+      - ECON 21030
+  prereq_text: Econ 20100/20110 and Econ 21020/21030
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 25530. Behavioral Development Economics (Undergraduate)
+- code: ECON 25540
+  title: Poverty and Public Policy
+  units: 100
+  description: This course covers the extent and nature of poverty, mainly in the United States and other rich countries.
+    We begin with the measurement of poverty, deprivation and homelessness. We then discuss causes of these problems, rationales
+    for government interventions, and the effectiveness of various public policies. The course will focus on the empirical
+    evidence on each topic, but begin with the theoretical foundation in each area.
+  crosslists:
+  - PBPL 23215
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 25540. Poverty and Public Policy. 100 Units.
+- code: ECON 26010
+  title: Public Finance
+  units: 100
+  description: This course addresses the measurement, explanation, and consequences of government activity including tax systems,
+    expenditure programs, and regulatory arrangements. Topics include cross-country comparisons of government behavior, market
+    analyses of public policy, the incidence of government activity, and effects of economic activity on politics and public
+    policy.
+  notes: ECON 26010 or 26020 may be used as an economics elective, but only one may be used toward degree requirements.
+  prereq:
+    all:
+    - any:
+      - ECON 20200
+      - ECON 20210
+    - any:
+      - ECON 21020
+      - ECON 21030
+  prereq_text: ECON 20200/20210 and ECON 21020 (or ECON 21030)
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 26010. Public Finance. 100 Units.
+- code: ECON 26015
+  title: Cost-Benefit Analysis
+  units: 100
+  description: 'The learning objectives of the class include: (1) understanding the role and importance of each of the key
+    steps in conducting a CBA, (2) understand the microeconomic foundations underlying the core elements of a CBA including
+    identifying, measuring, and monetizing impacts and costs, and assessing whether the social gain of a policy is positive,
+    (3) understand the most important conceptual and practical problems that arise in CBA. The class offers a comprehensive
+    treatment of the cost benefit analysis methodology and how its use can increase the effectiveness of public policy and
+    make society better off. The class includes applications drawn from many areas, including health, education, poverty and
+    the environment. Highly recommended prior coursework: PBPL 20000 Economics for Public Policy or ECON 20000 The Elements
+    of Economic Analysis I.'
+  crosslists:
+  - PBPL 21300
+  prereq_text: 'Recommended Coursework: PBPL 20000 Economics for Public Policy or ECON 20000 The Elements of Economic Analysis
+    I'
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 26015. Cost-Benefit Analysis. 100 Units.
+  needs_review: true
+- code: ECON 26030
+  title: The Economics of Socialism
+  units: 100
+  description: The course examines the economic theories of socialism ranging from Karl Marx's to market socialism, as well
+    as theories of market power, collective action, and price regulation. These theories are applied to the measurement of
+    socialism, income distribution, surplus value, and the degree of exploitation of labor. These metrics are used to compare
+    various mixed economies including the Nordic model and various sectors in the United States. We consider how the economics
+    of socialism might evolve as the health sector grows in the near future and artificial intelligence transforms the workplace
+    in the long run.
+  prereq:
+    any:
+    - ECON 10200
+    - ECON 20000
+    - ECON 20010
+  prereq_text: Econ 10200/20000/20010
+  terms_offered:
+  - AU
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 26030. The Economics of Socialism. 100 Units.
+- code: ECON 26040
+  title: Human Capital and the Economy
+  units: 100
+  description: This course introduces the concept of human capital, its accumulation process, its role in family decisions,
+    and its impact on the economy. Several models are presented and discussed, covering a wide range of topics, including
+    parental altruism, education, bequests, health, fertility, support in old age, income inequality, intergenerational transmission
+    of wealth, specialization, division of labor, and economic growth. The theory is complemented with historical evidence
+    from different countries and periods.
+  prereq:
+    any:
+    - ECON 20200
+    - ECON 20210
+  prereq_text: Econ 20200/20210
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 26040. Human Capital and the Economy. 100 Units.
+- code: ECON 26610
+  title: The Economics of Cities and Regions
+  units: 100
+  description: This course studies business and individual location decisions and how they determine the main economic forces
+    that lead to the existence and performance of cities and regional agglomerations. The course starts by developing a simple
+    theory of cities and its implications for city size, firm productivity, and housing prices. It then studies evidence of
+    the impact of cities on firm and worker productivity, urban amenities, and congestion. We will discuss the problems in
+    measuring these forces, the methodologies to do so, as well as the implications of this measurement for businesses, individuals,
+    and urban policy. We will also study the internal structure of cities, and how to evaluate the effect of new infrastructure
+    or policy on land and housing values as well as on overall welfare. Finally, the course will analyze the role cities and
+    regions play in aggregate economic development.
+  prereq:
+    all:
+    - any:
+      - ECON 20100
+      - ECON 20110
+    - any:
+      - ECON 21020
+      - ECON 21030
+  prereq_text: ECON 20100/20110 and ECON 21020/21030
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 26610. The Economics of Cities and Regions. 100 Units.
+- code: ECON 26700
+  title: Economics of Education
+  units: 100
+  description: This course explores economic models of the demand for and supply of different forms of schooling. The course
+    examines the markets for primary, secondary, and post-secondary schooling. The course examines numerous public policy
+    questions, such as the role of government in funding or subsidizing education, the design of public accountability systems,
+    the design of systems that deliver publicly funded (and possibly provided) education, and the relationship between education
+    markets and housing markets.
+  crosslists:
+  - PBPL 26705
+  - EDSO 26700
+  prereq:
+    any:
+    - ECON 21020
+    - ECON 21030
+  prereq_text: ECON 21020 or ECON 21030
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 26700. Economics of Education. 100 Units.
+- code: ECON 26740
+  title: 'Climate Crossroads: Policy, Diplomacy, and the Global Future'
+  units: 100
+  description: 'The world''s atmosphere and oceans are rapidly warming-the result of human economic progress fueled by fossil
+    fuels and other greenhouse gas emissions. A 2018 analysis by the Intergovernmental Panel on Climate Change concluded that
+    stabilizing the atmosphere requires reaching "net zero" emissions, where as much greenhouse gas is removed from the atmosphere
+    as is emitted. Achieving this demands a transformation of the global economy on a scale without historic precedent. This
+    course begins by describing the nature and complexity of the climate policy challenge. It then explores the policy levers
+    available to governments at both national and international levels to address it. The course considers perspectives from
+    wealthy, advanced economies-historically the largest source of emissions-as well as emerging economies with significant
+    development needs and rising emissions. It reviews the international framework for cooperation and negotiation on climate
+    change through the United Nations Framework Convention on Climate Change. Finally, students will examine the challenges
+    democratic societies face in maintaining public consensus on climate action, focusing on shifting U.S. policy frameworks.
+    The course will be taught by three experienced practitioners: the White House lead on climate policy in the Obama and
+    Biden Administrations, the former Foreign Minister of Pakistan, and the U.S.''s longtime lead negotiator at the UNFCCC
+    and other international treaty negotiations.'
+  notes: This course can count towards the Politics, Economics, and Society specialization in for the Climate and Sustainable
+    Growth major.
+  crosslists:
+  - CEGU 21025
+  - PBPL 21025
+  - GLST 21025
+  - CCSG 21025
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: 'ECON 26740. Climate Crossroads: Policy, Diplomacy, and the Global Future. 100 Units.'
+- code: ECON 26920
+  title: Behavioral Economics and Policy
+  units: 100
+  description: The standard theory of rational choice exhibits explanatory power in a vast range of circumstances, including
+    such disparate decision making environments as whether to commit a crime, have children, or seek to emigrate. Nonetheless,
+    shortfalls from full rationality seem not to be uncommon, and are themselves, to some extent, systematic. Behavioral economics
+    documents and tries to account for these departures from full rationality. This course looks at areas in which some modification
+    of the traditional rational choice apparatus might most be warranted; these include decisions that unfold over time, involve
+    low probability events, or implicate willpower. To what extent should public policy respond to shortfalls from rationality
+    or concern itself with promoting happiness?
+  crosslists:
+  - PBPL 28805
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 26920. Behavioral Economics and Policy. 100 Units.
+- code: ECON 27000
+  title: International Economics
+  units: 100
+  description: This course covers international economics with an emphasis on international trade. The basic theories of international
+    trade are introduced and used to analyze welfare and distributional effects of international trade, government policies,
+    and technology diffusion. In addition, this course also discusses the main empirical patterns of international trade and
+    international investment.
+  crosslists:
+  - PBPL 27000
+  prereq:
+    any:
+    - ECON 20100
+    - ECON 20110
+  prereq_text: ECON 20100/20110
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 27000. International Economics. 100 Units.
+- code: ECON 27300
+  title: Regulation of Vice
+  units: 100
+  description: This course discusses government policy regarding traditional vices (i.e., drinking, smoking, gambling, illicit
+    sex, recreational drug use). Among policies considered are prohibition, taxation, treatment, decriminalization, and legalization.
+    The intellectual framework employed to evaluate various policies is primarily economic, though other disciplines are drawn
+    upon. This course is offered in alternate years.
+  crosslists:
+  - PBPL 27300
+  prereq:
+    any:
+    - ECON 20000
+    - PBPL 20000
+  prereq_text: ECON 20000 or PBPL 20000
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 27300. Regulation of Vice. 100 Units.
+- code: ECON 27700
+  title: Health Economics and Public Policy
+  units: 100
+  description: This course analyzes the economics of health and medical care in the United States with particular attention
+    to the role of government. The first part of the course examines the demand for health and medical and the structure and
+    the consequences of public and private insurance. The second part of the course examines the supply of medical care, including
+    professional training, specialization and compensation, hospital competition, and finance and the determinants and consequences
+    of technological change in medicine. The course concludes with an examination of recent proposals and initiatives for
+    health care reform. Must have completed PPHA 32300 Principles of Microeconomics and Public Policy I or equivalent to enroll.
+  crosslists:
+  - CCTS 38300
+  - PBPL 28300
+  - PPHA 38300
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 27700. Health Economics and Public Policy. 100 Units.
+- code: ECON 28000
+  title: Industrial Organization
+  units: 100
+  description: This course extends the analysis from ECON 20100, with a focus on understanding the way firms make decisions
+    and the effects of those decisions on market outcomes and welfare. The course examines the structure and behavior of firms
+    within industries. Topics include oligopolistic behavior, the problems of regulating highly concentrated industries, and
+    the implementation of U.S. antitrust policy.
+  prereq:
+    any:
+    - ECON 20100
+    - ECON 20110
+  prereq_text: ECON 20100/20110
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 28000. Industrial Organization. 100 Units.
+- code: ECON 28010
+  title: Applied Empirical Industrial Organization
+  units: 100
+  description: In this course, students will learn how to apply techniques and models developed in industrial organization
+    and law and economics to important questions that arise in litigation and government regulation. We will be guided and
+    informed by pure theory underlying industrial organization and implement it in a world of partial information, incomplete
+    data, and even contradictory data, among other complexities. Students will learn how to develop inferences by applying
+    the models to real world cases and data - ie, extracting the most information possible from partial, imperfect data, frequently
+    with missing values or poorly-measured data points. These fact patterns will not always result in an incontrovertible
+    answer. Thus, students will be expected to identify and express the "best argument for" and "best argument against" the
+    questions posed to them. This means that students will be expected to (i) use theory as a guideline to assess the relevant
+    facts, circumstances, and data, (ii) reach a view, (iii) succinctly express that view in writing and acknowledge and address
+    contrary theory and empirical results. Students will also see actual expert reports and/or white papers that have been
+    prepared in actual disputes and investigations. Part of the grade will be based on an "expert report" written by the students
+    in small teams.
+  notes: Standard Track Economics majors should register for Econ 28010
+  prereq:
+    all:
+    - any:
+      - ECON 20100
+      - ECON 20110
+    - any:
+      - ECON 21020
+      - ECON 21030
+  prereq_text: Econ 20100/20110 and Econ 21020/21030
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 28010. Applied Empirical Industrial Organization. 100 Units.
+- code: ECON 28030
+  title: Markets and Regulation
+  units: 100
+  description: 'This is an applied industrial organization course that examines economically regulated market structures.
+    We will analyze: a) types of market structures that particularly generate economic regulation; b) common methods used
+    by regulatory agencies given a particular market structure; and c) models of the supply of and the demand for regulation
+    of markets, with emphasis on maximizing behavior on the part of both suppliers (regulators) and demanders (firms, consumers,
+    political representatives). We will focus on non-financial markets, as financial markets are well-covered in other courses.'
+  crosslists:
+  - PBPL 28670
+  prereq_text: 'PQ: PBPL 20000 or equivalent'
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 28030. Markets and Regulation. 100 Units.
+  needs_review: true
+- code: ECON 28040
+  title: Introduction to Securities Regulation
+  units: 100
+  description: This course will introduce students to the legal, economic, and business principles of capital markets in the
+    United States. Students will learn the use of initial public offerings and private placements to raise capital, the trading
+    of securities on public stock exchanges and in private transactions, and the regulation of these activities by the Securities
+    and Exchange Commission. Students will study stocks, bonds, and recent financial innovations, as well as the public and
+    private funds that invest in these instruments.
+  prereq:
+    any:
+    - ECON 10200
+    - ECON 20000
+    - ECON 20010
+  prereq_text: ECON 10200 or ECON 20000/20010
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 28040. Introduction to Securities Regulation. 100 Units.
+- code: ECON 28060
+  title: 'The Economics of Organizations: An Experimental Perspective'
+  units: 100
+  description: This course offers an introduction to the experimental methodology while at the same time providing the students
+    with up-to-date insights and findings on how to run an organization and how to manage a workforce. Students will learn
+    the basics of the experimental methodology, learn about the most ground-breaking findings in experimental economics related
+    to the functioning of firms, and know the relevant papers and findings in organizational and personnel economics with
+    a particular emphasis on the question of how to set incentives for workers.
+  prereq:
+    all:
+    - any:
+      - ECON 10000
+      - ECON 20000
+      - ECON 20010
+    - any:
+      - STAT 22000
+      - STAT 23400
+      - STAT 24400
+      - STAT 24410
+      - ECON 21010
+  prereq_text: ECON 10000/20000/20010 and STAT 22000/23400/24400/24410/ECON 21010
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: 'ECON 28060. The Economics of Organizations: An Experimental Perspective. 100 Units.'
+- code: ECON 28620
+  title: Crony Capitalism
+  units: 100
+  description: The economic system prevailing in most of the world today differs greatly from the idealist version of free
+    markets generally taught in economic classes. This course analyzes the role played by corporate governance, wealth inequality,
+    regulation, the media, and the political process in general in producing these deviations. It will explain why crony capitalism
+    prevails in most of the world and why it is becoming more entrenched also in the United States of America. The course,
+    which requires only basic knowledge of economics, welcomes undergraduates. This is a cross-listed course offered under
+    BUSN 35225 for Booth students and ECON 28620 for non-Booth students. Booth students will bid on BUSN 35225. Non-Booth
+    student can register under ECON 28620 or, if space is available, enroll via the non-Booth registration process for BUSN
+    35225. ECON 28620 is not eligible for pass/fail.
+  crosslists:
+  - BUSN 35225
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 28620. Crony Capitalism. 100 Units.
+- code: ECON 29200
+  title: Issues and Methods in Microeconomics
+  units: 100
+  description: Microeconomics is the study of how agents make optimal choices when facing constraints. The course will start
+    with a quick refresher in the "Economic Approach" as the basic tool for analysis in economics. We will continue with a
+    model of causal inference, and link it with concepts students have learned in the econometrics course. Then, we introduce
+    the use of experiments as an alternative methodology for the researchers to gather their own data. Finally, we cover some
+    major topics in behavioral economics.
+  notes: Study Abroad
+  prereq:
+    any:
+    - ECON 20000
+    - ECON 20010
+  prereq_text: Econ 20000/20010
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 29200. Issues and Methods in Microeconomics. 100 Units.
+- code: ECON 29300
+  title: Issues and Methods in Macroeconomics
+  units: 100
+  description: Using tools and methods in economics, we will study issues in macroeconomics and international trade and finance.
+    The topics we cover include both contemporary and classical issues such as tax incidence and distortions, optimal taxation,
+    inflation, monetary policy, patterns and benefits of trade, and exchange rate determination. The objective of the course
+    is to train students with analytical tools in macroeconomics so that they can understand, analyze, and evaluate various
+    policies and policy proposals. To make the subject matters relevant and practical, students are strongly encouraged to
+    read the Wall Street Journal and the Economist regularly to keep up with current events and controversies.
+  notes: Study Abroad
+  prereq:
+    any:
+    - ECON 20200
+    - ECON 20210
+  prereq_text: Econ 20200/20210
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 29300. Issues and Methods in Macroeconomics. 100 Units.
+- code: ECON 29700
+  title: Undergraduate Reading and Research
+  units: 100
+  description: 'Students are required to submit the College Reading and Research Course Form. Prerequisite(s): Consent of
+    directors of the undergraduate program'
+  prereq_text: Consent of directors of the undergraduate program
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 29700. Undergraduate Reading and Research. 100 Units.
+  needs_review: true
+- code: ECON 29800
+  title: Undergraduate Honors Workshop
+  units: 100
+  description: For details, see the preceding Honors section.
+  prereq_text: Faculty sponsorship and consent of honors workshop supervisors
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECON 29800. Undergraduate Honors Workshop. 100 Units.
+  needs_review: true
+- code: ECON 35550
+  title: The Practicalities of Running Randomized Control Trials
+  units: 100
+  notes: Cross-listed with ECMA 35550 (its catalog block lists ECON 35550 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from ECMA 35550.
+  crosslists:
+  - ECMA 35550
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: 'Equivalent Course(s): ECON 35550, PPHA 35561'

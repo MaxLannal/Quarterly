@@ -1,0 +1,63 @@
+# Golden plan (prompt 05). Course facts: data/seed/2026-27; rules: data/seed/REVIEW.md.
+id: econ-ba-fail-06
+description: Three of four electives from the pre-approved outside list (at least two must be ECON courses above 20210)
+program: econ-ba
+expect: fail
+expected_codes:
+- V07
+checks:
+- V01
+- V02
+- V03
+- V07
+- V08
+- V12
+plan:
+  catalog_year: 2026-27
+  entry_term: 2026-AU
+  programs:
+  - program_id: econ-ba
+  placements:
+  - MATH 15100
+  - MATH 15910
+  items:
+  - course: MATH 15100
+    term: 2026-AU
+  - course: MATH 15200
+    term: 2027-WI
+  - course: MATH 15250
+    term: 2027-SP
+  - course: ECON 20000
+    term: 2027-AU
+  - course: MATH 15300
+    term: 2027-AU
+  - course: MATH 20300
+    term: 2027-AU
+  - course: ECON 20100
+    term: 2028-WI
+  - course: MATH 19620
+    term: 2028-WI
+  - course: MATH 20400
+    term: 2028-WI
+  - course: ECON 20200
+    term: 2028-SP
+  - course: STAT 23400
+    term: 2028-SP
+  - course: MATH 20250
+    term: 2028-SP
+  - course: ECON 21020
+    term: 2028-AU
+  - course: ECON 23950
+    term: 2028-AU
+  - course: STAT 24400
+    term: 2028-AU
+  - course: MATH 20500
+    term: 2028-AU
+  - course: ECON 21200
+    term: 2029-WI
+  - course: STAT 25300
+    term: 2029-WI
+  - course: MATH 27300
+    term: 2029-SP
+  - course: CMSC 14100
+    term: 2029-SP

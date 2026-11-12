@@ -1,0 +1,13 @@
+# Generated from the 2026-2027 UChicago College Catalog (fetched 2026-11-12) by hand-checked scripts;
+# every source.quote is copied verbatim (whitespace collapsed) from source.url. See data/seed/REVIEW.md.
+courses:
+- code: MPHY 39600
+  title: Image Processing/Computer Vision
+  units: 100
+  notes: Cross-listed with CMSC 35600 (its catalog block lists MPHY 39600 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from CMSC 35600.
+  crosslists:
+  - CMSC 35600
+  source:
+    url: http://graduateannouncements.uchicago.edu/graduate/departmentofcomputerscience/
+    quote: 'Equivalent Course(s): MPHY 39600'

@@ -1,0 +1,107 @@
+# Generated from the 2026-2027 UChicago College Catalog (fetched 2026-11-12) by hand-checked scripts;
+# every source.quote is copied verbatim (whitespace collapsed) from source.url. See data/seed/REVIEW.md.
+courses:
+- code: ARTV 10100
+  title: 'Visual Language: On Images'
+  units: 100
+  description: Through studio work and critical discussions on 2D form, this course is designed to reveal the conventions
+    of images and image-making. Basic formal elements and principles of art are presented, but they are also put into practice
+    to reveal perennial issues in a visual field. Form is studied as a means to communicate content. Topics as varied as,
+    but not limited to, illusion, analogy, metaphor, time and memory, nature and culture, abstraction, the role of the author,
+    and universal systems can be illuminated through these primary investigations. Visits to museums and other fieldwork required,
+    as is participation in studio exercises and group critiques.
+  notes: ARTV 10100, 10200, and 10300 may be taken in sequence or individually. This course meets the general education requirement
+    in the arts. Previous experience in media-based studio courses not accepted as a substitute for this course. During the
+    Academic Year (autumn, winter, spring) students must attend the first two class sessions to confirm enrollment and wait
+    list requests are due several weeks before the quarter begins. Sign up for the Academic Year wait list at https://dova.uchicago.edu/waitlist.
+  core_tags:
+  - arts
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/visualarts/
+    quote: 'ARTV 10100. Visual Language: On Images. 100 Units.'
+- code: ARTV 10200
+  title: 'Visual Language: On Objects'
+  units: 100
+  description: Through studio work and critical discussions on 3D form, this course is intended to reveal the conventions
+    of sculpture while investigating its modes of production. Basic formal elements and principles of art are presented, but
+    also put into practice to reveal perennial issues in a visual field. Form is studied as a means to communicate content.
+    Topics as varied as, but not limited to, platonic form, analogy, metaphor, verisimilitude, abstraction, nature and culture,
+    and the body politic can be illuminated through these primary investigations. Visits to museums and other fieldwork required,
+    as is participation in studio exercises and group critiques.
+  notes: ARTV 10100, 10200, and 10300 may be taken in sequence or individually. This course meets the general education requirement
+    in the arts. Previous experience in media-based studio courses not accepted as a substitute for this course. During the
+    Academic Year (autumn, winter, spring) students must attend the first two class sessions to confirm enrollment and wait
+    list requests are due several weeks before the quarter begins. Sign up for the Academic Year wait list at https://dova.uchicago.edu/waitlist.
+  core_tags:
+  - arts
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/visualarts/
+    quote: 'ARTV 10200. Visual Language: On Objects. 100 Units.'
+- code: ARTV 10300
+  title: 'Visual Language: On Time and Space'
+  units: 100
+  description: The course is primarily concerned with how patterns of techniques and formal logics interact and shape our
+    experience of space and time. We will engage in creative and technical studies, individual projects, readings and screenings
+    that focus on the organization and technical realization of content as well as its interpretation. The goal is for students
+    to understand how the experience of space and time can be shaped. Faculty teaching this course will emphasize different
+    media to engage these issues including animation, computation, video/film-ography, and performance.
+  core_tags:
+  - arts
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/visualarts/
+    quote: 'ARTV 10300. Visual Language: On Time and Space. 100 Units.'
+- code: ARTV 16210
+  title: Media Art and Design Practice
+  units: 100
+  description: 'This studio-based course explores the practice, conventions, and boundaries of contemporary media art and
+    design. This can encompass areas as diverse as interactive installation, app design, and the Internet meme. Through projects
+    and critical discussion, students engage with the problems and opportunities of digitally driven content creation. Fundamental
+    elements of digital production are introduced, including basic properties of image, video, and the global network. Further
+    topics as varied as--though not limited to--web production, digital fabrication, interfaces, the glitch, and gaming may
+    be considered. Sections will vary based on the instructor''s fields of expertise. This course meets the general education
+    requirement in the arts. This course may not double count for general education requirements and the Media Arts and Design
+    minor. However, it is a great way for students to explore a potential interest in these areas. During the academic year,
+    students must attend the first course session to confirm enrollment. Students aiming to get into the course after registration
+    or during drop/add must use the waitlist to request to enroll. WAITLIST: https://forms.gle/WjLWCguW42GpcoRBA'
+  crosslists:
+  - MADD 26210
+  prereq_text: 'MADD 26210 Media Art and Design Practice is affiliated with HUMA 16000-16100-16200 Media Aesthetics: Image,
+    Text, Sound I-II-III. Students satisfying the general education requirement in the humanities will have priority in enrollment
+    for Media Arts and Design Practice.'
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/visualarts/
+    quote: ARTV 16210. Media Art and Design Practice. 100 Units.
+  needs_review: true
+- code: ARTV 20006
+  title: Contemporary Art
+  units: 100
+  description: This course will consider the practice and theory of visual art in the late twentieth and early twenty-first
+    centuries. Among the subjects that will drive our narrative will be the rise of postmodernism, pop art, the aesthetics
+    of the social movements of the 1960s, institutional critique, the relationship between reproductive media and Feminism,
+    the concept of spectacle, conceptual art, the appearance of a global art industry after 1989, the connections between
+    art school and art-making, "relational aesthetics," the fate of art in the age of the Internet, the art of the post-studio
+    moment, and what happens to art when it engages with *everything*.
+  crosslists:
+  - MADD 10006
+  - ARTH 15800
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/visualarts/
+    quote: ARTV 20006. Contemporary Art. 100 Units.

@@ -1,0 +1,77 @@
+# Golden plan (prompt 05). Course facts: data/seed/2026-27; rules: data/seed/REVIEW.md.
+id: cmsc-bxms-3-pass-05
+description: Option 3 alongside the Economics BA
+program: cmsc-bxms-3
+expect: pass
+checks:
+- V01
+- V02
+- V03
+- V07
+- V08
+- V12
+plan:
+  catalog_year: 2026-27
+  entry_term: 2026-AU
+  programs:
+  - program_id: econ-ba
+  - program_id: cmsc-bxms-3
+  placements:
+  - MATH 15100
+  items:
+  - course: MATH 15100
+    term: 2026-AU
+  - course: CMSC 14100
+    term: 2026-AU
+  - course: MATH 15200
+    term: 2027-WI
+  - course: CMSC 14200
+    term: 2027-WI
+  - course: MATH 15250
+    term: 2027-SP
+  - course: CMSC 14300
+    term: 2027-SP
+  - course: ECON 20000
+    term: 2027-AU
+  - course: MATH 15300
+    term: 2027-AU
+  - course: CMSC 14400
+    term: 2027-AU
+  - course: ECON 20100
+    term: 2028-WI
+  - course: MATH 19620
+    term: 2028-WI
+  - course: ECON 20200
+    term: 2028-SP
+  - course: STAT 23400
+    term: 2028-SP
+  - course: ECON 21020
+    term: 2028-AU
+  - course: ECON 23950
+    term: 2028-AU
+  - course: ECON 21200
+    term: 2029-WI
+  - course: ECON 25000
+    term: 2029-WI
+  - course: ECON 26010
+    term: 2029-SP
+  - course: ECON 27000
+    term: 2029-SP
+  - course: MPCS 50103
+    term: 2029-AU
+  - course: MPCS 55001
+    term: 2029-AU
+  - course: CMSC 23000
+    term: 2029-AU
+  - course: CMSC 23320
+    term: 2030-WI
+  - course: CMSC 33100
+    term: 2030-WI
+  - course: CMSC 33300
+    term: 2030-WI
+  - course: CMSC 33550
+    term: 2030-SP
+  - course: CMSC 33250
+    term: 2030-SP
+  - course: CMSC 35200
+    term: 2030-SP

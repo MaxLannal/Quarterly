@@ -1,0 +1,26 @@
+# Golden plan (prompt 05). Course facts: data/seed/2026-27; rules: data/seed/REVIEW.md.
+id: civ-abroad-cordoba-fail-03
+description: One course taken pass/fail
+program: civ-abroad-cordoba
+expect: fail
+expected_codes:
+- V12
+checks:
+- V01
+- V02
+- V03
+- V07
+- V12
+plan:
+  catalog_year: 2026-27
+  entry_term: 2026-AU
+  programs:
+  - program_id: civ-abroad-cordoba
+  items:
+  - course: SOSC 19082
+    term: 2028-SP
+    grading: pass_fail
+  - course: SOSC 19083
+    term: 2028-SP
+  - course: SOSC 19084
+    term: 2028-SP

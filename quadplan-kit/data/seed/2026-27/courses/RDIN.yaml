@@ -1,0 +1,119 @@
+# Generated from the 2026-2027 UChicago College Catalog (fetched 2026-11-12) by hand-checked scripts;
+# every source.quote is copied verbatim (whitespace collapsed) from source.url. See data/seed/REVIEW.md.
+courses:
+- code: RDIN 16100
+  title: Introduction to Latin American Civilization I
+  units: 100
+  notes: Cross-listed with LACS 16100 (its catalog block lists RDIN 16100 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from LACS 16100.
+  crosslists:
+  - LACS 16100
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): RDIN 16100, HIST 16101, SOSC 26100, ANTH 23101'
+- code: RDIN 16200
+  title: Introduction to Latin American Civilization II
+  units: 100
+  notes: Cross-listed with LACS 16200 (its catalog block lists RDIN 16200 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from LACS 16200.
+  crosslists:
+  - LACS 16200
+  terms_offered:
+  - AU
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): HIST 16102, SOSC 26200, RDIN 16200, ANTH 23102'
+- code: RDIN 16300
+  title: Introduction to Latin American Civilization III
+  units: 100
+  notes: Cross-listed with LACS 16300 (its catalog block lists RDIN 16300 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from LACS 16300.
+  crosslists:
+  - LACS 16300
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): ANTH 23103, SOSC 26300, HIST 16103, RDIN 16300'
+- code: RDIN 17904
+  title: 'Chinatown, the Japanese Garden, the Period Room: Diasporic Architecture from East Asia'
+  units: 100
+  notes: Cross-listed with ARTH 17904 (its catalog block lists RDIN 17904 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from ARTH 17904.
+  crosslists:
+  - ARTH 17904
+  prereq_text: 'Fulfills the following categories in the ARTH major and minor: Asian, modern (post-1800), European and American,
+    modern (post-1800). This course is an Art in Context seminar'
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/arthistory/
+    quote: 'Equivalent Course(s): CHST 17904, ARCH 17904, RDIN 17904'
+  needs_review: true
+- code: RDIN 24001
+  title: 'Colonizations I: Colonialism, Enslavement and Resistance in the Atlantic World'
+  units: 100
+  description: This quarter examines the making of the Atlantic world in the aftermath of European colonial expansion. Focusing
+    on the Caribbean, North and South America, and western Africa, we cover the dynamics of invasion, representation of otherness,
+    enslavement, colonial economies and societies, as well as resistance and revolution.
+  notes: This sequence meets the general education requirement in civilization studies. This course is offered every year.
+    These courses can be taken in any sequence.
+  core_tags:
+  - civilization
+  crosslists:
+  - LACS 24001
+  - SOSC 24001
+  - ANTH 24001
+  - HIST 18301
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'RDIN 24001. Colonizations I: Colonialism, Enslavement and Resistance in the Atlantic World. 100 Units.'
+- code: RDIN 24002
+  title: 'Colonizations II: Imperial Expansion, Anti-Imperialism, and Nation in Asia'
+  units: 100
+  description: This quarter addresses the histories of modern European and Japanese colonialism in Asia and their interconnection
+    within the Pacific and Indian Ocean worlds. Themes examined include the logics and dynamics of imperial expansion and
+    rule; Orientalist discourses; uprisings and anti-imperial movements; the rise of nationalisms; and paths to decolonization
+    in the region.
+  core_tags:
+  - civilization
+  crosslists:
+  - SALC 24002
+  - SOSC 24002
+  - ANTH 24002
+  - HIST 18302
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'RDIN 24002. Colonizations II: Imperial Expansion, Anti-Imperialism, and Nation in Asia. 100 Units.'
+- code: RDIN 24003
+  title: 'Colonizations III: Decolonization, Revolution, Freedom'
+  units: 100
+  description: The third quarter of the Colonizations sequence considers the processes and consequences of decolonization
+    both in newly independent nations and former colonial powers. Through an engagement with postcolonial studies, we explore
+    the problematics of freedom and sovereignty; anti-colonial movements, thinking and struggles; nation-making and nationalism;
+    and the enduring legacies of colonialism.
+  core_tags:
+  - civilization
+  crosslists:
+  - SALC 20702
+  - SOSC 24003
+  - ANTH 24003
+  - HIST 18303
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'RDIN 24003. Colonizations III: Decolonization, Revolution, Freedom. 100 Units.'

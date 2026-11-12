@@ -1,0 +1,45 @@
+# Generated from the 2026-2027 UChicago College Catalog (fetched 2026-11-12) by hand-checked scripts;
+# every source.quote is copied verbatim (whitespace collapsed) from source.url. See data/seed/REVIEW.md.
+courses:
+- code: NSCI 21510
+  title: Fundamentals of Synapses
+  units: 100
+  notes: Cross-listed with BIOS 27753 (its catalog block lists NSCI 21510 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from BIOS 27753.
+  crosslists:
+  - BIOS 27753
+  prereq_text: Second-year standing or greater (or by consent) and acceptance into the Spring Quarter Program at MBL.
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: 'Equivalent Course(s): NSCI 21510'
+  needs_review: true
+- code: NSCI 21515
+  title: Introduction to Imaging for Biological Research
+  units: 100
+  notes: Cross-listed with BIOS 27724 (its catalog block lists NSCI 21515 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from BIOS 27724.
+  crosslists:
+  - BIOS 27724
+  prereq_text: Second-year standing or greater (or by consent) and acceptance into the Spring Quarter Program at MBL.
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: 'Equivalent Course(s): NSCI 21515'
+  needs_review: true
+- code: NSCI 21530
+  title: 'Dynamic Camouflage: Behavior, Visual Perception and Neural Skin Patterning in Cephalopods'
+  units: 100
+  notes: Cross-listed with BIOS 27752 (its catalog block lists NSCI 21530 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from BIOS 27752.
+  crosslists:
+  - BIOS 27752
+  prereq_text: Second-year standing or greater (or by consent) and acceptance into the Spring Quarter Program at MBL.
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: 'Equivalent Course(s): NSCI 21530'
+  needs_review: true

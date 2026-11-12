@@ -1,0 +1,106 @@
+# Generated from the 2026-2027 UChicago College Catalog (fetched 2026-11-12) by hand-checked scripts;
+# every source.quote is copied verbatim (whitespace collapsed) from source.url. See data/seed/REVIEW.md.
+courses:
+- code: PPHA 30581
+  title: Data Science Clinic I
+  units: 100
+  notes: Cross-listed with DATA 27100 (its catalog block lists PPHA 30581 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from DATA 27100.
+  crosslists:
+  - DATA 27100
+  prereq_text: DATA 12000, DATA 13600, DATA 21100, DATA 21200, DATA 23100 (or equivalent) and by permission of instructor
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/datascience/
+    quote: 'Equivalent Course(s): MACS 30300, CAPP 30300, MPCS 57300, PPHA 30581'
+  needs_review: true
+- code: PPHA 35561
+  title: The Practicalities of Running Randomized Control Trials
+  units: 100
+  notes: Cross-listed with ECMA 35550 (its catalog block lists PPHA 35561 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from ECMA 35550.
+  crosslists:
+  - ECMA 35550
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: 'Equivalent Course(s): ECON 35550, PPHA 35561'
+- code: PPHA 35585
+  title: The Chinese Economy
+  units: 100
+  notes: Cross-listed with ECON 22030 (its catalog block lists PPHA 35585 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from ECON 22030.
+  crosslists:
+  - ECON 22030
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: 'Equivalent Course(s): PPHA 35585, PBPL 25585'
+- code: PPHA 36002
+  title: 'Urban Design Studio: Reconstructing Chicago''s Lost Neighborhoods Using Machine Learning'
+  units: 100
+  notes: Cross-listed with SOSC 26002 (its catalog block lists PPHA 36002 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from SOSC 26002.
+  crosslists:
+  - SOSC 26002
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: 'Equivalent Course(s): PBPL 26002, PPHA 36002, GEOG 24200, CHST 26002'
+- code: PPHA 36410
+  title: Epidemiology and Population Health
+  units: 100
+  notes: Cross-listed with STAT 22810 (its catalog block lists PPHA 36410 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from STAT 22810.
+  crosslists:
+  - STAT 22810
+  prereq_text: STAT 22000 or other introductory statistics highly desirable. For BIOS students-completion of the first three
+    quarters of a Biological Sciences Fundamentals sequence.
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/statistics/
+    quote: 'Equivalent Course(s): BIOS 27810, HLTH 20910, PBHS 30910, PPHA 36410'
+  needs_review: true
+- code: PPHA 38050
+  title: Evidence in Health Policy
+  units: 100
+  notes: Cross-listed with ECON 17720 (its catalog block lists PPHA 38050 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from ECON 17720.
+  crosslists:
+  - ECON 17720
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: 'Equivalent Course(s): PBPL 25510, PPHA 38050'
+- code: PPHA 38300
+  title: Health Economics and Public Policy
+  units: 100
+  notes: Cross-listed with ECON 27700 (its catalog block lists PPHA 38300 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from ECON 27700.
+  crosslists:
+  - ECON 27700
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: 'Equivalent Course(s): CCTS 38300, PBPL 28300, PPHA 38300'
+- code: PPHA 44302
+  title: 'Labor Markets: a Global Perspective'
+  units: 100
+  notes: Cross-listed with ECON 14020 (its catalog block lists PPHA 44302 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from ECON 14020.
+  crosslists:
+  - ECON 14020
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: 'Equivalent Course(s): PBPL 25640, PPHA 44302'

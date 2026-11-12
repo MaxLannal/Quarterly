@@ -1,0 +1,190 @@
+# Generated from the 2026-2027 UChicago College Catalog (fetched 2026-11-12) by hand-checked scripts;
+# every source.quote is copied verbatim (whitespace collapsed) from source.url. See data/seed/REVIEW.md.
+courses:
+- code: ASTR 12600
+  title: Matter, Energy, Space, and Time
+  units: 100
+  notes: Cross-listed with PHSC 12600 (its catalog block lists ASTR 12600 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from PHSC 12600.
+  crosslists:
+  - PHSC 12600
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: 'Equivalent Course(s): ASTR 12600'
+- code: ASTR 12610
+  title: Black Holes
+  units: 100
+  notes: Cross-listed with PHSC 12610 (its catalog block lists ASTR 12610 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from PHSC 12610.
+  crosslists:
+  - PHSC 12610
+  prereq:
+    any:
+    - PHSC 12600
+    - PHSC 12700
+  prereq_text: PHSC 12600 or PHSC 12700
+  terms_offered:
+  - WI
+  - SU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: 'Equivalent Course(s): ASTR 12610'
+- code: ASTR 12620
+  title: The Big Bang
+  units: 100
+  notes: Cross-listed with PHSC 12620 (its catalog block lists ASTR 12620 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from PHSC 12620.
+  crosslists:
+  - PHSC 12620
+  prereq: PHSC 12600
+  prereq_text: Must have ASTR/PHSC 12600 Matter, Energy, Space and Time as the pre-requisite for ASTR/PHSC The Big Bang.
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: 'Equivalent Course(s): ASTR 12620'
+- code: ASTR 12700
+  title: Stars
+  units: 100
+  notes: Cross-listed with PHSC 12700 (its catalog block lists ASTR 12700 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from PHSC 12700.
+  crosslists:
+  - PHSC 12700
+  terms_offered:
+  - AU
+  - SU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: 'Equivalent Course(s): ASTR 12700'
+- code: ASTR 12710
+  title: Galaxies
+  units: 100
+  notes: Cross-listed with PHSC 12710 (its catalog block lists ASTR 12710 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from PHSC 12710.
+  crosslists:
+  - PHSC 12710
+  prereq:
+    any:
+    - PHSC 10800
+    - PHSC 12600
+    - PHSC 12700
+  prereq_text: PHSC 10800, PHSC 12600 or PHSC 12700. PHSC 12710 can be taken as the first course in a sequence combined with
+    PHSC 12720.
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: 'Equivalent Course(s): ASTR 12710'
+  needs_review: true
+- code: ASTR 12720
+  title: Exoplanets
+  units: 100
+  notes: Cross-listed with PHSC 12720 (its catalog block lists ASTR 12720 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from PHSC 12720.
+  crosslists:
+  - PHSC 12720
+  prereq:
+    any:
+    - PHSC 10800
+    - PHSC 10100
+    - PHSC 12700
+    - PHSC 12710
+  prereq_text: PHSC 10800, PHSC 10100, PHSC 12700 or PHSC 12710.
+  terms_offered:
+  - SP
+  - SU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: 'Equivalent Course(s): ASTR 12720'
+- code: ASTR 18000
+  title: The Search for Extraterrestrial Life
+  units: 100
+  notes: Cross-listed with PHSC 18000 (its catalog block lists ASTR 18000 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from PHSC 18000.
+  crosslists:
+  - PHSC 18000
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: 'Equivalent Course(s): ASTR 18000'
+- code: ASTR 18100
+  title: The Milky Way
+  units: 100
+  notes: Cross-listed with PHSC 18100 (its catalog block lists ASTR 18100 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from PHSC 18100.
+  crosslists:
+  - PHSC 18100
+  prereq_text: Any two-course 10000-level general education sequence in chemistry, geophysical sciences, physical sciences,
+    or physics. Can be used as a third course in physical sciences to meet the general education requirement (of six courses
+    total in the biological, physical, and mathematical sciences).
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: 'Equivalent Course(s): ASTR 18100'
+  needs_review: true
+- code: ASTR 18200
+  title: The Origin and Evolution of the Universe
+  units: 100
+  notes: Cross-listed with PHSC 18200 (its catalog block lists ASTR 18200 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from PHSC 18200.
+  crosslists:
+  - PHSC 18200
+  prereq_text: No pre-requisites. May not be taken if previous enrollment in ASTR/PHSC 12620 Big Bang.
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: 'Equivalent Course(s): ASTR 18200'
+  needs_review: true
+- code: ASTR 21400
+  title: Creative Machines and Innovative Instrumentation
+  units: 100
+  notes: Cross-listed with CMSC 21400 (its catalog block lists ASTR 21400 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from CMSC 21400.
+  crosslists:
+  - CMSC 21400
+  prereq:
+    any:
+    - PHYS 12200
+    - PHYS 13200
+    - PHYS 14200
+    - CMSC 12100
+    - CMSC 12200
+    - CMSC 12300
+    - consent: instructor
+  prereq_text: PHYS 12200 or PHYS 13200 or PHYS 14200; or CMSC 12100 or CMSC 12200 or CMSC 12300; or consent of instructor.
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/computerscience/
+    quote: 'Equivalent Course(s): PSMS 31400, ASTR 31400, ASTR 21400, PHYS 21400'
+- code: ASTR 31400
+  title: Creative Machines and Innovative Instrumentation
+  units: 100
+  notes: Cross-listed with CMSC 21400 (its catalog block lists ASTR 31400 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from CMSC 21400.
+  crosslists:
+  - CMSC 21400
+  prereq:
+    any:
+    - PHYS 12200
+    - PHYS 13200
+    - PHYS 14200
+    - CMSC 12100
+    - CMSC 12200
+    - CMSC 12300
+    - consent: instructor
+  prereq_text: PHYS 12200 or PHYS 13200 or PHYS 14200; or CMSC 12100 or CMSC 12200 or CMSC 12300; or consent of instructor.
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/computerscience/
+    quote: 'Equivalent Course(s): PSMS 31400, ASTR 31400, ASTR 21400, PHYS 21400'

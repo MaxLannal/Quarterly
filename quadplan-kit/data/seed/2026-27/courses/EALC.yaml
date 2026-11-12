@@ -1,0 +1,118 @@
+# Generated from the 2026-2027 UChicago College Catalog (fetched 2026-11-12) by hand-checked scripts;
+# every source.quote is copied verbatim (whitespace collapsed) from source.url. See data/seed/REVIEW.md.
+courses:
+- code: EALC 14570
+  title: 'Special Topics: Animation Theory'
+  units: 100
+  notes: Cross-listed with CMST 14570 (its catalog block lists EALC 14570 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from CMST 14570.
+  crosslists:
+  - CMST 14570
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/cinemamediastudies/
+    quote: 'Equivalent Course(s): MADD 14570, EALC 14570'
+- code: EALC 15411
+  title: East Asian Civilization I, Ancient Period-1600
+  units: 100
+  notes: Cross-listed with HIST 15411 (its catalog block lists EALC 15411 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from HIST 15411.
+  crosslists:
+  - HIST 15411
+  prereq_text: HIST 15411-15412-15413 meets the general education requirement in civilization studies via three civilization
+    courses. HIST 15411-15412, HIST 15411-15413, or HIST 15412-15413 meets the general education requirement in civilization
+    studies via two civilization courses.
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): SOSC 25411, EALC 15411'
+  needs_review: true
+- code: EALC 15412
+  title: East Asian Civilization II, 1600-1895
+  units: 100
+  notes: Cross-listed with HIST 15412 (its catalog block lists EALC 15412 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from HIST 15412.
+  crosslists:
+  - HIST 15412
+  prereq_text: HIST 15411-15412-15413 meets the general education requirement in civilization studies via three civilization
+    courses. HIST 15411-15412, HIST 15411-15413, or HIST 15412-15413 meets the general education requirement in civilization
+    studies via two civilization courses.
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): EALC 15412, SOSC 25412'
+  needs_review: true
+- code: EALC 15413
+  title: East Asian Civilization III, 1895-Present
+  units: 100
+  notes: Cross-listed with HIST 15413 (its catalog block lists EALC 15413 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from HIST 15413.
+  crosslists:
+  - HIST 15413
+  prereq_text: HIST 15411-15412-15413 meets the general education requirement in civilization studies via three civilization
+    courses. HIST 15411-15412, HIST 15411-15413, or HIST 15412-15413 meets the general education requirement in civilization
+    studies via two civilization courses.
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): SOSC 25413, EALC 15413'
+  needs_review: true
+- code: EALC 16100
+  title: 'Art of the East: China'
+  units: 100
+  notes: Cross-listed with ARTH 16100 (its catalog block lists EALC 16100 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from ARTH 16100.
+  crosslists:
+  - ARTH 16100
+  prereq_text: 'Students must attend first class to confirm enrollment. This course meets the general education requirement
+    in the arts. This course fulfills the following requirements in the ARTH major and minor: Asian, modern (post-1800), Asian,
+    premodern (pre-1800)'
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/arthistory/
+    quote: 'Equivalent Course(s): EALC 16100'
+  needs_review: true
+- code: EALC 16107
+  title: 'Moving Objects, Dispersed Cultures: Case Studies from China and the Middle East'
+  units: 100
+  notes: Cross-listed with ARTH 16107 (its catalog block lists EALC 16107 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from ARTH 16107.
+  crosslists:
+  - ARTH 16107
+  prereq_text: 'PQ: Third or fourth-year standing.'
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/arthistory/
+    quote: 'Equivalent Course(s): BPRO 27100, EALC 16107, EALC 36107, NEHC 36107, ARTH 36107, RLST 26107, NEHC 16107'
+  needs_review: true
+- code: EALC 16806
+  title: Arts of Japan
+  units: 100
+  notes: Cross-listed with ARTH 16800 (its catalog block lists EALC 16806 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from ARTH 16800.
+  crosslists:
+  - ARTH 16800
+  prereq_text: 'Students must attend first class to confirm enrollment. This course meets the general education requirement
+    in the arts. This course fulfills the following requirements in the ARTH major and minor: Asian, premodern (pre-1800)'
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/arthistory/
+    quote: 'Equivalent Course(s): EALC 16806'
+  needs_review: true
+- code: EALC 36107
+  title: 'Moving Objects, Dispersed Cultures: Case Studies from China and the Middle East'
+  units: 100
+  notes: Cross-listed with ARTH 16107 (its catalog block lists EALC 36107 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from ARTH 16107.
+  crosslists:
+  - ARTH 16107
+  prereq_text: 'PQ: Third or fourth-year standing.'
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/arthistory/
+    quote: 'Equivalent Course(s): BPRO 27100, EALC 16107, EALC 36107, NEHC 36107, ARTH 36107, RLST 26107, NEHC 16107'
+  needs_review: true

@@ -1,0 +1,15 @@
+# Generated from the 2026-2027 UChicago College Catalog (fetched 2026-11-12) by hand-checked scripts;
+# every source.quote is copied verbatim (whitespace collapsed) from source.url. See data/seed/REVIEW.md.
+courses:
+- code: INRE 34506
+  title: The Rights of Immigrants and Refugees in Practice
+  units: 100
+  notes: Cross-listed with SOSC 24506 (its catalog block lists INRE 34506 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from SOSC 24506.
+  crosslists:
+  - SOSC 24506
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: 'Equivalent Course(s): GLST 24506, CHST 24506, INRE 34506, HMRT 26813, LLSO 24506'

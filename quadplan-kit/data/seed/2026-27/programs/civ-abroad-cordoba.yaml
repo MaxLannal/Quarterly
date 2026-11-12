@@ -1,0 +1,54 @@
+# Generated from the 2026-2027 UChicago College Catalog (fetched 2026-11-12) by hand-checked scripts;
+# every source.quote is copied verbatim (whitespace collapsed) from source.url. See data/seed/REVIEW.md.
+id: civ-abroad-cordoba
+catalog_year: 2026-27
+name: 'Córdoba: Crossroads of Mediterranean Civilizations'
+type: study_abroad_block
+department: Study Abroad
+status: review
+sources:
+- url: https://study-abroad.uchicago.edu/cordoba-crossroads-mediterranean-civilizations
+  quote: The civilization sequence meets the College’s civilization requirement.
+- url: https://study-abroad.uchicago.edu/program-type/uchicago-faculty-led
+  quote: 'Córdoba: Crossroads of Mediterranean Civilizations'
+rules:
+  id: civ-abroad-cordoba
+  label: 'Córdoba: Crossroads of Mediterranean Civilizations (Spring)'
+  group:
+    all: true
+    children:
+    - id: '1'
+      slot:
+        any_of:
+        - SOSC 19082
+      constraints:
+        no_pass_fail: true
+      source:
+        url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+        quote: 'SOSC 19082. Córdoba: Crossroads of Mediterranean Civilizations I. 100 Units.'
+    - id: '2'
+      slot:
+        any_of:
+        - SOSC 19083
+      constraints:
+        no_pass_fail: true
+      source:
+        url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+        quote: 'SOSC 19083. Córdoba: Crossroads of Mediterranean Civilizations II. 100 Units.'
+    - id: '3'
+      slot:
+        any_of:
+        - SOSC 19084
+      constraints:
+        no_pass_fail: true
+      source:
+        url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+        quote: 'SOSC 19084. Córdoba: Crossroads of Mediterranean Civilizations III. 100 Units.'
+  source:
+    url: https://study-abroad.uchicago.edu/cordoba-crossroads-mediterranean-civilizations
+    quote: 'They take and receive credit for four courses: the three-course civilization sequence and the Spanish in Córdoba
+      course.'
+  needs_review: true
+policy:
+  excludes:
+  - civ-abroad-paris-mdd

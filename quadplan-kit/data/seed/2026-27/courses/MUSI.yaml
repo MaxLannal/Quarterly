@@ -1,0 +1,166 @@
+# Generated from the 2026-2027 UChicago College Catalog (fetched 2026-11-12) by hand-checked scripts;
+# every source.quote is copied verbatim (whitespace collapsed) from source.url. See data/seed/REVIEW.md.
+courses:
+- code: MUSI 10100
+  title: Introduction to Western Art Music
+  units: 100
+  description: This one-quarter course is designed to enrich the listening experience of students, particularly with respect
+    to the art music of the Western European and American concert tradition. Students are introduced to the basic elements
+    of music and the ways that they are integrated to create works in various styles. Particular emphasis is placed on musical
+    form and on the potential for music to refer to and interact with aspects of the world outside.
+  notes: Background in music not required. Students must confirm enrollment by attending one of the first two sessions of
+    class. This course meets the general education requirement in the arts.
+  core_tags:
+  - arts
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/music/
+    quote: MUSI 10100. Introduction to Western Art Music. 100 Units.
+- code: MUSI 10200
+  title: Introduction to World Music
+  units: 100
+  description: This course is a selected survey of classical, popular, and folk music traditions from around the world. The
+    goals are not only to expand our skills as listeners but also to redefine what we consider music to be and, in the process,
+    stimulate a fresh approach to our own diverse musical traditions. In addition, the role of music as ritual, aesthetic
+    experience, mode of communication, and artistic expression is explored.
+  notes: Background in music not required. Students must confirm enrollment by attending one of the first two sessions of
+    class. This course meets the general education requirement in the arts.
+  core_tags:
+  - arts
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/music/
+    quote: MUSI 10200. Introduction to World Music. 100 Units.
+- code: MUSI 10300
+  title: 'Introduction to Music: Materials and Design'
+  units: 100
+  description: This introductory course in music is intended for students who are interested in exploring the language, interpretation,
+    and meaning of music through coordinated listening, analysis, and creative work. By listening to and comprehending the
+    structural and aesthetic considerations behind significant written and improvised works, from the earliest examples of
+    notated Western music to the music of living composers and performers, students will be prepared to undertake analytical
+    and ultimately creative projects. The relationship between cultural and historical practices and the creation and reception
+    of music will also be considered. The course is taught by a practicing composer, whose experience will guide and inform
+    the works studied. No prior background in music is required.
+  notes: Background in music not required. Students must confirm enrollment by attending one of the first two sessions of
+    class. This course meets the general education requirement in the arts.
+  core_tags:
+  - arts
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/music/
+    quote: 'MUSI 10300. Introduction to Music: Materials and Design. 100 Units.'
+- code: MUSI 10400
+  title: 'Introduction to Music: Analysis and Criticism'
+  units: 100
+  description: This course aims to develop students' analytical and critical tools by focusing on a select group of works
+    drawn from the Western European and American concert tradition. The texts for the course are recordings. Through listening,
+    written assignments, and class discussion, we explore topics such as compositional strategy, conditions of musical performance,
+    interactions between music and text, and the relationship between music and ideology as they are manifested in complete
+    compositions.
+  core_tags:
+  - arts
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/music/
+    quote: 'MUSI 10400. Introduction to Music: Analysis and Criticism. 100 Units.'
+- code: MUSI 10500
+  title: 'Performance as a Laboratory: Performing with Sound'
+  units: 100
+  description: This course is for everyone interested in connecting performativity with sound and music making. Through a
+    hands-on workshop format, students combine research on live performance methodologies-such as text scores, graphic scores,
+    and improvisation across acoustic and electronic sources, as well as non-Western and non-notated approaches to performance-with
+    the study of performativity theories. The course emphasizes practical and critical exploration of social, cultural, and
+    aesthetic aspects of sound practices, enabling students to develop, present, and critically discuss new and experimental
+    work that integrates these approaches. We will have critical listening sessions, regular work-in-progress and improvisation
+    sessions, and open strategies for notating and documenting sound-based performances.
+  core_tags:
+  - arts
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/music/
+    quote: 'MUSI 10500. Performance as a Laboratory: Performing with Sound. 100 Units.'
+- code: MUSI 12100
+  title: Music and Euro-American Cultures
+  units: 100
+  description: As part of the Social Sciences Civ core, this course looks at musics in different moments of Euro-American
+    history and the social contexts in which they originated, with some comparative views on other world traditions. It aims
+    to give students a better understanding of the social contexts of European music over this period; aids for the basic
+    sound structures of pieces from these different moments; and convincing writing in response to prompts based on source
+    readings or music pieces. Our first quarter (MUS 12100 etc.) spans roughly the period between Charlemagne's coronation
+    as Holy Roman Emperor (800 CE) and the dissolution of the Empire (1806) with the triumph of Napoleon across Western Europe.
+  core_tags:
+  - civilization
+  crosslists:
+  - SOSC 21100
+  - HIST 12700
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: MUSI 12100. Music and Euro-American Cultures. 100 Units.
+- code: MUSI 12200
+  title: Music and Euro-American Cultures II (1810-present)
+  units: 100
+  description: As part of the Social Sciences Civ core, this course looks at musics in different moments of Euro-American
+    history and the social contexts in which they originated, with some comparative views on other world traditions. It aims
+    to give students a better understanding of the social contexts of European music over this period; aids for the basic
+    sound structures of pieces from these different moments; and convincing writing in response to prompts based on source
+    readings or music pieces. Our second quarter (MUS 12200 etc.) runs from the beginning of European Romanticism around 1800
+    to the turn of the 21st century.
+  notes: Prior music course or ability to read music not required. Students must confirm enrollment by attending one of the
+    first two sessions of class. This two-quarter sequence meets the general education requirement in civilization studies;
+    it does not meet the general education requirement in the arts. Please note that MUSI 12100-12200 will not be offered
+    on campus in 2024-25. The sequence will be offered in Vienna in Spring 2025 and 2027.
+  core_tags:
+  - civilization
+  crosslists:
+  - HIST 12800
+  - SOSC 21200
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: MUSI 12200. Music and Euro-American Cultures II (1810-present)
+- code: MUSI 12300
+  title: Going to the Opera in Paris, 1650-1848
+  units: 100
+  notes: Cross-listed with SOSC 21300 (its catalog block lists MUSI 12300 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from SOSC 21300.
+  crosslists:
+  - SOSC 21300
+  prereq_text: Admission to the Paris Music Civilization sequence, and MUS 121-122.
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: 'Equivalent Course(s): MUSI 12300'
+  needs_review: true
+- code: MUSI 12400
+  title: Music and Culture in Vienna c. 1900
+  units: 100
+  notes: Cross-listed with SOSC 21301 (its catalog block lists MUSI 12400 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from SOSC 21301.
+  crosslists:
+  - SOSC 21301
+  prereq_text: Admission to the Spring 2025 Vienna Civilization Program and MUS 121-122 in Vienna
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: 'Equivalent Course(s): MUSI 12400'
+  needs_review: true

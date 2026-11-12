@@ -1,0 +1,13 @@
+# Generated from the 2026-2027 UChicago College Catalog (fetched 2026-11-12) by hand-checked scripts;
+# every source.quote is copied verbatim (whitespace collapsed) from source.url. See data/seed/REVIEW.md.
+courses:
+- code: NTSC 12500
+  title: Quant Methods/Envir Science
+  units: 100
+  notes: Cross-listed with STAT 12500 (its catalog block lists NTSC 12500 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from STAT 12500.
+  crosslists:
+  - STAT 12500
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/statistics/
+    quote: 'Equivalent Course(s): NTSC 12500'

@@ -1,0 +1,200 @@
+# Generated from the 2026-2027 UChicago College Catalog (fetched 2026-11-12) by hand-checked scripts;
+# every source.quote is copied verbatim (whitespace collapsed) from source.url. See data/seed/REVIEW.md.
+id: core
+catalog_year: 2026-27
+name: The Core (general education)
+type: core
+department: The College
+status: review
+sources:
+- url: http://collegecatalog.uchicago.edu/thecollege/thecore/
+  quote: This foundational set of coursework is referred to in the College as "the Core."
+rules:
+  id: core
+  label: The Core
+  group:
+    all: true
+    children:
+    - id: hca
+      label: Humanities, Arts, and Civilization Studies
+      bounded_parts:
+        total:
+          courses: 6
+        parts:
+        - id: huma
+          label: Humanities
+          from:
+            list: core-huma-sequences
+          count:
+          - 2
+          - 3
+          same_sequence: true
+          no_pass_fail: true
+          source:
+            url: http://collegecatalog.uchicago.edu/thecollege/humanities/
+            quote: All HUMA 10000-level sequences that meet general education requirements, listed below, are available as
+              either a two-quarter sequence (Autumn, Winter) or as a three-quarter sequence (Autumn, Winter, Spring).
+        - id: civ
+          label: Civilization Studies
+          from:
+            list: core-civ-sequences
+          count:
+          - 2
+          - 3
+          same_sequence: true
+          no_pass_fail: true
+          source:
+            url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+            quote: Students may meet the civilization requirement with two courses from a three-quarter sequence.
+          needs_review: true
+        - id: arts
+          label: Arts
+          from:
+            union:
+            - list: core-arts
+            - subject: ARTH
+              number_range:
+              - 14000
+              - 16999
+            - subject: ARTH
+              number_range:
+              - 17000
+              - 18999
+            - subject: CMST
+              number_range:
+              - 14500
+              - 14599
+            - subject: CRWR
+              number_range:
+              - 12100
+              - 12199
+            - subject: TAPS
+              number_range:
+              - 10300
+              - 10699
+          count:
+          - 1
+          - 2
+          no_pass_fail: true
+          source:
+            url: http://collegecatalog.uchicago.edu/thecollege/artscore/
+            quote: For that reason, only these courses can be used to satisfy the general education requirement in the arts.
+      source:
+        url: http://collegecatalog.uchicago.edu/thecollege/thecore/
+        quote: 'Students take a total of six quarter courses in this category, distributed in the following way: at least
+          two quarters in the humanities, at least two quarters in civilization studies, and at least one quarter in the arts.'
+    - id: nms
+      label: Natural and Mathematical Sciences
+      bounded_parts:
+        total:
+          courses: 6
+        parts:
+        - id: math
+          label: Mathematical Sciences
+          from:
+            list: core-math-options
+          count:
+          - 1
+          - 2
+          same_sequence: true
+          no_pass_fail: true
+          source:
+            url: http://collegecatalog.uchicago.edu/thecollege/mathematicalsciencescore/
+            quote: Students who satisfy the requirement with something other than calculus will take 100 or 200 units of approved
+              non-calculus course work.
+          needs_review: true
+        - id: phys
+          label: Physical Sciences
+          from:
+            list: core-phys-sequences
+          count:
+          - 2
+          - 3
+          same_sequence: true
+          no_pass_fail: true
+          source:
+            url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+            quote: Students are required to take an approved two- or three-course sequence in the physical sciences to satisfy
+              the Core requirement.
+          needs_review: true
+        - id: bio
+          label: Biological Sciences
+          from:
+            list: core-bio-sequences
+          count:
+          - 2
+          - 3
+          same_sequence: true
+          no_pass_fail: true
+          source:
+            url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+            quote: All students are required to complete at least two quarters of Biological Sciences course work to satisfy
+              the general education (i.e., Core) requirement in the Biological Sciences.
+          needs_review: true
+      source:
+        url: http://collegecatalog.uchicago.edu/thecollege/thecore/
+        quote: 'Students take a total of six quarter courses in this category, distributed in the following way: at least
+          two quarters of physical sciences, at least two quarters of biological sciences, and at least one in mathematical
+          sciences.'
+      needs_review: true
+    - id: sosc
+      label: Social Sciences
+      select:
+        count: 3
+        from:
+          list: core-sosc-sequences
+      constraints:
+        same_sequence: true
+        in_order: true
+        no_pass_fail: true
+      source:
+        url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+        quote: All three courses in a SOSC sequence must be taken in order. Once students begin a sequence, they are expected
+          to remain in the same sequence.
+    - id: writing
+      label: Writing
+      group:
+        n_of: 1
+        children:
+        - id: maroon
+          label: Maroon Track
+          slot:
+            any_of:
+            - WRIT 10100
+          constraints:
+            no_pass_fail: true
+          source:
+            url: http://collegecatalog.uchicago.edu/thecollege/writing/
+            quote: Students on the Maroon Track satisfy the Core writing requirement by completing the one-quarter course
+              'Inquiry, Conversation, Argument' for a quality grade.
+        - id: grey
+          label: Grey Track
+          select:
+            count: 2
+            from:
+              codes:
+              - HUMA 19100
+          source:
+            url: http://collegecatalog.uchicago.edu/thecollege/writing/
+            quote: Students on the Grey Track satisfy the Core writing requirement by completing a two-quarter series of co-curricular
+              writing seminars taken for a pass/fail grade.
+          needs_review: true
+      source:
+        url: http://collegecatalog.uchicago.edu/thecollege/writing/
+        quote: Students may complete this requirement via one of two tracks.
+    - id: language
+      label: Language Competence
+      select:
+        count: 1
+        from:
+          list: language-competence-courses
+      constraints:
+        no_pass_fail: true
+      source:
+        url: http://collegecatalog.uchicago.edu/thecollege/languagecompetency/
+        quote: 'Students may meet the language competence requirement in one of the following ways:'
+      needs_review: true
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/thecore/
+    quote: Core requirements consist of a total of 1500-1600 units of credit (i.e., 15-16 100-unit courses) across nine areas
+      of study.

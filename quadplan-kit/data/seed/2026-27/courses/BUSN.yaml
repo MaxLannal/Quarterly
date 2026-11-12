@@ -1,0 +1,715 @@
+# Generated from the 2026-2027 UChicago College Catalog (fetched 2026-11-12) by hand-checked scripts;
+# every source.quote is copied verbatim (whitespace collapsed) from source.url. See data/seed/REVIEW.md.
+courses:
+- code: BUSN 20100
+  title: Financial Accounting
+  units: 100
+  description: This course provides an introduction to financial statements and the financial reporting process from a user's
+    perspective. The focus of the course is on fundamental accounting concepts and principles. Students learn how the economic
+    transactions of a firm are reported in the financial statements and related disclosures. The objective of the course is
+    to provide students with basic skills necessary to read and analyze financial statements as well as to prepare students
+    for more advanced financial statement analysis courses.
+  prereq_text: 'This course is not open to MBA students. Cannot enroll in BUSN 20100 if BUSN 30000 Financial Accounting taken
+    previously, and vice versa. Refer to FAQ webpage for registration and schedule details: https://tinyurl.com/y8wz3oge.
+    All first year college students are restricted from enrolling into this course.'
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: BUSN 20100. Financial Accounting. 100 Units.
+  needs_review: true
+- code: BUSN 20101
+  title: Managerial Accounting
+  units: 100
+  description: This course focuses on internal operations, cost analysis, and performance evaluation, as opposed to the evaluation
+    of external financial statements. Its targeted audience includes students intending become management consultants, entrepreneurs,
+    managers (e.g., CEOs, CFOs, COOs, and product managers), and anyone with an interest in understanding how firms (1) make
+    decisions about products and services and (2) evaluate performance and control risk. Topics covered include overhead allocation,
+    activity based costing, opportunity cost of excess capacity, customer profitability, capital budgeting, transfer pricing,
+    performance evaluation, risk management, internal controls, and fraud. Applications cover both the manufacturing and services
+    sectors.
+  prereq_text: 'This course is not open to MBA students. Cannot enroll in BUSN 20101 if BUSN 30001 Cost Analysis and Internal
+    Controls taken previously, and vice versa. Booth Book Fee may be assessed. Refer to FAQ webpage for registration and schedule
+    details: https://tinyurl.com/y8wz3oge. All first year college students are restricted from enrolling into this course.'
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: BUSN 20101. Managerial Accounting. 100 Units.
+  needs_review: true
+- code: BUSN 20140
+  title: Accounting and Financial Analysis
+  units: 100
+  description: Course is designed to improve students' understanding of financial information beyond an intro accounting class.
+    It is designed to provide the knowledge of financial statements necessary to conduct a reasonably sophisticated financial
+    statement analysis. Focus is on the use of financial statements, although this requires some understanding of the process
+    by which financial statements are produced. It will benefit students who want to become investment bankers, economic consultants,
+    analysts, or other jobs that requires more than a superficial understanding of financial reporting. Not limited to study
+    of financial statements. Will also work with supplemental disclosures, which help the user to interpret the financial
+    statements and to understand better the economic transactions that gave rise to them. Techniques employed will be useful
+    for variety of purposes including (but not limited to) equity, credit, and complex deals (such as M&A) analysis. Although
+    this course does not cover forecasting, valuation, or models of complex deals, a thorough understanding of financial reporting
+    issues is critical to being able to use such techniques. This course especially useful as a prelude to Financial Statement
+    Analysis (B20150/B30130), Advanced Financial Analysis and Valuation for Global Firms (B30131), and Deal Structuring and
+    Financial Reporting Implications (B30122). Must submit answers to 5 cases based on actual financial statements. There
+    are two in-person exams (Weeks 5 & 10).
+  prereq_text: 'Strict PQ: BUSN 20100 (or 30000). To register for this class, students must have taken BUSN 20100 or 30000.
+    NEGPQ BUSN 30116 - Students cannot enroll in this class if they have taken BUSN 30116. All first year college students
+    are restricted from enrolling in this course; new transfer students ok.'
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: BUSN 20140. Accounting and Financial Analysis. 100 Units.
+  needs_review: true
+- code: BUSN 20150
+  title: Financial Statement Analysis
+  units: 100
+  description: This course teaches you how to analyze financial statements in order to develop financial statement models,
+    assess credit risk, and, ultimately, value a company. The course provides both a framework and the tools necessary to
+    analyze financial statements. Its primary objective is to advance your understanding of how financial reporting can be
+    used in a variety of decisions (e.g., lending and investment decisions) and analyses (e.g., financial distress and bankruptcy
+    prediction). It is applied in nature and stresses the use of actual financial statements. Throughout the course, I draw
+    heavily on real business examples and use cases to illustrate the application of the techniques and tools. Topics include
+    traditional ratio analysis techniques, accounting analysis (i.e., identifying earnings management and accounting quality
+    issues), and financial risk assessment. The second part of the course focuses on equity valuation, e.g., the preparation
+    of pro forma financial statements, and the use of various valuation models. While students with a multitude of interests
+    will benefit from this course, students with an interest in investment banking, equity or credit analysis, consulting,
+    strategy, corporate finance, or management will find this course particularly relevant.
+  prereq_text: 'This course is not open to MBA students. Cannot enroll in BUSN 20150 if BUSN 30130 Financial Statement Analysis
+    taken previously, and vice versa. Refer to FAQ webpage for registration and schedule details: https://tinyurl.com/y8wz3oge.
+    All first year college students are restricted from enrolling into this course. Financial Accounting (BUSN 20100 or BUSN
+    30000) is a strict prerequisite.'
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: BUSN 20150. Financial Statement Analysis. 100 Units.
+  needs_review: true
+- code: BUSN 20160
+  title: Accounting for Entrepreneurship
+  units: 100
+  description: This course provides the core set of tools needed to effectively provide the accounting functions for private,
+    entrepreneurial companies. The course follows the life-cycle of a company that begins life as a start-up, and the course
+    covers the accounting-related financial metrics that are needed by an entrepreneur. We will cover topics relevant at the
+    earliest states of a business, such as setting up the initial accounting infrastructure, through to the companies exit
+    to a strategic buyer, a private equity firm or an IPO.
+  prereq_text: 'This course is not open to MBA students. Booth Book Fee may be assessed. Cannot enroll in BUSN 20160 if BUSN
+    30121 Accounting for Entrepreneurship: From Start-Up through IPO taken previously. Refer to FAQ webpage for registration
+    and schedule details: https://tinyurl.com/y8wz3oge. All first year college students are restricted from enrolling into
+    this course.'
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: BUSN 20160. Accounting for Entrepreneurship. 100 Units.
+  needs_review: true
+- code: BUSN 20170
+  title: Tax Strategies
+  units: 100
+  description: 'This course provides students with a framework for thinking about tax planning. This framework has two principal
+    advantages. First, it is designed to have value long after the recent and next tax law change. Second, the framework is
+    portable, in that it can be applied to any set of tax laws - those of the United States or any other country. Although
+    the course generally focuses on U.S. based transactions and planning examples, the underlying ideas are applicable in
+    other jurisdictions. Once developed, the framework is applied to a variety of business settings. The applications integrate
+    concepts from finance, economics, and accounting to achieve a more complete understanding of the role of taxes in business
+    strategy. The course also includes periodic focus on the financial accounting ramifications of tax planning. Moreover,
+    the course content has valuation related implications. Topics include the following: tax planning for mergers, acquisitions,
+    and divestitures; taxation of structures for new businesses (e.g., C Corps, and LLCs); tax planning for financing transactions,
+    including cross-border financing, executive compensation (e.g., incentive stock options); and others.'
+  prereq_text: All first year college students are restricted from enrolling in this course; new transfer students ok.
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: BUSN 20170. Tax Strategies. 100 Units.
+  needs_review: true
+- code: BUSN 20180
+  title: Advanced Financial Analysis and Valuation for Global Firms
+  units: 100
+  description: The course covers advanced financial analysis and valuation for global firms. It is designed for students who
+    already have a basic familiarity with corporate valuation and DCF analysis (from corporate finance class) as well as solid
+    accounting knowledge. We cover financial analysis of different business models, specific situations (e.g., cyclicals,
+    young growth companies, closely-held firms) as well as the analysis and valuation of foreign companies (e.g., emerging
+    markets, reporting under IFRS). Capital markets have become increasingly global, providing more opportunities for corporate
+    investments and M&A abroad. Evaluating these global investments, however, poses unique challenges for financial analysis
+    (e.g., regarding information, accounting and governance) as well as valuation problems.
+  prereq_text: Investments (BUSN 20400 or 35000), corporate finance (BUSN 20410 or 35200) and accounting (BUSN 20100 or 30000)
+    all helpful background for success in this class. Cannot take BUSN 20180 if BUSN 30131 taken previously.
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: BUSN 20180. Advanced Financial Analysis and Valuation for Global Firms. 100 Units.
+  needs_review: true
+- code: BUSN 20200
+  title: Macroeconomics and the Business Environment
+  units: 100
+  description: This course is designed to introduce students to classic macroeconomic issues such as economic growth, recessions,
+    unemployment, inflation, interest rates, government deficit, international capital flows, and exchange rates. The course
+    will provide a unified framework to address these issues and to study the impact of different policies, such as monetary
+    and fiscal policies, on the aggregate behavior of the economy. The analytical tools developed in class will be used to
+    understand the recent experience of the United States and of the world economy and to discuss current policy debates.
+  prereq_text: Cannot enroll in BUSN 20200 if BUSN 33050 (or 33040) taken previously.
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: BUSN 20200. Macroeconomics and the Business Environment. 100 Units.
+  needs_review: true
+- code: BUSN 20230
+  title: International Financial Policy
+  units: 100
+  description: This course will help students develop an understanding of issues in international macroeconomics that are
+    important for investors and managers operating in the global marketplace. It will cover theories of the determination
+    of exchange rates and interest rates, the management of foreign exchange risk, international capital flows, debt and currency
+    crises, international monetary and exchange rate regimes, the roles of the international financial institutions in developing
+    countries, and other characteristics of international financial markets.
+  prereq_text: 'This course is not open to MBA students. Cannot enroll in BUSN 20230 if BUSN 33502 International Financial
+    Policy taken previously, and vice versa. Booth Book Fee may be assessed. Refer to FAQ webpage for registration and schedule
+    details: https://tinyurl.com/y8wz3oge. All first year college students are restricted from enrolling into this course.'
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: BUSN 20230. International Financial Policy. 100 Units.
+  needs_review: true
+- code: BUSN 20231
+  title: Economics in a Globalized World
+  units: 100
+  description: 'International trade has always been economically controversial and politically contentious. This course demystifies
+    some of the complex issues that surround discussions of globalization. It asks such questions as: Why do countries engage
+    in trade? Are countries in competition with one another, making one a winner and another a loser, or is trade mutually
+    beneficial? Who gains and who loses from international trade within a country? Should high-wage countries be worried about
+    competition from low-wage countries? Is international trade the main cause of increasing U.S. wage inequality? How do
+    global supply chains affect firms and workers? How is the burden of import tariffs divided in the economy? Do international
+    trade agreements create jobs or destroy jobs? What is the impact of a trade war on the global economy? This course examines
+    these questions and much more. There are no strict prerequisites, but I assume familiarity with concepts of microeconomics.'
+  prereq_text: 'There are no strict prerequisites, but I assume familiarity with concepts of microeconomics. This course is
+    not open to MBA students. Cannot enroll in BUSN 20231 if BUSN 33501 International Commercial Policy taken previously.
+    Booth Book Fee may be assessed. Refer to FAQ webpage for registration and schedule details: https://tinyurl.com/y8wz3oge.
+    All first year college students are restricted from enrolling into this course.'
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: BUSN 20231. Economics in a Globalized World. 100 Units.
+  needs_review: true
+- code: BUSN 20232
+  title: Central Banks, Financial Institutions and the Business Environment
+  units: 100
+  description: This course is about money, central banks, and financial institutions. We focus on how they affect businesses,
+    how they help companies grow, and what can go wrong. One focus of the course is monetary policy. We study how modern central
+    banks affect the real economy and how they can be successful. We analyze how central banks use conventional and unconventional
+    monetary policy in crises, using examples from the 2008 financial crisis and the recent inflationary period. We also consider
+    how households and firms react to monetary policy. A second focus is financial crises. We highlight why a well-functioning
+    monetary and financial system is key to a successful economy, and how crises disrupt businesses. To evaluate whether and
+    how the academic concepts matter in the real world, we read and discuss modern empirical research. A third focus is how
+    companies finance themselves and why they choose banks. Key questions are why banks exist and whether banks have a special
+    role in the economy. We cover fundamental economic concepts, including asymmetric information on credit markets and banks'
+    instability due to liquidity transformation. A fourth focus is how central banks regulate the financial sector. We discuss
+    topical questions, such as whether we should stop banks from becoming "too big to fail" and whether banks should receive
+    government bailouts. The regulatory concepts that we discuss affect not only financial institutions, but also businesses
+    and their customers.
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: BUSN 20232. Central Banks, Financial Institutions and the Business Environment. 100 Units.
+- code: BUSN 20330
+  title: Building the New Venture
+  units: 100
+  description: This course is intended for students who are interested in starting new entrepreneurial businesses. It is tactical,
+    hands-on, and covers the nuts and bolts of starting a company with a lesser emphasis on investing in entrepreneurial ventures.
+    Students will learn how to raise seed funding, compensate for limited human and financial resources, establish brand values
+    and positioning, secure a strong niche position, determine appropriate sourcing and sales channels, and develop execution
+    plans in sales, marketing, product development and operations. The emphasis is managerial and entrepreneurial, essentially
+    a working model for starting an enterprise. This class is executed through a combination of lectures, group assignments
+    based on student's new venture ideas, case discussions, VC and entrepreneur guest lectures and panels, and ultimately
+    ties together in a pitch at the end of the quarter to a panel of VC observers.
+  prereq_text: 'This course is not open to MBA students. Cannot enroll in BUSN 20330 if BUSN 34103 Building the New Venture
+    taken previously, and vice versa. Refer to FAQ webpage for registration and schedule details: https://tinyurl.com/y8wz3oge.
+    All first year college students are restricted from enrolling into this course.'
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: BUSN 20330. Building the New Venture. 100 Units.
+  needs_review: true
+- code: BUSN 20340
+  title: Developing a New Venture
+  units: 100
+  description: 'The course is designed to guide groups of students through the new venture creation process. Students will
+    have passed through the 1st round of the College New Venture Challenge, & will be developing their own original new business
+    ideas. Students may enter the course with ideas that are traditionally for-profit in nature or more socially oriented
+    (either for- or not-for-profit ventures). Students can expect to learn: •'
+  prereq_text: 'This course is not open to MBA students. Refer to FAQ webpage for registration and schedule details: https://tinyurl.com/y8wz3oge.
+    All first year college students are restricted from enrolling into this course. Consent only: Students will have passed
+    through the first round of the College New Venture Challenge. Students may enroll in both BUSN 20340 and BUSN 34104 Special
+    Topics in Entrepreneurship: Developing a New Venture (New Venture Challenge), but may receive credit for only one within
+    the Entrepreneurship bundle of the business economics specialization.'
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: BUSN 20340. Developing a New Venture. 100 Units.
+  needs_review: true
+- code: BUSN 20400
+  title: Investments
+  units: 100
+  description: 'This course offers the financial theory and quantitative tools necessary for understanding how stock, bond,
+    and option prices are determined, and how financial assets are used for investment decisions. Topics covered include the
+    following: the term structure of interest rates; portfolio selection based on mean-variance analysis; models of risk and
+    return (including the CAPM and multifactor models); performance evaluation; market efficiency and the random walk hypothesis;
+    asset pricing anomalies and behavioral finance; derivative security pricing (including options, futures, forwards, and
+    swaps); and international investment. This course is not open to MBA students.'
+  prereq_text: 'This course is not open to MBA students. Cannot enroll in BUSN 20400 if BUSN 35000 Investments taken previously,
+    and vice versa. Refer to FAQ webpage for registration and schedule details: https://tinyurl.com/y8wz3oge. All first year
+    college students are restricted from enrolling into this course.'
+  terms_offered:
+  - AU
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: BUSN 20400. Investments. 100 Units.
+  needs_review: true
+- code: BUSN 20405
+  title: Financial Instruments
+  units: 100
+  description: 'This course develops, critically assesses, and applies theories of pricing derivatives. Topic discussed are:
+    forward and futures contracts; interest rate and currency swaps; option trading strategies; binomial option pricing; the
+    Black-Scholes-Merton option pricing model and extensions; risk management with options; empirical evidence and time-varying
+    volatility; the pricing and hedging of corporate securities (common stock, senior and junior bonds, callable bonds, warrants,
+    convertible bonds, and putable bonds); credit risk; and real options.'
+  prereq_text: 'There are no enforced prerequisites but Investments (Business 20400/35000) is helpful. This course is not
+    open to MBA students. Cannot enroll in BUSN 20405 if BUSN 35100 Financial Instruments taken previously, and vice versa.
+    Booth Book Fee may be assessed. Refer to FAQ webpage for registration and schedule details: https://tinyurl.com/y8wz3oge.
+    All first year college students are restricted from enrolling into this course.'
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: BUSN 20405. Financial Instruments. 100 Units.
+  needs_review: true
+- code: BUSN 20410
+  title: Corporation Finance
+  units: 100
+  description: This course provides you with an understanding of major decisions made by corporate financial managers and
+    to familiarize you with the tools used to make these decisions. The first part of the course covers methods used to value
+    investment opportunities. Particular attention is given to discounted cash flow valuation, including the methods of weighted
+    average cost of capital (WACC) and adjusted present value (APV). The second part of the course focuses on issues of corporate
+    financial structure. The focus will be on the choice of financing through equity, debt and other types of securities and
+    on payout policies through dividends. Specialized topics, such as mergers and acquisitions and corporate hedging will
+    be covered as time permits.
+  prereq_text: 'This course is not open to MBA students. Cannot enroll in BUSN 20410 if BUSN 35200 Corporation Finance taken
+    previously, and vice versa. Refer to FAQ webpage for registration and schedule details: https://tinyurl.com/y8wz3oge.
+    All first year college students are restricted from enrolling into this course. Financial Accounting (BUSN 20100 or 30000)
+    required. Investments (BUSN 20400 or 35000) strongly recommended.'
+  terms_offered:
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: BUSN 20410. Corporation Finance. 100 Units.
+  needs_review: true
+- code: BUSN 20500
+  title: Operations Management
+  units: 100
+  description: This core course focuses on understanding levers for structuring, managing, and improving a firm's recurring
+    business processes to achieve competitive advantage in customer responsiveness, price, quality, and variety of products
+    and services. These levers are broadly applicable to service firms, for example banks, hospitals, and airlines, as well
+    as to traditional product-based firms. Processes within firms, as well as between firms, i.e. supply chains, are explored.
+    The fundamental principles underlying state- of-the-art practices, such as Lean, Mass Customization, and Time-Based Competition,
+    are explored so that students learn to critically evaluate these and other operational improvement programs. Students
+    learn the basics of how to manage the operations of a firm, and how operations issues affect and are affected by the many
+    business decisions they will be called upon to make or recommend in their careers. As such, this course is essential to
+    students aspiring to become consultants, entrepreneurs, or general managers. A working knowledge of operations is also
+    indispensable to those interested in marketing, finance, and accounting, where the interface between these functions and
+    operations is critical. Finally, an understanding of how firms become market leaders through operations is important in
+    investment careers. This course is not open to MBA students.
+  prereq_text: 'This course is not open to MBA students. Cannot enroll in BUSN 20500 if BUSN 40000 Operations Management:
+    Business Process Fundamentals taken previously, and vice versa. Booth Book Fee may be assessed. Refer to FAQ webpage for
+    registration and schedule details: https://tinyurl.com/y8wz3oge. All first year college students are restricted from enrolling
+    into this course.'
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: BUSN 20500. Operations Management. 100 Units.
+  needs_review: true
+- code: BUSN 20510
+  title: Managerial Decision Modeling
+  units: 100
+  description: This course is designed to sharpen students' analytical skills and elucidate quantitative modeling as an aid
+    in managerial decision-making. The course teaches various ways to frame, set up and solve managerial questions about resource
+    allocation, revenue management, finance, marketing, operations and risk analysis using Microsoft Excel, as well as various
+    tools and add-ins. The course will introduce various modeling frameworks and analytical tools in optimization and simulation.
+    Students in this course will become proficient in formulating relevant managerial questions in the language of optimization
+    and simulation modeling, as well as in solving the resulting problems using the frameworks covered in the course and interpreting
+    the results. The course involves hands-on active learning through in-class cases and examples, homework and term project
+    which applies the tools and modeling frameworks learned in the course to a business problem.
+  prereq_text: 'This course is not open to MBA students. Cannot enroll in BUSN 20510 if BUSN 36106 Managerial Decision Modeling
+    taken previously, and vice versa. Refer to FAQ webpage for registration and schedule details: https://tinyurl.com/y8wz3oge.
+    All first year college students are restricted from enrolling into this course.'
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: BUSN 20510. Managerial Decision Modeling. 100 Units.
+  needs_review: true
+- code: BUSN 20520
+  title: Supply Chain Management
+  units: 100
+  description: The supply chain of a firm is critical to its performance. Supply chains are networks of organizations that
+    supply and transform materials and distribute final products to consumers. If designed and managed properly, these networks
+    can be a crucial source of competitive advantage for both manufacturing and service enterprises. Students will learn how
+    to examine and improve the flow of materials and information through this network of suppliers, manufacturers, distributors,
+    and retailers in order to match supply with demand (i.e., to get the right products to the right customers in the right
+    amount and at the right time). Key topics include inter- and intra-firm coordination, incentive design, the impact of
+    uncertainty, and the role of information technology. Special emphasis is given to understanding how the business context
+    shapes managerial decisions regarding the strategic design and management of the supply chain.
+  prereq_text: 'This course is not open to MBA students. Cannot enroll in BUSN 20520 if BUSN 40101 Supply Chain Strategy and
+    Practice taken previously, and vice versa. Booth Book Fee may be assessed. Refer to FAQ webpage for registration and schedule
+    details: https://tinyurl.com/y8wz3oge. All first year college students are restricted from enrolling into this course.'
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: BUSN 20520. Supply Chain Management. 100 Units.
+  needs_review: true
+- code: BUSN 20550
+  title: Application Development
+  units: 100
+  description: 'On the first day of this course, you''ll bring an app idea of your own and we''ll show you how to use AI to
+    generate a robust, deployed version of it. It will include a web app backed by a centralized server and database; iPhone
+    and Android apps; email and push notifications; user accounts and permissions; and more. The code will live in a GitHub
+    repository you own, and you''ll begin iterating with an AI coding agent of your choice. But the thing is: you won''t understand
+    the code you now own. That''s what the rest of the course is for. We think the best way to develop that understanding
+    is to roll up your sleeves and write the code yourself, by hand, at least once. Starting from scratch, you will write
+    full-stack applications, step by step; and in doing so learn how the browser, server, database, APIs, deployment, monitoring,
+    and other pieces fit together. The course has two connected strands: - App: You will build and deploy full-stack, responsive,
+    authenticated, database-backed web applications using Ruby on Rails. - AI: You will learn about generative AI and integrate
+    chat, image and file input, structured output, and tool use into the apps we build. No prior programming experience is
+    required. Core lessons cover HTML, Ruby, Postgres, AI APIs, and more. Elective lessons go deeper into native mobile apps,
+    CSS, real-time updates, Python, local models, and more. You''ll finish with working software, practical experience, and
+    a better sense of what you want to learn next.'
+  prereq_text: 'This course is not open to MBA students. Cannot enroll in BUSN 20550 if BUSN 36110 Application Development
+    taken previously, and vice versa. Refer to FAQ webpage for registration and schedule details: https://tinyurl.com/y8wz3oge.
+    All first year college students are restricted from enrolling into this course. BUSN 20550 (and BUSN 36110) cannot count
+    toward the standard economics major electives or the business economics specialization electives.'
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: BUSN 20550. Application Development. 100 Units.
+  needs_review: true
+- code: BUSN 20600
+  title: Marketing Management
+  units: 100
+  description: 'The objective of the course is to provide an intro to marketing strategy. The course develops a common framework
+    (3Cs/4Ps) to analyze real world problems presented in business cases and synthesize recommendations addressing strategic
+    marketing issues. Numerous tools used to support the framework are also introduced. GOALS: 1. Introduce marketing strategy
+    and elements of marketing analysis or business situation analysis: Customer analysis, Company analysis and Competitor
+    analysis (3Cs). 2. Develop familiarity with tactical use of elements of the marketing mix - product policy, pricing, promotion
+    and placement/distribution (4 Ps)-in a manner consistent with marketing analysis and strategy. 3. Integrate elements of
+    the framework prescriptively into real world business situations. 4. Provide exposure to business case analysis and critical
+    thinking common in case-based business classes. FORMAT: This course uses lectures to introduce concepts, and uses cases
+    and business examples to illustrate them. Grading criteria includes homework assignments/case write-ups, final exam, and
+    class participation that may involve student presentations or in-class exercises.'
+  prereq_text: 'This course is not open to MBA students. Cannot enroll in BUSN 20600 if BUSN 37000 Marketing Strategy taken
+    previously, and vice versa. Refer to FAQ webpage for registration and schedule details: https://tinyurl.com/y8wz3oge.
+    All first year College students are restricted from enrolling into this course.'
+  terms_offered:
+  - WI
+  - SP
+  - SU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: BUSN 20600. Marketing Management. 100 Units.
+  needs_review: true
+- code: BUSN 20610
+  title: Pricing Strategy
+  units: 100
+  description: This course blends marketing analytic frameworks, marketing strategy & microeconomic theory, and data to formulate
+    actionable pricing strategies. Students will learn how to coordinate pricing decisions with the rest of the marketing
+    value proposition. Numerous pricing structures are developed in the course, along with their microeconomic foundations.
+    Students will learn the underlying theory for each pricing structure, along with the practical considerations for implementation
+  prereq_text: 'This course is not open to MBA students. Cannot enroll in BUSN 20610 if BUSN 37202 Pricing Strategies taken
+    previously, and vice versa. Booth Book Fee may be assessed. Refer to FAQ webpage for registration and schedule details:
+    https://tinyurl.com/y8wz3oge. All first year college students are restricted from enrolling into this course.'
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: BUSN 20610. Pricing Strategy. 100 Units.
+  needs_review: true
+- code: BUSN 20620
+  title: Data Driven Marketing
+  units: 100
+  notes: No course block on the Economics page; title from the pre-approved outside electives table ('Data Driven Marketing
+    (or BUSN 37105)').
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: BUSN 20620
+  needs_review: true
+- code: BUSN 20621
+  title: Data Science for Marketing Decision-Making with AI
+  units: 100
+  description: 'How should a firm set prices when customers differ in their willingness to pay? Which consumers should be
+    targeted with an offer or advertisement? What is the ROI of a digital ad campaign? In this course, you will learn how
+    to address these and other questions in modern marketing analytics by combining big data with AI/ML methods. We will use
+    AI agents to reduce the coding burden and focus instead on developing the key skills needed to apply these tools effectively:
+    framing questions appropriately, evaluating the quality of the output, and using the results to guide business decisions.
+    We will cover a broad range of topics, including demand modeling, customer relationship management, optimal targeting,
+    and digital marketing. Throughout the course, you will work through the full pipeline of a marketing analytics project:
+    processing raw data, applying statistical and machine learning methods, generating predictions, and translating those
+    predictions into concrete marketing decisions. In-class presentations will help you develop the ability to communicate
+    and defend the conclusions of your analyses.'
+  prereq_text: 'BUSN 20600 or BUSN 37000 required prereq. Previous stats background helpful. This course is not open to MBA
+    students. Cannot enroll in BUSN 20621 if BUSN 20620, 37105, or 37115 taken previously. Refer to FAQ webpage for registration
+    and schedule details: https://tinyurl.com/y8wz3oge. All first year college students are restricted from enrolling into
+    this course.'
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: BUSN 20621. Data Science for Marketing Decision-Making with AI. 100 Units.
+  needs_review: true
+- code: BUSN 20701
+  title: Managing in Organizations
+  units: 100
+  description: Successfully managing other people - be they competitors or co-workers - requires an understanding of their
+    thoughts, feelings, attitudes, motivations, and determinants of behavior. Developing an accurate understanding of these
+    factors, however, can be difficult to achieve because intuitions are often misguided and unstructured experience can be
+    a poor teacher. This course is intended to address this development by providing the scientific knowledge of human thought
+    and behavior that is critical for successfully managing others, and also for successfully managing ourselves.
+  prereq_text: 'This course is not open to MBA students. Cannot enroll in BUSN 20701 if BUSN 38001 Managing in Organizations
+    taken previously, and vice versa. Refer to FAQ webpage for registration and schedule details: https://tinyurl.com/y8wz3oge.
+    All first year college students are restricted from enrolling into this course.'
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: BUSN 20701. Managing in Organizations. 100 Units.
+  needs_review: true
+- code: BUSN 20702
+  title: Managerial Decision Making
+  units: 100
+  description: This course is designed to make you a better decision maker. Good decision makers know how to recognize decision
+    situations, then how to represent the essential structure of the situations, and how to analyze them with the formal tools
+    from decision theory. But, perhaps more important, they need to be able to think effectively about the inputs into a decision
+    analysis, whether to trust the analysis, and how to use the outputs to guide actions by themselves and their firms. And,
+    maybe most important of all, they need to know how to make effective, unaided intuitive decisions, and to recognize the
+    limits on their intuitive skills. This course will move back and forth between formal, optimal models and behavioral,
+    descriptive models to help you understand and improve your native decision making abilities.
+  prereq_text: 'This course is not open to MBA students. Cannot enroll in BUSN 20702 if BUSN 38002 Managerial Decision Making
+    taken previously, and vice versa. Refer to FAQ webpage for registration and schedule details: https://tinyurl.com/y8wz3oge.
+    All first year college students are restricted from enrolling into this course.'
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: BUSN 20702. Managerial Decision Making. 100 Units.
+  needs_review: true
+- code: BUSN 20710
+  title: Behavioral Economics
+  units: 100
+  description: Behavioral economics applies psychological insights to economic markets and decision making. In this class,
+    we will discuss the recent theoretical and empirical advances that have been made in this increasingly important field
+    of economics. Being thoughtful about the role of psychology can lead to a greater understanding of how the economy works.
+  prereq_text: 'This course is not open to MBA students. Cannot enroll in BUSN 20710 if BUSN 38120 The Study of Behavioral
+    Economics taken previously, and vice versa. Booth Book Fee may be assessed. Refer to FAQ webpage for registration and
+    schedule details: https://tinyurl.com/y8wz3oge. All first year college students are restricted from enrolling into this
+    course.'
+  terms_offered:
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: BUSN 20710. Behavioral Economics. 100 Units.
+  needs_review: true
+- code: BUSN 20711
+  title: Choosing Leadership
+  units: 100
+  description: 'This in-person, highly participatory course gives you a head start on your leadership journey by inviting
+    you to ask critical questions many wait years to consider: What makes me a good leader? How can I improve my leadership
+    skills? How can I add value by creating meaning? What is my definition of leadership? Through reflection and examining
+    your own experiences, written assignments, and engaging in discussions, films, simulations, and peer coaching, you will
+    explore how you lead, manage, and follow. Grounded in the core principles of social psychology, this course guides you
+    in clarifying your values and skillfully applying lessons to your personal leadership practice. No prerequisites.'
+  prereq_text: 'This course is not open to MBA students. Booth Book Fee may be assessed. Refer to FAQ webpage for registration
+    and schedule details: https://tinyurl.com/y8wz3oge. All first year College students are restricted from enrolling into
+    this course.'
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: BUSN 20711. Choosing Leadership. 100 Units.
+  needs_review: true
+- code: BUSN 20800
+  title: Big Data
+  units: 100
+  description: 'Big Data is a course about data mining: the analysis, exploration, and simplification of large high-dimensional
+    datasets. Students will learn how to model and interpret complicated `Big Data'' and become adept at building powerful
+    models for prediction and classification. Techniques covered include an advanced overview of linear and logistic regression,
+    model choice and false discovery rates, multinomial and binary regression, classification, decision trees, factor models,
+    clustering, the bootstrap and cross-validation. We learn both basic underlying concepts and practical computational skills,
+    including techniques for analysis of distributed data. Heavy emphasis is placed on analysis of actual datasets, and on
+    development of application specific methodology. Among other examples, we will consider consumer database mining, internet
+    and social media tracking, network analysis, and text mining.'
+  prereq_text: 'This course is not open to MBA students. Cannot enroll in BUSN 20800 if BUSN 41201 Big Data taken previously,
+    and vice versa. Refer to FAQ webpage for registration and schedule details: https://tinyurl.com/y8wz3oge. All first year
+    college students are restricted from enrolling into this course.'
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: BUSN 20800. Big Data. 100 Units.
+  needs_review: true
+- code: BUSN 20810
+  title: Machine Learning
+  units: 100
+  description: Students will learn about state-of-the-art machine learning techniques and how to apply them in business related
+    problems. Techniques will be introduced in the context of business applications and the emphasis will be put on how machine
+    learning can be used to create value and provide insights from data. First, and the biggest, part of the class will focus
+    on predictive analytics. Students will learn about decision trees, nearest neighbor classifiers, boosting, random forests,
+    deep neural networks, naive Bayes and support vector machines. Among other examples, we will apply these techniques to
+    detecting spam in email, click-through rate prediction in online advertisement, image classification, face recognition,
+    sentiment analysis and churn prediction. Students will learn what techniques to apply and why. In the second part of the
+    class, students will learn about unsupervised techniques for extracting actionable patterns from data. Examples include
+    clustering, collaborative filtering, probabilistic graphical modelling and dimension reduction with applications to customer
+    segmentation, recommender systems, graph and time series mining, and anomaly detection.
+  prereq_text: 'This course is not open to MBA students. Cannot enroll in BUSN 20810 if BUSN 41204 Machine Learning taken
+    previously, and vice versa. Booth Book Fee may be assessed. Refer to FAQ webpage for registration and schedule details:
+    https://tinyurl.com/y8wz3oge. All first year college students are restricted from enrolling into this course.'
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: BUSN 20810. Machine Learning. 100 Units.
+  needs_review: true
+- code: BUSN 20820
+  title: Financial Econometrics
+  units: 100
+  description: This course covers a variety of topics in financial econometrics. The topics covered are of real- world, practical
+    interest and are closely linked to material covered in other advance finance courses. Topics covered include ARMA models,
+    volatility models (GARCH), factor models, models for time varying correlations, analysis of panel data, cointegration
+    models for long-run co-movement between prices and models for transactions data and the analysis of transactions cost.
+  prereq_text: 'This course is not open to MBA students. Cannot enroll in BUSN 20820 if BUSN 41203 Financial Econometrics
+    taken previously, and vice versa. Refer to FAQ webpage for registration and schedule details: https://tinyurl.com/y8wz3oge.
+    All first year college students are restricted from enrolling into this course.'
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: BUSN 20820. Financial Econometrics. 100 Units.
+  needs_review: true
+- code: BUSN 20900
+  title: Competitive Strategy
+  units: 100
+  description: The course applies microeconomics (including elements of price theory, game theory, and industrial organization)
+    to analyze decisions firms face in business environments. There will be specific focus on strategic decisions and the
+    factors that influence firms' competitive advantages. Class time will be devoted to lectures and case discussions. Topics
+    covered include sources of competitive advantage, scope of the firm, efficient performance, pricing, entry and exit, vertical
+    structure, and network externalities.
+  prereq_text: 'This course is not open to MBA students. Cannot enroll in BUSN 20900 if BUSN 42001 Competitive Strategy taken
+    previously, and vice versa. Refer to FAQ webpage for registration and schedule details: https://tinyurl.com/y8wz3oge.
+    All first year college students are restricted from enrolling into this course.'
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: BUSN 20900. Competitive Strategy. 100 Units.
+  needs_review: true
+- code: BUSN 20920
+  title: Social Entrepreneurship and Innovation
+  units: 100
+  description: We will study social innovation with a focus on the role of social entrepreneurship for implementing innovative
+    solutions to society's problems. A team of 4 students will be assigned with an innovative idea that addresses a social
+    problem and could become a (for-profit or non-profit) social venture. Students will provide their preferences for assignment
+    from a list of preselected ideas. Teams will essentially develop a business idea around this innovation. To achieve this,
+    students will research the relevant literature, conduct customer discovery, analyze the competitive landscape, validate
+    and refine the offering, propose a business model, articulate a theory of change, and identify an impact management strategy.
+    Teams will present to the idea sponsor at the end of the quarter and in a mid-quarter check-in. The hope is that there
+    will be sufficient validation and interest to move forward with some of these ventures with students involved in or leading
+    the venture. One path is to participate in the John Edwardson, '72, Social New Venture Challenge. Much of class time will
+    be devoted to group exercises to implement frameworks to answer these questions for the projects as well as a set of case
+    study examples we will use throughout the course. In addition, there will be readings and discussions on a set of topics
+    to provide a broader understanding of the economics of social innovation and its relationship to more traditional innovation.
+    Grading will be based weekly project
+  prereq_text: 'Prerequisite(s): This course is not open to MBA students. Cannot enroll in BUSN 20920 if BUSN 34117 Social
+    Entrepreneurship and Innovation taken previously, and vice versa. Booth Book Fee may be assessed. Refer to FAQ webpage
+    for registration and schedule details: https:// tinyurl.com/y8wz3oge. All first year College students are restricted from
+    enrolling into this course.'
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: BUSN 20920. Social Entrepreneurship and Innovation. 100 Units.
+  needs_review: true
+- code: BUSN 20930
+  title: Social Sector Strategy and Structure
+  units: 100
+  description: The social sector, which encompasses nonprofit & for-profit firms that are primarily pursuing a solution to
+    social or environmental issues, is an increasingly important sector. This course provides an overview of the structures,
+    strategy frameworks, and management tools employed by social sector organizations to ensure that they deliver on the impact
+    they seek. In particular, the course examines those approaches that differ from managing a non-impact seeking venture.
+    The same fundamental approaches to marketing, competitive analysis, etc. can be translated across contexts. Where there
+    are differences, however, they are important. We will review & analyze the distinctive challenges of managing for social
+    or environmental impact, as opposed to profit maximization. We will use cases & exercises to examine and unpack social
+    sector management and strategy. This includes how organizations are structured from a tax-status perspective; common business
+    models; management tools such as the construct of theory of change/intended impact, impact measurement, marketing to donors
+    & beneficiaries; managing paid & unpaid labor; funding sources such as philanthropy & impact investing; governance; and
+    scale and growth. This is a "survey course" of the management tools, strategy frameworks, and structural approaches used
+    in the social sector. It is not deep dive into any of these topics, and is designed to provide any student with a working
+    knowledge of managing social sector organizations.
+  prereq_text: 'This course is not open to MBA students. Booth Book Fee may be assessed. Refer to FAQ webpage for registration
+    and schedule details: https://tinyurl.com/y8wz3oge. All first year college students are restricted from enrolling into
+    this course.'
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: BUSN 20930. Social Sector Strategy and Structure. 100 Units.
+  needs_review: true
+- code: BUSN 20940
+  title: Business Ethics
+  units: 100
+  description: Students in this course will gain experience formulating coherent arguments about the ethics and role of business,
+    by relating their own views to important ideas about business, democracy and markets. We will use this approach to consider
+    a broad range of tradeoffs and controversies that business leaders often confront. The business environment creates ethical
+    choices that can be hard to think through clearly. It can also subject companies to negative publicity or political pressure,
+    which affects both how they are regulated and how well they attract employees, customers and partners. Business leaders
+    are often called upon to make credible and persuasive arguments defending their products, their firms, their industries,
+    or the capitalist or market system in which they operate. The quality and accuracy of arguments in this environment vary,
+    but usually include assertions that a business or its leaders are behaving unethically or lack legitimacy. The ability
+    to assess these claims, and to address them effectively when you think the facts and arguments are on your side, is a
+    crucial skill, especially given the extensive influence of governments, pressure groups and the media. This course requires
+    students to consider how their views on the role and conduct of business relate to the ideas of important thinkers, and
+    to apply their views to business settings by discussing controversial topics or decisions.
+  prereq_text: 'Prerequisite(s): This course is not open to MBA students. Cannot enroll in BUSN 20940 if BUSN 33471Business,
+    Politics, and Ethics taken previously, and vice versa. Booth Book Fee may be assessed. Refer to FAQ webpage for registration
+    and schedule details: https://tinyurl.com/y8wz3oge. All first year College students are restricted from enrolling into
+    this course.'
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: BUSN 20940. Business Ethics. 100 Units.
+  needs_review: true
+- code: BUSN 35225
+  title: Crony Capitalism
+  units: 100
+  notes: Cross-listed with ECON 28620 (its catalog block lists BUSN 35225 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from ECON 28620.
+  crosslists:
+  - ECON 28620
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: 'Equivalent Course(s): BUSN 35225'
+- code: BUSN 36903
+  title: 'Mathematical Computation IIA: Convex Optimization'
+  units: 100
+  notes: Cross-listed with CMSC 35470 (its catalog block lists BUSN 36903 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from CMSC 35470.
+  crosslists:
+  - CMSC 35470
+  prereq:
+    any:
+    - STAT 30900
+    - STAT 31430
+    - consent: instructor
+  prereq_text: STAT 30900 or STAT 31430 or consent of instructor.
+  terms_offered:
+  - SP
+  source:
+    url: http://graduateannouncements.uchicago.edu/graduate/departmentofcomputerscience/
+    quote: 'Equivalent Course(s): BUSN 36903, CAAM 31015, STAT 31015, TTIC 31070'
+- code: BUSN 40901
+  title: Special Topics in Operations Mgt./Mgt. Science
+  units: 100
+  notes: Cross-listed with CMSC 34901 (its catalog block lists BUSN 40901 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from CMSC 34901.
+  crosslists:
+  - CMSC 34901
+  source:
+    url: http://graduateannouncements.uchicago.edu/graduate/departmentofcomputerscience/
+    quote: 'Equivalent Course(s): BUSN 40901'
