@@ -43,7 +43,13 @@ test("onboarding: five steps create a plan and open the generator", async ({ pag
   await page.mouse.move(b.x + b.width / 2, b.y + b.height / 2, { steps: 10 });
   await page.mouse.up();
   await expect(target).toContainText("At most 4 courses");
-  await page.getByRole("button", { name: "Next" }).click();
+  // dnd-kit swallows a click that lands within a few milliseconds of a drop (a person cannot
+  // click that fast; Playwright can), so press Next until the step changes.
+  const review = page.getByRole("heading", { name: "Step 5 of 5: Review" });
+  await expect(async () => {
+    if (!(await review.isVisible())) await page.getByRole("button", { name: "Next" }).click({ timeout: 1000 });
+    await expect(review).toBeVisible({ timeout: 1000 });
+  }).toPass();
 
   // 5. Review
   await expect(page.getByText("Fake Program, Fake Core")).toBeVisible();

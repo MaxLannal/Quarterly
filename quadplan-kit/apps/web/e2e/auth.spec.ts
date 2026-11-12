@@ -1,7 +1,11 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page, type Route } from "@playwright/test";
 
-// The e2e server is a static build with no API, so each test answers `/api/*` itself.
+// Each test answers `/api/*` itself to check the exact calls the pages make. The e2e build
+// ships the MSW service worker (VITE_MOCK_API=1), and a request answered by a service worker
+// never reaches `page.route`, so service workers are blocked for this file.
+test.use({ serviceWorkers: "block" });
+
 const SESSION = {
   account: { id: "00000000-0000-0000-0000-000000000001", username: "quiet-heron", role: "user", created_day: "2026-11-12" },
   csrf_token: "csrf-token-1",
@@ -31,6 +35,12 @@ async function mockApi(page: Page, replies: Record<string, Reply>): Promise<Call
   return calls;
 }
 
+/** The auth writes among the calls: the app shell and the planner make other calls of their own
+ *  (GET /auth/session, GET /catalog-years, POST /verify, ...). */
+function authPosts(calls: Call[]): Call[] {
+  return calls.filter((c) => c.key.startsWith("POST /auth/"));
+}
+
 async function expectAccessible(page: Page) {
   const results = await new AxeBuilder({ page }).include("main").analyze();
   expect(results.violations.map((v) => `${v.id}: ${v.help}`)).toEqual([]);
@@ -50,7 +60,7 @@ test("sign-up: email, code, then username and password", async ({ page }) => {
   await page.getByLabel("Email address").fill("student@gmail.com");
   await page.getByRole("button", { name: "Send code" }).click();
   await expect(page.getByRole("alert").filter({ hasText: "Use your @uchicago.edu email address." })).toBeVisible();
-  expect(calls).toHaveLength(0);
+  expect(authPosts(calls)).toHaveLength(0);
 
   await page.getByLabel("Email address").fill("student@uchicago.edu");
   await page.getByRole("button", { name: "Send code" }).click();
@@ -68,8 +78,9 @@ test("sign-up: email, code, then username and password", async ({ page }) => {
   await page.getByRole("button", { name: "Create account" }).click();
 
   await expect(page).toHaveURL(/\/plan$/);
-  expect(calls.map((c) => c.key)).toEqual(["POST /auth/email", "POST /auth/verify-code", "POST /auth/register"]);
-  expect(calls[2]?.body).toEqual({ ticket: "ticket-1", username: "quiet-heron", password: PASSWORD });
+  const posts = authPosts(calls);
+  expect(posts.map((c) => c.key)).toEqual(["POST /auth/email", "POST /auth/verify-code", "POST /auth/register"]);
+  expect(posts[2]?.body).toEqual({ ticket: "ticket-1", username: "quiet-heron", password: PASSWORD });
 });
 
 test("log in, and reset a forgotten password", async ({ page }) => {
@@ -97,7 +108,7 @@ test("log in, and reset a forgotten password", async ({ page }) => {
   await page.getByLabel("Password").fill("a brand new password");
   await page.getByRole("button", { name: "Log in" }).click();
   await expect(page).toHaveURL(/\/plan$/);
-  expect(calls.at(-1)).toMatchObject({
+  expect(authPosts(calls).at(-1)).toMatchObject({
     key: "POST /auth/login",
     body: { login: "quiet-heron", password: "a brand new password" },
   });
