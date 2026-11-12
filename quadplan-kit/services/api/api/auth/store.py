@@ -40,6 +40,11 @@ class Store:
         pipe.incr(key)
         return int(pipe.execute()[1])
 
+    def decr(self, key: str) -> None:
+        """Take one event back. A window that ended in the meantime is not brought back."""
+        if int(self._r.decr(key)) < 0:  # the key had expired: DECR made a new one with no TTL
+            self._r.delete(key)
+
     def count(self, key: str) -> int:
         return int(self._r.get(key) or 0)
 

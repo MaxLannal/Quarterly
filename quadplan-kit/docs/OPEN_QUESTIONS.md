@@ -34,8 +34,8 @@ Choices made so work could continue; each is the conservative option and easy to
 6. **Email provider.** `EMAIL_BACKEND=console` (development: prints the code and pending id, never
    the address) or `smtp` (stdlib `smtplib`, STARTTLS with certificate verification, works with
    any transactional provider). No provider SDK was added. Which provider, and the `EMAIL_FROM`
-   address? The API refuses to start with `ENVIRONMENT=production` and the console backend,
-   development secrets or a non-Secure cookie.
+   address? The API refuses to start with the console backend, development secrets
+   or a non-Secure cookie unless `ENVIRONMENT` is explicitly `development` or `test`.
 7. **Plus-addressing and aliases.** Only plain `local@uchicago.edu` is accepted: no subdomains
    (`@cs.uchicago.edu`, `@alumni.uchicago.edu`) and no `+tag`, so one mailbox cannot verify
    several accounts. If real student addresses need either, relax `normalize_uchicago_email`.

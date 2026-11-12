@@ -246,6 +246,23 @@ def test_limit_counts_in_a_window_and_expires() -> None:
     limit.check(store, "s")
 
 
+def test_limit_refund_gives_one_event_back_and_never_outlives_the_window() -> None:
+    client = fakeredis.FakeRedis(decode_responses=True)
+    store = Store(client)
+    limit = Limit("t", 2, HOUR)
+    for _ in range(5):  # good attempts: counted, then given back
+        limit.hit(store, "s")
+        limit.refund(store, "s")
+    limit.hit(store, "s")
+    limit.hit(store, "s")
+    with pytest.raises(HTTPException):
+        limit.hit(store, "s")
+    assert 0 < client.ttl("rl:t:s") <= HOUR  # a refund keeps the window's expiry
+    client.delete("rl:t:s")  # the window ends before a slow attempt finishes
+    limit.refund(store, "s")
+    assert client.keys("*") == []  # no negative, never-expiring counter is left behind
+
+
 # ---------------------------------------------------------------------------------- misc
 
 
@@ -259,18 +276,50 @@ def test_author_ref_is_per_page_and_stable() -> None:
     assert str(a) not in author_ref(a, 1)
 
 
+SAFE = {
+    "server_hmac_key": "a" * 40,
+    "issuance_hmac_key": "b" * 40,
+    "session_secret": "c" * 40,
+    "email_backend": "smtp",
+}
+
+
 def test_production_refuses_development_settings() -> None:
-    assert Settings(_env_file=None).production_problems() == []
+    for env in ("development", "test"):
+        assert Settings(_env_file=None, environment=env).production_problems() == []
     problems = Settings(
         _env_file=None, environment="production", session_cookie_secure=False
     ).production_problems()
     assert len(problems) == 5
-    good = Settings(
-        _env_file=None,
-        environment="production",
-        server_hmac_key="a" * 40,
-        issuance_hmac_key="b" * 40,
-        session_secret="c" * 40,
-        email_backend="smtp",
-    )
-    assert good.production_problems() == []
+    assert Settings(_env_file=None, environment="production", **SAFE).production_problems() == []
+
+
+@pytest.mark.parametrize("environment", [None, "", "prod", "staging", "Development", "dev"])
+def test_safety_check_fails_closed_unless_the_environment_is_development_or_test(
+    environment: str | None, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Unset or unrecognised ENVIRONMENT is treated as a real deployment."""
+    monkeypatch.delenv("ENVIRONMENT", raising=False)
+    if environment is not None:
+        monkeypatch.setenv("ENVIRONMENT", environment)
+
+    def problems(**overrides: Any) -> list[str]:
+        return Settings(_env_file=None, **{**SAFE, **overrides}).production_problems()
+
+    assert problems() == []
+    assert problems(email_backend="console") == [
+        "EMAIL_BACKEND=console would print verification codes"
+    ]
+    assert problems(session_cookie_secure=False) == ["SESSION_COOKIE_SECURE must be true"]
+    assert len(Settings(_env_file=None).production_problems()) == 4  # the defaults
+
+
+def test_app_refuses_to_start_with_unsafe_settings(monkeypatch: pytest.MonkeyPatch) -> None:
+    from api import main
+
+    unsafe = Settings(_env_file=None, environment="staging", **{**SAFE, "email_backend": "console"})
+    monkeypatch.setattr(main, "get_settings", lambda: unsafe)
+    with pytest.raises(RuntimeError, match="EMAIL_BACKEND=console"):
+        main.create_app()
+    monkeypatch.setattr(main, "get_settings", lambda: Settings(_env_file=None, **SAFE))
+    main.create_app()

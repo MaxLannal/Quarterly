@@ -1,5 +1,6 @@
 """`/account`: export, change password, delete (SPEC "Account deletion")."""
 
+import datetime as dt
 import uuid
 from collections.abc import Iterator
 from typing import Any
@@ -204,7 +205,65 @@ def test_password_confirmation_attempts_are_limited(env: Env) -> None:
     assert env.client.get("/auth/session").status_code == 200  # nothing was deleted
 
 
+def test_password_confirmation_is_counted_before_the_password_is_checked(
+    env: Env, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from api.routers import account as account_router
+
+    session = env.signup("quiet-heron", EMAIL)
+    seen: list[list[str]] = []
+    real = account_router.verify_password
+
+    def spy(stored: str | None, password: str) -> bool:
+        seen.append([env.redis.get(k) for k in env.redis.keys("rl:password-fail:*")])
+        return real(stored, password)
+
+    monkeypatch.setattr(account_router, "verify_password", spy)
+    body = {"current_password": "not-my-password", "new_password": "a brand new password"}
+    assert env.client.post("/account/password", json=body, headers=csrf(session)).status_code == 403
+    assert seen[-1] == ["1"]
+    body["current_password"] = PASSWORD
+    assert env.client.post("/account/password", json=body, headers=csrf(session)).status_code == 204
+    assert seen[-1] == ["2"]
+    # The good attempt was given back; the wrong one stays counted.
+    assert [env.redis.get(k) for k in env.redis.keys("rl:password-fail:*")] == ["1"]
+
+
 # -------------------------------------------------------------------------------- delete
+
+
+@pytest.mark.parametrize(
+    ("status", "suspended_days", "allowed"),
+    [
+        ("banned", None, False),
+        ("suspended", None, False),
+        ("active", 1, False),
+        ("active", 30, False),
+        ("active", 0, True),  # the suspension ended today
+        ("active", -3, True),
+    ],
+)
+def test_a_banned_or_suspended_account_cannot_be_deleted(
+    env: Env, status: str, suspended_days: int | None, allowed: bool
+) -> None:
+    session = env.signup("quiet-heron", EMAIL)
+    today = dt.datetime.now(dt.UTC).date()
+    until = None if suspended_days is None else today + dt.timedelta(days=suspended_days)
+    with env.db() as db:
+        account = db.scalars(select(m.Account)).one()
+        account.status, account.suspended_until = status, until
+        db.commit()
+    resp = env.client.post(
+        "/account/delete", json={"password": PASSWORD, "posts": "delete"}, headers=csrf(session)
+    )
+    with env.db() as db:
+        remaining = db.scalars(select(m.Account.email)).all()
+    if allowed:
+        assert resp.status_code == 204 and remaining == []
+    else:
+        assert resp.status_code == 409 and remaining == [EMAIL]
+        # The email is still taken, so the ban cannot be escaped by signing up again.
+        assert env.client.get("/auth/session").status_code == 200
 
 
 def seed_forum(env: Env, me: str, them: str, ids: dict[str, int]) -> dict[str, Any]:

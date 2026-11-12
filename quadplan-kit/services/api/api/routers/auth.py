@@ -17,14 +17,15 @@ from api.auth.emails import (
     get_email_backend,
     normalize_uchicago_email,
 )
-from api.auth.hashing import subject_hash
 from api.auth.passwords import hash_password, needs_rehash, verify_password
 from api.auth.ratelimit import (
     EMAIL_START_PER_ADDRESS,
     LOGIN_FAILURES,
     RESET_START_PER_ADDRESS,
+    account_subject,
     email_subject,
     ip_limit,
+    login_subject,
 )
 from api.auth.sessions import (
     SessionData,
@@ -91,7 +92,9 @@ def start_email(
     EMAIL_START_PER_ADDRESS.hit(store, email_subject(email))
     taken = db.scalar(sa.select(Account.id).where(Account.email == email)) is not None
     # Same response either way: only the mailbox owner learns whether an account exists.
-    pending_id, code = codes.create_pending(store, "signup", None if taken else email)
+    pending_id, code = codes.create_pending(
+        store, "signup", None if taken else email, address=email
+    )
     kind: EmailKind = "already_registered" if taken else "signup_code"
     background.add_task(
         mailer.send, OutgoingEmail(to=email, kind=kind, pending_id=pending_id, code=code)
@@ -168,17 +171,24 @@ def login(
     store: Annotated[Store, Depends(get_store)],
 ) -> SessionOut:
     ident = body.login.strip().lower()
-    subject = "login:" + subject_hash("login", ident)
-    LOGIN_FAILURES.check(store, subject)
+    # Count the attempt before the (slow) password check and give it back on success, so
+    # concurrent wrong guesses cannot all pass a check made before any of them was recorded.
+    subjects = [login_subject(ident)]
+    LOGIN_FAILURES.hit(store, subjects[0])
     if "@" in ident:
         query = sa.select(Account).where(Account.email == ident)
     else:
         query = sa.select(Account).where(sa.func.lower(Account.username) == ident)
     account = db.scalar(query)
+    if account is not None:
+        # One budget per account, however it is named (username or email).
+        subjects.append(account_subject(account.id))
+        LOGIN_FAILURES.hit(store, subjects[1])
     if not verify_password(account.password_hash if account else None, body.password):
-        LOGIN_FAILURES.record(store, subject)
         raise HTTPException(status_code=401, detail=BAD_LOGIN)
     assert account is not None and account.password_hash is not None
+    for subject in subjects:
+        LOGIN_FAILURES.refund(store, subject)
     if needs_rehash(account.password_hash):
         account.password_hash = hash_password(body.password)
         db.commit()
@@ -229,12 +239,15 @@ def start_password_reset(
 ) -> EmailStarted:
     # Always 202 with a pending id; a code is emailed only if the account exists.
     email = normalize_uchicago_email(body.email)
-    RESET_START_PER_ADDRESS.hit(store, email_subject(email or body.email.strip().lower()))
+    address = email or body.email.strip().lower()
+    RESET_START_PER_ADDRESS.hit(store, email_subject(address))
     exists = (
         email is not None
         and db.scalar(sa.select(Account.id).where(Account.email == email)) is not None
     )
-    pending_id, code = codes.create_pending(store, "reset", email if exists else None)
+    pending_id, code = codes.create_pending(
+        store, "reset", email if exists else None, address=address
+    )
     if email is not None and exists:
         background.add_task(
             mailer.send,

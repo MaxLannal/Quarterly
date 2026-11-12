@@ -4,6 +4,10 @@ A pending verification lives in Redis for 10 minutes under an opaque `pending_id
 stored as a keyed hash. A "dead" pending record (no email, a hash no code can match) is created
 when the server must not reveal that it sent nothing, so every `pending_id` behaves the same
 for someone who cannot read the mailbox.
+
+Wrong codes are also counted per address for a day (`CODE_FAILURES_PER_ADDRESS`), across all
+the codes sent to it. A dead record carries the same address subject as a live one, so the
+day limit does not show which kind a `pending_id` is.
 """
 
 from __future__ import annotations
@@ -16,6 +20,7 @@ from typing import Literal
 from fastapi import HTTPException
 
 from api.auth.hashing import secret_hash, token_key
+from api.auth.ratelimit import CODE_FAILURES_PER_ADDRESS, email_subject
 from api.auth.store import Store
 
 PENDING_TTL = 600
@@ -44,8 +49,14 @@ def _code_hash(pending_id: str, code: str) -> str:
     return secret_hash("code", pending_id, code)
 
 
-def create_pending(store: Store, kind: Kind, email: str | None) -> tuple[str, str | None]:
-    """Returns (pending_id, code). `email=None` makes a dead record and returns no code."""
+def create_pending(
+    store: Store, kind: Kind, email: str | None, *, address: str | None = None
+) -> tuple[str, str | None]:
+    """Returns (pending_id, code). `email=None` makes a dead record and returns no code.
+
+    `address` is the address the caller typed, for a dead record: only its rate-limit subject
+    (a keyed hash) is kept, so wrong codes count against it exactly as for a live record.
+    """
     pending_id = secrets.token_urlsafe(24)
     code: str | None
     if email is None:
@@ -53,13 +64,20 @@ def create_pending(store: Store, kind: Kind, email: str | None) -> tuple[str, st
     else:
         code = f"{secrets.randbelow(10**6):06d}"
         hashed = _code_hash(pending_id, code)
-    record = json.dumps({"kind": kind, "email": email, "hash": hashed})
+    counted = email if email is not None else address
+    subject = None if counted is None else email_subject(counted)
+    record = json.dumps({"kind": kind, "email": email, "hash": hashed, "subject": subject})
     store.put(_pending_key(pending_id), record, PENDING_TTL)
     return pending_id, code
 
 
 def redeem_pending(store: Store, kind: Kind, pending_id: str, code: str) -> str:
-    """The verified email. One use; at most MAX_ATTEMPTS tries, then the record is destroyed."""
+    """The verified email. One use; at most MAX_ATTEMPTS tries, then the record is destroyed.
+
+    Every try is also counted against the address before the code is compared, and a correct
+    code gives its count back: once the address has used up its wrong codes for the day, no
+    code for it works (not even the right one) until the window ends.
+    """
     attempts = store.incr(_attempts_key(pending_id), PENDING_TTL)
     if attempts > MAX_ATTEMPTS:
         store.delete(_pending_key(pending_id))
@@ -69,12 +87,21 @@ def redeem_pending(store: Store, kind: Kind, pending_id: str, code: str) -> str:
     if raw is None:
         raise invalid
     record = json.loads(raw)
+    subject = record.get("subject")
+    if subject is not None:
+        try:
+            CODE_FAILURES_PER_ADDRESS.hit(store, subject)
+        except HTTPException:
+            store.delete(_pending_key(pending_id))
+            raise
     matches = hmac.compare_digest(str(record["hash"]), _code_hash(pending_id, code))
     if record["kind"] != kind or not matches or record["email"] is None:
         raise invalid
     if store.getdel(_pending_key(pending_id)) is None:  # a concurrent request used it first
         raise invalid
     store.delete(_attempts_key(pending_id))
+    if subject is not None:
+        CODE_FAILURES_PER_ADDRESS.refund(store, subject)
     return str(record["email"])
 
 

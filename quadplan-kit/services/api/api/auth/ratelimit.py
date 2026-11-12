@@ -54,6 +54,14 @@ class Limit:
         if self.record(store, subject) > self.max:
             raise self._reject(store, subject)
 
+    def refund(self, store: Store, subject: str) -> None:
+        """Take back the event a `hit` counted, once the attempt turned out to be good.
+
+        Failure limits count every attempt *before* the secret is checked (`hit`) and refund
+        the good ones, so concurrent wrong guesses cannot all slip past a check made earlier.
+        """
+        store.decr(self._key(subject))
+
 
 def client_ip(request: Request) -> str:
     """The caller's address, for rate limiting only. Behind our own reverse proxy, set
@@ -76,6 +84,14 @@ def email_subject(email: str) -> str:
     return "em:" + subject_hash("email", email)
 
 
+def login_subject(ident: str) -> str:
+    return "login:" + subject_hash("login", ident)
+
+
+def account_subject(account_id: object) -> str:
+    return "account:" + subject_hash("account", str(account_id))
+
+
 def ip_limit(scope: str, per_day: int) -> Callable[..., None]:
     """Dependency: at most `per_day` requests per IP per 24 hours for this endpoint."""
     limit = Limit(f"{scope}:ip", per_day, DAY)
@@ -90,5 +106,10 @@ def ip_limit(scope: str, per_day: int) -> Callable[..., None]:
 # addresses; the per-email, per-login and per-account limits are the ones that stop guessing.
 EMAIL_START_PER_ADDRESS = Limit("email-start", 5, HOUR)
 RESET_START_PER_ADDRESS = Limit("reset-start", 5, HOUR)
+#: Wrong emailed codes per address, across every code sent to it (sign-up and reset together).
+#: Without it, 5 codes an hour x 5 tries each is an unbounded slow search of the 10^6 codes.
+CODE_FAILURES_PER_ADDRESS = Limit("code-fail", 10, DAY)
+#: Counted per typed login and, when it names an account, per account (username and email
+#: share that second budget).
 LOGIN_FAILURES = Limit("login-fail", 10, 15 * MINUTE)
 PASSWORD_FAILURES = Limit("password-fail", 10, 15 * MINUTE)

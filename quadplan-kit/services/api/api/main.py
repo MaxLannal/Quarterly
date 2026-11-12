@@ -14,7 +14,10 @@ def create_app() -> FastAPI:
     # Never log email or IP addresses (CLAUDE.md): scrub every log record, process-wide.
     install_log_redaction()
     if problems := get_settings().production_problems():
-        raise RuntimeError("unsafe production settings: " + "; ".join(problems))
+        raise RuntimeError(
+            "unsafe settings outside development (for local work set ENVIRONMENT=development): "
+            + "; ".join(problems)
+        )
     app = FastAPI(
         title="Quarterly API",
         version=__version__,

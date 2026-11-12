@@ -1,5 +1,6 @@
 """`/account`: export, change password, delete (SPEC "Account deletion")."""
 
+import datetime as dt
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, Response
@@ -7,9 +8,8 @@ from sqlalchemy.orm import Session
 
 from api.auth import account_data
 from api.auth.account_data import account_out, export_plans
-from api.auth.hashing import subject_hash
 from api.auth.passwords import hash_password, verify_password
-from api.auth.ratelimit import PASSWORD_FAILURES, ip_limit
+from api.auth.ratelimit import PASSWORD_FAILURES, account_subject, ip_limit
 from api.auth.sessions import (
     SessionData,
     clear_session_cookie,
@@ -28,12 +28,26 @@ router = APIRouter(prefix="/account", tags=["account"], responses=NOT_IMPLEMENTE
 
 def _confirm_password(store: Store, account: Account, password: str) -> None:
     """Re-authentication for sensitive actions, with its own per-account failure limit."""
-    subject = "account:" + subject_hash("account", str(account.id))
-    PASSWORD_FAILURES.check(store, subject)
+    subject = account_subject(account.id)
+    # Counted before the (slow) check and given back on success, so concurrent wrong guesses
+    # cannot all pass a check made before any of them was recorded.
+    PASSWORD_FAILURES.hit(store, subject)
     # The frozen schemas put no length cap on these fields; do not hash huge inputs.
     if len(password) > 256 or not verify_password(account.password_hash, password):
-        PASSWORD_FAILURES.record(store, subject)
         raise HTTPException(status_code=403, detail="That password is wrong.")
+    PASSWORD_FAILURES.refund(store, subject)
+
+
+def _refuse_while_restricted(account: Account) -> None:
+    """Deleting frees the email for a new account, so it must not be a way out of a ban or a
+    suspension. Day-level, like every date kept about a user."""
+    today = dt.datetime.now(dt.UTC).date()
+    suspended = account.suspended_until is not None and account.suspended_until > today
+    if account.status != "active" or suspended:
+        raise HTTPException(
+            status_code=409,
+            detail="This account is restricted, so it cannot be deleted right now.",
+        )
 
 
 @router.get(
@@ -80,6 +94,7 @@ def delete_account(
     db: Annotated[Session, Depends(get_session)],
     store: Annotated[Store, Depends(get_store)],
 ) -> None:
+    _refuse_while_restricted(account)
     _confirm_password(store, account, body.password)
     account_id = account.id
     account_data.delete_account(db, account, body.posts)

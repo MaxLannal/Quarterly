@@ -485,12 +485,152 @@ def test_login_failures_are_limited_per_login(env: Env) -> None:
             "/auth/login", json={"login": "Quiet-Heron", "password": "wrong-password"}
         )
         assert resp.status_code == 401
-    # Locked for a while, even with the right password; other logins are unaffected.
+    # Locked for a while, even with the right password, and by email too: the account has one
+    # budget however it is named.
     locked = browser.post("/auth/login", json={"login": "quiet-heron", "password": PASSWORD})
     assert locked.status_code == 429 and int(locked.headers["retry-after"]) <= 15 * 60
+    by_email = browser.post("/auth/login", json={"login": EMAIL, "password": PASSWORD})
+    assert by_email.status_code == 429
+    # Other accounts are unaffected.
+    env.signup("calm-otter", client=env.browser())
+    other = browser.post("/auth/login", json={"login": "calm-otter", "password": PASSWORD})
+    assert other.status_code == 200
+    # When the window ends the account can log in again.
+    env.redis.delete(*env.redis.keys("rl:login-fail:*"))
     assert (
         browser.post("/auth/login", json={"login": EMAIL, "password": PASSWORD}).status_code == 200
     )
+
+
+def test_username_and_email_share_one_login_failure_budget(env: Env) -> None:
+    env.signup("quiet-heron", EMAIL)
+    browser = env.browser()
+    for n in range(10):
+        ident = "quiet-heron" if n % 2 else EMAIL
+        resp = browser.post("/auth/login", json={"login": ident, "password": "wrong-password"})
+        assert resp.status_code == 401
+    for ident in ("quiet-heron", EMAIL):
+        resp = browser.post("/auth/login", json={"login": ident, "password": PASSWORD})
+        assert resp.status_code == 429
+
+
+def test_login_attempt_is_counted_before_the_password_is_checked(
+    env: Env, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Concurrent guesses cannot race past the limit: by the time the slow hash runs, the
+    attempt is already in both counters."""
+    from api.routers import auth as auth_router
+
+    env.signup("quiet-heron", EMAIL)
+    seen: list[list[int]] = []
+    real = auth_router.verify_password
+
+    def spy(stored: str | None, password: str) -> bool:
+        seen.append(sorted(int(env.redis.get(k)) for k in env.redis.keys("rl:login-fail:*")))
+        return real(stored, password)
+
+    monkeypatch.setattr(auth_router, "verify_password", spy)
+    browser = env.browser()
+    bad = browser.post("/auth/login", json={"login": "quiet-heron", "password": "wrong-password"})
+    assert bad.status_code == 401 and seen[-1] == [1, 1]  # the login and the account
+    good = browser.post("/auth/login", json={"login": "quiet-heron", "password": PASSWORD})
+    assert good.status_code == 200 and seen[-1] == [2, 2]
+    # A good login gives its attempt back; the failure stays counted.
+    assert sorted(int(env.redis.get(k)) for k in env.redis.keys("rl:login-fail:*")) == [1, 1]
+    # Unknown logins are counted too (per typed login only).
+    browser.post("/auth/login", json={"login": "nobody-here", "password": "wrong-password"})
+    assert len(env.redis.keys("rl:login-fail:*")) == 3
+
+
+def wrong_codes_until_the_address_is_locked(env: Env, path: str, extra: dict[str, str]) -> None:
+    """Uses up the day's wrong codes for EMAIL across several emailed codes."""
+    start_path = "/auth/email" if path == "/auth/verify-code" else "/auth/password-reset/start"
+    wrong = 0
+    while wrong < 10:
+        pending_id = env.client.post(start_path, json={"email": EMAIL}).json()["pending_id"]
+        good = env.outbox.last().code
+        bad = "000000" if good != "000000" else "111111"
+        for _ in range(min(codes.MAX_ATTEMPTS - 1, 10 - wrong)):
+            resp = env.client.post(path, json={"pending_id": pending_id, "code": bad, **extra})
+            assert resp.status_code == 400, resp.text
+            wrong += 1
+
+
+@pytest.mark.parametrize(
+    ("path", "extra"),
+    [
+        ("/auth/verify-code", {}),
+        ("/auth/password-reset/finish", {"new_password": "a brand new password"}),
+    ],
+)
+def test_wrong_codes_are_capped_per_address_per_day(
+    env: Env, path: str, extra: dict[str, str]
+) -> None:
+    reset = path != "/auth/verify-code"
+    if reset:
+        env.signup("quiet-heron", EMAIL)
+    start_path = "/auth/password-reset/start" if reset else "/auth/email"
+    wrong_codes_until_the_address_is_locked(env, path, extra)
+    env.redis.delete(*env.redis.keys("rl:*-start:*"))  # an hour later: new codes can be sent
+
+    # A fresh code, and the right one: refused, and the record is destroyed.
+    pending_id = env.client.post(start_path, json={"email": EMAIL}).json()["pending_id"]
+    good = env.outbox.last().code
+    body = {"pending_id": pending_id, "code": good, **extra}
+    live = len(env.redis.keys("auth:pending:*"))
+    locked = env.client.post(path, json=body)
+    assert locked.status_code == 429 and 0 < int(locked.headers["retry-after"]) <= 24 * 3600
+    assert len(env.redis.keys("auth:pending:*")) == live - 1
+    assert env.redis.keys("auth:ticket:*") == []
+    assert env.client.post(path, json=body).status_code == 400
+    if reset:  # the password did not change
+        login = env.browser().post("/auth/login", json={"login": EMAIL, "password": PASSWORD})
+        assert login.status_code == 200
+
+    # Other addresses are unaffected.
+    if not reset:
+        env.verified_ticket("someone-else@uchicago.edu")
+
+    # After the window passes, a new code works again.
+    env.redis.delete(*env.redis.keys("rl:code-fail:*"))
+    pending_id = env.client.post(start_path, json={"email": EMAIL}).json()["pending_id"]
+    body = {"pending_id": pending_id, "code": env.outbox.last().code, **extra}
+    assert env.client.post(path, json=body).status_code in (200, 204)
+
+
+def test_a_correct_code_does_not_use_up_the_address_budget(env: Env) -> None:
+    pending_id = start(env)
+    good = env.outbox.last().code
+    assert good is not None
+    bad = "000000" if good != "000000" else "111111"
+    env.client.post("/auth/verify-code", json={"pending_id": pending_id, "code": bad})
+    resp = env.client.post("/auth/verify-code", json={"pending_id": pending_id, "code": good})
+    assert resp.status_code == 200
+    (key,) = env.redis.keys("rl:code-fail:*")
+    assert env.redis.get(key) == "1" and 0 < env.redis.ttl(key) <= 24 * 3600
+    assert EMAIL not in key
+
+
+def test_code_cap_does_not_reveal_whether_the_address_has_an_account(env: Env) -> None:
+    """A sign-up for a taken address and a reset for an unknown one make "dead" records; wrong
+    codes against them count for the address just like against a live record."""
+    env.signup("quiet-heron", EMAIL)
+    fresh = env.browser()
+    statuses: dict[str, list[int]] = {}
+    for label, start_path, email in (
+        ("dead", "/auth/email", EMAIL),
+        ("live", "/auth/email", "calm-otter@uchicago.edu"),
+    ):
+        statuses[label] = []
+        for _ in range(3):
+            pending_id = fresh.post(start_path, json={"email": email}).json()["pending_id"]
+            for _ in range(4):
+                resp = fresh.post(
+                    "/auth/verify-code", json={"pending_id": pending_id, "code": "000000"}
+                )
+                statuses[label].append(resp.status_code)
+    if "000000" not in [m.code for m in env.outbox.sent]:
+        assert statuses["dead"] == statuses["live"] == [400] * 10 + [429, 400]
 
 
 @pytest.mark.parametrize(

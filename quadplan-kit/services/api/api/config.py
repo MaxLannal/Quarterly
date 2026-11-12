@@ -20,7 +20,9 @@ class Settings(BaseSettings):
     issuance_hmac_key: SecretStr = SecretStr("dev-only-issuance-hmac-key")
     session_secret: SecretStr = SecretStr("dev-only-session-secret")
     git_sha: str = Field(default="dev")
-    environment: str = "development"
+    #: `development` and `test` are the only values that skip the start-up safety check, and
+    #: they must be set explicitly: unset (or anything else) is treated as a real deployment.
+    environment: str = "production"
     #: Serve program versions still in `review` (labelled by their status). Only `published`
     #: versions reach students in production; M1 seed data awaits Richard's review.
     show_unpublished_programs: bool = False
@@ -42,7 +44,7 @@ class Settings(BaseSettings):
 
     def production_problems(self) -> list[str]:
         """Settings that are unsafe outside development (checked at start-up)."""
-        if self.environment != "production":
+        if self.environment in ("development", "test"):
             return []
         problems = [
             f"{name.upper()} still has its development value"
