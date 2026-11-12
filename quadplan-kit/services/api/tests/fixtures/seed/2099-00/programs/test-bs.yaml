@@ -24,6 +24,8 @@ rules:
         constraints: {no_pass_fail: true}
       - id: sequence
         source: {url: "https://example.invalid/fake-catalog", quote: "FAKE FIXTURE - not a real course"}
+        # The sequence may reuse the intro courses ("unless the rule says otherwise").
+        constraints: {allow_double_count: true}
         bounded_parts:
           total: {courses: 2}
           parts:

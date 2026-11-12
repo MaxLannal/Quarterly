@@ -91,7 +91,6 @@ def test_openapi_lists_every_endpoint() -> None:
 @pytest.mark.parametrize(
     ("method", "path", "body"),
     [
-        ("post", "/verify", {"plan": PLAN}),
         ("post", "/plans", {"name": "My plan", "state": PLAN}),
         (
             "patch",

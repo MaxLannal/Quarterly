@@ -47,7 +47,19 @@ def test_runner_reports_missing_expected_code(monkeypatch: pytest.MonkeyPatch) -
     assert any("missing ['V03']" in line for line in lines)
 
 
-def test_runner_skips_while_verifier_is_a_stub() -> None:
+def test_runner_with_the_real_verifier() -> None:
+    lines: list[str] = []
+    assert golden.run_golden(GOLDEN, SEED, lines.append) == 0
+    assert "PASS    test-bs/fail-01.yaml (fail)" in lines
+    assert "PASS    test-bs/pass-01.yaml (pass)" in lines
+    assert lines[-1] == "golden: PASS=2"
+
+
+def test_runner_reports_skips_when_the_verifier_is_missing(monkeypatch: pytest.MonkeyPatch) -> None:
+    def stub(*args: object) -> Report:
+        raise NotImplementedError
+
+    monkeypatch.setattr(golden, "verify", stub)
     lines: list[str] = []
     assert golden.run_golden(GOLDEN, SEED, lines.append) == 0
     assert lines[-1].startswith("golden: WARNING 2 plans not verified")
