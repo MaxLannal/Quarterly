@@ -18,7 +18,7 @@ data/seed (hand-verified YAML) · data/golden (must-pass / must-fail plans) · p
 - IMPORTANT: `packages/planner_core` never imports the DB, the web framework, an HTTP client or an LLM client. Pydantic in, Pydantic out.
 - A plan is "valid" only if `check_certificate()` accepts the solver's certificate.
 - Agents never write to the database. They draft `change_set` rows (status `proposed`) or `review_item` rows. Applying is a user action.
-- Never store or log email addresses, IP addresses or exact timestamps for users. Day-level dates only.
+- Never log email addresses or IP addresses. A user's email is stored only in `account.email` (decision 5), never copied to other tables, logs or analytics. No exact timestamps for users: day-level dates only.
 - Model IDs live only in `llm_routing.yaml`. Never hard-code a model name elsewhere.
 - Never invent catalog facts. Every seeded rule carries a verbatim `source.quote`; if unsure, add a TODO to `docs/OPEN_QUESTIONS.md` instead of guessing.
 - Secrets come from `.env` (see `.env.example`). Never commit `.env`.

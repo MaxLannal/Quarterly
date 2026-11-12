@@ -18,14 +18,14 @@ Where your brief left a choice open, I picked a default. Change any row and tell
 | 2 | Frontend | React + TypeScript (Vite), TanStack Query, dnd-kit, Tailwind + shadcn/ui | Next.js, if public course pages need SEO |
 | 3 | Database | PostgreSQL 16 (JSONB for rule trees, ltree for comment threads, full-text search) + Redis | SQLite for a throwaway demo |
 | 4 | Solver | Google OR-Tools CP-SAT for requirement matching and plan generation | Hand-written max-flow (matching only) |
-| 5 | Anonymity | Email verified once, then a blind-signed token creates an unlinkable account; email never stored; recovery codes only | Store a keyed hash of the email (allows recovery, weaker anonymity) |
+| 5 | Anonymity | Email and password is stored on the backend | Email and password is stored on the backend |
 | 6 | Logged-out access | Catalog facts, planner (local only), aggregate course attributes; posts and summaries need login | Hide all forum-derived numbers behind login |
 | 7 | v1 scope | College undergrads; catalog year 2026–27; Core + CS (BA/BS, Bx/MS) + Math (BA/BS) + Economics + 2 study-abroad civ programs | All programs at launch |
 | 8 | Section data | Ask the Registrar for a feed first; fall back to a Playwright scraper of the public Class Search plus department offering pages | Meta's Muse or another VM browser agent (not recommended for a pipeline; see Ingestion) |
 | 9 | Official course feedback | Not ingested (behind login; owned by the University) | Ask the Registrar for permission |
 | 10 | LLM routing | Anthropic API direct; OpenRouter as a fallback behind the same interface | OpenRouter only |
 | 11 | Chat write access | Agent drafts a change set; it is applied only after an explicit confirmation the server checks against that exact draft | Agent edits the plan freely |
-| 12 | Name | "QuadPlan" is a placeholder | Your pick |
+| 12 | Name | "Quarterly", "Quarterly Planner" and "Quarterly Forumn" for now | We will go with this name for now. Please ignore all "QuadPlan" entries and use the above names |
 
 ## Product overview
 
@@ -184,7 +184,7 @@ Mockups of six key screens, with sample data, are on the design canvas: [QuadPla
 | `/programs` | Program explorer | No | Every major, minor, Bx/MS, joint program, study-abroad block |
 | `/programs/{id}` | Program page | No | Requirement tree in plain English, source, sample path |
 | `/signup`, `/login` | Account creation and login | No | Anonymous account flow (see Accounts) |
-| `/account` | Account | Yes | Recovery codes, export, delete |
+| `/account` | Account | Yes | Change password, export, delete |
 | `/guidelines`, `/privacy`, `/about` | Static | No | Community rules, what we store, disclaimers |
 | `/admin/*` | Curator console | Admin | Ingestion runs, review queue, rule editor, moderation, LLM cost |
 
@@ -238,7 +238,7 @@ Five short steps: (1) entry term and status (first-year, transfer); (2) AP, plac
 
 ### Sign-up and login
 
-Sign-up has four steps: enter a `@uchicago.edu` address → enter the 6-digit code → the browser obtains an anonymous credential (explained in one plain sentence) → choose a username and password or passkey, then save 10 recovery codes. Login is username plus password or passkey. Nothing on either page asks for a name.
+Sign-up has three steps: enter a `@uchicago.edu` address → enter the 6-digit code → choose a username and password (passkey optional later). Login is username or email plus password; \"Forgot password\" sends a reset code by email. Nothing on either page asks for a name.
 
 ### Curator console (`/admin`)
 
@@ -329,10 +329,7 @@ The model has nine groups of tables; the catalog, schedule and program groups ar
 
 | Table | Key fields | Notes |
 | --- | --- | --- |
-| `account` | `id`, `username`, `password_hash` (argon2id) or passkey credential, `role` (user, curator, admin), `status`, `created_day` | No email, no name |
-| `recovery_code` | `account_id`, `code_hash`, `used` | 10 per account |
-| `issuance_ledger` | `email_hmac`, `academic_year`, `count` | Enforces one credential per email per year; no link to any account |
-| `spent_token` | `token_hash`, `spent_day` | Stops a token being used twice |
+| `account` | `id`, `username`, `email` (unique, lowercase), `email_verified_day`, `password_hash` (argon2id) or passkey credential, `role` (user, curator, admin), `status`, `created_day` | Email stored per decision 5; never logged or copied to other tables |
 
 ## Data ingestion
 
@@ -712,7 +709,7 @@ The forum follows theCourseForum's idea of one page per course × instructor ([t
 
 - Rules (shown in the composer): talk about the course and the teaching, not anyone's private life; no names of other students; no claims of misconduct (report those to the University instead); no slurs or harassment.
 - Automatic pass on submit (agent A4), user reports, and a human queue in the console.
-- Three upheld removals suspend an account for 30 days; bans are per account. Because each email can mint one credential per academic year, a ban cannot be dodged by signing up again that year.
+- Three upheld removals suspend an account for 30 days; bans are per account. Because each verified email can hold one account, a ban cannot be dodged by signing up again with the same address.
 - Instructors are not given a reply channel in v1; revisit with the University.
 
 ### Forum → course attributes
@@ -727,47 +724,40 @@ Structured ratings have weight w = 1; values extracted from text have w = 0.5; r
 
 ## Accounts and anonymity
 
-A student proves once that they own a `@uchicago.edu` address, receives an anonymous credential through an RSA blind signature (RFC 9474), and creates an account the server cannot connect to that address. The email is never stored, and there is no password reset by email.
+*Decision 5, confirmed by Richard on 2026-11-12, replaces the earlier blind-signature design: accounts store the verified `@uchicago.edu` email and a password hash. Readers still see only per-page pseudonyms in the forum.*
 
-### Why blind signatures
-
-In a blind signature the server signs a token without seeing it, so the signed token it later receives cannot be matched to the signing request ([RFC 9474](https://datatracker.ietf.org/doc/rfc9474/)). Cloudflare's `@cloudflare/blindrsa-ts` implements the RFC in the browser ([GitHub](https://github.com/cloudflare/blindrsa-ts)); the server side is small: BlindSign is a raw RSA private-key operation followed by the RFC's self-check, and final verification is standard RSASSA-PSS (SHA-384), which Python's `cryptography` library supports. Test both sides against the RFC's Appendix A vectors; if in doubt, wrap the Go library `cloudflare/circl` instead. Do not invent any other cryptography.
+A student proves once that they own a `@uchicago.edu` address and creates an account with a username and password. The email is stored on the account so the student can reset a lost password; it is never logged, never shown to other users, and never copied into forum, plan or analytics rows.
 
 ### Protocol
 
-1. **Email.** The browser sends the address. The server checks the domain, computes `h = HMAC(K_issue, lowercase(email))`, checks `issuance_ledger[h, academic_year] < 1`, and emails a 6-digit code. The code hash and `h` live in Redis for 10 minutes; the address is held in memory only long enough to send the email and is scrubbed from logs.
-2. **Code.** The browser submits the code and receives a one-time issuance ticket bound to `h`.
-3. **Blind issuance.** The browser creates a random 32-byte token `t`, blinds it with the server's public key for this academic year (variant RSABSSA-SHA384-PSS-Randomized), and sends the blinded message with the ticket. The server signs, increments the ledger, and deletes the ticket and Redis entries. It never sees `t`.
-4. **Recovery codes.** The browser unblinds the signature, then generates 10 recovery codes and asks the student to save them. This screen also adds natural delay between issuance and registration.
-5. **Registration.** Over a fresh request with no cookies from steps 1–3, the browser sends `t`, the signature, a username, a password (argon2id on the server) or a passkey, and the hashes of the recovery codes. The server verifies the signature, checks `t` is unspent, records `hash(t)` as spent, and creates the account.
-6. **Login** is username plus password or passkey; sessions are httpOnly cookies backed by Redis.
-
-The signing key rotates each academic year, which also defines the one-credential-per-email-per-year quota.
+1. **Email.** The browser sends the address. The server checks the domain (`@uchicago.edu` only), lowercases it, checks no account already uses it, and emails a 6-digit code. The code hash lives in Redis for 10 minutes, keyed by an opaque `pending_id` returned to the browser. The address is scrubbed from logs.
+2. **Code.** The browser submits `pending_id` and the code and receives a one-time registration ticket (Redis, 10 minutes) bound to the email.
+3. **Registration.** The browser sends the ticket, a username and a password. The server hashes the password with argon2id, creates the account with the lowercased email and `email_verified_day`, deletes the ticket, and starts a session. One account per email.
+4. **Login** is username (or email) plus password; sessions are httpOnly, Secure, SameSite=Lax cookies backed by Redis, with a CSRF token for state-changing requests. Passkeys may be a stub in v1.
+5. **Password reset.** The student enters their email; if an account exists, the server emails a 6-digit code (10-minute TTL, same Redis pattern); code plus new password sets a new argon2id hash and ends other sessions. The response never reveals whether an account exists.
+6. **Rate limits** on every auth endpoint (per email hash and per Redis-only, 24-hour IP counter that is never written to disk).
 
 ### What is stored
 
 | Data | Stored? | Linkable to a person? |
 | --- | --- | --- |
-| Email address | No | — |
-| `HMAC(email)` in the issuance ledger | Yes | Someone holding `K_issue` can test whether a given address ever signed up, but not which account it became |
-| Spent token hashes | Yes | No: the blind signature breaks the link to the email |
-| Username, password hash, plans, posts | Yes | Pseudonymous only |
+| Email address | Yes, only in `account.email` | Yes, by anyone with database access |
+| Username, password hash (argon2id), plans | Yes | Through the email |
+| Forum posts, comments, votes | Yes, with `author_ref = HMAC(server_key, account_id ‖ page_id)` | Not from a leaked database alone; yes for someone holding the server key and the database |
 | IP addresses | Not by the app; proxy logs truncated to /24 and kept 24 hours for abuse response | Weakly, for 24 hours |
 | Timestamps | Day-level only | Coarse |
 
 ### Threats and honest limits
 
-- **Leaked database:** no emails; posts on different pages cannot be joined to one account without the server key.
-- **Curious builder with database access:** cannot map accounts to emails; can test whether a specific address signed up. Disclose this on `/privacy`.
-- **Builder who changes the code to log identities:** no protocol prevents this. Mitigations: open-source the auth code, publish the yearly public key, and say plainly on `/privacy` that anonymity depends on the deployed code.
-- **Timing correlation:** issuance and registration close together in a quiet hour could be matched by someone logging both. The recovery-code step, day-level timestamps and no request logs reduce this.
-- **Sock puppets:** one credential per email per academic year.
-- **Lost password and recovery codes:** the account cannot be recovered; a new credential is available next academic year. A quota of 2 per year would allow recovery but also one ban evasion; default stays at 1.
-- **Email provider** learns that QuadPlan emailed an address. Use a transactional provider with content logging off and a minimal message.
+- **Leaked database:** reveals which emails have accounts and their plans; posts on different pages still cannot be joined to one account without the server key.
+- **Builder or admin with database access and the server key:** can link posts to an account and so to an email. Say this plainly on `/privacy`.
+- **Sock puppets:** one account per verified email.
+- **Lost password:** reset by email (step 5).
+- **Email provider** learns that Quarterly emailed an address. Use a transactional provider with content logging off and a minimal message.
 
 ### Account deletion
 
-`/account` offers export (plans as JSON) and deletion. Deletion removes the account, plans and recovery codes; the student chooses whether their posts are deleted or kept as "\[deleted account\]".
+`/account` offers export (plans as JSON) and deletion. Deletion removes the account, its email, plans and sessions; the student chooses whether their posts are deleted or kept as "\[deleted account\]".
 
 ## Risks, policy and legal
 
@@ -779,12 +769,12 @@ The two biggest risks are a wrong rule that misleads a student and a forum post 
 | Schedule scraping not permitted | No section data | Ask the Registrar first; fall back to department pages and offering history; the planner works at quarter level without sections |
 | University objects to a review site | Shutdown pressure | Talk to the College and Student Government early; never republish official evaluations; Yale shut down Bluebook+ in 2014 over how it presented ratings ([Chicago Maroon](https://chicagomaroon.com/49530/feature/new-website-cramwell-ai-helps-students-find-easy-courses-and-professors-for-upcoming-quarter/)) |
 | Defamation or harassment of instructors | Legal and ethical harm | Rules in the composer, automatic and human moderation, misconduct claims held, a takedown contact. US law generally treats user posts differently from content the platform writes itself, and **AI summaries are platform-written**: keep them neutral, cited and moderated |
-| Over-claiming anonymity | Loss of trust | Precise wording on `/privacy`; open-source the auth code |
+| Over-claiming anonymity | Loss of trust | Precise wording on `/privacy` (emails are stored; forum pseudonyms are per page); open-source the auth code |
 | Sensitive self-reported data (grades) | Privacy harm | Grade buckets optional; nothing imported from University systems |
 | Prompt injection through forum text | Agent misbehaves | No agent that reads forum text can write; citations validated |
 | LLM cost spikes | Budget | Per-account limits, Haiku pre-classifier, prompt caching, daily spend alarm in `llm_call` |
 | Empty forum at launch | Little value | Labelled estimates, a pre-launch review drive in pilot departments; the planner is useful without the forum |
-| Vote brigading | Skewed ratings | One credential per email per year, vote rate limits, burst detection per page |
+| Vote brigading | Skewed ratings | One account per verified email, vote rate limits, burst detection per page |
 | Catalog edited mid-year | Stale rules | Monthly change check on catalog snapshots |
 
 ## Build roadmap and Claude Code prompt sequence
@@ -799,7 +789,7 @@ In Claude Code, effort levels are `low`, `medium`, `high`, `xhigh` and `max`, an
 | 1 | Contracts | DB schema + migrations, DSL Pydantic models, OpenAPI skeleton, seed-file format | Opus 5.5 / xhigh | Alone |
 | 2 | Verifier | `planner_core`: checks V01–V12, CP-SAT model, certificate checker, tests | Fable 5.2 (or Opus 5.5 / xhigh) | Parallel |
 | 3 | Frontend shell | App shell, planner grid, requirement rail, issues panel against a mock API | Opus 5.5 / high | Parallel |
-| 4 | Accounts | Email verification, blind-signature issuance, registration, sessions | Fable 5.2 | Parallel |
+| 4 | Accounts | Email verification, registration, sessions, password reset (decision 5) | Fable 5.2 | Parallel |
 | 5 | Seed data | Core, CS, Math, Economics for 2026–27 with quotes; golden plans | Opus 5.5 / high, you review | Parallel |
 | 6 | Generator | CP-SAT plan generator, variants, change sets, API wiring | Opus 5.5 / xhigh | Alone |
 | 7 | Agents | `llm_gateway`, A1 generator agent, A2 advisor chat, eval harness | Opus 5.5 / high | Parallel |
@@ -830,5 +820,4 @@ In Claude Code, effort levels are `low`, `medium`, `high`, `xhigh` and `max`, an
 - [Cramwell AI article](https://chicagomaroon.com/49530/feature/new-website-cramwell-ai-helps-students-find-easy-courses-and-professors-for-upcoming-quarter/) — Chicago Maroon, Nov 2025
 - [theCourseForum: About](https://thecourseforum.com/about/)
 - [Introducing Muse](https://about.fb.com/news/2026/09/introducing-muse-personal-ai-agent/) — Meta, Sep 2026
-- [RFC 9474: RSA Blind Signatures](https://datatracker.ietf.org/doc/rfc9474/) and [cloudflare/blindrsa-ts](https://github.com/cloudflare/blindrsa-ts)
 - [Claude models overview](https://platform.claude.com/docs/en/models/overview) and [Claude Code subagents](https://code.claude.com/docs/en/sub-agents.md)
