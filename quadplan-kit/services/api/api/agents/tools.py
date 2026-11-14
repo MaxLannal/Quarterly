@@ -38,6 +38,7 @@ from planner_core.terms import term_key
 from pydantic import BaseModel, Field, ValidationError
 from sqlalchemy.orm import Session
 
+from api.attributes.records import hidden_citations
 from api.db import models as m
 from api.repo import catalog as catalog_repo
 from api.repo.rules import UnknownProgramsError, load_verify_inputs
@@ -286,7 +287,7 @@ class ToolBox:
         parts = [f"Forum summaries for {code}:"]
         for page_id, instructor in pages:
             s = summaries.get(page_id)
-            if s is None:
+            if s is None or hidden_citations(self.db, s):
                 continue
             ids.add(f"summary:{page_id}")
             parts.append(f"summary:{page_id} · {instructor} · {s.n_posts} posts")

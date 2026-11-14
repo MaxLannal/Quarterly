@@ -1,5 +1,6 @@
 """Deterministic plan generator (prompt 06) on a small made-up catalog."""
 
+import time
 from typing import Any
 
 import pytest
@@ -418,6 +419,36 @@ def test_unmet_requirement_mentions_placement() -> None:
     result = run(plan("core", "test-bs", "plc"), rules=ruleset(placed_only))
     assert result.infeasible is not None
     assert "placement result" in result.infeasible.message
+
+
+def test_a_dead_end_in_the_staged_solve_is_not_called_impossible(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Step 2 of the staged solve keeps step 1's placements; if those cannot be finished, the
+    request itself is solved instead of being reported impossible."""
+    monkeypatch.setattr(gen, "STAGED_PROGRAMS", 1)
+    real = gen._Builder.solve
+    sizes: list[int] = []
+
+    def solve(self: Any, assume: list[Any], **kw: Any) -> Any:
+        sizes.append(len(assume))
+        status, solver = real(self, assume, **kw)
+        if len(assume) > len(self.literals):  # step 2: pretend the placements dead-end
+            return gen.cp_model.INFEASIBLE, solver
+        return status, solver
+
+    monkeypatch.setattr(gen._Builder, "solve", solve)
+    result = run(plan())
+    assert result.infeasible is None and result.variants
+    assert any(n > sizes[0] for n in sizes)  # step 2 ran and was overridden
+
+
+def test_explaining_stays_within_the_time_limit() -> None:
+    goals = [{"id": "few", "type": "course_load", "max_courses": 1}]
+    started = time.monotonic()
+    result = run(plan(goals=goals), max_courses_per_term=1, time_limit_s=0.5)
+    assert result.infeasible is not None and result.infeasible.conflicts
+    assert time.monotonic() - started < 1.5
 
 
 def test_rejected_variants_raise_an_alert(monkeypatch: pytest.MonkeyPatch) -> None:

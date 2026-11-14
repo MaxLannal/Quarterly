@@ -1,5 +1,6 @@
 """Arq worker settings: a no-op job, and the nightly forum -> attributes job (prompt 11)."""
 
+import asyncio
 import os
 from typing import Any
 
@@ -21,14 +22,28 @@ async def nightly_attributes(ctx: dict[str, Any]) -> str:
     from llm_gateway.api import get_llm
     from sqlalchemy.orm import Session
 
-    configure_llm(get_settings())
-    with Session(get_engine()) as session:
-        stats = run_nightly(session, get_llm())
-    return f"values={stats.attributes} summaries={stats.summaries}"
+    def run() -> str:
+        configure_llm(get_settings())
+        with Session(get_engine()) as session:
+            stats = run_nightly(session, get_llm())
+        return f"values={stats.attributes} summaries={stats.summaries}"
+
+    # The job is synchronous (database and model calls): run it in a thread so the worker's
+    # event loop and health check keep going.
+    return await asyncio.to_thread(run)
+
+
+async def startup(ctx: dict[str, Any]) -> None:
+    """No emails or IP addresses in the worker's logs either (CLAUDE.md)."""
+    from api.auth.redaction import install_log_redaction
+
+    install_log_redaction()
 
 
 class WorkerSettings:
     functions = [noop, nightly_attributes]
-    cron_jobs = [cron(nightly_attributes, hour=3, minute=30, run_at_startup=False)]
+    on_startup = startup
+    # Up to 200 + 500 model calls a night: allow an hour (arq's default is 5 minutes).
+    cron_jobs = [cron(nightly_attributes, hour=3, minute=30, run_at_startup=False, timeout=3600)]
     redis_settings = RedisSettings.from_dsn(os.environ.get("REDIS_URL", "redis://localhost:6379/0"))
     health_check_interval = 10

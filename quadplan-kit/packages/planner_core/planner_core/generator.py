@@ -96,6 +96,8 @@ RESERVE_S = 0.3
 #: improving a plan or finding another variant.
 STAGE2_MIN_S = 0.5
 MIN_SOLVE_S = 0.2
+#: The shortest solve worth running while explaining an impossible request.
+EXPLAIN_MIN_S = 0.05
 #: Parallel search workers per solve.
 SEARCH_WORKERS = 8
 #: Scale of goal rewards and penalties relative to preferences.
@@ -150,6 +152,8 @@ class _Builder:
         self, plan: PlanState, rules: RuleSet, catalog: Catalog, options: GenerateOptions
     ) -> None:
         self.plan, self.rules, self.catalog, self.options = plan, rules, catalog, options
+        #: Every solve ends before this `time.monotonic()` value (set by `generate`).
+        self.deadline = float("inf")
         self.idx = Index(catalog, rules)
         self.college = rules.college
         self.terms = horizon(plan)
@@ -913,7 +917,14 @@ class _Builder:
         ]
         self.hint(solver)
         second = max(MIN_SOLVE_S, _left(deadline))
-        return self.solve([*self.literals, *kept], optimize=False, budget=second)
+        status, solver = self.solve([*self.literals, *kept], optimize=False, budget=second)
+        if status == cp_model.INFEASIBLE:
+            # Only the first step's placements are impossible to finish, not the request: try
+            # the request itself with the time left (its own INFEASIBLE is a real proof).
+            return self.solve(
+                self.literals, optimize=False, budget=max(MIN_SOLVE_S, _left(deadline))
+            )
+        return status, solver
 
     def hint(self, solver: cp_model.CpSolver) -> None:
         """Start the next solve from this solution."""
@@ -1019,6 +1030,10 @@ class _Builder:
             )
         return Infeasibility(message=message, conflicts=conflicts)
 
+    def _capped(self, budget: float) -> float:
+        """`budget`, cut to the time left before the deadline."""
+        return max(EXPLAIN_MIN_S, min(budget, _left(self.deadline)))
+
     def explain(self, core: list[Any]) -> Infeasibility:
         """Shrink an infeasible core to a minimal one and say it in plain English."""
         order = {"offering": 0, "sharing": 0, "locked": 0, "program": 1, "goal": 2}
@@ -1026,9 +1041,11 @@ class _Builder:
         i, steps = 0, 0
         budget = max(0.3, self.options.time_limit_s * EXPLAIN_SHARE)
         while i < len(core) and len(core) > 1 and steps < EXPLAIN_STEPS:
+            if _left(self.deadline) < EXPLAIN_MIN_S:
+                break  # out of time: the core is still a correct, if larger, explanation
             steps += 1
             trial = core[:i] + core[i + 1 :]
-            status, _ = self.solve(trial, optimize=False, budget=budget)
+            status, _ = self.solve(trial, optimize=False, budget=self._capped(budget))
             if status == cp_model.INFEASIBLE:
                 core = trial
             else:
@@ -1082,7 +1099,9 @@ class _Builder:
         m.maximize(sum(self.pm.objective))
         solver = cp_model.CpSolver()
         solver.parameters.num_workers = 1
-        solver.parameters.max_time_in_seconds = self.options.time_limit_s * 2 * EXPLAIN_SHARE
+        solver.parameters.max_time_in_seconds = self._capped(
+            self.options.time_limit_s * 2 * EXPLAIN_SHARE
+        )
         if solver.solve(m) not in _STATUS_OK:
             return None
         missing: list[str] = []
@@ -1130,7 +1149,9 @@ class _Builder:
         m.minimize(sum(f.used for f in self.floating.values()))
         solver = cp_model.CpSolver()
         solver.parameters.num_workers = 1
-        solver.parameters.max_time_in_seconds = self.options.time_limit_s * 2 * EXPLAIN_SHARE
+        solver.parameters.max_time_in_seconds = self._capped(
+            self.options.time_limit_s * 2 * EXPLAIN_SHARE
+        )
         status = solver.solve(m)
         if status not in _STATUS_OK:
             return None
@@ -1252,6 +1273,7 @@ def generate(
             [],
         )
     b = _Builder(plan, rules, catalog, options)
+    b.deadline = deadline
     early = b.build()
     if early is not None:
         return early
@@ -1279,7 +1301,7 @@ def generate(
             status, solver = better, polished
     rest = budget * 0.15 / max(1, options.variants - 1)
     if status == cp_model.INFEASIBLE:
-        core = b.core(list(b.literals), max(budget * EXPLAIN_SHARE, _left(deadline)))
+        core = b.core(list(b.literals), b._capped(budget * EXPLAIN_SHARE))
         return GenerateResult(infeasible=b.explain(core))
     if status not in _STATUS_OK:
         return _impossible(

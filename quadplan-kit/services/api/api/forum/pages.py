@@ -11,6 +11,7 @@ import sqlalchemy as sa
 from planner_core.terms import term_key
 from sqlalchemy.orm import Session
 
+from api.attributes.records import cited_ids, hidden_citations
 from api.db import models as m
 from api.repo.catalog import normalize_code
 from api.schemas.catalog import CourseInstructorOut, InstructorSummary, RatingSummary
@@ -208,12 +209,10 @@ def page_out(db: Session, page: m.CourseInstructor) -> ForumPageOut:
     ratings = ratings_by_page(db, [page.id])[page.id]
     summary_row = db.get(m.ForumSummary, page.id)
     summary = None
-    if summary_row is not None:
-        citations = [
-            c if isinstance(c, int) else int(c.get("post_id", 0))
-            for c in summary_row.citations or []
-            if isinstance(c, int) or (isinstance(c, dict) and "post_id" in c)
-        ]
+    # A summary citing a post that is no longer visible is not shown until the nightly job
+    # rewrites it (its [n] markers would point at a removed post).
+    if summary_row is not None and not hidden_citations(db, summary_row):
+        citations = cited_ids(summary_row)
         summary = ForumSummaryOut(
             text=summary_row.text,
             citations=citations,

@@ -9,7 +9,7 @@ from typing import Any
 
 import pytest
 import sqlalchemy as sa
-from api.attributes import a3
+from api.attributes import a3, job
 from api.attributes.aggregate import (
     K_DEPARTMENT,
     K_ESTIMATE,
@@ -21,6 +21,7 @@ from api.attributes.aggregate import (
 )
 from api.attributes.job import run_nightly
 from api.db import models as m
+from api.forum import pages
 from api.seed.bundle import load_bundle
 from api.seed.loader import upsert_bundle
 from api_test_support import FIXTURES
@@ -179,38 +180,113 @@ def test_below_three_reviews_the_course_shows_its_estimate(db: Session) -> None:
     page = make_page(db)
     review(db, page, workload=20, difficulty=5)
     review(db, page, workload=22, difficulty=4)
-    llm = fake(a3_cold_start_estimate=[GUESS], a3_forum_extraction=[EMPTY, EMPTY])
+    llm = fake(a3_cold_start_estimate=[GUESS])
     stats = run_nightly(db, llm, TODAY)
     row = value(db, "course", "TEST 10000", "workload_hours")
     assert row is not None and row.method == "prior" and row.n == 0 and row.value == 8
     assert row.evidence["estimate"] == 8
     page_row = value(db, "course_instructor", str(page.id), "difficulty")
     assert page_row is not None and page_row.value == 2 and page_row.method == "prior"
-    assert stats.cold_start == 1 and stats.extracted == 2
+    assert stats.cold_start == 1 and stats.extracted == 0  # reviews are not text-extracted
     assert db.get(m.ForumSummary, page.id) is None  # no summary answer: nothing published
 
 
+def discussion(db: Session, page: m.CourseInstructor, body: str) -> m.Post:
+    post = m.Post(
+        course_instructor_id=page.id,
+        kind="discussion",
+        author_ref=uuid.uuid4().hex,
+        title="Workload?",
+        body_md=body,
+        status="visible",
+        created_day=TODAY,
+    )
+    db.add(post)
+    db.flush()
+    return post
+
+
+def mentions(*pairs: tuple[float, str]) -> dict[str, Any]:
+    return {**EMPTY, "workload_mentions": [{"hours": h, "quote": q} for h, q in pairs]}
+
+
 @pytest.mark.db
-def test_three_reviews_publish_a_blend_with_text_values(db: Session) -> None:
+def test_two_reviews_and_a_discussion_publish_a_blend_with_a_text_value(db: Session) -> None:
     page = make_page(db)
-    review(db, page, workload=10)
+    review(db, page, workload=10, body="Expect about 25 hours a week.")  # never text-extracted
     review(db, page, workload=12)
-    review(db, page, workload=20, body="Expect about 30 hours in project weeks.")
-    mention = {
-        **EMPTY,
-        "workload_mentions": [
-            {"hours": 30, "quote": "about 30 hours in project weeks"},
-            {"hours": 40, "quote": "Expect about"},  # number missing from the quote
-        ],
-    }
-    llm = fake(a3_cold_start_estimate=[GUESS], a3_forum_extraction=[EMPTY, EMPTY, mention])
-    run_nightly(db, llm, TODAY)
+    discussion(db, page, "About 30 hours in project weeks, some weeks 20 hours.")
+    found = mentions(
+        (30, "About 30 hours in project weeks"),
+        (20, "some weeks 20 hours"),
+        (40, "About"),  # number missing from the quote
+    )
+    llm = fake(a3_cold_start_estimate=[GUESS], a3_forum_extraction=[found])
+    stats = run_nightly(db, llm, TODAY)
+    assert stats.extracted == 1
     row = value(db, "course", "TEST 10000", "workload_hours")
-    assert row is not None and row.method == "blend" and row.n == 4
-    expected = (K_ESTIMATE * 8 + 10 + 12 + 20 + 0.5 * 30) / (K_ESTIMATE + 3.5)
+    assert row is not None and row.method == "blend" and row.n == 3  # three posts
+    # The discussion counts once, as the mean of its two accepted mentions, at half weight.
+    expected = (K_ESTIMATE * 8 + 10 + 12 + 0.5 * 25) / (K_ESTIMATE + 2.5)
     assert row.value == pytest.approx(expected, abs=1e-3)
     assert row.evidence["from_text"] == 1 and row.evidence["prior"]["kind"] == "estimate"
     assert row.ci_low < row.value < row.ci_high
+
+
+@pytest.mark.db
+def test_one_post_never_reaches_three_ratings(db: Session) -> None:
+    page = make_page(db)
+    discussion(db, page, "Week 1: 10 hours. Week 2: 12 hours. Week 3: 14 hours.")
+    found = mentions((10, "10 hours"), (12, "12 hours"), (14, "14 hours"))
+    run_nightly(db, fake(a3_cold_start_estimate=[GUESS], a3_forum_extraction=[found]), TODAY)
+    row = value(db, "course", "TEST 10000", "workload_hours")
+    assert row is not None and row.method == "prior" and row.value == 8
+
+
+@pytest.mark.db
+def test_an_edited_post_is_extracted_again_and_old_values_drop(db: Session) -> None:
+    page = make_page(db)
+    review(db, page, workload=10)
+    review(db, page, workload=12)
+    post = discussion(db, page, "Easily 40 hours a week.")
+    llm = fake(a3_cold_start_estimate=[GUESS], a3_forum_extraction=[mentions((40, "40 hours"))])
+    run_nightly(db, llm, TODAY)
+    assert value(db, "course", "TEST 10000", "workload_hours").n == 3  # type: ignore[union-attr]
+
+    post.body_md = "I take that back, it was fine."  # edited: the 40 is gone
+    db.flush()
+    run_nightly(db, fake(a3_forum_extraction=[EMPTY]), TODAY)
+    row = value(db, "course", "TEST 10000", "workload_hours")
+    assert row is not None and row.method == "prior"  # back to two posts: the estimate shows
+    llm = fake()
+    run_nightly(db, llm, TODAY)  # nothing changed: not extracted a third time
+    assert not [c for c in llm.calls if c["task"] == "a3_forum_extraction"]
+    runs = db.scalars(sa.select(m.ExtractionRun)).all()
+    assert len(runs) == 1 and runs[0].output is not None
+    assert runs[0].output["workload_mentions"] == []  # the old quote is gone
+
+
+@pytest.mark.db
+def test_page_prior_is_the_department_average(db: Session) -> None:
+    page = make_page(db)
+    other = make_page(db, code="TEST 10100", slug="demo-b")
+    for w in (20, 22, 24):
+        review(db, other, workload=w)
+    for w in (6, 8, 10):
+        review(db, page, workload=w)
+    run_nightly(db, UnavailableLLM(), TODAY)
+    row = value(db, "course_instructor", str(page.id), "workload_hours")
+    assert row is not None and row.evidence["prior"] == {
+        "kind": "department",
+        "mean": 22.0,
+        "weight": K_DEPARTMENT,
+    }
+
+
+def test_escaped_quotes_still_match_the_post() -> None:
+    raw = a3.Extraction.model_validate(mentions((5, "&lt;5 hrs most weeks")))
+    kept = a3.checked_extraction(raw, "Honestly <5 hrs most weeks.")
+    assert [w.hours for w in kept.workload_mentions] == [5]
 
 
 @pytest.mark.db
@@ -280,3 +356,15 @@ def test_summaries_are_checked_and_moderated_before_publishing(db: Session) -> N
     llm = fake()
     run_nightly(db, llm, TODAY + dt.timedelta(days=5))
     assert not [c for c in llm.calls if c["task"] == "a3_forum_summary"]
+
+    # 6. A cited post is removed: the summary is hidden at once and rewritten that night.
+    posts[0].status = "removed"
+    db.flush()
+    row = db.get(m.ForumSummary, page.id)
+    assert row is not None and job.hidden_citations(db, row)
+    assert pages.page_out(db, page).summary is None
+    rewritten = {"text": "Fair course [1].", "citations": [ids[1]]}
+    llm = fake(a3_forum_summary=[rewritten], a4_moderation=[{"label": "ok"}])
+    run_nightly(db, llm, TODAY + dt.timedelta(days=6))
+    out = pages.page_out(db, page).summary
+    assert out is not None and out.citations == [ids[1]]

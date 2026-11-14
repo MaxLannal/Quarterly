@@ -17,6 +17,7 @@ hold no tools at all.
 
 from __future__ import annotations
 
+import html
 import re
 from dataclasses import dataclass
 from pathlib import Path
@@ -76,7 +77,9 @@ def _norm(text: str) -> str:
 
 
 def _in_post(quote: str, post: str) -> bool:
-    quote = _norm(quote)
+    # The model reads the post HTML-escaped (`wrap_untrusted`), so "<5 hrs" may come back as
+    # "&lt;5 hrs".
+    quote = _norm(html.unescape(quote))
     return bool(quote) and quote in _norm(post)
 
 

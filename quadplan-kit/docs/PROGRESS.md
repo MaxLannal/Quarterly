@@ -217,3 +217,14 @@ Without the placement, the popup explains that the calculus requirement needs a 
   - only removals still in force count toward suspensions, and an account cannot be deleted for 30 days after one (P08-12);
   - the plan generator no longer times out on large plans when the machine is busy. Cause: CP-SAT uses a single search worker whenever a model has assumptions, and that one search was luck-dependent (CS + Math + Bx/MS took 1.7 s to over 4 s). The goals are now fixed as constraints on a copy of the model, so all 8 workers search (0.2-0.9 s). Assumptions are used only to explain an impossible request. The time budget now runs to a deadline: finding a first plan may use all of it, and improving it or finding further variants gets what is left. Plans with four or more programs go straight to the staged solve;
   - vitest waits up to 5 s for async UI (was 1 s), so `make check` on a busy machine no longer fails on timing.
+- **Final review fixes (spec and security reviews of the whole goal, through step 4):**
+  - forum numbers need 3 different posts (not 3 mentions); a discussion post adds at most one value per number (the median of its mentions); review text is not mined, since its ratings already count (Q13);
+  - an edited post is read again and its old quotes stop counting; deleting or blanking a post (or an account with its posts) deletes its stored quotes;
+  - a "What students say" summary that cites a post no longer visible is hidden at once (forum page and advisor tool) and deleted and rewritten that night;
+  - a page's starting point is the department average, as the SPEC says;
+  - quotes the model returns HTML-escaped still match the post;
+  - the nightly job runs in a thread with a 1-hour limit, and the worker redacts its logs; database errors never log query values;
+  - the browser's chat history is scrubbed before it reaches the model;
+  - an older admin removal no longer counts again after the automatic check removes the same post; the 30-day deletion wait is checked after the password;
+  - the generator no longer calls a request impossible when only its staged shortcut dead-ends, and explaining an impossible request stays within the time limit;
+  - A3 summary and cold-start calls use low effort with 2000 output tokens, so answers are not cut off.

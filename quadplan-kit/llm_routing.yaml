@@ -76,13 +76,13 @@ tasks:
     fallback: {provider: openrouter, model: anthropic/claude-haiku-5.5}
   a3_forum_summary:
     model: claude-sonnet-5-5
-    effort: null
-    max_tokens: 1000
+    effort: low  # a short structured answer; null would mean high on Sonnet 5.5
+    max_tokens: 2000
     fallback: {provider: openrouter, model: anthropic/claude-sonnet-5.5}
   a3_cold_start_estimate:
     model: claude-sonnet-5-5
-    effort: null
-    max_tokens: 1000
+    effort: low  # a short structured answer; null would mean high on Sonnet 5.5
+    max_tokens: 2000
     fallback: {provider: openrouter, model: anthropic/claude-sonnet-5.5}
   a4_moderation:
     model: claude-haiku-5-5

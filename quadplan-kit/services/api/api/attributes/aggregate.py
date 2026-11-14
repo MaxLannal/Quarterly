@@ -13,8 +13,9 @@ prior weight k:
 - The confidence interval is the posterior mean +- 1.96 standard errors, where the variance is
   the weighted variance of the ratings (the scale's variance when there are fewer than two) and
   the effective count is k + sum(w); it is clamped to the attribute's scale.
-- Forum-derived values are published only when n (the number of ratings, not their weight) is
-  at least MIN_N; below that the subject shows its estimate.
+- Forum-derived values are published only when n, the number of distinct posts behind the
+  ratings (not their weight, and not the number of mentions), is at least MIN_N; below that the
+  subject shows its estimate.
 """
 
 from __future__ import annotations
@@ -65,6 +66,13 @@ class Estimate:
     weight: float
 
 
+def count_posts(ratings: list[Rating]) -> int:
+    """Distinct posts behind `ratings` (a rating without a post counts on its own)."""
+    return len({r.post_id for r in ratings if r.post_id is not None}) + sum(
+        r.post_id is None for r in ratings
+    )
+
+
 def rating_weight(source: str, day: dt.date, today: dt.date) -> float:
     """Structured 1, text 0.5; anything older than OLD_YEARS decays to 0.5."""
     weight = W_STRUCTURED if source == "review" else W_TEXT
@@ -92,14 +100,14 @@ def posterior(key: str, ratings: list[Rating], prior: Prior | None) -> Estimate 
         value=round(min(high, max(low, value)), 3),
         ci_low=round(max(low, value - half), 3),
         ci_high=round(min(high, value + half), 3),
-        n=len(ratings),
+        n=count_posts(ratings),
         weight=round(total, 3),
     )
 
 
 def department_prior(ratings: list[Rating]) -> Prior | None:
     """The department-level average, when the department has enough ratings."""
-    if len(ratings) < MIN_N:
+    if count_posts(ratings) < MIN_N:
         return None
     total = sum(r.weight for r in ratings)
     if total == 0:

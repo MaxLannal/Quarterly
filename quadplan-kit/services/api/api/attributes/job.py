@@ -1,11 +1,13 @@
 """The nightly forum -> attributes job (prompt 11). Order:
 
 1. Cold-start estimates for courses that have a forum page and no estimate yet (A3, Sonnet).
-2. Text extraction for visible posts not yet extracted (A3, Haiku); one `extraction_run` row
-   per post records what was accepted.
+2. Text extraction for visible posts not yet extracted, or edited since (A3, Haiku); one
+   `extraction_run` row per post and text version records what was accepted. Only discussion
+   posts give text values (a review's own ratings already count), at most one per post and key.
 3. The numeric update (`aggregate`) for every course with a forum page and every page.
-4. "What students say" for pages with 3 new visible posts since the last summary, or a summary
-   older than 30 days (A3, Sonnet), published only after the code checks and A4 moderation.
+4. "What students say" for pages with 3 new visible posts since the last summary, a summary
+   older than 30 days, or a summary citing a post that is no longer visible (A3, Sonnet),
+   published only after the code checks and A4 moderation.
 
 Without a model (`LLMUnavailableError`, e.g. while real calls are on hold) steps 1, 2 and 4 are
 skipped and step 3 runs on the structured ratings alone. Writes go to `attribute_value`
@@ -15,7 +17,9 @@ skipped and step 3 runs on the structured ratings alone. Writes go to `attribute
 from __future__ import annotations
 
 import datetime as dt
+import hashlib
 import logging
+import statistics
 from collections import defaultdict
 from dataclasses import dataclass, field
 from typing import Any
@@ -32,10 +36,12 @@ from api.attributes.aggregate import (
     MIN_N,
     Prior,
     Rating,
+    count_posts,
     department_prior,
     posterior,
     rating_weight,
 )
+from api.attributes.records import forget_extractions, hidden_citations
 from api.db import models as m
 
 log = logging.getLogger("api.attributes")
@@ -144,37 +150,58 @@ def _cold_start(db: Session, llm: LLM, stats: Stats) -> None:
         stats.cold_start += 1
 
 
+def _text(title: str | None, body: str) -> str:
+    return f"{title or ''}\n{body}"
+
+
+def _version(text: str) -> str:
+    """Identifies a post's text, so an edited post is extracted again."""
+    return hashlib.sha256(text.encode()).hexdigest()[:16]
+
+
+def _extracted(db: Session) -> dict[int, dict[str, Any]]:
+    """Post id -> its latest extraction (its `text_version` says which text it read)."""
+    out: dict[int, dict[str, Any]] = {}
+    for run in db.scalars(
+        sa.select(m.ExtractionRun)
+        .where(m.ExtractionRun.kind == "a3_extraction")
+        .order_by(m.ExtractionRun.id)
+    ):
+        pid = (run.output or {}).get("post_id")
+        if isinstance(pid, int):
+            out[pid] = run.output or {}
+    return out
+
+
 def _extract(db: Session, llm: LLM, stats: Stats) -> None:
-    done = {
-        int(run.output["post_id"])
-        for run in db.scalars(
-            sa.select(m.ExtractionRun).where(m.ExtractionRun.kind == "a3_extraction")
-        )
-        if run.output and "post_id" in run.output
-    }
-    posts = db.scalars(
-        sa.select(m.Post)
-        .where(m.Post.status == "visible")
+    done = {pid: out.get("text_version") for pid, out in _extracted(db).items()}
+    posts = db.execute(
+        sa.select(m.Post.id, m.Post.title, m.Post.body_md)
+        .outerjoin(m.ReviewRating, m.ReviewRating.post_id == m.Post.id)
+        .where(m.Post.status == "visible", m.ReviewRating.post_id.is_(None))
         .order_by(m.Post.id)
-        .limit(EXTRACT_PER_RUN + len(done))
     ).all()
-    for post in posts:
-        if post.id in done or not stats.llm_available:
+    for post_id, title, body in posts:
+        if stats.extracted >= EXTRACT_PER_RUN or not stats.llm_available:
+            return
+        text = _text(title, body)
+        if done.get(post_id) == _version(text):
             continue
         try:
-            found = a3.extract(llm, post.id, f"{post.title or ''}\n{post.body_md}")
+            found = a3.extract(llm, post_id, text)
+            forget_extractions(db, [post_id])  # the earlier text's quotes
         except LLMUnavailableError:
             stats.llm_available = False
             return
         except Exception as exc:
-            stats.rejected.append(f"extraction post {post.id}: {type(exc).__name__}")
+            stats.rejected.append(f"extraction post {post_id}: {type(exc).__name__}")
             continue
         db.add(
             m.ExtractionRun(
                 kind="a3_extraction",
                 model="a3_forum_extraction",  # routing task; model ids live in llm_routing.yaml
                 prompt_version=a3.load_prompt("a3_extraction").version,
-                output={"post_id": post.id, **found.model_dump()},
+                output={"post_id": post_id, "text_version": _version(text), **found.model_dump()},
                 status="ok",
             )
         )
@@ -210,27 +237,27 @@ def _ratings(
         per_page[page_id]["recommend_rate"].append(
             Rating(1.0 if rating.would_recommend else 0.0, w, post_id)
         )
-    page_of_post = dict(
-        db.execute(
-            sa.select(m.Post.id, m.Post.course_instructor_id).where(m.Post.status == "visible")
+    # Text values: discussion posts only (a review's own ratings already count), from the
+    # extraction of the post's current text, one value per post and key (the median of
+    # its mentions), so one post can never count as several ratings.
+    extracted = _extracted(db)
+    discussions = db.execute(
+        sa.select(
+            m.Post.id, m.Post.course_instructor_id, m.Post.created_day, m.Post.title, m.Post.body_md
         )
-        .tuples()
-        .all()
-    )
-    day_of_post = dict(db.execute(sa.select(m.Post.id, m.Post.created_day)).tuples().all())
-    for run in db.scalars(
-        sa.select(m.ExtractionRun).where(m.ExtractionRun.kind == "a3_extraction")
-    ):
-        out = run.output or {}
-        pid = out.get("post_id")
-        if not isinstance(pid, int) or pid not in page_of_post:
+        .outerjoin(m.ReviewRating, m.ReviewRating.post_id == m.Post.id)
+        .where(m.Post.status == "visible", m.ReviewRating.post_id.is_(None))
+    ).all()
+    for pid, page, day, title, body in discussions:
+        out = extracted.get(pid)
+        if out is None or out.get("text_version") != _version(_text(title, body)):
             continue
-        w = rating_weight("text", day_of_post[pid], today)
-        page = page_of_post[pid]
-        for mention in out.get("workload_mentions", []):
-            per_page[page]["workload_hours"].append(Rating(float(mention["hours"]), w, pid, "text"))
-        for cue in out.get("difficulty_cues", []):
-            per_page[page]["difficulty"].append(Rating(a3.DIFFICULTY[cue["level"]], w, pid, "text"))
+        w = rating_weight("text", day, today)
+        hours = [float(x["hours"]) for x in out.get("workload_mentions", [])]
+        levels = [a3.DIFFICULTY[x["level"]] for x in out.get("difficulty_cues", [])]
+        for key, values in (("workload_hours", hours), ("difficulty", levels)):
+            if values:
+                per_page[page][key].append(Rating(statistics.median(values), w, pid, "text"))
     return per_page, code_of
 
 
@@ -243,8 +270,9 @@ def _publish(
     prior: Prior | None,
     estimate: float | None,
 ) -> bool:
-    """Write the subject's value: forum-derived when n >= MIN_N, else its estimate."""
-    if len(ratings) >= MIN_N:
+    """Write the subject's value: forum-derived when n (distinct posts) >= MIN_N, else its
+    estimate."""
+    if count_posts(ratings) >= MIN_N:
         est = posterior(key, ratings, prior)
         if est is None:
             return False
@@ -321,11 +349,12 @@ def _aggregate(db: Session, today: dt.date, stats: Stats) -> None:
     for page, code in code_of.items():
         for key in FORUM_KEYS:
             ratings = per_page[page][key]
-            course_ratings = [
-                r for r in per_course[code][key] if r.post_id not in {x.post_id for x in ratings}
-            ]
+            # The department's average without this page's own posts (SPEC: m is the
+            # department-level average, else the estimate).
+            own = {x.post_id for x in ratings}
+            dept = [r for r in per_department[code.split(" ")[0]][key] if r.post_id not in own]
             estimate = estimates.get(code, {}).get(key)
-            prior = department_prior(course_ratings) or (
+            prior = department_prior(dept) or (
                 Prior(estimate, K_ESTIMATE, "estimate") if estimate is not None else None
             )
             stats.attributes += _publish(
@@ -377,6 +406,15 @@ def _summaries(db: Session, llm: LLM, today: dt.date, stats: Stats) -> None:
         stats.summaries += 1
 
 
+def _prune_summaries(db: Session) -> None:
+    """Delete summaries that cite a post no longer visible (also on pages with no visible post
+    left); pages that still have posts get a new one in `_summaries`."""
+    for row in db.scalars(sa.select(m.ForumSummary)).all():
+        if hidden_citations(db, row):
+            db.delete(row)
+    db.flush()
+
+
 def run_nightly(db: Session, llm: LLM, today: dt.date | None = None) -> Stats:
     today = today or dt.date.today()
     stats = Stats()
@@ -386,6 +424,7 @@ def run_nightly(db: Session, llm: LLM, today: dt.date | None = None) -> Stats:
     _extract(db, llm, stats)
     db.flush()
     _aggregate(db, today, stats)
+    _prune_summaries(db)
     _summaries(db, llm, today, stats)
     db.commit()
     for problem in stats.rejected:

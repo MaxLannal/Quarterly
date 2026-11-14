@@ -379,7 +379,8 @@ class ChatRun:
             rows = [r for r in _messages(self.db, self.saved) if r.role in ("user", "assistant")]
             turns = [Message(r.role, r.content) for r in rows][:-1]  # without this message
         else:
-            turns = [Message(t.role, t.text) for t in self.req.history]
+            # Sent by the browser as typed: scrub it like the new message.
+            turns = [Message(t.role, scrub(t.text)) for t in self.req.history]
         turns = turns[-HISTORY_TURNS:]
         while turns and turns[0].role != "user":
             turns = turns[1:]

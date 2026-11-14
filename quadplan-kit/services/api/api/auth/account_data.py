@@ -11,6 +11,7 @@ from planner_core.models import Goal
 from pydantic import TypeAdapter
 from sqlalchemy.orm import Session
 
+from api.attributes.records import forget_extractions
 from api.auth.hashing import author_ref
 from api.db import models as m
 from api.repo.plans import read_state as _plan_state
@@ -72,6 +73,7 @@ def delete_account(db: Session, account: m.Account, posts: Literal["delete", "ke
         mine_post = m.Post.author_ref.in_(refs)
         mine_comment = m.Comment.author_ref.in_(refs)
         if posts == "delete":
+            forget_extractions(db, db.scalars(sa.select(m.Post.id).where(mine_post)).all())
             db.execute(sa.delete(m.Post).where(mine_post))
             reply = sa.orm.aliased(m.Comment)
             has_reply = sa.exists().where(reply.parent_id == m.Comment.id)

@@ -9,7 +9,10 @@ from api.config import get_settings
 
 @lru_cache
 def get_engine(url: str | None = None) -> Engine:
-    return create_engine(url or get_settings().database_url, pool_pre_ping=True)
+    # hide_parameters: a database error never logs query values (post text, quotes).
+    return create_engine(
+        url or get_settings().database_url, pool_pre_ping=True, hide_parameters=True
+    )
 
 
 def get_session() -> Iterator[Session]:

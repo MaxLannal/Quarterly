@@ -96,6 +96,7 @@ def delete_account(
     store: Annotated[Store, Depends(get_store)],
 ) -> None:
     _refuse_while_restricted(account)
+    _confirm_password(store, account, body.password)
     # Deleting and signing up again would also reset suspension strikes: wait 30 days after a
     # moderator's upheld removal.
     since = dt.datetime.now(dt.UTC).date() - dt.timedelta(days=30)
@@ -105,7 +106,6 @@ def delete_account(
             detail="A moderator removed one of your posts in the last 30 days, so this account "
             "cannot be deleted yet.",
         )
-    _confirm_password(store, account, body.password)
     account_id = account.id
     account_data.delete_account(db, account, body.posts)
     db.commit()

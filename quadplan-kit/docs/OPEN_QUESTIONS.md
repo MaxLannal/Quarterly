@@ -124,6 +124,12 @@ Q10. **Which courses get an AI first guess.** Only courses that have a forum pag
 Q11. **Pace and grading strictness.** Reviews have no question for these, so they stay empty. That also means the "protect my GPA" goal has nothing to work with yet.
    *Suggested default:* add two optional 1-5 questions to the review form ("How fast did it move?", "How strictly was it graded?"), or leave them out of the demo.
 
+Q12. **Numbers for a specific instructor in the planner.** The forum computes numbers per course and per course-and-instructor, but the planner only uses the per-course ones for now, because the planner does not yet know who teaches each section (that comes with the class schedule, prompt 10).
+   *Suggested default (built):* per-course numbers until the schedule arrives, then switch to the instructor's numbers when the quarter's instructor is known.
+
+Q13. **What counts as "3 ratings".** Forum numbers appear only once 3 different posts back them. A discussion post that mentions hours or difficulty counts once (the middle value of what it says), at half the weight of a review; a review's text is not read for numbers, because its star ratings already count.
+   *Suggested default (built):* keep this, so one person cannot move a course's numbers by repeating themselves.
+
 ---
 
 ## Decisions (docs/SPEC.md "Summary and decisions to confirm")

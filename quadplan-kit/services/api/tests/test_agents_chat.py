@@ -391,9 +391,18 @@ def test_logged_out_chat_holds_no_forum_tools_and_text_is_scrubbed(env: Env) -> 
             }
         ),
     )
-    chat(env, "Mail me at quiet.heron@uchicago.edu or 773-555-0142 about TEST 10000")
+    history = [
+        {"role": "user", "text": "I am quiet.heron@uchicago.edu"},
+        {"role": "assistant", "text": "Noted."},
+    ]
+    chat(
+        env,
+        "Mail me at quiet.heron@uchicago.edu or 773-555-0142 about TEST 10000",
+        history=history,
+    )
     sent = fake.calls[0]["messages"][0].content
     assert "uchicago.edu" not in sent and "555-0142" not in sent
     main = next(c for c in fake.calls if c["task"] == "a2_advisor_chat")
+    assert "uchicago.edu" not in str(main["messages"])  # the browser's history is scrubbed too
     assert not {"get_forum_posts", "get_forum_summary"} & set(main["tools"])
     assert set(A2_TOOLS) - {"get_forum_posts", "get_forum_summary"} <= set(main["tools"])

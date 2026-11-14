@@ -22,6 +22,7 @@ from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session, aliased
 
+from api.attributes.records import forget_extractions
 from api.auth.hashing import author_ref
 from api.db import models as m
 from api.forum import moderation, pages
@@ -489,6 +490,7 @@ def update_post(
             for key, value in _rating_columns(body.ratings).items():
                 setattr(rating, key, value)
     if text_changed:
+        forget_extractions(db, [post.id])
         decision = _moderate_post(llm, post.title, post.body_md)
         post.status = decision.status
         record_decision(db, "post", post.id, decision)
@@ -505,6 +507,7 @@ def delete_post(db: Session, account: m.Account, post_id: int) -> None:
         # Upheld removals count toward a suspension; deleting must not erase one.
         raise HTTPException(status_code=409, detail="A moderator removed this post.")
     has_comments = db.scalar(sa.select(sa.exists().where(m.Comment.post_id == post.id)))
+    forget_extractions(db, [post.id])
     if has_comments:
         db.execute(sa.delete(m.ReviewRating).where(m.ReviewRating.post_id == post.id))
         post.title = None

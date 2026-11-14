@@ -88,6 +88,29 @@ def test_only_removals_still_in_force_count(migrated_db_url: str) -> None:
         post.status = "visible"  # an admin reversed it
         db.flush()
         assert upheld_removals(db, account.id) == 0
+        # Later the automatic check removes it again after an edit: the old admin removal is
+        # not upheld again.
+        post.status = "removed"
+        db.add_all(
+            [
+                m.ModerationAction(
+                    target_type="post",
+                    target_id=post.id,
+                    action="approve",
+                    actor="admin",
+                    created_day=dt.date.today() - dt.timedelta(days=9),
+                ),
+                m.ModerationAction(
+                    target_type="post",
+                    target_id=post.id,
+                    action="remove",
+                    actor="model",
+                    created_day=dt.date.today(),
+                ),
+            ]
+        )
+        db.flush()
+        assert upheld_removals(db, account.id) == 0
         assert upheld_removals(db, uuid.uuid4()) == 0
     engine.dispose()
 
@@ -110,3 +133,49 @@ def test_citation_labels_are_built_by_the_server() -> None:
         "TEST 10000: workload hours",
         "What students say",
     ]
+
+
+@pytest.mark.db
+def test_deleting_a_post_forgets_its_extracted_quotes(migrated_db_url: str) -> None:
+    from api.forum import service
+
+    engine = sa.create_engine(migrated_db_url)
+    with Session(engine) as db:
+        upsert_bundle(db, load_bundle(FIXTURES / "seed" / "2099-00"))
+        account = m.Account(
+            username="calm-otter", email="calm@uchicago.edu", email_verified_day=dt.date.today()
+        )
+        course = db.scalar(sa.select(m.Course).where(m.Course.code == "TEST 10000"))
+        instructor = m.Instructor(slug="demo-y", display_name="Demo Y (fake)")
+        db.add_all([account, instructor])
+        db.flush()
+        assert course is not None
+        page = m.CourseInstructor(course_id=course.id, instructor_id=instructor.id)
+        db.add(page)
+        db.flush()
+        post = m.Post(
+            course_instructor_id=page.id,
+            kind="discussion",
+            author_ref=author_ref(account.id, page.id),
+            body_md="About 12 hours a week.",
+            status="visible",
+            created_day=dt.date.today(),
+        )
+        db.add(post)
+        db.flush()
+        db.add(
+            m.ExtractionRun(
+                kind="a3_extraction",
+                model="a3_forum_extraction",
+                prompt_version="1",
+                output={
+                    "post_id": post.id,
+                    "workload_mentions": [{"hours": 12, "quote": "12 hours"}],
+                },
+                status="ok",
+            )
+        )
+        db.commit()
+        service.delete_post(db, account, post.id)
+        assert db.scalars(sa.select(m.ExtractionRun)).all() == []
+    engine.dispose()

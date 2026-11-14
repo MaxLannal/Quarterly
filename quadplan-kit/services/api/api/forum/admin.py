@@ -25,7 +25,7 @@ from api.auth.hashing import author_ref
 from api.db import models as m
 from api.forum.markdown import render_markdown
 from api.forum.pseudonyms import DELETED
-from api.forum.service import today
+from api.forum.service import _latest_actions, today
 from api.schemas.common import Page
 from api.schemas.forum import (
     ModerationDecision,
@@ -211,8 +211,10 @@ def _find_account(db: Session, page_id: int, ref: str | None) -> m.Account | Non
 
 
 def upheld_removals(db: Session, account_id: uuid.UUID, since: dt.date | None = None) -> int:
-    """Distinct items of this account that an admin removed and that are still removed (a
-    removal an admin later reversed is not upheld). `since` counts only removals from that day."""
+    """Distinct items of this account that an admin removed and that are still removed by that
+    admin: the item's latest moderation action is the admin's removal (a removal an admin later
+    reversed is not upheld, and an older admin removal does not count again when the automatic
+    check removes the item later). `since` counts only removals from that day."""
     query = sa.select(m.ModerationAction.target_type, m.ModerationAction.target_id).where(
         m.ModerationAction.actor == "admin", m.ModerationAction.action == "remove"
     )
@@ -233,7 +235,15 @@ def upheld_removals(db: Session, account_id: uuid.UUID, since: dt.date | None = 
                 .join(m.Post, m.Post.id == m.Comment.post_id)
                 .where(m.Comment.id == target_id, m.Comment.status == "removed")
             ).first()
-        if row is not None and row[1] is not None and author_ref(account_id, row[0]) == row[1]:
+        kind: TargetType = "post" if target_type == "post" else "comment"
+        latest = _latest_actions(db, kind, [target_id]).get(target_id)
+        upheld = latest is not None and latest.actor == "admin" and latest.action == "remove"
+        if (
+            upheld
+            and row is not None
+            and row[1] is not None
+            and author_ref(account_id, row[0]) == row[1]
+        ):
             count += 1
     return count
 
