@@ -7,12 +7,13 @@ from typing import Literal
 
 import sqlalchemy as sa
 from planner_core.hashing import plan_hash
-from planner_core.models import Goal, PlanState
+from planner_core.models import Goal
 from pydantic import TypeAdapter
 from sqlalchemy.orm import Session
 
 from api.auth.hashing import author_ref
 from api.db import models as m
+from api.repo.plans import read_state as _plan_state
 from api.schemas.auth import AccountOut
 from api.schemas.plans import PlanOut
 
@@ -25,78 +26,6 @@ def account_out(account: m.Account) -> AccountOut:
         username=account.username,
         role=account.role,
         created_day=account.created_day,
-    )
-
-
-def _plan_state(db: Session, plan: m.Plan) -> PlanState:
-    """Rebuild the planner_core PlanState from the `plan*` tables."""
-    item_rows = db.execute(
-        sa.select(m.PlanItem, m.Course.code)
-        .outerjoin(m.Course, m.Course.id == m.PlanItem.course_id)
-        .where(m.PlanItem.plan_id == plan.id)
-        .order_by(m.PlanItem.id)
-    ).all()
-    credit_rows = db.execute(
-        sa.select(m.Credit, m.Course.code)
-        .outerjoin(m.Course, m.Course.id == m.Credit.maps_to_course_id)
-        .where(m.Credit.plan_id == plan.id)
-        .order_by(m.Credit.id)
-    ).all()
-    program_rows = db.execute(
-        sa.select(m.PlanProgram, m.ProgramVersion.program_id)
-        .join(m.ProgramVersion, m.ProgramVersion.id == m.PlanProgram.program_version_id)
-        .where(m.PlanProgram.plan_id == plan.id)
-        .order_by(m.PlanProgram.id)
-    ).all()
-    goals = db.scalars(sa.select(m.Goal).where(m.Goal.plan_id == plan.id).order_by(m.Goal.id))
-    return PlanState.model_validate(
-        {
-            "catalog_year": plan.catalog_year,
-            "entry_term": plan.entry_term,
-            "entry_year_level": plan.entry_year_level,
-            "placements": list(plan.placements),
-            "overload_reasons": dict(plan.overload_reasons),
-            "items": [
-                {
-                    "id": str(item.id),
-                    "course": code,
-                    "slot_ref": item.slot_ref,
-                    "term": item.term_id,
-                    "status": item.status,
-                    "locked": item.locked,
-                    "units": item.units,
-                    "grading": item.grading,
-                    "grade": item.grade,
-                }
-                for item, code in item_rows
-            ],
-            "credits": [
-                {"kind": c.kind, "label": c.label, "maps_to": code, "units": c.units}
-                for c, code in credit_rows
-            ],
-            "programs": [
-                {
-                    "program_id": program_id,
-                    "version_id": pp.program_version_id,
-                    "options": pp.options,
-                }
-                for pp, program_id in program_rows
-            ],
-            "goals": [
-                _GOAL.validate_python(
-                    {
-                        **g.params,
-                        "id": g.goal_key,
-                        "type": g.type,
-                        "scope": g.scope,
-                        "term": g.term_id,
-                        "hard": g.hard,
-                        "weight": g.weight,
-                    }
-                )
-                for g in goals
-            ],
-        }
     )
 
 

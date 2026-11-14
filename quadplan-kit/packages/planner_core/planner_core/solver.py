@@ -132,8 +132,13 @@ class _Model:
         idx: Index,
         college: CollegePolicy | None,
         allowed: Callable[[Taken], bool] | None,
+        floating: frozenset[str] = frozenset(),
     ) -> None:
         self.facts, self.idx, self.college, self.allowed = facts, idx, college, allowed
+        #: Courses whose term the caller decides (the plan generator). `in_order` pairs that
+        #: involve one are not decided here; they are listed in `order_pairs` instead.
+        self.floating = floating
+        self.order_pairs: list[tuple[Taken, Any, Taken, Any]] = []
         self.model = cp_model.CpModel()
         self.x: dict[str, dict[str, Any]] = {}  # unit path -> key -> var
         self.s: dict[str, Any] = {}  # node path -> var, or None when it cannot be satisfied
@@ -273,7 +278,9 @@ class _Model:
         if c.in_order:
             for i, (a, var_a) in enumerate(pairs):
                 for b, var_b in pairs[i + 1 :]:
-                    if out_of_order(a, b):
+                    if a.uid in self.floating or b.uid in self.floating:
+                        self.order_pairs.append((a, var_a, b, var_b))
+                    elif out_of_order(a, b):
                         m.add_at_most_one([var_a, var_b])
         for limit in c.max_from:
             m.add(sum(var for t, var in pairs if self.idx.counts(limit, t.code)) <= limit.n)
@@ -313,6 +320,10 @@ class _Model:
 
     def keys(self, compiled: Compiled) -> list[str]:
         return sorted({key for path in compiled.units for key in self.x.get(path, {})})
+
+
+#: The program-satisfaction model, for callers that add their own variables (the generator).
+ProgramModel = _Model
 
 
 def solve(

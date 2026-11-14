@@ -10,6 +10,7 @@ import { opText } from "@/features/planner/context";
 import { goalLabel, round1 } from "@/features/planner/metrics";
 import { planTerms, termLabel, compareTerms } from "@/features/planner/terms";
 import { ReportBadge } from "@/features/planner/VerifierBadge";
+import { applyStoredChangeSet, GENERATOR_MODE, generateDeterministic } from "./deterministic";
 
 type Phase = "form" | "running" | "results";
 type Scope = GenerateRequest["scope"];
@@ -260,7 +261,7 @@ function GenerateForm({ plan, years, onSubmit }: { plan: PlanState; years: numbe
   );
 }
 
-function VariantCard({ v, onApply, onDiscard }: { v: VariantEvent; onApply: (ops: ChangeOp[]) => void; onDiscard: () => void }) {
+function VariantCard({ v, onApply, onDiscard }: { v: VariantEvent; onApply: (ops: ChangeOp[], terms: string[] | null) => void; onDiscard: () => void }) {
   const [showDiff, setShowDiff] = useState(false);
   const [picking, setPicking] = useState(false);
   const touched = termsTouched(v.change_set.ops).sort(compareTerms);
@@ -309,13 +310,13 @@ function VariantCard({ v, onApply, onDiscard }: { v: VariantEvent; onApply: (ops
               </label>
             ))}
           </div>
-          <Button className="mt-1" disabled={picked.length === 0} onClick={() => onApply(opsForTerms(v.change_set.ops, picked))}>
+          <Button className="mt-1" disabled={picked.length === 0} onClick={() => onApply(opsForTerms(v.change_set.ops, picked), picked)}>
             Apply {picked.length} quarter{picked.length === 1 ? "" : "s"}
           </Button>
         </fieldset>
       )}
       <div className="flex flex-wrap gap-2">
-        <Button onClick={() => onApply(v.change_set.ops)}>Apply</Button>
+        <Button onClick={() => onApply(v.change_set.ops, null)}>Apply</Button>
         <Button variant="outline" aria-expanded={showDiff} onClick={() => setShowDiff(!showDiff)}>
           {showDiff ? "Hide diff" : "View diff"}
         </Button>
@@ -337,14 +338,17 @@ interface GenerateDialogProps {
   years: number;
   /** Returns true when the ops applied cleanly. */
   onApply: (ops: ChangeOp[]) => boolean;
+  /** The saved plan's id when the plan is unchanged since it was saved; null otherwise. */
+  planId?: string | null;
 }
 
-export function GenerateDialog({ open, onClose, plan, years, onApply }: GenerateDialogProps) {
+export function GenerateDialog({ open, onClose, plan, years, onApply, planId = null }: GenerateDialogProps) {
   const [phase, setPhase] = useState<Phase>("form");
   const [steps, setSteps] = useState<StepEvent[]>([]);
   const [variants, setVariants] = useState<VariantEvent[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [unavailable, setUnavailable] = useState(false);
+  const [infeasible, setInfeasible] = useState<{ message: string; conflicts?: { id: string; label: string }[] } | null>(null);
   const abort = useRef<AbortController | null>(null);
 
   function reset() {
@@ -354,6 +358,7 @@ export function GenerateDialog({ open, onClose, plan, years, onApply }: Generate
     setVariants([]);
     setError(null);
     setUnavailable(false);
+    setInfeasible(null);
   }
 
   function close() {
@@ -368,7 +373,17 @@ export function GenerateDialog({ open, onClose, plan, years, onApply }: Generate
     setSteps([]);
     setVariants([]);
     setError(null);
+    setInfeasible(null);
     try {
+      if (GENERATOR_MODE === "deterministic") {
+        setSteps([{ type: "step", name: "Loading requirements, solving and verifying", status: "started" }]);
+        const result = await generateDeterministic(plan, v, controller.signal, planId);
+        setSteps([{ type: "step", name: "Loading requirements, solving and verifying", status: "done" }]);
+        setVariants(result.variants);
+        setInfeasible(result.infeasible);
+        setPhase("results");
+        return;
+      }
       for await (const ev of streamGenerate(buildGenerateRequest(plan, v), controller.signal)) {
         if (ev.type === "step") {
           setSteps((xs) => [...xs.filter((s) => s.name !== ev.name), ev]);
@@ -413,14 +428,28 @@ export function GenerateDialog({ open, onClose, plan, years, onApply }: Generate
       )}
       {phase === "results" && (
         <section aria-label="Generated variants" className="space-y-3">
+          {infeasible && (
+            <Notice tone="amber" role="status">
+              <p className="font-medium">No plan fits all of these settings.</p>
+              <p>{infeasible.message}</p>
+            </Notice>
+          )}
           {variants.length === 0 ? (
-            <p className="text-sm">No variants were returned.</p>
+            !infeasible && <p className="text-sm">No variants were returned.</p>
           ) : (
             variants.map((v, i) => (
               <VariantCard
                 key={`${v.label}-${i}`}
                 v={v}
-                onApply={(ops) => {
+                onApply={async (ops, terms) => {
+                  if (planId && v.change_set.id) {
+                    try {
+                      await applyStoredChangeSet(planId, v.change_set, terms);
+                    } catch {
+                      setError("Your plan changed since these options were made. Generate again.");
+                      return;
+                    }
+                  }
                   if (onApply(ops)) close();
                 }}
                 onDiscard={() => setVariants((xs) => xs.filter((_, n) => n !== i))}

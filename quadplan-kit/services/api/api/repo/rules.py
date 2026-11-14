@@ -86,8 +86,15 @@ def load_programs(
 
 
 def load_verify_inputs(
-    session: Session, plan: PlanState, *, show_unpublished: bool = False
+    session: Session,
+    plan: PlanState,
+    *,
+    show_unpublished: bool = False,
+    whole_catalog: bool = False,
+    section_terms: list[str] | None = None,
 ) -> tuple[RuleSet, Catalog]:
+    """`whole_catalog` loads every course of the year instead of only the plan's (the plan
+    generator chooses from all of them); `section_terms` adds posted sections of those terms."""
     year = plan.catalog_year
     programs = load_programs(session, plan, show_unpublished=show_unpublished)
     policy = session.get(m.CollegePolicy, year)
@@ -104,6 +111,8 @@ def load_verify_inputs(
         c.maps_to for c in plan.credits if c.maps_to
     }
     plan_ids = {id_of[code] for code in wanted if code in id_of}
+    if whole_catalog:
+        plan_ids = set(code_of)
 
     groups: dict[str, list[str]] = {}
     member_groups = sa.select(m.CrosslistGroup.group_id).where(
@@ -217,7 +226,9 @@ def load_verify_inputs(
         relations=relations,
         course_lists=course_lists,
         offerings=offerings,
-        sections=_sections(session, sorted({i.term for i in plan.items}), codes),
+        sections=_sections(
+            session, sorted({i.term for i in plan.items} | set(section_terms or [])), codes
+        ),
         attributes=attributes,
     )
     rules = RuleSet(catalog_year=year, programs=programs, college=college, requisites=requisites)

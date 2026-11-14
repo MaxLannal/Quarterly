@@ -945,6 +945,41 @@
         "title": "CommentOut",
         "type": "object"
       },
+      "Conflict": {
+        "additionalProperties": false,
+        "description": "One goal or limit in the smallest set that makes a request impossible.",
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "program",
+              "goal",
+              "graduation",
+              "offering",
+              "load",
+              "courses_per_term",
+              "locked",
+              "sharing"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "kind",
+          "label"
+        ],
+        "title": "Conflict",
+        "type": "object"
+      },
       "Constraints": {
         "additionalProperties": false,
         "properties": {
@@ -1930,6 +1965,261 @@
         "title": "ForumSummaryOut",
         "type": "object"
       },
+      "GenerateLocal": {
+        "description": "Generate for a plan that lives only in the browser (logged out, or not saved yet).",
+        "properties": {
+          "options": {
+            "$ref": "#/components/schemas/GenerateOptions",
+            "default": {
+              "allow_overload": false,
+              "allow_rarely_offered": [],
+              "interests": [],
+              "load": 0.0,
+              "per_term_load": {},
+              "scope": "whole",
+              "selected_terms": [],
+              "time_limit_s": 4.0,
+              "variants": 2
+            }
+          },
+          "plan": {
+            "$ref": "#/components/schemas/PlanState"
+          }
+        },
+        "required": [
+          "plan"
+        ],
+        "title": "GenerateLocal",
+        "type": "object"
+      },
+      "GenerateOptions": {
+        "additionalProperties": false,
+        "description": "The Generate-plan form as the deterministic generator reads it (SPEC \"Generate-plan\npopup\"). Locked and completed courses are always kept.",
+        "properties": {
+          "allow_overload": {
+            "default": false,
+            "title": "Allow Overload",
+            "type": "boolean"
+          },
+          "allow_rarely_offered": {
+            "items": {
+              "examples": [
+                "CMSC 14100"
+              ],
+              "pattern": "^[A-Z]{2,5} \\d{5}$",
+              "type": "string"
+            },
+            "title": "Allow Rarely Offered",
+            "type": "array"
+          },
+          "goals": {
+            "anyOf": [
+              {
+                "items": {
+                  "discriminator": {
+                    "mapping": {
+                      "bxms": "#/components/schemas/BxmsGoal",
+                      "challenge": "#/components/schemas/ChallengeGoal",
+                      "course_load": "#/components/schemas/CourseLoadGoal",
+                      "difficulty_cap": "#/components/schemas/DifficultyCapGoal",
+                      "graduate_by": "#/components/schemas/GraduateByGoal",
+                      "interest": "#/components/schemas/InterestGoal",
+                      "language": "#/components/schemas/LanguageGoal",
+                      "light_quarter": "#/components/schemas/LightQuarterGoal",
+                      "premed": "#/components/schemas/PremedGoal",
+                      "protect_gpa": "#/components/schemas/ProtectGpaGoal",
+                      "study_abroad": "#/components/schemas/StudyAbroadGoal",
+                      "workload_hours": "#/components/schemas/WorkloadHoursGoal"
+                    },
+                    "propertyName": "type"
+                  },
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/CourseLoadGoal"
+                    },
+                    {
+                      "$ref": "#/components/schemas/WorkloadHoursGoal"
+                    },
+                    {
+                      "$ref": "#/components/schemas/DifficultyCapGoal"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ChallengeGoal"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ProtectGpaGoal"
+                    },
+                    {
+                      "$ref": "#/components/schemas/GraduateByGoal"
+                    },
+                    {
+                      "$ref": "#/components/schemas/StudyAbroadGoal"
+                    },
+                    {
+                      "$ref": "#/components/schemas/BxmsGoal"
+                    },
+                    {
+                      "$ref": "#/components/schemas/PremedGoal"
+                    },
+                    {
+                      "$ref": "#/components/schemas/InterestGoal"
+                    },
+                    {
+                      "$ref": "#/components/schemas/LightQuarterGoal"
+                    },
+                    {
+                      "$ref": "#/components/schemas/LanguageGoal"
+                    }
+                  ]
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Goals"
+          },
+          "interests": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Interests",
+            "type": "array"
+          },
+          "load": {
+            "default": 0.0,
+            "maximum": 1.0,
+            "minimum": -1.0,
+            "title": "Load",
+            "type": "number"
+          },
+          "max_courses_per_term": {
+            "anyOf": [
+              {
+                "maximum": 6.0,
+                "minimum": 1.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Courses Per Term"
+          },
+          "per_term_load": {
+            "patternProperties": {
+              "^\\d{4}-(AU|WI|SP|SU)$": {
+                "type": "number"
+              }
+            },
+            "propertyNames": {
+              "examples": [
+                "2026-AU"
+              ]
+            },
+            "title": "Per Term Load",
+            "type": "object"
+          },
+          "preferences": {
+            "anyOf": [
+              {
+                "patternProperties": {
+                  "^[A-Z]{2,5} \\d{5}$": {
+                    "type": "integer"
+                  }
+                },
+                "propertyNames": {
+                  "examples": [
+                    "CMSC 14100"
+                  ]
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Preferences"
+          },
+          "scope": {
+            "default": "whole",
+            "enum": [
+              "whole",
+              "remaining",
+              "selected"
+            ],
+            "title": "Scope",
+            "type": "string"
+          },
+          "selected_terms": {
+            "items": {
+              "examples": [
+                "2026-AU"
+              ],
+              "pattern": "^\\d{4}-(AU|WI|SP|SU)$",
+              "type": "string"
+            },
+            "title": "Selected Terms",
+            "type": "array"
+          },
+          "time_limit_s": {
+            "default": 4.0,
+            "exclusiveMinimum": 0.0,
+            "maximum": 30.0,
+            "title": "Time Limit S",
+            "type": "number"
+          },
+          "today_term": {
+            "anyOf": [
+              {
+                "examples": [
+                  "2026-AU"
+                ],
+                "pattern": "^\\d{4}-(AU|WI|SP|SU)$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Today Term"
+          },
+          "variants": {
+            "default": 2,
+            "maximum": 3.0,
+            "minimum": 1.0,
+            "title": "Variants",
+            "type": "integer"
+          }
+        },
+        "title": "GenerateOptions",
+        "type": "object"
+      },
+      "GenerateOut": {
+        "properties": {
+          "infeasible": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Infeasibility"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "variants": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/GeneratedVariant"
+            },
+            "title": "Variants",
+            "type": "array"
+          }
+        },
+        "title": "GenerateOut",
+        "type": "object"
+      },
       "GenerateRequest": {
         "description": "The Generate-plan popup: a form, never free text (SPEC \"Generate-plan popup\").",
         "properties": {
@@ -2080,6 +2370,48 @@
           "plan"
         ],
         "title": "GenerateRequest",
+        "type": "object"
+      },
+      "GeneratedVariant": {
+        "description": "One generated plan: a proposed change set plus the verified plan it leads to.",
+        "properties": {
+          "change_set": {
+            "$ref": "#/components/schemas/ChangeSet"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "metrics": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "default": {},
+            "title": "Metrics",
+            "type": "object"
+          },
+          "plan": {
+            "$ref": "#/components/schemas/PlanState"
+          },
+          "rationale": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "default": {},
+            "title": "Rationale",
+            "type": "object"
+          },
+          "report": {
+            "$ref": "#/components/schemas/Report"
+          }
+        },
+        "required": [
+          "label",
+          "change_set",
+          "plan",
+          "report"
+        ],
+        "title": "GeneratedVariant",
         "type": "object"
       },
       "GoalResult": {
@@ -2338,6 +2670,27 @@
           "redis"
         ],
         "title": "HealthOut",
+        "type": "object"
+      },
+      "Infeasibility": {
+        "additionalProperties": false,
+        "properties": {
+          "conflicts": {
+            "items": {
+              "$ref": "#/components/schemas/Conflict"
+            },
+            "title": "Conflicts",
+            "type": "array"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "message"
+        ],
+        "title": "Infeasibility",
         "type": "object"
       },
       "InstructorCourse": {
@@ -8249,16 +8602,6 @@
               }
             },
             "description": "Successful Response"
-          },
-          "501": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorOut"
-                }
-              }
-            },
-            "description": "Not implemented yet"
           }
         },
         "summary": "List Plans",
@@ -8298,16 +8641,6 @@
               }
             },
             "description": "Validation Error"
-          },
-          "501": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorOut"
-                }
-              }
-            },
-            "description": "Not implemented yet"
           }
         },
         "summary": "Create Plan",
@@ -8361,16 +8694,6 @@
               }
             },
             "description": "Validation Error"
-          },
-          "501": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorOut"
-                }
-              }
-            },
-            "description": "Not implemented yet"
           }
         },
         "summary": "Compare Plans",
@@ -8379,8 +8702,64 @@
         ]
       }
     },
+    "/plans/generate": {
+      "post": {
+        "description": "Generate for a plan that lives in the browser. Nothing is saved: the change sets come\nback without ids, and the browser applies the chosen one itself.",
+        "operationId": "generate_local_plans_generate_post",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "mode",
+            "required": false,
+            "schema": {
+              "const": "deterministic",
+              "default": "deterministic",
+              "title": "Mode",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GenerateLocal"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenerateOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Generate Local",
+        "tags": [
+          "plans"
+        ]
+      }
+    },
     "/plans/import": {
       "post": {
+        "description": "Logged-out plans from the browser, saved at login. All or nothing.",
         "operationId": "import_plans_plans_import_post",
         "requestBody": {
           "content": {
@@ -8416,16 +8795,6 @@
               }
             },
             "description": "Validation Error"
-          },
-          "501": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorOut"
-                }
-              }
-            },
-            "description": "Not implemented yet"
           }
         },
         "summary": "Import Plans",
@@ -8462,16 +8831,6 @@
               }
             },
             "description": "Validation Error"
-          },
-          "501": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorOut"
-                }
-              }
-            },
-            "description": "Not implemented yet"
           }
         },
         "summary": "Delete Plan",
@@ -8513,16 +8872,6 @@
               }
             },
             "description": "Validation Error"
-          },
-          "501": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorOut"
-                }
-              }
-            },
-            "description": "Not implemented yet"
           }
         },
         "summary": "Get Plan",
@@ -8574,16 +8923,6 @@
               }
             },
             "description": "Validation Error"
-          },
-          "501": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorOut"
-                }
-              }
-            },
-            "description": "Not implemented yet"
           }
         },
         "summary": "Update Plan",
@@ -8631,16 +8970,6 @@
               }
             },
             "description": "Validation Error"
-          },
-          "501": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorOut"
-                }
-              }
-            },
-            "description": "Not implemented yet"
           }
         },
         "summary": "List Change Sets",
@@ -8704,16 +9033,6 @@
               }
             },
             "description": "Validation Error"
-          },
-          "501": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorOut"
-                }
-              }
-            },
-            "description": "Not implemented yet"
           }
         },
         "summary": "Apply Change Set",
@@ -8767,16 +9086,6 @@
               }
             },
             "description": "Validation Error"
-          },
-          "501": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorOut"
-                }
-              }
-            },
-            "description": "Not implemented yet"
           }
         },
         "summary": "Discard Change Set",
@@ -8820,19 +9129,74 @@
               }
             },
             "description": "Validation Error"
-          },
-          "501": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorOut"
-                }
-              }
-            },
-            "description": "Not implemented yet"
           }
         },
         "summary": "Duplicate Plan",
+        "tags": [
+          "plans"
+        ]
+      }
+    },
+    "/plans/{plan_id}/generate": {
+      "post": {
+        "description": "Generate up to 3 verified variants without an LLM (`mode=deterministic`; the agent\nmode arrives with prompt 07). Each variant is stored as a proposed change set.",
+        "operationId": "generate_saved_plans__plan_id__generate_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "plan_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Plan Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "mode",
+            "required": false,
+            "schema": {
+              "const": "deterministic",
+              "default": "deterministic",
+              "title": "Mode",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GenerateOptions"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenerateOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Generate Saved",
         "tags": [
           "plans"
         ]
@@ -8883,16 +9247,6 @@
               }
             },
             "description": "Validation Error"
-          },
-          "501": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorOut"
-                }
-              }
-            },
-            "description": "Not implemented yet"
           }
         },
         "summary": "Patch Items",

@@ -100,6 +100,16 @@ Q5. **Prerequisites (P05-16).** Should prerequisites written for master's studen
 
 ---
 
+**From prompt 06 (plan generator), with the default built meanwhile**
+
+Q6. **Transfer students and "units earned at UChicago".** The seeded College rule says 3800 of the 4200 units must be earned by enrollment here. A transfer student with three years left can earn at most 3600 (nine full quarters), so the generator says no plan exists for them.
+   *Suggested default:* keep the rule as written and show the explanation. Before deployment, find the College's rule for transfer students (it is probably different) and encode that.
+
+Q7. **Cross-listed courses in generated plans.** When two course numbers are the same course (cross-listed), the generator picks one of them, usually the one a requirement names first. This matters for the Bx/MS "at most two 20000-level courses" rule (M1-1).
+   *Suggested default:* keep it. Students can swap to the other number by hand, and the verifier checks either one.
+
+---
+
 ## Decisions (docs/SPEC.md "Summary and decisions to confirm")
 
 1. **Decision 5 (accounts).** Richard edited row 5 to "Email and password is stored on the backend" and confirmed it: accounts store the verified `@uchicago.edu` email and an argon2id password hash; there are no blind signatures. CLAUDE.md and SPEC "Accounts and anonymity" were updated to match. Forum anonymity (per-page pseudonyms, HMAC author refs) is unchanged.

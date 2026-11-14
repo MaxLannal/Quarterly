@@ -974,3 +974,73 @@ class ChangeSet(Model):
 
 GroupNode.model_rebuild()
 ProgramRules.model_rebuild()
+
+
+# --------------------------------------------------------------------------------------------
+# Plan generator (prompt 06)
+# --------------------------------------------------------------------------------------------
+
+
+class GenerateOptions(Model):
+    """The Generate-plan form as the deterministic generator reads it (SPEC "Generate-plan
+    popup"). Locked and completed courses are always kept."""
+
+    scope: Literal["whole", "remaining", "selected"] = "whole"
+    selected_terms: list[TermId] = Field(default_factory=list)
+    #: The current term: no course is placed before it ("remaining" starts here).
+    today_term: TermId | None = None
+    #: Career-wide load: -1 lighter (spread courses evenly) ... +1 heavier (finish sooner).
+    load: float = Field(default=0.0, ge=-1, le=1)
+    per_term_load: dict[TermId, float] = Field(default_factory=dict)
+    max_courses_per_term: int | None = Field(default=None, ge=1, le=6)
+    #: Use a 500-unit quarter where the plan already claims an overload reason that applies.
+    allow_overload: bool = False
+    #: Goals to plan for; None = the plan's own goals.
+    goals: list[Goal] | None = None
+    interests: list[str] = Field(default_factory=list)
+    variants: int = Field(default=2, ge=1, le=3)
+    #: Courses the student accepts in quarters where they are rarely offered (p_offered < 0.3).
+    allow_rarely_offered: list[CourseCode] = Field(default_factory=list)
+    #: Course preferences from the plan-generator agent (prompt 07): code -> 0..100.
+    #: None = the default preferences (interest tags, then recommend_rate, then level).
+    preferences: dict[CourseCode, int] | None = None
+    #: Wall-clock budget of the solver for the whole generation (all variants): the first
+    #: variant gets half, the others share the rest.
+    time_limit_s: float = Field(default=4.0, gt=0, le=30)
+
+
+class Conflict(Model):
+    """One goal or limit in the smallest set that makes a request impossible."""
+
+    id: str
+    kind: Literal[
+        "program", "goal", "graduation", "offering", "load", "courses_per_term", "locked", "sharing"
+    ]
+    label: str
+
+
+class Infeasibility(Model):
+    #: Plain English, e.g. "Graduating by Spring 2029 needs 5 more courses than your
+    #: remaining quarters allow."
+    message: str
+    conflicts: list[Conflict] = Field(default_factory=list)
+
+
+class Variant(Model):
+    label: str
+    #: The plan after the change; verified, and its certificate accepted by the checker.
+    plan: PlanState
+    #: The operations that turn the current plan into `plan` (`apply_ops`).
+    ops: list[ChangeOp]
+    report: Report
+    metrics: dict[str, float] = Field(default_factory=dict)
+    #: term -> one-line rationale (written by the agent in prompt 07; empty here).
+    rationale: dict[TermId, str] = Field(default_factory=dict)
+
+
+class GenerateResult(Model):
+    variants: list[Variant] = Field(default_factory=list)
+    #: Set when no plan meets the request.
+    infeasible: Infeasibility | None = None
+    #: Variants dropped because `verify` or `check_certificate` rejected them (a bug).
+    alerts: list[str] = Field(default_factory=list)

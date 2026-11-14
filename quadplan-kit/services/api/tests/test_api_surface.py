@@ -22,6 +22,8 @@ EXPECTED = {
     ("get", "/plans"),
     ("post", "/plans"),
     ("post", "/plans/import"),
+    ("post", "/plans/generate"),
+    ("post", "/plans/{plan_id}/generate"),
     ("get", "/plans/compare"),
     ("get", "/plans/{plan_id}"),
     ("patch", "/plans/{plan_id}"),
@@ -91,15 +93,6 @@ def test_openapi_lists_every_endpoint() -> None:
 @pytest.mark.parametrize(
     ("method", "path", "body"),
     [
-        ("post", "/plans", {"name": "My plan", "state": PLAN}),
-        (
-            "patch",
-            f"/plans/{UUID}/items",
-            {
-                "base_plan_hash": "sha256:x",
-                "ops": [{"op": "add", "course": "MATH 20700", "term": "2027-AU"}],
-            },
-        ),
         ("post", "/agents/generate", {"plan": PLAN}),
         ("post", "/agents/chat", {"plan": PLAN, "message": "hi"}),
         ("get", "/forum/pages/1/posts", None),

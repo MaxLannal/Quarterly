@@ -32,6 +32,8 @@ All stubs return `501 {"detail": "Not implemented yet (prompt NN)"}` after reque
 | GET | `/plans/{plan_id}/changesets` | | `ChangeSet[]` | Yes | 06 |
 | POST | `/plans/{plan_id}/changesets/{changeset_id}/apply` | `ChangeSetApply` (`terms` = apply selected quarters) | `PlanOut` | Yes | 06 |
 | POST | `/plans/{plan_id}/changesets/{changeset_id}/discard` | | `ChangeSet` | Yes | 06 |
+| POST | `/plans/generate?mode=deterministic` | `GenerateLocal {plan, options: GenerateOptions}` | `GenerateOut` (change sets without ids; nothing saved) | No (rate-limited) | 06 |
+| POST | `/plans/{plan_id}/generate?mode=deterministic` | `GenerateOptions` | `GenerateOut` (each variant stored as a proposed change set) | Yes | 06 |
 | POST | `/verify` | `VerifyRequest {plan: PlanState, options}` | `Report` | No | 02 |
 | POST | `/agents/generate` | `GenerateRequest` | SSE stream of `AgentEvent` | No (rate-limited) | 06/07 |
 | POST | `/agents/chat` | `ChatRequest` | SSE stream of `AgentEvent` | No (rate-limited) | 07 |
@@ -118,3 +120,63 @@ Entry points in `planner_core`: `verify(plan, rules, catalog, options) -> Report
 **Checker.** `check_certificate` accepts when: the plan hash and the rule hashes match; every assigned course is in the plan, matches its unit's selector and grading rules; a course fills one unit per program unless double counting is allowed; every program root is satisfied by the assignments, set constraints included; every share limit holds; every planned or in-progress course with a requisite has a witness that cites only facts of the plan and suffices; loads and goal results recompute to the same values and no hard goal fails. It does not re-check V01, V02, V04-V06, V09 or V10, which are lookups in the report. Witness tokens: `CODE@TERM`, `credit:CODE`, `placement:VALUE`, `standing:VALUE`, `program:GLOB`, `consent:VALUE`.
 
 **`POST /verify`.** Loads, for each `plan.programs` entry, the `program_version` of the plan's catalog year (a bound `version_id` must be that row), `published` only unless `show_unpublished_programs`; anything else is a 422 in FastAPI's validation-error shape (`loc` points at the program). The catalog is loaded as the subset the plan can touch (`api/repo/rules.py`). Attribute values are read with `subject_type = course` and `subject_id` = course code. Cache key `verify:{core_version}:{digest}:{plan_hash}`, where the digest hashes the loaded rules, catalog facts and request options; TTL one hour; Redis errors are logged and ignored.
+
+## Plan generator (prompt 06)
+
+`planner_core.generator.generate(plan, rules, catalog, options) -> GenerateResult` is pure and has no LLM.
+
+**What it keeps and what it decides.** Completed, in-progress, credited and locked courses never move, and neither do courses outside the quarters being planned. Unlocked planned courses inside those quarters *float*, along with a pool of catalog courses: the solver decides whether each one is placed, and where. The pool holds:
+- the courses that can fill the plan's requirements: the best few per requirement, and whole sequences for sequence lists;
+- the courses a goal names, and the prerequisites of everything in the pool;
+- forty free electives.
+
+Requirement placeholders (`slot_ref` items) in those quarters are replaced by real courses. Summer is never planned, and with `today_term` nothing is placed before the current quarter. Scope "remaining" starts at `today_term`; "selected" uses only `selected_terms`.
+
+**Model.** The model has a variable `place[c, t]` per pool course and quarter, and a course is placed at most once (a repeatable course gets two enrolments). Constraints:
+- Prerequisites must be met by earlier quarters, and co-requisites by the same quarter or an earlier one. Placement, standing and program atoms are read from the plan; consent never blocks, but such courses are less preferred.
+- `p_offered` >= 0.3 unless the student accepts the course in `allow_rarely_offered`. Where a quarter has a posted schedule, a course must appear in it.
+- Every quarter that has courses is full time, within the College maximum. A 500-unit quarter is allowed only with `allow_overload`, and only where the plan already claims an overload reason that applies.
+- Program satisfaction reuses the V07 model (`solver.ProgramModel`, which now lets the caller decide `in_order` for floating courses). Sharing limits, residency and graduation totals (units, units by enrollment, number of quarters) also hold.
+
+**Goals.** Goals are compiled by `goalcompile.compile_goals`, following the table in SPEC "Goal predicates":
+- hard bounds: `course_load`, `graduate_by`, `light_quarter`, and `workload_hours` / `difficulty_cap` when the goal is hard;
+- rewards: `challenge`, `interest`;
+- penalties: `protect_gpa`, and soft `workload_hours` / `difficulty_cap`;
+- a pinned block: `study_abroad`;
+- precedence: `bxms` (its program's `apply_requires` before `apply_by`), `premed`, `language`.
+
+**Objective.** The objective adds up:
+- the preference of each placed course, minus a cost per course that is larger than any preference, so nothing is added that no rule, goal or full-time load needs;
+- a bonus for keeping the student's own courses, especially in their quarter;
+- goal rewards and penalties, and the load slider (lighter spreads courses out; heavier finishes sooner);
+- a penalty on the peak weekly workload and on Core courses after the Core deadline.
+
+Default preferences (`preferences.py`) rank by interest match (tags, Core areas, title words), then forum `recommend_rate`, then lower course level. `options.preferences` (prompt 07's agent) overrides them for the courses it names.
+
+**Variants.** There are up to three variants, each differing from every earlier one in at least four placements. Each variant goes through `verify_checked`, which runs `verify` and then `check_certificate`. A variant that has errors or a rejected certificate is dropped, and an `ALERT` is logged, because that would be a bug in the generator. Each variant comes back with its verified plan, the change operations from the current plan (`apply_ops` reproduces the plan), the report and its metrics (`avg_hours` and `hardest_quarter_hours` are what the UI reads).
+
+**Time.** `time_limit_s` (default 4 s; the API clamps it to 5 s) is the solver budget for the whole call:
+- The solver first looks for any plan, without an objective (15% of the budget).
+- On large instances it falls back to a staged solve (60%): it places what the programs and goals need without the graduation totals, keeps those placements, and adds only the electives the totals still need.
+- It then improves the plan from that starting point (10%).
+- The remaining variants share the last 15%.
+
+The 20 synthetic profiles in `services/api/tests/test_generate_profiles.py` each finish in under 5 s. Each profile must produce either verified plans or an explanation naming its exact conflicts; a time-out message is a test failure.
+
+**Limits.**
+- A plan with more than 200 items, or with quarters more than 8 years from its entry quarter, is refused.
+- Generation is limited to 200 requests per IP per day, and to 100 per account per day for saved plans.
+- Before solving, an exact capacity check compares the units still needed to graduate with what the open quarters can hold under the unit and course limits. When they fall short, it names the limits that make the difference.
+
+**Impossible requests.** Every hard goal and limit is an assumption literal: each program, sharing, offerings, loads, courses per quarter, graduation, the prerequisites of locked courses, and each hard goal. When the solve is infeasible, the solver returns a core of those literals, and the generator shrinks it to a minimal set (budgeted). The result is said in plain English:
+- for a too-early `graduate_by`: "Graduating by Spring 2029 needs 5 more courses than your remaining quarters allow";
+- for a program that can't be completed: the requirements still missing, plus a hint when the blocker is a missing placement result;
+- otherwise, the goals that can't all hold together.
+
+**Saving a plan.** `PATCH /plans/{id}` with a `state` saves the whole plan, items included. Items keep their ids (they are updated in place), so change sets that target items by id stay valid across saves. `PATCH /plans/{id}/items` remains the way to make small edits guarded by the plan hash.
+
+**Change sets in the API.** A change set is applied only while the plan still hashes to its `base_plan_hash`. Otherwise it is marked `stale`, re-previewed against the current plan, and the request gets a 409. A request whose own `base_plan_hash` is outdated gets a 409 without changing the change set. `ChangeSetApply.terms` applies only the operations that touch the selected quarters. Typed confirmations (`confirmation_text`) arrive with prompt 07.
+
+**Frontend.** The Generate popup uses the generator selected by `VITE_GENERATOR_MODE`: `deterministic` (the default until prompt 07), or `agent`, which streams `/agents/generate`. In deterministic mode:
+- A plan saved to the account, and unchanged since it was saved, uses `POST /plans/{id}/generate`, and Apply goes through the change-set endpoint.
+- Any other plan uses `POST /plans/generate`, and the browser applies the operations itself.

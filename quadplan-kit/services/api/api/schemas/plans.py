@@ -1,7 +1,16 @@
 import datetime as dt
 import uuid
 
-from planner_core.models import ChangeOp, PlanState, Report, TermId, VerifyOptions
+from planner_core.models import (
+    ChangeOp,
+    ChangeSet,
+    GenerateOptions,
+    Infeasibility,
+    PlanState,
+    Report,
+    TermId,
+    VerifyOptions,
+)
 from pydantic import BaseModel, Field
 
 
@@ -29,8 +38,8 @@ class PlanCreate(BaseModel):
 class PlanUpdate(BaseModel):
     name: str | None = Field(default=None, min_length=1, max_length=80)
     is_primary: bool | None = None
-    #: Replaces programs, goals, credits, placements and overload reasons; items change only
-    #: through PATCH /plans/{id}/items.
+    #: Saves the whole plan: items (kept by id), programs, goals, credits, placements and
+    #: overload reasons. Small edits can go through PATCH /plans/{id}/items instead.
     state: PlanState | None = None
 
 
@@ -65,3 +74,27 @@ class PlanComparison(BaseModel):
 class VerifyRequest(BaseModel):
     plan: PlanState
     options: VerifyOptions = VerifyOptions()
+
+
+class GeneratedVariant(BaseModel):
+    """One generated plan: a proposed change set plus the verified plan it leads to."""
+
+    label: str
+    change_set: ChangeSet
+    plan: PlanState
+    report: Report
+    metrics: dict[str, float] = {}
+    rationale: dict[str, str] = {}
+
+
+class GenerateOut(BaseModel):
+    variants: list[GeneratedVariant] = []
+    #: Set when no plan meets the request: the smallest set of goals to relax, in plain English.
+    infeasible: Infeasibility | None = None
+
+
+class GenerateLocal(BaseModel):
+    """Generate for a plan that lives only in the browser (logged out, or not saved yet)."""
+
+    plan: PlanState
+    options: GenerateOptions = GenerateOptions()

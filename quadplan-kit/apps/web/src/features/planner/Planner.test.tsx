@@ -11,6 +11,7 @@ describe("Planner with endpoints that are not built yet (501)", () => {
     server.use(
       http.post("*/api/verify", notBuilt),
       http.post("*/api/agents/generate", notBuilt),
+      http.post("*/api/plans/generate", notBuilt),
       http.post("*/api/agents/chat", notBuilt),
       http.get("*/api/catalog-years", notBuilt),
     );

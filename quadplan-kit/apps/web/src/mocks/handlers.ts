@@ -275,6 +275,24 @@ export const handlers = [
   }),
 
   // Agents
+  http.post(`${A}/plans/:id/generate`, async ({ params, request }) => {
+    const options = (await request.json()) as S["GenerateOptions"];
+    const saved = plans.get(String(params.id));
+    if (!saved) return json<S["ErrorOut"]>({ detail: "Plan not found." }, 404);
+    const events = generateVariants({ plan: saved.state, plan_id: String(params.id), variants: options.variants ?? 2 } as S["GenerateRequest"]);
+    const variants = events.flatMap((e) =>
+      e.type === "variant" ? [{ label: e.label, change_set: e.change_set, plan: saved.state, report: e.report, metrics: e.metrics, rationale: e.rationale }] : [],
+    );
+    return json<S["GenerateOut"]>({ variants, infeasible: null });
+  }),
+  http.post(`${A}/plans/generate`, async ({ request }) => {
+    const body = (await request.json()) as S["GenerateLocal"];
+    const events = generateVariants({ plan: body.plan, plan_id: null, variants: body.options?.variants ?? 2 } as S["GenerateRequest"]);
+    const variants = events.flatMap((e) =>
+      e.type === "variant" ? [{ label: e.label, change_set: e.change_set, plan: body.plan, report: e.report, metrics: e.metrics, rationale: e.rationale }] : [],
+    );
+    return json<S["GenerateOut"]>({ variants, infeasible: null });
+  }),
   http.post(`${A}/agents/generate`, async ({ request }) => sse(generateVariants((await request.json()) as S["GenerateRequest"]))),
   http.post(`${A}/agents/chat`, async ({ request }) => sse(chatReply((await request.json()) as S["ChatRequest"]))),
 

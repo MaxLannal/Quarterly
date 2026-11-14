@@ -71,6 +71,8 @@ interface PlannerProps {
 export function Planner({ initial, autoGenerate = false }: PlannerProps) {
   const [state, dispatch] = useReducer(editorReducer, initial, (p) => initEditor(p.state, p.name, p.years));
   const [remoteId, setRemoteId] = useState(initial.remoteId);
+  // The plan as last saved to the account; generation uses the saved plan only while equal.
+  const [savedSnapshot, setSavedSnapshot] = useState<string | null>(() => (initial.remoteId ? JSON.stringify(initial.state) : null));
   const [stored, setStored] = useState(true);
   const [saveMsg, setSaveMsg] = useState<string | null>(null);
   const [showSummer, setShowSummer] = useState(() => (initial.state.items ?? []).some((i) => i.term.endsWith("-SU")));
@@ -172,6 +174,7 @@ export function Planner({ initial, autoGenerate = false }: PlannerProps) {
         setSaveMsg("Saving to your account is not available yet. Your plan is saved on this device.");
       } else if (res.data) {
         setRemoteId(res.data.id);
+        setSavedSnapshot(JSON.stringify(plan));
         setSaveMsg("Saved to your account.");
       } else {
         setSaveMsg("Could not save to your account. Your plan is saved on this device.");
@@ -327,7 +330,14 @@ export function Planner({ initial, autoGenerate = false }: PlannerProps) {
           }}
         />
       </Dialog>
-      <GenerateDialog open={generateOpen} onClose={() => setGenerateOpen(false)} plan={plan} years={state.years} onApply={tryOps} />
+      <GenerateDialog
+        open={generateOpen}
+        onClose={() => setGenerateOpen(false)}
+        plan={plan}
+        years={state.years}
+        planId={remoteId && savedSnapshot === JSON.stringify(plan) ? remoteId : null}
+        onApply={tryOps}
+      />
     </PlannerContext.Provider>
   );
 }

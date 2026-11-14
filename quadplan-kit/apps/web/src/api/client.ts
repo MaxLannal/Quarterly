@@ -1,4 +1,5 @@
 import createClient from "openapi-fetch";
+import { csrfMiddleware } from "@/features/auth/api";
 import type { paths } from "./schema";
 
 /** The API lives under `/api` on the same origin (Vite proxy in dev, nginx in Docker). */
@@ -16,6 +17,8 @@ export const api = createClient<paths>({
   credentials: "same-origin",
   fetch: (request: Request) => globalThis.fetch(request),
 });
+// State-changing requests carry the session's CSRF token (the API refuses them otherwise).
+api.use(csrfMiddleware);
 
 /** Thrown when an endpoint answers 501: the feature exists in the contract but not on the server yet. */
 export class NotAvailableError extends Error {

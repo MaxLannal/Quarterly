@@ -552,6 +552,27 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/plans/generate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Generate Local
+         * @description Generate for a plan that lives in the browser. Nothing is saved: the change sets come
+         *     back without ids, and the browser applies the chosen one itself.
+         */
+        post: operations["generate_local_plans_generate_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/plans/import": {
         parameters: {
             query?: never;
@@ -561,7 +582,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Import Plans */
+        /**
+         * Import Plans
+         * @description Logged-out plans from the browser, saved at login. All or nothing.
+         */
         post: operations["import_plans_plans_import_post"];
         delete?: never;
         options?: never;
@@ -650,6 +674,27 @@ export interface paths {
         put?: never;
         /** Duplicate Plan */
         post: operations["duplicate_plan_plans__plan_id__duplicate_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/plans/{plan_id}/generate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Generate Saved
+         * @description Generate up to 3 verified variants without an LLM (`mode=deterministic`; the agent
+         *     mode arrives with prompt 07). Each variant is stored as a proposed change set.
+         */
+        post: operations["generate_saved_plans__plan_id__generate_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1140,6 +1185,21 @@ export interface components {
              */
             status: "visible" | "held" | "removed";
         };
+        /**
+         * Conflict
+         * @description One goal or limit in the smallest set that makes a request impossible.
+         */
+        Conflict: {
+            /** Id */
+            id: string;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "program" | "goal" | "graduation" | "offering" | "load" | "courses_per_term" | "locked" | "sharing";
+            /** Label */
+            label: string;
+        };
         /** Constraints */
         Constraints: {
             /**
@@ -1547,6 +1607,89 @@ export interface components {
             text: string;
         };
         /**
+         * GenerateLocal
+         * @description Generate for a plan that lives only in the browser (logged out, or not saved yet).
+         */
+        GenerateLocal: {
+            /**
+             * @default {
+             *       "allow_overload": false,
+             *       "allow_rarely_offered": [],
+             *       "interests": [],
+             *       "load": 0,
+             *       "per_term_load": {},
+             *       "scope": "whole",
+             *       "selected_terms": [],
+             *       "time_limit_s": 4,
+             *       "variants": 2
+             *     }
+             */
+            options: components["schemas"]["GenerateOptions"];
+            plan: components["schemas"]["PlanState"];
+        };
+        /**
+         * GenerateOptions
+         * @description The Generate-plan form as the deterministic generator reads it (SPEC "Generate-plan
+         *     popup"). Locked and completed courses are always kept.
+         */
+        GenerateOptions: {
+            /**
+             * Allow Overload
+             * @default false
+             */
+            allow_overload: boolean;
+            /** Allow Rarely Offered */
+            allow_rarely_offered?: string[];
+            /** Goals */
+            goals?: (components["schemas"]["CourseLoadGoal"] | components["schemas"]["WorkloadHoursGoal"] | components["schemas"]["DifficultyCapGoal"] | components["schemas"]["ChallengeGoal"] | components["schemas"]["ProtectGpaGoal"] | components["schemas"]["GraduateByGoal"] | components["schemas"]["StudyAbroadGoal"] | components["schemas"]["BxmsGoal"] | components["schemas"]["PremedGoal"] | components["schemas"]["InterestGoal"] | components["schemas"]["LightQuarterGoal"] | components["schemas"]["LanguageGoal"])[] | null;
+            /** Interests */
+            interests?: string[];
+            /**
+             * Load
+             * @default 0
+             */
+            load: number;
+            /** Max Courses Per Term */
+            max_courses_per_term?: number | null;
+            /** Per Term Load */
+            per_term_load?: {
+                [key: string]: number;
+            };
+            /** Preferences */
+            preferences?: {
+                [key: string]: number;
+            } | null;
+            /**
+             * Scope
+             * @default whole
+             * @enum {string}
+             */
+            scope: "whole" | "remaining" | "selected";
+            /** Selected Terms */
+            selected_terms?: string[];
+            /**
+             * Time Limit S
+             * @default 4
+             */
+            time_limit_s: number;
+            /** Today Term */
+            today_term?: string | null;
+            /**
+             * Variants
+             * @default 2
+             */
+            variants: number;
+        };
+        /** GenerateOut */
+        GenerateOut: {
+            infeasible?: components["schemas"]["Infeasibility"] | null;
+            /**
+             * Variants
+             * @default []
+             */
+            variants: components["schemas"]["GeneratedVariant"][];
+        };
+        /**
          * GenerateRequest
          * @description The Generate-plan popup: a form, never free text (SPEC "Generate-plan popup").
          */
@@ -1599,6 +1742,31 @@ export interface components {
              * @default 2
              */
             variants: number;
+        };
+        /**
+         * GeneratedVariant
+         * @description One generated plan: a proposed change set plus the verified plan it leads to.
+         */
+        GeneratedVariant: {
+            change_set: components["schemas"]["ChangeSet"];
+            /** Label */
+            label: string;
+            /**
+             * Metrics
+             * @default {}
+             */
+            metrics: {
+                [key: string]: number;
+            };
+            plan: components["schemas"]["PlanState"];
+            /**
+             * Rationale
+             * @default {}
+             */
+            rationale: {
+                [key: string]: string;
+            };
+            report: components["schemas"]["Report"];
         };
         /** GoalResult */
         GoalResult: {
@@ -1697,6 +1865,13 @@ export interface components {
              * @enum {string}
              */
             status: "ok" | "degraded";
+        };
+        /** Infeasibility */
+        Infeasibility: {
+            /** Conflicts */
+            conflicts?: components["schemas"]["Conflict"][];
+            /** Message */
+            message: string;
         };
         /** InstructorCourse */
         InstructorCourse: {
@@ -4440,15 +4615,6 @@ export interface operations {
                     "application/json": components["schemas"]["PlanSummary"][];
                 };
             };
-            /** @description Not implemented yet */
-            501: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorOut"];
-                };
-            };
         };
     };
     create_plan_plans_post: {
@@ -4480,15 +4646,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-            /** @description Not implemented yet */
-            501: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorOut"];
                 };
             };
         };
@@ -4523,13 +4680,39 @@ export interface operations {
                     "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
-            /** @description Not implemented yet */
-            501: {
+        };
+    };
+    generate_local_plans_generate_post: {
+        parameters: {
+            query?: {
+                mode?: "deterministic";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["GenerateLocal"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorOut"];
+                    "application/json": components["schemas"]["GenerateOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
@@ -4565,15 +4748,6 @@ export interface operations {
                     "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
-            /** @description Not implemented yet */
-            501: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorOut"];
-                };
-            };
         };
     };
     get_plan_plans__plan_id__get: {
@@ -4605,15 +4779,6 @@ export interface operations {
                     "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
-            /** @description Not implemented yet */
-            501: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorOut"];
-                };
-            };
         };
     };
     delete_plan_plans__plan_id__delete: {
@@ -4641,15 +4806,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-            /** @description Not implemented yet */
-            501: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorOut"];
                 };
             };
         };
@@ -4687,15 +4843,6 @@ export interface operations {
                     "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
-            /** @description Not implemented yet */
-            501: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorOut"];
-                };
-            };
         };
     };
     list_change_sets_plans__plan_id__changesets_get: {
@@ -4725,15 +4872,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-            /** @description Not implemented yet */
-            501: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorOut"];
                 };
             };
         };
@@ -4772,15 +4910,6 @@ export interface operations {
                     "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
-            /** @description Not implemented yet */
-            501: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorOut"];
-                };
-            };
         };
     };
     discard_change_set_plans__plan_id__changesets__changeset_id__discard_post: {
@@ -4811,15 +4940,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-            /** @description Not implemented yet */
-            501: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorOut"];
                 };
             };
         };
@@ -4853,13 +4973,41 @@ export interface operations {
                     "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
-            /** @description Not implemented yet */
-            501: {
+        };
+    };
+    generate_saved_plans__plan_id__generate_post: {
+        parameters: {
+            query?: {
+                mode?: "deterministic";
+            };
+            header?: never;
+            path: {
+                plan_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["GenerateOptions"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorOut"];
+                    "application/json": components["schemas"]["GenerateOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
@@ -4895,15 +5043,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-            /** @description Not implemented yet */
-            501: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorOut"];
                 };
             };
         };

@@ -115,3 +115,53 @@ Run on `main` at `dbd2a56` (2026-11-12). Every command exited 0.
   - Rough cost: $15–40, about half with the Batch API.
 
 **Next:** start prompt 06 (generator) only when Richard says go.
+
+## Prompt 06 · Deterministic plan generator and change sets (2026-11-14)
+
+**What was built**
+- **`planner_core.generator.generate`** (pure, no LLM): a placement model on top of the V07 program model.
+  - It decides where each floating course goes: the student's unlocked planned courses in the quarters being planned, plus a pool of catalog courses.
+  - It respects prerequisite order, `p_offered` >= 0.3 unless the student accepts the course, full-time loads and the overload rule, and graduation totals. Locked and completed courses stay put.
+  - It returns up to 3 variants, each differing from earlier ones in at least 4 placements.
+  - Every variant goes through `verify` + `check_certificate`; a rejected variant is dropped and logged as an `ALERT`.
+- **Goal compiler** (`goalcompile.py`): goals become hard bounds, rewards, penalties, a pinned block or precedence rules, exactly as the SPEC goal table says.
+- **Default preferences** (`preferences.py`): interest match, then forum `recommend_rate`, then lower course level. An agent's ranking (prompt 07) can override them.
+- **Plain-English explanations** for impossible requests. Every hard goal and limit is an assumption literal, and the minimal conflicting set is named. Examples:
+  - "Graduating by Spring 2028 needs N more courses than your remaining quarters allow."
+  - "Completing cmsc-bs isn't possible … Still missing: … Some of these courses need a placement result."
+- **Saved plans API:** create, read, update, delete, duplicate, import and compare plans, plus item edits guarded by the plan hash.
+- **Change sets:** create, list, apply (only while the plan hash matches; otherwise marked `stale`, re-previewed, 409), apply selected quarters, and discard.
+- **`POST /plans/{id}/generate?mode=deterministic`** stores each variant as a proposed change set. **`POST /plans/generate`** does the same for browser-only plans, without saving.
+- **Generate popup:** wired behind `VITE_GENERATOR_MODE` (default `deterministic` until prompt 07). It shows the variants, or the explanation when nothing fits.
+
+**Spec review:** the `spec-reviewer` found 9 gaps, and all are fixed:
+- A hard profile (CS + Math + Bx/MS) timed out. A feasibility-first solve, plus a staged fallback, now finds a plan.
+- Explanations were not minimal. An exact capacity check now runs before solving, and literals are shrunk in a better order.
+- Two profiles had wrong inputs (abroad quarters, a CHEM course code). They are corrected, and every profile now asserts its exact outcome.
+- `PATCH /plans/{id}` silently dropped course edits. It now saves items, and item ids stay stable.
+- Re-previews of stale change sets broke on new item ids. Fixed by the stable ids.
+- The preference order did not strictly follow interest, then recommend rate, then level. The weights are rescaled.
+- Work on the generate endpoints was unbounded. The time budget is clamped, plan size is bounded, and there is a per-account daily limit.
+- A valid change set was marked stale when only the client's hash was old. It now returns 409 without touching the change set.
+- The popup ignored saved plans. It now uses the saved plan's endpoints when the plan is unchanged since it was saved.
+
+**Evidence:**
+- `make check` passed: planner_core 170 tests at 97.10% coverage; 224 API and service tests; 61 web tests; golden 115/115.
+- All 20 profiles finish in under 5 s, each with its exact outcome:
+  - 15 give verified plans, among them CS + Math + Bx/MS and both study-abroad blocks.
+  - 5 give explanations naming the exact limits: no placement, two transfers, graduating early, three courses a quarter.
+- `make e2e` 36 passed.
+
+**Try it** (stack up with `make up && make seed`):
+```bash
+curl -s -X POST 'localhost:8000/plans/generate?mode=deterministic' -H 'Content-Type: application/json' \
+  -d '{"plan":{"catalog_year":"2026-27","entry_term":"2026-AU","placements":["MATH 15100"],"programs":[{"program_id":"core"},{"program_id":"cmsc-bs"}]},"options":{"variants":2}}' \
+  | python3 -c 'import json,sys; r=json.load(sys.stdin); print([(v["label"], v["report"]["status"], len(v["change_set"]["ops"])) for v in r["variants"]], r["infeasible"])'
+```
+In the app:
+1. Open http://localhost:5173/onboarding.
+2. In step 2, add a credit: Kind **Placement**, Description `MATH 15100`, units 0.
+3. In step 3, choose the programs **core** and **cmsc-bs**.
+4. Finish, then click **Generate plan** and then **Generate**.
+
+Without the placement, the popup explains that the calculus requirement needs a placement result.
