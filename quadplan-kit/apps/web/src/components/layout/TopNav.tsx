@@ -42,7 +42,7 @@ function SearchBox() {
         onChange={(e) => setQ(e.target.value)}
         placeholder="Search courses"
         className={cn(
-          "min-h-11 w-full min-w-0 rounded-pill border border-hairline-strong bg-surface-card pl-4 pr-12 text-body-sm text-ink placeholder:text-muted",
+          "min-h-11 w-full min-w-0 rounded-pill border border-border-input bg-surface-card pl-4 pr-12 text-body-sm text-ink placeholder:text-muted",
           "focus-visible:outline-none focus:border-primary focus:shadow-[inset_0_0_0_1px_var(--color-primary)]",
         )}
       />
@@ -100,7 +100,7 @@ export function TopNav() {
 
   return (
     <header className="border-b border-hairline bg-canvas">
-      <div className="mx-auto flex w-full max-w-tool flex-wrap items-center gap-x-2 px-4 sm:px-6 md:h-16 md:flex-nowrap lg:px-8">
+      <div className={cn("mx-auto flex w-full flex-wrap", location.pathname === "/plan" ? "max-w-tool" : "max-w-content", "items-center gap-x-2 px-4 sm:px-6 md:h-16 md:flex-nowrap lg:px-8")}>
         <Wordmark className="mr-2 h-16 md:h-auto" />
         <nav
           id={panelId}

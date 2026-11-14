@@ -80,6 +80,18 @@ test("buttons keep a 44px target although pills are drawn 40px tall", async ({ p
   for (const path of ["/", "/plan", "/courses", "/courses/TEST%2020000"]) {
     await page.goto(path);
     await expect(page.getByRole("heading", { level: 1 })).toBeAttached();
+    if (path === "/plan") {
+      // Measure a planner with a course card on it (drag handle, actions menu).
+      await page.getByRole("button", { name: "+ Program" }).click();
+      const dialog = page.getByRole("dialog", { name: "Programs" });
+      await dialog.getByRole("checkbox", { name: "Fake Program" }).check();
+      await dialog.getByRole("button", { name: "Save programs" }).click();
+      const node = page.getByRole("button", { name: /^Fake introductory sequence/ });
+      if ((await node.getAttribute("aria-expanded")) !== "true") await node.click();
+      await page.getByRole("button", { name: "Add TEST 10000 to a quarter" }).click();
+      await page.getByRole("dialog", { name: "Add TEST 10000 to…" }).getByRole("button", { name: "Autumn 2099", exact: true }).click();
+      await expect(page.locator('[data-testid="course-card"][data-course="TEST 10000"]')).toBeVisible();
+    }
     const small = await page.evaluate(() =>
       [...document.querySelectorAll<HTMLElement>("button, a[role='button'], [role='tab'], [role='menuitem']")]
         .filter((el) => el.offsetParent !== null && !el.classList.contains("sr-only"))

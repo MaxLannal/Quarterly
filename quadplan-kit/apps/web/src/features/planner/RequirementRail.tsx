@@ -51,7 +51,7 @@ function EligibleCourse({ course }: { course: CourseSummary }) {
       <button
         type="button"
         aria-label={`Drag ${course.code} onto the plan`}
-        className="flex min-h-11 w-8 shrink-0 cursor-grab touch-none items-center justify-center rounded-l-md text-gray-dark hover:text-ink focus-visible:outline-offset-[-2px]"
+        className="flex min-h-11 w-11 shrink-0 cursor-grab touch-none items-center justify-center rounded-l-md text-gray-dark hover:text-ink focus-visible:outline-offset-[-2px]"
         {...attributes}
         {...listeners}
       >

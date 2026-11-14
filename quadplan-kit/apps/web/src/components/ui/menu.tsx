@@ -93,7 +93,7 @@ export function Menu({ label, trigger, items, open, onOpenChange, className }: M
                 item.onSelect();
               }}
               className={cn(
-                "flex min-h-11 w-full cursor-pointer items-center rounded-sm px-3 text-left text-body-sm text-ink hover:bg-surface-strong focus:bg-primary-wash focus:outline-none disabled:cursor-not-allowed disabled:text-muted-soft disabled:hover:bg-transparent",
+                "flex min-h-11 w-full cursor-pointer items-center rounded-sm px-3 text-left text-body-sm text-ink hover:bg-surface-strong focus:bg-primary-wash focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-[-2px] disabled:cursor-not-allowed disabled:text-muted-soft disabled:hover:bg-transparent",
                 item.danger && "text-error",
               )}
             >

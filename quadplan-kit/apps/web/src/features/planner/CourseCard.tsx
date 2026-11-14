@@ -70,7 +70,7 @@ export function CourseCard({ item }: { item: PlanItem }) {
         type="button"
         aria-label={item.locked ? `${label} is locked` : `Drag ${label}`}
         className={cn(
-          "flex min-h-11 w-8 shrink-0 touch-none items-center justify-center rounded-l-md text-gray-dark hover:text-ink focus-visible:outline-offset-[-2px]",
+          "flex min-h-11 w-11 shrink-0 touch-none items-center justify-center rounded-l-md text-gray-dark hover:text-ink focus-visible:outline-offset-[-2px]",
           item.locked ? "cursor-not-allowed" : "cursor-grab",
         )}
         {...attributes}
