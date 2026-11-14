@@ -13,6 +13,7 @@ the post is held for review, unless `MODERATION_FALLBACK=publish` in development
 
 from __future__ import annotations
 
+import html
 import logging
 from concurrent.futures import ThreadPoolExecutor
 from concurrent.futures import TimeoutError as FutureTimeout
@@ -92,7 +93,7 @@ def load_prompt(path: Path = PROMPT_PATH) -> Prompt:
 def wrap_untrusted(text: str, source_id: str) -> str:
     """The text as data: inside `<untrusted_source>`, with any closing tag it contains
     defused so it cannot end the block early."""
-    safe = text.replace("</untrusted_source", "&lt;/untrusted_source")
+    safe = html.escape(text, quote=False)  # no tag inside, in any letter case
     return f'<untrusted_source id="{source_id}">\n{safe}\n</untrusted_source>'
 
 

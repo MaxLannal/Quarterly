@@ -6,7 +6,7 @@ WEB := apps/web
 NPM := npm --prefix $(WEB)
 COMPOSE := docker compose
 
-.PHONY: help install env up down ps logs scraper-up lint typecheck test test-py test-web \
+.PHONY: attributes help install env up down ps logs scraper-up lint typecheck test test-py test-web \
         golden check e2e evals migrate seed seed-forum-demo api-client api-client-check format
 
 help:
@@ -77,6 +77,10 @@ evals:
 	@$(UV) run python evals/run.py --estimate
 	@test "$(CONFIRM_SPEND)" = "yes" || { echo "evals: not calling the real API. Ask Richard, then run: CONFIRM_SPEND=yes make evals"; exit 1; }
 	CONFIRM_SPEND=yes $(UV) run python evals/run.py
+
+# The nightly forum -> attributes job (prompt 11), run by hand.
+attributes: env
+	$(UV) run python -m api.cli attributes
 
 migrate: env
 	@if [ -f services/api/alembic.ini ]; then cd services/api && $(UV) run alembic upgrade head; else echo "migrate: no migrations yet"; fi

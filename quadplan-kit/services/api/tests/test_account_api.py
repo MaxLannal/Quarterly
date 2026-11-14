@@ -488,3 +488,40 @@ def test_delete_account_without_any_forum_activity(env: Env) -> None:
     assert resp.status_code == 204
     with env.db() as db:
         assert db.scalars(select(m.Account.id)).all() == []
+
+
+@pytest.mark.parametrize(
+    ("days_ago", "reversed_", "allowed"), [(10, False, False), (10, True, True), (40, False, True)]
+)
+def test_no_deletion_within_30_days_of_an_upheld_removal(
+    env: Env, days_ago: int, reversed_: bool, allowed: bool
+) -> None:
+    ids = seed_catalog(env)
+    me = env.signup("quiet-heron", EMAIL)
+    today = dt.datetime.now(dt.UTC).date()
+    with env.db() as db:
+        account_id = uuid.UUID(me["account"]["id"])
+        post = m.Post(
+            course_instructor_id=ids["page_a"],
+            kind="discussion",
+            author_ref=author_ref(account_id, ids["page_a"]),
+            body_md="x",
+            status="visible" if reversed_ else "removed",
+            created_day=today - dt.timedelta(days=days_ago),
+        )
+        db.add(post)
+        db.flush()
+        db.add(
+            m.ModerationAction(
+                target_type="post",
+                target_id=post.id,
+                action="remove",
+                actor="admin",
+                created_day=today - dt.timedelta(days=days_ago),
+            )
+        )
+        db.commit()
+    resp = env.client.post(
+        "/account/delete", json={"password": PASSWORD, "posts": "delete"}, headers=csrf(me)
+    )
+    assert resp.status_code == (204 if allowed else 409), resp.text

@@ -54,6 +54,27 @@ def cmd_golden(args: argparse.Namespace) -> int:
     return run_golden(args.golden_dir, args.seed_dir)
 
 
+def cmd_attributes(args: argparse.Namespace) -> int:
+    """The nightly forum -> attributes job, run by hand (the worker runs it nightly)."""
+    from llm_gateway.api import get_llm
+    from sqlalchemy.orm import Session
+
+    from api.agents.llm import configure_llm
+    from api.attributes.job import run_nightly
+    from api.config import get_settings
+    from api.db.session import get_engine
+
+    configure_llm(get_settings())
+    with Session(get_engine(args.database_url)) as session:
+        stats = run_nightly(session, get_llm())
+    print(
+        f"attributes: estimates={stats.cold_start} extracted={stats.extracted} "
+        f"values={stats.attributes} summaries={stats.summaries} rejected={len(stats.rejected)}"
+        + ("" if stats.llm_available else " (no LLM: structured ratings only)")
+    )
+    return 0
+
+
 def cmd_schemas(args: argparse.Namespace) -> int:
     from api.schema_export import export
 
@@ -97,6 +118,9 @@ def main(argv: list[str]) -> int:
     golden.add_argument("--golden-dir", type=Path, default=REPO_ROOT / "data" / "golden")
     golden.add_argument("--seed-dir", type=Path, default=REPO_ROOT / "data" / "seed")
     golden.set_defaults(func=cmd_golden)
+    attributes = sub.add_parser("attributes", help="run the nightly forum -> attributes job")
+    attributes.add_argument("--database-url", default=None)
+    attributes.set_defaults(func=cmd_attributes)
     schemas = sub.add_parser("schemas", help="export JSON Schemas")
     schemas.add_argument("--out", type=Path, default=REPO_ROOT / "docs" / "schemas")
     schemas.set_defaults(func=cmd_schemas)

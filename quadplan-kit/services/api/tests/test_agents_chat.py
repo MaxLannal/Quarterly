@@ -376,3 +376,24 @@ def test_history_older_than_30_days_is_deleted(env: Env) -> None:
     with env.db() as db:
         contents = db.scalars(sa.select(m.ChatMessage.content).order_by(m.ChatMessage.id)).all()
         assert "old" not in contents and contents[0] == "new"
+
+
+# ------------------------------------------------------------------ review fixes (step 3)
+
+
+def test_logged_out_chat_holds_no_forum_tools_and_text_is_scrubbed(env: Env) -> None:
+    fake = use_llm(
+        env,
+        FakeLLM(
+            script={
+                "a2_scope_classifier": [IN_SCOPE],
+                "a2_advisor_chat": [ToolCall("submit_answer", {"text": "Sure.", "citations": []})],
+            }
+        ),
+    )
+    chat(env, "Mail me at quiet.heron@uchicago.edu or 773-555-0142 about TEST 10000")
+    sent = fake.calls[0]["messages"][0].content
+    assert "uchicago.edu" not in sent and "555-0142" not in sent
+    main = next(c for c in fake.calls if c["task"] == "a2_advisor_chat")
+    assert not {"get_forum_posts", "get_forum_summary"} & set(main["tools"])
+    assert set(A2_TOOLS) - {"get_forum_posts", "get_forum_summary"} <= set(main["tools"])

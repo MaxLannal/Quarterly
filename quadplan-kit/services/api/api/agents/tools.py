@@ -146,6 +146,8 @@ class ToolBox:
     statuses: tuple[str, ...]
     show_unpublished: bool
     proposals: list[Proposal] = field(default_factory=list)
+    #: Forum posts and summaries need login (decision 6): a logged-out run gets no forum tools.
+    logged_in: bool = False
 
     @property
     def year(self) -> str:
@@ -429,7 +431,8 @@ class ToolBox:
         ]
 
     def tools(self, names: Sequence[str]) -> list[Tool]:
-        return [TOOLS[name](self) for name in names]
+        allowed = [n for n in names if self.logged_in or n not in FORUM_TOOLS]
+        return [TOOLS[name](self) for name in allowed]
 
 
 TOOLS: dict[str, Any] = {
@@ -507,6 +510,8 @@ TOOLS: dict[str, Any] = {
     ),
 }
 
+#: Tools that read forum posts or summaries: only for logged-in callers.
+FORUM_TOOLS = frozenset({"get_forum_summary", "get_forum_posts"})
 A1_TOOLS = ("search_courses", "get_course", "get_forum_summary")
 A1_RATIONALE_TOOLS = ("get_course", "get_forum_summary")
 #: The advisor's tools: reads, plus one draft tool. No tool applies anything.

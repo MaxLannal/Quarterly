@@ -86,8 +86,8 @@ tasks:
     fallback: {provider: openrouter, model: anthropic/claude-sonnet-5.5}
   a4_moderation:
     model: claude-haiku-5-5
-    effort: null
-    max_tokens: 256
+    effort: low       # thinking stays on: leave room for it plus the label
+    max_tokens: 1024
     fallback: {provider: openrouter, model: anthropic/claude-haiku-5.5}
 
 # List prices in USD per million tokens, for llm_call.cost_usd. Anthropic: SPEC "Model routing"

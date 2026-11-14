@@ -156,6 +156,7 @@ def generate(
         report=report,
         statuses=_statuses(),
         show_unpublished=_unpublished(),
+        logged_in=account is not None,
     )
     run = GenerateRun(
         db=db,
@@ -192,6 +193,7 @@ def chat(
         statuses=_statuses(),
         log=RunLog(),
         saved=saved,
+        logged_in=account is not None,
     )
     return _stream(db, run.events())
 

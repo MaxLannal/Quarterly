@@ -87,16 +87,30 @@ def split_ref(ref: str) -> tuple[str, str] | None:
     return kind, ident
 
 
+def citation_label(kind: str, ident: str) -> str:
+    """The chip text, built by the server from the id: the model's own label is ignored, so
+    text from a forum post cannot reach the chip through the model."""
+    if kind == "attribute":
+        code, _, key = ident.rpartition(":")
+        return f"{code}: {key.replace('_', ' ')}"
+    if kind == "post":
+        return f"Student post #{ident}"
+    if kind == "summary":
+        return "What students say"
+    return ident  # a course code or a program id
+
+
 def checked_citations(
     task: str, cited: Iterable[tuple[str, str, str]], seen: set[str]
 ) -> list[Citation]:
     """Keep the citations whose `kind:id` some tool returned in this run; drop and log the
-    others (SPEC "Citations are checked")."""
+    others (SPEC "Citations are checked"). Labels are rebuilt by `citation_label`."""
     kept: list[Citation] = []
     dropped = 0
-    for kind, ident, label in cited:
+    for kind, ident, _model_label in cited:
         if kind in CITATION_KINDS and f"{kind}:{ident}" in seen:
             if all((c.kind, c.id) != (kind, ident) for c in kept):
+                label = citation_label(kind, ident)
                 kept.append(Citation.model_validate({"kind": kind, "id": ident, "label": label}))
         else:
             dropped += 1

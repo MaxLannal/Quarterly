@@ -20,6 +20,7 @@ from api.auth.sessions import (
 from api.auth.store import Store, get_store
 from api.db.models import Account
 from api.db.session import get_session
+from api.forum.admin import upheld_removals
 from api.schemas.auth import AccountDelete, AccountExport, PasswordChange
 from api.schemas.common import NOT_IMPLEMENTED
 
@@ -95,6 +96,15 @@ def delete_account(
     store: Annotated[Store, Depends(get_store)],
 ) -> None:
     _refuse_while_restricted(account)
+    # Deleting and signing up again would also reset suspension strikes: wait 30 days after a
+    # moderator's upheld removal.
+    since = dt.datetime.now(dt.UTC).date() - dt.timedelta(days=30)
+    if upheld_removals(db, account.id, since) > 0:
+        raise HTTPException(
+            status_code=409,
+            detail="A moderator removed one of your posts in the last 30 days, so this account "
+            "cannot be deleted yet.",
+        )
     _confirm_password(store, account, body.password)
     account_id = account.id
     account_data.delete_account(db, account, body.posts)

@@ -1208,6 +1208,7 @@ dependencies = [
     { name = "llm-gateway" },
     { name = "planner-core" },
     { name = "pydantic-settings" },
+    { name = "quarterly-api" },
 ]
 
 [package.metadata]
@@ -1216,6 +1217,7 @@ requires-dist = [
     { name = "llm-gateway", editable = "packages/llm_gateway" },
     { name = "planner-core", editable = "packages/planner_core" },
     { name = "pydantic-settings", specifier = ">=2.6" },
+    { name = "quarterly-api", editable = "services/api" },
 ]
 
 [[package]]

@@ -27,6 +27,7 @@ an LLM). Pure: Pydantic in, Pydantic out; the solver runs single-threaded.
 
 from __future__ import annotations
 
+import time
 from dataclasses import dataclass, field
 from fnmatch import fnmatchcase
 from fractions import Fraction
@@ -87,6 +88,14 @@ SCALE = 10
 #: the most checks used to shrink the set of conflicting goals.
 EXPLAIN_SHARE = 0.1
 EXPLAIN_STEPS = 6
+#: Plans with this many programs go straight to the staged solve.
+STAGED_PROGRAMS = 4
+#: Seconds kept back from the time limit for building and verifying the variants.
+RESERVE_S = 0.3
+#: The least time the second step of the staged solve gets, and the least worth spending on
+#: improving a plan or finding another variant.
+STAGE2_MIN_S = 0.5
+MIN_SOLVE_S = 0.2
 #: Parallel search workers per solve.
 SEARCH_WORKERS = 8
 #: Scale of goal rewards and penalties relative to preferences.
@@ -847,28 +856,53 @@ class _Builder:
     def solve(
         self, assume: list[Any], *, optimize: bool = True, budget: float | None = None
     ) -> tuple[Any, cp_model.CpSolver]:
+        """Solve with the `assume` literals held true. CP-SAT searches with a single worker
+        whenever a model has assumptions, and that one search is slow and luck-dependent on
+        large programs (CS + Math + Bx/MS: 0.2-0.9 s with 8 workers, 1.7 s to over 4 s with
+        one). So the literals are fixed as constraints on a copy of the model and every worker
+        searches; `core` re-solves with assumptions when the reason for "impossible" is needed.
+        The result is verified either way, so run-to-run differences are harmless."""
         m = self.m
         m.clear_assumptions()
-        m.add_assumptions(assume)
         if optimize:
             m.maximize(self.objective)
         else:
             m.clear_objective()  # type: ignore[no-untyped-call]
+        fixed = m.clone()
+        if assume:
+            fixed.add_bool_and(assume)
         solver = cp_model.CpSolver()
-        # Several search workers find a first plan far sooner on large programs (CS + Math +
-        # Bx/MS); the result is verified either way, so run-to-run differences are harmless.
         solver.parameters.num_workers = SEARCH_WORKERS
         solver.parameters.random_seed = 0
         solver.parameters.max_time_in_seconds = budget or self.options.time_limit_s / 2
-        status = solver.solve(m)
+        status = solver.solve(fixed)
         return status, solver
 
-    def staged(self, budget: float) -> tuple[Any, cp_model.CpSolver]:
+    def core(self, assume: list[Any], budget: float) -> list[Any]:
+        """Literals of `assume` that together are impossible (all of them when CP-SAT cannot
+        say within `budget`)."""
+        m = self.m
+        m.clear_assumptions()
+        m.add_assumptions(assume)
+        m.clear_objective()  # type: ignore[no-untyped-call]
+        solver = cp_model.CpSolver()
+        solver.parameters.random_seed = 0
+        solver.parameters.max_time_in_seconds = budget
+        status = solver.solve(m)
+        m.clear_assumptions()
+        if status != cp_model.INFEASIBLE:
+            return list(assume)
+        found = set(solver.sufficient_assumptions_for_infeasibility())
+        return [lit for lit in assume if lit.index in found] or list(assume)
+
+    def staged(self, deadline: float) -> tuple[Any, cp_model.CpSolver]:
         """For hard instances: place what the programs and goals need without the graduation
-        totals, then keep those placements and add only the electives the totals still need."""
+        totals, then keep those placements and add only the electives the totals still need.
+        The first step may use all the time left except what the second step needs."""
         grad = [lit for lit in self.literals if self.conflicts[lit.index].id == "graduation"]
         rest = [lit for lit in self.literals if lit not in grad]
-        status, solver = self.solve(rest, optimize=False, budget=budget * 0.8)
+        first = max(MIN_SOLVE_S, _left(deadline) - STAGE2_MIN_S)
+        status, solver = self.solve(rest, optimize=False, budget=first)
         if status not in _STATUS_OK:
             return status, solver
         kept = [
@@ -878,7 +912,8 @@ class _Builder:
             if solver.boolean_value(var)
         ]
         self.hint(solver)
-        return self.solve([*self.literals, *kept], optimize=False, budget=budget * 0.2)
+        second = max(MIN_SOLVE_S, _left(deadline))
+        return self.solve([*self.literals, *kept], optimize=False, budget=second)
 
     def hint(self, solver: cp_model.CpSolver) -> None:
         """Start the next solve from this solution."""
@@ -1205,6 +1240,9 @@ def generate(
 ) -> GenerateResult:
     """Generate up to `options.variants` verified plans, or explain why none exists."""
     options = options or GenerateOptions()
+    # Every solve below fits before this deadline (less RESERVE_S for verifying the variants):
+    # finding a first plan may use all of it; improving it and further variants get what is left.
+    deadline = time.monotonic() + options.time_limit_s
     entry_year = parse_term(plan.entry_term)[0]
     far = [i.term for i in plan.items if abs(parse_term(i.term)[0] - entry_year) > MAX_YEARS]
     if len(plan.items) > MAX_ITEMS or far:
@@ -1225,18 +1263,23 @@ def generate(
         return GenerateResult(infeasible=short)
     budget = options.time_limit_s
     # Find any plan first (fast without an objective), then improve it from that start.
-    status, solver = b.solve(b.literals, optimize=False, budget=budget * 0.15)
-    if status not in _STATUS_OK and status != cp_model.INFEASIBLE:
-        status, solver = b.staged(budget * 0.6)
-    if status in _STATUS_OK:
+    if len(b.compiled) >= STAGED_PROGRAMS:
+        # Many programs at once (e.g. CS + Math + Bx/MS + Core): the direct search rarely
+        # finds a plan in time, the staged one does.
+        status, solver = b.staged(deadline)
+    else:
+        status, solver = b.solve(b.literals, optimize=False, budget=budget * 0.15)
+        if status not in _STATUS_OK and status != cp_model.INFEASIBLE:
+            status, solver = b.staged(deadline)
+    polish = min(budget * 0.1, _left(deadline))
+    if status in _STATUS_OK and polish >= MIN_SOLVE_S:
         b.hint(solver)
-        better, polished = b.solve(b.literals, budget=budget * 0.1)
+        better, polished = b.solve(b.literals, budget=polish)
         if better in _STATUS_OK:
             status, solver = better, polished
     rest = budget * 0.15 / max(1, options.variants - 1)
     if status == cp_model.INFEASIBLE:
-        found = set(solver.sufficient_assumptions_for_infeasibility())
-        core = [lit for lit in b.literals if lit.index in found] or list(b.literals)
+        core = b.core(list(b.literals), max(budget * EXPLAIN_SHARE, _left(deadline)))
         return GenerateResult(infeasible=b.explain(core))
     if status not in _STATUS_OK:
         return _impossible(
@@ -1246,8 +1289,10 @@ def generate(
     earlier: list[dict[str, str]] = []
     for n in range(options.variants):
         if n > 0:
+            if _left(deadline) < MIN_SOLVE_S:
+                break
             b.hint(solver)
-            status, solver = b.solve(b.literals, budget=rest)
+            status, solver = b.solve(b.literals, budget=min(rest, _left(deadline)))
             if status not in _STATUS_OK:
                 break
         vplan, ops, placed = _variant_plan(b, solver, goals_plan)
@@ -1274,6 +1319,11 @@ def generate(
             "has been reported.",
         )
     return result
+
+
+def _left(deadline: float) -> float:
+    """Seconds a solve may still take before `deadline`, keeping RESERVE_S back."""
+    return deadline - time.monotonic() - RESERVE_S
 
 
 def _differ(b: _Builder, placed: dict[str, str]) -> None:

@@ -183,3 +183,37 @@ Without the placement, the popup explains that the calculus requirement needs a 
 **Prepared for steps 3 and 4:**
 - `llm_gateway.api` is the contract shared by prompts 07, 08 and 11: `LLM.structured(task, ...)`, `FakeLLM` for tests, and `get_llm()`, which refuses every call until prompt 07 configures a client.
 - Pre-added dependencies: `anthropic` and `openai` (gateway), `markdown-it-py` and `nh3` (sanitized forum markdown).
+
+## Step 3 · Prompts 07 and 08, in parallel (2026-11-14)
+
+- **Prompt 07 (`agent-engineer`):**
+  - `llm_gateway`: routing from `llm_routing.yaml`, an Anthropic backend with OpenRouter as fallback, an agent loop with budgets, a repair turn, cost logging, and a FakeLLM that replays tool calls.
+  - A1 plan-generator agent around the prompt 06 solver, with fallbacks and SSE progress.
+  - A2 advisor chat with a scope classifier, read-only tools, a draft-only `propose_change_set`, a deterministic confirmation parser, citations checked against tool results, and 30-day history.
+  - Evals built (A1 50 profiles; A2 60/20/10/10). `make evals` needs `CONFIRM_SPEND=yes` and is Richard's to run.
+  - Real calls happen only with `LLM_LIVE=true`; it is off. With no model, generation uses its fallbacks: default preferences and no rationale.
+- **Prompt 08 (forum):**
+  - Pages, reviews and discussions, nested comments in `ltree`, votes with Best/Top/New/Controversial/Hot ranking in SQL, per-page pseudonyms with HMAC `author_ref`, and day-level dates.
+  - Markdown sanitized on the server; a regex scrub plus A4 moderation (3 s timeout, then hold for review); reports, an admin moderation queue, and suspension after 3 upheld removals.
+  - A dev-only `make seed-forum-demo` adds fake "Demo Instructor A-E" pages.
+  - axe finds no violations on the forum, thread and moderation pages.
+- **Both** build their UI from the step-2 components and tokens.
+- **Merge:** conflicts were in the mocks index, config, the API surface test and open questions. A CSRF token is now restored after a page reload, which fixed plan saves after a reload. Evidence: `make check` passed; `make e2e` 52 passed.
+
+## Step 4 · Prompt 11: forum ratings into course attributes (2026-11-14)
+
+- A nightly job (Arq cron at 03:30; `make attributes` by hand) turns reviews into course and course x instructor values with a Bayesian average:
+  - prior weight 5 against the department average, or 2 against the AI's first guess;
+  - text-extracted values and reviews older than 4 years weigh 0.5;
+  - a 95% interval;
+  - forum numbers published only from 3 ratings up, with the estimate shown below that.
+- A3 extraction (quotes and numbers checked), "What students say" summaries (at most 120 words, `[n]` citations checked, published only when A4 moderation says `ok`), and cold-start estimates. All are tested with FakeLLM. With no model, the job runs on the structured ratings alone.
+- The forum page shows the summary with links to the cited posts; the course page and planner read the new values.
+- Questions Q8-Q11 in `docs/OPEN_QUESTIONS.md`.
+- **Review fixes for steps 3 and 4** (spec and security reviews of 07 and 08):
+  - logged-out users get no forum tools in the agents, and chat text is scrubbed of emails and phone numbers before it is stored or sent;
+  - citation chip labels are built by the server, not written by the model;
+  - the moderation wrapper escapes its closing tag in any letter case; A4 moderation gets 1024 output tokens;
+  - only removals still in force count toward suspensions, and an account cannot be deleted for 30 days after one (P08-12);
+  - the plan generator no longer times out on large plans when the machine is busy. Cause: CP-SAT uses a single search worker whenever a model has assumptions, and that one search was luck-dependent (CS + Math + Bx/MS took 1.7 s to over 4 s). The goals are now fixed as constraints on a copy of the model, so all 8 workers search (0.2-0.9 s). Assumptions are used only to explain an impossible request. The time budget now runs to a deadline: finding a first plan may use all of it, and improving it or finding further variants gets what is left. Plans with four or more programs go straight to the staged solve;
+  - vitest waits up to 5 s for async UI (was 1 s), so `make check` on a busy machine no longer fails on timing.

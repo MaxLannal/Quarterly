@@ -222,10 +222,7 @@ def test_generates_verified_variants_that_replay() -> None:
         )
         assert v.metrics["courses_added"] == len(v.ops)
     first = placed(result)
-    assert (
-        first["TEST 10000"] < first["TEST 10100"]
-        or first["TEST 10000"][:4] < first["TEST 10100"][:4]
-    )
+    assert term_key(first["TEST 10000"]) < term_key(first["TEST 10100"])  # its prerequisite
     for later in result.variants[1:]:
         a, b = (
             set(placed(result).items()),

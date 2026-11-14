@@ -47,6 +47,7 @@ from api.agents.prompts import load_prompt
 from api.agents.runtime import RunLog, checked_citations
 from api.agents.tools import A2_TOOLS, ToolBox
 from api.db import models as m
+from api.forum.scrub import scrub
 from api.repo import plans as plans_repo
 from api.repo.rules import UnknownProgramsError, load_verify_inputs
 from api.schemas.agents import (
@@ -240,6 +241,8 @@ class ChatRun:
     log: RunLog
     #: The saved plan this conversation belongs to (history and proposals on the server).
     saved: m.Plan | None = None
+    #: Logged-out runs get no forum tools (posts and summaries need login).
+    logged_in: bool = False
 
     def _say(self, role: str, content: str, citations: list[Citation] | None = None) -> None:
         if self.saved is None:
@@ -276,7 +279,7 @@ class ChatRun:
         return MessageEvent(text=text, citations=citations or [])
 
     def events(self) -> Iterator[BaseModel]:
-        message = self.req.message.strip()
+        message = scrub(self.req.message.strip())  # no emails or phone numbers kept or sent
         self._say("user", message)
         confirmation = parse_confirmation(message, self.req.plan.entry_term)
         if confirmation is not None:
@@ -406,6 +409,7 @@ class ChatRun:
             report=report,
             statuses=self.statuses,
             show_unpublished=self.show_unpublished,
+            logged_in=self.logged_in,
         )
         prompt = load_prompt("a2_chat")
         spec = AgentSpec(

@@ -210,26 +210,28 @@ def _find_account(db: Session, page_id: int, ref: str | None) -> m.Account | Non
     return None
 
 
-def upheld_removals(db: Session, account_id: uuid.UUID) -> int:
-    """Distinct items of this account that an admin removed."""
-    removed = db.execute(
-        sa.select(m.ModerationAction.target_type, m.ModerationAction.target_id)
-        .where(m.ModerationAction.actor == "admin", m.ModerationAction.action == "remove")
-        .distinct()
+def upheld_removals(db: Session, account_id: uuid.UUID, since: dt.date | None = None) -> int:
+    """Distinct items of this account that an admin removed and that are still removed (a
+    removal an admin later reversed is not upheld). `since` counts only removals from that day."""
+    query = sa.select(m.ModerationAction.target_type, m.ModerationAction.target_id).where(
+        m.ModerationAction.actor == "admin", m.ModerationAction.action == "remove"
     )
+    if since is not None:
+        query = query.where(m.ModerationAction.created_day >= since)
+    removed = db.execute(query.distinct())
     count = 0
     for target_type, target_id in removed:
         if target_type == "post":
             row = db.execute(
                 sa.select(m.Post.course_instructor_id, m.Post.author_ref).where(
-                    m.Post.id == target_id
+                    m.Post.id == target_id, m.Post.status == "removed"
                 )
             ).first()
         else:
             row = db.execute(
                 sa.select(m.Post.course_instructor_id, m.Comment.author_ref)
                 .join(m.Post, m.Post.id == m.Comment.post_id)
-                .where(m.Comment.id == target_id)
+                .where(m.Comment.id == target_id, m.Comment.status == "removed")
             ).first()
         if row is not None and row[1] is not None and author_ref(account_id, row[0]) == row[1]:
             count += 1

@@ -110,6 +110,22 @@ Q7. **Cross-listed courses in generated plans.** When two course numbers are the
 
 ---
 
+**From prompt 11 (forum ratings into course numbers), with the default built meanwhile**
+
+Q8. **How much the starting guess counts.** The spec gives a course's starting point two different weights: 5 reviews' worth in the Forum section, and 2 reviews' worth for the AI's first guess in the A3 section.
+   *Suggested default (built):* 5 when the starting point is the department's average from real reviews, and 2 when it is the AI's guess. Real data then outweighs a guess quickly.
+
+Q9. **Turning words into a difficulty number.** When a post says a course is "easy", "moderate", "hard" or "very hard", it counts as 2, 3, 4 or 5 on the 1-5 scale, at half the weight of a star rating.
+   *Suggested default (built):* keep this mapping. Alternatively, use words only as supporting quotes and never as numbers.
+
+Q10. **Which courses get an AI first guess.** Only courses that have a forum page get one, at most 200 a night, to keep the cost down.
+   *Suggested default (built):* keep it. Alternatively, guess for every course in the catalog once (about 1,300 calls).
+
+Q11. **Pace and grading strictness.** Reviews have no question for these, so they stay empty. That also means the "protect my GPA" goal has nothing to work with yet.
+   *Suggested default:* add two optional 1-5 questions to the review form ("How fast did it move?", "How strictly was it graded?"), or leave them out of the demo.
+
+---
+
 ## Decisions (docs/SPEC.md "Summary and decisions to confirm")
 
 1. **Decision 5 (accounts).** Richard edited row 5 to "Email and password is stored on the backend" and confirmed it: accounts store the verified `@uchicago.edu` email and an argon2id password hash; there are no blind signatures. CLAUDE.md and SPEC "Accounts and anonymity" were updated to match. Forum anonymity (per-page pseudonyms, HMAC author refs) is unchanged.
@@ -393,4 +409,8 @@ Forum choices made while building. Each is implemented as described and can be c
   **Suggested:** return to the page they came from. Small change to the login page.
 - **P08-11. Instructor names in the home page search.** Names are now public on `/instructors`, which has its own search, but the home page search still covers courses only (the home page was outside this task).
   **Suggested:** add instructors to the home search in a later pass.
+- **P08-12. Deleting an account right after a moderator removes a post.** Deleting an account and signing up again would also wipe its count of removed posts, which a rule-breaker could use to dodge a suspension. So an account cannot be deleted for 30 days after a moderator removes one of its posts (the student sees a message saying why). Removals an admin later reverses do not count.
+  **Suggested:** keep the 30-day wait. Option: allow deletion at any time and accept that a determined rule-breaker can reset their count (their email can still be blocked by hand).
+- **P08-13. Logged-out students and the AI helpers.** Forum posts are only for logged-in students, so the plan generator and the advisor chat cannot read forum posts or summaries for someone who is not logged in; they still use catalog facts and course ratings.
+  **Suggested:** keep it, so the AI cannot be used to read the forum without an account.
 

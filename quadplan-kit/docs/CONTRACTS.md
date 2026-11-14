@@ -218,3 +218,21 @@ The 20 synthetic profiles in `services/api/tests/test_generate_profiles.py` each
 **Prompts and evals.** `prompts/a1_preferences.md`, `a1_rationale.md`, `a2_chat.md`, `a2_scope.md` start with `id`, `version` and `task`; `llm_call.prompt_version` is `<id>@<version>`. Forum text reaches a model only inside `<untrusted_source id="post:N|summary:N">`, HTML-escaped so it cannot close the tag. `evals/` holds the sets (built from the seed by `evals/build_sets.py`) and the runner; `make evals` refuses without `CONFIRM_SPEND=yes`.
 
 **Frontend.** `VITE_GENERATOR_MODE` now defaults to `agent`. The agent mocks for vitest and e2e live in `apps/web/src/mocks/agents.ts`.
+
+## Forum -> course attributes (prompt 11)
+
+**When it runs.** `api.attributes.job.run_nightly` runs every night at 03:30 as an Arq cron job (`worker.main.nightly_attributes`); run it by hand with `make attributes`. It writes one `attribute_value` row per subject and key, replaced each night. A subject is a course (`subject_id` = course code) or a course x instructor page (`subject_id` = the page id). The course page, the forum and the planner read those rows.
+
+**The numbers** (`aggregate.py`). Each value is `(k*m + sum(w*r)) / (k + sum(w))`:
+- The prior m is the department average when the department has at least 3 ratings (k = 5), else the course's cold-start estimate (k = 2, "weighted as 2 ratings"), else nothing (k = 0).
+- Weights: a structured rating counts 1, a value pulled from post text 0.5, and anything older than 4 years 0.5.
+- The confidence interval is the value plus or minus 1.96 standard errors, clamped to the scale.
+- Forum-derived values are published only when n >= 3 (method `blend`, or `forum` with no prior). Below that, the row holds the estimate (method `prior`, n 0), and the UI labels it an estimate.
+- Attributes updated: workload hours, difficulty, intellectual intensity and recommend rate. Pace and grading strictness have no forum source yet.
+
+**Agent A3** (`a3.py`, prompts `prompts/a3_*.md`). Every answer is checked by code before it is used:
+- **Extraction (Haiku):** every quote must appear in the post, and a workload number must appear in its quote. Difficulty words map to easy 2, moderate 3, hard 4, very hard 5.
+- **Summary (Sonnet):** at most 120 words; every `[n]` marker must point into the citation list, and only posts the model was given may be cited. The A4 classifier must then return `ok`; when moderation is unavailable, nothing is published. Summaries are rebuilt after 3 new visible posts or after 30 days.
+- **Cold start (Sonnet):** a rubric gives workload and difficulty from the description and level, stored as an estimate. Only courses that have a forum page get one, at most 200 a night.
+
+Post text is passed to the model inside `<untrusted_source>`, and these calls hold no tools. Without a model, the job skips the A3 steps and aggregates the structured ratings only.
