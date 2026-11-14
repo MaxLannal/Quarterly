@@ -237,3 +237,87 @@ Without the placement, the popup explains that the calculus requirement needs a 
 - Screenshots: `make screenshots` (`SCREENSHOTS=1`) writes 47 PNGs to `docs/screenshots/` (23 pages at both widths, plus the phone menu).
 - axe at both widths on the planner (with Generate and Advisor open), the forum page and the thread: no serious or critical violations (`e2e/design.spec.ts`).
 - New questions DF-12 (About page text) and DF-13 (reaching the advisor on a phone).
+
+## Goal wrap-up: prompts 06, 07, 08, 11 and the design work (2026-11-14)
+
+**What was built**
+- **Plan generator (06):** a CP-SAT generator that returns up to three verified plans (each re-checked by `check_certificate`), or explains in plain English which limits conflict. Change sets carry stale-plan protection.
+  - API: `POST /plans/generate` and `/plans/{id}/generate`.
+  - Profiles: 20 student profiles run in under 5 s.
+- **Design foundation (step 2) and design review (step 5):** see below.
+- **AI layer (07):** an LLM gateway with routing in `llm_routing.yaml`, the A1 plan-generator agent and the A2 advisor chat, all streaming progress.
+  - Every call is tested with a fake model. Real calls happen only with `LLM_LIVE=true`, which is off.
+- **Forum (08):** course × instructor pages, reviews, discussions, nested comments, votes, reports, an automatic moderation check, and an admin queue.
+  - Pseudonyms are per page, and dates are day-level.
+- **Forum numbers (11):** a nightly job turns reviews into course and course × instructor numbers using a Bayesian average.
+  - "What students say" summaries are checked and moderated before they are shown.
+  - AI first guesses fill in for courses without enough reviews.
+- **Reviews:** the final spec and security reviews of the whole goal (`500ea7b^..96cdb54`) have no open high or medium findings. Everything they found was fixed, with tests (see the step 4 and step 5 notes above).
+
+**How DESIGN.md was applied** (details in `docs/DESIGN-IMPLEMENTATION.md`)
+- **Tokens:** every DESIGN.md color, type style, radius and shadow is a Tailwind theme token. Tailwind's own palette is switched off, so components can only use design tokens.
+- **Fonts:** Newsreader and Inter are bundled with the app; no request goes to another site (an e2e test checks this).
+- **Components:** shared parts in `components/ui` (buttons, fields, `ChoiceRow`, cards, dialogs, tabs, notices) and `components/layout` (top nav with a phone menu, footer, page header, empty and loading states) are used on every page.
+- **Step 5:** every page was reviewed at 1440×900 and 390×844 and fixed:
+  - nav "current section";
+  - footer alignment;
+  - planner course-card layout;
+  - phone filters;
+  - 44px link targets;
+  - `ChoiceRow` everywhere;
+  - advisor citation chips that link.
+  
+  Screenshots of every page at both widths are in `docs/screenshots/` (`make screenshots`).
+- **Accessibility:** real buttons and labels, 44px targets (measured by an e2e test), and visible focus. axe finds no serious or critical issues on the planner (with the Generate dialog and the Advisor open), the forum page and the thread, at both widths.
+
+**Gate on `main` (96cdb54)**
+- `make check`: lint and types clean; planner_core 172, API 404, web 90 passed; golden 115.
+- `make e2e`: 56 passed (the 49 screenshot tests are skipped unless `SCREENSHOTS=1`).
+- 9 axe tests passed.
+
+**Try it.** Start with `make up && make migrate && make seed && make seed-forum-demo`. Use `.env` from `.env.example`: `ENVIRONMENT=development`, `EMAIL_BACKEND=console`, and `LLM_LIVE=false`.
+
+*Plan generation, without AI:*
+```bash
+curl -s -X POST 'localhost:8000/plans/generate?mode=deterministic' -H 'Content-Type: application/json' \
+  -d '{"plan":{"catalog_year":"2026-27","entry_term":"2026-AU","placements":["MATH 15100"],"programs":[{"program_id":"core"},{"program_id":"cmsc-bs"}]},"options":{"variants":2}}' \
+  | python3 -c 'import json,sys; r=json.load(sys.stdin); print([(v["label"], v["report"]["status"], len(v["change_set"]["ops"])) for v in r["variants"]], r["infeasible"])'
+# -> [('Option A', 'valid', 42), ('Option B', 'valid', 42)] None
+```
+In the app:
+1. Open http://localhost:5173/onboarding.
+2. In step 2 add a credit: Kind **Placement**, Description `MATH 15100`.
+3. In step 3 pick **core** and **cmsc-bs**.
+4. Finish, then click **Generate plan**, then **Generate**.
+
+*Plan generation through the agent:*
+```bash
+curl -s -N -X POST localhost:8000/agents/generate -H 'Content-Type: application/json' \
+  -d '{"plan":{"catalog_year":"2026-27","entry_term":"2026-AU","placements":["MATH 15100"],"programs":[{"program_id":"core"},{"program_id":"cmsc-bs"}]},"request":"Lighter workload, graduate on time"}'
+```
+With `LLM_LIVE=false` it streams its steps, says "Using the default elective ranking", and still returns two verified options.
+
+*Advisor chat:* open the planner's **Advisor** tab and ask "Is CMSC 14100 hard?". With `LLM_LIVE=false` it answers "The advisor can't answer right now. You can still edit your plan by hand."
+- To try the real advisor (it costs money, so it is Richard's call):
+  1. Set `LLM_LIVE=true` and `ANTHROPIC_API_KEY` in `.env`.
+  2. Run `make up`.
+  3. Ask again.
+- Logged-out users get answers without forum content.
+
+*Forum:*
+1. Open http://localhost:5173/signup and use any `@uchicago.edu` address. The 6-digit code is printed in the API log (the address is not): `docker compose logs api | grep signup_code`.
+2. Open http://localhost:5173/courses/CMSC%2014100/i/demo-instructor-a. The demo pages are fake (Demo Instructor A–E). Post a review or a discussion, vote, comment and report.
+3. Admin queue: run `docker compose exec db psql -U quarterly -d quarterly -c "UPDATE account SET role = 'admin' WHERE username = '<your username>';"`, then open http://localhost:5173/admin/moderation.
+
+*Forum numbers:* `make attributes` turns the demo reviews into course numbers; without AI it uses the star ratings alone. For example, `curl -s 'localhost:8000/courses/CMSC%2014100'` then shows workload, difficulty and recommend rate with `"method": "forum"`.
+
+**Note from this run:** `make up` could not rebuild the Docker images today. Docker Desktop timed out reaching Docker Hub and ghcr.io, and a plain `docker pull python:3.12-slim` hung as well. So the commands above were checked against the current code with the API run directly (`uvicorn` on port 8001) and the stack's database and Redis. `make up` rebuilds as soon as Docker can reach the registries again.
+
+**Questions for Richard from this goal** (each has a suggested answer in `docs/OPEN_QUESTIONS.md`):
+- P08-12: the 30-day wait before deleting an account after a moderator removes a post.
+- P08-13: logged-out students get AI answers without forum content.
+- Q12: the planner uses per-course numbers until the class schedule says who teaches.
+- Q13: how forum numbers count posts and people.
+- DF-12: what the About page should say.
+- DF-13: how a phone user reaches the advisor.
+- The older screenshots `planner.png`, `planner-issues.png`, `course-page.png` and `program-page.png` (from before this goal, on real catalog data) are still in `docs/screenshots/`. They hold no personal data. Keep or delete them as you prefer.
