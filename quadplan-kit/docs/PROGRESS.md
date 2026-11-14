@@ -98,4 +98,12 @@ Run on `main` at `dbd2a56` (2026-11-12). Every command exited 0.
   - The three stale items are marked resolved.
 - The closing review of that fix reported: **"No unresolved correctness findings."**
 
-**Next:** wait for Richard to review `data/seed/REVIEW.md` and `docs/OPEN_QUESTIONS.md`. Do not start prompt 06 until he replies.
+## Richard's review of M1 (2026-11-14)
+- Every open question now has its answer recorded under it in `docs/OPEN_QUESTIONS.md`. The work these answers create is listed there under "Work these answers create"; none of it is started.
+- New working rule for the demo phase, now also in CLAUDE.md: a catalog question gets a strict default plus a warning, is logged as deferred, and work continues.
+- The hand check of `data/seed/REVIEW.md` is deferred until before deployment. Seed program versions stay in `review` status.
+- Richard reports the Claude API and OpenRouter API are available. Before prompts 07 and 09 use them, choose the most cost-efficient model and effort for each LLM task in `llm_routing.yaml` (see below).
+
+**Next:**
+- Choose the model and effort for each LLM task, once Richard approves the plan and a budget.
+- Start prompt 06 (generator) only when Richard says go.

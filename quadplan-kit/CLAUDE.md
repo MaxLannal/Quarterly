@@ -24,6 +24,11 @@ data/seed (hand-verified YAML) · data/golden (must-pass / must-fail plans) · p
 - Secrets come from `.env` (see `.env.example`). Never commit `.env`.
 - Frontend types come from the generated OpenAPI client (`make api-client`); no hand-written fetch types.
 
+## Current phase: working demo (Richard, 2026-11-14)
+- Catalog-rule questions do not block work. Take the strict reading (do not count the course) and show the student a warning explaining why. Record the choice and a suggested default under "Deferred until before deployment" in `docs/OPEN_QUESTIONS.md`, then build. These are resolved just before deployment.
+- A default decides how to read a quote; it never replaces a missing quote. Product, security and privacy questions still go to Richard.
+- The hand check of `data/seed/REVIEW.md` is deferred until before deployment.
+
 ## Style
 - Python 3.12, ruff, mypy (`--strict` for planner_core and llm_gateway), pytest + Hypothesis.
 - TypeScript strict, eslint, vitest, Playwright for e2e. Accessible markup: real buttons, labels, 44px targets.

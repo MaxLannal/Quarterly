@@ -2,6 +2,8 @@
 
 Hand-check sheet for prompt 05. Every row is one rule with the verbatim quote it came from. Please check the quote supports the rule, and look hardest at rows marked **yes** under needs_review.
 
+> **Status (2026-11-14): this hand check is deferred until before deployment.** Richard's decision: we are building a working demo first, and researching the catalog rule by rule takes more effort than the demo needs. Until then the seed is used as encoded. Unclear rules keep the strict reading, with a warning explaining it. New catalog questions get a suggested default and are recorded in `docs/OPEN_QUESTIONS.md` ("Working rule for the demo phase"). Program versions stay in `review` status, shown in development through `SHOW_UNPUBLISHED_PROGRAMS=true`.
+
 ## Provenance
 
 - **Catalog year:** 2026-2027. Every College Catalog page fetched carries the heading "2026-2027 Catalog", so no fallback year was used.
