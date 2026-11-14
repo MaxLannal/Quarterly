@@ -165,3 +165,21 @@ In the app:
 4. Finish, then click **Generate plan** and then **Generate**.
 
 Without the placement, the popup explains that the calculus requirement needs a placement result.
+
+## Step 2 · Design foundation from DESIGN.md (2026-11-14)
+
+**How DESIGN.md was applied.** The full mapping is in `docs/DESIGN-IMPLEMENTATION.md`.
+- **Tokens:** every color, type style, radius, shadow and layout width in `docs/DESIGN.md` is a CSS custom property, wired into the Tailwind v4 theme (`apps/web/src/index.css`, `@theme`). That covers 43 colors, 14 type styles, the radii and two elevation levels. Tailwind's default palette, sizes, radii and shadows are switched off, so a class can only name a design token, and components contain no raw hex values.
+- **Fonts:** Newsreader (display) and Inter (text) are bundled from npm (`@fontsource*`) and served from `/assets`. The app makes no CDN or third-party request; an e2e test loads 13 pages and fails on any outside request.
+- **Components:**
+  - `components/ui`: Button variants (the primary pill is drawn 40px tall inside a 44px hit area), inputs, select, textarea and field, badges, notices, cards, a local SVG orb, avatar, dialog, menu, tabs and icons.
+  - `components/layout`: top nav (it folds into a menu button below 768px), footer, page container and header, section, empty and loading states.
+- **Pages:** every page and feature is restyled with those components. That includes home, onboarding, the planner (grid, cards, requirement rail, right rail, Generate popup, Advisor), course search and course page, programs, plans and compare, sign-up, login, account and the static pages. Behavior is unchanged: no existing test changed.
+- **Accessibility:** contrast and visible focus as required; an e2e test measures that every control is at least 44px; the "Move to..." keyboard menu is kept; axe reports 0 violations on the planner, home and course pages.
+- **Conflicts** between DESIGN.md and the SPEC (the behavior was kept) are in `docs/OPEN_QUESTIONS.md` as DF-1 to DF-11, each with a suggested answer.
+
+**Evidence:** `make check` passed; `make e2e` 41 passed.
+
+**Prepared for steps 3 and 4:**
+- `llm_gateway.api` is the contract shared by prompts 07, 08 and 11: `LLM.structured(task, ...)`, `FakeLLM` for tests, and `get_llm()`, which refuses every call until prompt 07 configures a client.
+- Pre-added dependencies: `anthropic` and `openai` (gateway), `markdown-it-py` and `nh3` (sanitized forum markdown).

@@ -3,7 +3,12 @@ name = "llm-gateway"
 version = "0.1.0"
 description = "Provider clients, model routing (llm_routing.yaml) and cost logging"
 requires-python = ">=3.12,<3.13"
-dependencies = ["pydantic>=2.9,<3", "pyyaml>=6.0"]
+dependencies = [
+    "anthropic>=2.8.0",
+    "openai>=3.51.0",
+    "pydantic>=2.9,<3",
+    "pyyaml>=6.0",
+]
 
 [build-system]
 requires = ["hatchling"]

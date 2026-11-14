@@ -15,10 +15,14 @@ dependencies = [
     "pyyaml>=6.0",
     "argon2-cffi>=23.1",
     "cryptography>=44",
+    "markdown-it-py>=4.3.0",
+    "nh3>=0.3.7",
+    "llm-gateway",
 ]
 
 [tool.uv.sources]
 planner-core = { workspace = true }
+llm-gateway = { workspace = true }
 
 [build-system]
 requires = ["hatchling"]
