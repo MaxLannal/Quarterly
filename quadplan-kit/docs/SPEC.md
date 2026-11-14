@@ -356,7 +356,7 @@ Three scheduled pipelines (annual catalog, quarterly schedule, nightly forum agg
 2. **Parse courses (code only).** CourseLeaf course blocks have regular fields: code, title, units, description, "Prerequisite(s)", "Equivalent Course(s)", "Note(s)". These become `course`, `crosslist_group` and `course_relation` rows.
 3. **Formalize prerequisites (agent E1, Haiku 5.5).** Each prerequisite sentence becomes a DSL expression. Output must parse under the grammar, and every course it names must exist; anything else goes to review.
 4. **Enumerate programs (agent E2, Opus 5.5).** From the catalog index, A–Z index, minors list, joint-degree pages, study-abroad list and department sites, produce one candidate per program with its type and URL. Completeness check: the count must reconcile with at least two independent lists (the College states 68 majors and 57 minors on its [Programs of Study](https://college.uchicago.edu/academics/programs-study) page). A mismatch blocks the run.
-5. **Formalize each program (agent E3, Fable 5.2, run twice).** Input: the program snapshot, the DSL schema, the course list and three worked examples. Output: a rule tree where every node carries a verbatim quote from the source. A second, independent run uses Opus 5.5 with a reordered prompt.
+5. **Formalize each program (agent E3, Opus 5.5, run twice).** Input: the program snapshot, the DSL schema, the course list and three worked examples. Output: a rule tree where every node carries a verbatim quote from the source. A second, independent run uses Sonnet 5.5 with a reordered prompt.
 6. **Validate.** (a) JSON schema; (b) every course reference exists; (c) every quote appears verbatim in the snapshot; (d) the two runs agree node by node, otherwise a review item; (e) agent E4 (Sonnet 5.5) renders the tree back into English and a judge lists differences from the source; (f) golden plans pass or fail as expected; (g) size sanity: majors fall within 9–19 courses ([Degree Requirements](https://college.uchicago.edu/advising/degree-requirements)).
 7. **Diff against last year.** Unchanged programs carry over automatically; changed ones go to review.
 8. **Human review and publish.** A curator accepts, edits or rejects in the console. Only `published` versions reach students.
@@ -578,8 +578,8 @@ Prices are list prices per million input / output tokens from the [models overvi
 
 | Agent / task | Model | Price (in / out) | Why |
 | --- | --- | --- | --- |
-| E3 program formalizer (offline, yearly) | `claude-fable-5-2`, effort high | $8 / $40 | Hardest reading task; errors are expensive; runs rarely |
-| E3b second opinion | `claude-opus-5-5`, effort high | $4 / $20 | Independent model for the two-run diff |
+| E3 program formalizer (offline, yearly) | `claude-opus-5-5`, effort high | $4 / $20 | Hardest reading task. Fable is overkill: every rule is still checked by deterministic code, golden plans and human review (Richard, 2026-11-14) |
+| E3b second opinion | `claude-sonnet-5-5`, effort high | $2 / $10 | A different model from E3, so the two-run diff stays independent |
 | E2 program enumerator | `claude-opus-5-5` | $4 / $20 | Cross-checking many pages |
 | E1 prerequisite sentence → DSL | `claude-haiku-5-5` | from $0.10 / $0.50 | High volume, short inputs |
 | E4 back-translation judge, scraper repair | `claude-sonnet-5-5` | $2 / $10 | Mid-difficulty, fast |

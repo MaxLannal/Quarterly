@@ -10,16 +10,19 @@ providers:
   fallback_after_errors: 2
 
 tasks:
+  # Richard, 2026-11-14: Fable is overkill here; every rule is still checked by deterministic
+  # code, golden plans and human review. The second run uses a different model so the two runs
+  # stay independent.
   e3_program_formalizer:      # E3, offline, yearly
-    model: claude-fable-5-2
-    effort: high
-    max_tokens: 16000
-    fallback: {provider: openrouter, model: anthropic/claude-fable-5.2}
-  e3b_second_opinion:         # E3b independent second run
     model: claude-opus-5-5
     effort: high
     max_tokens: 16000
     fallback: {provider: openrouter, model: anthropic/claude-opus-5.5}
+  e3b_second_opinion:         # E3b independent second run
+    model: claude-sonnet-5-5
+    effort: high
+    max_tokens: 16000
+    fallback: {provider: openrouter, model: anthropic/claude-sonnet-5.5}
   e2_program_enumerator:
     model: claude-opus-5-5
     effort: null

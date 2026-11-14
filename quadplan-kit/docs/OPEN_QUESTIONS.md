@@ -2,6 +2,8 @@
 
 Each question below has Richard's answer underneath it (answered 2026-11-14), or the default that stands when no answer was given. Nothing here is a guessed catalog fact.
 
+New questions in this file are written in plain language, each with a suggested answer or a few options (Richard's preference, 2026-11-14).
+
 ## Working rule for the demo phase (Richard, 2026-11-14)
 
 > One main idea now as we start further building is that, at this stage we are working towards a working demo. The Catalog is very complicated and intricate and will require a significant amount of manpower to reasearch it out. For now, for every new question that is catalog rule related, you should make a suggestion to yourself, document the desicion as a question for later, and build the thing out first. We will defer solving these questions in the future when we are about to deploy this website.
@@ -65,7 +67,7 @@ Status words used below:
 - **Economics:** standard/honors mixing, Booth alternates (P05-13b, d).
 - **Study abroad:** placeholder language courses for Córdoba and Paris (P05-14).
 - **Courses:** fetch every subject page and use the real course blocks (P05-15).
-- **Prerequisites:** formalize the 261 sentences with agent E1 (prompt 09; it calls the Anthropic API, so ask before running), then spot-check and hand-review graduate CMSC electives (P05-16).
+- **Prerequisites:** formalize the 261 sentences with agent E1 (prompt 09), then spot-check and hand-review graduate CMSC electives (P05-16). **On hold:** no API calls until Richard says so.
 
 ## Deferred until before deployment
 
@@ -105,6 +107,12 @@ Q5. **Prerequisites (P05-16).** Should prerequisites written for master's studen
 
 2. **Decision 12 (name).** The UI uses "Quarterly" / "Quarterly Planner". The forum name is written "Quarterly Forumn"; the UI uses "Quarterly Forum", assuming a typo. Code identifiers keep the neutral names (`planner_core`, `api`, ...); the Compose project and database are `quarterly`.
    **Answer: Decided.** "Yes, please use 'Forum'." (To do: fix SPEC row 12.)
+
+6. **Which AI model turns each program page into rules (E3)?** Richard (2026-11-14): Fable is overkill, because every rule is still checked by our own code, the golden plans and a human. The main run now uses **Opus 5.5**.
+   The spec has a second, separate run whose answer is compared with the first; any disagreement goes to a person. Which model should that second run use?
+   - **Sonnet 5.5 (suggested, and what is set now).** It is about half the price of Opus. Because it is a different model, it is less likely to make the same mistake as the first run.
+   - **Opus 5.5 again, with the instructions reordered.** This costs the same as the first run, and the two runs may share blind spots.
+   **Answer: Default (Sonnet 5.5) set in `llm_routing.yaml`; change it if you prefer the other option.**
 
 ## Infrastructure
 

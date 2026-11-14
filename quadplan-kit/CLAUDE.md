@@ -28,6 +28,11 @@ data/seed (hand-verified YAML) · data/golden (must-pass / must-fail plans) · p
 - Catalog-rule questions do not block work. Take the strict reading (do not count the course) and show the student a warning explaining why. Record the choice and a suggested default under "Deferred until before deployment" in `docs/OPEN_QUESTIONS.md`, then build. These are resolved just before deployment.
 - A default decides how to read a quote; it never replaces a missing quote. Product, security and privacy questions still go to Richard.
 - The hand check of `data/seed/REVIEW.md` is deferred until before deployment.
+- Do not send any request to the Claude or OpenRouter APIs (no evals, test runs or agent runs) until Richard says so (2026-11-14). Build and test LLM code against fake clients only.
+
+## Questions for Richard
+- Anywhere you leave Richard a question (`docs/OPEN_QUESTIONS.md`, `docs/PROGRESS.md`, review notes, chat), write it in plain, jargon-free language that a non-engineer can follow.
+- Always include your suggested answer, or two or three options with what each one means in practice.
 
 ## Style
 - Python 3.12, ruff, mypy (`--strict` for planner_core and llm_gateway), pytest + Hypothesis.

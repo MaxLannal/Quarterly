@@ -102,8 +102,16 @@ Run on `main` at `dbd2a56` (2026-11-12). Every command exited 0.
 - Every open question now has its answer recorded under it in `docs/OPEN_QUESTIONS.md`. The work these answers create is listed there under "Work these answers create"; none of it is started.
 - New working rule for the demo phase, now also in CLAUDE.md: a catalog question gets a strict default plus a warning, is logged as deferred, and work continues.
 - The hand check of `data/seed/REVIEW.md` is deferred until before deployment. Seed program versions stay in `review` status.
-- Richard reports the Claude API and OpenRouter API are available. Before prompts 07 and 09 use them, choose the most cost-efficient model and effort for each LLM task in `llm_routing.yaml` (see below).
+- The Claude API and OpenRouter API keys are set. **On hold:** nothing sends them requests until Richard says so; LLM code is tested against fake clients only.
+- Fable is overkill for the app (Richard): program formalizer E3 moved to Opus 5.5, its second run E3b to Sonnet 5.5 (`llm_routing.yaml`, SPEC "Model routing").
+- Questions for Richard are now written in plain language with a suggested answer or options (CLAUDE.md "Questions for Richard").
 
-**Next:**
-- Choose the model and effort for each LLM task, once Richard approves the plan and a budget.
-- Start prompt 06 (generator) only when Richard says go.
+**Planned, on hold until API calls are allowed: choose the cheapest model and effort per task.**
+- **Free savings first:** cache the fixed prompts, and send offline jobs through the Batch API (50% off).
+- **Then compare settings** by cost per correctly finished task.
+- **Start with E1** (prerequisite sentence → rule). About 780 hand-encoded prerequisites in the seed serve as the answer key, so scoring is automatic.
+  - Candidates: Haiku 5.5 at low, medium and high effort; Sonnet 5.5 at low and medium; Opus 5.5 at low.
+  - Sample: 200 pairs × 3 runs.
+  - Rough cost: $15–40, about half with the Batch API.
+
+**Next:** start prompt 06 (generator) only when Richard says go.
