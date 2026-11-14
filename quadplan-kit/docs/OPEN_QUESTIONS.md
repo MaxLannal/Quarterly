@@ -318,3 +318,30 @@ Decisions taken while making the nine failing golden plans pass. Each is impleme
   **Answer: OK.**
 - **M1-4. A share-limit must-fail for Bx/MS Option 1 needs a 30000-level number.** Discrete, Algorithms and ML taken as CMSC 27100 / 27200 / 25300 are three 20000-level courses, so the cap (V07) fails before the share limit (V08) can. `cmsc-bxms-1/fail-05` now takes ML as CMSC 35300 (cross-listed with CMSC 25300, which the major needs), so exactly the share limit fails.
   **Answer: OK.** Note: this test depends on the M1-1 reading; if the department rejects `as_enrolled`, revise this test.
+
+## Design foundation
+
+Places where `docs/DESIGN.md` (the look) and `docs/SPEC.md` (what the pages do and say) pull in different directions, or where DESIGN.md says nothing. The app keeps the SPEC's behavior and follows DESIGN.md for the look; each item says what was built. How DESIGN.md maps to code is in `docs/DESIGN-IMPLEMENTATION.md`.
+
+- **DF-1. Site name.** DESIGN.md's wordmark is "UChicago Course Forum"; the SPEC and the app call the site "Quarterly". Which name should the header show?
+  **Suggested:** keep "Quarterly" (built that way, in the DESIGN.md wordmark style: the light serif). Option: switch to "UChicago Course Forum" everywhere, which also changes page titles and tests.
+- **DF-2. Planner width.** DESIGN.md caps page content at 1200px wide. The planner has three side-by-side columns (requirements, the four-year grid, issues and advisor) that do not fit in 1200px without squeezing the grid.
+  **Suggested:** let the planner alone use up to 1600px (built); every other page stays at 1200px or narrower. Option: keep 1200px and put the issues and advisor panel under the grid on every screen size.
+- **DF-3. Course code in the course page title.** The SPEC's course page header starts with the code and title ("CMSC 14300 · Systems Programming I"). DESIGN.md says course codes are never set in the large serif type.
+  **Suggested:** keep both in the one heading, but show the code as a small grey label above the title in the plain font (built). Screen readers still read "CMSC 14300 · Systems Programming I".
+- **DF-4. The filled button in the top bar.** DESIGN.md's top bar ends with a filled maroon button, but it also says "one filled maroon button per page", and most pages already have one ("Start planning", "Add to plan", "Generate plan").
+  **Suggested:** the top bar's "Log in" is an outlined button, not a filled one (built). Option: add a filled "Sign up" button to the top bar on every page.
+- **DF-5. Several "Apply" buttons at once.** The Generate popup shows one result card per variant (up to three), and the advisor can show several proposal cards. Each card's "Apply" is a filled maroon button, so one view can show two or three.
+  **Suggested:** keep it (built): each card is its own decision, and filling only one would suggest a favourite. Option: make every card's "Apply" outlined and keep filled buttons for page-level actions only.
+- **DF-6. Colors for "warning" and "information" boxes.** DESIGN.md gives a pale background for errors and successes but not for warnings and information notes.
+  **Suggested:** use the warning and information colors mixed at 8% into white, the same recipe DESIGN.md uses for the pale maroon (built; no new color values). If you agree, add these two to DESIGN.md.
+- **DF-7. Deleting without a second step.** DESIGN.md says delete buttons ask "are you sure?" in place. Today "Delete" on My plans removes a plan straight away; that is the existing behavior, and this task did not change behavior.
+  **Suggested:** add an in-place "Delete? Yes / Cancel" step to plan deletion now, and to forum posts when the forum is built. Option: leave plan deletion as one click, since a plan can be duplicated first.
+- **DF-8. Rare UI components.** DESIGN.md suggests animated components from Rare UI (toasts, drawers, counters, the animated hero orb). None are installed yet: each one comes from an outside website and requires a visible credit link.
+  **Suggested:** add them one at a time when the forum is built (toasts and the delete button first), each restyled to our colors, with the credit in the footer. Until then the hero orb is a still, soft color glow.
+- **DF-9. Filters on phones.** DESIGN.md moves course filters into a bottom drawer on phones. The course search filters currently sit above the results on phones.
+  **Suggested:** build the drawer together with the Rare UI drawer (DF-8); the stacked filters work in the meantime.
+- **DF-10. Dark mode.** DESIGN.md does not define one and says to ask first.
+  **Suggested:** no dark mode for the demo (built that way).
+- **DF-11. A footer on every page.** DESIGN.md has a footer; the SPEC's page list does not mention one.
+  **Suggested:** keep the footer (built), with links only to pages the SPEC already lists (planner, my plans, programs, course search, instructors, guidelines, privacy, about).
