@@ -3,6 +3,7 @@
 from fastapi import Depends, FastAPI
 
 from api import __version__
+from api.agents.llm import configure_llm
 from api.auth.redaction import install_log_redaction
 from api.auth.sessions import csrf_guard
 from api.config import get_settings
@@ -18,6 +19,8 @@ def create_app() -> FastAPI:
             "unsafe settings outside development (for local work set ENVIRONMENT=development): "
             + "; ".join(problems)
         )
+    # The real LLM gateway only with LLM_LIVE=true and a provider key (CLAUDE.md API hold).
+    configure_llm(get_settings())
     app = FastAPI(
         title="Quarterly API",
         version=__version__,

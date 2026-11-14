@@ -5,9 +5,7 @@
  */
 import { http, HttpResponse } from "msw";
 import type { components } from "@/api/schema";
-import type { AgentEvent, ChangeOp, PlanState } from "@/api/types";
 import { applyOps } from "@/features/planner/changes";
-import { termAt } from "@/features/planner/terms";
 import {
   allCourses,
   CATALOG_YEARS,
@@ -21,6 +19,7 @@ import {
   PROGRAMS,
   summary,
 } from "./data";
+import { agentHandlers, generateVariants } from "./agents";
 import { mockVerify } from "./verify";
 
 type S = components["schemas"];
@@ -98,93 +97,6 @@ export function resetMockState() {
   plans.clear();
   importedPlans.length = 0;
   setLoggedIn(false);
-}
-
-// ------------------------------------------------------------------------------------------
-// Agents (SSE)
-// ------------------------------------------------------------------------------------------
-
-function sse(events: AgentEvent[]) {
-  const body = events.map((e) => `data: ${JSON.stringify(e)}\n\n`).join("");
-  return new HttpResponse(body, { headers: { "Content-Type": "text/event-stream" } });
-}
-
-const STEPS = ["Loading requirements", "Choosing electives", "Solving", "Verifying", "Writing rationale"];
-
-function firstFreeTerms(plan: PlanState, n: number): string[] {
-  const used = new Set((plan.items ?? []).map((i) => i.term));
-  const out: string[] = [];
-  for (let y = 1; y <= 4 && out.length < n; y += 1) {
-    for (const q of ["AU", "WI", "SP"] as const) {
-      const t = termAt(plan.entry_term, y, q);
-      if (!used.has(t) && out.length < n) out.push(t);
-    }
-  }
-  return out;
-}
-
-function generateVariants(req: S["GenerateRequest"]): AgentEvent[] {
-  const events: AgentEvent[] = [];
-  for (const name of STEPS) {
-    events.push({ type: "step", name, status: "started" });
-    events.push({ type: "step", name, status: "done" });
-  }
-  const labels = ["Fake balanced", "Fake front-loaded", "Fake light start"];
-  const planned = new Set((req.plan.items ?? []).map((i) => i.course));
-  const candidates = ["TEST 10000", "TEST 10100", "TEST 10200", "FAKE 11000", "FAKE 11100", "FAKE 11200"].filter((c) => !planned.has(c));
-  const terms = firstFreeTerms(req.plan, 3);
-  for (let v = 0; v < Math.min(Math.max(req.variants, 1), 3); v += 1) {
-    const ops: ChangeOp[] = candidates.slice(0, 3).map((course, i) => ({
-      op: "add",
-      course,
-      slot_ref: null,
-      term: terms[(i + v) % Math.max(terms.length, 1)] ?? req.plan.entry_term,
-      status: "planned",
-      grading: "letter",
-      locked: false,
-      units: null,
-    }));
-    const after = applyOps(req.plan, ops);
-    const rationale: Record<string, string> = {};
-    for (const op of ops) if (op.op === "add") rationale[op.term] = `Fake rationale: places ${op.course} here.`;
-    events.push({
-      type: "variant",
-      label: labels[v] ?? `Fake variant ${v + 1}`,
-      change_set: { id: `fake-cs-${v + 1}`, plan_id: req.plan_id ?? null, origin: "generate", ops, base_plan_hash: "mock", status: "proposed", preview_report: null },
-      report: mockVerify(after),
-      metrics: { avg_hours: 9 + v, hardest_quarter_hours: 18 + v },
-      rationale,
-    });
-  }
-  events.push({ type: "done", run_id: "fake-run" });
-  return events;
-}
-
-function chatReply(req: S["ChatRequest"]): AgentEvent[] {
-  const msg = req.message.toLowerCase();
-  if (/weather|joke|recipe/.test(msg)) {
-    return [{ type: "message", text: "I can only help with course planning.", citations: [] }, { type: "done", run_id: "fake-run" }];
-  }
-  const events: AgentEvent[] = [
-    {
-      type: "message",
-      text: "Mock advisor: TEST 25200 is a lighter elective than TEST 25000 in this fake data.",
-      citations: [
-        { kind: "attribute", id: "TEST 25200:workload_hours", label: "TEST 25200 · workload 13 h/wk · n=34" },
-        { kind: "course", id: "TEST 25200", label: "TEST 25200" },
-      ],
-    },
-  ];
-  if (msg.includes("add")) {
-    const term = firstFreeTerms(req.plan, 1)[0] ?? req.plan.entry_term;
-    const ops: ChangeOp[] = [{ op: "add", course: "TEST 25200", slot_ref: null, term, status: "planned", grading: "letter", locked: false, units: null }];
-    events.push({
-      type: "proposal",
-      change_set: { id: "fake-chat-cs-1", plan_id: req.plan_id ?? null, origin: "chat", ops, base_plan_hash: "mock", status: "proposed", preview_report: mockVerify(applyOps(req.plan, ops)) },
-    });
-  }
-  events.push({ type: "done", run_id: "fake-run" });
-  return events;
 }
 
 // ------------------------------------------------------------------------------------------
@@ -293,8 +205,7 @@ export const handlers = [
     );
     return json<S["GenerateOut"]>({ variants, infeasible: null });
   }),
-  http.post(`${A}/agents/generate`, async ({ request }) => sse(generateVariants((await request.json()) as S["GenerateRequest"]))),
-  http.post(`${A}/agents/chat`, async ({ request }) => sse(chatReply((await request.json()) as S["ChatRequest"]))),
+  ...agentHandlers,
 
   // Auth and account (prompt 04 builds the real ones)
   http.get(`${A}/auth/session`, () => (loggedIn() ? json<S["SessionOut"]>(session()) : unauthorized())),

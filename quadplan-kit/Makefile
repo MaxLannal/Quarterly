@@ -69,8 +69,14 @@ check: lint typecheck api-client-check test golden
 e2e:
 	$(NPM) run e2e
 
+# Agent evals against the real API (costs money; Richard runs them). Runs the free checks,
+# prints the estimate, and refuses to go on unless CONFIRM_SPEND=yes. Spending cap:
+# EVAL_COST_CAP_USD (default 20). The script refuses on its own too.
 evals:
-	@echo "evals: no eval sets yet (prompt 07); never run against the real API without asking"
+	@$(UV) run python evals/run.py --offline
+	@$(UV) run python evals/run.py --estimate
+	@test "$(CONFIRM_SPEND)" = "yes" || { echo "evals: not calling the real API. Ask Richard, then run: CONFIRM_SPEND=yes make evals"; exit 1; }
+	CONFIRM_SPEND=yes $(UV) run python evals/run.py
 
 migrate: env
 	@if [ -f services/api/alembic.ini ]; then cd services/api && $(UV) run alembic upgrade head; else echo "migrate: no migrations yet"; fi

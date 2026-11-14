@@ -37,6 +37,7 @@ EXPECTED = {
     ("post", "/verify"),
     ("post", "/agents/generate"),
     ("post", "/agents/chat"),
+    ("get", "/agents/chat/history"),
     # forum
     ("get", "/forum/pages"),
     ("get", "/forum/pages/{page_id}"),
@@ -93,8 +94,6 @@ def test_openapi_lists_every_endpoint() -> None:
 @pytest.mark.parametrize(
     ("method", "path", "body"),
     [
-        ("post", "/agents/generate", {"plan": PLAN}),
-        ("post", "/agents/chat", {"plan": PLAN, "message": "hi"}),
         ("get", "/forum/pages/1/posts", None),
         ("post", "/forum/votes", {"target_type": "post", "target_id": 1, "value": 1}),
         (
