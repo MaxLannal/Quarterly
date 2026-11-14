@@ -1,26 +1,17 @@
-import { useQuery } from "@tanstack/react-query";
-import { api } from "@/api/client";
-import type { SessionOut } from "@/api/types";
-import { setCsrfToken } from "@/features/auth/api";
-
-export const SESSION_KEY = ["session"] as const;
+import { useMemo } from "react";
+import type { AccountOut } from "@/features/auth/api";
+import { useSession as useAuthSession } from "@/features/auth/session";
 
 /**
- * The current session, or null when logged out (401) or when accounts are not available yet (501).
- * Prompt 04 owns the auth pages; the shell and the plan import only need this read.
+ * Who is logged in, in the `{ data, isLoading }` shape the top nav, planner and plan list read.
+ *
+ * There is one source of truth: the store in `features/auth/session`, which login, sign-up and
+ * logout update directly. (This used to be a separate cached query that nothing refreshed after
+ * a login, so the top nav kept saying "Log in" and the planner acted logged out until a reload.)
  */
-export async function fetchSession(): Promise<SessionOut | null> {
-  try {
-    const { data, response } = await api.GET("/auth/session");
-    const session = response.status === 200 && data ? data : null;
-    // After a reload the CSRF token exists only in this response: keep it for state changes.
-    setCsrfToken(session?.csrf_token ?? null);
-    return session;
-  } catch {
-    return null;
-  }
-}
-
-export function useSession() {
-  return useQuery({ queryKey: SESSION_KEY, queryFn: fetchSession, staleTime: 60_000, retry: false });
+export function useSession(): { data: { account: AccountOut } | null; isLoading: boolean } {
+  const session = useAuthSession();
+  const account = session.status === "authenticated" ? session.account : null;
+  const data = useMemo(() => (account ? { account } : null), [account]);
+  return { data, isLoading: session.status === "loading" };
 }

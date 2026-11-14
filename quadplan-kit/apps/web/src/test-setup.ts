@@ -1,5 +1,6 @@
 import "@testing-library/jest-dom/vitest";
 import { cleanup, configure } from "@testing-library/react";
+import { resetSession } from "./features/auth/session";
 import { resetMockState } from "./mocks/handlers";
 import { server } from "./mocks/node";
 
@@ -12,6 +13,7 @@ afterEach(() => {
   cleanup();
   server.resetHandlers();
   resetMockState();
+  resetSession(); // the login state is module-wide: start every test logged out and unloaded
   try {
     window.localStorage.clear();
   } catch {

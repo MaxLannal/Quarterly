@@ -321,3 +321,16 @@ With `LLM_LIVE=false` it streams its steps, says "Using the default elective ran
 - DF-12: what the About page should say.
 - DF-13: how a phone user reaches the advisor.
 - The older screenshots `planner.png`, `planner-issues.png`, `course-page.png` and `program-page.png` (from before this goal, on real catalog data) are still in `docs/screenshots/`. They hold no personal data. Keep or delete them as you prefer.
+
+### Fix after the wrap-up: login on the Docker site (2026-11-14)
+
+- **Symptom (Richard):** on http://localhost:5173 the UI looked old and logging in did not work.
+- **Cause 1, a real bug:** the app kept two separate records of who is logged in. Login updated one. The top bar, planner, "My plans" and the import of a logged-out plan read the other, which kept its cached "logged out" answer. So after a successful login the top bar still said "Log in" and the planner acted logged out until a reload.
+  - Fix: `apps/web/src/lib/session.ts` now reads the one auth store that login, sign-up and logout update.
+  - Test: `e2e/auth.spec.ts` checks that the top bar shows the account right after login. It fails on the old code.
+- **Cause 2, stale pages:** nginx sent no cache headers, so browsers could keep showing an old build for hours after a rebuild.
+  - Fix: `apps/web/docker/nginx.conf` now sends `no-cache` for the page and caches the fingerprinted `/assets/` files for good.
+  - After this change, one hard reload (Cmd+Shift+R) clears any old copy.
+- **Checked on Docker:** the served bundle is byte-identical to a fresh build of `main`. A real Chromium logs in and lands on the planner with the account in the top bar.
+- **Safari note:** the session cookie is marked `Secure`. Safari does not keep `Secure` cookies on plain `http://localhost` (Chrome and Firefox do), so log in with Chrome or Firefox locally. Option: `SESSION_COOKIE_SECURE=false` in `.env` for local development only; the API refuses that setting outside development.
+- **Evidence:** `make check` passed (web 90); `make e2e` 56 passed.

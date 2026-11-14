@@ -108,6 +108,10 @@ test("log in, and reset a forgotten password", async ({ page }) => {
   await page.getByLabel("Password").fill("a brand new password");
   await page.getByRole("button", { name: "Log in" }).click();
   await expect(page).toHaveURL(/\/plan$/);
+  // The top bar shows the account at once, without a reload (it used to keep saying "Log in").
+  const banner = page.getByRole("banner").first();
+  await expect(banner.getByRole("link", { name: /quiet-heron/ })).toBeVisible();
+  await expect(banner.getByRole("link", { name: "Log in" })).toHaveCount(0);
   expect(authPosts(calls).at(-1)).toMatchObject({
     key: "POST /auth/login",
     body: { login: "quiet-heron", password: "a brand new password" },

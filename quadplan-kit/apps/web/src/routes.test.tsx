@@ -1,4 +1,4 @@
-import { screen } from "@testing-library/react";
+import { screen, waitFor } from "@testing-library/react";
 import { renderRoute } from "./test-utils";
 
 const CASES: [string, string][] = [
@@ -17,7 +17,8 @@ const CASES: [string, string][] = [
 describe("routes", () => {
   it.each(CASES)("renders %s", async (path, heading) => {
     renderRoute(path);
-    expect(await screen.findByRole("heading", { level: 1, name: heading })).toBeInTheDocument();
+    // Retried until it holds: forum pages swap their "checking your login" header for the real one.
+    await waitFor(() => expect(screen.getByRole("heading", { level: 1, name: heading })).toBeInTheDocument());
   });
 });
 
