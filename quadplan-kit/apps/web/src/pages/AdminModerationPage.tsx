@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { EmptyState, inlineLinkClass, LoadingState, PageContainer, PageHeader } from "@/components/layout/page";
+import { EmptyState, inlineLinkClass, LoadingState, PageContainer, PageHeader, tallTargetClass } from "@/components/layout/page";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 import { Badge, CourseCode, ErrorText, Notice } from "@/components/ui/misc";
 import { useSession } from "@/features/auth/session";
 import { useModerationDecision, useModerationQueue, type ModerationItem } from "@/features/forum/api";
@@ -130,7 +131,7 @@ export default function AdminModerationPage() {
         title={TITLE}
         description="Held posts and comments, and anything with an open report, oldest first. Approve publishes and dismisses the reports; Remove takes it down and upholds them. Three upheld removals suspend the author for 30 days."
         meta={
-          <Link to="/guidelines" className={inlineLinkClass}>
+          <Link to="/guidelines" className={cn(inlineLinkClass, tallTargetClass)}>
             Community guidelines
           </Link>
         }

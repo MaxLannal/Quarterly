@@ -361,6 +361,10 @@ Places where `docs/DESIGN.md` (the look) and `docs/SPEC.md` (what the pages do a
   **Suggested:** no dark mode for the demo (built that way).
 - **DF-11. A footer on every page.** DESIGN.md has a footer; the SPEC's page list does not mention one.
   **Suggested:** keep the footer (built), with links only to pages the SPEC already lists (planner, my plans, programs, course search, instructors, guidelines, privacy, about).
+- **DF-12. What the About page says (design review, step 5).** The About page is still empty. It used to show a note meant for us ("Placeholder ... built in prompt 03"); it now says "Coming soon". The SPEC only says the page holds "disclaimers", and disclaimers are your call, not ours.
+  **Suggested:** three short paragraphs: (1) Quarterly is a student project, not run by or endorsed by the University of Chicago; (2) the planner checks plans against the published catalog, but your adviser and the official degree audit have the final word; (3) forum posts are students' opinions, are moderated, and are anonymous to other students. Options: write it yourself, or drop the About page and put one line of this in the footer.
+- **DF-13. The advisor on a phone (design review, step 5).** On a phone the planner shows its three columns one after another: requirements, then the four-year grid (twelve quarters), then the Issues / Goals / Advisor panel. A student who wants to ask the advisor scrolls past the whole grid first (about 4,000 pixels, several screen lengths).
+  **Suggested:** on phones only, add a small row of three buttons under the plan name ("Requirements", "Plan", "Issues and advisor") that jump to each part; nothing else moves. Options: put the Issues / Goals / Advisor panel above the grid on phones; or leave it as it is (built that way today).
 
 ## Prompt 07
 

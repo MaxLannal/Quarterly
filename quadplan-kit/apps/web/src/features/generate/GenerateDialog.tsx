@@ -5,7 +5,7 @@ import type { ChangeOp, GenerateRequest, Goal, PlanState, StepEvent, VariantEven
 import { Button } from "@/components/ui/button";
 import { Dialog } from "@/components/ui/dialog";
 import { CheckIcon, CloseIcon, ErrorIcon } from "@/components/ui/icons";
-import { controlClass, controlCompactClass } from "@/components/ui/input";
+import { ChoiceRow, controlClass, controlCompactClass } from "@/components/ui/input";
 import { NotAvailable, Notice } from "@/components/ui/misc";
 import { cn } from "@/lib/utils";
 import { opsForTerms, termsTouched } from "@/features/planner/changes";
@@ -104,23 +104,22 @@ function GenerateForm({ plan, years, onSubmit }: { plan: PlanState; years: numbe
             ["selected", "Selected quarters"],
           ] as const
         ).map(([value, label]) => (
-          <label key={value} className="flex min-h-11 items-center gap-2 text-body-sm">
-            <input type="radio" name="scope" value={value} checked={scope === value} onChange={() => setScope(value)} className="size-5" />
+          <ChoiceRow key={value} type="radio" name="scope" value={value} checked={scope === value} onChange={() => setScope(value)}>
             {label}
-          </label>
+          </ChoiceRow>
         ))}
         {scope === "selected" && (
           <div className="mt-1 grid grid-cols-2 gap-x-2 sm:grid-cols-4">
             {terms.map((t) => (
-              <label key={t} className="flex min-h-11 items-center gap-2 text-caption">
-                <input
-                  type="checkbox"
-                  className="size-5"
-                  checked={selectedTerms.includes(t)}
-                  onChange={(e) => setSelectedTerms(e.target.checked ? [...selectedTerms, t] : selectedTerms.filter((x) => x !== t))}
-                />
+              <ChoiceRow
+                key={t}
+                type="checkbox"
+                className="text-caption"
+                checked={selectedTerms.includes(t)}
+                onChange={(e) => setSelectedTerms(e.target.checked ? [...selectedTerms, t] : selectedTerms.filter((x) => x !== t))}
+              >
                 {termLabel(t)}
-              </label>
+              </ChoiceRow>
             ))}
           </div>
         )}
@@ -185,10 +184,9 @@ function GenerateForm({ plan, years, onSubmit }: { plan: PlanState; years: numbe
             ))}
           </select>
         </div>
-        <label className="flex min-h-11 items-center gap-2 text-body-sm">
-          <input type="checkbox" className="size-5" checked={allowOverload} onChange={(e) => setAllowOverload(e.target.checked)} />
+        <ChoiceRow type="checkbox" checked={allowOverload} onChange={(e) => setAllowOverload(e.target.checked)}>
           Allow a 500-unit quarter where the rules permit it
-        </label>
+        </ChoiceRow>
       </fieldset>
 
       <fieldset>
@@ -197,21 +195,20 @@ function GenerateForm({ plan, years, onSubmit }: { plan: PlanState; years: numbe
           <p className="text-body-sm text-muted">No goals yet. Add them in the Goals tab.</p>
         ) : (
           (plan.goals ?? []).map((g) => (
-            <label key={g.id} className="flex min-h-11 items-center gap-2 text-body-sm">
-              <input
-                type="checkbox"
-                className="size-5"
-                checked={goalIds.has(g.id)}
-                onChange={(e) => {
-                  const next = new Set(goalIds);
-                  if (e.target.checked) next.add(g.id);
-                  else next.delete(g.id);
-                  setGoalIds(next);
-                }}
-              />
+            <ChoiceRow
+              key={g.id}
+              type="checkbox"
+              checked={goalIds.has(g.id)}
+              onChange={(e) => {
+                const next = new Set(goalIds);
+                if (e.target.checked) next.add(g.id);
+                else next.delete(g.id);
+                setGoalIds(next);
+              }}
+            >
               {goalLabel(g)}
               {g.term ? ` (${termLabel(g.term)})` : ""}
-            </label>
+            </ChoiceRow>
           ))
         )}
       </fieldset>
@@ -299,7 +296,7 @@ function VariantCard({ v, onApply, onDiscard }: { v: VariantEvent; onApply: (ops
         </ul>
       )}
       {(v.citations ?? []).length > 0 && (
-        <ul className="flex flex-wrap" aria-label={`Sources for ${v.label}`}>
+        <ul className="-mx-1.5 flex flex-wrap" aria-label={`Sources for ${v.label}`}>
           {(v.citations ?? []).map((c) => (
             <li key={`${c.kind}-${c.id}`}>
               <CitationChip c={c} />
@@ -322,10 +319,9 @@ function VariantCard({ v, onApply, onDiscard }: { v: VariantEvent; onApply: (ops
           <legend className="text-caption-uppercase uppercase text-muted">Quarters to apply</legend>
           <div className="grid grid-cols-2 gap-x-2">
             {touched.map((t) => (
-              <label key={t} className="flex min-h-11 items-center gap-2 text-body-sm">
-                <input type="checkbox" className="size-5" checked={picked.includes(t)} onChange={(e) => setPicked(e.target.checked ? [...picked, t] : picked.filter((x) => x !== t))} />
+              <ChoiceRow key={t} type="checkbox" checked={picked.includes(t)} onChange={(e) => setPicked(e.target.checked ? [...picked, t] : picked.filter((x) => x !== t))}>
                 {termLabel(t)}
-              </label>
+              </ChoiceRow>
             ))}
           </div>
           <Button className="mt-1" disabled={picked.length === 0} onClick={() => onApply(opsForTerms(v.change_set.ops, picked), picked)}>

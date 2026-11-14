@@ -20,3 +20,18 @@ describe("routes", () => {
     expect(await screen.findByRole("heading", { level: 1, name: heading })).toBeInTheDocument();
   });
 });
+
+describe("top nav", () => {
+  it.each([
+    ["/plans", "Plan"],
+    ["/onboarding", "Plan"],
+    ["/courses/TEST%2010000", "Courses"],
+    ["/courses/TEST%2010000/i/fake-instructor-a", "Forum"],
+    ["/guidelines", "Forum"],
+  ])("marks the section of %s as current", async (path, label) => {
+    renderRoute(path);
+    const nav = await screen.findByRole("navigation", { name: "Main" });
+    const current = nav.querySelectorAll('[aria-current="page"]');
+    expect([...current].map((a) => a.textContent)).toEqual([label]);
+  });
+});

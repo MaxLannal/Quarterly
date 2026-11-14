@@ -217,3 +217,11 @@ Without the placement, the popup explains that the calculus requirement needs a 
   - only removals still in force count toward suspensions, and an account cannot be deleted for 30 days after one (P08-12);
   - the plan generator no longer times out on large plans when the machine is busy. Cause: CP-SAT uses a single search worker whenever a model has assumptions, and that one search was luck-dependent (CS + Math + Bx/MS took 1.7 s to over 4 s). The goals are now fixed as constraints on a copy of the model, so all 8 workers search (0.2-0.9 s). Assumptions are used only to explain an impossible request. The time budget now runs to a deadline: finding a first plan may use all of it, and improving it or finding further variants gets what is left. Plans with four or more programs go straight to the staged solve;
   - vitest waits up to 5 s for async UI (was 1 s), so `make check` on a busy machine no longer fails on timing.
+
+## Step 5 · Design review at 1440 and 390 (2026-11-14)
+
+- Every page reviewed at desktop (1440×900) and phone (390×844) width against `docs/DESIGN.md`; per-page findings and fixes are in `docs/DESIGN-IMPLEMENTATION.md` ("Design review at 1440 and 390 (step 5)"). Main fixes: planner course cards (full-width body, issues no longer squeezed), the nav marks the current section on every page, the footer lines up with the top bar, forum section heads in the display serif, two-up course filters on phones, plan cards in two rows, no stray gaps from empty error regions, 44px targets on dense links, plain "Coming soon" copy instead of build notes.
+- Deferred review findings closed: advisor `post` / `summary` / `attribute` citation chips now link (thread, forum page, course page; a plain pill when logged out); forum radio rows use the shared `ChoiceRow` (as do onboarding, the Generate dialog and the program picker); the forum `Sort` type comes from the generated OpenAPI schema.
+- Screenshots: `make screenshots` (`SCREENSHOTS=1`) writes 47 PNGs to `docs/screenshots/` (23 pages at both widths, plus the phone menu).
+- axe at both widths on the planner (with Generate and Advisor open), the forum page and the thread: no serious or critical violations (`e2e/design.spec.ts`).
+- New questions DF-12 (About page text) and DF-13 (reaching the advisor on a phone).

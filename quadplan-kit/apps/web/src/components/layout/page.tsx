@@ -152,3 +152,8 @@ export function LoadingState({ label, lines = 3, className }: { label: string; l
 /** link-inline: maroon, underlined. Standalone links also get a 44px target. */
 export const inlineLinkClass = "rounded-xs text-primary underline underline-offset-2 hover:text-primary-hover";
 export const standaloneLinkClass = cn(inlineLinkClass, "inline-flex min-h-11 items-center");
+/**
+ * A 44px target for a link that sits in a dense line (meta rows, list titles) without moving the
+ * layout: 12px of padding above and below, cancelled by the same negative margin.
+ */
+export const tallTargetClass = "inline-block py-3 -my-3";

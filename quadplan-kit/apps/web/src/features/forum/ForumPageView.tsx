@@ -1,7 +1,8 @@
 import { useId, useState } from "react";
 import { Link } from "react-router-dom";
 import { ApiError } from "@/api/client";
-import { EmptyState, inlineLinkClass, LoadingState, PageContainer, PageHeader, Section, standaloneLinkClass } from "@/components/layout/page";
+import { EmptyState, inlineLinkClass, LoadingState, PageContainer, PageHeader, Section, standaloneLinkClass, tallTargetClass } from "@/components/layout/page";
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Label, Select } from "@/components/ui/input";
@@ -116,7 +117,7 @@ function PostList({ page, kind }: { page: ForumPage; kind: PostKind }) {
 function SummarySlot({ page }: { page: ForumPage }) {
   const s = page.summary;
   return (
-    <Section id="summary" title="What students say" size="sm">
+    <Section id="summary" title="What students say">
       {s ? (
         <div className="flex max-w-reading flex-col gap-2">
           <p className="text-body-md text-body">{s.text}</p>
@@ -188,19 +189,19 @@ export function ForumPageView({ code, slug }: { code: string; slug: string }) {
         }
         meta={
           <>
-            <Link to={`/instructors/${encodeURIComponent(page.instructor.slug)}`} className={inlineLinkClass}>
+            <Link to={`/instructors/${encodeURIComponent(page.instructor.slug)}`} className={cn(inlineLinkClass, tallTargetClass)}>
               {page.instructor.display_name}
             </Link>
             {page.instructor.department && <span>{page.instructor.department}</span>}
             <span>{terms.length ? `Taught ${terms.map(termLabel).join(", ")}` : "Terms taught not recorded yet"}</span>
-            <Link to={`/courses/${encodeURIComponent(page.course_code)}`} className={inlineLinkClass}>
+            <Link to={`/courses/${encodeURIComponent(page.course_code)}`} className={cn(inlineLinkClass, tallTargetClass)}>
               Course page
             </Link>
           </>
         }
       />
       <div className="flex flex-col gap-12">
-        <Section id="ratings" title="Ratings" size="sm" description={page.n_reviews ? `From ${plural(page.n_reviews ?? 0, "review")}` : "No reviews yet"}>
+        <Section id="ratings" title="Ratings" description={page.n_reviews ? `From ${plural(page.n_reviews ?? 0, "review")}` : "No reviews yet"}>
           <div className="flex flex-col gap-6">
             <RatingStats ratings={page.ratings ?? { n_reviews: 0 }} />
             <RatingBars distribution={page.rating_distribution ?? {}} />

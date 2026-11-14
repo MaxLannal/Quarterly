@@ -114,7 +114,7 @@ test("planner: generate popup and advisor proposal", async ({ page }) => {
   await page.getByRole("tab", { name: "Advisor" }).click();
   await page.getByLabel("Ask the advisor").fill("Please add a lighter elective");
   await page.getByRole("button", { name: "Send" }).click();
-  await expect(page.getByRole("link", { name: "TEST 25200" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "TEST 25200", exact: true })).toBeVisible();
   const proposal = page.getByRole("article", { name: "Proposed change" });
   await expect(proposal).toContainText("Add TEST 25200");
   await proposal.getByRole("button", { name: "Apply" }).click();

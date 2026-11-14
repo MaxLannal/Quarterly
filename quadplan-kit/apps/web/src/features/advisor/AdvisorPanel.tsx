@@ -6,6 +6,9 @@ import type { ChangeOp, ChangeSet, ChatTurn, Citation, PlanState } from "@/api/t
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/input";
 import { NotAvailable, Notice } from "@/components/ui/misc";
+import { useSession } from "@/features/auth/session";
+import { useForumPageById, usePost } from "@/features/forum/api";
+import { pagePath, threadPath } from "@/features/forum/format";
 import { applyStoredChangeSet } from "@/features/generate/deterministic";
 import { opText } from "@/features/planner/context";
 import { termLabel } from "@/features/planner/terms";
@@ -17,31 +20,51 @@ type Entry =
   | { kind: "assistant"; text: string; citations: Citation[] }
   | { kind: "proposal"; changeSet: ChangeSet; state: CardState };
 
-export function CitationChip({ c }: { c: Citation }) {
-  // Citation chip: a 32px neutral pill drawn inside a transparent 6px border, so links keep a 44px
-  // target (same technique as Button size "sm"). Tabular Inter: course codes never use the serif.
-  const cls =
-    "inline-flex min-h-11 items-center rounded-pill border-[6px] border-transparent bg-surface-strong bg-clip-padding px-3 text-caption tabular-nums text-ink";
-  const link = `${cls} underline underline-offset-2 hover:bg-hairline focus-visible:outline-offset-[-4px]`;
-  if (c.kind === "course") {
-    return (
-      <Link to={`/courses/${encodeURIComponent(c.id)}`} className={link}>
-        {c.label}
-      </Link>
-    );
-  }
-  if (c.kind === "program") {
-    return (
-      <Link to={`/programs/${encodeURIComponent(c.id)}`} className={link}>
-        {c.label}
-      </Link>
-    );
-  }
+// Citation chip: a 32px neutral pill drawn inside a transparent 6px border, so links keep a 44px
+// target (same technique as Button size "sm"). Tabular Inter: course codes never use the serif.
+const chipClass =
+  "inline-flex min-h-11 items-center rounded-pill border-[6px] border-transparent bg-surface-strong bg-clip-padding px-3 text-caption tabular-nums text-ink";
+const chipLinkClass = `${chipClass} underline underline-offset-2 hover:bg-hairline focus-visible:outline-offset-[-4px]`;
+
+function ChipLink({ to, label }: { to: string; label: string }) {
   return (
-    <span className={cls} title={`${c.kind}: ${c.id}`}>
-      {c.label}
-    </span>
+    <Link to={to} className={chipLinkClass}>
+      {label}
+    </Link>
   );
+}
+
+/**
+ * A forum citation (`post:POST_ID` or `summary:PAGE_ID`). The id alone cannot build the URL
+ * (`/courses/:code/i/:instructor/t/:id`), so the chip asks the API for the post (which names its
+ * page) and the page (which names the course and instructor). Forum reads need a login, so a
+ * logged-out student, a removed post or a failed request keeps a plain chip: same pill, no
+ * underline, nothing to click.
+ */
+function ForumCitationChip({ c }: { c: Citation }) {
+  const session = useSession();
+  const loggedIn = session.status === "authenticated";
+  const isPost = c.kind === "post";
+  const post = usePost(isPost ? Number(c.id) : Number.NaN, loggedIn && isPost);
+  const pageId = isPost ? post.data?.page_id : Number(c.id);
+  const page = useForumPageById(pageId ?? Number.NaN, loggedIn && pageId != null);
+  if (page.data) {
+    const { course_code: code, instructor } = page.data;
+    return <ChipLink to={isPost ? threadPath(code, instructor.slug, Number(c.id)) : pagePath(code, instructor.slug)} label={c.label} />;
+  }
+  return <span className={chipClass}>{c.label}</span>;
+}
+
+export function CitationChip({ c }: { c: Citation }) {
+  if (c.kind === "course") return <ChipLink to={`/courses/${encodeURIComponent(c.id)}`} label={c.label} />;
+  if (c.kind === "program") return <ChipLink to={`/programs/${encodeURIComponent(c.id)}`} label={c.label} />;
+  if (c.kind === "attribute") {
+    // `CODE:key` (for example "CMSC 14300:workload_hours"): the attribute is shown on the course page.
+    const code = c.id.slice(0, c.id.lastIndexOf(":"));
+    if (code) return <ChipLink to={`/courses/${encodeURIComponent(code)}`} label={c.label} />;
+  }
+  if (c.kind === "post" || c.kind === "summary") return <ForumCitationChip c={c} />;
+  return <span className={chipClass}>{c.label}</span>;
 }
 
 /**
@@ -229,7 +252,7 @@ export function AdvisorPanel({ plan, planId = null, onApply }: AdvisorPanelProps
                 <span className="sr-only">Advisor: </span>
                 <p>{entry.text}</p>
                 {entry.citations.length > 0 && (
-                  <ul className="mt-1 flex flex-wrap" aria-label="Sources">
+                  <ul className="-mx-1.5 mt-1 flex flex-wrap" aria-label="Sources">
                     {entry.citations.map((c) => (
                       <li key={`${c.kind}-${c.id}`}>
                         <CitationChip c={c} />

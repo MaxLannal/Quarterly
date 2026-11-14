@@ -1,17 +1,20 @@
 import { Link, useParams } from "react-router-dom";
 import { ApiError, isNotAvailable } from "@/api/client";
 import { useCourse } from "@/api/hooks";
-import { inlineLinkClass, LoadingState, PageContainer, PageHeader, Section, standaloneLinkClass } from "@/components/layout/page";
+import { inlineLinkClass, LoadingState, PageContainer, PageHeader, Section, standaloneLinkClass, tallTargetClass } from "@/components/layout/page";
 import { Avatar } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 import { Badge, CourseCode, NotAvailable } from "@/components/ui/misc";
 import { AddToPlanButton } from "@/features/courses/AddToPlanButton";
 import { AttributeCard, OfferingsTable, PrereqGraph } from "@/features/courses/CourseParts";
+import { useSession } from "@/features/auth/session";
 import { CourseForumSummary } from "@/features/forum/CourseForumSummary";
 import { termLabel } from "@/features/planner/terms";
 
 export default function CoursePage() {
   const { code = "" } = useParams();
   const q = useCourse(code);
+  const loggedIn = useSession().status === "authenticated";
 
   if (q.isLoading) {
     return (
@@ -102,12 +105,13 @@ export default function CoursePage() {
                   <li key={i.instructor.slug} className="flex items-center gap-3 py-3">
                     <Avatar name={i.instructor.display_name} />
                     <div className="min-w-0">
-                      <Link to={`/courses/${encodeURIComponent(c.code)}/i/${i.instructor.slug}`} className={`${inlineLinkClass} text-title-sm`}>
+                      <Link to={`/courses/${encodeURIComponent(c.code)}/i/${i.instructor.slug}`} className={cn(inlineLinkClass, tallTargetClass, "text-title-sm")}>
                         {i.instructor.display_name}
                       </Link>
                       <p className="text-caption text-muted">
                         {i.n_terms} term{i.n_terms === 1 ? "" : "s"}
-                        {i.first_term && i.last_term ? `, ${termLabel(i.first_term)}–${termLabel(i.last_term)}` : ""} · reviews need login
+                        {i.first_term && i.last_term ? `, ${termLabel(i.first_term)}–${termLabel(i.last_term)}` : ""}
+                        {loggedIn ? "" : " · reviews need login"}
                       </p>
                     </div>
                   </li>
@@ -127,7 +131,7 @@ export default function CoursePage() {
               <ul className="divide-y divide-hairline border-y border-hairline">
                 {c.counts_toward.map((ct) => (
                   <li key={`${ct.program_id}-${ct.node_id}`} className="py-3 text-body-sm text-body">
-                    <Link to={`/programs/${ct.program_id}`} className={`${inlineLinkClass} text-body-strong`}>
+                    <Link to={`/programs/${ct.program_id}`} className={cn(inlineLinkClass, tallTargetClass, "text-body-strong")}>
                       {ct.program_name}
                     </Link>
                     {ct.label ? `: ${ct.label}` : ""}

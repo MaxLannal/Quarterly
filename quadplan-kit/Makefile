@@ -7,7 +7,7 @@ NPM := npm --prefix $(WEB)
 COMPOSE := docker compose
 
 .PHONY: attributes help install env up down ps logs scraper-up lint typecheck test test-py test-web \
-        golden check e2e evals migrate seed seed-forum-demo api-client api-client-check format
+        golden check e2e screenshots evals migrate seed seed-forum-demo api-client api-client-check format
 
 help:
 	@grep -E '^[a-z-]+:' Makefile | cut -d: -f1 | sort | tr '\n' ' '; echo
@@ -68,6 +68,11 @@ check: lint typecheck api-client-check test golden
 
 e2e:
 	$(NPM) run e2e
+
+# Design review screenshots: every page at 1440 and 390px wide into docs/screenshots/
+# (apps/web/e2e/screenshots.spec.ts). Uses E2E_PORT like `make e2e`.
+screenshots:
+	SCREENSHOTS=1 $(NPM) run e2e -- e2e/screenshots.spec.ts
 
 # Agent evals against the real API (costs money; Richard runs them). Runs the free checks,
 # prints the estimate, and refuses to go on unless CONFIRM_SPEND=yes. Spending cap:

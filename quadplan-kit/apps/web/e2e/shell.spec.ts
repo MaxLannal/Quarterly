@@ -14,7 +14,11 @@ test("home and app shell", async ({ page }) => {
 
 test("phone width: no horizontal scroll on main pages", async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 800 });
-  for (const path of ["/", "/plan", "/courses", "/courses/TEST%2020000", "/onboarding", "/programs/fake-major"]) {
+  const paths = [
+    ...["/", "/plan", "/plans", "/plans/compare", "/onboarding", "/courses", "/courses/TEST%2020000", "/programs", "/programs/fake-major"],
+    ...["/instructors", "/signup", "/login", "/account", "/guidelines", "/privacy", "/about", "/no-such-page"],
+  ];
+  for (const path of paths) {
     await page.goto(path);
     await expect(page.getByRole("heading", { level: 1 })).toBeAttached();
     await expect(page.getByRole("searchbox", { name: "Search courses", exact: true })).toBeVisible();

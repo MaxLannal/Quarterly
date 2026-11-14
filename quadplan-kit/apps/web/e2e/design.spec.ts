@@ -109,3 +109,90 @@ test("buttons keep a 44px target although pills are drawn 40px tall", async ({ p
   const drawn = await pill.evaluate((el) => el.clientHeight); // the padding box, inside the transparent border
   expect(drawn).toBe(40);
 });
+
+// ------------------------------------------------------------------------------------------
+// Design review (step 5): axe on the planner (with the Generate dialog and an answered Advisor
+// tab) and on the forum page and thread, at desktop (1440x900) and phone (390x844) width. No
+// serious or critical WCAG 2.1 A/AA violations.
+// ------------------------------------------------------------------------------------------
+
+const FORUM = "/courses/TEST%2010000/i/fake-instructor-a";
+
+async function expectNoSeriousAxeViolations(page: Page, include?: string) {
+  let builder = new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"]);
+  if (include) builder = builder.include(include);
+  const results = await builder.analyze();
+  const serious = results.violations.filter((v) => v.impact === "serious" || v.impact === "critical");
+  expect(serious.map((v) => `${v.impact} ${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
+}
+
+async function logIn(page: Page) {
+  await page.goto("/guidelines");
+  await expect(page.getByRole("heading", { level: 1, name: "Community guidelines" })).toBeVisible();
+  await page.evaluate(() => fetch("/api/auth/login", { method: "POST", body: JSON.stringify({ login: "fake-user", password: "x" }) }));
+}
+
+async function plannerWithCourses(page: Page) {
+  await page.goto("/plan");
+  await page.getByRole("button", { name: "+ Program" }).click();
+  const dialog = page.getByRole("dialog", { name: "Programs" });
+  await dialog.getByRole("checkbox", { name: "Fake Program" }).check();
+  await dialog.getByRole("button", { name: "Save programs" }).click();
+  for (const code of ["TEST 10000", "TEST 10100"]) {
+    const node = page.getByRole("button", { name: /^Fake introductory sequence/ });
+    if ((await node.getAttribute("aria-expanded")) !== "true") await node.click();
+    await page.getByRole("button", { name: `Add ${code} to a quarter` }).click();
+    await page.getByRole("dialog", { name: `Add ${code} to…` }).getByRole("button", { name: "Autumn 2099", exact: true }).click();
+  }
+  await expect(page.locator('[data-testid="course-card"][data-course="TEST 10100"]')).toContainText("earlier quarter");
+}
+
+for (const size of [
+  { width: 1440, height: 900 },
+  { width: 390, height: 844 },
+]) {
+  test.describe(`axe at ${size.width}px`, () => {
+    test.use({ viewport: size });
+
+    test(`planner, Generate dialog and Advisor @${size.width}: no serious axe violations`, async ({ page }) => {
+      await logIn(page);
+      await plannerWithCourses(page);
+      await expectNoSeriousAxeViolations(page);
+
+      await page.getByRole("button", { name: "Generate plan" }).click();
+      const dialog = page.getByRole("dialog", { name: "Generate plan" });
+      await expectNoSeriousAxeViolations(page, '[role="dialog"]');
+      await dialog.getByRole("button", { name: "Generate" }).click();
+      await expect(dialog.getByRole("article", { name: "Variant Fake balanced" })).toBeVisible();
+      await expectNoSeriousAxeViolations(page, '[role="dialog"]');
+      await page.keyboard.press("Escape");
+      await expect(dialog).toBeHidden();
+
+      await page.getByRole("tab", { name: "Advisor" }).click();
+      await page.getByLabel("Ask the advisor").fill("Please add a lighter elective");
+      await page.getByRole("button", { name: "Send" }).click();
+      await expect(page.getByRole("article", { name: "Proposed change" })).toBeVisible();
+      // Forum citations become links once the post and its page load (forum reads need a login).
+      await expect(page.getByRole("link", { name: "Student post #3" })).toHaveAttribute("href", `${FORUM}/t/3`);
+      await expect(page.getByRole("link", { name: "What students say" })).toHaveAttribute("href", FORUM);
+      await expectNoSeriousAxeViolations(page);
+    });
+
+    test(`forum page and thread @${size.width}: no serious axe violations`, async ({ page }) => {
+      await logIn(page);
+      await page.goto(FORUM);
+      await expect(page.getByRole("article", { name: "Review by Fake Heron" })).toBeVisible();
+      await expectNoSeriousAxeViolations(page);
+      await page.getByRole("button", { name: "Write a review" }).click();
+      await expect(page.getByRole("form", { name: "Write a review" })).toBeVisible();
+      await expectNoSeriousAxeViolations(page);
+
+      await page.goto(`${FORUM}/t/3`);
+      await expect(page.getByText("Fake reply at depth 5.")).toBeVisible();
+      await expectNoSeriousAxeViolations(page);
+      await page.getByRole("button", { name: "Report discussion by Fake Lark" }).click();
+      await expect(page.getByRole("dialog", { name: "Report this post" })).toBeVisible();
+      await expectNoSeriousAxeViolations(page, '[role="dialog"]');
+    });
+  });
+}

@@ -57,7 +57,7 @@ export function CourseCard({ item }: { item: PlanItem }) {
       }}
       style={transform ? { transform: `translate3d(${transform.x}px, ${transform.y}px, 0)` } : undefined}
       className={cn(
-        "relative flex items-stretch rounded-lg border border-l-[3px] border-hairline bg-surface-card text-caption text-ink transition-shadow hover:shadow-hover",
+        "relative flex flex-col rounded-lg border border-l-[3px] border-hairline bg-surface-card text-caption text-ink transition-shadow hover:shadow-hover",
         isSlot ? "border-dashed border-hairline-strong border-l-hairline-strong bg-canvas-soft" : tag ? REQUIREMENT_COLORS[tag.color % REQUIREMENT_COLORS.length] : "border-l-hairline-strong",
         completed && "bg-canvas-soft",
         worst === "error" && "border-error",
@@ -66,20 +66,23 @@ export function CourseCard({ item }: { item: PlanItem }) {
         isDragging && "z-30 opacity-90 shadow-overlay",
       )}
     >
-      <button
-        type="button"
-        aria-label={item.locked ? `${label} is locked` : `Drag ${label}`}
-        className={cn(
-          "flex min-h-11 w-11 shrink-0 touch-none items-center justify-center rounded-l-md text-gray-dark hover:text-ink focus-visible:outline-offset-[-2px]",
-          item.locked ? "cursor-not-allowed" : "cursor-grab",
-        )}
-        {...attributes}
-        {...listeners}
-      >
-        {item.locked ? <LockIcon size={14} /> : <GripIcon size={14} />}
-      </button>
-      <div className="min-w-0 flex-1 py-2 pr-1">
-        <div className="flex flex-wrap items-baseline gap-x-2">
+      {/* Header row: drag handle, code and units, actions menu (each control a 44px target).
+          The body below uses the card's full width, so titles and issue messages are not
+          squeezed between the two controls in a narrow quarter column. */}
+      <div className="flex items-center">
+        <button
+          type="button"
+          aria-label={item.locked ? `${label} is locked` : `Drag ${label}`}
+          className={cn(
+            "flex size-11 shrink-0 touch-none items-center justify-center rounded-tl-md text-gray-dark hover:text-ink focus-visible:outline-offset-[-2px]",
+            item.locked ? "cursor-not-allowed" : "cursor-grab",
+          )}
+          {...attributes}
+          {...listeners}
+        >
+          {item.locked ? <LockIcon size={14} /> : <GripIcon size={14} />}
+        </button>
+        <div className="flex min-w-0 flex-1 flex-wrap items-baseline gap-x-2 py-1">
           <span className="font-medium tabular-nums">{isSlot ? "Requirement slot" : item.course}</span>
           {units != null && <span className="text-muted">{units} units</span>}
           {completed && (
@@ -88,6 +91,9 @@ export function CourseCard({ item }: { item: PlanItem }) {
             </Badge>
           )}
         </div>
+        <Menu label={`Actions for ${label}`} trigger={<MoreIcon />} items={items} open={menuOpen} onOpenChange={setMenuOpen} />
+      </div>
+      <div className="min-w-0 px-3 pb-2">
         <div className="truncate text-body" title={course?.title ?? item.slot_ref ?? undefined}>
           {isSlot ? item.slot_ref : (course?.title ?? "")}
         </div>
@@ -118,7 +124,6 @@ export function CourseCard({ item }: { item: PlanItem }) {
           </ul>
         )}
       </div>
-      <Menu label={`Actions for ${label}`} trigger={<MoreIcon />} items={items} open={menuOpen} onOpenChange={setMenuOpen} />
     </li>
   );
 }

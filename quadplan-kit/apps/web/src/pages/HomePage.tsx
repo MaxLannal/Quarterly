@@ -17,7 +17,7 @@ export default function HomePage() {
   }
   return (
     <section className="relative isolate overflow-hidden">
-      <Orb color="lake" className="-left-16 top-0 size-[320px] sm:left-0 sm:size-[480px] lg:left-[8%] lg:size-[640px]" />
+      <Orb color="lake" className="-left-16 top-0 size-[320px] sm:left-0 sm:size-[480px] lg:-top-6 lg:left-[8%] lg:size-[560px]" />
       <div className="mx-auto flex w-full max-w-content flex-col items-start gap-8 px-4 py-16 sm:px-6 sm:py-24 lg:px-8 lg:py-section">
         <div className="flex max-w-3xl flex-col gap-5">
           <h1 className="font-display text-display-md text-ink sm:text-display-xl lg:text-display-mega">Quarterly</h1>
