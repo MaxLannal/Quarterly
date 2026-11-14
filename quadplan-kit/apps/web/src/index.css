@@ -1,35 +1,262 @@
 @import "tailwindcss";
 
+/*
+ * Design tokens from docs/DESIGN.md (YAML front matter + "Implementation tokens").
+ * docs/DESIGN-IMPLEMENTATION.md maps every DESIGN.md part to the names below.
+ *
+ * Tailwind's default palette, radii, shadows and type sizes are cleared so a utility can only
+ * name a DESIGN.md token: `bg-canvas`, `text-ink`, `border-hairline`, `rounded-pill`,
+ * `shadow-hover`, `text-title-md`, `font-display`. Spacing keeps Tailwind's 4px step, which is
+ * DESIGN.md's base unit (1 = xxs 4px, 2 = xs 8px, 3 = sm 12px, 4 = base 16px, 5 = md 20px,
+ * 6 = lg 24px, 8 = xl 32px, 12 = xxl 48px, 24 = section 96px).
+ */
+@theme {
+  --color-*: initial;
+  --radius-*: initial;
+  --shadow-*: initial;
+  --inset-shadow-*: initial;
+  --drop-shadow-*: initial;
+  --text-*: initial;
+
+  /* Brand & action */
+  --color-primary: #800000;
+  --color-primary-hover: #6c0000;
+  --color-primary-active: #5a0000;
+  --color-primary-wash: #f5ebeb;
+  --color-on-primary: #ffffff;
+
+  /* Text */
+  --color-ink: #111111;
+  --color-body-strong: #262626;
+  --color-body: #4d4d4d;
+  --color-muted: #6b6b6b;
+  --color-muted-soft: #adadad;
+
+  /* Surfaces */
+  --color-canvas: #f7f7f5;
+  --color-canvas-soft: #fbfbfa;
+  --color-surface-card: #ffffff;
+  --color-surface-strong: #f1f1ee;
+  --color-surface-dark: #111111;
+  --color-surface-dark-elevated: #1f1f1f;
+  --color-surface-inverse: #800000;
+  --color-on-dark: #ffffff;
+  --color-on-dark-soft: #adadad;
+  --color-on-inverse-soft: #f0e0e0;
+
+  /* Lines */
+  --color-hairline: #e8e8e4;
+  --color-hairline-soft: #f1f1ee;
+  --color-hairline-strong: #d6d6ce;
+  --color-border-input: #8a8a8a;
+  --color-gray-dark: #767676;
+
+  /* Atmospheric orbs: soft radial blooms only (see .orb below) */
+  --color-orb-lake: #5b8fa8;
+  --color-orb-goldenrod: #ffb547;
+  --color-orb-ivy: #adb17d;
+  --color-orb-terracotta: #d49464;
+  --color-orb-rose: #b1746f;
+
+  /* Semantic */
+  --color-error: #8f3931;
+  --color-error-wash: #f6efef;
+  --color-success: #616530;
+  --color-success-wash: #f2f3ee;
+  --color-warning: #9a5324;
+  --color-warning-icon: #c68220;
+  --color-info: #155f83;
+  /* DESIGN.md gives no wash for warning and info; these are derived from the token itself at
+     the same 8% mix DESIGN.md uses for primary-wash (no new hex). */
+  --color-warning-wash: color-mix(in srgb, #9a5324 8%, #ffffff);
+  --color-info-wash: color-mix(in srgb, #155f83 8%, #ffffff);
+
+  /* Data visualization (in this order) */
+  --color-data-1: #155f83;
+  --color-data-2: #ffa319;
+  --color-data-3: #8a9045;
+  --color-data-4: #c16622;
+  --color-data-5: #725663;
+  --color-data-6: #58593f;
+
+  /* Type families (fonts are bundled from npm, see main.tsx) */
+  --font-display: "Newsreader", "Times New Roman", serif;
+  --font-sans: "Inter Variable", "Inter", system-ui, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* Type scale: `text-<token>` sets size, line height, tracking and weight together */
+  --text-display-mega: 64px;
+  --text-display-mega--line-height: 1.05;
+  --text-display-mega--letter-spacing: -1.92px;
+  --text-display-mega--font-weight: 300;
+  --text-display-xl: 48px;
+  --text-display-xl--line-height: 1.08;
+  --text-display-xl--letter-spacing: -0.96px;
+  --text-display-xl--font-weight: 300;
+  --text-display-lg: 36px;
+  --text-display-lg--line-height: 1.17;
+  --text-display-lg--letter-spacing: -0.36px;
+  --text-display-lg--font-weight: 300;
+  --text-display-md: 32px;
+  --text-display-md--line-height: 1.13;
+  --text-display-md--letter-spacing: -0.32px;
+  --text-display-md--font-weight: 300;
+  --text-display-sm: 24px;
+  --text-display-sm--line-height: 1.2;
+  --text-display-sm--letter-spacing: 0;
+  --text-display-sm--font-weight: 300;
+  --text-title-md: 20px;
+  --text-title-md--line-height: 1.35;
+  --text-title-md--letter-spacing: 0;
+  --text-title-md--font-weight: 500;
+  --text-title-sm: 18px;
+  --text-title-sm--line-height: 1.44;
+  --text-title-sm--letter-spacing: 0.18px;
+  --text-title-sm--font-weight: 500;
+  --text-body-md: 16px;
+  --text-body-md--line-height: 1.5;
+  --text-body-md--letter-spacing: 0.16px;
+  --text-body-strong: 16px;
+  --text-body-strong--line-height: 1.5;
+  --text-body-strong--letter-spacing: 0.16px;
+  --text-body-strong--font-weight: 500;
+  --text-body-sm: 15px;
+  --text-body-sm--line-height: 1.47;
+  --text-body-sm--letter-spacing: 0.15px;
+  --text-caption: 14px;
+  --text-caption--line-height: 1.5;
+  --text-caption--letter-spacing: 0;
+  --text-caption-uppercase: 12px;
+  --text-caption-uppercase--line-height: 1.4;
+  --text-caption-uppercase--letter-spacing: 0.96px;
+  --text-caption-uppercase--font-weight: 600;
+  --text-button: 15px;
+  --text-button--line-height: 1;
+  --text-button--letter-spacing: 0;
+  --text-button--font-weight: 500;
+  --text-nav-link: 15px;
+  --text-nav-link--line-height: 1.4;
+  --text-nav-link--letter-spacing: 0;
+  --text-nav-link--font-weight: 500;
+
+  /* Radii */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-xxl: 24px;
+  --radius-pill: 9999px;
+
+  /* Elevation: one hover tier and one overlay tier */
+  --shadow-hover: 0 4px 16px rgba(0, 0, 0, 0.04);
+  --shadow-overlay: 0 8px 32px rgba(0, 0, 0, 0.08);
+
+  /* Layout */
+  --spacing-section: 96px;
+  --container-content: 1200px;
+  --container-reading: 720px;
+  --container-form: 448px;
+  /* The planner is a three-rail tool and needs more than the 1200px content width. */
+  --container-tool: 1600px;
+
+  /* Motion */
+  --default-transition-duration: 150ms;
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+}
+
+/* DESIGN.md "Implementation tokens" names, for plain CSS and inline styles. */
 :root {
-  --background: #ffffff;
-  --foreground: #1a1a1a;
-  --primary: #800000; /* maroon */
-  --primary-foreground: #ffffff;
-  --muted: #f4f4f5;
-  --muted-foreground: #52525b;
-  --border: #e4e4e7;
+  --space-xxs: 4px;
+  --space-xs: 8px;
+  --space-sm: 12px;
+  --space-base: 16px;
+  --space-md: 20px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-xxl: 48px;
+  --section-pad: 96px;
+  --container-max: 1200px;
+  --reading-max: 720px;
+  --top-nav-height: 64px;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-border: var(--border);
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-}
-
-/* Tailwind v4 borders default to currentColor; use the theme border color (shadcn convention). */
 @layer base {
+  html {
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    background: var(--color-canvas);
+    color: var(--color-ink);
+    font-size: var(--text-body-md);
+    line-height: var(--text-body-md--line-height);
+    letter-spacing: var(--text-body-md--letter-spacing);
+    font-weight: 400;
+  }
+
+  /* Tailwind v4 borders default to currentColor; use the hairline token instead. */
   *,
   ::before,
   ::after {
-    border-color: var(--border);
+    border-color: var(--color-hairline);
+  }
+
+  /* Focus (all interactive elements): 2px maroon ring, 2px offset. */
+  :focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+
+  /* Native checkboxes, radios and range sliders take the accent color. */
+  input[type="checkbox"],
+  input[type="radio"],
+  input[type="range"] {
+    accent-color: var(--color-primary);
+  }
+
+  ::selection {
+    background: var(--color-primary-wash);
+    color: var(--color-ink);
+  }
+
+  /* Display headings never bold; course codes never in the serif (see components). */
+  h1,
+  h2,
+  h3,
+  h4 {
+    color: var(--color-ink);
+  }
+}
+
+@layer components {
+  /* An atmospheric orb: one orb-* color as a soft radial bloom, 40% at the center, blurred. */
+  .orb {
+    position: absolute;
+    pointer-events: none;
+    border-radius: 9999px;
+    background: radial-gradient(
+      circle at center,
+      color-mix(in srgb, var(--orb-color, var(--color-orb-lake)) 40%, transparent) 0%,
+      transparent 70%
+    );
+    filter: blur(70px);
+  }
+
+  /* Loading skeletons: surface-strong plates. */
+  .skeleton {
+    background: var(--color-surface-strong);
+    border-radius: var(--radius-md);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    transition-duration: 0ms !important;
+    animation-duration: 0ms !important;
+    animation-iteration-count: 1 !important;
   }
 }
