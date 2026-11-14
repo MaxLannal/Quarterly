@@ -94,12 +94,27 @@ class ProgramDetail(ProgramSummary):
     sample_path: list[PlanItem] = []
 
 
+class RatingSummary(BaseModel):
+    """Averages over the visible reviews of a forum page (or of every page of a course).
+    Shown to logged-in readers only."""
+
+    n_reviews: int = 0
+    overall: float | None = None
+    difficulty: float | None = None
+    intellectual_intensity: float | None = None
+    workload_hours: float | None = None
+    #: Share of reviews that would recommend, 0..1.
+    recommend_rate: float | None = None
+
+
 class InstructorCourse(BaseModel):
     code: str
     title: str
     page_id: int
     n_terms: int = 0
+    #: Forum-derived values: empty unless the reader is logged in (P03-12).
     attributes: list[AttributeValue] = []
+    ratings: RatingSummary | None = None
 
 
 class InstructorDetail(InstructorSummary):

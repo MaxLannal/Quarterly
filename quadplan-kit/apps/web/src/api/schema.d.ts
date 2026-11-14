@@ -55,6 +55,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/admin/moderation": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Moderation Queue */
+        get: operations["moderation_queue_admin_moderation_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/admin/moderation/{target_type}/{target_id}/decision": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Moderation Decision */
+        post: operations["moderation_decision_admin_moderation__target_type___target_id__decision_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/admin/program-versions/{version_id}/publish": {
         parameters: {
             query?: never;
@@ -336,6 +370,23 @@ export interface paths {
         };
         /** Get Course */
         get: operations["get_course_courses__code__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/forum/courses/{code}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Course Forum */
+        get: operations["course_forum_forum_courses__code__get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1154,6 +1205,11 @@ export interface components {
         };
         /** CommentOut */
         CommentOut: {
+            /**
+             * Body Html
+             * @default
+             */
+            body_html: string;
             /** Body Md */
             body_md: string;
             /**
@@ -1165,6 +1221,13 @@ export interface components {
             depth: number;
             /** Id */
             id: number;
+            /**
+             * Mine
+             * @default false
+             */
+            mine: boolean;
+            /** Moderation Note */
+            moderation_note?: string | null;
             /**
              * My Vote
              * @default 0
@@ -1317,6 +1380,35 @@ export interface components {
              * @default []
              */
             unlocks: string[];
+        };
+        /**
+         * CourseForumOut
+         * @description Course-level view: every instructor's page of one course, pooled (SPEC "Course-level
+         *     view: the course page aggregates all its instructors").
+         */
+        CourseForumOut: {
+            /** Course Code */
+            course_code: string;
+            /** Course Title */
+            course_title: string;
+            /**
+             * Pages
+             * @default []
+             */
+            pages: components["schemas"]["ForumPageSummary"][];
+            /**
+             * Rating Distribution
+             * @default {}
+             */
+            rating_distribution: {
+                [key: string]: number[];
+            };
+            /**
+             * @default {
+             *       "n_reviews": 0
+             *     }
+             */
+            ratings: components["schemas"]["RatingSummary"];
         };
         /** CourseInstructorOut */
         CourseInstructorOut: {
@@ -1560,7 +1652,30 @@ export interface components {
             rating_distribution: {
                 [key: string]: number[];
             };
+            /**
+             * @default {
+             *       "n_reviews": 0
+             *     }
+             */
+            ratings: components["schemas"]["RatingSummary"];
             summary?: components["schemas"]["ForumSummaryOut"] | null;
+            /**
+             * Terms Taught
+             * @default []
+             */
+            terms_taught: string[];
+        };
+        /** ForumPageSummary */
+        ForumPageSummary: {
+            instructor: components["schemas"]["InstructorSummary"];
+            /** Page Id */
+            page_id: number;
+            /**
+             * @default {
+             *       "n_reviews": 0
+             *     }
+             */
+            ratings: components["schemas"]["RatingSummary"];
             /**
              * Terms Taught
              * @default []
@@ -1889,6 +2004,7 @@ export interface components {
             n_terms: number;
             /** Page Id */
             page_id: number;
+            ratings?: components["schemas"]["RatingSummary"] | null;
             /** Title */
             title: string;
         };
@@ -2127,6 +2243,101 @@ export interface components {
              */
             type: "message";
         };
+        /** ModerationDecision */
+        ModerationDecision: {
+            /**
+             * Decision
+             * @enum {string}
+             */
+            decision: "approve" | "remove";
+            /** Note */
+            note?: string | null;
+        };
+        /** ModerationItemOut */
+        ModerationItemOut: {
+            /** Body Html */
+            body_html: string;
+            /** Body Md */
+            body_md: string;
+            /** Course Code */
+            course_code: string;
+            /**
+             * Created Day
+             * Format: date
+             */
+            created_day: string;
+            /** Instructor Name */
+            instructor_name: string;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "review" | "discussion" | "comment";
+            /** Model Label */
+            model_label?: string | null;
+            /** Page Id */
+            page_id: number;
+            /** Post Id */
+            post_id: number;
+            /** Pseudonym */
+            pseudonym: string;
+            /**
+             * Reports
+             * @default []
+             */
+            reports: components["schemas"]["ModerationReport"][];
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "visible" | "held" | "removed";
+            /** Target Id */
+            target_id: number;
+            /**
+             * Target Type
+             * @enum {string}
+             */
+            target_type: "post" | "comment";
+            /** Title */
+            title?: string | null;
+        };
+        /** ModerationReport */
+        ModerationReport: {
+            /**
+             * Created Day
+             * Format: date
+             */
+            created_day: string;
+            /**
+             * From Author
+             * @default false
+             */
+            from_author: boolean;
+            /** Id */
+            id: number;
+            /** Reason */
+            reason: string;
+        };
+        /** ModerationResult */
+        ModerationResult: {
+            /**
+             * Author Suspended
+             * @default false
+             */
+            author_suspended: boolean;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "visible" | "held" | "removed";
+            /** Target Id */
+            target_id: number;
+            /**
+             * Target Type
+             * @enum {string}
+             */
+            target_type: "post" | "comment";
+        };
         /** MoveOp */
         MoveOp: {
             /** Course */
@@ -2211,6 +2422,17 @@ export interface components {
         Page_InstructorSummary_: {
             /** Items */
             items: components["schemas"]["InstructorSummary"][];
+            /** Limit */
+            limit: number;
+            /** Offset */
+            offset: number;
+            /** Total */
+            total: number;
+        };
+        /** Page[ModerationItemOut] */
+        Page_ModerationItemOut_: {
+            /** Items */
+            items: components["schemas"]["ModerationItemOut"][];
             /** Limit */
             limit: number;
             /** Offset */
@@ -2490,6 +2712,11 @@ export interface components {
         };
         /** PostDetail */
         PostDetail: {
+            /**
+             * Body Html
+             * @default
+             */
+            body_html: string;
             /** Body Md */
             body_md: string;
             /**
@@ -2502,6 +2729,8 @@ export interface components {
              * Format: date
              */
             created_day: string;
+            /** Edited Day */
+            edited_day?: string | null;
             /** Id */
             id: number;
             /**
@@ -2509,6 +2738,13 @@ export interface components {
              * @enum {string}
              */
             kind: "review" | "discussion";
+            /**
+             * Mine
+             * @default false
+             */
+            mine: boolean;
+            /** Moderation Note */
+            moderation_note?: string | null;
             /**
              * My Vote
              * @default 0
@@ -2539,6 +2775,11 @@ export interface components {
         };
         /** PostOut */
         PostOut: {
+            /**
+             * Body Html
+             * @default
+             */
+            body_html: string;
             /** Body Md */
             body_md: string;
             /**
@@ -2546,6 +2787,8 @@ export interface components {
              * Format: date
              */
             created_day: string;
+            /** Edited Day */
+            edited_day?: string | null;
             /** Id */
             id: number;
             /**
@@ -2553,6 +2796,13 @@ export interface components {
              * @enum {string}
              */
             kind: "review" | "discussion";
+            /**
+             * Mine
+             * @default false
+             */
+            mine: boolean;
+            /** Moderation Note */
+            moderation_note?: string | null;
             /**
              * My Vote
              * @default 0
@@ -2586,6 +2836,8 @@ export interface components {
             /** Body Md */
             body_md?: string | null;
             ratings?: components["schemas"]["ReviewRatingIn"] | null;
+            /** Term Taken */
+            term_taken?: string | null;
             /** Title */
             title?: string | null;
         };
@@ -2771,6 +3023,28 @@ export interface components {
              * @default 1
              */
             weight: number;
+        };
+        /**
+         * RatingSummary
+         * @description Averages over the visible reviews of a forum page (or of every page of a course).
+         *     Shown to logged-in readers only.
+         */
+        RatingSummary: {
+            /** Difficulty */
+            difficulty?: number | null;
+            /** Intellectual Intensity */
+            intellectual_intensity?: number | null;
+            /**
+             * N Reviews
+             * @default 0
+             */
+            n_reviews: number;
+            /** Overall */
+            overall?: number | null;
+            /** Recommend Rate */
+            recommend_rate?: number | null;
+            /** Workload Hours */
+            workload_hours?: number | null;
         };
         /** Register */
         Register: {
@@ -3372,6 +3646,92 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Not implemented yet */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+        };
+    };
+    moderation_queue_admin_moderation_get: {
+        parameters: {
+            query?: {
+                limit?: number;
+                offset?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Page_ModerationItemOut_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Not implemented yet */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+        };
+    };
+    moderation_decision_admin_moderation__target_type___target_id__decision_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                target_type: "post" | "comment";
+                target_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ModerationDecision"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ModerationResult"];
+                };
             };
             /** @description Validation Error */
             422: {
@@ -4074,6 +4434,37 @@ export interface operations {
             };
         };
     };
+    course_forum_forum_courses__code__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                code: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CourseForumOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     find_page_forum_pages_get: {
         parameters: {
             query: {
@@ -4102,15 +4493,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-            /** @description Not implemented yet */
-            501: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorOut"];
                 };
             };
         };
@@ -4142,15 +4524,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-            /** @description Not implemented yet */
-            501: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorOut"];
                 };
             };
         };
@@ -4190,15 +4563,6 @@ export interface operations {
                     "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
-            /** @description Not implemented yet */
-            501: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorOut"];
-                };
-            };
         };
     };
     create_post_forum_pages__page_id__posts_post: {
@@ -4234,15 +4598,6 @@ export interface operations {
                     "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
-            /** @description Not implemented yet */
-            501: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorOut"];
-                };
-            };
         };
     };
     get_post_forum_posts__post_id__get: {
@@ -4274,15 +4629,6 @@ export interface operations {
                     "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
-            /** @description Not implemented yet */
-            501: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorOut"];
-                };
-            };
         };
     };
     delete_post_forum_posts__post_id__delete: {
@@ -4310,15 +4656,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-            /** @description Not implemented yet */
-            501: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorOut"];
                 };
             };
         };
@@ -4356,15 +4693,6 @@ export interface operations {
                     "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
-            /** @description Not implemented yet */
-            501: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorOut"];
-                };
-            };
         };
     };
     create_comment_forum_posts__post_id__comments_post: {
@@ -4400,15 +4728,6 @@ export interface operations {
                     "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
-            /** @description Not implemented yet */
-            501: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorOut"];
-                };
-            };
         };
     };
     report_forum_reports_post: {
@@ -4442,15 +4761,6 @@ export interface operations {
                     "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
-            /** @description Not implemented yet */
-            501: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorOut"];
-                };
-            };
         };
     };
     vote_forum_votes_post: {
@@ -4482,15 +4792,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-            /** @description Not implemented yet */
-            501: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorOut"];
                 };
             };
         };

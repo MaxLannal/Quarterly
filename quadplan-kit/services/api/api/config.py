@@ -42,6 +42,12 @@ class Settings(BaseSettings):
     #: (0 = use the socket address). Used for rate limiting only; addresses are never stored.
     trusted_proxy_hops: int = 0
 
+    # Forum (prompt 08)
+    #: What a post becomes when the A4 moderation classifier cannot answer (no LLM client, an
+    #: error, the 3 s timeout): "hold" waits for a human (SPEC A4). "publish" shows it after the
+    #: regex scrub; it is for development and tests only while real LLM calls are on hold.
+    moderation_fallback: Literal["hold", "publish"] = "hold"
+
     def production_problems(self) -> list[str]:
         """Settings that are unsafe outside development (checked at start-up)."""
         if self.environment in ("development", "test"):
@@ -55,6 +61,10 @@ class Settings(BaseSettings):
             problems.append("EMAIL_BACKEND=console would print verification codes")
         if not self.session_cookie_secure:
             problems.append("SESSION_COOKIE_SECURE must be true")
+        if self.moderation_fallback == "publish":
+            problems.append(
+                "MODERATION_FALLBACK=publish would publish forum posts no classifier has checked"
+            )
         return problems
 
 

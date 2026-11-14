@@ -326,13 +326,13 @@ def test_csrf_token_is_required_on_cookie_authenticated_writes(env: Env) -> None
     assert env.client.delete("/plans/00000000-0000-0000-0000-000000000001").status_code == 403
     # Nothing happened.
     assert env.client.get("/auth/session").status_code == 200
-    # With the token the request reaches the endpoint (a stub answers 501).
+    # With the token the request reaches the endpoint (no such post: 404).
     ok = env.client.post(
         "/forum/votes",
         json={"target_type": "post", "target_id": 1, "value": 1},
         headers=csrf(session),
     )
-    assert ok.status_code == 501
+    assert ok.status_code == 404
     # Another session's token does not work.
     other = env.signup("other-user", "other@uchicago.edu", client=env.browser())
     assert env.client.post("/auth/logout", headers=csrf(other)).status_code == 403
@@ -342,7 +342,7 @@ def test_csrf_token_is_required_on_cookie_authenticated_writes(env: Env) -> None
         env.browser()
         .post("/forum/votes", json={"target_type": "post", "target_id": 1, "value": 1})
         .status_code
-        == 501
+        == 401  # not the CSRF guard's 403: no session, so the endpoint asks for a login
     )
 
 

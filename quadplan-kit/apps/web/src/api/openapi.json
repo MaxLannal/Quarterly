@@ -872,6 +872,11 @@
       },
       "CommentOut": {
         "properties": {
+          "body_html": {
+            "default": "",
+            "title": "Body Html",
+            "type": "string"
+          },
           "body_md": {
             "title": "Body Md",
             "type": "string"
@@ -888,6 +893,22 @@
           "id": {
             "title": "Id",
             "type": "integer"
+          },
+          "mine": {
+            "default": false,
+            "title": "Mine",
+            "type": "boolean"
+          },
+          "moderation_note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Moderation Note"
           },
           "my_vote": {
             "default": 0,
@@ -1269,6 +1290,50 @@
           "catalog_year"
         ],
         "title": "CourseDetail",
+        "type": "object"
+      },
+      "CourseForumOut": {
+        "description": "Course-level view: every instructor's page of one course, pooled (SPEC \"Course-level\nview: the course page aggregates all its instructors\").",
+        "properties": {
+          "course_code": {
+            "title": "Course Code",
+            "type": "string"
+          },
+          "course_title": {
+            "title": "Course Title",
+            "type": "string"
+          },
+          "pages": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/ForumPageSummary"
+            },
+            "title": "Pages",
+            "type": "array"
+          },
+          "rating_distribution": {
+            "additionalProperties": {
+              "items": {
+                "type": "integer"
+              },
+              "type": "array"
+            },
+            "default": {},
+            "title": "Rating Distribution",
+            "type": "object"
+          },
+          "ratings": {
+            "$ref": "#/components/schemas/RatingSummary",
+            "default": {
+              "n_reviews": 0
+            }
+          }
+        },
+        "required": [
+          "course_code",
+          "course_title"
+        ],
+        "title": "CourseForumOut",
         "type": "object"
       },
       "CourseInstructorOut": {
@@ -1853,6 +1918,12 @@
             "title": "Rating Distribution",
             "type": "object"
           },
+          "ratings": {
+            "$ref": "#/components/schemas/RatingSummary",
+            "default": {
+              "n_reviews": 0
+            }
+          },
           "summary": {
             "anyOf": [
               {
@@ -1879,6 +1950,37 @@
           "instructor"
         ],
         "title": "ForumPageOut",
+        "type": "object"
+      },
+      "ForumPageSummary": {
+        "properties": {
+          "instructor": {
+            "$ref": "#/components/schemas/InstructorSummary"
+          },
+          "page_id": {
+            "title": "Page Id",
+            "type": "integer"
+          },
+          "ratings": {
+            "$ref": "#/components/schemas/RatingSummary",
+            "default": {
+              "n_reviews": 0
+            }
+          },
+          "terms_taught": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Terms Taught",
+            "type": "array"
+          }
+        },
+        "required": [
+          "page_id",
+          "instructor"
+        ],
+        "title": "ForumPageSummary",
         "type": "object"
       },
       "ForumReportIn": {
@@ -2716,6 +2818,16 @@
             "title": "Page Id",
             "type": "integer"
           },
+          "ratings": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RatingSummary"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "title": {
             "title": "Title",
             "type": "string"
@@ -3383,6 +3495,214 @@
         "title": "MessageEvent",
         "type": "object"
       },
+      "ModerationDecision": {
+        "properties": {
+          "decision": {
+            "enum": [
+              "approve",
+              "remove"
+            ],
+            "title": "Decision",
+            "type": "string"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "maxLength": 1000,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          }
+        },
+        "required": [
+          "decision"
+        ],
+        "title": "ModerationDecision",
+        "type": "object"
+      },
+      "ModerationItemOut": {
+        "properties": {
+          "body_html": {
+            "title": "Body Html",
+            "type": "string"
+          },
+          "body_md": {
+            "title": "Body Md",
+            "type": "string"
+          },
+          "course_code": {
+            "title": "Course Code",
+            "type": "string"
+          },
+          "created_day": {
+            "format": "date",
+            "title": "Created Day",
+            "type": "string"
+          },
+          "instructor_name": {
+            "title": "Instructor Name",
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "review",
+              "discussion",
+              "comment"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "model_label": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Label"
+          },
+          "page_id": {
+            "title": "Page Id",
+            "type": "integer"
+          },
+          "post_id": {
+            "title": "Post Id",
+            "type": "integer"
+          },
+          "pseudonym": {
+            "title": "Pseudonym",
+            "type": "string"
+          },
+          "reports": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/ModerationReport"
+            },
+            "title": "Reports",
+            "type": "array"
+          },
+          "status": {
+            "enum": [
+              "visible",
+              "held",
+              "removed"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "target_id": {
+            "title": "Target Id",
+            "type": "integer"
+          },
+          "target_type": {
+            "enum": [
+              "post",
+              "comment"
+            ],
+            "title": "Target Type",
+            "type": "string"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          }
+        },
+        "required": [
+          "target_type",
+          "target_id",
+          "post_id",
+          "page_id",
+          "course_code",
+          "instructor_name",
+          "kind",
+          "pseudonym",
+          "body_md",
+          "body_html",
+          "status",
+          "created_day"
+        ],
+        "title": "ModerationItemOut",
+        "type": "object"
+      },
+      "ModerationReport": {
+        "properties": {
+          "created_day": {
+            "format": "date",
+            "title": "Created Day",
+            "type": "string"
+          },
+          "from_author": {
+            "default": false,
+            "title": "From Author",
+            "type": "boolean"
+          },
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "reason": {
+            "title": "Reason",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "reason",
+          "created_day"
+        ],
+        "title": "ModerationReport",
+        "type": "object"
+      },
+      "ModerationResult": {
+        "properties": {
+          "author_suspended": {
+            "default": false,
+            "title": "Author Suspended",
+            "type": "boolean"
+          },
+          "status": {
+            "enum": [
+              "visible",
+              "held",
+              "removed"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "target_id": {
+            "title": "Target Id",
+            "type": "integer"
+          },
+          "target_type": {
+            "enum": [
+              "post",
+              "comment"
+            ],
+            "title": "Target Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "target_type",
+          "target_id",
+          "status"
+        ],
+        "title": "ModerationResult",
+        "type": "object"
+      },
       "MoveOp": {
         "additionalProperties": false,
         "properties": {
@@ -3637,6 +3957,37 @@
           "offset"
         ],
         "title": "Page[InstructorSummary]",
+        "type": "object"
+      },
+      "Page_ModerationItemOut_": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/ModerationItemOut"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "limit": {
+            "title": "Limit",
+            "type": "integer"
+          },
+          "offset": {
+            "title": "Offset",
+            "type": "integer"
+          },
+          "total": {
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "total",
+          "limit",
+          "offset"
+        ],
+        "title": "Page[ModerationItemOut]",
         "type": "object"
       },
       "Page_PostOut_": {
@@ -4476,6 +4827,11 @@
       },
       "PostDetail": {
         "properties": {
+          "body_html": {
+            "default": "",
+            "title": "Body Html",
+            "type": "string"
+          },
           "body_md": {
             "title": "Body Md",
             "type": "string"
@@ -4493,6 +4849,18 @@
             "title": "Created Day",
             "type": "string"
           },
+          "edited_day": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Edited Day"
+          },
           "id": {
             "title": "Id",
             "type": "integer"
@@ -4504,6 +4872,22 @@
             ],
             "title": "Kind",
             "type": "string"
+          },
+          "mine": {
+            "default": false,
+            "title": "Mine",
+            "type": "boolean"
+          },
+          "moderation_note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Moderation Note"
           },
           "my_vote": {
             "default": 0,
@@ -4589,6 +4973,11 @@
       },
       "PostOut": {
         "properties": {
+          "body_html": {
+            "default": "",
+            "title": "Body Html",
+            "type": "string"
+          },
           "body_md": {
             "title": "Body Md",
             "type": "string"
@@ -4597,6 +4986,18 @@
             "format": "date",
             "title": "Created Day",
             "type": "string"
+          },
+          "edited_day": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Edited Day"
           },
           "id": {
             "title": "Id",
@@ -4609,6 +5010,22 @@
             ],
             "title": "Kind",
             "type": "string"
+          },
+          "mine": {
+            "default": false,
+            "title": "Mine",
+            "type": "boolean"
+          },
+          "moderation_note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Moderation Note"
           },
           "my_vote": {
             "default": 0,
@@ -4716,6 +5133,21 @@
                 "type": "null"
               }
             ]
+          },
+          "term_taken": {
+            "anyOf": [
+              {
+                "examples": [
+                  "2026-AU"
+                ],
+                "pattern": "^\\d{4}-(AU|WI|SP|SU)$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Term Taken"
           },
           "title": {
             "anyOf": [
@@ -5247,6 +5679,73 @@
           "id"
         ],
         "title": "ProtectGpaGoal",
+        "type": "object"
+      },
+      "RatingSummary": {
+        "description": "Averages over the visible reviews of a forum page (or of every page of a course).\nShown to logged-in readers only.",
+        "properties": {
+          "difficulty": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Difficulty"
+          },
+          "intellectual_intensity": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Intellectual Intensity"
+          },
+          "n_reviews": {
+            "default": 0,
+            "title": "N Reviews",
+            "type": "integer"
+          },
+          "overall": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Overall"
+          },
+          "recommend_rate": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Recommend Rate"
+          },
+          "workload_hours": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Workload Hours"
+          }
+        },
+        "title": "RatingSummary",
         "type": "object"
       },
       "Register": {
@@ -6775,6 +7274,147 @@
         ]
       }
     },
+    "/admin/moderation": {
+      "get": {
+        "operationId": "moderation_queue_admin_moderation_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 50,
+              "maximum": 200,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Page_ModerationItemOut_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Not implemented yet"
+          }
+        },
+        "summary": "Moderation Queue",
+        "tags": [
+          "admin"
+        ]
+      }
+    },
+    "/admin/moderation/{target_type}/{target_id}/decision": {
+      "post": {
+        "operationId": "moderation_decision_admin_moderation__target_type___target_id__decision_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "target_type",
+            "required": true,
+            "schema": {
+              "enum": [
+                "post",
+                "comment"
+              ],
+              "title": "Target Type",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "target_id",
+            "required": true,
+            "schema": {
+              "title": "Target Id",
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ModerationDecision"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModerationResult"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Not implemented yet"
+          }
+        },
+        "summary": "Moderation Decision",
+        "tags": [
+          "admin"
+        ]
+      }
+    },
     "/admin/program-versions/{version_id}/publish": {
       "post": {
         "operationId": "publish_program_version_admin_program_versions__version_id__publish_post",
@@ -7810,6 +8450,48 @@
         ]
       }
     },
+    "/forum/courses/{code}": {
+      "get": {
+        "operationId": "course_forum_forum_courses__code__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "code",
+            "required": true,
+            "schema": {
+              "title": "Code",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CourseForumOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Course Forum",
+        "tags": [
+          "forum"
+        ]
+      }
+    },
     "/forum/pages": {
       "get": {
         "operationId": "find_page_forum_pages_get",
@@ -7853,16 +8535,6 @@
               }
             },
             "description": "Validation Error"
-          },
-          "501": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorOut"
-                }
-              }
-            },
-            "description": "Not implemented yet"
           }
         },
         "summary": "Find Page",
@@ -7905,16 +8577,6 @@
               }
             },
             "description": "Validation Error"
-          },
-          "501": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorOut"
-                }
-              }
-            },
-            "description": "Not implemented yet"
           }
         },
         "summary": "Get Page",
@@ -8033,16 +8695,6 @@
               }
             },
             "description": "Validation Error"
-          },
-          "501": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorOut"
-                }
-              }
-            },
-            "description": "Not implemented yet"
           }
         },
         "summary": "List Posts",
@@ -8093,16 +8745,6 @@
               }
             },
             "description": "Validation Error"
-          },
-          "501": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorOut"
-                }
-              }
-            },
-            "description": "Not implemented yet"
           }
         },
         "summary": "Create Post",
@@ -8138,16 +8780,6 @@
               }
             },
             "description": "Validation Error"
-          },
-          "501": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorOut"
-                }
-              }
-            },
-            "description": "Not implemented yet"
           }
         },
         "summary": "Delete Post",
@@ -8188,16 +8820,6 @@
               }
             },
             "description": "Validation Error"
-          },
-          "501": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorOut"
-                }
-              }
-            },
-            "description": "Not implemented yet"
           }
         },
         "summary": "Get Post",
@@ -8248,16 +8870,6 @@
               }
             },
             "description": "Validation Error"
-          },
-          "501": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorOut"
-                }
-              }
-            },
-            "description": "Not implemented yet"
           }
         },
         "summary": "Update Post",
@@ -8310,16 +8922,6 @@
               }
             },
             "description": "Validation Error"
-          },
-          "501": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorOut"
-                }
-              }
-            },
-            "description": "Not implemented yet"
           }
         },
         "summary": "Create Comment",
@@ -8361,16 +8963,6 @@
               }
             },
             "description": "Validation Error"
-          },
-          "501": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorOut"
-                }
-              }
-            },
-            "description": "Not implemented yet"
           }
         },
         "summary": "Report",
@@ -8412,16 +9004,6 @@
               }
             },
             "description": "Validation Error"
-          },
-          "501": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorOut"
-                }
-              }
-            },
-            "description": "Not implemented yet"
           }
         },
         "summary": "Vote",
