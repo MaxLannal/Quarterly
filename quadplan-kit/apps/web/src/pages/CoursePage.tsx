@@ -6,6 +6,7 @@ import { Avatar } from "@/components/ui/card";
 import { Badge, CourseCode, NotAvailable } from "@/components/ui/misc";
 import { AddToPlanButton } from "@/features/courses/AddToPlanButton";
 import { AttributeCard, OfferingsTable, PrereqGraph } from "@/features/courses/CourseParts";
+import { CourseForumSummary } from "@/features/forum/CourseForumSummary";
 import { termLabel } from "@/features/planner/terms";
 
 export default function CoursePage() {
@@ -115,6 +116,10 @@ export default function CoursePage() {
             )}
           </Section>
 
+          <CourseForumSummary code={c.code} />
+        </div>
+
+        <div className="grid gap-12 lg:grid-cols-2 lg:gap-6">
           <Section id="counts" title="Counts toward">
             {c.counts_toward.length === 0 ? (
               <p className="text-body-sm text-muted">No program requirements list this course.</p>

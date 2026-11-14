@@ -3547,6 +3547,10 @@
             "title": "Instructor Name",
             "type": "string"
           },
+          "instructor_slug": {
+            "title": "Instructor Slug",
+            "type": "string"
+          },
           "kind": {
             "enum": [
               "review",
@@ -3627,6 +3631,7 @@
           "page_id",
           "course_code",
           "instructor_name",
+          "instructor_slug",
           "kind",
           "pseudonym",
           "body_md",

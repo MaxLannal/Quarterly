@@ -2268,6 +2268,8 @@ export interface components {
             created_day: string;
             /** Instructor Name */
             instructor_name: string;
+            /** Instructor Slug */
+            instructor_slug: string;
             /**
              * Kind
              * @enum {string}

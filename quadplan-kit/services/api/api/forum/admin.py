@@ -90,10 +90,15 @@ def queue(db: Session, *, limit: int, offset: int) -> Page[ModerationItemOut]:
     }
     page_ids = {p.course_instructor_id for p in posts.values()}
     page_info = {
-        pid: (code, name)
-        for pid, code, name in (
+        pid: (code, name, slug)
+        for pid, code, name, slug in (
             db.execute(
-                sa.select(m.CourseInstructor.id, m.Course.code, m.Instructor.display_name)
+                sa.select(
+                    m.CourseInstructor.id,
+                    m.Course.code,
+                    m.Instructor.display_name,
+                    m.Instructor.slug,
+                )
                 .join(m.Course, m.Course.id == m.CourseInstructor.course_id)
                 .join(m.Instructor, m.Instructor.id == m.CourseInstructor.instructor_id)
                 .where(m.CourseInstructor.id.in_(page_ids))
@@ -130,7 +135,7 @@ def queue(db: Session, *, limit: int, offset: int) -> Page[ModerationItemOut]:
     items: list[ModerationItemOut] = []
     for pid in post_ids:
         p = posts[pid]
-        code, name = page_info[p.course_instructor_id]
+        code, name, slug = page_info[p.course_instructor_id]
         items.append(
             ModerationItemOut(
                 target_type="post",
@@ -139,6 +144,7 @@ def queue(db: Session, *, limit: int, offset: int) -> Page[ModerationItemOut]:
                 page_id=p.course_instructor_id,
                 course_code=code,
                 instructor_name=name,
+                instructor_slug=slug,
                 kind=p.kind,
                 pseudonym=handles.get(p.pseudonym_id or 0, DELETED),
                 title=p.title,
@@ -152,7 +158,7 @@ def queue(db: Session, *, limit: int, offset: int) -> Page[ModerationItemOut]:
         )
     for c in comments:
         p = posts[c.post_id]
-        code, name = page_info[p.course_instructor_id]
+        code, name, slug = page_info[p.course_instructor_id]
         items.append(
             ModerationItemOut(
                 target_type="comment",
@@ -161,6 +167,7 @@ def queue(db: Session, *, limit: int, offset: int) -> Page[ModerationItemOut]:
                 page_id=p.course_instructor_id,
                 course_code=code,
                 instructor_name=name,
+                instructor_slug=slug,
                 kind="comment",
                 pseudonym=handles.get(c.pseudonym_id or 0, DELETED),
                 title=None,

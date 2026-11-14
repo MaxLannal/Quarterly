@@ -12,7 +12,7 @@ const ROUTES: [string, string][] = [
   ["/courses/MATH%2020700/i/jane-doe", "Course × instructor forum"],
   ["/courses/MATH%2020700/i/jane-doe/t/1", "Thread"],
   ["/instructors", "Instructors"],
-  ["/instructors/jane-doe", "Instructor"],
+  ["/instructors/fake-instructor-a", "Fake Instructor A"],
   ["/programs", "Program explorer"],
   ["/programs/fake-major", "Fake Program"],
   ["/signup", "Create an account"],
@@ -22,6 +22,7 @@ const ROUTES: [string, string][] = [
   ["/privacy", "Privacy"],
   ["/about", "About"],
   ["/admin/review", "Curator console"],
+  ["/admin/moderation", "Moderation queue"],
 ];
 
 for (const [path, heading] of ROUTES) {

@@ -184,6 +184,7 @@ class ModerationItemOut(BaseModel):
     page_id: int
     course_code: str
     instructor_name: str
+    instructor_slug: str
     kind: Literal["review", "discussion", "comment"]
     pseudonym: str
     title: str | None = None
