@@ -294,7 +294,7 @@ export function Planner({ initial, autoGenerate = false }: PlannerProps) {
                       />
                     ),
                   },
-                  { key: "advisor", label: "Advisor", content: <AdvisorPanel plan={plan} onApply={tryOps} /> },
+                  { key: "advisor", label: "Advisor", content: <AdvisorPanel plan={plan} planId={remoteId && savedSnapshot === JSON.stringify(plan) ? remoteId : null} onApply={tryOps} /> },
                 ]}
               />
             </section>

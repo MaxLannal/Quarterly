@@ -6,12 +6,13 @@ import type { GenerateFormValue } from "./GenerateDialog";
 type S = components["schemas"];
 
 /**
- * Which generator the Generate popup uses. `deterministic` = the solver alone
- * (`POST /plans/generate?mode=deterministic`, prompt 06); `agent` = the LLM agent over SSE
- * (`POST /agents/generate`, prompt 07). Set at build time with VITE_GENERATOR_MODE.
+ * Which generator the Generate popup uses. `agent` (the default since prompt 07) = the agent
+ * harness over SSE (`POST /agents/generate`), which works without an LLM through its fallbacks;
+ * `deterministic` = the solver alone (`POST /plans/generate?mode=deterministic`, prompt 06).
+ * Set at build time with VITE_GENERATOR_MODE.
  */
 export const GENERATOR_MODE: "deterministic" | "agent" =
-  import.meta.env.VITE_GENERATOR_MODE === "agent" ? "agent" : "deterministic";
+  import.meta.env.VITE_GENERATOR_MODE === "deterministic" ? "deterministic" : "agent";
 
 /** The quarter a date falls in (Summer counts toward the next Autumn: nothing is planned in it). */
 export function currentTerm(date: Date = new Date()): string {
@@ -27,13 +28,21 @@ export interface DeterministicResult {
   infeasible: S["Infeasibility"] | null;
 }
 
-/** Applies a stored change set on the server ("Apply" or "Apply selected quarters"). */
-export async function applyStoredChangeSet(planId: string, cs: { id?: string | null; base_plan_hash: string }, terms: string[] | null): Promise<void> {
+/**
+ * Applies a stored change set on the server: "Apply", "Apply selected quarters", or the
+ * advisor's typed confirmation (`confirmationText`, which the server parses again).
+ */
+export async function applyStoredChangeSet(
+  planId: string,
+  cs: { id?: string | null; base_plan_hash: string },
+  terms: string[] | null,
+  confirmationText: string | null = null,
+): Promise<void> {
   if (!cs.id) return;
   unwrap(
     await api.POST("/plans/{plan_id}/changesets/{changeset_id}/apply", {
       params: { path: { plan_id: planId, changeset_id: cs.id } },
-      body: { base_plan_hash: cs.base_plan_hash, terms, confirmation_text: null },
+      body: { base_plan_hash: cs.base_plan_hash, terms, confirmation_text: confirmationText },
     }),
   );
 }
@@ -88,6 +97,7 @@ export async function generateDeterministic(
       report: x.report,
       metrics: x.metrics ?? {},
       rationale: x.rationale ?? {},
+      citations: [],
     })),
     infeasible: out.infeasible ?? null,
   };

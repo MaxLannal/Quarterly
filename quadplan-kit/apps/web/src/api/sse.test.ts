@@ -12,14 +12,14 @@ describe("SSE", () => {
 
   it("streams agent events", async () => {
     const types: string[] = [];
-    for await (const ev of streamChat({ message: "please add", plan: emptyPlan("2099-00") })) types.push(ev.type);
+    for await (const ev of streamChat({ message: "please add", plan: emptyPlan("2099-00"), history: [] })) types.push(ev.type);
     expect(types).toEqual(["message", "proposal", "done"]);
   });
 
   it("throws NotAvailableError on 501", async () => {
     server.use(http.post("*/api/agents/chat", () => HttpResponse.json({ detail: "Not implemented yet (prompt 07)" }, { status: 501 })));
     const run = async () => {
-      for await (const ev of streamChat({ message: "hi", plan: emptyPlan("2099-00") })) void ev;
+      for await (const ev of streamChat({ message: "hi", plan: emptyPlan("2099-00"), history: [] })) void ev;
     };
     await expect(run()).rejects.toBeInstanceOf(NotAvailableError);
   });

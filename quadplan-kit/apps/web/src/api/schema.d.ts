@@ -123,6 +123,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/agents/chat/history": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Chat History */
+        get: operations["chat_history_agents_chat_history_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/agents/generate": {
         parameters: {
             query?: never;
@@ -908,7 +925,7 @@ export interface components {
          * AgentEvent
          * @description One Server-Sent Event `data:` payload from /agents/generate or /agents/chat.
          */
-        AgentEvent: components["schemas"]["StepEvent"] | components["schemas"]["VariantEvent"] | components["schemas"]["MessageEvent"] | components["schemas"]["ProposalEvent"] | components["schemas"]["DoneEvent"] | components["schemas"]["ErrorEvent"];
+        AgentEvent: components["schemas"]["StepEvent"] | components["schemas"]["VariantEvent"] | components["schemas"]["InfeasibleEvent"] | components["schemas"]["MessageEvent"] | components["schemas"]["ProposalEvent"] | components["schemas"]["ConfirmEvent"] | components["schemas"]["DoneEvent"] | components["schemas"]["ErrorEvent"];
         /** Assignment */
         Assignment: {
             /** Courses */
@@ -1123,8 +1140,46 @@ export interface components {
             /** Terms */
             terms?: string[] | null;
         };
+        /** ChatEntry */
+        ChatEntry: {
+            change_set?: components["schemas"]["ChangeSet"] | null;
+            /**
+             * Citations
+             * @default []
+             */
+            citations: components["schemas"]["Citation"][];
+            /**
+             * Role
+             * @enum {string}
+             */
+            role: "user" | "assistant" | "proposal";
+            /**
+             * Text
+             * @default
+             */
+            text: string;
+        };
+        /**
+         * ChatHistory
+         * @description A saved plan's advisor conversation of the last 30 days, oldest first.
+         */
+        ChatHistory: {
+            /**
+             * Entries
+             * @default []
+             */
+            entries: components["schemas"]["ChatEntry"][];
+            /** Run Id */
+            run_id?: string | null;
+        };
         /** ChatRequest */
         ChatRequest: {
+            /**
+             * History
+             * @default []
+             */
+            history: components["schemas"]["ChatTurn"][];
+            latest_proposal?: components["schemas"]["ChangeSet"] | null;
             /** Message */
             message: string;
             plan: components["schemas"]["PlanState"];
@@ -1132,6 +1187,16 @@ export interface components {
             plan_id?: string | null;
             /** Run Id */
             run_id?: string | null;
+        };
+        /** ChatTurn */
+        ChatTurn: {
+            /**
+             * Role
+             * @enum {string}
+             */
+            role: "user" | "assistant";
+            /** Text */
+            text: string;
         };
         /** Citation */
         Citation: {
@@ -1184,6 +1249,22 @@ export interface components {
              * @enum {string}
              */
             status: "visible" | "held" | "removed";
+        };
+        /**
+         * ConfirmEvent
+         * @description The student's message was a typed confirmation of `change_set`. A saved plan applies
+         *     it with POST /plans/{id}/changesets/{cs}/apply and `confirmation_text`; a plan that lives
+         *     in the browser applies the operations itself.
+         */
+        ConfirmEvent: {
+            change_set: components["schemas"]["ChangeSet"];
+            /** Confirmation Text */
+            confirmation_text: string;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "confirm";
         };
         /**
          * Conflict
@@ -1737,6 +1818,8 @@ export interface components {
              * @default []
              */
             selected_terms: string[];
+            /** Today Term */
+            today_term?: string | null;
             /**
              * Variants
              * @default 2
@@ -1872,6 +1955,24 @@ export interface components {
             conflicts?: components["schemas"]["Conflict"][];
             /** Message */
             message: string;
+        };
+        /**
+         * InfeasibleEvent
+         * @description No plan meets the request; `message` says why in plain English.
+         */
+        InfeasibleEvent: {
+            /**
+             * Conflicts
+             * @default []
+             */
+            conflicts: components["schemas"]["Conflict"][];
+            /** Message */
+            message: string;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "infeasible";
         };
         /** InstructorCourse */
         InstructorCourse: {
@@ -3137,6 +3238,11 @@ export interface components {
         /** VariantEvent */
         VariantEvent: {
             change_set: components["schemas"]["ChangeSet"];
+            /**
+             * Citations
+             * @default []
+             */
+            citations: components["schemas"]["Citation"][];
             /** Label */
             label: string;
             /**
@@ -3551,13 +3657,35 @@ export interface operations {
                     "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
-            /** @description Not implemented yet */
-            501: {
+        };
+    };
+    chat_history_agents_chat_history_get: {
+        parameters: {
+            query: {
+                plan_id: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorOut"];
+                    "application/json": components["schemas"]["ChatHistory"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
@@ -3592,15 +3720,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-            /** @description Not implemented yet */
-            501: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorOut"];
                 };
             };
         };

@@ -169,8 +169,10 @@
         "description": "One Server-Sent Event `data:` payload from /agents/generate or /agents/chat.",
         "discriminator": {
           "mapping": {
+            "confirm": "#/components/schemas/ConfirmEvent",
             "done": "#/components/schemas/DoneEvent",
             "error": "#/components/schemas/ErrorEvent",
+            "infeasible": "#/components/schemas/InfeasibleEvent",
             "message": "#/components/schemas/MessageEvent",
             "proposal": "#/components/schemas/ProposalEvent",
             "step": "#/components/schemas/StepEvent",
@@ -186,10 +188,16 @@
             "$ref": "#/components/schemas/VariantEvent"
           },
           {
+            "$ref": "#/components/schemas/InfeasibleEvent"
+          },
+          {
             "$ref": "#/components/schemas/MessageEvent"
           },
           {
             "$ref": "#/components/schemas/ProposalEvent"
+          },
+          {
+            "$ref": "#/components/schemas/ConfirmEvent"
           },
           {
             "$ref": "#/components/schemas/DoneEvent"
@@ -773,8 +781,94 @@
         "title": "ChangeSetApply",
         "type": "object"
       },
+      "ChatEntry": {
+        "properties": {
+          "change_set": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ChangeSet"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "citations": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/Citation"
+            },
+            "title": "Citations",
+            "type": "array"
+          },
+          "role": {
+            "enum": [
+              "user",
+              "assistant",
+              "proposal"
+            ],
+            "title": "Role",
+            "type": "string"
+          },
+          "text": {
+            "default": "",
+            "title": "Text",
+            "type": "string"
+          }
+        },
+        "required": [
+          "role"
+        ],
+        "title": "ChatEntry",
+        "type": "object"
+      },
+      "ChatHistory": {
+        "description": "A saved plan's advisor conversation of the last 30 days, oldest first.",
+        "properties": {
+          "entries": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/ChatEntry"
+            },
+            "title": "Entries",
+            "type": "array"
+          },
+          "run_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Run Id"
+          }
+        },
+        "title": "ChatHistory",
+        "type": "object"
+      },
       "ChatRequest": {
         "properties": {
+          "history": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/ChatTurn"
+            },
+            "maxItems": 12,
+            "title": "History",
+            "type": "array"
+          },
+          "latest_proposal": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ChangeSet"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "message": {
             "maxLength": 4000,
             "minLength": 1,
@@ -812,6 +906,29 @@
           "message"
         ],
         "title": "ChatRequest",
+        "type": "object"
+      },
+      "ChatTurn": {
+        "properties": {
+          "role": {
+            "enum": [
+              "user",
+              "assistant"
+            ],
+            "title": "Role",
+            "type": "string"
+          },
+          "text": {
+            "maxLength": 4000,
+            "title": "Text",
+            "type": "string"
+          }
+        },
+        "required": [
+          "role",
+          "text"
+        ],
+        "title": "ChatTurn",
         "type": "object"
       },
       "Citation": {
@@ -943,6 +1060,30 @@
           "created_day"
         ],
         "title": "CommentOut",
+        "type": "object"
+      },
+      "ConfirmEvent": {
+        "description": "The student's message was a typed confirmation of `change_set`. A saved plan applies\nit with POST /plans/{id}/changesets/{cs}/apply and `confirmation_text`; a plan that lives\nin the browser applies the operations itself.",
+        "properties": {
+          "change_set": {
+            "$ref": "#/components/schemas/ChangeSet"
+          },
+          "confirmation_text": {
+            "title": "Confirmation Text",
+            "type": "string"
+          },
+          "type": {
+            "const": "confirm",
+            "default": "confirm",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "change_set",
+          "confirmation_text"
+        ],
+        "title": "ConfirmEvent",
         "type": "object"
       },
       "Conflict": {
@@ -2293,8 +2434,10 @@
           "interests": {
             "default": [],
             "items": {
+              "maxLength": 60,
               "type": "string"
             },
+            "maxItems": 12,
             "title": "Interests",
             "type": "array"
           },
@@ -2357,6 +2500,21 @@
             },
             "title": "Selected Terms",
             "type": "array"
+          },
+          "today_term": {
+            "anyOf": [
+              {
+                "examples": [
+                  "2026-AU"
+                ],
+                "pattern": "^\\d{4}-(AU|WI|SP|SU)$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Today Term"
           },
           "variants": {
             "default": 2,
@@ -2691,6 +2849,34 @@
           "message"
         ],
         "title": "Infeasibility",
+        "type": "object"
+      },
+      "InfeasibleEvent": {
+        "description": "No plan meets the request; `message` says why in plain English.",
+        "properties": {
+          "conflicts": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/Conflict"
+            },
+            "title": "Conflicts",
+            "type": "array"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          },
+          "type": {
+            "const": "infeasible",
+            "default": "infeasible",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "message"
+        ],
+        "title": "InfeasibleEvent",
         "type": "object"
       },
       "InstructorCourse": {
@@ -6362,6 +6548,14 @@
           "change_set": {
             "$ref": "#/components/schemas/ChangeSet"
           },
+          "citations": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/Citation"
+            },
+            "title": "Citations",
+            "type": "array"
+          },
           "label": {
             "title": "Label",
             "type": "string"
@@ -7011,19 +7205,52 @@
               }
             },
             "description": "Validation Error"
-          },
-          "501": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorOut"
-                }
-              }
-            },
-            "description": "Not implemented yet"
           }
         },
         "summary": "Chat",
+        "tags": [
+          "agents"
+        ]
+      }
+    },
+    "/agents/chat/history": {
+      "get": {
+        "operationId": "chat_history_agents_chat_history_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "plan_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Plan Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChatHistory"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Chat History",
         "tags": [
           "agents"
         ]
@@ -7063,16 +7290,6 @@
               }
             },
             "description": "Validation Error"
-          },
-          "501": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorOut"
-                }
-              }
-            },
-            "description": "Not implemented yet"
           }
         },
         "summary": "Generate",

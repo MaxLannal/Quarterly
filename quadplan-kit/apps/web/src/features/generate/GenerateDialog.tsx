@@ -13,7 +13,8 @@ import { opText } from "@/features/planner/context";
 import { goalLabel, round1 } from "@/features/planner/metrics";
 import { planTerms, termLabel, compareTerms } from "@/features/planner/terms";
 import { ReportBadge } from "@/features/planner/VerifierBadge";
-import { applyStoredChangeSet, GENERATOR_MODE, generateDeterministic } from "./deterministic";
+import { CitationChip } from "@/features/advisor/AdvisorPanel";
+import { applyStoredChangeSet, currentTerm, GENERATOR_MODE, generateDeterministic } from "./deterministic";
 
 type Phase = "form" | "running" | "results";
 type Scope = GenerateRequest["scope"];
@@ -32,12 +33,17 @@ export interface GenerateFormValue {
   variants: number;
 }
 
-export function buildGenerateRequest(plan: PlanState, v: GenerateFormValue): GenerateRequest {
+/**
+ * The agent's request. `planId` (a saved plan, unchanged since it was saved) makes the server
+ * store each variant as a change set; otherwise nothing is saved and the browser applies it.
+ */
+export function buildGenerateRequest(plan: PlanState, v: GenerateFormValue, planId: string | null = null, today: string = currentTerm()): GenerateRequest {
   return {
     plan,
-    plan_id: null,
+    plan_id: planId,
     scope: v.scope,
     selected_terms: v.scope === "selected" ? v.selectedTerms : [],
+    today_term: v.scope === "remaining" ? today : null,
     load: v.load,
     per_term_load: v.perTermLoad,
     max_courses_per_term: v.maxCourses,
@@ -292,6 +298,15 @@ function VariantCard({ v, onApply, onDiscard }: { v: VariantEvent; onApply: (ops
           ))}
         </ul>
       )}
+      {(v.citations ?? []).length > 0 && (
+        <ul className="flex flex-wrap" aria-label={`Sources for ${v.label}`}>
+          {(v.citations ?? []).map((c) => (
+            <li key={`${c.kind}-${c.id}`}>
+              <CitationChip c={c} />
+            </li>
+          ))}
+        </ul>
+      )}
       {showDiff && (
         <div>
           <h4 className="text-caption-uppercase uppercase text-muted">Changes to your plan</h4>
@@ -387,10 +402,11 @@ export function GenerateDialog({ open, onClose, plan, years, onApply, planId = n
         setPhase("results");
         return;
       }
-      for await (const ev of streamGenerate(buildGenerateRequest(plan, v), controller.signal)) {
+      for await (const ev of streamGenerate(buildGenerateRequest(plan, v, planId), controller.signal)) {
         if (ev.type === "step") {
           setSteps((xs) => [...xs.filter((s) => s.name !== ev.name), ev]);
         } else if (ev.type === "variant") setVariants((xs) => [...xs, ev]);
+        else if (ev.type === "infeasible") setInfeasible({ message: ev.message, conflicts: ev.conflicts ?? [] });
         else if (ev.type === "error") setError(ev.message);
       }
       setPhase("results");
