@@ -42,6 +42,14 @@ class Settings(BaseSettings):
     #: (0 = use the socket address). Used for rate limiting only; addresses are never stored.
     trusted_proxy_hops: int = 0
 
+    # LLM agents (prompt 07)
+    anthropic_api_key: SecretStr = SecretStr("")
+    openrouter_api_key: SecretStr = SecretStr("")
+    #: Send requests to the model providers. Off until Richard lifts the hold on API calls
+    #: (CLAUDE.md, 2026-11-14): with it off the agents take their fallbacks (default elective
+    #: ranking, no rationale; the advisor answers only typed confirmations).
+    llm_live: bool = False
+
     def production_problems(self) -> list[str]:
         """Settings that are unsafe outside development (checked at start-up)."""
         if self.environment in ("development", "test"):

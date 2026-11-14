@@ -7,6 +7,9 @@ COPY packages packages
 COPY services services
 RUN uv sync --frozen --no-dev --package quarterly-api
 COPY data data
+# Model routing and the versioned agent prompts (prompt 07).
+COPY llm_routing.yaml ./
+COPY prompts prompts
 ENV PATH="/app/.venv/bin:$PATH"
 ARG GIT_SHA=dev
 ENV GIT_SHA=$GIT_SHA

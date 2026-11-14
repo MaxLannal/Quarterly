@@ -31,6 +31,7 @@ from planner_core.models import (
 )
 from sqlalchemy.orm import Session
 
+from api.agents.chat import confirmation_problem
 from api.auth.ratelimit import DAY, Limit, account_subject, ip_limit
 from api.auth.sessions import current_account
 from api.auth.store import Store, get_store
@@ -351,10 +352,11 @@ def apply_change_set(
     plan = _plan(db, me, plan_id)
     row = _change_set(db, plan, changeset_id)
     if body.confirmation_text is not None:
-        raise HTTPException(
-            status_code=422,
-            detail="Typed confirmations arrive with the advisor chat; use Apply instead.",
-        )
+        # A typed confirmation from the advisor chat (prompt 07): parsed deterministically,
+        # it must name this change set; the plan-hash check below still applies.
+        problem = confirmation_problem(db, plan, row, body.confirmation_text, body.terms)
+        if problem is not None:
+            raise HTTPException(status_code=422, detail=problem)
     if row.status != "proposed":
         raise HTTPException(status_code=409, detail=f"This change set is {row.status}.")
     state = repo.read_state(db, plan)
