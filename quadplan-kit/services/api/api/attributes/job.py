@@ -238,26 +238,41 @@ def _ratings(
             Rating(1.0 if rating.would_recommend else 0.0, w, post_id)
         )
     # Text values: discussion posts only (a review's own ratings already count), from the
-    # extraction of the post's current text, one value per post and key (the median of
-    # its mentions), so one post can never count as several ratings.
+    # extraction of the post's current text, and one value per author, page and key (the
+    # median of everything that author's posts on the page say), so neither one post nor one
+    # person posting several times can count as several ratings.
     extracted = _extracted(db)
     discussions = db.execute(
         sa.select(
-            m.Post.id, m.Post.course_instructor_id, m.Post.created_day, m.Post.title, m.Post.body_md
+            m.Post.id,
+            m.Post.course_instructor_id,
+            m.Post.author_ref,
+            m.Post.created_day,
+            m.Post.title,
+            m.Post.body_md,
         )
         .outerjoin(m.ReviewRating, m.ReviewRating.post_id == m.Post.id)
         .where(m.Post.status == "visible", m.ReviewRating.post_id.is_(None))
+        .order_by(m.Post.id)
     ).all()
-    for pid, page, day, title, body in discussions:
+    groups: dict[tuple[int, str], dict[str, Any]] = {}
+    for pid, page, ref, day, title, body in discussions:
         out = extracted.get(pid)
         if out is None or out.get("text_version") != _version(_text(title, body)):
             continue
-        w = rating_weight("text", day, today)
-        hours = [float(x["hours"]) for x in out.get("workload_mentions", [])]
-        levels = [a3.DIFFICULTY[x["level"]] for x in out.get("difficulty_cues", [])]
-        for key, values in (("workload_hours", hours), ("difficulty", levels)):
-            if values:
-                per_page[page][key].append(Rating(statistics.median(values), w, pid, "text"))
+        group = groups.setdefault(
+            (page, ref or f"post:{pid}"),
+            {"post_id": pid, "day": day, "workload_hours": [], "difficulty": []},
+        )
+        group["day"] = max(group["day"], day)
+        group["workload_hours"] += [float(x["hours"]) for x in out.get("workload_mentions", [])]
+        group["difficulty"] += [a3.DIFFICULTY[x["level"]] for x in out.get("difficulty_cues", [])]
+    for (page, _), group in groups.items():
+        w = rating_weight("text", group["day"], today)
+        for key in ("workload_hours", "difficulty"):
+            if group[key]:
+                value = statistics.median(group[key])
+                per_page[page][key].append(Rating(value, w, group["post_id"], "text"))
     return per_page, code_of
 
 

@@ -42,3 +42,12 @@ def forget_extractions(db: Session, post_ids: Collection[int]) -> None:
                 m.ExtractionRun.output["post_id"].as_integer().in_(list(post_ids)),
             )
         )
+
+
+def forget_summary(db: Session, page_id: int, post_id: int) -> None:
+    """Delete the page's "What students say" summary if it cites this post, which was just
+    edited, blanked or deleted: the summary may repeat words that are gone. The nightly job
+    writes a new one."""
+    row = db.get(m.ForumSummary, page_id)
+    if row is not None and post_id in cited_ids(row):
+        db.delete(row)

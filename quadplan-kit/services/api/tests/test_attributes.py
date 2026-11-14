@@ -191,11 +191,13 @@ def test_below_three_reviews_the_course_shows_its_estimate(db: Session) -> None:
     assert db.get(m.ForumSummary, page.id) is None  # no summary answer: nothing published
 
 
-def discussion(db: Session, page: m.CourseInstructor, body: str) -> m.Post:
+def discussion(
+    db: Session, page: m.CourseInstructor, body: str, author: str | None = None
+) -> m.Post:
     post = m.Post(
         course_instructor_id=page.id,
         kind="discussion",
-        author_ref=uuid.uuid4().hex,
+        author_ref=author or uuid.uuid4().hex,
         title="Workload?",
         body_md=body,
         status="visible",
@@ -241,6 +243,17 @@ def test_one_post_never_reaches_three_ratings(db: Session) -> None:
     run_nightly(db, fake(a3_cold_start_estimate=[GUESS], a3_forum_extraction=[found]), TODAY)
     row = value(db, "course", "TEST 10000", "workload_hours")
     assert row is not None and row.method == "prior" and row.value == 8
+
+
+@pytest.mark.db
+def test_one_person_posting_three_times_counts_once(db: Session) -> None:
+    page = make_page(db)
+    for hours in (10, 12, 14):
+        discussion(db, page, f"This week took {hours} hours.", author="same-person")
+    found = [mentions((h, f"{h} hours")) for h in (10, 12, 14)]
+    run_nightly(db, fake(a3_cold_start_estimate=[GUESS], a3_forum_extraction=found), TODAY)
+    row = value(db, "course", "TEST 10000", "workload_hours")
+    assert row is not None and row.method == "prior" and row.value == 8  # one person: n = 1
 
 
 @pytest.mark.db

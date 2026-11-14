@@ -228,6 +228,7 @@ Without the placement, the popup explains that the calculus requirement needs a 
   - an older admin removal no longer counts again after the automatic check removes the same post; the 30-day deletion wait is checked after the password;
   - the generator no longer calls a request impossible when only its staged shortcut dead-ends, and explaining an impossible request stays within the time limit;
   - A3 summary and cold-start calls use low effort with 2000 output tokens, so answers are not cut off.
+  - after the final reviews: editing, blanking or deleting a post that a summary cites deletes that summary at once (it is rewritten that night); text values count once per person per page, so posting three times does not reach the 3-rating minimum; explaining an impossible request finds its conflicting limits with all the time left, so a busy machine no longer adds an extra limit to the explanation; the curator console has screenshots too.
 
 ## Step 5 · Design review at 1440 and 390 (2026-11-14)
 

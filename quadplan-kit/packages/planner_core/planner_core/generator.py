@@ -1301,7 +1301,9 @@ def generate(
             status, solver = better, polished
     rest = budget * 0.15 / max(1, options.variants - 1)
     if status == cp_model.INFEASIBLE:
-        core = b.core(list(b.literals), b._capped(budget * EXPLAIN_SHARE))
+        # The core decides which limits the explanation names: it may use all the time left
+        # (usually well under 0.2 s; much longer only on a busy machine).
+        core = b.core(list(b.literals), b._capped(budget))
         return GenerateResult(infeasible=b.explain(core))
     if status not in _STATUS_OK:
         return _impossible(

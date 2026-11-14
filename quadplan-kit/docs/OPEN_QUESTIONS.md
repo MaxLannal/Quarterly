@@ -128,6 +128,7 @@ Q12. **Numbers for a specific instructor in the planner.** The forum computes nu
    *Suggested default (built):* per-course numbers until the schedule arrives, then switch to the instructor's numbers when the quarter's instructor is known.
 
 Q13. **What counts as "3 ratings".** Forum numbers appear only once 3 different posts back them. A discussion post that mentions hours or difficulty counts once (the middle value of what it says), at half the weight of a review; a review's text is not read for numbers, because its star ratings already count.
+   Several discussion posts by the same person on the same page also count once.
    *Suggested default (built):* keep this, so one person cannot move a course's numbers by repeating themselves.
 
 ---

@@ -179,3 +179,60 @@ def test_deleting_a_post_forgets_its_extracted_quotes(migrated_db_url: str) -> N
         service.delete_post(db, account, post.id)
         assert db.scalars(sa.select(m.ExtractionRun)).all() == []
     engine.dispose()
+
+
+@pytest.mark.db
+def test_blanking_a_cited_post_drops_the_summary(migrated_db_url: str) -> None:
+    from api.forum import service
+
+    engine = sa.create_engine(migrated_db_url)
+    with Session(engine) as db:
+        upsert_bundle(db, load_bundle(FIXTURES / "seed" / "2099-00"))
+        account = m.Account(
+            username="calm-otter", email="calm@uchicago.edu", email_verified_day=dt.date.today()
+        )
+        course = db.scalar(sa.select(m.Course).where(m.Course.code == "TEST 10000"))
+        instructor = m.Instructor(slug="demo-z", display_name="Demo Z (fake)")
+        db.add_all([account, instructor])
+        db.flush()
+        assert course is not None
+        page = m.CourseInstructor(course_id=course.id, instructor_id=instructor.id)
+        db.add(page)
+        db.flush()
+        post = m.Post(
+            course_instructor_id=page.id,
+            kind="discussion",
+            author_ref=author_ref(account.id, page.id),
+            body_md="The midterm was brutal.",
+            status="visible",
+            created_day=dt.date.today(),
+        )
+        db.add(post)
+        db.flush()
+        db.add(
+            m.Comment(
+                post_id=post.id,
+                author_ref="someone-else",
+                body_md="Agreed.",
+                status="visible",
+                path="c1",
+                created_day=dt.date.today(),
+            )
+        )
+        db.add(
+            m.ForumSummary(
+                course_instructor_id=page.id,
+                text="Brutal midterm [1].",
+                citations=[{"post_id": post.id}],
+                model="a3_forum_summary",
+                n_posts=1,
+                computed_at=dt.date.today(),
+            )
+        )
+        db.commit()
+        service.delete_post(db, account, post.id)  # it has a reply, so it is blanked
+        assert (
+            db.get(m.Post, post.id) is not None and db.get(m.Post, post.id).body_md == "[deleted]"
+        )  # type: ignore[union-attr]
+        assert db.get(m.ForumSummary, page.id) is None
+    engine.dispose()

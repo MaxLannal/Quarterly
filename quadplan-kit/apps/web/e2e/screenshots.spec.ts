@@ -187,6 +187,14 @@ const SHOTS: Shot[] = [
       await expect(p.getByRole("article", { name: /discussion on TEST 10000/ })).toBeVisible();
     },
   },
+  {
+    name: "admin",
+    run: async (p) => {
+      await logIn(p, true);
+      await p.goto("/admin/review");
+      await h1(p, "Curator console");
+    },
+  },
   { name: "not-found", run: async (p) => (await p.goto("/no-such-page"), h1(p, "Page not found")) },
 ];
 
