@@ -1,25 +1,77 @@
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
+import { CheckIcon, ErrorIcon, InfoIcon, WarningIcon } from "./icons";
 
-const TONES = {
-  neutral: "border-border bg-muted text-foreground",
-  green: "border-green-700 bg-green-50 text-green-900",
-  amber: "border-amber-600 bg-amber-50 text-amber-900",
-  red: "border-red-700 bg-red-50 text-red-900",
-  blue: "border-blue-700 bg-blue-50 text-blue-900",
+/** Semantic tones from DESIGN.md "Semantic". `neutral` is the default badge-pill plate. */
+const BADGE_TONES = {
+  neutral: "bg-surface-strong text-ink",
+  success: "bg-success-wash text-success",
+  warning: "bg-warning-wash text-warning",
+  error: "bg-error-wash text-error",
+  info: "bg-info-wash text-info",
 } as const;
 
-export type Tone = keyof typeof TONES;
+export type Tone = keyof typeof BADGE_TONES;
 
-export function Badge({ tone = "neutral", children, className }: { tone?: Tone; children: ReactNode; className?: string }) {
+const TONE_ICON: Record<Tone, ReactNode> = {
+  neutral: null,
+  success: <CheckIcon size={14} />,
+  warning: <WarningIcon size={14} className="text-warning-icon" />,
+  error: <ErrorIcon size={14} />,
+  info: <InfoIcon size={14} />,
+};
+
+/**
+ * badge-pill: surface-strong plate, caption-uppercase, pill. Department and quarter tags use the
+ * neutral tone; the semantic tones are for statuses (verifier, "In review", estimates) and always
+ * carry an icon, so color is never the only signal.
+ */
+export function Badge({
+  tone = "neutral",
+  children,
+  className,
+  casing = "upper",
+  icon = true,
+}: {
+  tone?: Tone;
+  children: ReactNode;
+  className?: string;
+  /** `normal` for sentence-case statuses such as "3 warnings". */
+  casing?: "upper" | "normal";
+  icon?: boolean;
+}) {
   return (
-    <span className={cn("inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-xs font-medium", TONES[tone], className)}>
+    <span
+      className={cn(
+        "inline-flex items-center gap-1 whitespace-nowrap rounded-pill px-[10px] py-1",
+        casing === "upper" ? "text-caption-uppercase uppercase" : "text-caption font-medium",
+        BADGE_TONES[tone],
+        className,
+      )}
+    >
+      {icon && TONE_ICON[tone]}
       {children}
     </span>
   );
 }
 
-/** An inline message box. `role="status"` for live info, `alert` for errors. */
+const NOTICE_TONES: Record<Tone, string> = {
+  neutral: "border-hairline bg-canvas-soft",
+  success: "border-success/25 bg-success-wash",
+  warning: "border-warning/25 bg-warning-wash",
+  error: "border-error/30 bg-error-wash",
+  info: "border-info/25 bg-info-wash",
+};
+
+const NOTICE_ICON: Record<Tone, ReactNode> = {
+  neutral: <InfoIcon className="text-gray-dark" />,
+  success: <CheckIcon className="text-success" />,
+  warning: <WarningIcon className="text-warning-icon" />,
+  error: <ErrorIcon className="text-error" />,
+  info: <InfoIcon className="text-info" />,
+};
+
+/** An inline message box with an icon. `role="status"` for live info, `alert` for errors. */
 export function Notice({
   tone = "neutral",
   children,
@@ -32,8 +84,9 @@ export function Notice({
   className?: string;
 }) {
   return (
-    <div role={role} className={cn("rounded-md border px-3 py-2 text-sm", TONES[tone], className)}>
-      {children}
+    <div role={role} className={cn("flex items-start gap-3 rounded-lg border px-4 py-3 text-body-sm text-ink", NOTICE_TONES[tone], className)}>
+      <span className="mt-[3px] shrink-0">{NOTICE_ICON[tone]}</span>
+      <div className="min-w-0 flex-1 [&_a]:text-primary [&_a]:underline [&_a]:underline-offset-2">{children}</div>
     </div>
   );
 }
@@ -42,32 +95,49 @@ export function Notice({
 export function NotAvailable({ feature, children }: { feature: string; children?: ReactNode }) {
   return (
     <Notice tone="neutral" role="status">
-      <strong>{feature} is not available yet.</strong> {children}
+      <strong className="font-medium">{feature} is not available yet.</strong> {children}
     </Notice>
   );
 }
 
+/** Inline loading line (DESIGN.md leaves loading states to us: muted caption + a plate). */
 export function Spinner({ label = "Loading" }: { label?: string }) {
   return (
-    <p role="status" className="text-sm text-muted-foreground">
+    <p role="status" className="flex items-center gap-2 text-caption text-muted">
+      <span aria-hidden="true" className="inline-block size-2 animate-pulse rounded-pill bg-gray-dark" />
       {label}…
     </p>
   );
 }
 
-/** Rating dots for a 1–5 value, with the number for screen readers. */
+/** Inline error text: icon + message (never color alone). */
+export function ErrorText({ children, className }: { children: ReactNode; className?: string }) {
+  return (
+    <p className={cn("flex items-start gap-2 text-caption text-error", className)}>
+      <ErrorIcon className="mt-[3px] shrink-0" size={14} />
+      <span>{children}</span>
+    </p>
+  );
+}
+
+/** Rating dots for a 1–5 value, with the number for screen readers. Single series = maroon. */
 export function Dots({ value, max = 5, label }: { value: number; max?: number; label: string }) {
   const filled = Math.round(value);
   return (
-    <span className="inline-flex items-center gap-0.5" title={`${label}: ${value.toFixed(1)} of ${max}`}>
+    <span className="inline-flex items-center gap-[3px]" title={`${label}: ${value.toFixed(1)} of ${max}`}>
       <span className="sr-only">{`${label} ${value.toFixed(1)} of ${max}`}</span>
       {Array.from({ length: max }, (_, i) => (
         <span
           key={i}
           aria-hidden="true"
-          className={cn("inline-block size-1.5 rounded-full", i < filled ? "bg-foreground" : "bg-zinc-300")}
+          className={cn("inline-block size-1.5 rounded-pill", i < filled ? "bg-primary" : "bg-hairline-strong")}
         />
       ))}
     </span>
   );
+}
+
+/** A course code: caption-uppercase or tabular Inter, never the serif. */
+export function CourseCode({ children, className }: { children: ReactNode; className?: string }) {
+  return <span className={cn("font-sans text-caption-uppercase uppercase tabular-nums text-muted", className)}>{children}</span>;
 }

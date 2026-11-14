@@ -4,7 +4,9 @@ import { useEligible } from "@/api/hooks";
 import type { CourseSummary, NodeProgress, ProgramDetail } from "@/api/types";
 import { isNotAvailable } from "@/api/client";
 import { Button } from "@/components/ui/button";
-import { Badge, NotAvailable, Spinner } from "@/components/ui/misc";
+import { EmptyState } from "@/components/layout/page";
+import { ChevronIcon, GripIcon } from "@/components/ui/icons";
+import { Badge, ErrorText, NotAvailable, Spinner } from "@/components/ui/misc";
 import { cn } from "@/lib/utils";
 import { describe, progressByNode, ruleTree, type RuleEntry } from "@/features/programs/rules";
 import { REQUIREMENT_COLORS, usePlanner } from "./context";
@@ -22,11 +24,11 @@ function ProgressBar({ p, label }: { p: NodeProgress | undefined; label: string 
         aria-valuemax={p.need}
         aria-valuenow={Math.min(p.have, p.need)}
         aria-valuetext={`${p.have} of ${p.need} ${p.unit}`}
-        className="h-2 flex-1 overflow-hidden rounded-full bg-zinc-200"
+        className="h-1.5 flex-1 overflow-hidden rounded-pill bg-surface-strong"
       >
-        <div className={cn("h-full", p.satisfied ? "bg-green-700" : "bg-blue-700")} style={{ width: `${pct}%` }} />
+        <div className={cn("h-full rounded-pill", p.satisfied ? "bg-success" : "bg-primary")} style={{ width: `${pct}%` }} />
       </div>
-      <span className="shrink-0 text-xs text-muted-foreground">
+      <span className="shrink-0 text-caption tabular-nums text-muted">
         {p.have}/{p.need}
       </span>
     </div>
@@ -44,25 +46,25 @@ function EligibleCourse({ course }: { course: CourseSummary }) {
     <li
       ref={setNodeRef}
       style={transform ? { transform: `translate3d(${transform.x}px, ${transform.y}px, 0)` } : undefined}
-      className={cn("flex items-center rounded-md border border-border bg-background text-sm", isDragging && "z-30 shadow-lg")}
+      className={cn("flex items-center rounded-lg border border-hairline bg-surface-card text-caption transition-shadow hover:shadow-hover", isDragging && "z-30 shadow-overlay")}
     >
       <button
         type="button"
         aria-label={`Drag ${course.code} onto the plan`}
-        className="flex min-h-11 w-8 shrink-0 cursor-grab touch-none items-center justify-center text-muted-foreground"
+        className="flex min-h-11 w-8 shrink-0 cursor-grab touch-none items-center justify-center rounded-l-md text-gray-dark hover:text-ink focus-visible:outline-offset-[-2px]"
         {...attributes}
         {...listeners}
       >
-        <span aria-hidden="true">⠿</span>
+        <GripIcon size={14} />
       </button>
-      <div className="min-w-0 flex-1 py-1">
-        <div className="font-medium">{course.code}</div>
-        <div className="truncate text-xs text-muted-foreground">
+      <div className="min-w-0 flex-1 py-1.5">
+        <div className="whitespace-nowrap font-medium tabular-nums text-ink">{course.code}</div>
+        <div className="truncate text-caption text-muted">
           {course.title}
           {hours ? ` · ${round1(hours.value)} h/wk` : ""}
         </div>
       </div>
-      <Button variant="ghost" className="px-2" onClick={() => openAddTo(course.code)} aria-label={`Add ${course.code} to a quarter`}>
+      <Button variant="ghost" size="sm" onClick={() => openAddTo(course.code)} aria-label={`Add ${course.code} to a quarter`}>
         Add
       </Button>
     </li>
@@ -72,10 +74,10 @@ function EligibleCourse({ course }: { course: CourseSummary }) {
 function EligibleList({ programId, node, catalogYear }: { programId: string; node: string; catalogYear: string }) {
   const q = useEligible(programId, node, catalogYear);
   if (q.isLoading) return <Spinner label="Loading eligible courses" />;
-  if (q.error) return isNotAvailable(q.error) ? <NotAvailable feature="Eligible courses" /> : <p className="text-sm text-red-800">Could not load eligible courses.</p>;
-  if (!q.data?.length) return <p className="text-sm text-muted-foreground">No eligible courses listed.</p>;
+  if (q.error) return isNotAvailable(q.error) ? <NotAvailable feature="Eligible courses" /> : <ErrorText>Could not load eligible courses.</ErrorText>;
+  if (!q.data?.length) return <p className="text-body-sm text-muted">No eligible courses listed.</p>;
   return (
-    <ul className="mt-1 space-y-1" aria-label="Eligible courses">
+    <ul className="mt-2 space-y-1.5" aria-label="Eligible courses">
       {q.data.map((c) => (
         <EligibleCourse key={c.code} course={c} />
       ))}
@@ -107,20 +109,20 @@ function RuleRow({
   const expanded = open.has(entry.path);
   const isActive = active === entry.path;
   return (
-    <li className="py-1">
-      <div className="flex items-start gap-1">
+    <li className="py-0.5">
+      <div className="flex items-start gap-0.5">
         {hasChildren ? (
           <button
             type="button"
             aria-expanded={expanded}
             aria-label={`${expanded ? "Collapse" : "Expand"} ${entry.label}`}
             onClick={() => toggle(entry.path)}
-            className="flex min-h-11 min-w-11 items-center justify-center rounded-md hover:bg-muted"
+            className="flex min-h-11 min-w-11 shrink-0 cursor-pointer items-center justify-center rounded-pill text-gray-dark hover:bg-surface-strong hover:text-ink focus-visible:outline-offset-[-2px]"
           >
-            <span aria-hidden="true">{expanded ? "▾" : "▸"}</span>
+            <ChevronIcon open={expanded} />
           </button>
         ) : (
-          <span className="w-11 shrink-0" aria-hidden="true" />
+          <span className="w-3 shrink-0" aria-hidden="true" />
         )}
         <div className="min-w-0 flex-1">
           {entry.selectable ? (
@@ -128,15 +130,18 @@ function RuleRow({
               type="button"
               aria-expanded={isActive}
               onClick={() => setActive(isActive ? null : entry.path)}
-              className="min-h-11 w-full rounded-md px-1 text-left text-sm hover:bg-muted"
+              className={cn(
+                "min-h-11 w-full cursor-pointer rounded-md px-2 py-1.5 text-left text-body-sm hover:bg-surface-strong focus-visible:outline-offset-0",
+                isActive && "bg-primary-wash hover:bg-primary-wash",
+              )}
             >
-              <span className="font-medium">{entry.label}</span>
-              <span className="block text-xs text-muted-foreground">{describe(entry)}</span>
+              <span className="font-medium text-ink">{entry.label}</span>
+              <span className="block text-caption text-muted">{describe(entry)}</span>
             </button>
           ) : (
-            <div className="px-1 py-2 text-sm">
-              <span className="font-medium">{entry.label}</span>
-              <span className="block text-xs text-muted-foreground">{describe(entry)}</span>
+            <div className="px-2 py-2.5 text-body-sm">
+              <span className="font-medium text-ink">{entry.label}</span>
+              <span className="block text-caption text-muted">{describe(entry)}</span>
             </div>
           )}
           <ProgressBar p={p} label={entry.label} />
@@ -144,7 +149,7 @@ function RuleRow({
         </div>
       </div>
       {hasChildren && expanded && (
-        <ul className="ml-4 border-l border-border pl-1">
+        <ul className="ml-3 border-l border-hairline">
           {entry.children.map((c) => (
             <RuleRow
               key={c.path}
@@ -176,10 +181,10 @@ function ProgramTree({ program, index, progress }: { program: ProgramDetail; ind
       return n;
     });
   return (
-    <section aria-label={program.name} className={cn("rounded-lg border border-l-4 border-border p-2", REQUIREMENT_COLORS[index % REQUIREMENT_COLORS.length])}>
-      <h3 className="flex flex-wrap items-center gap-2 font-semibold">
+    <section aria-label={program.name} className={cn("rounded-lg border border-l-[3px] border-hairline bg-canvas-soft p-2", REQUIREMENT_COLORS[index % REQUIREMENT_COLORS.length])}>
+      <h3 className="flex flex-wrap items-center gap-2 px-2 pt-1 text-title-sm">
         {program.name}
-        {program.status !== "published" && <Badge tone="amber">In review</Badge>}
+        {program.status !== "published" && <Badge tone="warning">In review</Badge>}
       </h3>
       <ul>
         <RuleRow
@@ -206,23 +211,21 @@ interface RequirementRailProps {
 export function RequirementRail({ details, progress, onAddProgram }: RequirementRailProps) {
   const byNode = progressByNode(progress);
   return (
-    <div className="space-y-3">
+    <div className="space-y-4">
       <div className="flex items-center justify-between gap-2">
-        <h2 className="text-lg font-semibold">Requirements</h2>
-        <Button variant="outline" onClick={onAddProgram}>
+        <h2 className="font-display text-display-sm">Requirements</h2>
+        <Button variant="outline" size="sm" onClick={onAddProgram}>
           Add program
         </Button>
       </div>
-      {details.length === 0 && <p className="text-sm text-muted-foreground">Add a program to see its requirements and track progress.</p>}
+      {details.length === 0 && <EmptyState>Add a program to see its requirements and track progress.</EmptyState>}
       {details.map((d, i) =>
         d.isLoading ? (
           <Spinner key={d.id} label={`Loading ${d.id}`} />
         ) : d.data ? (
           <ProgramTree key={d.id} program={d.data} index={i} progress={byNode} />
         ) : (
-          <p key={d.id} className="text-sm text-red-800">
-            {isNotAvailable(d.error) ? `Program ${d.id} is not available yet.` : `Could not load program ${d.id}.`}
-          </p>
+          <ErrorText key={d.id}>{isNotAvailable(d.error) ? `Program ${d.id} is not available yet.` : `Could not load program ${d.id}.`}</ErrorText>
         ),
       )}
     </div>

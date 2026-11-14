@@ -2,6 +2,7 @@ import { useEffect, useId, useRef, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { cn } from "@/lib/utils";
 import { Button } from "./button";
+import { CloseIcon } from "./icons";
 
 const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
@@ -55,7 +56,7 @@ export function Dialog({ open, onClose, title, description, children, className 
 
   if (!open) return null;
   return createPortal(
-    <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 p-0 sm:items-center sm:p-4">
+    <div className="fixed inset-0 z-50 flex items-end justify-center bg-ink/40 p-0 sm:items-center sm:p-4">
       <div
         ref={ref}
         role="dialog"
@@ -64,20 +65,20 @@ export function Dialog({ open, onClose, title, description, children, className 
         aria-describedby={description ? descId : undefined}
         tabIndex={-1}
         className={cn(
-          "max-h-[92vh] w-full max-w-lg overflow-y-auto rounded-t-xl bg-background p-4 shadow-xl sm:rounded-xl",
+          "max-h-[92vh] w-full max-w-lg overflow-y-auto rounded-t-xxl border border-hairline bg-surface-card p-5 text-ink shadow-overlay sm:rounded-xl sm:p-6",
           className,
         )}
       >
-        <div className="mb-3 flex items-start justify-between gap-2">
-          <h2 id={titleId} className="pt-2 text-lg font-semibold">
+        <div className="mb-2 flex items-start justify-between gap-3">
+          <h2 id={titleId} className="pt-2 font-display text-display-sm">
             {title}
           </h2>
-          <Button variant="ghost" aria-label="Close" onClick={onClose}>
-            <span aria-hidden="true">✕</span>
+          <Button variant="ghost" size="icon" aria-label="Close" onClick={onClose} className="-mr-2 -mt-1">
+            <CloseIcon />
           </Button>
         </div>
         {description && (
-          <p id={descId} className="mb-3 text-sm text-muted-foreground">
+          <p id={descId} className="mb-5 text-body-sm text-muted">
             {description}
           </p>
         )}

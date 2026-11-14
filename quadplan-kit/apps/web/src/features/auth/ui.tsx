@@ -1,4 +1,7 @@
 import { useEffect, useId, useRef, type InputHTMLAttributes, type ReactNode } from "react";
+import { Eyebrow, PageContainer, standaloneLinkClass } from "@/components/layout/page";
+import { CheckIcon, ErrorIcon } from "@/components/ui/icons";
+import { controlClass, FieldError, FieldHint, Label } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
 interface TextFieldProps extends Omit<InputHTMLAttributes<HTMLInputElement>, "id"> {
@@ -15,32 +18,17 @@ export function TextField({ label, hint, error, className, ...input }: TextField
   const errorId = `${id}-error`;
   const describedBy = [hint ? hintId : null, error ? errorId : null].filter(Boolean).join(" ");
   return (
-    <div className="flex flex-col gap-1">
-      <label htmlFor={id} className="text-sm font-medium">
-        {label}
-      </label>
+    <div className="flex flex-col gap-1.5">
+      <Label htmlFor={id}>{label}</Label>
       <input
         id={id}
         aria-invalid={error ? true : undefined}
         aria-describedby={describedBy || undefined}
-        className={cn(
-          "min-h-11 rounded-md border border-border bg-background px-3 text-base",
-          "focus-visible:outline-2 focus-visible:outline-offset-2",
-          error && "border-primary",
-          className,
-        )}
+        className={cn(controlClass, className)}
         {...input}
       />
-      {hint ? (
-        <p id={hintId} className="text-sm text-muted-foreground">
-          {hint}
-        </p>
-      ) : null}
-      {error ? (
-        <p id={errorId} role="alert" className="text-sm font-medium text-primary">
-          {error}
-        </p>
-      ) : null}
+      {hint ? <FieldHint id={hintId}>{hint}</FieldHint> : null}
+      {error ? <FieldError id={errorId}>{error}</FieldError> : null}
     </div>
   );
 }
@@ -50,8 +38,9 @@ export function FormError({ message }: { message: string | null }) {
   return (
     <div role="alert" aria-live="assertive">
       {message ? (
-        <p className="rounded-md border border-primary bg-muted p-3 text-sm font-medium text-primary">
-          {message}
+        <p className="flex items-start gap-3 rounded-lg border border-error/30 bg-error-wash px-4 py-3 text-body-sm text-ink">
+          <ErrorIcon className="mt-[3px] shrink-0 text-error" />
+          <span>{message}</span>
         </p>
       ) : null}
     </div>
@@ -62,7 +51,12 @@ export function FormError({ message }: { message: string | null }) {
 export function Notice({ message }: { message: string | null }) {
   return (
     <div role="status" aria-live="polite">
-      {message ? <p className="rounded-md border border-border bg-muted p-3 text-sm">{message}</p> : null}
+      {message ? (
+        <p className="flex items-start gap-3 rounded-lg border border-success/25 bg-success-wash px-4 py-3 text-body-sm text-ink">
+          <CheckIcon className="mt-[3px] shrink-0 text-success" />
+          <span>{message}</span>
+        </p>
+      ) : null}
     </div>
   );
 }
@@ -74,22 +68,26 @@ export function StepHeading({ children }: { children: ReactNode }) {
     ref.current?.focus();
   }, []);
   return (
-    <h2 ref={ref} tabIndex={-1} className="text-lg font-semibold outline-none">
+    <h2 ref={ref} tabIndex={-1} className="font-display text-display-sm outline-none">
       {children}
     </h2>
   );
 }
 
-export function AuthPage({ title, children }: { title: string; children: ReactNode }) {
+/** Sign-up and login: a narrow form column on a white card. */
+export function AuthPage({ title, eyebrow, children }: { title: string; eyebrow?: ReactNode; children: ReactNode }) {
   return (
-    <section className="mx-auto flex max-w-md flex-col gap-4 p-6">
-      <h1 className="text-2xl font-semibold">{title}</h1>
-      {children}
-    </section>
+    <PageContainer width="form" as="section" className="flex flex-col gap-6">
+      <div className="flex flex-col gap-3">
+        {eyebrow && <Eyebrow>{eyebrow}</Eyebrow>}
+        <h1 className="font-display text-display-md">{title}</h1>
+      </div>
+      <div className="flex flex-col gap-5 rounded-xl border border-hairline bg-surface-card p-6 sm:p-8">{children}</div>
+    </PageContainer>
   );
 }
 
-export const linkClass = "inline-flex min-h-11 items-center text-primary underline";
+export const linkClass = standaloneLinkClass;
 
 export const PASSWORD_MIN = 12;
 export const PASSWORD_HINT = `At least ${PASSWORD_MIN} characters. A few unrelated words work well.`;

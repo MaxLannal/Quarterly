@@ -32,14 +32,15 @@ export function usePlanner(): PlannerContextValue {
   return ctx;
 }
 
-/** Left-border stripe colors for requirement tags (≥ 3:1 against white for the stripe). */
+/** Left-border stripe colors for requirement tags: DESIGN.md data-1 … data-6, in order. The
+ *  stripe is never the only signal; the card also names the requirement in text. */
 export const REQUIREMENT_COLORS = [
-  "border-l-blue-700",
-  "border-l-emerald-700",
-  "border-l-purple-700",
-  "border-l-orange-700",
-  "border-l-pink-700",
-  "border-l-teal-700",
+  "border-l-data-1",
+  "border-l-data-2",
+  "border-l-data-3",
+  "border-l-data-4",
+  "border-l-data-5",
+  "border-l-data-6",
 ];
 
 /** Issues that point at an item: same course, and same term when the issue names terms. */

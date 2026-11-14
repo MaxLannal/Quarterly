@@ -2,6 +2,9 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+// Fonts are bundled from npm (no CDN): Inter for body/UI, Newsreader 300 for display.
+import "@fontsource-variable/inter";
+import "@fontsource/newsreader/300.css";
 import "./index.css";
 import { routes } from "./routes";
 

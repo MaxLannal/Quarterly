@@ -38,13 +38,13 @@ export function AddToPlanButton({ code, catalogYear }: { code: string; catalogYe
   }
 
   return (
-    <div className="space-y-2">
+    <div className="flex flex-col items-start gap-3">
       <Button onClick={start}>Add to plan</Button>
       {msg && (
-        <Notice tone={msg.ok ? "green" : "red"} role="status">
+        <Notice tone={msg.ok ? "success" : "error"} role="status">
           {msg.text}{" "}
           {msg.ok && (
-            <Link to="/plan" className="font-medium underline">
+            <Link to="/plan" className="font-medium">
               Open the planner
             </Link>
           )}

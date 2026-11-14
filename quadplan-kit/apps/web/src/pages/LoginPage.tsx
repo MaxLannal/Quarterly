@@ -118,7 +118,7 @@ export default function LoginPage() {
 
   return (
     <AuthPage title="Log in">
-      <form onSubmit={onSubmit} noValidate className="flex flex-col gap-4">
+      <form onSubmit={onSubmit} noValidate className="flex flex-col gap-5">
         {view.name === "login" ? (
           <>
             <Notice message={notice} />
@@ -179,7 +179,7 @@ export default function LoginPage() {
         {view.name === "reset-code" ? (
           <>
             <StepHeading>Choose a new password</StepHeading>
-            <p className="text-sm">
+            <p className="text-body-sm">
               If an account uses that address, we sent it a 6-digit code. It expires in 10 minutes.
             </p>
             <TextField
@@ -222,7 +222,7 @@ export default function LoginPage() {
           </>
         ) : null}
       </form>
-      <p className="text-sm">
+      <p className="border-t border-hairline pt-4 text-body-sm text-body">
         New here?{" "}
         <Link to="/signup" className={linkClass}>
           Create an account

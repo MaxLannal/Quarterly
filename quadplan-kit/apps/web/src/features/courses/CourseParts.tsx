@@ -1,17 +1,19 @@
 import { Link } from "react-router-dom";
 import type { AttributeValue, CourseDetail } from "@/api/types";
+import { Card } from "@/components/ui/card";
+import { ArrowIcon } from "@/components/ui/icons";
 import { Badge } from "@/components/ui/misc";
 import { isEstimate, round1 } from "@/features/planner/metrics";
 import { quarterName, termLabel } from "@/features/planner/terms";
 
 function CourseNode({ code, current = false }: { code: string; current?: boolean }) {
-  const cls = "flex min-h-11 items-center justify-center rounded-md border px-3 text-sm font-medium";
+  const cls = "flex min-h-11 items-center justify-center rounded-pill border px-4 text-caption font-medium tabular-nums";
   return current ? (
-    <span className={`${cls} border-primary bg-primary text-primary-foreground`} aria-current="page">
+    <span className={`${cls} border-primary bg-primary-wash text-ink`} aria-current="page">
       {code}
     </span>
   ) : (
-    <Link to={`/courses/${encodeURIComponent(code)}`} className={`${cls} border-border bg-background hover:bg-muted`}>
+    <Link to={`/courses/${encodeURIComponent(code)}`} className={`${cls} border-hairline-strong bg-surface-card text-ink transition-shadow hover:shadow-hover`}>
       {code}
     </Link>
   );
@@ -20,13 +22,13 @@ function CourseNode({ code, current = false }: { code: string; current?: boolean
 /** What the course needs → the course → what it unlocks. */
 export function PrereqGraph({ course }: { course: CourseDetail }) {
   return (
-    <figure className="rounded-lg border border-border p-3" aria-labelledby="prereq-graph-caption">
-      <figcaption id="prereq-graph-caption" className="mb-2 text-sm font-semibold">
+    <figure className="rounded-xl border border-hairline bg-surface-card p-6" aria-labelledby="prereq-graph-caption">
+      <figcaption id="prereq-graph-caption" className="mb-4 text-title-sm">
         Prerequisite graph
       </figcaption>
       <div className="flex flex-col items-stretch gap-2 sm:flex-row sm:items-center">
         <div className="flex-1">
-          <h3 className="mb-1 text-xs font-medium uppercase text-muted-foreground">Needs</h3>
+          <h3 className="mb-2 text-caption-uppercase uppercase text-muted">Needs</h3>
           {course.needs.length ? (
             <ul className="flex flex-col gap-1">
               {course.needs.map((c) => (
@@ -36,22 +38,20 @@ export function PrereqGraph({ course }: { course: CourseDetail }) {
               ))}
             </ul>
           ) : (
-            <p className="text-sm text-muted-foreground">Nothing</p>
+            <p className="text-body-sm text-muted">Nothing</p>
           )}
         </div>
-        <span aria-hidden="true" className="self-center text-xl text-muted-foreground">
-          <span className="hidden sm:inline">→</span>
-          <span className="sm:hidden">↓</span>
+        <span aria-hidden="true" className="self-center text-gray-dark">
+          <ArrowIcon size={20} className="rotate-90 sm:rotate-0" />
         </span>
         <div className="flex-1">
           <CourseNode code={course.code} current />
         </div>
-        <span aria-hidden="true" className="self-center text-xl text-muted-foreground">
-          <span className="hidden sm:inline">→</span>
-          <span className="sm:hidden">↓</span>
+        <span aria-hidden="true" className="self-center text-gray-dark">
+          <ArrowIcon size={20} className="rotate-90 sm:rotate-0" />
         </span>
         <div className="flex-1">
-          <h3 className="mb-1 text-xs font-medium uppercase text-muted-foreground">Unlocks</h3>
+          <h3 className="mb-2 text-caption-uppercase uppercase text-muted">Unlocks</h3>
           {course.unlocks.length ? (
             <ul className="flex flex-col gap-1">
               {course.unlocks.map((c) => (
@@ -61,7 +61,7 @@ export function PrereqGraph({ course }: { course: CourseDetail }) {
               ))}
             </ul>
           ) : (
-            <p className="text-sm text-muted-foreground">Nothing listed</p>
+            <p className="text-body-sm text-muted">Nothing listed</p>
           )}
         </div>
       </div>
@@ -78,30 +78,30 @@ function confidence(p: number): string {
 export function OfferingsTable({ course }: { course: CourseDetail }) {
   const offerings = [...course.offerings].sort((a, b) => "AU WI SP SU".indexOf(a.quarter) - "AU WI SP SU".indexOf(b.quarter));
   return (
-    <div className="space-y-4">
+    <div className="space-y-8">
       <div className="overflow-x-auto">
-        <table className="w-full text-left text-sm">
-          <caption className="mb-1 text-left font-semibold">Predicted quarters</caption>
+        <table className="w-full text-left text-body-sm text-body">
+          <caption className="mb-2 text-left text-title-sm text-ink">Predicted quarters</caption>
           <thead>
-            <tr className="border-b border-border">
-              <th scope="col" className="py-1 pr-2">Quarter</th>
-              <th scope="col" className="py-1 pr-2">Chance offered</th>
-              <th scope="col" className="py-1 pr-2">Basis</th>
+            <tr className="border-b border-hairline-strong">
+              <th scope="col" className="py-2 pr-3 text-caption-uppercase uppercase text-muted">Quarter</th>
+              <th scope="col" className="py-2 pr-3 text-caption-uppercase uppercase text-muted">Chance offered</th>
+              <th scope="col" className="py-2 pr-3 text-caption-uppercase uppercase text-muted">Basis</th>
             </tr>
           </thead>
           <tbody>
             {offerings.length === 0 ? (
               <tr>
-                <td colSpan={3} className="py-1 text-muted-foreground">No offering pattern recorded.</td>
+                <td colSpan={3} className="py-2 text-muted">No offering pattern recorded.</td>
               </tr>
             ) : (
               offerings.map((o) => (
-                <tr key={o.quarter} className="border-b border-border">
-                  <th scope="row" className="py-1 pr-2 font-normal">{quarterName(o.quarter)}</th>
-                  <td className="py-1 pr-2">
+                <tr key={o.quarter} className="border-b border-hairline">
+                  <th scope="row" className="py-2 pr-3 font-normal text-ink">{quarterName(o.quarter)}</th>
+                  <td className="py-2 pr-3">
                     {confidence(o.p_offered)} ({Math.round(o.p_offered * 100)}%)
                   </td>
-                  <td className="py-1 pr-2">
+                  <td className="py-2 pr-3">
                     {o.method === "catalog" ? "Catalog “Terms Offered”" : o.method}
                     {o.evidence_terms?.length ? ` (${o.evidence_terms.map(termLabel).join(", ")})` : ""}
                   </td>
@@ -112,29 +112,29 @@ export function OfferingsTable({ course }: { course: CourseDetail }) {
         </table>
       </div>
       <div className="overflow-x-auto">
-        <table className="w-full text-left text-sm">
-          <caption className="mb-1 text-left font-semibold">Offerings by term</caption>
+        <table className="w-full text-left text-body-sm text-body">
+          <caption className="mb-2 text-left text-title-sm text-ink">Offerings by term</caption>
           <thead>
-            <tr className="border-b border-border">
-              <th scope="col" className="py-1 pr-2">Term</th>
-              <th scope="col" className="py-1 pr-2">Section</th>
-              <th scope="col" className="py-1 pr-2">Instructor</th>
+            <tr className="border-b border-hairline-strong">
+              <th scope="col" className="py-2 pr-3 text-caption-uppercase uppercase text-muted">Term</th>
+              <th scope="col" className="py-2 pr-3 text-caption-uppercase uppercase text-muted">Section</th>
+              <th scope="col" className="py-2 pr-3 text-caption-uppercase uppercase text-muted">Instructor</th>
             </tr>
           </thead>
           <tbody>
             {course.sections.length === 0 ? (
               <tr>
-                <td colSpan={3} className="py-1 text-muted-foreground">No schedule data yet.</td>
+                <td colSpan={3} className="py-2 text-muted">No schedule data yet.</td>
               </tr>
             ) : (
               course.sections.map((s) => (
-                <tr key={`${s.term}-${s.section_no}`} className="border-b border-border">
-                  <th scope="row" className="py-1 pr-2 font-normal">{termLabel(s.term)}</th>
-                  <td className="py-1 pr-2">
+                <tr key={`${s.term}-${s.section_no}`} className="border-b border-hairline">
+                  <th scope="row" className="py-2 pr-3 font-normal text-ink">{termLabel(s.term)}</th>
+                  <td className="py-2 pr-3">
                     {s.section_no}
                     {s.component ? ` (${s.component})` : ""}
                   </td>
-                  <td className="py-1 pr-2">
+                  <td className="py-2 pr-3">
                     {(s.instructor_ids ?? [])
                       .map((id) => course.instructors.find((i) => i.instructor.slug === id)?.instructor.display_name ?? id)
                       .join(", ") || "TBA"}
@@ -168,23 +168,23 @@ function attrValue(a: AttributeValue): string {
 export function AttributeCard({ course }: { course: CourseDetail }) {
   const attrs = course.attributes.filter((a) => a.subject_type === "course");
   return (
-    <section aria-labelledby="attr-heading" className="rounded-lg border border-border p-3">
-      <h2 id="attr-heading" className="font-semibold">
+    <Card as="section" aria-labelledby="attr-heading" className="self-start">
+      <h2 id="attr-heading" className="font-display text-display-sm">
         Course attributes
       </h2>
       {attrs.length === 0 ? (
-        <p className="text-sm text-muted-foreground">No attributes yet.</p>
+        <p className="mt-4 text-body-sm text-muted">No attributes yet.</p>
       ) : (
-        <dl className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-2">
+        <dl className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
           {attrs.map((a) => (
-            <div key={a.key} className="rounded-md bg-muted/50 p-2">
-              <dt className="text-xs text-muted-foreground">{ATTR_LABELS[a.key]}</dt>
-              <dd className="font-semibold">{attrValue(a)}</dd>
-              <dd className="text-xs text-muted-foreground">
+            <div key={a.key} className="rounded-lg bg-canvas-soft p-4">
+              <dt className="text-caption text-muted">{ATTR_LABELS[a.key]}</dt>
+              <dd className="mt-0.5 text-title-sm tabular-nums">{attrValue(a)}</dd>
+              <dd className="mt-2 text-caption text-muted">
                 {isEstimate(a) ? (
-                  <Badge tone="amber">Estimate</Badge>
+                  <Badge tone="warning" casing="normal">Estimate</Badge>
                 ) : (
-                  <Badge tone="blue">From {a.n} forum ratings</Badge>
+                  <Badge tone="info" casing="normal">From {a.n} forum ratings</Badge>
                 )}
                 {a.ci_low != null && a.ci_high != null && ` · range ${round1(a.ci_low)}–${round1(a.ci_high)}`}
                 {!isEstimate(a) && a.method === "blend" && " · blended with estimate"}
@@ -193,6 +193,6 @@ export function AttributeCard({ course }: { course: CourseDetail }) {
           ))}
         </dl>
       )}
-    </section>
+    </Card>
   );
 }

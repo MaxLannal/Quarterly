@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { inlineLinkClass } from "@/components/layout/page";
 import { Button } from "@/components/ui/button";
 import { api, attempt } from "@/features/auth/api";
 import { signedIn } from "@/features/auth/session";
@@ -123,9 +124,8 @@ export default function SignupPage() {
   }
 
   return (
-    <AuthPage title="Create an account">
-      <p className="text-sm text-muted-foreground">Step {STEP_NUMBER[step.name]} of 3</p>
-      <form onSubmit={onSubmit} noValidate className="flex flex-col gap-4">
+    <AuthPage title="Create an account" eyebrow={`Step ${STEP_NUMBER[step.name]} of 3`}>
+      <form onSubmit={onSubmit} noValidate className="flex flex-col gap-5">
         {step.name === "email" ? (
           <>
             <StepHeading>Your UChicago email</StepHeading>
@@ -141,10 +141,10 @@ export default function SignupPage() {
               error={fieldError}
               hint="Only @uchicago.edu addresses. We email you a 6-digit code."
             />
-            <p className="text-sm text-muted-foreground">
+            <p className="text-body-sm text-muted">
               We store this address so you can reset your password. Other students never see it;
               forum posts use a separate pseudonym on each page.{" "}
-              <Link to="/privacy" className="text-primary underline">
+              <Link to="/privacy" className={inlineLinkClass}>
                 What we store
               </Link>
             </p>
@@ -158,8 +158,8 @@ export default function SignupPage() {
         {step.name === "code" ? (
           <>
             <StepHeading>Enter the code</StepHeading>
-            <p className="text-sm">
-              If <span className="font-medium">{email.trim()}</span> can be used for a new account,
+            <p className="text-body-sm">
+              If <span className="font-medium text-ink">{email.trim()}</span> can be used for a new account,
               a 6-digit code is on its way. It expires in 10 minutes.
             </p>
             <Notice message={notice} />
@@ -233,7 +233,7 @@ export default function SignupPage() {
           </>
         ) : null}
       </form>
-      <p className="text-sm">
+      <p className="border-t border-hairline pt-4 text-body-sm text-body">
         Already have an account?{" "}
         <Link to="/login" className={linkClass}>
           Log in

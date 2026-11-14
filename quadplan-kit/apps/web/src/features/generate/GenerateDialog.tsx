@@ -4,7 +4,10 @@ import { streamGenerate } from "@/api/sse";
 import type { ChangeOp, GenerateRequest, Goal, PlanState, StepEvent, VariantEvent } from "@/api/types";
 import { Button } from "@/components/ui/button";
 import { Dialog } from "@/components/ui/dialog";
+import { CheckIcon, CloseIcon, ErrorIcon } from "@/components/ui/icons";
+import { controlClass, controlCompactClass } from "@/components/ui/input";
 import { NotAvailable, Notice } from "@/components/ui/misc";
+import { cn } from "@/lib/utils";
 import { opsForTerms, termsTouched } from "@/features/planner/changes";
 import { opText } from "@/features/planner/context";
 import { goalLabel, round1 } from "@/features/planner/metrics";
@@ -82,12 +85,12 @@ function GenerateForm({ plan, years, onSubmit }: { plan: PlanState; years: numbe
     });
   }
 
-  const box = "min-h-11 rounded-md border border-border bg-background px-2 text-sm";
+  const box = cn(controlClass, controlCompactClass);
   return (
-    <form onSubmit={submit} className="space-y-4" aria-label="Generate plan options">
+    <form onSubmit={submit} className="space-y-6 [&>fieldset+fieldset]:border-t [&>fieldset+fieldset]:border-hairline [&>fieldset+fieldset]:pt-5" aria-label="Generate plan options">
       <fieldset>
-        <legend className="font-semibold">1. Scope</legend>
-        <p className="text-xs text-muted-foreground">Locked and completed courses are kept.</p>
+        <legend className="flex items-baseline gap-2 text-title-sm text-ink">1. Scope</legend>
+        <p className="text-caption text-muted">Locked and completed courses are kept.</p>
         {(
           [
             ["whole", "Whole plan"],
@@ -95,7 +98,7 @@ function GenerateForm({ plan, years, onSubmit }: { plan: PlanState; years: numbe
             ["selected", "Selected quarters"],
           ] as const
         ).map(([value, label]) => (
-          <label key={value} className="flex min-h-11 items-center gap-2 text-sm">
+          <label key={value} className="flex min-h-11 items-center gap-2 text-body-sm">
             <input type="radio" name="scope" value={value} checked={scope === value} onChange={() => setScope(value)} className="size-5" />
             {label}
           </label>
@@ -103,7 +106,7 @@ function GenerateForm({ plan, years, onSubmit }: { plan: PlanState; years: numbe
         {scope === "selected" && (
           <div className="mt-1 grid grid-cols-2 gap-x-2 sm:grid-cols-4">
             {terms.map((t) => (
-              <label key={t} className="flex min-h-11 items-center gap-2 text-xs">
+              <label key={t} className="flex min-h-11 items-center gap-2 text-caption">
                 <input
                   type="checkbox"
                   className="size-5"
@@ -118,12 +121,12 @@ function GenerateForm({ plan, years, onSubmit }: { plan: PlanState; years: numbe
       </fieldset>
 
       <fieldset className="space-y-2">
-        <legend className="font-semibold">2. Load and difficulty</legend>
+        <legend className="flex items-baseline gap-2 text-title-sm text-ink">2. Load and difficulty</legend>
         <div>
-          <label htmlFor={ids.load} className="block text-sm">
+          <label htmlFor={ids.load} className="block text-body-sm text-ink">
             Career-wide load: <strong>{LOAD_LABELS[String(load)]}</strong>
           </label>
-          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+          <div className="flex items-center gap-2 text-caption text-muted">
             <span aria-hidden="true">Lighter</span>
             <input
               id={ids.load}
@@ -140,13 +143,13 @@ function GenerateForm({ plan, years, onSubmit }: { plan: PlanState; years: numbe
           </div>
         </div>
         <details>
-          <summary className="min-h-11 cursor-pointer py-2 text-sm">Per-quarter overrides</summary>
+          <summary className="flex min-h-11 cursor-pointer items-center rounded-md text-body-sm font-medium text-ink">Per-quarter overrides</summary>
           <div className="grid gap-1 sm:grid-cols-2">
             {terms.map((t) => (
-              <label key={t} className="flex items-center justify-between gap-2 text-xs">
+              <label key={t} className="flex items-center justify-between gap-2 text-caption">
                 {termLabel(t)}
                 <select
-                  className={box}
+                  className={cn(box, "w-44")}
                   value={perTermLoad[t] ?? ""}
                   onChange={(e) => {
                     const next = { ...perTermLoad };
@@ -164,10 +167,10 @@ function GenerateForm({ plan, years, onSubmit }: { plan: PlanState; years: numbe
           </div>
         </details>
         <div>
-          <label htmlFor={ids.max} className="block text-sm">
+          <label htmlFor={ids.max} className="mb-1.5 block text-body-sm text-ink">
             Maximum courses per quarter
           </label>
-          <select id={ids.max} className={box} value={maxCourses ?? ""} onChange={(e) => setMaxCourses(e.target.value ? Number(e.target.value) : null)}>
+          <select id={ids.max} className={cn(box, "w-40")} value={maxCourses ?? ""} onChange={(e) => setMaxCourses(e.target.value ? Number(e.target.value) : null)}>
             <option value="">No limit</option>
             {[1, 2, 3, 4, 5, 6].map((n) => (
               <option key={n} value={n}>
@@ -176,19 +179,19 @@ function GenerateForm({ plan, years, onSubmit }: { plan: PlanState; years: numbe
             ))}
           </select>
         </div>
-        <label className="flex min-h-11 items-center gap-2 text-sm">
+        <label className="flex min-h-11 items-center gap-2 text-body-sm">
           <input type="checkbox" className="size-5" checked={allowOverload} onChange={(e) => setAllowOverload(e.target.checked)} />
           Allow a 500-unit quarter where the rules permit it
         </label>
       </fieldset>
 
       <fieldset>
-        <legend className="font-semibold">3. Goals</legend>
+        <legend className="flex items-baseline gap-2 text-title-sm text-ink">3. Goals</legend>
         {(plan.goals ?? []).length === 0 ? (
-          <p className="text-sm text-muted-foreground">No goals yet. Add them in the Goals tab.</p>
+          <p className="text-body-sm text-muted">No goals yet. Add them in the Goals tab.</p>
         ) : (
           (plan.goals ?? []).map((g) => (
-            <label key={g.id} className="flex min-h-11 items-center gap-2 text-sm">
+            <label key={g.id} className="flex min-h-11 items-center gap-2 text-body-sm">
               <input
                 type="checkbox"
                 className="size-5"
@@ -208,8 +211,8 @@ function GenerateForm({ plan, years, onSubmit }: { plan: PlanState; years: numbe
       </fieldset>
 
       <fieldset>
-        <legend className="font-semibold">4. Interests</legend>
-        <div className="flex gap-2">
+        <legend className="flex items-baseline gap-2 text-title-sm text-ink">4. Interests</legend>
+        <div className="mt-2 flex gap-2">
           <label htmlFor={ids.tag} className="sr-only">
             Interest tag
           </label>
@@ -224,28 +227,28 @@ function GenerateForm({ plan, years, onSubmit }: { plan: PlanState; years: numbe
                 addTag();
               }
             }}
-            className={`${box} flex-1`}
+            className={cn(box, "flex-1")}
           />
           <Button type="button" variant="outline" onClick={addTag}>
             Add
           </Button>
         </div>
-        <ul className="mt-1 flex flex-wrap gap-1">
+        <ul className="mt-1 flex flex-wrap gap-x-1">
           {interests.map((t) => (
             <li key={t}>
-              <Button type="button" variant="outline" className="px-2 text-xs" onClick={() => setInterests(interests.filter((x) => x !== t))} aria-label={`Remove interest ${t}`}>
-                {t} <span aria-hidden="true">✕</span>
+              <Button type="button" variant="outline" size="sm" onClick={() => setInterests(interests.filter((x) => x !== t))} aria-label={`Remove interest ${t}`}>
+                {t} <CloseIcon size={12} />
               </Button>
             </li>
           ))}
         </ul>
       </fieldset>
 
-      <div>
-        <label htmlFor={ids.variants} className="block font-semibold">
+      <div className="border-t border-hairline pt-5">
+        <label htmlFor={ids.variants} className="mb-2 block text-title-sm text-ink">
           5. Variants
         </label>
-        <select id={ids.variants} className={box} value={variants} onChange={(e) => setVariants(Number(e.target.value))}>
+        <select id={ids.variants} className={cn(box, "w-28")} value={variants} onChange={(e) => setVariants(Number(e.target.value))}>
           {[1, 2, 3].map((n) => (
             <option key={n} value={n}>
               {n}
@@ -270,18 +273,18 @@ function VariantCard({ v, onApply, onDiscard }: { v: VariantEvent; onApply: (ops
   const hardest = v.metrics.hardest_quarter_hours;
   const rationale = Object.entries(v.rationale).sort(([a], [b]) => compareTerms(a, b));
   return (
-    <article className="space-y-2 rounded-lg border border-border p-3" aria-label={`Variant ${v.label}`}>
+    <article className="space-y-3 rounded-xl border border-hairline bg-surface-card p-5" aria-label={`Variant ${v.label}`}>
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <h3 className="font-semibold">{v.label}</h3>
+        <h3 className="text-title-sm">{v.label}</h3>
         <ReportBadge report={v.report} />
       </div>
-      <p className="text-xs text-muted-foreground">
+      <p className="text-caption tabular-nums text-muted">
         {avg != null && `Average ${round1(avg)} h/wk`}
         {avg != null && hardest != null && " · "}
         {hardest != null && `Hardest quarter ${round1(hardest)} h/wk`}
       </p>
       {rationale.length > 0 && (
-        <ul className="space-y-0.5 text-sm">
+        <ul className="space-y-1 text-body-sm text-body [&_strong]:font-medium [&_strong]:text-ink">
           {rationale.map(([term, why]) => (
             <li key={term}>
               <strong>{termLabel(term)}:</strong> {why}
@@ -291,8 +294,8 @@ function VariantCard({ v, onApply, onDiscard }: { v: VariantEvent; onApply: (ops
       )}
       {showDiff && (
         <div>
-          <h4 className="text-sm font-semibold">Changes to your plan</h4>
-          <ul className="list-disc pl-5 text-sm">
+          <h4 className="text-caption-uppercase uppercase text-muted">Changes to your plan</h4>
+          <ul className="mt-1 list-disc pl-5 text-body-sm marker:text-gray-dark">
             {v.change_set.ops.map((op, i) => (
               <li key={i}>{opText(op)}</li>
             ))}
@@ -301,10 +304,10 @@ function VariantCard({ v, onApply, onDiscard }: { v: VariantEvent; onApply: (ops
       )}
       {picking && (
         <fieldset>
-          <legend className="text-sm font-semibold">Quarters to apply</legend>
+          <legend className="text-caption-uppercase uppercase text-muted">Quarters to apply</legend>
           <div className="grid grid-cols-2 gap-x-2">
             {touched.map((t) => (
-              <label key={t} className="flex min-h-11 items-center gap-2 text-sm">
+              <label key={t} className="flex min-h-11 items-center gap-2 text-body-sm">
                 <input type="checkbox" className="size-5" checked={picked.includes(t)} onChange={(e) => setPicked(e.target.checked ? [...picked, t] : picked.filter((x) => x !== t))} />
                 {termLabel(t)}
               </label>
@@ -315,7 +318,7 @@ function VariantCard({ v, onApply, onDiscard }: { v: VariantEvent; onApply: (ops
           </Button>
         </fieldset>
       )}
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-2 border-t border-hairline pt-3">
         <Button onClick={() => onApply(v.change_set.ops, null)}>Apply</Button>
         <Button variant="outline" aria-expanded={showDiff} onClick={() => setShowDiff(!showDiff)}>
           {showDiff ? "Hide diff" : "View diff"}
@@ -407,18 +410,24 @@ export function GenerateDialog({ open, onClose, plan, years, onApply, planId = n
         </div>
       )}
       {error && (
-        <Notice tone="red" role="alert" className="mb-3">
+        <Notice tone="error" role="alert" className="mb-3">
           {error}
         </Notice>
       )}
       {phase === "form" && <GenerateForm plan={plan} years={years} onSubmit={run} />}
       {phase === "running" && (
         <div role="status" aria-live="polite">
-          <p className="mb-2 font-medium">Generating…</p>
-          <ol className="space-y-1 text-sm">
+          <p className="mb-3 text-title-sm">Generating…</p>
+          <ol className="space-y-2 text-body-sm text-body">
             {steps.map((s) => (
-              <li key={s.name}>
-                <span aria-hidden="true">{s.status === "done" ? "✓ " : s.status === "failed" ? "✕ " : "… "}</span>
+              <li key={s.name} className="flex items-center gap-2">
+                {s.status === "done" ? (
+                  <CheckIcon className="text-success" />
+                ) : s.status === "failed" ? (
+                  <ErrorIcon className="text-error" />
+                ) : (
+                  <span aria-hidden="true" className="inline-block size-2 animate-pulse rounded-pill bg-primary" />
+                )}
                 {s.name}
                 <span className="sr-only"> ({s.status})</span>
               </li>
@@ -427,15 +436,15 @@ export function GenerateDialog({ open, onClose, plan, years, onApply, planId = n
         </div>
       )}
       {phase === "results" && (
-        <section aria-label="Generated variants" className="space-y-3">
+        <section aria-label="Generated variants" className="space-y-4">
           {infeasible && (
-            <Notice tone="amber" role="status">
+            <Notice tone="warning" role="status">
               <p className="font-medium">No plan fits all of these settings.</p>
               <p>{infeasible.message}</p>
             </Notice>
           )}
           {variants.length === 0 ? (
-            !infeasible && <p className="text-sm">No variants were returned.</p>
+            !infeasible && <p className="text-body-sm">No variants were returned.</p>
           ) : (
             variants.map((v, i) => (
               <VariantCard

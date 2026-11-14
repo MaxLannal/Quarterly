@@ -3,7 +3,7 @@ import { usePrograms } from "@/api/hooks";
 import { isNotAvailable } from "@/api/client";
 import type { ProgramSummary } from "@/api/types";
 import { Button } from "@/components/ui/button";
-import { Badge, NotAvailable, Spinner } from "@/components/ui/misc";
+import { Badge, ErrorText, NotAvailable, Spinner } from "@/components/ui/misc";
 
 export const TYPE_LABELS: Record<ProgramSummary["type"], string> = {
   core: "Core curriculum",
@@ -25,7 +25,7 @@ export function groupPrograms(programs: ProgramSummary[]): [ProgramSummary["type
 }
 
 export function StatusBadge({ status }: { status: string }) {
-  return status === "published" ? null : <Badge tone="amber">{status === "review" ? "In review" : status}</Badge>;
+  return status === "published" ? null : <Badge tone="warning">{status === "review" ? "In review" : status}</Badge>;
 }
 
 /** Checkbox list of programs grouped by type; "in review" ones are labelled. */
@@ -40,19 +40,19 @@ export function ProgramChecklist({
 }) {
   const q = usePrograms(catalogYear);
   if (q.isLoading) return <Spinner label="Loading programs" />;
-  if (q.error) return isNotAvailable(q.error) ? <NotAvailable feature="The program list" /> : <p className="text-sm text-red-800">Could not load programs.</p>;
+  if (q.error) return isNotAvailable(q.error) ? <NotAvailable feature="The program list" /> : <ErrorText>Could not load programs.</ErrorText>;
   const groups = groupPrograms(q.data ?? []);
-  if (groups.length === 0) return <p className="text-sm text-muted-foreground">No programs are loaded yet.</p>;
+  if (groups.length === 0) return <p className="text-body-sm text-muted">No programs are loaded yet.</p>;
   return (
-    <div className="space-y-3">
+    <div className="space-y-5">
       {groups.map(([type, ps]) => (
         <fieldset key={type}>
-          <legend className="text-sm font-semibold">{TYPE_LABELS[type]}</legend>
+          <legend className="mb-1 text-caption-uppercase uppercase text-muted">{TYPE_LABELS[type]}</legend>
           {ps.map((p) => (
-            <label key={p.id} className="flex min-h-11 items-center gap-2 text-sm">
+            <label key={p.id} className="flex min-h-11 cursor-pointer items-center gap-3 rounded-md text-body-sm text-ink">
               <input
                 type="checkbox"
-                className="size-5"
+                className="size-5 shrink-0 cursor-pointer"
                 checked={selected.includes(p.id)}
                 onChange={(e) => onChange(e.target.checked ? [...selected, p.id] : selected.filter((x) => x !== p.id))}
               />
@@ -77,7 +77,7 @@ export function ProgramPickerBody({
 }) {
   const [selected, setSelected] = useState(initial);
   return (
-    <div className="space-y-3">
+    <div className="space-y-5">
       <ProgramChecklist catalogYear={catalogYear} selected={selected} onChange={setSelected} />
       <Button className="w-full" onClick={() => onDone(selected)}>
         Save programs

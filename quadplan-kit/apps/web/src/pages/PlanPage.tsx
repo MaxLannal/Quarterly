@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useCatalogYears } from "@/api/hooks";
-import { Spinner } from "@/components/ui/misc";
+import { LoadingState, PageContainer, PageHeader } from "@/components/layout/page";
 import { activePlan, newLocalId, today, upsertPlan, type LocalPlan } from "@/features/planner/localPlans";
 import { emptyPlan } from "@/features/planner/planModel";
 import { Planner } from "@/features/planner/Planner";
@@ -33,10 +33,10 @@ export default function PlanPage() {
 
   if (!local) {
     return (
-      <section className="p-6">
-        <h1 className="text-2xl font-semibold">Planner</h1>
-        <Spinner label="Preparing your plan" />
-      </section>
+      <PageContainer width="tool" as="section">
+        <PageHeader title="Planner" size="md" />
+        <LoadingState label="Preparing your plan" />
+      </PageContainer>
     );
   }
   return <Planner key={local.localId} initial={local} autoGenerate={params.get("generate") === "1"} />;

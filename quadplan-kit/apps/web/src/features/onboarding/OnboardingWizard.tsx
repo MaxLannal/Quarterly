@@ -3,7 +3,10 @@ import { useEffect, useId, useRef, useState, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCatalogYears, usePrograms } from "@/api/hooks";
 import type { Credit, Goal, PlanState } from "@/api/types";
+import { PageContainer, PageHeader } from "@/components/layout/page";
 import { Button } from "@/components/ui/button";
+import { CloseIcon } from "@/components/ui/icons";
+import { controlClass, controlCompactClass } from "@/components/ui/input";
 import { Notice } from "@/components/ui/misc";
 import { CAREER_PRESETS, interestGoal, TERM_PRESETS } from "@/features/planner/goals";
 import { newLocalId, today, upsertPlan } from "@/features/planner/localPlans";
@@ -14,7 +17,9 @@ import { ProgramChecklist } from "@/features/programs/ProgramPicker";
 import { cn } from "@/lib/utils";
 
 const STEPS = ["Entry term", "Credits", "Programs", "Goals", "Review"];
-const box = "min-h-11 w-full rounded-md border border-border bg-background px-2 text-sm";
+const box = controlClass;
+const labelClass = "mb-1.5 block text-caption font-medium text-ink";
+const radioRow = "flex min-h-11 cursor-pointer items-center gap-3 text-body-sm text-ink";
 
 interface Draft {
   catalogYear: string;
@@ -38,7 +43,7 @@ function StepEntry({ d, set, years }: { d: Draft; set: (p: Partial<Draft>) => vo
   return (
     <div className="space-y-3">
       <div>
-        <label htmlFor={`${id}-cy`} className="text-sm font-medium">
+        <label htmlFor={`${id}-cy`} className={labelClass}>
           Catalog year
         </label>
         <select id={`${id}-cy`} className={box} value={d.catalogYear} onChange={(e) => set({ catalogYear: e.target.value, entryTerm: `${catalogStartYear(e.target.value)}-AU` })}>
@@ -50,7 +55,7 @@ function StepEntry({ d, set, years }: { d: Draft; set: (p: Partial<Draft>) => vo
         </select>
       </div>
       <div>
-        <label htmlFor={`${id}-entry`} className="text-sm font-medium">
+        <label htmlFor={`${id}-entry`} className={labelClass}>
           First quarter at UChicago
         </label>
         <select id={`${id}-entry`} className={box} value={d.entryTerm} onChange={(e) => set({ entryTerm: e.target.value })}>
@@ -62,18 +67,18 @@ function StepEntry({ d, set, years }: { d: Draft; set: (p: Partial<Draft>) => vo
         </select>
       </div>
       <fieldset>
-        <legend className="text-sm font-medium">Status</legend>
-        <label className="flex min-h-11 items-center gap-2 text-sm">
-          <input type="radio" name="status" className="size-5" checked={d.yearLevel === 1} onChange={() => set({ yearLevel: 1 })} />
+        <legend className={labelClass}>Status</legend>
+        <label className={radioRow}>
+          <input type="radio" name="status" className="size-5 shrink-0 cursor-pointer" checked={d.yearLevel === 1} onChange={() => set({ yearLevel: 1 })} />
           First-year
         </label>
-        <label className="flex min-h-11 items-center gap-2 text-sm">
-          <input type="radio" name="status" className="size-5" checked={d.yearLevel > 1} onChange={() => set({ yearLevel: 2 })} />
+        <label className={radioRow}>
+          <input type="radio" name="status" className="size-5 shrink-0 cursor-pointer" checked={d.yearLevel > 1} onChange={() => set({ yearLevel: 2 })} />
           Transfer student
         </label>
         {d.yearLevel > 1 && (
           <div>
-            <label htmlFor={`${id}-level`} className="text-sm">
+            <label htmlFor={`${id}-level`} className={labelClass}>
               Class standing at entry
             </label>
             <select id={`${id}-level`} className={box} value={d.yearLevel} onChange={(e) => set({ yearLevel: Number(e.target.value) })}>
@@ -108,11 +113,11 @@ function StepCredits({ d, set }: { d: Draft; set: (p: Partial<Draft>) => void })
 
   return (
     <div className="space-y-3">
-      <p className="text-sm text-muted-foreground">Optional. Credits with no known equivalent are flagged for manual mapping.</p>
+      <p className="text-body-sm text-body">Optional. Credits with no known equivalent are flagged for manual mapping.</p>
       {d.credits.length > 0 && (
-        <ul className="space-y-1">
+        <ul className="space-y-2">
           {d.credits.map((c, i) => (
-            <li key={i} className="flex items-center justify-between gap-2 rounded-md border border-border p-2 text-sm">
+            <li key={i} className="flex items-center justify-between gap-2 rounded-lg border border-hairline bg-canvas-soft py-1 pl-4 pr-1 text-body-sm text-ink">
               <span>
                 {c.kind}: {c.label}
                 {c.maps_to ? ` → ${c.maps_to}` : " (needs mapping)"} · {c.units} units
@@ -124,9 +129,9 @@ function StepCredits({ d, set }: { d: Draft; set: (p: Partial<Draft>) => void })
           ))}
         </ul>
       )}
-      <form onSubmit={add} className="grid gap-2 sm:grid-cols-2" aria-label="Add a credit">
+      <form onSubmit={add} className="grid gap-4 rounded-xl border border-hairline bg-canvas-soft p-5 sm:grid-cols-2" aria-label="Add a credit">
         <div>
-          <label htmlFor={`${id}-kind`} className="text-sm font-medium">
+          <label htmlFor={`${id}-kind`} className={labelClass}>
             Kind
           </label>
           <select id={`${id}-kind`} className={box} value={kind} onChange={(e) => setKind(e.target.value as Credit["kind"])}>
@@ -136,25 +141,25 @@ function StepCredits({ d, set }: { d: Draft; set: (p: Partial<Draft>) => void })
           </select>
         </div>
         <div>
-          <label htmlFor={`${id}-label`} className="text-sm font-medium">
+          <label htmlFor={`${id}-label`} className={labelClass}>
             Description
           </label>
           <input id={`${id}-label`} className={box} value={label} onChange={(e) => setLabel(e.target.value)} />
         </div>
         <div>
-          <label htmlFor={`${id}-maps`} className="text-sm font-medium">
+          <label htmlFor={`${id}-maps`} className={labelClass}>
             Counts as course (if known)
           </label>
           <input id={`${id}-maps`} className={box} placeholder="ABCD 12345" value={mapsTo} onChange={(e) => setMapsTo(e.target.value)} />
         </div>
         <div>
-          <label htmlFor={`${id}-units`} className="text-sm font-medium">
+          <label htmlFor={`${id}-units`} className={labelClass}>
             Units
           </label>
           <input id={`${id}-units`} type="number" min={0} className={box} value={units} onChange={(e) => setUnits(e.target.value)} />
         </div>
         {err && (
-          <p role="alert" className="text-sm text-red-800 sm:col-span-2">
+          <p role="alert" className="text-caption font-medium text-error sm:col-span-2">
             {err}
           </p>
         )}
@@ -176,13 +181,13 @@ function StepPrograms({ d, set }: { d: Draft; set: (p: Partial<Draft>) => void }
   }
   return (
     <div className="space-y-3">
-      <label className="flex min-h-11 items-center gap-2 text-sm font-medium">
-        <input type="checkbox" className="size-5" checked={d.undecided} onChange={(e) => set({ undecided: e.target.checked })} />
+      <label className={cn(radioRow, "font-medium")}>
+        <input type="checkbox" className="size-5 shrink-0 cursor-pointer" checked={d.undecided} onChange={(e) => set({ undecided: e.target.checked })} />
         I&apos;m undecided
       </label>
       {!d.undecided && <ProgramChecklist catalogYear={d.catalogYear} selected={d.programs} onChange={(programs) => set({ programs })} />}
       <div>
-        <label htmlFor={`${id}-tag`} className="text-sm font-medium">
+        <label htmlFor={`${id}-tag`} className={labelClass}>
           Interests {d.undecided ? "" : "(optional)"}
         </label>
         <div className="flex gap-2">
@@ -203,11 +208,11 @@ function StepPrograms({ d, set }: { d: Draft; set: (p: Partial<Draft>) => void }
             Add
           </Button>
         </div>
-        <ul className="mt-1 flex flex-wrap gap-1">
+        <ul className="mt-1 flex flex-wrap gap-x-1">
           {d.interests.map((t) => (
             <li key={t}>
-              <Button variant="outline" className="px-2 text-xs" onClick={() => set({ interests: d.interests.filter((x) => x !== t) })} aria-label={`Remove interest ${t}`}>
-                {t} <span aria-hidden="true">✕</span>
+              <Button variant="outline" size="sm" onClick={() => set({ interests: d.interests.filter((x) => x !== t) })} aria-label={`Remove interest ${t}`}>
+                {t} <CloseIcon size={12} />
               </Button>
             </li>
           ))}
@@ -225,12 +230,12 @@ function ChipSource({ k, label, onPlace, terms, disabled }: { k: string; label: 
     <li
       ref={setNodeRef}
       style={transform ? { transform: `translate3d(${transform.x}px, ${transform.y}px, 0)` } : undefined}
-      className="flex flex-wrap items-center gap-2 rounded-md border border-border bg-background p-1 text-sm"
+      className="flex flex-wrap items-center gap-2 rounded-lg border border-hairline bg-surface-card p-1.5 text-body-sm"
     >
       <button
         type="button"
         aria-label={`Drag “${label}” onto a quarter`}
-        className="flex min-h-11 min-w-11 cursor-grab touch-none items-center justify-center rounded-full border border-blue-700 px-3 text-blue-900"
+        className="flex min-h-11 min-w-11 cursor-grab touch-none items-center justify-center gap-2 rounded-pill border border-hairline-strong bg-surface-card px-4 text-body-sm text-ink hover:shadow-hover disabled:cursor-not-allowed disabled:text-muted-soft"
         disabled={disabled}
         {...attributes}
         {...listeners}
@@ -240,7 +245,7 @@ function ChipSource({ k, label, onPlace, terms, disabled }: { k: string; label: 
       <label htmlFor={id} className="sr-only">
         Quarter for {label}
       </label>
-      <select id={id} className="min-h-11 rounded-md border border-border bg-background px-2 text-sm" value={term} onChange={(e) => setTerm(e.target.value)} disabled={disabled}>
+      <select id={id} className={cn(controlClass, controlCompactClass, "w-auto flex-1")} value={term} onChange={(e) => setTerm(e.target.value)} disabled={disabled}>
         {terms.map((t) => (
           <option key={t} value={t}>
             {termLabel(t)}
@@ -257,8 +262,12 @@ function ChipSource({ k, label, onPlace, terms, disabled }: { k: string; label: 
 function TimelineCell({ term, chips, onRemove }: { term: string; chips: { key: string; i: number }[]; onRemove: (i: number) => void }) {
   const { setNodeRef, isOver } = useDroppable({ id: term });
   return (
-    <div ref={setNodeRef} className={cn("min-h-16 rounded-md border border-border p-1 text-xs", isOver && "border-blue-700 bg-blue-50")} data-testid={`timeline-${term}`}>
-      <div className="font-medium">{termLabel(term)}</div>
+    <div
+      ref={setNodeRef}
+      className={cn("min-h-20 rounded-lg border border-hairline bg-canvas-soft p-2 text-caption transition-colors", isOver && "border-primary bg-primary-wash")}
+      data-testid={`timeline-${term}`}
+    >
+      <div className="text-caption-uppercase uppercase text-muted">{termLabel(term)}</div>
       <ul className="mt-1 flex flex-col gap-1">
         {chips.map((c) => (
           <li key={c.i}>
@@ -266,9 +275,9 @@ function TimelineCell({ term, chips, onRemove }: { term: string; chips: { key: s
               type="button"
               onClick={() => onRemove(c.i)}
               aria-label={`Remove ${TERM_PRESETS.find((p) => p.key === c.key)?.label} from ${termLabel(term)}`}
-              className="min-h-11 w-full rounded-full border border-blue-700 px-2 text-left text-blue-900 hover:bg-blue-50"
+              className="flex min-h-11 w-full cursor-pointer items-center justify-between gap-1 rounded-pill border-[6px] border-transparent bg-surface-strong bg-clip-padding px-3 text-left text-caption text-ink hover:bg-hairline focus-visible:outline-offset-[-4px]"
             >
-              {TERM_PRESETS.find((p) => p.key === c.key)?.label} <span aria-hidden="true">✕</span>
+              <span>{TERM_PRESETS.find((p) => p.key === c.key)?.label}</span> <CloseIcon size={12} />
             </button>
           </li>
         ))}
@@ -287,10 +296,10 @@ function StepGoals({ d, set, hasAbroad }: { d: Draft; set: (p: Partial<Draft>) =
     if (key && e.over) place(key, String(e.over.id));
   }
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       <fieldset>
-        <legend className="text-sm font-medium">Career-wide goals</legend>
-        <div className="mt-1 flex flex-wrap gap-2">
+        <legend className={labelClass}>Career-wide goals</legend>
+        <div className="flex flex-wrap gap-2">
           {CAREER_PRESETS.map((p) => {
             const on = d.careerKeys.includes(p.key);
             return (
@@ -299,7 +308,10 @@ function StepGoals({ d, set, hasAbroad }: { d: Draft; set: (p: Partial<Draft>) =
                 type="button"
                 aria-pressed={on}
                 onClick={() => set({ careerKeys: on ? d.careerKeys.filter((k) => k !== p.key) : [...d.careerKeys, p.key] })}
-                className={cn("min-h-11 rounded-full border px-3 text-sm", on ? "border-primary bg-primary text-primary-foreground" : "border-border hover:bg-muted")}
+                className={cn(
+                  "min-h-11 cursor-pointer rounded-pill border px-4 text-body-sm transition-colors",
+                  on ? "border-primary bg-primary-wash text-ink" : "border-hairline-strong bg-surface-card text-ink hover:bg-surface-strong",
+                )}
               >
                 {p.label}
               </button>
@@ -309,14 +321,14 @@ function StepGoals({ d, set, hasAbroad }: { d: Draft; set: (p: Partial<Draft>) =
       </fieldset>
       <DndContext sensors={sensors} onDragEnd={onDragEnd}>
         <fieldset>
-          <legend className="text-sm font-medium">Quarter goals: drag a chip onto a quarter, or pick one and press Place</legend>
-          <ul className="mt-1 flex flex-col gap-1">
+          <legend className={labelClass}>Quarter goals: drag a chip onto a quarter, or pick one and press Place</legend>
+          <ul className="flex flex-col gap-2">
             {TERM_PRESETS.map((p) => (
               <ChipSource key={p.key} k={p.key} label={p.label} terms={terms} onPlace={(t) => place(p.key, t)} disabled={p.key === "study_abroad" && !hasAbroad} />
             ))}
           </ul>
         </fieldset>
-        <div className="grid grid-cols-3 gap-1" aria-label="Timeline">
+        <div className="grid grid-cols-3 gap-2" aria-label="Timeline">
           {terms.map((t) => (
             <TimelineCell
               key={t}
@@ -409,17 +421,17 @@ export function OnboardingWizard() {
   const goals = buildGoals(d, abroad);
 
   return (
-    <div className="mx-auto max-w-2xl p-4">
-      <h1 className="text-2xl font-semibold">Planner setup</h1>
-      <ol className="mt-3 flex flex-wrap gap-1 text-xs" aria-label="Steps">
+    <PageContainer width="reading">
+      <PageHeader title="Planner setup" eyebrow="Start planning" size="md" className="mb-6" />
+      <ol className="flex flex-wrap gap-2 text-caption" aria-label="Steps">
         {STEPS.map((s, i) => (
-          <li key={s} aria-current={i === step ? "step" : undefined} className={cn("rounded-full border px-2 py-1", i === step ? "border-primary font-semibold text-primary" : "border-border text-muted-foreground")}>
+          <li key={s} aria-current={i === step ? "step" : undefined} className={cn("rounded-pill border px-3 py-1.5", i === step ? "border-primary bg-primary-wash font-medium text-ink" : i < step ? "border-hairline-strong text-ink" : "border-hairline text-muted")}>
             {i + 1}. {s}
           </li>
         ))}
       </ol>
-      <section aria-labelledby="step-heading" className="mt-4 space-y-4 rounded-lg border border-border p-4">
-        <h2 id="step-heading" ref={headingRef} tabIndex={-1} className="text-lg font-semibold">
+      <section aria-labelledby="step-heading" className="mt-6 space-y-6 rounded-xl border border-hairline bg-surface-card p-6 sm:p-8">
+        <h2 id="step-heading" ref={headingRef} tabIndex={-1} className="font-display text-display-sm">
           Step {step + 1} of 5: {STEPS[step]}
         </h2>
         {step === 0 && <StepEntry d={d} set={set} years={yearChoices} />}
@@ -427,8 +439,8 @@ export function OnboardingWizard() {
         {step === 2 && <StepPrograms d={d} set={set} />}
         {step === 3 && <StepGoals d={d} set={set} hasAbroad={!!abroad} />}
         {step === 4 && (
-          <div className="space-y-3 text-sm">
-            <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1">
+          <div className="space-y-4 text-body-sm">
+            <dl className="grid grid-cols-[auto_1fr] gap-x-6 gap-y-3 text-body [&_dt]:text-caption-uppercase [&_dt]:uppercase [&_dt]:text-muted">
               <dt className="font-medium">Entry</dt>
               <dd>
                 {termLabel(d.entryTerm)} ({d.yearLevel === 1 ? "first-year" : `transfer, year ${d.yearLevel}`}), catalog {d.catalogYear}
@@ -443,18 +455,18 @@ export function OnboardingWizard() {
               <dt className="font-medium">Goals</dt>
               <dd>{goals.length ? goals.map((g) => `${goalLabel(g)}${g.term ? ` (${termLabel(g.term)})` : ""}`).join("; ") : "None"}</dd>
             </dl>
-            <label className="flex min-h-11 items-center gap-2 font-medium">
-              <input type="checkbox" className="size-5" checked={d.generate} onChange={(e) => set({ generate: e.target.checked })} />
+            <label className={cn(radioRow, "font-medium")}>
+              <input type="checkbox" className="size-5 shrink-0 cursor-pointer" checked={d.generate} onChange={(e) => set({ generate: e.target.checked })} />
               Generate a starting plan
             </label>
             {!stored && (
-              <Notice tone="red" role="alert">
+              <Notice tone="error" role="alert">
                 This browser is blocking storage, so the plan cannot be kept. Allow site data or log in to save plans.
               </Notice>
             )}
           </div>
         )}
-        <div className="flex flex-wrap justify-between gap-2 border-t border-border pt-3">
+        <div className="flex flex-wrap justify-between gap-2 border-t border-hairline pt-5">
           <Button variant="outline" onClick={() => setStep(step - 1)} disabled={step === 0}>
             Back
           </Button>
@@ -468,7 +480,7 @@ export function OnboardingWizard() {
           </div>
         </div>
       </section>
-    </div>
+    </PageContainer>
   );
 }
 

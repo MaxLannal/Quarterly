@@ -1,6 +1,9 @@
-import { useId, useState } from "react";
+import { useId, useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import type { PlanState } from "@/api/types";
+import { EmptyState, PageContainer, PageHeader } from "@/components/layout/page";
+import { Card } from "@/components/ui/card";
+import { Field, Select } from "@/components/ui/input";
 import { loadPlans } from "@/features/planner/localPlans";
 import { compareTerms, termLabel } from "@/features/planner/terms";
 
@@ -46,78 +49,86 @@ export default function ComparePlansPage() {
   const pa = plans.find((p) => p.localId === a);
   const pb = plans.find((p) => p.localId === b);
   const d = pa && pb ? diffPlans(pa.state, pb.state) : null;
-  const box = "min-h-11 w-full rounded-md border border-border bg-background px-2";
+  const column = (headingId: string, title: string, rows: ReactNode[]) => (
+    <Card as="section" aria-labelledby={headingId} variant="compact" className="p-5">
+      <h2 id={headingId} className="text-caption-uppercase uppercase text-muted">
+        {title}
+      </h2>
+      {rows.length === 0 ? (
+        <p className="mt-3 text-body-sm text-muted">None</p>
+      ) : (
+        <ul className="mt-2 divide-y divide-hairline text-body-sm text-ink">{rows}</ul>
+      )}
+    </Card>
+  );
 
   return (
-    <div className="mx-auto max-w-4xl space-y-4 p-4">
-      <h1 className="text-2xl font-semibold">Compare plans</h1>
+    <PageContainer className="max-w-4xl">
+      <PageHeader title="Compare plans" eyebrow="Plans" />
       {plans.length < 2 ? (
-        <p>
+        <EmptyState>
           You need two plans to compare.{" "}
-          <Link to="/plans" className="text-primary underline">
+          <Link to="/plans">
             Duplicate a plan
           </Link>{" "}
           first.
-        </p>
+        </EmptyState>
       ) : (
-        <>
-          <div className="grid gap-3 sm:grid-cols-2">
-            <div>
-              <label htmlFor={`${id}-a`} className="text-sm font-medium">
-                Plan A
-              </label>
-              <select id={`${id}-a`} className={box} value={a} onChange={(e) => setA(e.target.value)}>
+        <div className="flex flex-col gap-8">
+          <Card variant="well" className="grid gap-4 sm:grid-cols-2">
+            <Field label="Plan A" htmlFor={`${id}-a`}>
+              <Select id={`${id}-a`} value={a} onChange={(e) => setA(e.target.value)}>
                 {plans.map((p) => (
                   <option key={p.localId} value={p.localId}>
                     {p.name}
                   </option>
                 ))}
-              </select>
-            </div>
-            <div>
-              <label htmlFor={`${id}-b`} className="text-sm font-medium">
-                Plan B
-              </label>
-              <select id={`${id}-b`} className={box} value={b} onChange={(e) => setB(e.target.value)}>
+              </Select>
+            </Field>
+            <Field label="Plan B" htmlFor={`${id}-b`}>
+              <Select id={`${id}-b`} value={b} onChange={(e) => setB(e.target.value)}>
                 {plans.map((p) => (
                   <option key={p.localId} value={p.localId}>
                     {p.name}
                   </option>
                 ))}
-              </select>
-            </div>
-          </div>
+              </Select>
+            </Field>
+          </Card>
           {d && (
             <div className="grid gap-4 sm:grid-cols-3">
-              <section aria-labelledby="only-a">
-                <h2 id="only-a" className="font-semibold">
-                  Only in A
-                </h2>
-                <ul className="text-sm">{d.onlyA.map((x, i) => <li key={i}>{x.course} · {termLabel(x.term)}</li>)}</ul>
-              </section>
-              <section aria-labelledby="only-b">
-                <h2 id="only-b" className="font-semibold">
-                  Only in B
-                </h2>
-                <ul className="text-sm">{d.onlyB.map((x, i) => <li key={i}>{x.course} · {termLabel(x.term)}</li>)}</ul>
-              </section>
-              <section aria-labelledby="moved">
-                <h2 id="moved" className="font-semibold">
-                  Different quarter
-                </h2>
-                <ul className="text-sm">
-                  {d.moved.map((x, i) => (
-                    <li key={i}>
-                      {x.course}: {termLabel(x.a)} → {termLabel(x.b)}
-                    </li>
-                  ))}
-                </ul>
-              </section>
-              <p className="text-sm text-muted-foreground sm:col-span-3">{d.same} courses are the same in both.</p>
+              {column(
+                "only-a",
+                "Only in A",
+                d.onlyA.map((x, i) => (
+                  <li key={i} className="py-2">
+                    {x.course} · {termLabel(x.term)}
+                  </li>
+                )),
+              )}
+              {column(
+                "only-b",
+                "Only in B",
+                d.onlyB.map((x, i) => (
+                  <li key={i} className="py-2">
+                    {x.course} · {termLabel(x.term)}
+                  </li>
+                )),
+              )}
+              {column(
+                "moved",
+                "Different quarter",
+                d.moved.map((x, i) => (
+                  <li key={i} className="py-2">
+                    {x.course}: {termLabel(x.a)} → {termLabel(x.b)}
+                  </li>
+                )),
+              )}
+              <p className="text-body-sm text-muted sm:col-span-3">{d.same} courses are the same in both.</p>
             </div>
           )}
-        </>
+        </div>
       )}
-    </div>
+    </PageContainer>
   );
 }

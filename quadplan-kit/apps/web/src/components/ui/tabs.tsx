@@ -7,7 +7,7 @@ export interface RailTab {
   content: ReactNode;
 }
 
-/** WAI-ARIA tabs; panels stay mounted so the advisor conversation survives tab switches. */
+/** WAI-ARIA tabs. Current tab: ink text over a 2px maroon underline (DESIGN.md active state); panels stay mounted so the advisor conversation survives tab switches. */
 export function Tabs({ tabs, label, initial }: { tabs: RailTab[]; label: string; initial?: string }) {
   const [active, setActive] = useState(initial ?? tabs[0]?.key ?? "");
   const base = useId();
@@ -28,7 +28,7 @@ export function Tabs({ tabs, label, initial }: { tabs: RailTab[]; label: string;
 
   return (
     <div>
-      <div role="tablist" aria-label={label} className="flex border-b border-border">
+      <div role="tablist" aria-label={label} className="flex gap-1 border-b border-hairline">
         {tabs.map((t, i) => (
           <button
             key={t.key}
@@ -44,8 +44,8 @@ export function Tabs({ tabs, label, initial }: { tabs: RailTab[]; label: string;
             onClick={() => setActive(t.key)}
             onKeyDown={(e) => onKey(e, i)}
             className={cn(
-              "min-h-11 flex-1 border-b-2 px-3 text-sm font-medium",
-              active === t.key ? "border-primary text-primary" : "border-transparent text-muted-foreground hover:text-foreground",
+              "-mb-px min-h-11 flex-1 cursor-pointer whitespace-nowrap border-b-2 px-3 text-nav-link transition-colors focus-visible:outline-offset-[-2px]",
+              active === t.key ? "border-primary text-ink" : "border-transparent text-muted hover:text-ink",
             )}
           >
             {t.label}
@@ -60,7 +60,7 @@ export function Tabs({ tabs, label, initial }: { tabs: RailTab[]; label: string;
           aria-labelledby={`${base}-tab-${t.key}`}
           hidden={active !== t.key}
           tabIndex={0}
-          className="pt-3"
+          className="pt-4 focus-visible:outline-offset-4"
         >
           {t.content}
         </div>

@@ -1,44 +1,49 @@
 import { Link } from "react-router-dom";
 import { isNotAvailable } from "@/api/client";
 import { usePrograms } from "@/api/hooks";
-import { NotAvailable, Spinner } from "@/components/ui/misc";
+import { LoadingState, PageContainer, PageHeader, Section } from "@/components/layout/page";
+import { Card } from "@/components/ui/card";
+import { ErrorText, NotAvailable } from "@/components/ui/misc";
 import { groupPrograms, StatusBadge, TYPE_LABELS } from "@/features/programs/ProgramPicker";
 
 export default function ProgramsPage() {
   const q = usePrograms();
   return (
-    <div className="mx-auto max-w-5xl space-y-4 p-4">
-      <h1 className="text-2xl font-semibold">Program explorer</h1>
+    <PageContainer>
+      <PageHeader
+        title="Program explorer"
+        eyebrow="Programs"
+        description="Every major, minor, Bx/MS and joint degree, track and study-abroad block, with its requirements in plain English."
+      />
       {q.isLoading ? (
-        <Spinner label="Loading programs" />
+        <LoadingState label="Loading programs" />
       ) : q.error ? (
         isNotAvailable(q.error) ? (
           <NotAvailable feature="The program list" />
         ) : (
-          <p className="text-red-800">Could not load programs.</p>
+          <ErrorText>Could not load programs.</ErrorText>
         )
       ) : (
-        groupPrograms(q.data ?? []).map(([type, programs]) => (
-          <section key={type} aria-labelledby={`type-${type}`}>
-            <h2 id={`type-${type}`} className="text-lg font-semibold">
-              {TYPE_LABELS[type]}
-            </h2>
-            <ul className="mt-1 grid gap-2 sm:grid-cols-2">
-              {programs.map((p) => (
-                <li key={p.id} className="rounded-md border border-border p-3">
-                  <Link to={`/programs/${p.id}`} className="font-medium text-primary hover:underline">
-                    {p.name}
-                  </Link>{" "}
-                  <StatusBadge status={p.status} />
-                  <div className="text-sm text-muted-foreground">
-                    {[p.degree, p.department, `Catalog ${p.catalog_year}`].filter(Boolean).join(" · ")}
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </section>
-        ))
+        <div className="flex flex-col gap-12">
+          {groupPrograms(q.data ?? []).map(([type, programs]) => (
+            <Section key={type} id={`type-${type}`} title={TYPE_LABELS[type]}>
+              <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {programs.map((p) => (
+                  <Card as="li" key={p.id} interactive className="relative flex flex-col gap-2">
+                    <div className="flex items-start justify-between gap-3">
+                      <Link to={`/programs/${p.id}`} className="rounded-xs text-title-md text-ink after:absolute after:inset-0 after:rounded-xl hover:underline">
+                        {p.name}
+                      </Link>
+                      <StatusBadge status={p.status} />
+                    </div>
+                    <p className="text-caption text-muted">{[p.degree, p.department, `Catalog ${p.catalog_year}`].filter(Boolean).join(" · ")}</p>
+                  </Card>
+                ))}
+              </ul>
+            </Section>
+          ))}
+        </div>
       )}
-    </div>
+    </PageContainer>
   );
 }

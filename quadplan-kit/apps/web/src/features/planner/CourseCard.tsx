@@ -3,7 +3,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import type { PlanItem } from "@/api/types";
 import { Menu, type MenuItem } from "@/components/ui/menu";
-import { Dots } from "@/components/ui/misc";
+import { ErrorIcon, GripIcon, LockIcon, MoreIcon, WarningIcon } from "@/components/ui/icons";
+import { Badge, Dots } from "@/components/ui/misc";
 import { cn } from "@/lib/utils";
 import { issuesForItem, REQUIREMENT_COLORS, usePlanner } from "./context";
 import { attribute, isEstimate, itemUnits, round1 } from "./metrics";
@@ -56,39 +57,43 @@ export function CourseCard({ item }: { item: PlanItem }) {
       }}
       style={transform ? { transform: `translate3d(${transform.x}px, ${transform.y}px, 0)` } : undefined}
       className={cn(
-        "relative flex items-stretch rounded-md border border-l-4 bg-background text-sm shadow-sm",
-        isSlot ? "border-dashed border-zinc-400 border-l-zinc-400" : tag ? REQUIREMENT_COLORS[tag.color % REQUIREMENT_COLORS.length] : "border-l-zinc-300",
-        completed && "bg-zinc-50",
-        worst === "error" && "border-red-700",
-        worst === "warning" && "border-amber-600",
-        item.id && highlight.items.has(item.id) && "ring-4 ring-blue-600",
-        isDragging && "z-30 opacity-80 shadow-lg",
+        "relative flex items-stretch rounded-lg border border-l-[3px] border-hairline bg-surface-card text-caption text-ink transition-shadow hover:shadow-hover",
+        isSlot ? "border-dashed border-hairline-strong border-l-hairline-strong bg-canvas-soft" : tag ? REQUIREMENT_COLORS[tag.color % REQUIREMENT_COLORS.length] : "border-l-hairline-strong",
+        completed && "bg-canvas-soft",
+        worst === "error" && "border-error",
+        worst === "warning" && "border-warning",
+        item.id && highlight.items.has(item.id) && "ring-2 ring-primary ring-offset-2 ring-offset-canvas-soft",
+        isDragging && "z-30 opacity-90 shadow-overlay",
       )}
     >
       <button
         type="button"
         aria-label={item.locked ? `${label} is locked` : `Drag ${label}`}
         className={cn(
-          "flex min-h-11 w-8 shrink-0 touch-none items-center justify-center text-muted-foreground",
+          "flex min-h-11 w-8 shrink-0 touch-none items-center justify-center rounded-l-md text-gray-dark hover:text-ink focus-visible:outline-offset-[-2px]",
           item.locked ? "cursor-not-allowed" : "cursor-grab",
         )}
         {...attributes}
         {...listeners}
       >
-        <span aria-hidden="true">{item.locked ? "🔒" : "⠿"}</span>
+        {item.locked ? <LockIcon size={14} /> : <GripIcon size={14} />}
       </button>
-      <div className="min-w-0 flex-1 py-1.5 pr-1">
+      <div className="min-w-0 flex-1 py-2 pr-1">
         <div className="flex flex-wrap items-baseline gap-x-2">
-          <span className="font-semibold">{isSlot ? "Requirement slot" : item.course}</span>
-          {units != null && <span className="text-xs text-muted-foreground">{units} units</span>}
-          {completed && <span className="text-xs font-medium text-green-800">Completed</span>}
+          <span className="font-medium tabular-nums">{isSlot ? "Requirement slot" : item.course}</span>
+          {units != null && <span className="text-muted">{units} units</span>}
+          {completed && (
+            <Badge tone="success" casing="normal" className="px-2 py-0">
+              Completed
+            </Badge>
+          )}
         </div>
-        <div className="truncate text-xs" title={course?.title ?? item.slot_ref ?? undefined}>
+        <div className="truncate text-body" title={course?.title ?? item.slot_ref ?? undefined}>
           {isSlot ? item.slot_ref : (course?.title ?? "")}
         </div>
-        {tag && <div className="truncate text-xs text-muted-foreground">{tag.label}</div>}
+        {tag && <div className="truncate text-muted">{tag.label}</div>}
         {(hours || difficulty) && (
-          <div className="mt-0.5 flex flex-wrap items-center gap-x-2 text-xs text-muted-foreground">
+          <div className="mt-1 flex flex-wrap items-center gap-x-2 tabular-nums text-muted">
             {hours && (
               <span>
                 {isEstimate(hours) ? "~" : ""}
@@ -100,18 +105,20 @@ export function CourseCard({ item }: { item: PlanItem }) {
           </div>
         )}
         {mine.length > 0 && (
-          <ul className="mt-1 space-y-0.5">
+          <ul className="mt-1.5 space-y-1">
             {mine.map((i, n) => (
-              <li key={n} className={cn("text-xs", i.level === "error" ? "text-red-800" : "text-amber-900")}>
-                <span aria-hidden="true">{i.level === "error" ? "⛔ " : "⚠ "}</span>
-                <span className="sr-only">{i.level}: </span>
-                {i.message}
+              <li key={n} className={cn("flex items-start gap-1.5", i.level === "error" ? "text-error" : "text-warning")}>
+                {i.level === "error" ? <ErrorIcon size={14} className="mt-[3px] shrink-0" /> : <WarningIcon size={14} className="mt-[3px] shrink-0 text-warning-icon" />}
+                <span>
+                  <span className="sr-only">{i.level}: </span>
+                  {i.message}
+                </span>
               </li>
             ))}
           </ul>
         )}
       </div>
-      <Menu label={`Actions for ${label}`} trigger={<span aria-hidden="true">⋯</span>} items={items} open={menuOpen} onOpenChange={setMenuOpen} />
+      <Menu label={`Actions for ${label}`} trigger={<MoreIcon />} items={items} open={menuOpen} onOpenChange={setMenuOpen} />
     </li>
   );
 }
