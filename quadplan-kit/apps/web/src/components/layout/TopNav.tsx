@@ -1,16 +1,20 @@
 import { useEffect, useId, useState, type FormEvent } from "react";
-import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Avatar } from "@/components/ui/card";
 import { CloseIcon, MenuIcon, SearchIcon } from "@/components/ui/icons";
 import { useSession } from "@/lib/session";
 import { cn } from "@/lib/utils";
 
-const NAV = [
-  { to: "/plan", label: "Plan" },
-  { to: "/courses", label: "Courses" },
-  { to: "/programs", label: "Programs" },
-  { to: "/instructors", label: "Forum" },
+/** A forum page or thread: /courses/:code/i/:instructor[/t/:id]. */
+const FORUM_PATH = /^\/courses\/[^/]+\/i\//;
+
+/** Each link is the current section for its own path and the pages that belong to it. */
+const NAV: { to: string; label: string; current: (path: string) => boolean }[] = [
+  { to: "/plan", label: "Plan", current: (p) => /^\/(plan|plans|onboarding)(\/|$)/.test(p) },
+  { to: "/courses", label: "Courses", current: (p) => /^\/courses(\/|$)/.test(p) && !FORUM_PATH.test(p) },
+  { to: "/programs", label: "Programs", current: (p) => /^\/programs(\/|$)/.test(p) },
+  { to: "/instructors", label: "Forum", current: (p) => /^\/(instructors|guidelines)(\/|$)/.test(p) || FORUM_PATH.test(p) },
 ];
 
 /** The text wordmark (DESIGN.md "Brand & logo": no university marks). */
@@ -54,23 +58,26 @@ function SearchBox() {
 }
 
 function NavLinks({ vertical = false }: { vertical?: boolean }) {
+  const { pathname } = useLocation();
   return (
     <>
-      {NAV.map((item) => (
-        <NavLink
-          key={item.to}
-          to={item.to}
-          className={({ isActive }) =>
-            cn(
+      {NAV.map((item) => {
+        const current = item.current(pathname);
+        return (
+          <Link
+            key={item.to}
+            to={item.to}
+            aria-current={current ? "page" : undefined}
+            className={cn(
               "flex min-h-11 items-center rounded-pill px-4 text-nav-link text-ink transition-colors hover:bg-surface-strong",
               vertical && "w-full md:w-auto",
-              isActive && "bg-primary-wash hover:bg-primary-wash",
-            )
-          }
-        >
-          {item.label}
-        </NavLink>
-      ))}
+              current && "bg-primary-wash hover:bg-primary-wash",
+            )}
+          >
+            {item.label}
+          </Link>
+        );
+      })}
     </>
   );
 }

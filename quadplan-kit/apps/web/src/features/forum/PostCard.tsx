@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { tallTargetClass } from "@/components/layout/page";
 import { Button } from "@/components/ui/button";
 import { Avatar, Card } from "@/components/ui/card";
 import { Badge, Dots, ErrorText, Notice } from "@/components/ui/misc";
 import { termLabel } from "@/features/planner/terms";
+import { cn } from "@/lib/utils";
 import { useDeletePost, useReport, type ForumPage, type Post } from "./api";
 import { Composer } from "./Composer";
 import { relativeDay } from "./format";
@@ -134,7 +136,7 @@ export function PostCard({
       <Byline post={post} />
       <Heading id={`post-${post.id}-title`} className={headingClass}>
         {threadHref && visible ? (
-          <Link to={threadHref} className="rounded-xs hover:text-primary hover:underline hover:underline-offset-4">
+          <Link to={threadHref} className={cn(tallTargetClass, "rounded-xs hover:text-primary hover:underline hover:underline-offset-4")}>
             {title}
           </Link>
         ) : (

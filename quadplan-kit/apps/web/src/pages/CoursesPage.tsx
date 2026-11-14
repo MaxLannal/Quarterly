@@ -99,8 +99,8 @@ export default function CoursesPage() {
     <PageContainer>
       <PageHeader title="Course search" eyebrow="Courses" description="Filter by department, level, quarter, Core area, workload and difficulty." />
       <Card variant="well">
-      <form onSubmit={submit} className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4" aria-label="Course filters">
-        <div className="flex flex-col gap-1.5 sm:col-span-2">
+      <form onSubmit={submit} className="grid grid-cols-2 gap-x-3 gap-y-4 sm:gap-4 lg:grid-cols-4" aria-label="Course filters">
+        <div className="col-span-2 flex flex-col gap-1.5">
           <label htmlFor={field("q")} className="text-caption font-medium text-ink">
             Code or title
           </label>
@@ -162,7 +162,7 @@ export default function CoursesPage() {
             ))}
           </select>
         </div>
-        <div className="flex items-end gap-3 sm:col-span-2 lg:col-span-4">
+        <div className="col-span-2 flex items-end gap-3 lg:col-span-4">
           <Button type="submit">Search</Button>
           <Button
             type="button"

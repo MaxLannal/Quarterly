@@ -1,5 +1,6 @@
 import { Placeholder } from "./Placeholder";
 
 export default function AdminPage() {
-  return <Placeholder title="Curator console" route="/admin/*" prompt="09" />;
+  // The curator console is built in prompt 09.
+  return <Placeholder title="Curator console" />;
 }

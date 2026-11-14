@@ -63,47 +63,51 @@ export default function PlansPage() {
         ) : (
           <ul className="flex flex-col gap-3">
             {doc.plans.map((p) => (
-              <Card as="li" variant="compact" key={p.localId} className="flex flex-wrap items-center gap-3 px-5">
-                <label className="sr-only" htmlFor={`name-${p.localId}`}>
-                  Name of plan
-                </label>
-                <Input
-                  id={`name-${p.localId}`}
-                  defaultValue={p.name}
-                  onBlur={(e) => e.target.value.trim() && e.target.value !== p.name && rename(p, e.target.value.trim())}
-                  className="min-w-48 flex-1 text-body-strong"
-                />
-                <span className="text-caption text-muted">
-                  {p.isPrimary ? "Primary · " : ""}
-                  {(p.state.items ?? []).length} items · updated {p.updatedDay}
-                </span>
-                <Button variant="outline" onClick={() => open(p)}>
-                  Open
-                </Button>
-                <Button variant="outline" onClick={() => duplicate(p)}>
-                  Duplicate
-                </Button>
-                {!p.isPrimary && (
+              <Card as="li" variant="compact" key={p.localId} className="flex flex-col gap-3 px-5 md:flex-row md:items-center">
+                <div className="flex min-w-0 flex-1 flex-col gap-1">
+                  <label className="sr-only" htmlFor={`name-${p.localId}`}>
+                    Name of plan
+                  </label>
+                  <Input
+                    id={`name-${p.localId}`}
+                    defaultValue={p.name}
+                    onBlur={(e) => e.target.value.trim() && e.target.value !== p.name && rename(p, e.target.value.trim())}
+                    className="text-body-strong"
+                  />
+                  <span className="text-caption text-muted">
+                    {p.isPrimary ? "Primary · " : ""}
+                    {(p.state.items ?? []).length} items · updated {p.updatedDay}
+                  </span>
+                </div>
+                <div className="flex flex-wrap gap-x-2">
+                  <Button variant="outline" onClick={() => open(p)}>
+                    Open
+                  </Button>
+                  <Button variant="outline" onClick={() => duplicate(p)}>
+                    Duplicate
+                  </Button>
+                  {!p.isPrimary && (
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        upsertPlan({ ...p, isPrimary: true }, false);
+                        refresh();
+                      }}
+                    >
+                      Set primary
+                    </Button>
+                  )}
                   <Button
-                    variant="outline"
+                    variant="destructive"
                     onClick={() => {
-                      upsertPlan({ ...p, isPrimary: true }, false);
+                      deletePlan(p.localId);
                       refresh();
                     }}
+                    aria-label={`Delete ${p.name}`}
                   >
-                    Set primary
+                    Delete
                   </Button>
-                )}
-                <Button
-                  variant="destructive"
-                  onClick={() => {
-                    deletePlan(p.localId);
-                    refresh();
-                  }}
-                  aria-label={`Delete ${p.name}`}
-                >
-                  Delete
-                </Button>
+                </div>
               </Card>
             ))}
           </ul>

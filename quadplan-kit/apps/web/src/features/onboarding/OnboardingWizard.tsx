@@ -6,7 +6,7 @@ import type { Credit, Goal, PlanState } from "@/api/types";
 import { PageContainer, PageHeader } from "@/components/layout/page";
 import { Button } from "@/components/ui/button";
 import { CloseIcon } from "@/components/ui/icons";
-import { controlClass, controlCompactClass } from "@/components/ui/input";
+import { ChoiceRow, controlClass, controlCompactClass } from "@/components/ui/input";
 import { Notice } from "@/components/ui/misc";
 import { CAREER_PRESETS, interestGoal, TERM_PRESETS } from "@/features/planner/goals";
 import { newLocalId, today, upsertPlan } from "@/features/planner/localPlans";
@@ -19,7 +19,6 @@ import { cn } from "@/lib/utils";
 const STEPS = ["Entry term", "Credits", "Programs", "Goals", "Review"];
 const box = controlClass;
 const labelClass = "mb-1.5 block text-caption font-medium text-ink";
-const radioRow = "flex min-h-11 cursor-pointer items-center gap-3 text-body-sm text-ink";
 
 interface Draft {
   catalogYear: string;
@@ -68,14 +67,12 @@ function StepEntry({ d, set, years }: { d: Draft; set: (p: Partial<Draft>) => vo
       </div>
       <fieldset>
         <legend className={labelClass}>Status</legend>
-        <label className={radioRow}>
-          <input type="radio" name="status" className="size-5 shrink-0 cursor-pointer" checked={d.yearLevel === 1} onChange={() => set({ yearLevel: 1 })} />
+        <ChoiceRow type="radio" name="status" checked={d.yearLevel === 1} onChange={() => set({ yearLevel: 1 })}>
           First-year
-        </label>
-        <label className={radioRow}>
-          <input type="radio" name="status" className="size-5 shrink-0 cursor-pointer" checked={d.yearLevel > 1} onChange={() => set({ yearLevel: 2 })} />
+        </ChoiceRow>
+        <ChoiceRow type="radio" name="status" checked={d.yearLevel > 1} onChange={() => set({ yearLevel: 2 })}>
           Transfer student
-        </label>
+        </ChoiceRow>
         {d.yearLevel > 1 && (
           <div>
             <label htmlFor={`${id}-level`} className={labelClass}>
@@ -181,10 +178,9 @@ function StepPrograms({ d, set }: { d: Draft; set: (p: Partial<Draft>) => void }
   }
   return (
     <div className="space-y-3">
-      <label className={cn(radioRow, "font-medium")}>
-        <input type="checkbox" className="size-5 shrink-0 cursor-pointer" checked={d.undecided} onChange={(e) => set({ undecided: e.target.checked })} />
+      <ChoiceRow type="checkbox" className="font-medium" checked={d.undecided} onChange={(e) => set({ undecided: e.target.checked })}>
         I&apos;m undecided
-      </label>
+      </ChoiceRow>
       {!d.undecided && <ProgramChecklist catalogYear={d.catalogYear} selected={d.programs} onChange={(programs) => set({ programs })} />}
       <div>
         <label htmlFor={`${id}-tag`} className={labelClass}>
@@ -455,10 +451,9 @@ export function OnboardingWizard() {
               <dt className="font-medium">Goals</dt>
               <dd>{goals.length ? goals.map((g) => `${goalLabel(g)}${g.term ? ` (${termLabel(g.term)})` : ""}`).join("; ") : "None"}</dd>
             </dl>
-            <label className={cn(radioRow, "font-medium")}>
-              <input type="checkbox" className="size-5 shrink-0 cursor-pointer" checked={d.generate} onChange={(e) => set({ generate: e.target.checked })} />
+            <ChoiceRow type="checkbox" className="font-medium" checked={d.generate} onChange={(e) => set({ generate: e.target.checked })}>
               Generate a starting plan
-            </label>
+            </ChoiceRow>
             {!stored && (
               <Notice tone="error" role="alert">
                 This browser is blocking storage, so the plan cannot be kept. Allow site data or log in to save plans.

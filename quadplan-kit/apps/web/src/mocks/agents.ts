@@ -93,6 +93,10 @@ export function chatReply(req: S["ChatRequest"]): AgentEvent[] {
       citations: [
         { kind: "attribute", id: "TEST 25200:workload_hours", label: "TEST 25200 · workload 13 h/wk · n=34" },
         { kind: "course", id: "TEST 25200", label: "TEST 25200" },
+        // Forum sources name only an id, like the API (labels as `citation_label` builds them):
+        // post 3 and page 1 are the fake discussion thread and page in mocks/forum.ts.
+        { kind: "post", id: "3", label: "Student post #3" },
+        { kind: "summary", id: "1", label: "What students say" },
       ],
     },
   ];

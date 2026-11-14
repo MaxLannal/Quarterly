@@ -1,7 +1,7 @@
 import { useId, useState, type FormEvent } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Input, Label, Select, Textarea } from "@/components/ui/input";
+import { ChoiceRow, Input, Label, Select, Textarea } from "@/components/ui/input";
 import { ErrorText, Notice } from "@/components/ui/misc";
 import { termLabel } from "@/features/planner/terms";
 import { cn } from "@/lib/utils";
@@ -236,17 +236,9 @@ export function Composer({
                 <legend className="mb-1 text-caption font-medium text-ink">Would you recommend it?</legend>
                 <div className="flex gap-4">
                   {(["yes", "no"] as const).map((v) => (
-                    <label key={v} className="flex min-h-11 cursor-pointer items-center gap-2 text-body-sm text-ink">
-                      <input
-                        type="radio"
-                        name={`${id}-recommend`}
-                        value={v}
-                        checked={draft.recommend === v}
-                        onChange={() => set("recommend", v)}
-                        className="size-5 cursor-pointer accent-primary"
-                      />
+                    <ChoiceRow key={v} type="radio" name={`${id}-recommend`} value={v} checked={draft.recommend === v} onChange={() => set("recommend", v)}>
                       {v === "yes" ? "Yes" : "No"}
-                    </label>
+                    </ChoiceRow>
                   ))}
                 </div>
               </fieldset>

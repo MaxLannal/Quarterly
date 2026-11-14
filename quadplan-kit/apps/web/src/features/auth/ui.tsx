@@ -36,7 +36,9 @@ export function TextField({ label, hint, error, className, ...input }: TextField
 /** Form-level error: announced as soon as it appears. */
 export function FormError({ message }: { message: string | null }) {
   return (
-    <div role="alert" aria-live="assertive">
+    // Empty live regions stay in the page (so later messages are announced) but leave the
+    // flow, so they add no gap to the flex column around them.
+    <div role="alert" aria-live="assertive" className="empty:absolute">
       {message ? (
         <p className="flex items-start gap-3 rounded-lg border border-error/30 bg-error-wash px-4 py-3 text-body-sm text-ink">
           <ErrorIcon className="mt-[3px] shrink-0 text-error" />
@@ -50,7 +52,7 @@ export function FormError({ message }: { message: string | null }) {
 /** Polite status message (success, "code sent"). */
 export function Notice({ message }: { message: string | null }) {
   return (
-    <div role="status" aria-live="polite">
+    <div role="status" aria-live="polite" className="empty:absolute">
       {message ? (
         <p className="flex items-start gap-3 rounded-lg border border-success/25 bg-success-wash px-4 py-3 text-body-sm text-ink">
           <CheckIcon className="mt-[3px] shrink-0 text-success" />

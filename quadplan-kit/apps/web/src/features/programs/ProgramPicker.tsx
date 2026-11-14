@@ -3,6 +3,7 @@ import { usePrograms } from "@/api/hooks";
 import { isNotAvailable } from "@/api/client";
 import type { ProgramSummary } from "@/api/types";
 import { Button } from "@/components/ui/button";
+import { ChoiceRow } from "@/components/ui/input";
 import { Badge, ErrorText, NotAvailable, Spinner } from "@/components/ui/misc";
 
 export const TYPE_LABELS: Record<ProgramSummary["type"], string> = {
@@ -49,16 +50,14 @@ export function ProgramChecklist({
         <fieldset key={type}>
           <legend className="mb-1 text-caption-uppercase uppercase text-muted">{TYPE_LABELS[type]}</legend>
           {ps.map((p) => (
-            <label key={p.id} className="flex min-h-11 cursor-pointer items-center gap-3 rounded-md text-body-sm text-ink">
-              <input
-                type="checkbox"
-                className="size-5 shrink-0 cursor-pointer"
-                checked={selected.includes(p.id)}
-                onChange={(e) => onChange(e.target.checked ? [...selected, p.id] : selected.filter((x) => x !== p.id))}
-              />
-              {p.name}
-              <StatusBadge status={p.status} />
-            </label>
+            <ChoiceRow
+              key={p.id}
+              type="checkbox"
+              checked={selected.includes(p.id)}
+              onChange={(e) => onChange(e.target.checked ? [...selected, p.id] : selected.filter((x) => x !== p.id))}
+            >
+              {p.name} <StatusBadge status={p.status} />
+            </ChoiceRow>
           ))}
         </fieldset>
       ))}

@@ -228,3 +228,11 @@ Without the placement, the popup explains that the calculus requirement needs a 
   - an older admin removal no longer counts again after the automatic check removes the same post; the 30-day deletion wait is checked after the password;
   - the generator no longer calls a request impossible when only its staged shortcut dead-ends, and explaining an impossible request stays within the time limit;
   - A3 summary and cold-start calls use low effort with 2000 output tokens, so answers are not cut off.
+
+## Step 5 · Design review at 1440 and 390 (2026-11-14)
+
+- Every page reviewed at desktop (1440×900) and phone (390×844) width against `docs/DESIGN.md`; per-page findings and fixes are in `docs/DESIGN-IMPLEMENTATION.md` ("Design review at 1440 and 390 (step 5)"). Main fixes: planner course cards (full-width body, issues no longer squeezed), the nav marks the current section on every page, the footer lines up with the top bar, forum section heads in the display serif, two-up course filters on phones, plan cards in two rows, no stray gaps from empty error regions, 44px targets on dense links, plain "Coming soon" copy instead of build notes.
+- Deferred review findings closed: advisor `post` / `summary` / `attribute` citation chips now link (thread, forum page, course page; a plain pill when logged out); forum radio rows use the shared `ChoiceRow` (as do onboarding, the Generate dialog and the program picker); the forum `Sort` type comes from the generated OpenAPI schema.
+- Screenshots: `make screenshots` (`SCREENSHOTS=1`) writes 47 PNGs to `docs/screenshots/` (23 pages at both widths, plus the phone menu).
+- axe at both widths on the planner (with Generate and Advisor open), the forum page and the thread: no serious or critical violations (`e2e/design.spec.ts`).
+- New questions DF-12 (About page text) and DF-13 (reaching the advisor on a phone).

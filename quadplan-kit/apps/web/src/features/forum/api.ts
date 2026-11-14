@@ -1,7 +1,7 @@
 /** Forum data: react-query hooks over the generated client (types come from the OpenAPI schema). */
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api, unwrap } from "@/api/client";
-import type { components } from "@/api/schema";
+import type { components, paths } from "@/api/schema";
 
 type S = components["schemas"];
 export type ForumPage = S["ForumPageOut"];
@@ -19,7 +19,9 @@ export type ModerationItem = S["ModerationItemOut"];
 export type VoteValue = S["VoteIn"]["value"];
 export type TargetType = S["VoteIn"]["target_type"];
 export type PostKind = PostCreate["kind"];
-export type Sort = "best" | "new" | "top" | "controversial" | "hot";
+/** The posts list's `sort` query parameter, taken from the generated schema. */
+type PostsQuery = NonNullable<paths["/forum/pages/{page_id}/posts"]["get"]["parameters"]["query"]>;
+export type Sort = NonNullable<PostsQuery["sort"]>;
 
 const PAGE_SIZE = 20;
 
@@ -28,6 +30,7 @@ export const forumKeys = {
   page: (code: string, slug: string) => ["forum", "page", code, slug] as const,
   posts: (pageId: number, kind: PostKind, sort: Sort, term: string) => ["forum", "posts", pageId, kind, sort, term] as const,
   post: (id: number) => ["forum", "post", id] as const,
+  pageById: (id: number) => ["forum", "page-by-id", id] as const,
   course: (code: string) => ["forum", "course", code] as const,
   queue: ["forum", "moderation"] as const,
 };
@@ -38,6 +41,17 @@ export function useForumPage(code: string, slug: string, enabled = true) {
     queryFn: async () => unwrap(await api.GET("/forum/pages", { params: { query: { course: code, instructor: slug } } })),
     enabled,
     retry: false,
+  });
+}
+
+/** A forum page by its id (advisor citations name pages and posts by id only). */
+export function useForumPageById(id: number, enabled = true) {
+  return useQuery({
+    queryKey: forumKeys.pageById(id),
+    queryFn: async () => unwrap(await api.GET("/forum/pages/{page_id}", { params: { path: { page_id: id } } })),
+    enabled: enabled && Number.isFinite(id),
+    retry: false,
+    staleTime: 5 * 60_000,
   });
 }
 

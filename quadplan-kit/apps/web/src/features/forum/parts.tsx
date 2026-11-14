@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Stat } from "@/components/ui/card";
 import { Dialog } from "@/components/ui/dialog";
 import { ArrowIcon } from "@/components/ui/icons";
-import { Label, Textarea } from "@/components/ui/input";
+import { ChoiceRow, Label, Textarea } from "@/components/ui/input";
 import { ErrorText, Notice } from "@/components/ui/misc";
 import { cn } from "@/lib/utils";
 import { useReport, useVote, type RatingSummary, type TargetType, type VoteValue } from "./api";
@@ -237,17 +237,9 @@ export function ReportDialog({
           <fieldset className="flex flex-col gap-1">
             <legend className="mb-1 text-caption font-medium text-ink">Reason</legend>
             {REPORT_REASONS.map((r) => (
-              <label key={r} className="flex min-h-11 cursor-pointer items-center gap-3 rounded-md text-body-sm text-ink">
-                <input
-                  type="radio"
-                  name={`${id}-reason`}
-                  value={r}
-                  checked={reason === r}
-                  onChange={() => setReason(r)}
-                  className="size-5 shrink-0 cursor-pointer accent-primary"
-                />
+              <ChoiceRow key={r} type="radio" name={`${id}-reason`} value={r} checked={reason === r} onChange={() => setReason(r)}>
                 {r}
-              </label>
+              </ChoiceRow>
             ))}
           </fieldset>
           <div className="flex flex-col gap-1.5">
