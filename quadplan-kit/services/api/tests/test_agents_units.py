@@ -63,7 +63,15 @@ def test_the_real_client_needs_llm_live_and_a_key() -> None:
     try:
         assert not configure_llm(Settings(llm_live=False, anthropic_api_key=SecretStr("k")))
         assert isinstance(get_llm(), UnavailableLLM)
-        assert not configure_llm(Settings(llm_live=True))
+        # Independent of the developer's .env, which may hold real keys.
+        assert not configure_llm(
+            Settings(
+                _env_file=None,
+                llm_live=True,
+                anthropic_api_key=SecretStr(""),
+                openrouter_api_key=SecretStr(""),
+            )  # type: ignore[call-arg]
+        )
         assert isinstance(get_llm(), UnavailableLLM)
         # Building the client sends nothing.
         assert configure_llm(Settings(llm_live=True, anthropic_api_key=SecretStr("k")))
