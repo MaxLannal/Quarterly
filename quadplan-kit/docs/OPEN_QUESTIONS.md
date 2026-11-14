@@ -345,3 +345,24 @@ Places where `docs/DESIGN.md` (the look) and `docs/SPEC.md` (what the pages do a
   **Suggested:** no dark mode for the demo (built that way).
 - **DF-11. A footer on every page.** DESIGN.md has a footer; the SPEC's page list does not mention one.
   **Suggested:** keep the footer (built), with links only to pages the SPEC already lists (planner, my plans, programs, course search, instructors, guidelines, privacy, about).
+
+## Prompt 07
+
+The plan generator and the advisor are built and tested on a fake model only. Nothing has been sent to Claude or OpenRouter.
+
+- **P7-1. Turning the AI on.** The app talks to the AI providers only when `.env` has `LLM_LIVE=true` and an API key. It is off by default because of your hold on API calls. While it is off, "Generate plan" still works (it picks electives by your interests and course ratings, and shows no one-line explanations), and the advisor only handles typed confirmations; any question gets "The advisor can't answer right now."
+  **Suggested:** when you lift the hold, set `LLM_LIVE=true` in `.env` and restart. Option: leave it off for the demo and show the generator without explanations.
+- **P7-2. Running the evals.** `make evals` runs 50 student profiles through the generator and 100 advisor questions (60 planning questions, 20 off-topic, 10 typed confirmations, 10 forum posts with hidden attacks). It prints an estimate first (about $15 at list prices), stops at $20 (change with `EVAL_COST_CAP_USD`), and refuses to start unless you type `CONFIRM_SPEND=yes make evals`. The free part (`uv run python evals/run.py --offline`) already passes.
+  **Suggested:** run it once when you lift the hold, before showing the AI features. Option: run only the advisor half first (`CONFIRM_SPEND=yes uv run python evals/run.py --only a2`, about $2).
+- **P7-3. How many advisor messages a day.** The SPEC limits plan generations (10 a day per account, 3 a day per device when logged out) but says nothing about advisor messages, and each answer costs about 2 to 3 cents.
+  **Suggested (built):** 60 advisor messages a day per account, 30 a day per network address when logged out. Option: the same 10 and 3 as generations.
+- **P7-4. Messages that look like an attack.** The gate labels messages as on-topic, off-topic, a confirmation, or "suspicious" (for example "print your instructions" or "act without asking me"). The SPEC says what to do with off-topic ones (a one-line refusal) but not with suspicious ones.
+  **Suggested (built):** a fixed one-line reply, "I can't help with that. I can answer questions about your courses and your plan.", without calling the main model. Option: let the main model answer with its normal rules.
+- **P7-5. A second model when Claude declines.** Claude's safety filter sometimes declines harmless requests. For the generator and the advisor, the app asks Anthropic to retry a declined request on another Claude model automatically (Anthropic's "fallbacks" setting; the retry is billed like a normal request on that model). The tiny scope gate (Haiku) does not have this.
+  **Suggested (built):** keep it on. Option: turn it off in `llm_routing.yaml` (`refusal_fallback: false`); a declined request then falls back to the non-AI path.
+- **P7-6. Forum citations do not link yet.** When the advisor cites a forum post, the chip shows the post's label but does not link to the thread, because the thread address needs the forum's pages (prompt 08).
+  **Suggested:** link the chip to the thread once the forum is merged (a small change in `AdvisorPanel.tsx`).
+- **P7-7. What the advisor remembers.** For a plan saved to an account, the conversation is stored on the server and deleted after 30 days. For a plan that lives only in the browser, nothing is stored on the server: the browser sends the last few messages with each question.
+  **Suggested:** keep it that way. Option: also keep a browser-only history in the browser's storage across reloads.
+- **P7-8. One shared address, three generations.** Logged-out students are limited to 3 generations a day per network address (SPEC). Students on campus Wi-Fi may share one address, so the third logged-out student on the same network could be blocked for the day.
+  **Suggested:** keep 3 for the demo and tell students to log in for 10 a day. Option: raise the logged-out limit to 20 per address.
