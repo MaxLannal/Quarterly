@@ -7,7 +7,7 @@ NPM := npm --prefix $(WEB)
 COMPOSE := docker compose
 
 .PHONY: help install env up down ps logs scraper-up lint typecheck test test-py test-web \
-        golden check e2e evals migrate seed api-client api-client-check format
+        golden check e2e evals migrate seed seed-forum-demo api-client api-client-check format
 
 help:
 	@grep -E '^[a-z-]+:' Makefile | cut -d: -f1 | sort | tr '\n' ' '; echo
@@ -83,6 +83,12 @@ migrate: env
 
 seed: env
 	$(UV) run python -m api.cli seed
+
+# Development only: FAKE instructors ("Demo Instructor A".."E") and forum pages on five real
+# courses, so the forum can be tried without schedule data. Never part of data/seed.
+# `make seed-forum-demo ARGS=--remove` deletes them again.
+seed-forum-demo: env
+	$(UV) run python -m api.cli seed-forum-demo $(ARGS)
 
 # Regenerate the OpenAPI document and the TypeScript types the frontend uses.
 api-client:

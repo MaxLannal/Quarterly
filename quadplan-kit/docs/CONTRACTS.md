@@ -22,7 +22,7 @@ All stubs return `501 {"detail": "Not implemented yet (prompt NN)"}` after reque
 | GET | `/programs?catalog_year&type` | | `ProgramSummary[]` | No | M1 integration |
 | GET | `/programs/{program_id}?catalog_year` | | `ProgramDetail` (rule tree, policy, sources) | No | M1 integration |
 | GET | `/programs/{program_id}/eligible?node` | | `CourseSummary[]` | No | M1 integration |
-| GET | `/instructors`, `/instructors/{slug}` | | `Page[InstructorSummary]`, `InstructorDetail` | Yes | 08 |
+| GET | `/instructors?q`, `/instructors/{slug}` | | `Page[InstructorSummary]`, `InstructorDetail` (per-course `ratings` only when logged in) | No (P03-12: names public) | 08 (done) |
 | GET / POST | `/plans` | `PlanCreate` | `PlanSummary[]` / `PlanOut` | Yes | 04/06 |
 | POST | `/plans/import` | `PlanImport` (logged-out plans) | `PlanSummary[]` | Yes | 04/06 |
 | GET | `/plans/compare?a&b` | | `PlanComparison` | Yes | 06 |
@@ -43,7 +43,10 @@ All stubs return `501 {"detail": "Not implemented yet (prompt NN)"}` after reque
 | GET / PATCH / DELETE | `/forum/posts/{post_id}` | `PostUpdate` | `PostDetail` / `PostOut` / 204 | Yes | 08 |
 | POST | `/forum/posts/{post_id}/comments` | `CommentCreate` | `CommentOut` | Yes | 08 |
 | POST | `/forum/votes` | `VoteIn` | `VoteOut` | Yes | 08 |
-| POST | `/forum/reports` | `ForumReportIn` | `ForumReportOut` | Yes | 08 |
+| POST | `/forum/reports` | `ForumReportIn` | `ForumReportOut` (202) | Yes | 08 |
+| GET | `/forum/courses/{code}` | | `CourseForumOut` (every instructor's page, ratings pooled) | Yes | 08 (added) |
+| GET | `/admin/moderation` | | `Page[ModerationItemOut]` | Admin | 08 (added) |
+| POST | `/admin/moderation/{target_type}/{target_id}/decision` | `ModerationDecision` | `ModerationResult` | Admin | 08 (added) |
 | POST | `/auth/email` | `EmailStart` | `EmailStarted {pending_id}` (202) | No | 04 |
 | POST | `/auth/verify-code` | `VerifyCode` | `RegistrationTicket` | No | 04 |
 | POST | `/auth/register` | `Register {ticket, username, password}` | `SessionOut` | No | 04 |
@@ -88,6 +91,22 @@ The frontend calls these under `/api/...` (Vite dev proxy and nginx strip the pr
 **Accounts (decision 5).** `account.email` (unique, lowercase) is the only column holding an email; a migration test enforces this. No blind-signature tables. User rows use day-level dates only (`*_day`), also enforced by a test.
 
 **Program versions.** One `program_version` per program per catalog year (unique). Only `published` versions reach students; the seed loader writes the status in the YAML (default `review`).
+
+## Forum (prompt 08)
+
+Code: `services/api/api/forum/`. Tests: `services/api/tests/test_forum_api.py`, `test_forum_privacy.py`.
+
+- **Pages.** A forum page is a `course_instructor` row (`page_id`). `api.forum.pages.ensure_page(db, course_id, instructor_id, term_id)` creates it on first sight and widens its term range; the schedule pipeline (prompt 10) must call it. One page per course *code* and instructor: a course row of another catalog year reuses the existing page. `GET /courses/{code}` now lists `instructors` (public names, P03-12).
+- **Identity.** `author_ref`, `voter_ref` and `reporter_ref` are all `api.auth.hashing.author_ref(account_id, page_id)`. No forum row holds an account id. Pseudonyms are random two-word handles, one per (ref, page), unique on the page.
+- **Visibility.** Readers see `visible` items; authors also see their own `held` / `removed` items with `mine: true` and a `moderation_note`. Others' hidden items answer 404 (reads, votes, comments, reports). A hidden comment with visible replies stays in the thread as a `[removed]` / `[awaiting moderation]` placeholder with the pseudonym `[hidden]`.
+- **Contract additions (all additive).** `PostOut` / `CommentOut`: `body_html` (server-rendered and sanitized; the only HTML the client inserts), `mine`, `moderation_note`; `PostOut.edited_day`; `PostUpdate.term_taken`; `ForumPageOut.ratings` (`RatingSummary`); `InstructorCourse.ratings`; the three endpoints above.
+- **Comments** are returned depth-first; siblings in Best order; `depth` = `nlevel(path) - 1` (top level 0). Paths are ltree labels of comment ids.
+- **Sorting** (SQL, `api/forum/sorting.py`): Best = Wilson lower bound (z = 1.96), Top = net score, New = day then id, Controversial = (u + d) ^ (min/max) when both are positive, Hot = score * 0.5 ^ (age_days / 30). Ties: newer id first.
+- **Moderation.** Scrub (emails, phone numbers) -> A4 via `llm_gateway` (`a4_moderation`, `prompts/a4_moderation.md`, text inside `<untrusted_source>`, 3 s wall clock). `ok` publishes; `identifying_info` / `misconduct_claim` hold; other labels reject (status `removed`, reason shown to the author). No answer -> hold, or publish when `MODERATION_FALLBACK=publish` (development / test only; refused at start-up elsewhere). Edits are moderated again. An author asks for human review by reporting their own post. Each model hold or reject is a `moderation_action` row (`actor = model`, `reason` = label).
+- **Queue and suspension.** Admins only. `approve` publishes and dismisses open reports; `remove` takes the item down and upholds them. Every third distinct admin removal of one account's items sets `account.suspended_until` to today + 30 days; the author is found by recomputing refs for every account (nothing stored links them). Suspended accounts can read and log in but not post, comment or vote (403). A moderator-removed post cannot be edited or deleted by its author.
+- **Rate limits** (per account, Redis only): 10 posts / hour and 30 / day, 30 edits or deletes / hour, 60 comments / hour, 300 votes / hour, 20 reports / day; plus a loose per-IP limit on every forum write.
+- **Storage note.** `review_rating.grade_bucket` is `varchar(16)`; "prefer not to say" is stored as `undisclosed` and mapped back on read. No migration was needed.
+- **Demo data.** `make seed-forum-demo` (development only) adds FAKE instructors "Demo Instructor A".."E" (`demo-instructor-a`..) on CMSC 14100, CMSC 14200, MATH 15100, ECON 20000 and HUMA 11000, plus a few fake posts; `ARGS=--remove` deletes them. Never part of `data/seed`.
 
 ## Verifier semantics (prompt 02)
 

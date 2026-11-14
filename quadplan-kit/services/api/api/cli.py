@@ -63,6 +63,28 @@ def cmd_schemas(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_seed_forum_demo(args: argparse.Namespace) -> int:
+    from sqlalchemy.orm import Session
+
+    from api.db.session import get_engine
+    from api.forum.demo import DemoRefusedError, remove_demo, seed_demo
+
+    try:
+        with Session(get_engine(args.database_url)) as session:
+            if args.remove:
+                print(f"seed-forum-demo: removed {remove_demo(session)} fake instructors")
+                return 0
+            counts = seed_demo(session)
+    except DemoRefusedError as exc:
+        print(f"seed-forum-demo: refused: {exc}")
+        return 1
+    print(
+        "seed-forum-demo: FAKE demo data loaded: "
+        + ", ".join(f"{k}={v}" for k, v in counts.items())
+    )
+    return 0
+
+
 def main(argv: list[str]) -> int:
     parser = argparse.ArgumentParser(prog="python -m api.cli")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -78,6 +100,13 @@ def main(argv: list[str]) -> int:
     schemas = sub.add_parser("schemas", help="export JSON Schemas")
     schemas.add_argument("--out", type=Path, default=REPO_ROOT / "docs" / "schemas")
     schemas.set_defaults(func=cmd_schemas)
+    demo = sub.add_parser(
+        "seed-forum-demo",
+        help="development only: fake instructors and forum pages on a few real courses",
+    )
+    demo.add_argument("--database-url", default=None)
+    demo.add_argument("--remove", action="store_true", help="delete the fake demo data")
+    demo.set_defaults(func=cmd_seed_forum_demo)
     try:
         args = parser.parse_args(argv)
     except SystemExit as exc:

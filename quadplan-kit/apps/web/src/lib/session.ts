@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/api/client";
 import type { SessionOut } from "@/api/types";
+import { setCsrfToken } from "@/features/auth/api";
 
 export const SESSION_KEY = ["session"] as const;
 
@@ -11,7 +12,10 @@ export const SESSION_KEY = ["session"] as const;
 export async function fetchSession(): Promise<SessionOut | null> {
   try {
     const { data, response } = await api.GET("/auth/session");
-    return response.status === 200 && data ? data : null;
+    const session = response.status === 200 && data ? data : null;
+    // After a reload the CSRF token exists only in this response: keep it for state changes.
+    setCsrfToken(session?.csrf_token ?? null);
+    return session;
   } catch {
     return null;
   }

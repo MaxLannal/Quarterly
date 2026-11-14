@@ -49,6 +49,7 @@ EXPECTED = {
     ("post", "/forum/posts/{post_id}/comments"),
     ("post", "/forum/votes"),
     ("post", "/forum/reports"),
+    ("get", "/forum/courses/{code}"),
     # auth + account (decision 5)
     ("post", "/auth/email"),
     ("post", "/auth/verify-code"),
@@ -65,6 +66,8 @@ EXPECTED = {
     ("get", "/admin/review-items"),
     ("post", "/admin/review-items/{item_id}/decision"),
     ("post", "/admin/program-versions/{version_id}/publish"),
+    ("get", "/admin/moderation"),
+    ("post", "/admin/moderation/{target_type}/{target_id}/decision"),
 }
 
 PLAN = {"catalog_year": "2026-27", "entry_term": "2026-AU"}
@@ -94,13 +97,6 @@ def test_openapi_lists_every_endpoint() -> None:
 @pytest.mark.parametrize(
     ("method", "path", "body"),
     [
-        ("get", "/forum/pages/1/posts", None),
-        ("post", "/forum/votes", {"target_type": "post", "target_id": 1, "value": 1}),
-        (
-            "post",
-            "/forum/pages/1/posts",
-            {"kind": "discussion", "body_md": "Is the midterm curved?"},
-        ),
         ("get", "/admin/review-items", None),
     ],
 )
@@ -114,8 +110,8 @@ def test_stubs_return_501_after_validation(
 
 
 def test_request_validation_happens_before_the_stub() -> None:
-    review = {"kind": "review", "body_md": "Great", "term_taken": "2025-AU"}
-    assert TestClient(app).post("/forum/pages/1/posts", json=review).status_code == 422
+    # The forum needs a login (401 before the body is read); its validation is tested in
+    # test_forum_api.py.
     resp = TestClient(app).post(
         "/verify", json={"plan": {"catalog_year": "2026-27", "entry_term": "2026-FA"}}
     )

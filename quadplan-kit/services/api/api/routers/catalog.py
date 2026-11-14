@@ -6,8 +6,10 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from planner_core.models import CourseList, ProgramType, Quarter, Term
 from sqlalchemy.orm import Session
 
+from api.auth.sessions import SessionData, optional_session
 from api.config import get_settings
 from api.db.session import get_session
+from api.forum import instructors
 from api.repo import catalog as repo
 from api.schemas.catalog import (
     CatalogYearOut,
@@ -18,7 +20,7 @@ from api.schemas.catalog import (
     ProgramDetail,
     ProgramSummary,
 )
-from api.schemas.common import NOT_IMPLEMENTED, Page, not_implemented
+from api.schemas.common import NOT_IMPLEMENTED, Page
 
 router = APIRouter(tags=["catalog"], responses=NOT_IMPLEMENTED)
 
@@ -136,15 +138,24 @@ def eligible_courses(
         )
 
 
+# Instructor names are public (P03-12); ratings stay behind login.
 @router.get("/instructors", response_model=Page[InstructorSummary])
 def list_instructors(
+    session: SessionDep,
     q: str | None = None,
     limit: int = Query(default=50, ge=1, le=200),
     offset: int = Query(default=0, ge=0),
 ) -> Page[InstructorSummary]:
-    raise not_implemented("08")
+    items, total = instructors.search(session, q, limit=limit, offset=offset)
+    return Page[InstructorSummary](items=items, total=total, limit=limit, offset=offset)
 
 
+# The courses an instructor teaches; per-course ratings only for logged-in readers.
 @router.get("/instructors/{slug}", response_model=InstructorDetail)
-def get_instructor(slug: str) -> InstructorDetail:
-    raise not_implemented("08")
+def get_instructor(
+    session: SessionDep,
+    reader: Annotated[SessionData | None, Depends(optional_session)],
+    slug: str,
+) -> InstructorDetail:
+    with _not_found():
+        return instructors.detail(session, slug, with_ratings=reader is not None)

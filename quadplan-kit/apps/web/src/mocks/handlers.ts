@@ -10,7 +10,6 @@ import {
   allCourses,
   CATALOG_YEARS,
   detail,
-  FAKE_INSTRUCTOR,
   findCourse,
   matches,
   MOCK_CATALOG_YEAR,
@@ -20,6 +19,7 @@ import {
   summary,
 } from "./data";
 import { agentHandlers, generateVariants } from "./agents";
+import { forumHandlers, resetForumMock } from "./forum";
 import { mockVerify } from "./verify";
 
 type S = components["schemas"];
@@ -97,27 +97,15 @@ export function resetMockState() {
   plans.clear();
   importedPlans.length = 0;
   setLoggedIn(false);
+  resetForumMock();
 }
 
 // ------------------------------------------------------------------------------------------
 // Handlers
 // ------------------------------------------------------------------------------------------
 
-const instructorPage = (pageId: number): S["ForumPageOut"] => {
-  const course = allCourses()[pageId - 1] ?? allCourses()[0];
-  return {
-    id: pageId,
-    course_code: course?.code ?? "TEST 10000",
-    course_title: course?.title ?? "Fake",
-    instructor: FAKE_INSTRUCTOR,
-    n_reviews: 0,
-    rating_distribution: {},
-    summary: null,
-    terms_taught: ["2099-AU"],
-  };
-};
-
 export const handlers = [
+  ...forumHandlers, // forum, instructors and moderation: src/mocks/forum.ts (prompt 08)
   http.get(`${A}/health`, () => json<S["HealthOut"]>({ status: "ok", db: true, redis: true })),
   http.get(`${A}/version`, () => json<S["VersionOut"]>({ version: "mock", git_sha: "mock", core_version: "mock" })),
 
@@ -292,30 +280,6 @@ export const handlers = [
   http.post(`${A}/plans/:id/changesets/:cs/discard`, ({ params }) =>
     json<S["ChangeSet"]>({ id: dec(params.cs), plan_id: dec(params.id), origin: "chat", ops: [], base_plan_hash: "mock", status: "discarded", preview_report: null }),
   ),
-
-  // Forum and instructors (prompt 08)
-  http.get(`${A}/instructors`, () => json<S["Page_InstructorSummary_"]>({ items: [FAKE_INSTRUCTOR], total: 1, limit: 50, offset: 0 })),
-  http.get(`${A}/instructors/:slug`, ({ params }) =>
-    dec(params.slug) === FAKE_INSTRUCTOR.slug
-      ? json<S["InstructorDetail"]>({ ...FAKE_INSTRUCTOR, courses: allCourses().slice(0, 2).map((c, i) => ({ code: c.code, title: c.title, n_terms: 2, page_id: i + 1, attributes: summary(c).attributes })) })
-      : notFound("Instructor"),
-  ),
-  http.get(`${A}/forum/pages`, () => json<S["ForumPageOut"]>(instructorPage(1))),
-  http.get(`${A}/forum/pages/:id`, ({ params }) => json<S["ForumPageOut"]>(instructorPage(Number(params.id)))),
-  http.get(`${A}/forum/pages/:id/posts`, () => json<S["Page_PostOut_"]>({ items: [], total: 0, limit: 20, offset: 0 })),
-  http.post(`${A}/forum/pages/:id/posts`, async ({ params, request }) => {
-    const body = (await request.json()) as S["PostCreate"];
-    return json<S["PostOut"]>({ id: 1, page_id: Number(params.id), kind: body.kind, title: body.title ?? null, body_md: body.body_md, ratings: body.ratings ?? null, term_taken: body.term_taken ?? null, pseudonym: "Fake Heron", score: 0, my_vote: 0, n_comments: 0, status: "visible", created_day: today() }, 201);
-  }),
-  http.get(`${A}/forum/posts/:id`, () => notFound("Post")),
-  http.patch(`${A}/forum/posts/:id`, () => notFound("Post")),
-  http.delete(`${A}/forum/posts/:id`, () => new HttpResponse(null, { status: 204 })),
-  http.post(`${A}/forum/posts/:id/comments`, () => notFound("Post")),
-  http.post(`${A}/forum/votes`, async ({ request }) => {
-    const body = (await request.json()) as S["VoteIn"];
-    return json<S["VoteOut"]>({ my_vote: body.value, score: body.value });
-  }),
-  http.post(`${A}/forum/reports`, () => json<S["ForumReportOut"]>({ id: 1, status: "open" }, 201)),
 
   // Admin (prompt 09)
   http.get(`${A}/admin/review-items`, () => json<S["Page_ReviewItemOut_"]>({ items: [], total: 0, limit: 50, offset: 0 })),

@@ -491,6 +491,8 @@ def course_detail(
     session: Session, catalog_year: str, raw_code: str, *, statuses: Sequence[str] = PUBLISHED
 ) -> CourseDetail:
     """Everything the course page shows. `statuses`: program versions for `counts_toward`."""
+    from api.forum.pages import course_instructors  # the forum imports this module
+
     row = _course_row(session, catalog_year, raw_code)
     summary = _summaries(session, [row])[0]
     requisite = session.scalar(
@@ -514,8 +516,8 @@ def course_detail(
         relations=_relations(session, row.id),
         offerings=_offerings(session, row),
         sections=_sections(session, row),
-        # Instructor pages (course_instructor) arrive with schedule data and the forum (08).
-        instructors=[],
+        # One forum page per course x instructor (names are public, P03-12).
+        instructors=course_instructors(session, row.code),
         counts_toward=counts_toward(session, catalog_year, row.code, statuses=statuses),
         source=Source.model_validate(row.source) if row.source else None,
     )

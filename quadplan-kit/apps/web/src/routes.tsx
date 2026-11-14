@@ -2,6 +2,7 @@ import type { RouteObject } from "react-router-dom";
 import { AppShell } from "./AppShell";
 import AboutPage from "./pages/AboutPage";
 import AccountPage from "./pages/AccountPage";
+import AdminModerationPage from "./pages/AdminModerationPage";
 import AdminPage from "./pages/AdminPage";
 import ComparePlansPage from "./pages/ComparePlansPage";
 import CourseInstructorPage from "./pages/CourseInstructorPage";
@@ -46,6 +47,7 @@ export const routes: RouteObject[] = [
       { path: "/guidelines", element: <GuidelinesPage /> },
       { path: "/privacy", element: <PrivacyPage /> },
       { path: "/about", element: <AboutPage /> },
+      { path: "/admin/moderation", element: <AdminModerationPage /> },
       { path: "/admin/*", element: <AdminPage /> },
       { path: "*", element: <NotFoundPage /> },
     ],
