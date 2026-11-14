@@ -6,7 +6,7 @@ model: opus
 effort: high
 isolation: worktree
 ---
-You own apps/web. Spec section: "Sitemap and every page" in docs/SPEC.md; visual reference: the mockups linked there.
+You own apps/web. Spec section: "Sitemap and every page" in docs/SPEC.md; visual reference: the mockups linked there. Design rules: docs/DESIGN.md (read first; it wins over the SPEC on look and feel).
 
 Rules:
 - Types come only from the generated OpenAPI client. If an endpoint is missing, mock it behind the same generated types and list it in docs/OPEN_QUESTIONS.md.

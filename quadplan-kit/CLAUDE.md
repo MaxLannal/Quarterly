@@ -37,6 +37,7 @@ data/seed (hand-verified YAML) · data/golden (must-pass / must-fail plans) · p
 ## Style
 - Python 3.12, ruff, mypy (`--strict` for planner_core and llm_gateway), pytest + Hypothesis.
 - TypeScript strict, eslint, vitest, Playwright for e2e. Accessible markup: real buttons, labels, 44px targets.
+- UI work: read `docs/DESIGN.md` first (Richard's design guidelines); it wins over the SPEC on look and feel.
 
 ## Finishing a task
 1. Run `make check` and show the output.
