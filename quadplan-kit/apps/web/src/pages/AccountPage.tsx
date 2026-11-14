@@ -1,6 +1,8 @@
 import { useId, useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { PageContainer, PageHeader } from "@/components/layout/page";
 import { Button } from "@/components/ui/button";
+import { Avatar } from "@/components/ui/card";
 import { api, attempt, type AccountOut } from "@/features/auth/api";
 import { signedOut, useSession } from "@/features/auth/session";
 import { FormError, linkClass, Notice, PASSWORD_HINT, passwordProblem, TextField } from "@/features/auth/ui";
@@ -39,8 +41,8 @@ function ChangePassword() {
   }
 
   return (
-    <form onSubmit={(e) => void onSubmit(e)} noValidate className="flex flex-col gap-4" aria-labelledby="change-password">
-      <h2 id="change-password" className="text-lg font-semibold">
+    <form onSubmit={(e) => void onSubmit(e)} noValidate className="flex flex-col gap-5 rounded-xl border border-hairline bg-surface-card p-6 sm:p-8" aria-labelledby="change-password">
+      <h2 id="change-password" className="font-display text-display-sm">
         Change password
       </h2>
       <TextField
@@ -109,11 +111,11 @@ function ExportData({ account }: { account: AccountOut }) {
   }
 
   return (
-    <section aria-labelledby="export-data" className="flex flex-col gap-4">
-      <h2 id="export-data" className="text-lg font-semibold">
+    <section aria-labelledby="export-data" className="flex flex-col gap-5 rounded-xl border border-hairline bg-surface-card p-6 sm:p-8">
+      <h2 id="export-data" className="font-display text-display-sm">
         Export your data
       </h2>
-      <p className="text-sm text-muted-foreground">Your account details and every plan, as one JSON file.</p>
+      <p className="text-body-sm text-muted">Your account details and every plan, as one JSON file.</p>
       <FormError message={error} />
       <Notice message={notice} />
       <Button type="button" variant="outline" disabled={busy} onClick={() => void download()} className="self-start">
@@ -169,18 +171,18 @@ function DeleteAccount() {
   ];
 
   return (
-    <form onSubmit={(e) => void onSubmit(e)} noValidate className="flex flex-col gap-4" aria-labelledby="delete-account">
-      <h2 id="delete-account" className="text-lg font-semibold">
+    <form onSubmit={(e) => void onSubmit(e)} noValidate className="flex flex-col gap-5 rounded-xl border border-hairline bg-surface-card p-6 sm:p-8" aria-labelledby="delete-account">
+      <h2 id="delete-account" className="font-display text-display-sm">
         Delete account
       </h2>
-      <p className="text-sm">
+      <p className="text-body-sm text-body">
         This permanently removes your account, your email address, your plans and your sessions. It
         cannot be undone.
       </p>
       <fieldset className="flex flex-col gap-2">
-        <legend className="text-sm font-medium">Your forum posts</legend>
+        <legend className="text-body-sm font-medium">Your forum posts</legend>
         {options.map((option) => (
-          <div key={option.value} className="flex items-start gap-3 rounded-md border border-border p-3">
+          <div key={option.value} className="flex items-start gap-3 rounded-lg border border-hairline px-4 py-2 has-[:checked]:border-primary has-[:checked]:bg-primary-wash">
             <input
               id={`${groupId}-${option.value}`}
               type="radio"
@@ -189,16 +191,16 @@ function DeleteAccount() {
               checked={posts === option.value}
               onChange={() => setPosts(option.value)}
               aria-describedby={`${groupId}-${option.value}-detail`}
-              className="mt-3 size-5"
+              className="mt-3 size-5 shrink-0 cursor-pointer"
             />
             <div>
               <label
                 htmlFor={`${groupId}-${option.value}`}
-                className="flex min-h-11 cursor-pointer items-center text-sm font-medium"
+                className="flex min-h-11 cursor-pointer items-center text-body-sm font-medium text-ink"
               >
                 {option.label}
               </label>
-              <p id={`${groupId}-${option.value}-detail`} className="text-sm text-muted-foreground">
+              <p id={`${groupId}-${option.value}-detail`} className="text-body-sm text-muted">
                 {option.detail}
               </p>
             </div>
@@ -215,7 +217,7 @@ function DeleteAccount() {
         onChange={(e) => setPassword(e.target.value)}
       />
       <FormError message={error} />
-      <Button type="submit" disabled={busy} className="self-start">
+      <Button type="submit" variant="destructive" disabled={busy} className="self-start">
         {busy ? "Deleting…" : "Delete my account permanently"}
       </Button>
     </form>
@@ -237,10 +239,10 @@ export default function AccountPage() {
   }
 
   return (
-    <section className="mx-auto flex max-w-2xl flex-col gap-8 p-6">
-      <h1 className="text-2xl font-semibold">Account</h1>
+    <PageContainer width="reading" as="section" className="flex flex-col gap-6">
+      <PageHeader title="Account" size="md" className="mb-4" />
       {session.status === "loading" ? (
-        <p role="status" className="text-muted-foreground">
+        <p role="status" className="text-muted">
           Loading your account…
         </p>
       ) : null}
@@ -254,11 +256,14 @@ export default function AccountPage() {
       ) : null}
       {session.status === "authenticated" ? (
         <>
-          <div className="flex flex-wrap items-center gap-4">
-            <p>
-              Logged in as <span className="font-medium">{session.account.username}</span>{" "}
-              <span className="text-muted-foreground">(account created {session.account.created_day})</span>
-            </p>
+          <div className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-hairline bg-surface-card p-6 sm:px-8">
+            <div className="flex items-center gap-3">
+              <Avatar name={session.account.username} />
+              <p>
+                Logged in as <span className="font-medium">{session.account.username}</span>{" "}
+                <span className="text-muted">(account created {session.account.created_day})</span>
+              </p>
+            </div>
             <Button type="button" variant="outline" disabled={busy} onClick={() => void logOut()}>
               Log out
             </Button>
@@ -266,13 +271,13 @@ export default function AccountPage() {
           <ChangePassword />
           <ExportData account={session.account} />
           <DeleteAccount />
-          <p className="text-sm">
+          <p className="text-body-sm">
             <Link to="/privacy" className={linkClass}>
               What Quarterly stores about you
             </Link>
           </p>
         </>
       ) : null}
-    </section>
+    </PageContainer>
   );
 }

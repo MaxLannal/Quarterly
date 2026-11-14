@@ -67,7 +67,7 @@ export function Menu({ label, trigger, items, open, onOpenChange, className }: M
         aria-expanded={open}
         aria-controls={open ? id : undefined}
         onClick={() => onOpenChange(!open)}
-        className="flex min-h-11 min-w-11 items-center justify-center rounded-md text-muted-foreground hover:bg-muted focus-visible:outline-2"
+        className="flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-pill text-muted transition-colors hover:bg-surface-strong hover:text-ink focus-visible:outline-offset-[-2px] aria-expanded:bg-surface-strong aria-expanded:text-ink"
       >
         {trigger}
       </button>
@@ -79,7 +79,7 @@ export function Menu({ label, trigger, items, open, onOpenChange, className }: M
           aria-label={label}
           tabIndex={-1}
           onKeyDown={onKeyDown}
-          className="absolute right-0 z-40 mt-1 min-w-48 rounded-md border border-border bg-background py-1 shadow-lg"
+          className="absolute right-0 z-40 mt-1 min-w-52 rounded-lg border border-hairline bg-surface-card p-1 shadow-overlay"
         >
           {items.map((item) => (
             <button
@@ -93,8 +93,8 @@ export function Menu({ label, trigger, items, open, onOpenChange, className }: M
                 item.onSelect();
               }}
               className={cn(
-                "flex min-h-11 w-full items-center px-3 text-left text-sm hover:bg-muted focus:bg-muted focus:outline-none disabled:opacity-50",
-                item.danger && "text-red-800",
+                "flex min-h-11 w-full cursor-pointer items-center rounded-sm px-3 text-left text-body-sm text-ink hover:bg-surface-strong focus:bg-primary-wash focus:outline-none disabled:cursor-not-allowed disabled:text-muted-soft disabled:hover:bg-transparent",
+                item.danger && "text-error",
               )}
             >
               {item.label}

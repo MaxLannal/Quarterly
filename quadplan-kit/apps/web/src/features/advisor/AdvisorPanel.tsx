@@ -4,6 +4,7 @@ import { isNotAvailable } from "@/api/client";
 import { streamChat } from "@/api/sse";
 import type { ChangeOp, ChangeSet, Citation, PlanState } from "@/api/types";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/input";
 import { NotAvailable, Notice } from "@/components/ui/misc";
 import { opText } from "@/features/planner/context";
 import { ReportBadge } from "@/features/planner/VerifierBadge";
@@ -14,17 +15,21 @@ type Entry =
   | { kind: "proposal"; changeSet: ChangeSet; state: "proposed" | "applied" | "dismissed" };
 
 export function CitationChip({ c }: { c: Citation }) {
-  const cls = "inline-flex min-h-8 items-center rounded-full border border-border bg-muted px-2 text-xs";
+  // Citation chip: a 32px neutral pill drawn inside a transparent 6px border, so links keep a 44px
+  // target (same technique as Button size "sm"). Tabular Inter: course codes never use the serif.
+  const cls =
+    "inline-flex min-h-11 items-center rounded-pill border-[6px] border-transparent bg-surface-strong bg-clip-padding px-3 text-caption tabular-nums text-ink";
+  const link = `${cls} underline underline-offset-2 hover:bg-hairline focus-visible:outline-offset-[-4px]`;
   if (c.kind === "course") {
     return (
-      <Link to={`/courses/${encodeURIComponent(c.id)}`} className={`${cls} underline-offset-2 hover:underline`}>
+      <Link to={`/courses/${encodeURIComponent(c.id)}`} className={link}>
         {c.label}
       </Link>
     );
   }
   if (c.kind === "program") {
     return (
-      <Link to={`/programs/${encodeURIComponent(c.id)}`} className={`${cls} hover:underline`}>
+      <Link to={`/programs/${encodeURIComponent(c.id)}`} className={link}>
         {c.label}
       </Link>
     );
@@ -48,27 +53,27 @@ export function ProposalCard({
   onDismiss: () => void;
 }) {
   return (
-    <article className="rounded-md border border-blue-700 bg-blue-50/50 p-2 text-sm" aria-label="Proposed change">
-      <h4 className="font-semibold">Proposed change</h4>
-      <ul className="my-1 list-disc pl-5">
+    <article className="rounded-xl border border-hairline-strong bg-surface-card p-4 text-body-sm text-ink" aria-label="Proposed change">
+      <h4 className="text-caption-uppercase uppercase text-muted">Proposed change</h4>
+      <ul className="my-2 list-disc pl-5 marker:text-gray-dark">
         {changeSet.ops.map((op, i) => (
           <li key={i}>{opText(op)}</li>
         ))}
       </ul>
       {changeSet.preview_report && (
-        <p className="flex items-center gap-2">
+        <p className="flex flex-wrap items-center gap-2 text-body">
           After this change: <ReportBadge report={changeSet.preview_report} />
         </p>
       )}
       {state === "proposed" ? (
-        <div className="mt-2 flex gap-2">
+        <div className="mt-3 flex gap-2">
           <Button onClick={onApply}>Apply</Button>
           <Button variant="outline" onClick={onDismiss}>
             Dismiss
           </Button>
         </div>
       ) : (
-        <p className="mt-1 text-xs text-muted-foreground">{state === "applied" ? "Applied." : "Dismissed."}</p>
+        <p className="mt-2 text-caption text-muted">{state === "applied" ? "Applied." : "Dismissed."}</p>
       )}
     </article>
   );
@@ -118,21 +123,23 @@ export function AdvisorPanel({ plan, onApply }: AdvisorPanelProps) {
   return (
     <div className="flex flex-col gap-3">
       {unavailable && <NotAvailable feature="The advisor">Planning questions will work once the chat service is built.</NotAvailable>}
-      <ol className="space-y-2" aria-label="Advisor messages" aria-live="polite">
-        {entries.length === 0 && <li className="text-sm text-muted-foreground">Ask a planning question, for example “Which elective is lighter?”</li>}
+      <ol className="space-y-3" aria-label="Advisor messages" aria-live="polite">
+        {entries.length === 0 && (
+          <li className="rounded-lg bg-canvas-soft p-4 text-body-sm text-muted">Ask a planning question, for example “Which elective is lighter?”</li>
+        )}
         {entries.map((entry, i) => (
           <li key={i}>
             {entry.kind === "user" ? (
-              <div className="ml-6 rounded-md bg-muted p-2 text-sm">
+              <div className="ml-8 rounded-lg rounded-br-xs bg-surface-strong px-4 py-3 text-body-sm text-ink">
                 <span className="sr-only">You: </span>
                 {entry.text}
               </div>
             ) : entry.kind === "assistant" ? (
-              <div className="mr-6 rounded-md border border-border p-2 text-sm">
+              <div className="mr-8 rounded-lg rounded-bl-xs border border-hairline bg-surface-card px-4 py-3 text-body-sm text-body">
                 <span className="sr-only">Advisor: </span>
                 <p>{entry.text}</p>
                 {entry.citations.length > 0 && (
-                  <ul className="mt-1 flex flex-wrap gap-1" aria-label="Sources">
+                  <ul className="mt-1 flex flex-wrap" aria-label="Sources">
                     {entry.citations.map((c) => (
                       <li key={`${c.kind}-${c.id}`}>
                         <CitationChip c={c} />
@@ -154,29 +161,22 @@ export function AdvisorPanel({ plan, onApply }: AdvisorPanelProps) {
           </li>
         ))}
         {busy && (
-          <li role="status" className="text-sm text-muted-foreground">
+          <li role="status" className="text-body-sm text-muted">
             Thinking…
           </li>
         )}
       </ol>
       {error && (
-        <Notice tone="red" role="alert">
+        <Notice tone="error" role="alert">
           {error}
         </Notice>
       )}
       <form onSubmit={send} className="flex flex-col gap-2">
-        <label htmlFor={inputId} className="text-sm font-medium">
+        <label htmlFor={inputId} className="text-caption font-medium text-ink">
           Ask the advisor
         </label>
-        <textarea
-          id={inputId}
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          rows={3}
-          maxLength={4000}
-          className="rounded-md border border-border bg-background p-2 text-sm"
-        />
-        <Button type="submit" disabled={busy || !text.trim()}>
+        <Textarea id={inputId} value={text} onChange={(e) => setText(e.target.value)} rows={3} maxLength={4000} className="text-body-sm" />
+        <Button type="submit" className="self-end" disabled={busy || !text.trim()}>
           Send
         </Button>
       </form>

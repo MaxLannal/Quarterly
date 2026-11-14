@@ -14,7 +14,10 @@ import { useCourseMap, usePlanPrograms, usePrograms } from "@/api/hooks";
 import type { ChangeOp, Issue, PlanItem } from "@/api/types";
 import { Button } from "@/components/ui/button";
 import { Dialog } from "@/components/ui/dialog";
+import { CloseIcon } from "@/components/ui/icons";
+import { Input } from "@/components/ui/input";
 import { Notice } from "@/components/ui/misc";
+import { Tabs } from "@/components/ui/tabs";
 import { AdvisorPanel } from "@/features/advisor/AdvisorPanel";
 import { GenerateDialog } from "@/features/generate/GenerateDialog";
 import { ProgramPickerBody, StatusBadge } from "@/features/programs/ProgramPicker";
@@ -27,7 +30,6 @@ import { upsertPlan, type LocalPlan } from "./localPlans";
 import { addCourseOps, editorReducer, initEditor, itemLabel, moveItemOps, type EditResult } from "./planModel";
 import { PlanGrid } from "./PlanGrid";
 import { RequirementRail } from "./RequirementRail";
-import { Tabs } from "./RightRail";
 import { TermPickerDialog } from "./TermPickerDialog";
 import { termLabel } from "./terms";
 import { useVerify } from "./useVerify";
@@ -186,46 +188,49 @@ export function Planner({ initial, autoGenerate = false }: PlannerProps) {
 
   return (
     <PlannerContext.Provider value={ctx}>
-      <div className="mx-auto max-w-[1600px] space-y-3 p-3">
-        <div className="flex flex-wrap items-center gap-2 border-b border-border pb-3">
+      <div className="mx-auto flex w-full max-w-tool flex-col gap-4 px-4 pb-24 pt-6 sm:px-6 lg:px-8">
+        <div className="flex flex-wrap items-end gap-x-4 gap-y-3 border-b border-hairline pb-5">
           <h1 className="sr-only">Planner</h1>
-          <div className="flex min-w-0 flex-col">
-            <label htmlFor={nameId} className="text-xs text-muted-foreground">
+          <div className="flex min-w-0 flex-col gap-1">
+            <label htmlFor={nameId} className="text-caption-uppercase uppercase text-muted">
               Plan name
             </label>
-            <input
+            <Input
               id={nameId}
               value={state.name}
               onChange={(e) => dispatch({ type: "rename", name: e.target.value })}
-              className="min-h-11 w-48 rounded-md border border-border bg-background px-2 font-semibold"
+              className="w-56 font-display text-display-sm"
             />
           </div>
-          <span className="text-sm text-muted-foreground">Catalog {plan.catalog_year}</span>
-          <ul className="flex flex-wrap items-center gap-1" aria-label="Programs on this plan">
-            {(plan.programs ?? []).map((p) => {
-              const summary = allPrograms.find((x) => x.id === p.program_id);
-              return (
-                <li key={p.program_id} className="flex items-center gap-1 rounded-full border border-border bg-muted pl-3 text-sm">
-                  {names.get(p.program_id) ?? p.program_id}
-                  {summary && <StatusBadge status={summary.status} />}
-                  <button
-                    type="button"
-                    aria-label={`Remove program ${names.get(p.program_id) ?? p.program_id}`}
-                    onClick={() => dispatch({ type: "programs", programs: (plan.programs ?? []).filter((x) => x.program_id !== p.program_id) })}
-                    className="flex min-h-11 min-w-11 items-center justify-center rounded-full hover:bg-zinc-200"
-                  >
-                    <span aria-hidden="true">✕</span>
-                  </button>
-                </li>
-              );
-            })}
-            <li>
-              <Button variant="outline" onClick={() => setPickPrograms(true)}>
-                + Program
-              </Button>
-            </li>
-          </ul>
-          <div className="ml-auto flex flex-wrap items-center gap-2">
+          <div className="flex min-w-0 flex-col gap-1">
+            <span className="text-caption-uppercase uppercase text-muted">Catalog {plan.catalog_year}</span>
+            <ul className="flex flex-wrap items-center gap-2" aria-label="Programs on this plan">
+              {(plan.programs ?? []).map((p) => {
+                const summary = allPrograms.find((x) => x.id === p.program_id);
+                return (
+                  <li key={p.program_id} className="flex min-h-11 items-center gap-1 rounded-pill border border-hairline-strong bg-surface-card pl-4 text-body-sm text-ink">
+                    {names.get(p.program_id) ?? p.program_id}
+                    {summary && <StatusBadge status={summary.status} />}
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      aria-label={`Remove program ${names.get(p.program_id) ?? p.program_id}`}
+                      onClick={() => dispatch({ type: "programs", programs: (plan.programs ?? []).filter((x) => x.program_id !== p.program_id) })}
+                      className="-my-px text-muted hover:text-ink"
+                    >
+                      <CloseIcon size={14} />
+                    </Button>
+                  </li>
+                );
+              })}
+              <li>
+                <Button variant="outline" onClick={() => setPickPrograms(true)}>
+                  + Program
+                </Button>
+              </li>
+            </ul>
+          </div>
+          <div className="flex flex-wrap items-center gap-2 lg:ml-auto">
             <VerifierBadge verify={verify} />
             <Button onClick={() => setGenerateOpen(true)}>Generate plan</Button>
             <Button variant="outline" onClick={() => void save()}>
@@ -234,37 +239,39 @@ export function Planner({ initial, autoGenerate = false }: PlannerProps) {
           </div>
         </div>
         {saveMsg && (
-          <Notice role="status" tone="blue">
+          <Notice role="status" tone="info">
             {saveMsg}
           </Notice>
         )}
         {!stored && (
-          <Notice tone="amber" role="alert">
+          <Notice tone="warning" role="alert">
             This browser is not storing data for this site, so your plan will be lost when you leave. Log in to save it.
           </Notice>
         )}
         {state.error && (
-          <Notice tone="red" role="alert" className="flex items-center justify-between gap-2">
-            <span>{state.error}</span>
-            <Button variant="ghost" onClick={() => dispatch({ type: "dismissError" })}>
-              Dismiss
-            </Button>
+          <Notice tone="error" role="alert">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <span>{state.error}</span>
+              <Button variant="ghost" size="sm" onClick={() => dispatch({ type: "dismissError" })}>
+                Dismiss
+              </Button>
+            </div>
           </Notice>
         )}
         {items.length === 0 && programIds.length === 0 && (
-          <Notice tone="blue">
-            New here? <Link to="/onboarding" className="font-medium underline">Set up your plan</Link> with your entry term, programs and goals, or drag courses in from the requirement list.
+          <Notice tone="info">
+            New here? <Link to="/onboarding" className="font-medium">Set up your plan</Link> with your entry term, programs and goals, or drag courses in from the requirement list.
           </Notice>
         )}
         <DndContext sensors={sensors} onDragEnd={onDragEnd} accessibility={{ announcements }}>
-          <div className="grid gap-4 lg:grid-cols-[280px_minmax(0,1fr)] xl:grid-cols-[260px_minmax(0,1fr)_320px]">
-            <section aria-label="Requirements" className="min-w-0">
+          <div className="mt-2 grid items-start gap-6 lg:grid-cols-[300px_minmax(0,1fr)] xl:grid-cols-[300px_minmax(0,1fr)_340px]">
+            <section aria-label="Requirements" className="min-w-0 rounded-xl border border-hairline bg-surface-card p-4">
               <RequirementRail details={programQueries.map((q, i) => ({ ...q, id: programIds[i] ?? "" }))} progress={report?.progress} onAddProgram={() => setPickPrograms(true)} />
             </section>
             <section aria-label="Plan grid" className="min-w-0">
               <PlanGrid years={state.years} showSummer={showSummer} onToggleSummer={() => setShowSummer(!showSummer)} onYears={(n) => dispatch({ type: "years", years: n })} />
             </section>
-            <section aria-label="Issues, goals and advisor" className="min-w-0 lg:col-span-2 xl:col-span-1">
+            <section aria-label="Issues, goals and advisor" className="min-w-0 rounded-xl border border-hairline bg-surface-card px-4 pb-4 pt-2 lg:col-span-2 xl:col-span-1">
               <Tabs
                 label="Plan details"
                 tabs={[

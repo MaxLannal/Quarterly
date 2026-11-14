@@ -1,7 +1,9 @@
 import { Link, useParams } from "react-router-dom";
 import { ApiError, isNotAvailable } from "@/api/client";
 import { useCourse } from "@/api/hooks";
-import { Badge, NotAvailable, Spinner } from "@/components/ui/misc";
+import { inlineLinkClass, LoadingState, PageContainer, PageHeader, Section, standaloneLinkClass } from "@/components/layout/page";
+import { Avatar } from "@/components/ui/card";
+import { Badge, CourseCode, NotAvailable } from "@/components/ui/misc";
 import { AddToPlanButton } from "@/features/courses/AddToPlanButton";
 import { AttributeCard, OfferingsTable, PrereqGraph } from "@/features/courses/CourseParts";
 import { termLabel } from "@/features/planner/terms";
@@ -12,129 +14,134 @@ export default function CoursePage() {
 
   if (q.isLoading) {
     return (
-      <section className="mx-auto max-w-5xl p-4">
-        <h1 className="text-2xl font-semibold">{code}</h1>
-        <Spinner label="Loading course" />
-      </section>
+      <PageContainer as="section">
+        <PageHeader title={code} size="xl" />
+        <LoadingState label="Loading course" />
+      </PageContainer>
     );
   }
   if (q.error || !q.data) {
     const missing = q.error instanceof ApiError && q.error.status === 404;
     return (
-      <section className="mx-auto max-w-5xl space-y-3 p-4">
-        <h1 className="text-2xl font-semibold">{missing ? "Course not found" : code}</h1>
-        {isNotAvailable(q.error) ? (
-          <NotAvailable feature="Course pages" />
-        ) : (
-          <p>{missing ? `There is no course ${code} in this catalog.` : "Could not load this course."}</p>
-        )}
-        <Link to="/courses" className="text-primary underline">
-          Search courses
-        </Link>
-      </section>
+      <PageContainer as="section" width="reading">
+        <PageHeader title={missing ? "Course not found" : code} size="md" />
+        <div className="flex flex-col gap-3">
+          {isNotAvailable(q.error) ? (
+            <NotAvailable feature="Course pages" />
+          ) : (
+            <p className="text-body">{missing ? `There is no course ${code} in this catalog.` : "Could not load this course."}</p>
+          )}
+          <Link to="/courses" className={standaloneLinkClass}>
+            Search courses
+          </Link>
+        </div>
+      </PageContainer>
     );
   }
 
   const c = q.data;
   return (
-    <article className="mx-auto max-w-5xl space-y-5 p-4">
-      <header className="space-y-2">
-        <h1 className="text-2xl font-semibold">
-          {c.code} · {c.title}
-        </h1>
-        <div className="flex flex-wrap items-center gap-2 text-sm">
-          <span>{c.units} units</span>
-          {c.crosslists.length > 0 && <span>Cross-listed as {c.crosslists.join(", ")}</span>}
-          {c.core_tags.map((t) => (
-            <Badge key={t} tone="blue">
-              Core: {t}
-            </Badge>
-          ))}
-          {c.tags.map((t) => (
-            <Badge key={t}>{t}</Badge>
-          ))}
-          <span className="text-muted-foreground">Catalog {c.catalog_year}</span>
+    <PageContainer as="article">
+      <PageHeader
+        size="xl"
+        title={
+          <>
+            <CourseCode className="mb-4 block">{c.code}</CourseCode>
+            {" "}<span className="sr-only">·</span>{" "}
+            {c.title}
+          </>
+        }
+        meta={
+          <>
+            <span>{c.units} units</span>
+            {c.crosslists.length > 0 && <span>Cross-listed as {c.crosslists.join(", ")}</span>}
+            <span>Catalog {c.catalog_year}</span>
+            {c.core_tags.map((t) => (
+              <Badge key={t}>Core: {t}</Badge>
+            ))}
+            {c.tags.map((t) => (
+              <Badge key={t}>{t}</Badge>
+            ))}
+          </>
+        }
+        description={c.description ? <p>{c.description}</p> : undefined}
+        actions={<AddToPlanButton code={c.code} catalogYear={c.catalog_year} />}
+      />
+
+      <div className="flex flex-col gap-12">
+        <Section id="prereq" title="Prerequisites">
+          <div className="flex max-w-reading flex-col gap-2 text-body">
+            <p className="text-ink">{c.prereq_human ?? c.prereq_text ?? "None listed."}</p>
+            {c.prereq_text && c.prereq_human && (
+              <p className="text-body-sm text-muted">
+                Catalog text: <q>{c.prereq_text}</q>
+              </p>
+            )}
+            {c.notes && <p className="text-body-sm">{c.notes}</p>}
+          </div>
+          <div className="mt-5">
+            <PrereqGraph course={c} />
+          </div>
+        </Section>
+
+        <div className="grid gap-12 lg:grid-cols-2 lg:gap-6">
+          <Section id="offer" title="Offerings">
+            <OfferingsTable course={c} />
+          </Section>
+          <AttributeCard course={c} />
         </div>
-        <AddToPlanButton code={c.code} catalogYear={c.catalog_year} />
-      </header>
 
-      {c.description && <p className="max-w-prose">{c.description}</p>}
+        <div className="grid gap-12 lg:grid-cols-2 lg:gap-6">
+          <Section id="instr" title="Instructors">
+            {c.instructors.length === 0 ? (
+              <p className="text-body-sm text-muted">No instructors recorded yet.</p>
+            ) : (
+              <ul className="divide-y divide-hairline border-y border-hairline">
+                {c.instructors.map((i) => (
+                  <li key={i.instructor.slug} className="flex items-center gap-3 py-3">
+                    <Avatar name={i.instructor.display_name} />
+                    <div className="min-w-0">
+                      <Link to={`/courses/${encodeURIComponent(c.code)}/i/${i.instructor.slug}`} className={`${inlineLinkClass} text-title-sm`}>
+                        {i.instructor.display_name}
+                      </Link>
+                      <p className="text-caption text-muted">
+                        {i.n_terms} term{i.n_terms === 1 ? "" : "s"}
+                        {i.first_term && i.last_term ? `, ${termLabel(i.first_term)}–${termLabel(i.last_term)}` : ""} · reviews need login
+                      </p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </Section>
 
-      <section aria-labelledby="prereq-heading" className="space-y-2">
-        <h2 id="prereq-heading" className="text-lg font-semibold">
-          Prerequisites
-        </h2>
-        <p>{c.prereq_human ?? c.prereq_text ?? "None listed."}</p>
-        {c.prereq_text && c.prereq_human && (
-          <p className="text-sm text-muted-foreground">
-            Catalog text: <q>{c.prereq_text}</q>
+          <Section id="counts" title="Counts toward">
+            {c.counts_toward.length === 0 ? (
+              <p className="text-body-sm text-muted">No program requirements list this course.</p>
+            ) : (
+              <ul className="divide-y divide-hairline border-y border-hairline">
+                {c.counts_toward.map((ct) => (
+                  <li key={`${ct.program_id}-${ct.node_id}`} className="py-3 text-body-sm text-body">
+                    <Link to={`/programs/${ct.program_id}`} className={`${inlineLinkClass} text-body-strong`}>
+                      {ct.program_name}
+                    </Link>
+                    {ct.label ? `: ${ct.label}` : ""}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </Section>
+        </div>
+
+        {c.source?.url && (
+          <p className="text-caption text-muted">
+            Source:{" "}
+            <a href={c.source.url} className={inlineLinkClass} rel="noreferrer" target="_blank">
+              catalog entry
+            </a>
           </p>
         )}
-        {c.notes && <p className="text-sm">{c.notes}</p>}
-        <PrereqGraph course={c} />
-      </section>
-
-      <div className="grid gap-5 lg:grid-cols-2">
-        <section aria-labelledby="offer-heading">
-          <h2 id="offer-heading" className="mb-2 text-lg font-semibold">
-            Offerings
-          </h2>
-          <OfferingsTable course={c} />
-        </section>
-        <AttributeCard course={c} />
       </div>
-
-      <section aria-labelledby="instr-heading">
-        <h2 id="instr-heading" className="text-lg font-semibold">
-          Instructors
-        </h2>
-        {c.instructors.length === 0 ? (
-          <p className="text-sm text-muted-foreground">No instructors recorded yet.</p>
-        ) : (
-          <ul className="mt-1 space-y-1">
-            {c.instructors.map((i) => (
-              <li key={i.instructor.slug}>
-                <Link to={`/courses/${encodeURIComponent(c.code)}/i/${i.instructor.slug}`} className="text-primary underline">
-                  {i.instructor.display_name}
-                </Link>{" "}
-                <span className="text-sm text-muted-foreground">
-                  {i.n_terms} term{i.n_terms === 1 ? "" : "s"}
-                  {i.first_term && i.last_term ? `, ${termLabel(i.first_term)}–${termLabel(i.last_term)}` : ""} · reviews need login
-                </span>
-              </li>
-            ))}
-          </ul>
-        )}
-      </section>
-
-      <section aria-labelledby="counts-heading">
-        <h2 id="counts-heading" className="text-lg font-semibold">
-          Counts toward
-        </h2>
-        {c.counts_toward.length === 0 ? (
-          <p className="text-sm text-muted-foreground">No program requirements list this course.</p>
-        ) : (
-          <ul className="mt-1 list-disc space-y-1 pl-5">
-            {c.counts_toward.map((ct) => (
-              <li key={`${ct.program_id}-${ct.node_id}`}>
-                <Link to={`/programs/${ct.program_id}`} className="text-primary underline">
-                  {ct.program_name}
-                </Link>
-                {ct.label ? `: ${ct.label}` : ""}
-              </li>
-            ))}
-          </ul>
-        )}
-      </section>
-
-      {c.source?.url && (
-        <p className="text-sm text-muted-foreground">
-          Source:{" "}
-          <a href={c.source.url} className="underline" rel="noreferrer" target="_blank">
-            catalog entry
-          </a>
-        </p>
-      )}
-    </article>
+    </PageContainer>
   );
 }

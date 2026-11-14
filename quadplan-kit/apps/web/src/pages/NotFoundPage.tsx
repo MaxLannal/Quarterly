@@ -1,14 +1,15 @@
 import { Link } from "react-router-dom";
+import { PageContainer, PageHeader, standaloneLinkClass } from "@/components/layout/page";
 
 export default function NotFoundPage() {
   return (
-    <section className="mx-auto max-w-3xl space-y-2 p-6">
-      <h1 className="text-2xl font-semibold">Page not found</h1>
+    <PageContainer width="reading" as="section">
+      <PageHeader title="Page not found" size="md" />
       <p>
-        <Link to="/" className="text-primary underline">
+        <Link to="/" className={standaloneLinkClass}>
           Go to the home page
         </Link>
       </p>
-    </section>
+    </PageContainer>
   );
 }

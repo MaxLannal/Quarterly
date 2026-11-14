@@ -1,4 +1,6 @@
 import type { Issue } from "@/api/types";
+import { EmptyState } from "@/components/layout/page";
+import { ErrorIcon, InfoIcon, WarningIcon } from "@/components/ui/icons";
 import { NotAvailable, Notice, Spinner } from "@/components/ui/misc";
 import { cn } from "@/lib/utils";
 import type { VerifyState } from "./useVerify";
@@ -22,7 +24,7 @@ export function IssuesTab({ verify, selected, onSelect }: IssuesTabProps) {
   const report = verify.report;
   if (!report) {
     return verify.status === "error" ? (
-      <Notice tone="red" role="alert">
+      <Notice tone="error" role="alert">
         {verify.error}
       </Notice>
     ) : (
@@ -33,12 +35,12 @@ export function IssuesTab({ verify, selected, onSelect }: IssuesTabProps) {
   return (
     <div className="space-y-3">
       {verify.status === "error" && (
-        <Notice tone="red" role="alert">
+        <Notice tone="error" role="alert">
           {verify.error} Showing the last result.
         </Notice>
       )}
       {issues.length === 0 ? (
-        <p className="text-sm">No issues found.</p>
+        <EmptyState>No issues found.</EmptyState>
       ) : (
         <ul className="space-y-2" aria-label="Verifier issues">
           {issues.map((issue, i) => {
@@ -50,17 +52,23 @@ export function IssuesTab({ verify, selected, onSelect }: IssuesTabProps) {
                   aria-pressed={isSel}
                   onClick={() => onSelect(isSel ? null : issue)}
                   className={cn(
-                    "w-full rounded-md border border-l-4 p-2 text-left text-sm hover:bg-muted",
-                    issue.level === "error" ? "border-l-red-700" : issue.level === "warning" ? "border-l-amber-600" : "border-l-blue-700",
-                    isSel && "bg-blue-50 ring-2 ring-blue-600",
+                    "w-full cursor-pointer rounded-lg border border-l-[3px] border-hairline bg-surface-card p-3 text-left text-body-sm text-ink transition-colors hover:bg-canvas-soft focus-visible:outline-offset-0",
+                    issue.level === "error" ? "border-l-error" : issue.level === "warning" ? "border-l-warning-icon" : "border-l-info",
+                    isSel && "border-primary bg-primary-wash hover:bg-primary-wash",
                   )}
                 >
-                  <span className="text-xs font-semibold uppercase">
+                  <span
+                    className={cn(
+                      "flex items-center gap-1.5 text-caption-uppercase uppercase",
+                      issue.level === "error" ? "text-error" : issue.level === "warning" ? "text-warning" : "text-info",
+                    )}
+                  >
+                    {issue.level === "error" ? <ErrorIcon size={14} /> : issue.level === "warning" ? <WarningIcon size={14} className="text-warning-icon" /> : <InfoIcon size={14} />}
                     {issue.level} · {issue.code}
                   </span>
-                  <span className="block">{issue.message}</span>
+                  <span className="mt-1 block">{issue.message}</span>
                   {(issue.fix_hints ?? []).length > 0 && (
-                    <span className="mt-1 block text-xs text-muted-foreground">Try: {(issue.fix_hints ?? []).join(" ")}</span>
+                    <span className="mt-1 block text-caption text-muted">Try: {(issue.fix_hints ?? []).join(" ")}</span>
                   )}
                 </button>
               </li>
@@ -69,9 +77,9 @@ export function IssuesTab({ verify, selected, onSelect }: IssuesTabProps) {
         </ul>
       )}
       {(report.assumptions ?? []).length > 0 && (
-        <details className="text-sm">
-          <summary className="min-h-11 cursor-pointer py-2">Assumptions ({(report.assumptions ?? []).length})</summary>
-          <ul className="list-disc pl-5 text-muted-foreground">
+        <details className="text-body-sm">
+          <summary className="flex min-h-11 cursor-pointer items-center rounded-md text-body-strong">Assumptions ({(report.assumptions ?? []).length})</summary>
+          <ul className="list-disc space-y-1 pl-5 text-muted marker:text-gray-dark">
             {(report.assumptions ?? []).map((a) => (
               <li key={a}>{a}</li>
             ))}

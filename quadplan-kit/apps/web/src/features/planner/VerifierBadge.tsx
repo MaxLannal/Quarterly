@@ -18,10 +18,9 @@ export function reportText(report: Report): string {
 }
 
 export function ReportBadge({ report }: { report: Report }) {
-  const tone = report.status === "valid" ? "green" : report.status === "warnings" ? "amber" : "red";
+  const tone = report.status === "valid" ? "success" : report.status === "warnings" ? "warning" : "error";
   return (
-    <Badge tone={tone}>
-      <span aria-hidden="true">{report.status === "valid" ? "✓" : report.status === "warnings" ? "⚠" : "⛔"}</span>
+    <Badge tone={tone} casing="normal">
       {reportText(report)}
     </Badge>
   );
@@ -29,18 +28,18 @@ export function ReportBadge({ report }: { report: Report }) {
 
 export function VerifierBadge({ verify }: { verify: VerifyState }) {
   let body;
-  if (verify.status === "unavailable") body = <Badge tone="neutral">Verifier not available yet</Badge>;
+  if (verify.status === "unavailable") body = <Badge tone="neutral" casing="normal">Verifier not available yet</Badge>;
   else if (verify.status === "verifying" || (verify.status === "idle" && !verify.report)) {
     body = verify.report ? (
-      <span className="inline-flex items-center gap-1 opacity-70">
+      <span className="inline-flex items-center gap-2">
         <ReportBadge report={verify.report} />
-        <span className="text-xs">checking…</span>
+        <span className="text-caption text-muted">checking…</span>
       </span>
     ) : (
-      <Badge tone="neutral">Checking…</Badge>
+      <Badge tone="neutral" casing="normal">Checking…</Badge>
     );
   } else if (verify.report) body = <ReportBadge report={verify.report} />;
-  else body = <Badge tone="red">Verifier error</Badge>;
+  else body = <Badge tone="error" casing="normal">Verifier error</Badge>;
   return (
     <span role="status" data-testid="verifier-badge" className="inline-flex min-h-11 items-center">
       {body}

@@ -2,21 +2,27 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { api, isNotAvailable, unwrap } from "@/api/client";
+import { EmptyState, PageContainer, PageHeader, Section, standaloneLinkClass } from "@/components/layout/page";
 import { Button } from "@/components/ui/button";
-import { NotAvailable, Notice, Spinner } from "@/components/ui/misc";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { ErrorText, NotAvailable, Notice, Spinner } from "@/components/ui/misc";
 import { deletePlan, loadPlans, newLocalId, setActive, upsertPlan, type LocalPlan } from "@/features/planner/localPlans";
 import { useSession } from "@/lib/session";
 
 function AccountPlans() {
   const q = useQuery({ queryKey: ["plans"], queryFn: async () => unwrap(await api.GET("/plans")), retry: false });
   if (q.isLoading) return <Spinner label="Loading saved plans" />;
-  if (q.error) return isNotAvailable(q.error) ? <NotAvailable feature="Saving plans to your account">Your plans are kept on this device for now.</NotAvailable> : <p className="text-red-800">Could not load saved plans.</p>;
-  if (!q.data?.length) return <p className="text-sm text-muted-foreground">No plans saved to your account yet.</p>;
+  if (q.error) return isNotAvailable(q.error) ? <NotAvailable feature="Saving plans to your account">Your plans are kept on this device for now.</NotAvailable> : <ErrorText>Could not load saved plans.</ErrorText>;
+  if (!q.data?.length) return <EmptyState>No plans saved to your account yet.</EmptyState>;
   return (
-    <ul className="space-y-1">
+    <ul className="divide-y divide-hairline rounded-xl border border-hairline bg-surface-card px-6">
       {q.data.map((p) => (
-        <li key={p.id} className="rounded-md border border-border p-2 text-sm">
-          {p.name} {p.is_primary && "(primary)"} · catalog {p.catalog_year} · updated {p.updated_day}
+        <li key={p.id} className="py-4 text-body-sm text-body">
+          <span className="text-body-strong text-ink">
+            {p.name} {p.is_primary && "(primary)"}
+          </span>{" "}
+          · catalog {p.catalog_year} · updated {p.updated_day}
         </li>
       ))}
     </ul>
@@ -43,33 +49,31 @@ export default function PlansPage() {
   }
 
   return (
-    <div className="mx-auto max-w-4xl space-y-6 p-4">
-      <h1 className="text-2xl font-semibold">My plans</h1>
-      <section aria-labelledby="device-plans" className="space-y-2">
-        <h2 id="device-plans" className="text-lg font-semibold">
-          On this device
-        </h2>
+    <PageContainer className="max-w-4xl">
+      <PageHeader title="My plans" eyebrow="Plans" />
+      <div className="flex flex-col gap-12">
+      <Section id="device-plans" title="On this device">
         {doc.plans.length === 0 ? (
-          <p className="text-sm">
+          <EmptyState>
             No plans yet.{" "}
-            <Link to="/onboarding" className="text-primary underline">
+            <Link to="/onboarding">
               Start planning
             </Link>
-          </p>
+          </EmptyState>
         ) : (
-          <ul className="space-y-2">
+          <ul className="flex flex-col gap-3">
             {doc.plans.map((p) => (
-              <li key={p.localId} className="flex flex-wrap items-center gap-2 rounded-md border border-border p-2">
+              <Card as="li" variant="compact" key={p.localId} className="flex flex-wrap items-center gap-3 px-5">
                 <label className="sr-only" htmlFor={`name-${p.localId}`}>
                   Name of plan
                 </label>
-                <input
+                <Input
                   id={`name-${p.localId}`}
                   defaultValue={p.name}
                   onBlur={(e) => e.target.value.trim() && e.target.value !== p.name && rename(p, e.target.value.trim())}
-                  className="min-h-11 flex-1 rounded-md border border-border bg-background px-2"
+                  className="min-w-48 flex-1 text-body-strong"
                 />
-                <span className="text-sm text-muted-foreground">
+                <span className="text-caption text-muted">
                   {p.isPrimary ? "Primary · " : ""}
                   {(p.state.items ?? []).length} items · updated {p.updatedDay}
                 </span>
@@ -91,7 +95,7 @@ export default function PlansPage() {
                   </Button>
                 )}
                 <Button
-                  variant="ghost"
+                  variant="destructive"
                   onClick={() => {
                     deletePlan(p.localId);
                     refresh();
@@ -100,33 +104,31 @@ export default function PlansPage() {
                 >
                   Delete
                 </Button>
-              </li>
+              </Card>
             ))}
           </ul>
         )}
         {doc.plans.length >= 2 && (
-          <Link to="/plans/compare" className="inline-flex min-h-11 items-center text-primary underline">
+          <Link to="/plans/compare" className={`${standaloneLinkClass} mt-3`}>
             Compare two plans
           </Link>
         )}
-      </section>
-      <section aria-labelledby="account-plans" className="space-y-2">
-        <h2 id="account-plans" className="text-lg font-semibold">
-          In your account
-        </h2>
+      </Section>
+      <Section id="account-plans" title="In your account">
         {isLoading ? (
           <Spinner />
         ) : session ? (
           <AccountPlans />
         ) : (
-          <Notice tone="blue">
-            <Link to="/login" className="font-medium underline">
+          <Notice tone="info">
+            <Link to="/login" className="font-medium">
               Log in
             </Link>{" "}
             to save plans to your account; plans on this device are imported when you log in.
           </Notice>
         )}
-      </section>
-    </div>
+      </Section>
+      </div>
+    </PageContainer>
   );
 }
