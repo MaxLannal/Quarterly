@@ -345,3 +345,31 @@ Places where `docs/DESIGN.md` (the look) and `docs/SPEC.md` (what the pages do a
   **Suggested:** no dark mode for the demo (built that way).
 - **DF-11. A footer on every page.** DESIGN.md has a footer; the SPEC's page list does not mention one.
   **Suggested:** keep the footer (built), with links only to pages the SPEC already lists (planner, my plans, programs, course search, instructors, guidelines, privacy, about).
+
+## Prompt 08
+
+Forum choices made while building. Each is implemented as described and can be changed in one place.
+
+- **P08-1. Posts when the automatic check is down.** Real AI calls are on hold, so in production every post would wait for a moderator. For local development, `MODERATION_FALLBACK=publish` shows posts right away (after emails and phone numbers are removed); the server refuses to start with that setting outside development.
+  **Suggested:** keep "wait for a moderator" as the production rule (what the SPEC says). Option: publish straight away and check later, which is faster for students but lets a bad post be seen for a while.
+- **P08-2. A suspension leaves a small trace.** When an account is suspended, the database records the end date on the account. Someone with a stolen copy of the database could match that date to the moderator's removal on the same day and guess that this account wrote that removed post. It only affects removed posts of suspended accounts; ordinary posts stay unlinkable.
+  **Suggested:** accept it and say so on the privacy page. Options: start suspensions on the next Monday, which blurs the match; or keep suspensions outside the database (lost if the server restarts).
+- **P08-3. Repeat suspensions.** Every third post removed by a moderator suspends the account for 30 days (so the 3rd, 6th, 9th...). Posts the automatic check rejects do not count unless a moderator also removes them.
+  **Suggested:** keep this, and let an admin ban an account by hand after the second suspension. Option: an automatic permanent ban at 6 removals.
+- **P08-4. Which term a reviewer can pick.** A review must name a term in which the schedule shows that instructor teaching the course. Students who took it before our schedule data begins cannot review it yet.
+  **Suggested:** keep it for the demo; once schedule data goes back further, the list grows by itself. Option: allow any term in the last four years, which lets older students review but cannot check they really took it then.
+- **P08-5. Cross-listed courses.** A course listed under two codes (for example CMSC 25300 and STAT 27700) with the same instructor would get two separate forum pages, splitting its reviews.
+  **Suggested:** one page per cross-listed group, shown under every code. This needs a small change when the schedule pipeline (prompt 10) creates pages.
+- **P08-6. Who moderates.** Only admins can use the moderation queue; curators cannot.
+  **Suggested:** admins only for now. Option: let curators moderate too.
+- **P08-7. Deleting a post that has replies.** The post's text becomes "[deleted]" and its author is hidden, so the replies under it stay readable. A post with no replies is removed completely.
+  **Suggested:** keep this.
+- **P08-8. No images in posts.** A picture loaded from another website would tell that website the address of every student who reads the post, so images are not allowed; links are (they open only when clicked).
+  **Suggested:** keep it. Option: allow images we host ourselves later.
+- **P08-9. Rate limits.** Per account: 10 posts an hour and 30 a day, 60 comments an hour, 300 votes an hour, 20 reports a day, 30 edits or deletions an hour.
+  **Suggested:** keep these for launch and adjust from real use.
+- **P08-10. Back to the forum after logging in.** Forum pages ask readers to log in, but the login page then opens the planner rather than the page they came from (the login page belongs to prompt 04).
+  **Suggested:** return to the page they came from. Small change to the login page.
+- **P08-11. Instructor names in the home page search.** Names are now public on `/instructors`, which has its own search, but the home page search still covers courses only (the home page was outside this task).
+  **Suggested:** add instructors to the home search in a later pass.
+

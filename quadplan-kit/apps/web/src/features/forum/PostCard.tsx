@@ -184,7 +184,7 @@ export function PostCard({
             {appeal.isSuccess ? "Review requested" : "Ask for human review"}
           </Button>
         )}
-        {post.mine && <DeleteButton postId={post.id} onDeleted={onDeleted} />}
+        {post.mine && !post.moderation_note?.startsWith("Removed by a moderator") && <DeleteButton postId={post.id} onDeleted={onDeleted} />}
       </div>
       {appeal.error && <ErrorText>{appeal.error.message}</ErrorText>}
       <ReportDialog open={reporting} onClose={() => setReporting(false)} targetType="post" targetId={post.id} />

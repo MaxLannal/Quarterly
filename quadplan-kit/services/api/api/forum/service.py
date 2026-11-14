@@ -189,6 +189,9 @@ def _target(db: Session, target_type: TargetType, target_id: int) -> tuple[int, 
 def vote(db: Session, account: m.Account, body: VoteIn) -> VoteOut:
     page_id, target = _target(db, body.target_type, body.target_id)
     if target.status != "visible":
+        # Others' held or removed items do not exist for this reader (no existence leak).
+        if target.author_ref != author_ref(account.id, page_id):
+            raise not_found("Post" if body.target_type == "post" else "Comment")
         raise HTTPException(status_code=409, detail="You can only vote on published posts.")
     ensure_can_write(account)
     model: type[m.Post] | type[m.Comment] = m.Post if body.target_type == "post" else m.Comment
@@ -498,6 +501,9 @@ def delete_post(db: Session, account: m.Account, post_id: int) -> None:
     """The author deletes their post. A post with replies is blanked instead, so the
     conversation under it survives."""
     post, _ = _own_post(db, account, post_id)
+    if post.status == "removed" and _removed_by_admin(db, "post", post.id):
+        # Upheld removals count toward a suspension; deleting must not erase one.
+        raise HTTPException(status_code=409, detail="A moderator removed this post.")
     has_comments = db.scalar(sa.select(sa.exists().where(m.Comment.post_id == post.id)))
     if has_comments:
         db.execute(sa.delete(m.ReviewRating).where(m.ReviewRating.post_id == post.id))

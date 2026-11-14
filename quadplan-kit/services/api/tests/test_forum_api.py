@@ -422,10 +422,10 @@ def test_votes_one_per_voter_changeable_and_withdrawable(f: ForumEnv) -> None:
     listed = author.get(f"/forum/pages/{f.pages['a_doe']}/posts").json()["items"][0]
     assert listed["score"] == -1 and listed["my_vote"] == -1
     held = post(f, author, "a_doe", discussion("held"), label="misconduct_claim")
-    assert (
-        voter.post(url, {"target_type": "post", "target_id": held["id"], "value": 1}).status_code
-        == 409
-    )
+    # Others cannot tell a held post exists; its author is told why they cannot vote.
+    held_vote = {"target_type": "post", "target_id": held["id"], "value": 1}
+    assert voter.post(url, held_vote).status_code == 404
+    assert author.post(url, held_vote).status_code == 409
     assert (
         voter.post(url, {"target_type": "post", "target_id": 999999, "value": 1}).status_code == 404
     )
@@ -593,6 +593,8 @@ def test_reports_queue_and_decisions(f: ForumEnv) -> None:
     assert mine["moderation_note"] == "Removed by a moderator."
     f.answer("ok")
     assert author.patch(f"/forum/posts/{bad['id']}", {"body_md": "nicer"}).status_code == 409
+    # Nor delete it: that would erase the strike it counts toward.
+    assert author.delete(f"/forum/posts/{bad['id']}").status_code == 409
 
 
 def test_three_upheld_removals_suspend_for_30_days(f: ForumEnv) -> None:
