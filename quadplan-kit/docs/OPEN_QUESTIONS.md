@@ -38,6 +38,7 @@ Status words used below:
 **New question from building these answers (2026-11-14)**
 - **P08-14. Suspended students, account deletion, and lifting a suspension.** A suspended student cannot delete their account until the suspension ends (now at most 90 days, the longest choice in the admin menu). There is also no button yet for an admin to end a suspension early.
   **Suggested:** keep the block (otherwise deleting and signing up again would dodge the suspension), keep 90 days as the longest, and add an "end suspension" action to the admin page later. Option: let suspended students delete their account at any time; their email is then free to sign up again.
+  **Decided (Richard, 2026-11-14): go with the suggestion.** The block and the 90-day maximum stay as built. **Later work:** an "end suspension" action for admins. Admins never learn who is suspended, so it would sit on the removal decision that started the suspension, in the moderation history.
 
 **OK (go with the suggestion):** P08-6 to P08-13, Q7 to Q10, Q12, Q13, DF-1 to DF-13, P7-1 to P7-8, and the Safari note (use Chrome or Firefox locally). P7-1 and P7-2 wait until Richard lifts the hold on API calls. DF-8 (Rare UI parts) and P08-11 (instructors in the home search) are later work.
 
