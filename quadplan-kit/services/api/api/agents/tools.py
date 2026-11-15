@@ -40,6 +40,7 @@ from sqlalchemy.orm import Session
 
 from api.attributes.records import hidden_citations
 from api.db import models as m
+from api.forum.pages import pages_of_code
 from api.repo import catalog as catalog_repo
 from api.repo.rules import UnknownProgramsError, load_verify_inputs
 
@@ -263,14 +264,11 @@ class ToolBox:
     # -------------------------------------------------------------- forum
 
     def _pages(self, code: str) -> list[tuple[int, str]]:
-        rows = self.db.execute(
-            sa.select(m.CourseInstructor.id, m.Instructor.display_name)
-            .join(m.Course, m.Course.id == m.CourseInstructor.course_id)
-            .join(m.Instructor, m.Instructor.id == m.CourseInstructor.instructor_id)
-            .where(m.Course.code == code)
-            .order_by(m.CourseInstructor.id)
-        ).all()
-        return [(int(r[0]), str(r[1])) for r in rows]
+        """The forum pages of `code`, including the pages it shares with the codes it is
+        cross-listed under (P08-5); one per instructor."""
+        return [
+            (page.id, instructor.display_name) for page, instructor in pages_of_code(self.db, code)
+        ]
 
     def get_forum_summary(self, args: dict[str, Any]) -> ToolOutput:
         code = str(args["code"])

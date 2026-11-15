@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useAuthLinks } from "@/features/auth/next";
 import { api, isNotAvailable, unwrap } from "@/api/client";
 import { EmptyState, PageContainer, PageHeader, Section, standaloneLinkClass } from "@/components/layout/page";
 import { Button } from "@/components/ui/button";
@@ -32,6 +33,7 @@ function AccountPlans() {
 export default function PlansPage() {
   const navigate = useNavigate();
   const { data: session, isLoading } = useSession();
+  const authLinks = useAuthLinks();
   const [doc, setDoc] = useState(() => loadPlans());
   const refresh = () => setDoc(loadPlans());
   // DESIGN.md: deleting asks "are you sure?" in place (DF-7).
@@ -139,7 +141,7 @@ export default function PlansPage() {
           <AccountPlans />
         ) : (
           <Notice tone="info">
-            <Link to="/login" className="font-medium">
+            <Link to={authLinks.login} className="font-medium">
               Log in
             </Link>{" "}
             to save plans to your account; plans on this device are imported when you log in.

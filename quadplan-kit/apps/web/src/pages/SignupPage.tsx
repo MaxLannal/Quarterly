@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { safeNext } from "@/features/auth/next";
+import { keepNext, safeNext } from "@/features/auth/next";
 import { inlineLinkClass } from "@/components/layout/page";
 import { Button } from "@/components/ui/button";
 import { api, attempt } from "@/features/auth/api";
@@ -237,7 +237,7 @@ export default function SignupPage() {
       </form>
       <p className="border-t border-hairline pt-4 text-body-sm text-body">
         Already have an account?{" "}
-        <Link to="/login" className={linkClass}>
+        <Link to={keepNext("/login", params.get("next"))} className={linkClass}>
           Log in
         </Link>
       </p>

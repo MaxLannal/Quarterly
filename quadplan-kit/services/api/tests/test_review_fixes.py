@@ -236,3 +236,41 @@ def test_blanking_a_cited_post_drops_the_summary(migrated_db_url: str) -> None:
         )  # type: ignore[union-attr]
         assert db.get(m.ForumSummary, page.id) is None
     engine.dispose()
+
+
+@pytest.mark.db
+def test_advisor_finds_forum_pages_under_every_cross_listed_code(migrated_db_url: str) -> None:
+    engine = sa.create_engine(migrated_db_url)
+    with Session(engine) as db:
+        upsert_bundle(db, load_bundle(FIXTURES / "seed" / "2099-00"))
+        course = db.scalars(sa.select(m.Course).where(m.Course.code == "TEST 10000")).one()
+        other = m.Course(
+            catalog_year=course.catalog_year,
+            subject="XTST",
+            number="10000",
+            code="XTST 10000",
+            title="Fake (cross-listed)",
+        )
+        instructor = m.Instructor(slug="demo-c", display_name="Demo C (fake)")
+        db.add_all([other, instructor])
+        db.flush()
+        db.add_all(
+            [
+                m.CrosslistGroup(group_id="fake:c", course_id=course.id),
+                m.CrosslistGroup(group_id="fake:c", course_id=other.id),
+            ]
+        )
+        page = m.CourseInstructor(course_id=course.id, instructor_id=instructor.id)
+        db.add(page)
+        db.flush()
+        report = Report(status="valid", plan_hash="x", core_version="x")
+        tools = ToolBox(
+            db=db,
+            state=PLAN,
+            report=report,
+            statuses=("published",),
+            show_unpublished=False,
+            logged_in=True,
+        )
+        assert tools._pages("XTST 10000") == [(page.id, "Demo C (fake)")]
+    engine.dispose()

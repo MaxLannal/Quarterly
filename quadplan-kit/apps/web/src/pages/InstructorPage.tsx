@@ -1,4 +1,5 @@
 import { Link, useParams } from "react-router-dom";
+import { useAuthLinks } from "@/features/auth/next";
 import { ApiError } from "@/api/client";
 import { EmptyState, inlineLinkClass, LoadingState, PageContainer, PageHeader, Section, standaloneLinkClass } from "@/components/layout/page";
 import { Card } from "@/components/ui/card";
@@ -12,6 +13,7 @@ import { pagePath, plural } from "@/features/forum/format";
 export default function InstructorPage() {
   const { slug = "" } = useParams();
   const session = useSession();
+  const authLinks = useAuthLinks();
   const loggedIn = session.status === "authenticated";
   const q = useInstructor(slug, loggedIn);
 
@@ -44,7 +46,7 @@ export default function InstructorPage() {
         {!loggedIn && (
           <Notice tone="info" className="mb-4">
             <p>
-              <Link to="/login">Log in</Link> to see ratings and read reviews.
+              <Link to={authLinks.login}>Log in</Link> to see ratings and read reviews.
             </p>
           </Notice>
         )}

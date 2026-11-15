@@ -17,6 +17,11 @@ function withNext(page: "/login" | "/signup", from: string): string {
   return next === DEFAULT && from !== DEFAULT ? page : `${page}?next=${encodeURIComponent(next)}`;
 }
 
+/** The login <-> sign-up switch link, keeping where the student will go afterwards. */
+export function keepNext(page: "/login" | "/signup", raw: string | null): string {
+  return raw ? withNext(page, raw) : page;
+}
+
 /** Links to the login and sign-up pages that come back to the current page afterwards. */
 export function useAuthLinks(): { login: string; signup: string } {
   const location = useLocation();

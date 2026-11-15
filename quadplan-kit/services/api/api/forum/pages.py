@@ -262,7 +262,7 @@ def page_out(db: Session, page: m.CourseInstructor) -> ForumPageOut:
     )
 
 
-def _pages_of_code(db: Session, code: str) -> list[tuple[m.CourseInstructor, m.Instructor]]:
+def pages_of_code(db: Session, code: str) -> list[tuple[m.CourseInstructor, m.Instructor]]:
     rows = db.execute(
         sa.select(m.CourseInstructor, m.Instructor)
         .join(m.Course, m.Course.id == m.CourseInstructor.course_id)
@@ -290,7 +290,7 @@ def course_instructors(db: Session, code: str) -> list[CourseInstructorOut]:
             last_term=page.last_term,
             n_terms=page.n_terms,
         )
-        for page, instructor in _pages_of_code(db, code)
+        for page, instructor in pages_of_code(db, code)
     ]
 
 
@@ -303,7 +303,7 @@ def course_forum(db: Session, raw_code: str) -> CourseForumOut:
     )
     if title is None:
         raise PageNotFoundError(f"No course {code}")
-    pages = _pages_of_code(db, code)
+    pages = pages_of_code(db, code)
     ids = [p.id for p, _ in pages]
     per_page = ratings_by_page(db, ids)
     return CourseForumOut(

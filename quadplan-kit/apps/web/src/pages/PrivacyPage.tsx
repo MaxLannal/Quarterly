@@ -114,8 +114,8 @@ export default function PrivacyPage() {
         <li>Each forum page gives you a different pseudonym, so readers cannot follow you across pages.</li>
         <li>
           If a moderator suspends an account, the day the suspension ends is stored on the account. Someone with a stolen copy of
-          the database could match that day to a post removed the same day and guess who wrote it. This only affects removed posts
-          of suspended accounts.
+          the database could count back from that day to a post removed when the suspension started and guess who wrote it. This
+          only affects removed posts of suspended accounts.
         </li>
       </ul>
 
