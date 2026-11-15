@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import time
 from pathlib import Path
 
 import pytest
@@ -37,6 +38,11 @@ def test_cached_inputs_equal_the_queried_ones(migrated_db_url: str) -> None:
         before = repo._year(db, "2026-27", ttl=60)
         again = repo._year(db, "2026-27", ttl=0)  # stale: same copy back, refresh started
         assert again is before
+        for _ in range(200):  # let the background refresh finish before the database goes
+            if not repo._refreshing:
+                break
+            time.sleep(0.05)
+        assert not repo._refreshing
         repo.clear_rules_cache()
         assert repo.preload_rules_cache(db) >= 1 and repo._years
         repo.clear_rules_cache()

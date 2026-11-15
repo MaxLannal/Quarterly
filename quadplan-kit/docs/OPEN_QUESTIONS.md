@@ -495,3 +495,14 @@ Questions about the schedule pipeline (reading Class Search). The pipeline is bu
 - **P10-5. Courses on the schedule that are not in the catalog.** If a section's course code is not in the catalog (a new or topics course), the section is not saved. The code goes to the review queue.
   **Suggested:** keep this until the catalog pipeline (prompt 09) can add such courses after review.
 
+
+## Prompt 12
+
+- **P12-1. Load-test targets on this laptop (logged per the "same fix fails twice" rule).** Target: checking a plan (`POST /verify`) at 50 a second with 95% answered within half a second, and forum page reads at 100 a second. On the Mac development machine through Docker Desktop:
+  - Several runs met the plan-check target: 48.3 a second with p95 240 ms, and 50.3 a second.
+  - Others missed it as the machine got busier: p95 400 ms to 2.4 s.
+  - Forum reads ran at 100 a second with a median of 11-300 ms and p95 of 200-620 ms.
+  - Measured directly, the server handles about 235 forum reads a second, and one read takes 7 ms. Much of the delay comes from Docker Desktop's port forwarding on a Mac with ~100 open connections (138 ms even for the health check) and from running the load generator on the same busy machine.
+  - Improvements made: catalog data kept in memory (preloaded and refreshed in the background), forum page headers reused for 5 s, a bigger database pool.
+
+  **Suggested:** run `make loadtest` on the real server before launch (`docs/DEPLOY.md`, and the launch checklist in `docs/PROGRESS.md`). If it misses there, raise `WEB_CONCURRENCY` with the server's CPU count (each worker uses up to 20 database connections; Postgres allows 200).
