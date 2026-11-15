@@ -1,5 +1,6 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page } from "@playwright/test";
+import { addCourseViaTree, addProgram, card, closePanel, logIn, openAdvisor, openPanel, plannerWithCourses, settle } from "./helpers";
 
 // Design foundation (docs/DESIGN.md, docs/DESIGN-IMPLEMENTATION.md): self-hosted fonts and assets,
 // accessible pages, 44px targets.
@@ -21,6 +22,7 @@ const MAIN_PAGES = [
 ];
 
 async function expectNoAxeViolations(page: Page) {
+  await settle(page);
   const results = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"]).analyze();
   expect(results.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
 }
@@ -81,17 +83,12 @@ test("buttons keep a 44px target although pills are drawn 40px tall", async ({ p
     await page.goto(path);
     await expect(page.getByRole("heading", { level: 1 })).toBeAttached();
     if (path === "/plan") {
-      // Measure a planner with a course card on it (drag handle, actions menu).
-      await page.getByRole("button", { name: "+ Program" }).click();
-      const dialog = page.getByRole("dialog", { name: "Programs" });
-      await dialog.getByRole("checkbox", { name: "Fake Program" }).check();
-      await dialog.getByRole("button", { name: "Save programs" }).click();
-      const node = page.getByRole("button", { name: /^Fake introductory sequence/ });
-      if ((await node.getAttribute("aria-expanded")) !== "true") await node.click();
-      await page.getByRole("button", { name: "Add TEST 10000 to a quarter" }).click();
-      await page.getByRole("dialog", { name: "Add TEST 10000 to…" }).getByRole("button", { name: "Autumn 2099", exact: true }).click();
-      await expect(page.locator('[data-testid="course-card"][data-course="TEST 10000"]')).toBeVisible();
+      // Measure a planner with a course card and the requirement tree open.
+      await addProgram(page, "Fake Program");
+      await addCourseViaTree(page, /^Fake introductory sequence/, "TEST 10000", "Autumn 2099");
+      await expect(card(page, "TEST 10000")).toBeVisible();
     }
+    await settle(page);
     const small = await page.evaluate(() =>
       [...document.querySelectorAll<HTMLElement>("button, a[role='button'], [role='tab'], [role='menuitem']")]
         .filter((el) => el.offsetParent !== null && !el.classList.contains("sr-only"))
@@ -111,40 +108,20 @@ test("buttons keep a 44px target although pills are drawn 40px tall", async ({ p
 });
 
 // ------------------------------------------------------------------------------------------
-// Design review (step 5): axe on the planner (with the Generate dialog and an answered Advisor
-// tab) and on the forum page and thread, at desktop (1440x900) and phone (390x844) width. No
+// Design review (step 5, FEEDBACK UI): axe on the planner (with the drawer, the Generate dialog
+// and an answered AI advisor) and on the forum page and thread, at desktop (1440x900) and phone (390x844) width. No
 // serious or critical WCAG 2.1 A/AA violations.
 // ------------------------------------------------------------------------------------------
 
 const FORUM = "/courses/TEST%2010000/i/fake-instructor-a";
 
 async function expectNoSeriousAxeViolations(page: Page, include?: string) {
+  await settle(page);
   let builder = new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"]);
   if (include) builder = builder.include(include);
   const results = await builder.analyze();
   const serious = results.violations.filter((v) => v.impact === "serious" || v.impact === "critical");
   expect(serious.map((v) => `${v.impact} ${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
-}
-
-async function logIn(page: Page) {
-  await page.goto("/guidelines");
-  await expect(page.getByRole("heading", { level: 1, name: "Community guidelines" })).toBeVisible();
-  await page.evaluate(() => fetch("/api/auth/login", { method: "POST", body: JSON.stringify({ login: "fake-user", password: "x" }) }));
-}
-
-async function plannerWithCourses(page: Page) {
-  await page.goto("/plan");
-  await page.getByRole("button", { name: "+ Program" }).click();
-  const dialog = page.getByRole("dialog", { name: "Programs" });
-  await dialog.getByRole("checkbox", { name: "Fake Program" }).check();
-  await dialog.getByRole("button", { name: "Save programs" }).click();
-  for (const code of ["TEST 10000", "TEST 10100"]) {
-    const node = page.getByRole("button", { name: /^Fake introductory sequence/ });
-    if ((await node.getAttribute("aria-expanded")) !== "true") await node.click();
-    await page.getByRole("button", { name: `Add ${code} to a quarter` }).click();
-    await page.getByRole("dialog", { name: `Add ${code} to…` }).getByRole("button", { name: "Autumn 2099", exact: true }).click();
-  }
-  await expect(page.locator('[data-testid="course-card"][data-course="TEST 10100"]')).toContainText("earlier quarter");
 }
 
 for (const size of [
@@ -154,9 +131,16 @@ for (const size of [
   test.describe(`axe at ${size.width}px`, () => {
     test.use({ viewport: size });
 
-    test(`planner, Generate dialog and Advisor @${size.width}: no serious axe violations`, async ({ page }) => {
+    test(`planner, drawer, Generate dialog and AI advisor @${size.width}: no serious axe violations`, async ({ page }) => {
+      test.slow(); // six axe runs
       await logIn(page);
       await plannerWithCourses(page);
+      // Requirements drawer open (full screen on a phone).
+      await expectNoSeriousAxeViolations(page);
+      await openPanel(page, "Check plan");
+      await expect(page.getByRole("list", { name: "Verifier issues" })).toBeVisible();
+      await expectNoSeriousAxeViolations(page);
+      await closePanel(page);
       await expectNoSeriousAxeViolations(page);
 
       await page.getByRole("button", { name: "Generate plan" }).click();
@@ -168,13 +152,13 @@ for (const size of [
       await page.keyboard.press("Escape");
       await expect(dialog).toBeHidden();
 
-      await page.getByRole("tab", { name: "Advisor" }).click();
-      await page.getByLabel("Ask the advisor").fill("Please add a lighter elective");
-      await page.getByRole("button", { name: "Send" }).click();
-      await expect(page.getByRole("article", { name: "Proposed change" })).toBeVisible();
+      const sheet = await openAdvisor(page);
+      await sheet.getByLabel("Ask the advisor").fill("Please add a lighter elective");
+      await sheet.getByRole("button", { name: "Send" }).click();
+      await expect(sheet.getByRole("article", { name: "Proposed change" })).toBeVisible();
       // Forum citations become links once the post and its page load (forum reads need a login).
-      await expect(page.getByRole("link", { name: "Student post #3" })).toHaveAttribute("href", `${FORUM}/t/3`);
-      await expect(page.getByRole("link", { name: "What students say" })).toHaveAttribute("href", FORUM);
+      await expect(sheet.getByRole("link", { name: "Student post #3" })).toHaveAttribute("href", `${FORUM}/t/3`);
+      await expect(sheet.getByRole("link", { name: "What students say" })).toHaveAttribute("href", FORUM);
       await expectNoSeriousAxeViolations(page);
     });
 

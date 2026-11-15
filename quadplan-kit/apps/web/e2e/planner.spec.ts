@@ -1,43 +1,27 @@
 import AxeBuilder from "@axe-core/playwright";
-import { expect, test, type Page } from "@playwright/test";
+import { expect, test } from "@playwright/test";
+import { addCourseViaTree, addProgram, card, closePanel, openAdvisor, openPanel, settle } from "./helpers";
 
 // Runs against MSW mocks (fake catalog year 2099-00, TEST/FAKE courses, "Fake Program").
-
-async function addProgram(page: Page, name: string) {
-  await page.getByRole("button", { name: "+ Program" }).click();
-  const dialog = page.getByRole("dialog", { name: "Programs" });
-  await dialog.getByRole("checkbox", { name: name }).check();
-  await dialog.getByRole("button", { name: "Save programs" }).click();
-  await expect(dialog).toBeHidden();
-}
-
-async function addCourseViaRail(page: Page, node: RegExp, code: string, term: string) {
-  const nodeButton = page.getByRole("button", { name: node });
-  if ((await nodeButton.getAttribute("aria-expanded")) !== "true") await nodeButton.click();
-  await page.getByRole("button", { name: `Add ${code} to a quarter` }).click();
-  await page.getByRole("dialog", { name: `Add ${code} to…` }).getByRole("button", { name: term, exact: true }).click();
-}
-
-function card(page: Page, code: string) {
-  return page.locator(`[data-testid="course-card"][data-course="${code}"]`);
-}
 
 test("planner: build, verify, move, lock, highlight", async ({ page }) => {
   await page.goto("/plan");
   await expect(page.getByRole("heading", { level: 1, name: "Planner" })).toBeAttached();
-  await expect(page.getByRole("heading", { name: "Year 1 (2099–00)" })).toBeVisible();
-  await expect(page.getByTestId("verifier-badge")).toHaveText(/Valid/);
+  await expect(page.getByRole("heading", { name: "First year 2099–00" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Check plan", exact: true })).toBeVisible();
 
   await addProgram(page, "Fake Program");
+  await openPanel(page, "Requirements");
   await expect(page.getByRole("heading", { name: "Fake Program", level: 3 })).toBeVisible();
-  await expect(page.getByTestId("verifier-badge")).toHaveText(/3 errors/);
+  // Errors stay subtle: a small count on the toolbar button, not a banner.
+  await expect(page.getByRole("button", { name: "Check plan (3 errors)" })).toBeVisible();
 
-  // Keyboard path: requirement node -> eligible course -> "Add to…" quarter picker.
-  await addCourseViaRail(page, /^Fake introductory sequence/, "TEST 10000", "Autumn 2099");
-  await addCourseViaRail(page, /^Fake introductory sequence/, "TEST 10100", "Autumn 2099");
+  // Keyboard path: requirement node -> course -> "Add to…" quarter picker.
+  await addCourseViaTree(page, /^Fake introductory sequence/, "TEST 10000", "Autumn 2099");
+  await addCourseViaTree(page, /^Fake introductory sequence/, "TEST 10100", "Autumn 2099");
   await expect(card(page, "TEST 10000")).toContainText("Fake Introduction I");
   await expect(card(page, "TEST 10000")).toContainText("Fake Program · Fake introductory sequence");
-  // TEST 10100 needs TEST 10000 earlier: the verifier flags the card.
+  // TEST 10100 needs TEST 10000 earlier: the verifier notes it on the card.
   await expect(card(page, "TEST 10100")).toContainText("needs TEST 10000 in an earlier quarter");
   await expect(page.getByTestId("footer-2099-AU")).toContainText("200 units");
 
@@ -48,9 +32,10 @@ test("planner: build, verify, move, lock, highlight", async ({ page }) => {
   await expect(page.getByTestId("quarter-2100-WI")).toContainText("TEST 10100");
   await expect(card(page, "TEST 10100")).not.toContainText("earlier quarter");
 
-  // Issues tab: clicking an issue highlights its cards.
-  await page.getByRole("tab", { name: /Issues/ }).click();
-  await addCourseViaRail(page, /^Fake core courses/, "TEST 20000", "Autumn 2099");
+  // Check plan: clicking an issue highlights its cards.
+  await addCourseViaTree(page, /^Fake core courses/, "TEST 20000", "Autumn 2099");
+  await openPanel(page, "Check plan");
+  await expect(page.getByTestId("verifier-badge")).toContainText(/errors?/);
   const issue = page.getByRole("button", { name: /TEST 20000 needs TEST 10200/ });
   await issue.click();
   await expect(issue).toHaveAttribute("aria-pressed", "true");
@@ -81,7 +66,8 @@ test("planner: build, verify, move, lock, highlight", async ({ page }) => {
 test("planner: drag and drop moves a card", async ({ page }) => {
   await page.goto("/plan");
   await addProgram(page, "Fake Program");
-  await addCourseViaRail(page, /^Fake introductory sequence/, "TEST 10000", "Winter 2100");
+  await addCourseViaTree(page, /^Fake introductory sequence/, "TEST 10000", "Winter 2100");
+  await closePanel(page);
   const handle = page.getByRole("button", { name: "Drag TEST 10000", exact: true });
   const target = page.getByTestId("quarter-2099-AU");
   const from = await handle.boundingBox();
@@ -111,34 +97,42 @@ test("planner: generate popup and advisor proposal", async ({ page }) => {
   await expect(dialog).toBeHidden();
   await expect(card(page, "TEST 10000")).toBeVisible();
 
-  await page.getByRole("tab", { name: "Advisor" }).click();
-  await page.getByLabel("Ask the advisor").fill("Please add a lighter elective");
-  await page.getByRole("button", { name: "Send" }).click();
-  await expect(page.getByRole("link", { name: "TEST 25200", exact: true })).toBeVisible();
-  const proposal = page.getByRole("article", { name: "Proposed change" });
+  const sheet = await openAdvisor(page);
+  await sheet.getByLabel("Ask the advisor").fill("Please add a lighter elective");
+  await sheet.getByRole("button", { name: "Send" }).click();
+  await expect(sheet.getByRole("link", { name: "TEST 25200", exact: true })).toBeVisible();
+  const proposal = sheet.getByRole("article", { name: "Proposed change" });
   await expect(proposal).toContainText("Add TEST 25200");
   await proposal.getByRole("button", { name: "Apply" }).click();
   await expect(proposal).toContainText("Applied.");
+  // The conversation survives closing and reopening the advisor.
+  await page.keyboard.press("Escape");
+  await expect(sheet).toBeHidden();
   await expect(card(page, "TEST 25200")).toBeVisible();
+  await openAdvisor(page);
+  await expect(proposal).toContainText("Applied.");
 });
 
 test("planner: no axe violations", async ({ page }) => {
   await page.goto("/plan");
   await addProgram(page, "Fake Program");
-  await addCourseViaRail(page, /^Fake introductory sequence/, "TEST 10100", "Autumn 2099");
+  await addCourseViaTree(page, /^Fake introductory sequence/, "TEST 10100", "Autumn 2099");
   await expect(card(page, "TEST 10100")).toContainText("earlier quarter");
+  await settle(page);
   const results = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"]).analyze();
   expect(results.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
 });
 
-test("on a phone, jump buttons reach the advisor without scrolling past the grid", async ({ page }) => {
+test("on a phone, the panel is full screen and closes back to the grid", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/plan");
-  const jump = page.getByRole("navigation", { name: "Jump to" });
-  await expect(jump).toBeVisible();
-  await jump.getByRole("link", { name: "Issues and advisor" }).click();
-  await expect(page).toHaveURL(/#plan-details$/);
-  await expect(page.getByRole("region", { name: "Issues, goals and advisor" })).toBeInViewport();
-  await page.setViewportSize({ width: 1440, height: 900 });
-  await expect(jump).toBeHidden();
+  await page.getByRole("button", { name: "Requirements", exact: true }).click();
+  const drawer = page.getByRole("dialog", { name: "Plan panel" });
+  await expect(drawer).toBeVisible();
+  const box = await drawer.boundingBox();
+  expect(Math.round(box?.width ?? 0)).toBe(390);
+  expect(Math.round(box?.height ?? 0)).toBe(844);
+  await page.keyboard.press("Escape");
+  await expect(drawer).toBeHidden();
+  await expect(page.getByRole("button", { name: "Requirements", exact: true })).toBeFocused();
 });

@@ -40,7 +40,7 @@ export function Footer() {
       <div className={cn("mx-auto grid w-full gap-10 px-4 py-12 sm:px-6 md:grid-cols-[2fr_repeat(3,1fr)] md:py-16 lg:px-8", wide ? "max-w-tool" : "max-w-content")}>
         <div className="max-w-xs">
           <p className="font-display text-display-sm text-ink">Quarterly</p>
-          <p className="mt-2 text-body-sm text-body">Plan four years of courses and read what students say about each class.</p>
+          <p className="mt-2 text-body-sm text-body">Quarterly is a student project, not affiliated with the University of Chicago.</p>
         </div>
         {COLUMNS.map((col) => (
           <nav key={col.title} aria-label={`${col.title} links`}>

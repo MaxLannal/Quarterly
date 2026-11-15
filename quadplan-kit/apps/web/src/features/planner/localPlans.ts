@@ -5,6 +5,7 @@
  */
 import type { PlanCreate, PlanState } from "@/api/types";
 import { readJson, writeJson } from "@/lib/storage";
+import { termAt } from "./terms";
 
 export const STORAGE_KEY = "quarterly.plans.v1";
 
@@ -15,7 +16,11 @@ export interface LocalPlan {
   state: PlanState;
   /** Day-level date only (no exact timestamps). */
   updatedDay: string;
-  /** Plan years shown in the grid (4 or 5). */
+  /**
+   * Legacy: plan years shown in the old grid (4, or 5 with "Add Year 5"). No longer written; the
+   * plan's `graduation_term` replaced it. `loadPlans` turns `years: 5` into a Spring-of-year-5
+   * graduation quarter (FEEDBACK F3).
+   */
   years?: number;
   /** Account ids this plan was already imported into (import on login). */
   importedFor?: string[];
@@ -44,9 +49,24 @@ function isDoc(value: unknown): value is LocalPlansDoc {
   );
 }
 
+/**
+ * Plans saved before the graduation quarter existed kept a `years` count instead. Four years was
+ * the old grid's minimum, so only `years: 5` says something: graduate in the Spring of year 5.
+ */
+export function migrateLegacyYears(plan: LocalPlan): LocalPlan {
+  const { years, ...rest } = plan;
+  if (years === undefined) return plan;
+  if (years !== 5 || rest.state.graduation_term) return rest;
+  try {
+    return { ...rest, state: { ...rest.state, graduation_term: termAt(rest.state.entry_term, 5, "SP") } };
+  } catch {
+    return rest;
+  }
+}
+
 export function loadPlans(): LocalPlansDoc {
   const doc = readJson<unknown>(STORAGE_KEY);
-  return isDoc(doc) ? doc : { ...EMPTY, plans: [] };
+  return isDoc(doc) ? { ...doc, plans: doc.plans.map(migrateLegacyYears) } : { ...EMPTY, plans: [] };
 }
 
 export function savePlans(doc: LocalPlansDoc): boolean {
@@ -65,7 +85,7 @@ export function newLocalId(): string {
 export function upsertPlan(plan: LocalPlan, makeActive = true): boolean {
   const doc = loadPlans();
   const idx = doc.plans.findIndex((p) => p.localId === plan.localId);
-  const stored = { ...plan, updatedDay: today() };
+  const stored = migrateLegacyYears({ ...plan, updatedDay: today() });
   if (idx >= 0) doc.plans[idx] = stored;
   else doc.plans.push(stored);
   if (stored.isPrimary) {

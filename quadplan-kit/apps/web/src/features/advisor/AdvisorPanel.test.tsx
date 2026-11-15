@@ -132,6 +132,37 @@ describe("CitationChip", () => {
   });
 });
 
+describe("AdvisorPanel as a chat (FEEDBACK F4)", () => {
+  it("shows the student's bubble, a typing indicator while the AI writes, then the AI's bubble", async () => {
+    let release: () => void = () => undefined;
+    const gate = new Promise<void>((r) => (release = r));
+    server.use(
+      http.post("*/api/agents/chat", async () => {
+        await gate;
+        return sse([{ type: "message", text: "A fake answer.", citations: [] }, { type: "done", run_id: "r" }]);
+      }),
+    );
+    renderPanel(() => true);
+    await ask("Is TEST 20000 hard?");
+    expect(screen.getByTestId("chat-bubble-user")).toHaveTextContent("You: Is TEST 20000 hard?");
+    expect(screen.getByTestId("typing-indicator")).toHaveTextContent("The AI is writing…");
+    release();
+    expect(await screen.findByTestId("chat-bubble-ai")).toHaveTextContent("AI advisor: A fake answer.");
+    expect(screen.queryByTestId("typing-indicator")).toBeNull();
+  });
+
+  it("sends with Enter and keeps Shift+Enter for a new line", async () => {
+    const user = userEvent.setup();
+    renderPanel(() => true);
+    const box = screen.getByLabelText("Ask the advisor");
+    await user.type(box, "Line one{Shift>}{Enter}{/Shift}line two");
+    expect(box).toHaveValue("Line one\nline two");
+    await user.type(box, "{Enter}");
+    expect(await screen.findByTestId("chat-bubble-user")).toHaveTextContent(/Line one\s+line two/);
+    expect(box).toHaveValue("");
+  });
+});
+
 describe("confirmationPhrase", () => {
   it("writes the sentence the server's parser reads, or nothing", () => {
     expect(

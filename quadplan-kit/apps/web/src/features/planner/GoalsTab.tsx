@@ -5,12 +5,13 @@ import { controlClass, controlCompactClass } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { CAREER_PRESETS, TERM_PRESETS } from "./goals";
 import { goalLabel } from "./metrics";
-import { planTerms, termLabel } from "./terms";
+import { termLabel } from "./terms";
 
 interface GoalsTabProps {
   goals: Goal[];
   entryTerm: string;
-  years: number;
+  /** The plan's quarters, in grid order. */
+  terms: string[];
   issues: Issue[];
   programs: ProgramSummary[];
   onChange: (goals: Goal[]) => void;
@@ -19,7 +20,7 @@ interface GoalsTabProps {
 function GoalRow({ goal, issues, onRemove }: { goal: Goal; issues: Issue[]; onRemove: () => void }) {
   const mine = issues.filter((i) => i.goal_id === goal.id);
   return (
-    <li className="flex items-start justify-between gap-2 rounded-lg border border-hairline bg-surface-card py-1 pl-3 pr-1 text-body-sm">
+    <li className="flex animate-rise items-start justify-between gap-2 rounded-lg border border-hairline bg-surface-card py-1 pl-3 pr-1 text-body-sm">
       <div className="min-w-0 py-2">
         <div className="text-ink">{goalLabel(goal)}</div>
         {goal.term && <div className="text-caption text-muted">{termLabel(goal.term)}</div>}
@@ -36,10 +37,9 @@ function GoalRow({ goal, issues, onRemove }: { goal: Goal; issues: Issue[]; onRe
   );
 }
 
-export function GoalsTab({ goals, entryTerm, years, issues, programs, onChange }: GoalsTabProps) {
+export function GoalsTab({ goals, entryTerm, terms, issues, programs, onChange }: GoalsTabProps) {
   const career = goals.filter((g) => g.scope === "career");
   const perTerm = goals.filter((g) => g.scope === "term");
-  const terms = planTerms(entryTerm, years);
   const [preset, setPreset] = useState(TERM_PRESETS[0]?.key ?? "");
   const [term, setTerm] = useState(terms[0] ?? "");
   const presetId = useId();

@@ -14,7 +14,7 @@ const form = { scope: "remaining" as const, selectedTerms: [], load: 0, perTermL
 function renderDialog(planId: string | null = null) {
   return render(
     <MemoryRouter>
-      <GenerateDialog open onClose={() => undefined} plan={plan} years={4} onApply={() => true} planId={planId} />
+      <GenerateDialog open onClose={() => undefined} plan={plan} onApply={() => true} planId={planId} />
     </MemoryRouter>,
   );
 }

@@ -90,9 +90,7 @@ function PostList({ page, kind }: { page: ForumPage; kind: PostKind }) {
       ) : posts.error ? (
         <ErrorText>{posts.error.message}</ErrorText>
       ) : items.length === 0 ? (
-        <EmptyState title={kind === "review" ? "No reviews yet" : "No discussion yet"}>
-          {kind === "review" ? "Be the first to review this course with this instructor." : "Ask a question about the course, the exams or the workload."}
-        </EmptyState>
+        <EmptyState title={kind === "review" ? "No reviews yet" : "No discussion yet"} />
       ) : (
         <ul className="flex flex-col gap-4">
           {items.map((post) => (
@@ -139,9 +137,7 @@ function SummarySlot({ page }: { page: ForumPage }) {
           </p>
         </div>
       ) : (
-        <EmptyState title="No summary yet">
-          Once there are a few reviews, a short AI summary of what students say will appear here, with links to the posts it draws on.
-        </EmptyState>
+        <EmptyState title="No summary yet">An AI summary appears once there are a few reviews.</EmptyState>
       )}
     </Section>
   );

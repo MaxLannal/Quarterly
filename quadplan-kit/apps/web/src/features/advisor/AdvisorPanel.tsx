@@ -1,11 +1,12 @@
-import { useEffect, useId, useRef, useState, type FormEvent } from "react";
+import { useEffect, useId, useRef, useState, type FormEvent, type KeyboardEvent, type ReactNode, type RefObject } from "react";
 import { Link } from "react-router-dom";
 import { api, isNotAvailable, unwrap } from "@/api/client";
 import { streamChat } from "@/api/sse";
 import type { ChangeOp, ChangeSet, ChatTurn, Citation, PlanState } from "@/api/types";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/input";
-import { NotAvailable, Notice } from "@/components/ui/misc";
+import { CloseIcon, SparkIcon } from "@/components/ui/icons";
+import { Badge, NotAvailable, Notice } from "@/components/ui/misc";
+import { TopSheet } from "@/components/ui/sheet";
 import { useSession } from "@/features/auth/session";
 import { useForumPageById, usePost } from "@/features/forum/api";
 import { pagePath, threadPath } from "@/features/forum/format";
@@ -132,6 +133,8 @@ interface AdvisorPanelProps {
   planId?: string | null;
   /** Applies the ops to the plan in the browser; returns true when they applied cleanly. */
   onApply: (ops: ChangeOp[]) => boolean;
+  /** Ref to the message box (the advisor sheet focuses it on open). */
+  composerRef?: RefObject<HTMLTextAreaElement>;
 }
 
 const MAX_HISTORY = 12;
@@ -149,14 +152,23 @@ function sameOps(a: ChangeSet, b: ChangeSet): boolean {
   return a.id && b.id ? a.id === b.id : JSON.stringify(a.ops) === JSON.stringify(b.ops) && a.base_plan_hash === b.base_plan_hash;
 }
 
-export function AdvisorPanel({ plan, planId = null, onApply }: AdvisorPanelProps) {
+export function AdvisorPanel({ plan, planId = null, onApply, composerRef }: AdvisorPanelProps) {
   const [entries, setEntries] = useState<Entry[]>([]);
   const [text, setText] = useState("");
   const [busy, setBusy] = useState(false);
   const [unavailable, setUnavailable] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const runId = useRef<string | null>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const ownInputRef = useRef<HTMLTextAreaElement>(null);
+  const inputRef = composerRef ?? ownInputRef;
   const inputId = useId();
+
+  // Keep the newest message in view.
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (el) el.scrollTop = el.scrollHeight;
+  }, [entries.length, busy]);
 
   // A saved plan's conversation lives on the server (30 days).
   useEffect(() => {
@@ -233,73 +245,164 @@ export function AdvisorPanel({ plan, planId = null, onApply }: AdvisorPanelProps
     }
   }
 
+
+  function onComposerKey(e: KeyboardEvent<HTMLTextAreaElement>) {
+    // Enter sends, Shift+Enter starts a new line (the usual chat convention).
+    if (e.key === "Enter" && !e.shiftKey && !e.nativeEvent.isComposing) {
+      e.preventDefault();
+      e.currentTarget.form?.requestSubmit();
+    }
+  }
+
   return (
-    <div className="flex flex-col gap-3">
-      {unavailable && <NotAvailable feature="The advisor">Planning questions will work once the chat service is built.</NotAvailable>}
-      <ol className="space-y-3" aria-label="Advisor messages" aria-live="polite">
-        {entries.length === 0 && (
-          <li className="rounded-lg bg-canvas-soft p-4 text-body-sm text-muted">Ask a planning question, for example “Which elective is lighter?”</li>
+    <div className="flex min-h-0 flex-1 flex-col">
+      <div ref={scrollRef} className="min-h-0 flex-1 overflow-y-auto px-4 py-5 sm:px-6" data-testid="advisor-scroll">
+        {unavailable && (
+          <div className="mb-4">
+            <NotAvailable feature="The advisor" />
+          </div>
         )}
-        {entries.map((entry, i) => (
-          <li key={i}>
-            {entry.kind === "user" ? (
-              <div className="ml-8 rounded-lg rounded-br-xs bg-surface-strong px-4 py-3 text-body-sm text-ink">
-                <span className="sr-only">You: </span>
-                {entry.text}
-              </div>
-            ) : entry.kind === "assistant" ? (
-              <div className="mr-8 rounded-lg rounded-bl-xs border border-hairline bg-surface-card px-4 py-3 text-body-sm text-body">
-                <span className="sr-only">Advisor: </span>
-                <p>{entry.text}</p>
-                {entry.citations.length > 0 && (
-                  <ul className="-mx-1.5 mt-1 flex flex-wrap" aria-label="Sources">
-                    {entry.citations.map((c) => (
-                      <li key={`${c.kind}-${c.id}`}>
-                        <CitationChip c={c} />
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-            ) : (
-              <ProposalCard
-                changeSet={entry.changeSet}
-                state={entry.state}
-                onApply={() => {
-                  setError(null);
-                  void applyChangeSet(entry.changeSet, null);
-                }}
-                onDismiss={() => {
-                  setCard(entry.changeSet, "dismissed");
-                  const id = entry.changeSet.id;
-                  if (planId && id) {
-                    void api.POST("/plans/{plan_id}/changesets/{changeset_id}/discard", { params: { path: { plan_id: planId, changeset_id: id } } }).catch(() => undefined);
-                  }
-                }}
-              />
-            )}
-          </li>
-        ))}
-        {busy && (
-          <li role="status" className="text-body-sm text-muted">
-            Thinking…
-          </li>
-        )}
-      </ol>
+        <ol className="flex flex-col gap-4" aria-label="Advisor messages" aria-live="polite">
+          {entries.length === 0 && (
+            <li className="mx-auto max-w-sm py-8 text-center text-body-sm text-muted">Ask a planning question, for example “Which elective is lighter?”</li>
+          )}
+          {entries.map((entry, i) => (
+            <li key={i} className="animate-rise">
+              {entry.kind === "user" ? (
+                <div className="flex justify-end">
+                  <div className="max-w-[85%] whitespace-pre-wrap rounded-xl rounded-tr-xs bg-primary-wash px-4 py-2.5 text-body-sm text-ink" data-testid="chat-bubble-user">
+                    <span className="sr-only">You: </span>
+                    {entry.text}
+                  </div>
+                </div>
+              ) : entry.kind === "assistant" ? (
+                <AiRow>
+                  <div className="w-fit max-w-full rounded-xl rounded-tl-xs border border-hairline bg-surface-card px-4 py-2.5 text-body-sm text-body" data-testid="chat-bubble-ai">
+                    <span className="sr-only">AI advisor: </span>
+                    <p className="whitespace-pre-wrap">{entry.text}</p>
+                    {entry.citations.length > 0 && (
+                      <ul className="-mx-1.5 mt-1 flex flex-wrap" aria-label="Sources">
+                        {entry.citations.map((c) => (
+                          <li key={`${c.kind}-${c.id}`}>
+                            <CitationChip c={c} />
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                </AiRow>
+              ) : (
+                <AiRow>
+                  <ProposalCard
+                    changeSet={entry.changeSet}
+                    state={entry.state}
+                    onApply={() => {
+                      setError(null);
+                      void applyChangeSet(entry.changeSet, null);
+                    }}
+                    onDismiss={() => {
+                      setCard(entry.changeSet, "dismissed");
+                      const id = entry.changeSet.id;
+                      if (planId && id) {
+                        void api.POST("/plans/{plan_id}/changesets/{changeset_id}/discard", { params: { path: { plan_id: planId, changeset_id: id } } }).catch(() => undefined);
+                      }
+                    }}
+                  />
+                </AiRow>
+              )}
+            </li>
+          ))}
+          {busy && (
+            <li role="status" className="animate-fade-in">
+              <AiRow>
+                <div className="flex h-10 items-center gap-1 rounded-xl rounded-tl-xs border border-hairline bg-surface-card px-4" data-testid="typing-indicator">
+                  <span className="sr-only">The AI is writing…</span>
+                  {[0, 150, 300].map((d) => (
+                    <span key={d} aria-hidden="true" className="inline-block size-1.5 animate-typing rounded-pill bg-gray-dark" style={{ animationDelay: `${d}ms` }} />
+                  ))}
+                </div>
+              </AiRow>
+            </li>
+          )}
+        </ol>
+      </div>
       {error && (
-        <Notice tone="error" role="alert">
-          {error}
-        </Notice>
+        <div className="px-4 pb-2 sm:px-6">
+          <Notice tone="error" role="alert">
+            {error}
+          </Notice>
+        </div>
       )}
-      <form onSubmit={send} className="flex flex-col gap-2">
-        <label htmlFor={inputId} className="text-caption font-medium text-ink">
+      <form onSubmit={send} className="border-t border-hairline bg-canvas-soft px-4 py-3 sm:px-6">
+        <label htmlFor={inputId} className="sr-only">
           Ask the advisor
         </label>
-        <Textarea id={inputId} value={text} onChange={(e) => setText(e.target.value)} rows={3} maxLength={4000} className="text-body-sm" />
-        <Button type="submit" className="self-end" disabled={busy || !text.trim()}>
-          Send
-        </Button>
+        <div className="flex items-end gap-2 rounded-xl border border-border-input bg-surface-card py-1 pl-3 pr-1 focus-within:border-primary focus-within:shadow-[inset_0_0_0_1px_var(--color-primary)]">
+          <textarea
+            ref={inputRef}
+            id={inputId}
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            onKeyDown={onComposerKey}
+            rows={2}
+            maxLength={4000}
+            placeholder="Ask about your plan"
+            className="min-h-11 flex-1 resize-none bg-transparent py-2 text-body-sm text-ink placeholder:text-muted focus-visible:outline-none"
+          />
+          <Button type="submit" disabled={busy || !text.trim()}>
+            Send
+          </Button>
+        </div>
       </form>
     </div>
+  );
+}
+
+/** An AI turn: the AI avatar, then the bubble or card. */
+function AiRow({ children }: { children: ReactNode }) {
+  return (
+    <div className="flex items-start gap-2.5 pr-6 sm:pr-12">
+      <span aria-hidden="true" className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-full bg-surface-strong text-ink">
+        <SparkIcon size={16} />
+      </span>
+      <div className="min-w-0 flex-1">{children}</div>
+    </div>
+  );
+}
+
+/**
+ * The advisor's own surface: a sheet that slides down from the top (a full page on a phone),
+ * labelled as generative AI (FEEDBACK F4). The conversation stays when the sheet is closed.
+ */
+export function AdvisorSheet({ open, onClose, ...panel }: AdvisorPanelProps & { open: boolean; onClose: () => void }) {
+  const titleId = useId();
+  const descId = useId();
+  const composer = useRef<HTMLTextAreaElement>(null);
+  return (
+    <TopSheet open={open} onClose={onClose} labelledBy={titleId} describedBy={descId} initialFocus={composer}>
+      <header className="flex items-start gap-3 border-b border-hairline px-4 py-3 sm:px-6 sm:py-4">
+        <span aria-hidden="true" className="mt-1 hidden size-10 shrink-0 items-center justify-center rounded-full bg-primary-wash text-primary sm:flex">
+          <SparkIcon size={20} />
+        </span>
+        <div className="min-w-0 flex-1">
+          <div className="flex flex-wrap items-center gap-2">
+            <h2 id={titleId} className="font-display text-display-sm">
+              AI advisor
+            </h2>
+            <Badge casing="normal" icon={false} className="gap-1.5">
+              <SparkIcon size={12} />
+              Generative AI
+            </Badge>
+          </div>
+          <p id={descId} className="mt-1 text-caption text-muted">
+            Answers are written by an AI and can be wrong. Not official advising.
+          </p>
+        </div>
+        <Button variant="ghost" size="icon" aria-label="Close" onClick={onClose} className="-mr-2">
+          <CloseIcon />
+        </Button>
+      </header>
+      <AdvisorPanel {...panel} composerRef={composer} />
+    </TopSheet>
   );
 }

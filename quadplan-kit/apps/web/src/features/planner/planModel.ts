@@ -5,7 +5,7 @@
  */
 import type { ChangeOp, Goal, PlanItem, PlanProgram, PlanState } from "@/api/types";
 import { applyOps, ChangeOpError } from "./changes";
-import { catalogStartYear, yearIndex } from "./terms";
+import { catalogStartYear, classYearLabel, graduationTerm, isBefore, planYearCount, termAt, yearIndex } from "./terms";
 
 let counter = 0;
 export function newItemId(): string {
@@ -107,8 +107,6 @@ export function setCompletedOps(item: PlanItem, completed: boolean): EditResult 
 export interface EditorState {
   plan: PlanState;
   name: string;
-  /** Plan years shown (4, or 5 with the optional Year 5). */
-  years: number;
   /** Increments on every plan change; used to tell a generated variant is stale. */
   revision: number;
   error: string | null;
@@ -120,37 +118,60 @@ export type EditorAction =
   | { type: "rename"; name: string }
   | { type: "programs"; programs: PlanProgram[] }
   | { type: "goals"; goals: Goal[] }
-  | { type: "years"; years: number }
+  | { type: "graduation"; term: string }
+  | { type: "addYear" }
+  | { type: "removeYear" }
   | { type: "replace"; plan: PlanState; name?: string }
   | { type: "dismissError" };
 
-/** Years needed to show every item (at least 4, at most 5 in the grid). */
-export function yearsNeeded(plan: PlanState): number {
-  let max = 4;
-  for (const item of plan.items ?? []) {
-    try {
-      max = Math.max(max, yearIndex(item.term, plan.entry_term));
-    } catch {
-      // malformed term: shown in the "other terms" list instead
-    }
-  }
-  return Math.min(max, 5);
+/** Plan years shown in the grid: up to the graduation quarter's year (FEEDBACK F3). */
+export function planYears(plan: PlanState): number {
+  return planYearCount(plan.entry_term, graduationTerm(plan));
 }
 
-export function initEditor(plan: PlanState, name: string, years?: number): EditorState {
-  const withIds = ensureIds(plan);
-  return { plan: withIds, name, years: Math.max(years ?? 4, yearsNeeded(withIds)), revision: 0, error: null };
+/** Items in plan year `year` (by academic year, whatever the quarter). */
+function itemsInYear(plan: PlanState, year: number): PlanItem[] {
+  return (plan.items ?? []).filter((i) => {
+    try {
+      return yearIndex(i.term, plan.entry_term) === year;
+    } catch {
+      return false;
+    }
+  });
+}
+
+/** "Add a year": graduate in the Spring of the year after the current last year. */
+export function addYear(plan: PlanState): PlanState {
+  return { ...plan, graduation_term: termAt(plan.entry_term, planYears(plan) + 1, "SP") };
+}
+
+/** "Remove last year": refused while that year has courses, or when it is the only year. */
+export function removeYear(plan: PlanState): { ok: true; plan: PlanState } | { ok: false; error: string } {
+  const years = planYears(plan);
+  const label = classYearLabel(years, plan.entry_year_level ?? 1).toLowerCase();
+  const last = termAt(plan.entry_term, years - 1, "SP");
+  if (years <= 1 || isBefore(last, plan.entry_term)) return { ok: false, error: "A plan needs at least one year." };
+  if (itemsInYear(plan, years).length > 0) return { ok: false, error: `Your ${label} has courses. Move or remove them first.` };
+  return { ok: true, plan: { ...plan, graduation_term: last } };
+}
+
+export function initEditor(plan: PlanState, name: string): EditorState {
+  return { plan: ensureIds(plan), name, revision: 0, error: null };
 }
 
 function withOps(state: EditorState, ops: ChangeOp[]): EditorState {
   if (ops.length === 0) return state;
   try {
     const plan = applyOps(state.plan, ops, { newId: newItemId });
-    return { ...state, plan, revision: state.revision + 1, error: null, years: Math.max(state.years, yearsNeeded(plan)) };
+    return { ...state, plan, revision: state.revision + 1, error: null };
   } catch (e) {
     if (e instanceof ChangeOpError) return { ...state, error: e.message };
     throw e;
   }
+}
+
+function withPlan(state: EditorState, plan: PlanState): EditorState {
+  return { ...state, plan, revision: state.revision + 1, error: null };
 }
 
 export function editorReducer(state: EditorState, action: EditorAction): EditorState {
@@ -165,19 +186,18 @@ export function editorReducer(state: EditorState, action: EditorAction): EditorS
       return { ...state, plan: { ...state.plan, programs: action.programs }, revision: state.revision + 1 };
     case "goals":
       return { ...state, plan: { ...state.plan, goals: action.goals }, revision: state.revision + 1 };
-    case "years":
-      return { ...state, years: Math.max(4, Math.min(5, Math.max(action.years, yearsNeeded(state.plan)))) };
-    case "replace": {
-      const plan = ensureIds(action.plan);
-      return {
-        ...state,
-        plan,
-        name: action.name ?? state.name,
-        revision: state.revision + 1,
-        years: Math.max(state.years, yearsNeeded(plan)),
-        error: null,
-      };
+    case "graduation":
+      if (action.term.endsWith("-SU")) return { ...state, error: "You cannot graduate in a Summer quarter." };
+      if (isBefore(action.term, state.plan.entry_term)) return { ...state, error: "Your last quarter cannot be before your first." };
+      return withPlan(state, { ...state.plan, graduation_term: action.term });
+    case "addYear":
+      return withPlan(state, addYear(state.plan));
+    case "removeYear": {
+      const r = removeYear(state.plan);
+      return r.ok ? withPlan(state, r.plan) : { ...state, error: r.error };
     }
+    case "replace":
+      return { ...state, plan: ensureIds(action.plan), name: action.name ?? state.name, revision: state.revision + 1, error: null };
     case "dismissError":
       return { ...state, error: null };
   }

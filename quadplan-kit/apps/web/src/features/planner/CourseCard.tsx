@@ -15,7 +15,7 @@ export function CourseCard({ item }: { item: PlanItem }) {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const id = item.id ?? `${item.course}-${item.term}`;
-  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
+  const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
     id,
     data: { kind: "item", itemId: item.id },
     disabled: item.locked,
@@ -24,7 +24,6 @@ export function CourseCard({ item }: { item: PlanItem }) {
   const course = item.course ? courses.get(item.course) : undefined;
   const tag = item.course ? tags.get(item.course) : undefined;
   const mine = issuesForItem(issues, item);
-  const worst = mine.some((i) => i.level === "error") ? "error" : mine.some((i) => i.level === "warning") ? "warning" : null;
   const hours = attribute(course, "workload_hours");
   const difficulty = attribute(course, "difficulty");
   const units = itemUnits(item, course);
@@ -55,15 +54,14 @@ export function CourseCard({ item }: { item: PlanItem }) {
         e.preventDefault();
         setMenuOpen(true);
       }}
-      style={transform ? { transform: `translate3d(${transform.x}px, ${transform.y}px, 0)` } : undefined}
       className={cn(
-        "relative flex flex-col rounded-lg border border-l-[3px] border-hairline bg-surface-card text-caption text-ink transition-shadow hover:shadow-hover",
+        // The card settles into place when it mounts: on load, and after a drop into a new quarter.
+        "relative flex animate-settle flex-col rounded-lg border border-l-[3px] border-hairline bg-surface-card text-caption text-ink transition-[box-shadow,opacity] hover:shadow-hover",
         isSlot ? "border-dashed border-hairline-strong border-l-hairline-strong bg-canvas-soft" : tag ? REQUIREMENT_COLORS[tag.color % REQUIREMENT_COLORS.length] : "border-l-hairline-strong",
         completed && "bg-canvas-soft",
-        worst === "error" && "border-error",
-        worst === "warning" && "border-warning",
         item.id && highlight.items.has(item.id) && "ring-2 ring-primary ring-offset-2 ring-offset-canvas-soft",
-        isDragging && "z-30 opacity-90 shadow-overlay",
+        // While dragging, the drag overlay follows the pointer; the card stays as a faint placeholder.
+        isDragging && "opacity-40",
       )}
     >
       {/* Header row: drag handle, code and units, actions menu (each control a 44px target).
@@ -113,8 +111,8 @@ export function CourseCard({ item }: { item: PlanItem }) {
         {mine.length > 0 && (
           <ul className="mt-1.5 space-y-1">
             {mine.map((i, n) => (
-              <li key={n} className={cn("flex items-start gap-1.5", i.level === "error" ? "text-error" : "text-warning")}>
-                {i.level === "error" ? <ErrorIcon size={14} className="mt-[3px] shrink-0" /> : <WarningIcon size={14} className="mt-[3px] shrink-0 text-warning-icon" />}
+              <li key={n} className="flex items-start gap-1.5 text-body">
+                {i.level === "error" ? <ErrorIcon size={14} className="mt-[3px] shrink-0 text-error" /> : <WarningIcon size={14} className="mt-[3px] shrink-0 text-warning-icon" />}
                 <span>
                   <span className="sr-only">{i.level}: </span>
                   {i.message}

@@ -1,5 +1,6 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Locator, type Page } from "@playwright/test";
+import { settle } from "./helpers";
 
 // Forum (prompt 08) against the MSW mocks in src/mocks/forum.ts.
 
@@ -23,6 +24,7 @@ async function pick(form: Locator, name: string) {
 
 /** No serious or critical axe violations (WCAG 2.1 A/AA). */
 async function expectNoSeriousAxeViolations(page: Page) {
+  await settle(page);
   const results = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"]).analyze();
   const serious = results.violations.filter((v) => v.impact === "serious" || v.impact === "critical");
   expect(serious.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);

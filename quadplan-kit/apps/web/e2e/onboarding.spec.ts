@@ -38,6 +38,9 @@ test("onboarding: five steps create a plan and open the generator", async ({ pag
   await expect(page.getByTestId("timeline-2100-WI")).toContainText("Light quarter");
   const chip = page.getByRole("button", { name: "Drag “At most 4 courses” onto a quarter" });
   const target = page.getByTestId("timeline-2100-SP");
+  // Both ends of the drag on screen: a pointer near the window edge makes dnd-kit scroll the page.
+  await page.setViewportSize({ width: 1280, height: 1000 });
+  await target.scrollIntoViewIfNeeded();
   const a = await chip.boundingBox();
   const b = await target.boundingBox();
   if (!a || !b) throw new Error("no boxes");

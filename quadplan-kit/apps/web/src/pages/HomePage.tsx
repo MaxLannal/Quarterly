@@ -22,7 +22,7 @@ export default function HomePage() {
         <div className="flex max-w-3xl flex-col gap-5">
           <h1 className="font-display text-display-md text-ink sm:text-display-xl lg:text-display-mega">Quarterly</h1>
           <p className="max-w-reading text-title-sm font-normal text-body">
-            Plan four years of courses with a verifier that checks every requirement, and read what students say about each class.
+            Plan your courses with a verifier that checks every requirement, and read what students say about each class.
           </p>
         </div>
         <form role="search" onSubmit={submit} className="flex w-full max-w-xl flex-col gap-3 sm:flex-row" aria-label="Search courses and instructors">

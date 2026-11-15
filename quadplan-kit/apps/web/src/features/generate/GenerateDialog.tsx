@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils";
 import { opsForTerms, termsTouched } from "@/features/planner/changes";
 import { opText } from "@/features/planner/context";
 import { goalLabel, round1 } from "@/features/planner/metrics";
-import { planTerms, termLabel, compareTerms } from "@/features/planner/terms";
+import { compareTerms, graduationTerm, planTerms, termLabel } from "@/features/planner/terms";
 import { ReportBadge } from "@/features/planner/VerifierBadge";
 import { CitationChip } from "@/features/advisor/AdvisorPanel";
 import { applyStoredChangeSet, currentTerm, GENERATOR_MODE, generateDeterministic } from "./deterministic";
@@ -54,8 +54,8 @@ export function buildGenerateRequest(plan: PlanState, v: GenerateFormValue, plan
   };
 }
 
-function GenerateForm({ plan, years, onSubmit }: { plan: PlanState; years: number; onSubmit: (v: GenerateFormValue) => void }) {
-  const terms = planTerms(plan.entry_term, years);
+function GenerateForm({ plan, onSubmit }: { plan: PlanState; onSubmit: (v: GenerateFormValue) => void }) {
+  const terms = planTerms(plan.entry_term, graduationTerm(plan));
   const [scope, setScope] = useState<Scope>("whole");
   const [selectedTerms, setSelectedTerms] = useState<string[]>([]);
   const [load, setLoad] = useState(0);
@@ -192,7 +192,7 @@ function GenerateForm({ plan, years, onSubmit }: { plan: PlanState; years: numbe
       <fieldset>
         <legend className="flex items-baseline gap-2 text-title-sm text-ink">3. Goals</legend>
         {(plan.goals ?? []).length === 0 ? (
-          <p className="text-body-sm text-muted">No goals yet. Add them in the Goals tab.</p>
+          <p className="text-body-sm text-muted">No goals yet. Add them under Goals.</p>
         ) : (
           (plan.goals ?? []).map((g) => (
             <ChoiceRow
@@ -276,7 +276,7 @@ function VariantCard({ v, onApply, onDiscard }: { v: VariantEvent; onApply: (ops
   const hardest = v.metrics.hardest_quarter_hours;
   const rationale = Object.entries(v.rationale).sort(([a], [b]) => compareTerms(a, b));
   return (
-    <article className="space-y-3 rounded-xl border border-hairline bg-surface-card p-5" aria-label={`Variant ${v.label}`}>
+    <article className="animate-rise space-y-3 rounded-xl border border-hairline bg-surface-card p-5" aria-label={`Variant ${v.label}`}>
       <div className="flex flex-wrap items-center justify-between gap-2">
         <h3 className="text-title-sm">{v.label}</h3>
         <ReportBadge report={v.report} />
@@ -349,14 +349,13 @@ interface GenerateDialogProps {
   open: boolean;
   onClose: () => void;
   plan: PlanState;
-  years: number;
   /** Returns true when the ops applied cleanly. */
   onApply: (ops: ChangeOp[]) => boolean;
   /** The saved plan's id when the plan is unchanged since it was saved; null otherwise. */
   planId?: string | null;
 }
 
-export function GenerateDialog({ open, onClose, plan, years, onApply, planId = null }: GenerateDialogProps) {
+export function GenerateDialog({ open, onClose, plan, onApply, planId = null }: GenerateDialogProps) {
   const [phase, setPhase] = useState<Phase>("form");
   const [steps, setSteps] = useState<StepEvent[]>([]);
   const [variants, setVariants] = useState<VariantEvent[]>([]);
@@ -415,7 +414,7 @@ export function GenerateDialog({ open, onClose, plan, years, onApply, planId = n
   }
 
   return (
-    <Dialog open={open} onClose={close} title="Generate plan" description="A form, not a prompt: every choice maps to a typed setting." className="max-w-2xl">
+    <Dialog open={open} onClose={close} title="Generate plan" className="max-w-2xl">
       {unavailable && (
         <div className="mb-3">
           <NotAvailable feature="Plan generation">You can still build your plan by hand.</NotAvailable>
@@ -426,7 +425,7 @@ export function GenerateDialog({ open, onClose, plan, years, onApply, planId = n
           {error}
         </Notice>
       )}
-      {phase === "form" && <GenerateForm plan={plan} years={years} onSubmit={run} />}
+      {phase === "form" && <GenerateForm plan={plan} onSubmit={run} />}
       {phase === "running" && (
         <div role="status" aria-live="polite">
           <p className="mb-3 text-title-sm">Generating…</p>

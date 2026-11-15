@@ -3,13 +3,31 @@ import { cn } from "@/lib/utils";
 
 export interface RailTab {
   key: string;
-  label: string;
+  label: ReactNode;
   content: ReactNode;
 }
 
-/** WAI-ARIA tabs. Current tab: ink text over a 2px maroon underline (DESIGN.md active state); panels stay mounted so the advisor conversation survives tab switches. */
-export function Tabs({ tabs, label, initial }: { tabs: RailTab[]; label: string; initial?: string }) {
-  const [active, setActive] = useState(initial ?? tabs[0]?.key ?? "");
+interface TabsProps {
+  tabs: RailTab[];
+  label: string;
+  initial?: string;
+  /** Controlled mode: the current tab and its setter. */
+  active?: string;
+  onChange?: (key: string) => void;
+  /** Shown at the end of the tab row (for example a close button). */
+  end?: ReactNode;
+  className?: string;
+  panelClassName?: string;
+}
+
+/** WAI-ARIA tabs. Current tab: ink text over a 2px maroon underline (DESIGN.md active state); panels stay mounted so their state survives tab switches. */
+export function Tabs({ tabs, label, initial, active: controlled, onChange, end, className, panelClassName }: TabsProps) {
+  const [own, setOwn] = useState(initial ?? tabs[0]?.key ?? "");
+  const active = controlled ?? own;
+  const setActive = (key: string) => {
+    setOwn(key);
+    onChange?.(key);
+  };
   const base = useId();
   const refs = useRef<(HTMLButtonElement | null)[]>([]);
 
@@ -27,30 +45,33 @@ export function Tabs({ tabs, label, initial }: { tabs: RailTab[]; label: string;
   }
 
   return (
-    <div>
-      <div role="tablist" aria-label={label} className="flex gap-1 border-b border-hairline">
-        {tabs.map((t, i) => (
-          <button
-            key={t.key}
-            ref={(el) => {
-              refs.current[i] = el;
-            }}
-            type="button"
-            role="tab"
-            id={`${base}-tab-${t.key}`}
-            aria-selected={active === t.key}
-            aria-controls={`${base}-panel-${t.key}`}
-            tabIndex={active === t.key ? 0 : -1}
-            onClick={() => setActive(t.key)}
-            onKeyDown={(e) => onKey(e, i)}
-            className={cn(
-              "-mb-px min-h-11 flex-1 cursor-pointer whitespace-nowrap border-b-2 px-3 text-nav-link transition-colors focus-visible:outline-offset-[-2px]",
-              active === t.key ? "border-primary text-ink" : "border-transparent text-muted hover:text-ink",
-            )}
-          >
-            {t.label}
-          </button>
-        ))}
+    <div className={className}>
+      <div className="flex items-center gap-1 border-b border-hairline">
+        <div role="tablist" aria-label={label} className="flex min-w-0 flex-1 gap-1">
+          {tabs.map((t, i) => (
+            <button
+              key={t.key}
+              ref={(el) => {
+                refs.current[i] = el;
+              }}
+              type="button"
+              role="tab"
+              id={`${base}-tab-${t.key}`}
+              aria-selected={active === t.key}
+              aria-controls={`${base}-panel-${t.key}`}
+              tabIndex={active === t.key ? 0 : -1}
+              onClick={() => setActive(t.key)}
+              onKeyDown={(e) => onKey(e, i)}
+              className={cn(
+                "-mb-px inline-flex min-h-11 flex-1 cursor-pointer items-center justify-center gap-1.5 whitespace-nowrap border-b-2 px-3 text-nav-link transition-colors focus-visible:outline-offset-[-2px]",
+                active === t.key ? "border-primary text-ink" : "border-transparent text-muted hover:text-ink",
+              )}
+            >
+              {t.label}
+            </button>
+          ))}
+        </div>
+        {end}
       </div>
       {tabs.map((t) => (
         <div
@@ -60,7 +81,7 @@ export function Tabs({ tabs, label, initial }: { tabs: RailTab[]; label: string;
           aria-labelledby={`${base}-tab-${t.key}`}
           hidden={active !== t.key}
           tabIndex={0}
-          className="pt-4 focus-visible:outline-offset-4"
+          className={cn("pt-4 focus-visible:outline-offset-4", panelClassName)}
         >
           {t.content}
         </div>

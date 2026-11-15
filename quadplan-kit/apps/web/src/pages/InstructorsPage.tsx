@@ -24,7 +24,7 @@ export default function InstructorsPage() {
     <PageContainer as="section" width="reading">
       <PageHeader
         title="Instructors"
-        description="Find an instructor to see the courses they teach. Ratings, reviews and discussion are for logged-in students."
+        description="Ratings, reviews and discussion are for logged-in students."
       />
       <form role="search" aria-label="Search instructors" onSubmit={submit} className="mb-8 flex flex-wrap items-end gap-3">
         <div className="flex min-w-0 flex-1 flex-col gap-1.5">

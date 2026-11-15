@@ -18,7 +18,7 @@ All DESIGN.md tokens live in one `@theme` block, so Tailwind utilities use token
 | Layout | `--container-content` 1200, `--container-reading` 720, `--container-form` 448, `--container-tool` 1600 (planner only, DF-2) | `max-w-content`, `max-w-reading`, `max-w-form`, `max-w-tool` |
 | Focus | `:focus-visible` = 2px maroon outline, 2px offset, on every element (base layer) | `focus-visible:outline-offset-*` to adjust |
 | Orbs | `.orb` class: radial gradient of one orb color at 40% fading out, blurred 70px | `<Orb color="lake" />` |
-| Motion | 150ms default transitions; `prefers-reduced-motion` turns transitions and animations off | |
+| Motion | 150ms default transitions; `--animate-*` keyframes (see "FEEDBACK UI" below); `prefers-reduced-motion` turns every animation off and makes transitions instant | `animate-fade-in`, `animate-dialog-in`, `animate-drawer-in/out`, `animate-sheet-in/out`, `animate-rise`, `animate-settle`, `animate-typing` |
 
 `src/lib/utils.ts` teaches `tailwind-merge` the token names, so `cn("text-caption", "text-ink")` keeps both (a size and a color).
 
@@ -43,7 +43,7 @@ All DESIGN.md tokens live in one `@theme` block, so Tailwind utilities use token
 - `Footer.tsx`: footer (canvas, body-sm, link columns).
 - `page.tsx`: `PageContainer` (widths content / reading / form / tool), `PageHeader` (eyebrow, light-serif h1, meta, description, actions), `Section`, `Eyebrow`, `EmptyState`, `LoadingState` (skeleton plates), `inlineLinkClass` / `standaloneLinkClass` (link-inline).
 
-Every page and feature uses these: home (hero-band with one orb), onboarding, planner (grid, course cards with data-color requirement stripes, requirement rail, right-rail tabs, verifier badge, Generate popup, advisor), course search and course page, program explorer and program page, my plans, compare, sign-up, login, account, privacy, and the placeholder pages.
+Every page and feature uses these: home (hero-band with one orb), onboarding, planner (grid, course cards with data-color requirement stripes, toolbar, right-hand drawer with the requirement tree, goals and plan check, Generate popup, AI advisor sheet), course search and course page, program explorer and program page, my plans, compare, sign-up, login, account, privacy, and the placeholder pages.
 
 ## Accessibility kept
 
@@ -97,3 +97,37 @@ No page scrolls sideways at 390px, and axe found no WCAG 2.1 A/AA violations on 
 - Phone width: the top bar keeps search on its own row and folds links behind "Menu" (`nav-menu-390.png`); grids go to one column; forms keep 44px controls; dense links get 44px targets. The planner on a phone stacks requirements, the grid, then the Issues/Goals/Advisor panel (DF-13).
 
 **Evidence.** `e2e/design.spec.ts` runs axe (WCAG 2.1 A/AA) at 1440 and 390 on the planner with courses, the Generate dialog (options and results), the Advisor with an answer and resolved forum citation links, the forum page (with the review form open), and the thread (with the report dialog open), and fails on any serious or critical violation. `e2e/shell.spec.ts` checks 17 pages for sideways scrolling at phone width.
+
+## FEEDBACK UI (2026-11-14)
+
+Richard's FEEDBACK items F2 to F6 (`docs/FEEDBACK.md`). They override DESIGN.md and the SPEC where they conflict.
+
+**Layout (F4).** The planner is now a header, a toolbar and the grid; the old three-column layout (requirement rail, grid, Issues/Goals/Advisor tabs) and the phone "Jump to" links are gone.
+- Header: plan name with the line "Not official advising. Check with your adviser." under it; catalog year and program pills.
+- Toolbar: Requirements, Goals, Check plan (outline pills that open the drawer at that tab; the open one gets the maroon-wash selected state and `aria-expanded`), AI advisor, then Save and the one primary pill, Generate plan.
+- Drawer (`features/planner/PlanDrawer.tsx`): tabs Requirements, Goals and Issues. At 1024px and up it is a sticky 380px column (400px from 1280px) beside the grid, with the overlay shadow; it is not modal, so the grid stays usable and courses drag from the tree onto the grid. Below 1024px it covers the screen as a modal dialog (focus trapped, Escape and "Close panel" close it, focus returns to the toolbar). It stays mounted while closed, so open tree nodes and goal fields survive.
+- Requirement tree (`RequirementTree.tsx`): program heading, then its rule nodes as disclosure buttons (label, the rule in caption text, progress as a small "2 of 3" with a check when met), then courses: grip handle, the course code in bold (Inter 600) over the name in caption, a check if it is on the plan, and Add. Group nodes start open; course lists load when a node opens. Nesting is drawn with a hairline left border.
+- Errors stay subtle: no banner or red counts on the page. "Check plan" carries a small error-wash count pill (screen readers hear "Check plan (3 errors)"); the drawer's Issues tab shows the verifier badge and the list. Course cards no longer turn their border red; issue lines keep a colored icon with body-colored text.
+- AI advisor (`AdvisorSheet` in `features/advisor/AdvisorPanel.tsx`, `components/ui/sheet.tsx`): a modal sheet that slides down from the top, max 768px wide and 88vh tall on desktop, full screen on a phone. Header: spark avatar, "AI advisor", a neutral "Generative AI" badge and "Answers are written by an AI and can be wrong. Not official advising." Messages read as a chat: the student's bubbles on the right in maroon wash, the AI's on the left in white cards beside a spark avatar, proposal cards in the AI column, a three-dot typing indicator while the answer streams, and a composer pinned to the bottom (Enter sends, Shift+Enter is a new line; focus starts there). Everything else is unchanged: SSE streaming, citation chips with links, Apply, typed confirmations, history for saved plans, logged-out behavior. The sheet stays mounted when closed, so the conversation survives.
+- Drag and drop: a `DragOverlay` follows the pointer (the source card stays as a 40% placeholder); drops go to the quarter under the pointer (`pointerWithin`, falling back to overlap for keyboard drags). "Move to…" and "Add" stay the keyboard path.
+
+**Years (F2, F3).** `features/planner/terms.ts` mirrors `planner_core.terms`: an academic year runs SU, AU, WI, SP. Each year in the grid is headed by its class year relative to entry ("Second year" for a second-year transfer) and the academic year ("2100–01"); Summer comes first and stays hidden until "Show Summer". The grid ends at the plan's graduation quarter (`graduation_term`, defaulting to the Spring of the last year left), set with "Graduating in" (Autumn, Winter or Spring, up to a year past the current last year), "Add a year" and "Remove last year" (refused, with a short message, while that year has courses). Items outside are listed under "Other terms". Local plans saved with the old `years: 5` open with Spring of year 5.
+
+**Motion (F6).** CSS keyframes in `index.css` and a 30-line helper (`lib/motion.ts`: `usePresence` keeps an element up for its exit animation, `useMediaQuery`); no animation library.
+
+| Moment | Animation | Duration, easing |
+| --- | --- | --- |
+| Button press | pill scales to 97% | 150ms |
+| Dialog open | backdrop fades; panel fades, rises 8px and scales from 98% | 200ms ease-out |
+| Drawer open / close | slides 24px from the right with a fade | 250ms ease-out in, 200ms ease-in out |
+| AI advisor open / close | slides 24px down from the top with a fade; backdrop fades | 250ms in, 200ms out |
+| Course card placed | settles from 97% to 101% to 100% | 250ms ease-out |
+| New list items (chat messages, issues, goals, tree courses, variants) | rise 6px and fade in; issues stagger 30ms | 200ms ease-out |
+| Quarter under a dragged card | maroon-wash fill, maroon line and hover shadow | 200ms |
+| AI typing | three dots pulse in turn | 1.2s loop |
+
+Rules: entrances ease out, exits ease in and are shorter; nothing moves more than 24px; every keyframe ends at `transform: none`, so no containing block is left behind for the fixed drag overlay; reading surfaces (messages, post text) do not move once shown. With `prefers-reduced-motion: reduce` no animation runs at all (`animation: none`), transitions are instant, and closing skips the exit delay (`e2e/feedback-ui.spec.ts`, "with reduced motion, nothing animates").
+
+**Text (F5).** Removed: the Generate dialog's "A form, not a prompt: every choice maps to a typed setting."; the quarter picker's "Choose a quarter."; the advisor's "Planning questions will work once the chat service is built."; the course search description; the program explorer description; the first sentence of the instructors description; the forum's empty-state encouragement under "No reviews yet" and "No discussion yet"; the footer tagline (now the not-affiliated line). Shortened: the forum's "No summary yet" body, "Other terms" note, and the home hero's "Plan four years of courses" (years are no longer fixed at four). Legal, privacy, error and instruction text is unchanged.
+
+**Evidence.** `e2e/feedback-ui.spec.ts` (one test group per item), `e2e/planner.spec.ts`, axe in `e2e/design.spec.ts` with the drawer and the advisor open at 1440 and 390. Screenshots: `docs/screenshots/plan-*.png`, new `plan-drawer-*`, `plan-check-*`, `plan-years-*`; `plan-advisor-*` now shows the sheet.
