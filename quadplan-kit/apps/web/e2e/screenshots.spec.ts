@@ -2,6 +2,7 @@ import { mkdirSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { expect, test, type Page } from "@playwright/test";
+import { addCourseViaTree, closePanel, logIn, openAdvisor, openPanel, plannerWithCourses } from "./helpers";
 
 // Design review screenshots (step 5): every page at 1440x900 and 390x844, full page, device
 // scale factor 1, animations off, saved to docs/screenshots/<name>-<width>.png. Runs only with
@@ -15,33 +16,10 @@ const WIDTHS = [
   { width: 390, height: 844 },
 ] as const;
 
-async function logIn(page: Page, admin = false) {
-  await page.goto("/guidelines");
-  await expect(page.getByRole("heading", { level: 1, name: "Community guidelines" })).toBeVisible();
-  await page.evaluate(async (asAdmin) => {
-    if (asAdmin) sessionStorage.setItem("quarterly.mock.admin", "1");
-    await fetch("/api/auth/login", { method: "POST", body: JSON.stringify({ login: "fake-user", password: "x" }) });
-  }, admin);
-}
-
-/** A planner with a program and two courses on it (one with a prerequisite warning). */
+/** A planner with a program and two courses on it (one with a prerequisite issue), drawer closed. */
 async function fillPlanner(page: Page) {
-  await page.goto("/plan");
-  await page.getByRole("button", { name: "+ Program" }).click();
-  const dialog = page.getByRole("dialog", { name: "Programs" });
-  await dialog.getByRole("checkbox", { name: "Fake Program" }).check();
-  await dialog.getByRole("button", { name: "Save programs" }).click();
-  await expect(dialog).toBeHidden();
-  for (const [code, term] of [
-    ["TEST 10000", "Autumn 2099"],
-    ["TEST 10100", "Autumn 2099"],
-  ] as const) {
-    const node = page.getByRole("button", { name: /^Fake introductory sequence/ });
-    if ((await node.getAttribute("aria-expanded")) !== "true") await node.click();
-    await page.getByRole("button", { name: `Add ${code} to a quarter` }).click();
-    await page.getByRole("dialog", { name: `Add ${code} to…` }).getByRole("button", { name: term, exact: true }).click();
-    await expect(page.locator(`[data-testid="course-card"][data-course="${code}"]`)).toBeVisible();
-  }
+  await plannerWithCourses(page);
+  await closePanel(page);
 }
 
 /**
@@ -79,7 +57,45 @@ const SHOTS: Shot[] = [
     name: "plan",
     run: async (p) => {
       await fillPlanner(p);
-      await expect(p.getByTestId("verifier-badge")).toBeVisible();
+      await expect(p.getByRole("button", { name: /^Check plan/ })).toBeVisible();
+    },
+  },
+  {
+    // FEEDBACK F4: the right-hand drawer with the requirement tree (full screen on a phone).
+    name: "plan-drawer",
+    dialog: true,
+    run: async (p) => {
+      await plannerWithCourses(p);
+      await p.getByTestId("plan-drawer").getByRole("button", { name: /^Fake core courses/ }).click();
+      await expect(p.getByRole("button", { name: "Add TEST 20000 to a quarter" })).toBeVisible();
+      await p.getByTestId("plan-drawer").evaluate((el) => el.querySelector('[role="tabpanel"]:not([hidden])')?.scrollTo(0, 0));
+    },
+  },
+  {
+    // FEEDBACK F4: "Check plan" opens the issues in the drawer.
+    name: "plan-check",
+    dialog: true,
+    run: async (p) => {
+      await plannerWithCourses(p);
+      await openPanel(p, "Check plan");
+      await expect(p.getByRole("list", { name: "Verifier issues" })).toBeVisible();
+    },
+  },
+  {
+    // FEEDBACK F2 and F3: Summer opens each year, the graduation quarter and the year controls.
+    name: "plan-years",
+    run: async (p) => {
+      await p.goto("/plan");
+      await p.getByRole("button", { name: "+ Program" }).click();
+      const dialog = p.getByRole("dialog", { name: "Programs" });
+      await dialog.getByRole("checkbox", { name: "Fake Program" }).check();
+      await dialog.getByRole("button", { name: "Save programs" }).click();
+      await p.getByRole("button", { name: "Show Summer" }).click();
+      await addCourseViaTree(p, /^Fake introductory sequence/, "TEST 10000", "Summer 2099");
+      await addCourseViaTree(p, /^Fake introductory sequence/, "TEST 10100", "Autumn 2099");
+      await closePanel(p);
+      await p.getByLabel("Graduating in").selectOption("2103-WI");
+      await expect(p.getByTestId("quarter-2103-SP")).toHaveCount(0);
     },
   },
   {
@@ -94,15 +110,17 @@ const SHOTS: Shot[] = [
     },
   },
   {
+    // FEEDBACK F4: the AI advisor slides down from the top, labelled as generative AI.
     name: "plan-advisor",
+    dialog: true,
     run: async (p) => {
       await logIn(p);
       await fillPlanner(p);
-      await p.getByRole("tab", { name: "Advisor" }).click();
-      await p.getByLabel("Ask the advisor").fill("Please add a lighter elective");
-      await p.getByRole("button", { name: "Send" }).click();
-      await expect(p.getByRole("article", { name: "Proposed change" })).toBeVisible();
-      await expect(p.getByRole("link", { name: "Student post #3" })).toBeVisible();
+      const sheet = await openAdvisor(p);
+      await sheet.getByLabel("Ask the advisor").fill("Please add a lighter elective");
+      await sheet.getByRole("button", { name: "Send" }).click();
+      await expect(sheet.getByRole("article", { name: "Proposed change" })).toBeVisible();
+      await expect(sheet.getByRole("link", { name: "Student post #3" })).toBeVisible();
     },
   },
   {

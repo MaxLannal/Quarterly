@@ -1212,6 +1212,22 @@
       "title": "Goals",
       "type": "array"
     },
+    "graduation_term": {
+      "anyOf": [
+        {
+          "examples": [
+            "2026-AU"
+          ],
+          "pattern": "^\\d{4}-(AU|WI|SP|SU)$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Graduation Term"
+    },
     "items": {
       "items": {
         "$ref": "#/$defs/PlanItem"

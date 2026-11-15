@@ -54,8 +54,7 @@ export function AddToPlanButton({ code, catalogYear }: { code: string; catalogYe
         <TermPickerDialog
           open={open}
           title={`Add ${code} to…`}
-          entryTerm={plan.state.entry_term}
-          years={plan.years ?? 4}
+          plan={plan.state}
           onPick={pick}
           onClose={() => setOpen(false)}
         />

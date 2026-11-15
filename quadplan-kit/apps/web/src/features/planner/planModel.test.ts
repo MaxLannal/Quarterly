@@ -1,6 +1,6 @@
 import type { PlanItem } from "@/api/types";
 import { highlightFor } from "./context";
-import { addCourseOps, editorReducer, emptyPlan, initEditor, moveItemOps, removeItemOps, setCompletedOps, toggleLockOps, type EditorState } from "./planModel";
+import { addCourseOps, editorReducer, emptyPlan, initEditor, moveItemOps, planYears, removeItemOps, setCompletedOps, toggleLockOps, type EditorState } from "./planModel";
 import { dropResult } from "./Planner";
 
 function editor(items: PlanItem[]): EditorState {
@@ -44,12 +44,50 @@ describe("drag and drop", () => {
     expect(dropResult({ kind: "item", itemId: "missing" }, "2099-AU", [])).toBeNull();
   });
 
-  it("a drop into Year 5 shows Year 5", () => {
-    const s = editor([]);
-    expect(s.years).toBe(4);
-    const next = editorReducer(s, { type: "edit", result: addCourseOps("TEST 10000", "2103-AU") });
-    expect(next.years).toBe(5);
-    expect(editorReducer(next, { type: "years", years: 4 }).years).toBe(5);
+});
+
+describe("years and the graduation quarter (FEEDBACK F3)", () => {
+  it("a first-year gets four years and a second-year transfer three", () => {
+    expect(planYears(emptyPlan("2099-00"))).toBe(4);
+    expect(planYears({ ...emptyPlan("2099-00"), entry_year_level: 2 })).toBe(3);
+    expect(planYears({ ...emptyPlan("2099-00"), entry_year_level: 3 })).toBe(2);
+  });
+
+  it("adds and removes the last year", () => {
+    let s = editor([]);
+    s = editorReducer(s, { type: "addYear" });
+    expect(s.plan.graduation_term).toBe("2104-SP");
+    expect(planYears(s.plan)).toBe(5);
+    s = editorReducer(s, { type: "removeYear" });
+    s = editorReducer(s, { type: "removeYear" });
+    expect(s.plan.graduation_term).toBe("2102-SP");
+    expect(planYears(s.plan)).toBe(3);
+  });
+
+  it("refuses to remove a year that has courses", () => {
+    const s = editor([item("a", "TEST 10000", "2103-WI")]);
+    const next = editorReducer(s, { type: "removeYear" });
+    expect(next.plan).toBe(s.plan);
+    expect(next.error).toBe("Your fourth year has courses. Move or remove them first.");
+  });
+
+  it("refuses to remove the only year", () => {
+    const s = initEditor({ ...emptyPlan("2099-00"), entry_year_level: 4 }, "x");
+    expect(editorReducer(s, { type: "removeYear" }).error).toBe("A plan needs at least one year.");
+  });
+
+  it("graduating early in Winter keeps the year but ends at Winter", () => {
+    const s = editorReducer(editor([]), { type: "graduation", term: "2103-WI" });
+    expect(s.plan.graduation_term).toBe("2103-WI");
+    expect(planYears(s.plan)).toBe(4);
+    expect(editorReducer(s, { type: "graduation", term: "2103-SU" }).error).toMatch(/Summer/);
+    expect(editorReducer(s, { type: "graduation", term: "2098-SP" }).error).toMatch(/before/);
+  });
+
+  it("a course after the graduation quarter stays on the plan", () => {
+    const s = editorReducer(editor([item("a", "TEST 10000", "2103-SP")]), { type: "graduation", term: "2103-WI" });
+    expect(s.plan.items).toHaveLength(1);
+    expect(addCourseOps("TEST 10100", "2104-AU").ok).toBe(true);
   });
 });
 

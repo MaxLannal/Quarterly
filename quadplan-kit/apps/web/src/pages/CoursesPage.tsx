@@ -97,7 +97,7 @@ export default function CoursesPage() {
 
   return (
     <PageContainer>
-      <PageHeader title="Course search" eyebrow="Courses" description="Filter by department, level, quarter, Core area, workload and difficulty." />
+      <PageHeader title="Course search" eyebrow="Courses" />
       <Card variant="well">
       <form onSubmit={submit} className="grid grid-cols-2 gap-x-3 gap-y-4 sm:gap-4 lg:grid-cols-4" aria-label="Course filters">
         <div className="col-span-2 flex flex-col gap-1.5">

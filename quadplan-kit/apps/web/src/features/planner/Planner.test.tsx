@@ -1,4 +1,4 @@
-import { screen, within } from "@testing-library/react";
+import { screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
 import { server } from "@/mocks/node";
@@ -29,10 +29,12 @@ describe("Planner with endpoints that are not built yet (501)", () => {
     expect(await within(dialog).findByText(/Plan generation is not available yet/)).toBeInTheDocument();
     await user.click(within(dialog).getByRole("button", { name: "Close" }));
 
-    await user.click(screen.getByRole("tab", { name: "Advisor" }));
-    await user.type(screen.getByLabelText("Ask the advisor"), "Is TEST 20000 hard?");
-    await user.click(screen.getByRole("button", { name: "Send" }));
-    expect(await screen.findByText(/The advisor is not available yet/)).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "AI advisor" }));
+    const advisor = screen.getByRole("dialog", { name: "AI advisor" });
+    expect(within(advisor).getByText("Generative AI")).toBeInTheDocument();
+    await user.type(within(advisor).getByLabelText("Ask the advisor"), "Is TEST 20000 hard?");
+    await user.click(within(advisor).getByRole("button", { name: "Send" }));
+    expect(await within(advisor).findByText(/The advisor is not available yet/)).toBeInTheDocument();
   });
 
   it("falls back to the current academic year when catalog years are unavailable", async () => {
@@ -50,7 +52,12 @@ describe("Planner with mocks", () => {
     await user.click(await within(dialog).findByRole("checkbox", { name: /Fake Minor/ }));
     expect(within(dialog).getByText("In review")).toBeInTheDocument();
     await user.click(within(dialog).getByRole("button", { name: "Save programs" }));
-    expect(await screen.findByRole("progressbar", { name: "Fake theory part progress" })).toHaveAttribute("aria-valuetext", "0 of 1 courses");
+    await user.click(screen.getByRole("button", { name: "Requirements" }));
+    const node = await screen.findByRole("button", { name: /^Fake theory part/ });
+    await waitFor(() => expect(node).toHaveTextContent("0 of 1 courses"));
+    // Errors stay subtle: a small count on "Check plan", the list inside the panel.
+    expect(await screen.findByRole("button", { name: "Check plan (1 error)" })).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "Check plan (1 error)" }));
     expect(await screen.findByText("1 error")).toBeInTheDocument();
   });
 });

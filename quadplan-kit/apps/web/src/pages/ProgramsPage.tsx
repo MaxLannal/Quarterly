@@ -13,7 +13,6 @@ export default function ProgramsPage() {
       <PageHeader
         title="Program explorer"
         eyebrow="Programs"
-        description="Every major, minor, Bx/MS and joint degree, track and study-abroad block, with its requirements in plain English."
       />
       {q.isLoading ? (
         <LoadingState label="Loading programs" />

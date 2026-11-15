@@ -360,3 +360,15 @@ Richard answered the questions from the steps 1-5 run (recorded in `docs/OPEN_QU
   - cross-listing chains.
   One new question for Richard: **P08-14** (suspended students and account deletion; ending a suspension early).
 - **Evidence:** `make check` passed (planner_core 174, API 407, web 104, golden 115); `make e2e` 58 passed (49 screenshot tests skipped); screenshots refreshed (`make screenshots`).
+
+
+## FEEDBACK F2-F6 · Planner UI — done (2026-11-14)
+
+- **F2 Summer first:** the web term helpers mirror `planner_core.terms` (an academic year runs Summer, Autumn, Winter, Spring). Each year in the grid opens with its Summer (still hidden until "Show Summer"); nothing follows the last Spring.
+- **F3 Years:** the grid ends at the plan's graduation quarter (`graduation_term`; by default the Spring of the last year left, so three years for a second-year transfer). "Graduating in" (Autumn, Winter or Spring), "Add a year" and "Remove last year" (refused while that year has courses). Years are named by class year ("Second year"). Local plans saved with the old `years: 5` open with five years. Onboarding's review step shows the years and graduation quarter.
+- **F4 Layout:** a toolbar (Requirements, Goals, Check plan, AI advisor, Save, Generate plan); a right-hand drawer with the requirement tree (bold code, small name, subtle "2 of 3"), goals and the plan check (full screen on a phone); errors shown only as a small count on "Check plan"; the AI advisor as a sheet from the top, labelled "Generative AI", with chat bubbles and a typing indicator.
+- **F5 Text:** filler lines removed (list in `docs/DESIGN-IMPLEMENTATION.md`, "FEEDBACK UI"); the footer says Quarterly is not affiliated with the University of Chicago; the planner says "Not official advising. Check with your adviser."
+- **F6 Motion:** CSS-only entrances for dialogs, the drawer, the advisor, new list items and placed cards, plus button press feedback; none under reduced motion.
+- Also: `docs/schemas` regenerated (they lagged the `graduation_term` commit); drag and drop now drops on the quarter under the pointer (planner and onboarding).
+- **Evidence:** `make check` passed (planner_core 178, API 408, web 116, golden 115); `make e2e` 68 passed (55 screenshot tests skipped); `e2e/feedback-ui.spec.ts` covers each item; screenshots refreshed, new `plan-drawer`, `plan-check`, `plan-years`.
+- **Next:** F2-F6 to move in `docs/FEEDBACK.md`; DF-13 (phone jump buttons) is superseded by the drawer.

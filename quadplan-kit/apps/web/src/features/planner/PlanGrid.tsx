@@ -1,12 +1,26 @@
 import { useDroppable } from "@dnd-kit/core";
+import { useId, useState } from "react";
 import type { Goal, PlanItem } from "@/api/types";
 import { Button } from "@/components/ui/button";
+import { controlClass, controlCompactClass } from "@/components/ui/input";
 import { Badge } from "@/components/ui/misc";
 import { cn } from "@/lib/utils";
 import { usePlanner } from "./context";
 import { CourseCard } from "./CourseCard";
 import { goalLabel, quarterMetrics, round1 } from "./metrics";
-import { academicYear, QUARTERS, resolveTermRef, termAt, termLabel } from "./terms";
+import { planYears, removeYear } from "./planModel";
+import {
+  academicYear,
+  academicYearLabel,
+  classYearLabel,
+  graduationTerm,
+  isBefore,
+  planTerms,
+  QUARTERS,
+  resolveTermRef,
+  termAt,
+  termLabel,
+} from "./terms";
 
 function termGoals(goals: Goal[], term: string, entryTerm: string): Goal[] {
   return goals.filter((g) => {
@@ -31,8 +45,8 @@ function QuarterCell({ term, items }: { term: string; items: PlanItem[] }) {
       aria-labelledby={headingId}
       data-testid={`quarter-${term}`}
       className={cn(
-        "flex min-h-28 min-w-0 flex-col rounded-xl border border-hairline bg-canvas-soft p-3 transition-colors sm:min-h-44",
-        isOver && "border-primary bg-primary-wash",
+        "flex min-h-28 min-w-0 flex-col rounded-xl border border-hairline bg-canvas-soft p-3 transition-[border-color,background-color,box-shadow] duration-200 sm:min-h-44",
+        isOver && "border-primary bg-primary-wash shadow-hover",
         highlight.terms.has(term) && "ring-2 ring-primary ring-offset-2 ring-offset-canvas",
       )}
     >
@@ -60,9 +74,7 @@ function QuarterCell({ term, items }: { term: string; items: PlanItem[] }) {
             {round1(m.hours)}
             {m.hoursPartial && m.courses ? "+" : ""} h/wk
           </span>
-          <span title="Difficulty index: the sum of course difficulty (1–5 each)">
-            Difficulty {round1(m.difficulty)}
-          </span>
+          <span title="Difficulty index: the sum of course difficulty (1–5 each)">Difficulty {round1(m.difficulty)}</span>
         </div>
         {goals.length > 0 && (
           <ul className="mt-2 flex flex-wrap gap-1" aria-label={`Goals for ${termLabel(term)}`}>
@@ -80,74 +92,131 @@ function QuarterCell({ term, items }: { term: string; items: PlanItem[] }) {
   );
 }
 
-interface PlanGridProps {
-  years: number;
-  showSummer: boolean;
-  onToggleSummer: () => void;
-  onYears: (n: number) => void;
+const NUMBER_WORDS = ["One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight"];
+
+/** Graduation choices: Autumn, Winter and Spring from the first quarter to one year past the last. */
+function graduationChoices(entryTerm: string, years: number): string[] {
+  const out: string[] = [];
+  for (let y = 1; y <= years + 1; y += 1) {
+    for (const q of ["AU", "WI", "SP"] as const) {
+      const t = termAt(entryTerm, y, q);
+      if (!isBefore(t, entryTerm)) out.push(t);
+    }
+  }
+  return out;
 }
 
-export function PlanGrid({ years, showSummer, onToggleSummer, onYears }: PlanGridProps) {
+interface PlanGridProps {
+  showSummer: boolean;
+  onToggleSummer: () => void;
+  onGraduation: (term: string) => void;
+  onAddYear: () => void;
+}
+
+/**
+ * The plan grid. Each academic year opens with its Summer (optional, hidden by default), then
+ * Autumn, Winter and Spring (FEEDBACK F2). The grid ends at the graduation quarter (F3); items
+ * outside it are listed under "Other terms".
+ */
+export function PlanGrid({ showSummer, onToggleSummer, onGraduation, onAddYear }: PlanGridProps) {
   const { plan } = usePlanner();
+  const [yearMsg, setYearMsg] = useState<string | null>(null);
+  const gradId = useId();
   const items = plan.items ?? [];
+  const last = graduationTerm(plan);
+  const years = planYears(plan);
+  const level = plan.entry_year_level ?? 1;
+  const terms = planTerms(plan.entry_term, last);
+  const shown = new Set(terms);
   const byTerm = new Map<string, PlanItem[]>();
   for (const item of items) byTerm.set(item.term, [...(byTerm.get(item.term) ?? []), item]);
-  const shown = new Set<string>();
-  const yearNums = Array.from({ length: years }, (_, i) => i + 1);
-  for (const y of yearNums) for (const q of QUARTERS) shown.add(termAt(plan.entry_term, y, q));
   const outside = items.filter((i) => !shown.has(i.term));
-  const year5Empty = QUARTERS.every((q) => !(byTerm.get(termAt(plan.entry_term, 5, q)) ?? []).length);
+  const choices = graduationChoices(plan.entry_term, years);
+  if (!choices.includes(last)) choices.push(last);
+
+  function removeLastYear() {
+    const r = removeYear(plan);
+    if (!r.ok) {
+      setYearMsg(r.error);
+      return;
+    }
+    setYearMsg(null);
+    if (r.plan.graduation_term) onGraduation(r.plan.graduation_term);
+  }
 
   return (
     <div className="flex flex-col gap-8">
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <h2 className="font-display text-display-sm sm:text-display-md">Four-year plan</h2>
-        <Button variant="outline" onClick={onToggleSummer} aria-pressed={showSummer}>
-          {showSummer ? "Hide Summer" : "Show Summer"}
-        </Button>
+      <div className="flex flex-wrap items-end justify-between gap-x-4 gap-y-3">
+        <h2 className="font-display text-display-sm sm:text-display-md">{NUMBER_WORDS[years - 1] ?? years}-year plan</h2>
+        <div className="flex flex-wrap items-end gap-2">
+          <div className="flex flex-col gap-1">
+            <label htmlFor={gradId} className="text-caption-uppercase uppercase text-muted">
+              Graduating in
+            </label>
+            <select id={gradId} value={last} onChange={(e) => onGraduation(e.target.value)} className={cn(controlClass, controlCompactClass, "w-44")}>
+              {choices.map((t) => (
+                <option key={t} value={t}>
+                  {termLabel(t)}
+                </option>
+              ))}
+            </select>
+          </div>
+          <Button variant="outline" onClick={onToggleSummer} aria-pressed={showSummer}>
+            {showSummer ? "Hide Summer" : "Show Summer"}
+          </Button>
+        </div>
       </div>
-      {yearNums.map((y) => {
+      {Array.from({ length: years }, (_, i) => i + 1).map((y) => {
         const start = academicYear(termAt(plan.entry_term, y, "AU"));
         const summer = termAt(plan.entry_term, y, "SU");
         const summerItems = byTerm.get(summer) ?? [];
+        const yearTerms = QUARTERS.map((q) => termAt(plan.entry_term, y, q)).filter((t) => shown.has(t));
+        const visible = yearTerms.filter((t) => showSummer || !t.endsWith("-SU"));
         return (
           <section key={y} aria-labelledby={`year-${y}`} data-testid={`year-${y}`}>
-            <h3 id={`year-${y}`} className="mb-3 font-display text-display-sm">
-              Year {y} <span className="font-sans text-caption tabular-nums text-muted">({start}–{String((start + 1) % 100).padStart(2, "0")})</span>
+            <h3 id={`year-${y}`} className="mb-3 flex flex-wrap items-baseline gap-x-2 font-display text-display-sm">
+              {classYearLabel(y, level)}{" "}
+              <span className="font-sans text-caption tabular-nums text-muted">{academicYearLabel(start)}</span>
               {!showSummer && summerItems.length > 0 && (
-                <span className="ml-2 font-sans text-caption text-muted">
+                <span className="font-sans text-caption text-muted">
+                  {" "}
                   · {termLabel(summer)}: {summerItems.length} course{summerItems.length === 1 ? "" : "s"} (hidden)
                 </span>
               )}
             </h3>
             <div className={cn("grid grid-cols-1 gap-3 sm:grid-cols-3", showSummer && "xl:grid-cols-4")}>
-              {QUARTERS.filter((q) => showSummer || q !== "SU").map((q) => {
-                const term = termAt(plan.entry_term, y, q);
-                return <QuarterCell key={term} term={term} items={byTerm.get(term) ?? []} />;
-              })}
+              {visible.map((term) => (
+                <QuarterCell key={term} term={term} items={byTerm.get(term) ?? []} />
+              ))}
             </div>
           </section>
         );
       })}
-      <div className="flex flex-wrap gap-2">
-        {years < 5 ? (
-          <Button variant="outline" onClick={() => onYears(5)}>
-            Add Year 5
+      <div className="flex flex-col gap-2">
+        <div className="flex flex-wrap gap-2">
+          <Button
+            variant="outline"
+            onClick={() => {
+              setYearMsg(null);
+              onAddYear();
+            }}
+          >
+            Add a year
           </Button>
-        ) : (
-          year5Empty && (
-            <Button variant="outline" onClick={() => onYears(4)}>
-              Remove Year 5
-            </Button>
-          )
-        )}
+          <Button variant="ghost" onClick={removeLastYear} disabled={years <= 1}>
+            Remove last year
+          </Button>
+        </div>
+        <p role="status" className="text-caption text-error empty:hidden">
+          {yearMsg}
+        </p>
       </div>
       {outside.length > 0 && (
-        <section aria-labelledby="other-terms">
+        <section aria-labelledby="other-terms" className="animate-fade-in">
           <h3 id="other-terms" className="font-display text-display-sm">
             Other terms
           </h3>
-          <p className="text-body-sm text-muted">These items are outside the grid&apos;s years.</p>
+          <p className="text-body-sm text-muted">Outside the quarters above.</p>
           <ul className="mt-3 grid gap-2 sm:grid-cols-3">
             {outside.map((item) => (
               <CourseCard key={item.id} item={item} />

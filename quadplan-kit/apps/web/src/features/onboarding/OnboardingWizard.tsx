@@ -1,4 +1,4 @@
-import { DndContext, KeyboardSensor, PointerSensor, useDraggable, useDroppable, useSensor, useSensors, type DragEndEvent } from "@dnd-kit/core";
+import { DndContext, KeyboardSensor, pointerWithin, PointerSensor, rectIntersection, useDraggable, useDroppable, useSensor, useSensors, type CollisionDetection, type DragEndEvent } from "@dnd-kit/core";
 import { useEffect, useId, useRef, useState, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "@/api/client";
@@ -13,7 +13,7 @@ import { CAREER_PRESETS, interestGoal, TERM_PRESETS } from "@/features/planner/g
 import { newLocalId, today, upsertPlan } from "@/features/planner/localPlans";
 import { goalLabel } from "@/features/planner/metrics";
 import { emptyPlan } from "@/features/planner/planModel";
-import { catalogStartYear, catalogYearFor, termAt, termLabel } from "@/features/planner/terms";
+import { catalogStartYear, catalogYearFor, defaultGraduationTerm, planTerms, planYearCount, termLabel } from "@/features/planner/terms";
 import { ProgramChecklist } from "@/features/programs/ProgramPicker";
 import { cn } from "@/lib/utils";
 
@@ -288,10 +288,16 @@ function TimelineCell({ term, chips, onRemove }: { term: string; chips: { key: s
   );
 }
 
+/** Drop on the quarter under the pointer; keyboard drags (no pointer) use the overlap. */
+const collision: CollisionDetection = (args) => {
+  const hits = pointerWithin(args);
+  return hits.length ? hits : rectIntersection(args);
+};
+
 function StepGoals({ d, set, hasAbroad }: { d: Draft; set: (p: Partial<Draft>) => void; hasAbroad: boolean }) {
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 4 } }), useSensor(KeyboardSensor));
-  const terms: string[] = [];
-  for (let y = 1; y <= 4; y += 1) for (const q of ["AU", "WI", "SP"] as const) terms.push(termAt(d.entryTerm, y, q));
+  // The years left from the class standing at entry (FEEDBACK F3); Summers are left out here.
+  const terms = planTerms(d.entryTerm, defaultGraduationTerm(d.entryTerm, d.yearLevel)).filter((t) => !t.endsWith("-SU"));
   const place = (key: string, term: string) => set({ termGoals: [...d.termGoals, { key, term }] });
   function onDragEnd(e: DragEndEvent) {
     const key = (e.active.data.current as { key?: string } | undefined)?.key;
@@ -321,7 +327,7 @@ function StepGoals({ d, set, hasAbroad }: { d: Draft; set: (p: Partial<Draft>) =
           })}
         </div>
       </fieldset>
-      <DndContext sensors={sensors} onDragEnd={onDragEnd}>
+      <DndContext sensors={sensors} collisionDetection={collision} onDragEnd={onDragEnd}>
         <fieldset>
           <legend className={labelClass}>Quarter goals: drag a chip onto a quarter, or pick one and press Place</legend>
           <ul className="flex flex-col gap-2">
@@ -446,6 +452,10 @@ export function OnboardingWizard() {
               <dt className="font-medium">Entry</dt>
               <dd>
                 {termLabel(d.entryTerm)} ({d.yearLevel === 1 ? "first-year" : `transfer, year ${d.yearLevel}`}), catalog {d.catalogYear}
+              </dd>
+              <dt className="font-medium">Years</dt>
+              <dd>
+                {planYearCount(d.entryTerm, defaultGraduationTerm(d.entryTerm, d.yearLevel))}, graduating in {termLabel(defaultGraduationTerm(d.entryTerm, d.yearLevel))}. You can add or remove years in the planner.
               </dd>
               <dt className="font-medium">Credits</dt>
               <dd>{d.credits.length ? d.credits.map((c) => c.label).join(", ") : "None"}</dd>

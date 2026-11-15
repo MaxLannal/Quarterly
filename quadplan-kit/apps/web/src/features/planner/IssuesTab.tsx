@@ -4,6 +4,7 @@ import { ErrorIcon, InfoIcon, WarningIcon } from "@/components/ui/icons";
 import { NotAvailable, Notice, Spinner } from "@/components/ui/misc";
 import { cn } from "@/lib/utils";
 import type { VerifyState } from "./useVerify";
+import { VerifierBadge } from "./VerifierBadge";
 
 const ORDER = { error: 0, warning: 1, info: 2 } as const;
 
@@ -17,7 +18,20 @@ interface IssuesTabProps {
   onSelect: (issue: Issue | null) => void;
 }
 
-export function IssuesTab({ verify, selected, onSelect }: IssuesTabProps) {
+/** The plan check: the verifier's status, then its issues. Opened from "Check plan" (FEEDBACK F4). */
+export function IssuesTab(props: IssuesTabProps) {
+  return (
+    <div className="space-y-3">
+      <div className="flex items-center justify-between gap-2">
+        <h3 className="text-title-sm">Plan check</h3>
+        <VerifierBadge verify={props.verify} />
+      </div>
+      <IssuesList {...props} />
+    </div>
+  );
+}
+
+function IssuesList({ verify, selected, onSelect }: IssuesTabProps) {
   if (verify.status === "unavailable") {
     return <NotAvailable feature="The verifier">Your plan is kept, but it cannot be checked yet.</NotAvailable>;
   }
@@ -46,7 +60,7 @@ export function IssuesTab({ verify, selected, onSelect }: IssuesTabProps) {
           {issues.map((issue, i) => {
             const isSel = selected === issue;
             return (
-              <li key={`${issue.code}-${i}`}>
+              <li key={`${issue.code}-${i}`} className="animate-rise" style={{ animationDelay: `${Math.min(i, 8) * 30}ms` }}>
                 <button
                   type="button"
                   aria-pressed={isSel}

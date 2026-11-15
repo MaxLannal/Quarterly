@@ -39,6 +39,21 @@ describe("localPlans", () => {
     set.mockRestore();
   });
 
+  it("loads plans saved with the old years count (FEEDBACK F3)", () => {
+    const old = { ...local("five"), years: 5 };
+    const four = { ...local("four"), years: 4 };
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ version: 1, activeId: "five", plans: [old, four] }));
+    const [a, b] = loadPlans().plans;
+    expect(a?.state.graduation_term).toBe("2104-SP");
+    expect(a && "years" in a).toBe(false);
+    // Four was the old minimum: the default (years left from entry) applies.
+    expect(b?.state.graduation_term ?? null).toBeNull();
+    // A graduation quarter already on the plan wins.
+    const set = { ...local("set", { state: { ...emptyPlan("2099-00"), graduation_term: "2102-WI" } }), years: 5 };
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ version: 1, activeId: "set", plans: [set] }));
+    expect(loadPlans().plans[0]?.state.graduation_term).toBe("2102-WI");
+  });
+
   it("ignores corrupt stored data", () => {
     window.localStorage.setItem(STORAGE_KEY, "{not json");
     expect(loadPlans().plans).toEqual([]);

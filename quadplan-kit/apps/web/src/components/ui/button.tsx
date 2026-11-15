@@ -15,7 +15,8 @@ import { cn } from "@/lib/utils";
 export const buttonVariants = cva(
   [
     "relative inline-flex shrink-0 cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-pill",
-    "border-transparent bg-clip-padding font-sans text-button transition-colors",
+    // Press feedback: the pill dips to 97% for the 150ms press (instant under reduced motion).
+    "border-transparent bg-clip-padding font-sans text-button transition-[color,background-color,box-shadow,scale] active:scale-[0.97]",
     "disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50",
   ],
   {
