@@ -54,6 +54,11 @@ class Settings(BaseSettings):
     llm_fake: Literal["", "e2e"] = ""
     #: Daily model spend (USD, from llm_call) above which the worker logs LLM SPEND ALARM.
     llm_spend_alarm_usd: float = 5.0
+    #: Seconds each API process keeps a catalog year in memory for loading plan inputs
+    #: (api.repo.rules). 0 = always query (the default; tests rely on it).
+    rules_cache_ttl_s: float = 0.0
+    #: Seconds a forum page header is reused per process (api.forum.pages). 0 = off.
+    page_cache_ttl_s: float = 0.0
 
     def production_problems(self) -> list[str]:
         """Settings that are unsafe outside development (checked at start-up)."""

@@ -70,7 +70,7 @@ def find_page(db: SessionDep, _: AccountDep, course: str, instructor: str) -> Fo
 @router.get("/pages/{page_id}", response_model=ForumPageOut)
 def get_page(db: SessionDep, _: AccountDep, page_id: int) -> ForumPageOut:
     with _not_found():
-        return pages.page_out(db, pages.get_page(db, page_id))
+        return pages.cached_page_out(db, page_id)
 
 
 # Course-level view: every instructor's page of one course, ratings pooled.

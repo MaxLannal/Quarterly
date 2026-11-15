@@ -3,6 +3,10 @@
     LOAD_HOST=http://localhost:8000 LOAD_LOGIN=<username> LOAD_PASSWORD=<password> \
         uv run python loadtest/run.py
 
+    # in the stack's own Docker network, through nginx like real traffic:
+    LOAD_DOCKER_NETWORK=quarterly_default LOAD_HOST=http://web:5173/api \
+        LOAD_LOGIN=... LOAD_PASSWORD=... uv run python loadtest/run.py
+
 Targets: POST /verify at 50 requests/second with p95 under 500 ms; forum page reads at 100
 requests/second (p95 under 500 ms too); no failed requests.
 """
@@ -28,12 +32,27 @@ P95_MS = 500.0
 
 def run(user: str, users: int, out: Path) -> list[dict[str, str]]:
     host = os.environ.get("LOAD_HOST", "http://localhost:8000")
-    cmd = [
-        "uvx", "--with", "httpx", "locust==2.32.4",
-        "-f", str(HERE / "locustfile.py"), user,
-        "--headless", "-u", str(users), "-r", str(users), "-t", DURATION,
-        "--host", host, "--csv", str(out / user), "--only-summary",
+    args = [
+        user, "--headless", "-u", str(users), "-r", str(users), "-t", DURATION,
+        "--host", host, "--only-summary",
     ]  # fmt: skip
+    network = os.environ.get("LOAD_DOCKER_NETWORK")
+    if network:
+        # Inside the stack's network, next to the server, as a load generator would be on a
+        # real deployment (Docker Desktop's port forwarding on a Mac adds ~100 ms per request
+        # once there are ~100 open connections).
+        cmd = [
+            "docker", "run", "--rm", "--network", network,
+            "-e", "LOAD_LOGIN", "-e", "LOAD_PASSWORD",
+            "-v", f"{HERE.resolve()}:/mnt/lt:ro", "-v", f"{out}:/mnt/out",
+            "locustio/locust:2.32.4", "-f", "/mnt/lt/locustfile.py",
+            *args, "--csv", f"/mnt/out/{user}",
+        ]  # fmt: skip
+    else:
+        cmd = [
+            "uvx", "locust==2.32.4", "-f", str(HERE / "locustfile.py"),
+            *args, "--csv", str(out / user),
+        ]  # fmt: skip
     subprocess.run(cmd, check=False, env=os.environ.copy())
     with open(out / f"{user}_stats.csv", newline="") as f:
         return list(csv.DictReader(f))
@@ -42,6 +61,7 @@ def run(user: str, users: int, out: Path) -> list[dict[str, str]]:
 def main() -> int:
     failed = False
     with tempfile.TemporaryDirectory() as tmp:
+        os.chmod(tmp, 0o777)  # the locust container writes its CSV files here
         for user, rate, names in SCENARIOS:
             rows = {r["Name"]: r for r in run(user, rate, Path(tmp))}
             agg = rows["Aggregated"]

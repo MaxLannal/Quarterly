@@ -341,3 +341,25 @@ def instructor_pages(db: Session, instructor_id: int) -> list[tuple[m.CourseInst
     for page, course in rows:
         by_code.setdefault(course.code, (page, course))
     return list(by_code.values())
+
+
+# The page header (ratings, summary, terms) is the same for every reader: keep it for a few
+# seconds per process so a busy page is not rebuilt on every read (prompt 12 load test). A new
+# review or a removal shows up within PAGE_CACHE_TTL_S. Off when 0 (tests).
+_page_cache: dict[int, tuple[float, ForumPageOut]] = {}
+
+
+def cached_page_out(db: Session, page_id: int) -> ForumPageOut:
+    import time
+
+    from api.config import get_settings
+
+    ttl = get_settings().page_cache_ttl_s
+    now = time.monotonic()
+    hit = _page_cache.get(page_id) if ttl > 0 else None
+    if hit is not None and now - hit[0] < ttl:
+        return hit[1]
+    out = page_out(db, get_page(db, page_id))
+    if ttl > 0:
+        _page_cache[page_id] = (now, out)
+    return out
