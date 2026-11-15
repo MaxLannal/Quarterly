@@ -123,3 +123,11 @@ api-client-check:
 loadtest:
 	$(UV) run python loadtest/make_plans.py
 	LOAD_HOST=$${LOAD_HOST:-http://localhost:8000} $(UV) run python loadtest/run.py
+
+# Prompt 09: pilot ingestion. Runs E1-E4 on the hand-seeded programs and reports node-level
+# agreement with the seed (docs/ingest-pilot/). `make ingest-pilot ARGS=--fake` is free (FakeLLM
+# answers from the seed). A real run costs money: it prints the estimate and refuses unless
+# CONFIRM_SPEND=yes and LLM_LIVE=true; spending cap INGEST_COST_CAP_USD (default 25).
+.PHONY: ingest-pilot
+ingest-pilot:
+	@$(UV) run python -m worker.ingest.pilot $(ARGS)

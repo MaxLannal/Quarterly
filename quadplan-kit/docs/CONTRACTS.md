@@ -239,6 +239,48 @@ The 20 synthetic profiles in `services/api/tests/test_generate_profiles.py` each
 
 Post text is passed to the model inside `<untrusted_source>`, and these calls hold no tools. Without a model, the job skips the A3 steps and aggregates the structured ratings only.
 
+## Catalog ingestion (prompt 09)
+
+**Where it lives.** `services/worker/worker/ingest/` (see its `__init__.py` for the module map). It imports the API package for the database models, the seed loader and the prompt loader; the API never imports the worker.
+
+**Crawler.** `Crawler` fetches only the hosts it is given, reads robots.txt once per host (404 allows everything; 401, 403, 5xx or a network error skips the host), waits at least 1 second between requests (a longer `Crawl-delay` wins), and sends `QuarterlyCatalogBot/0.1 (...; contact: <CATALOG_CONTACT_EMAIL>)`. It refuses to start without a contact address and never logs it. Every response, robots.txt included, is a snapshot: bytes in MinIO (S3 API, SigV4, key `catalog/<sha256[:2]>/<sha256>`), a `source_snapshot` row with url, time, sha256, key and content type. Snapshot ids in rule trees are `source_snapshot.id` as a string.
+
+**Agents.** All go through `llm_gateway` with tasks from `llm_routing.yaml` and prompts in `prompts/` (header `id`, `version`, `task`):
+
+| Agent | Task | Prompt | Tools | Output |
+| --- | --- | --- | --- | --- |
+| E1 prerequisite | `e1_prereq_formalizer` | `e1_prereq` | none | `E1Answer` (DSL expression or `unparseable`) |
+| E2 enumerator | `e2_program_enumerator` | `e2_enumerator` | `list_pages`, `read_snapshot` | `submit_programs`: `ProgramCandidate[]` |
+| E3 run A | `e3_program_formalizer` | `e3_formalizer` | `read_snapshot`, `lookup_course`, `get_course_list`, `validate_rules` (5 calls), `run_golden` | `submit_rules`: YAML that passes (a)-(c) |
+| E3 run B | `e3b_second_opinion` | `e3b_formalizer` (same sections, reordered) | same | same |
+| E4 judge | `e4_backtranslation_judge` | `e4_backtranslation` | none | `E4Answer` (English + differences by node path) |
+
+Page text reaches every agent inside `<untrusted_source id="snapshot:<id>">`. No agent holds a write tool. Every run is an `extraction_run` row and every model call an `llm_call` row. `Metered` wraps the client with the spending cap (`INGEST_COST_CAP_USD`).
+
+**Checks.** E1: the expression parses, every course exists, every course number appears in the sentence, no self-reference; otherwise a `requisite` review item. E2: the candidates must match at least two independent lists built by code (the College's stated counts, counted as distinct `family` names per type, so a BA and BS are one major; the Programs of Study index, every URL both ways; the A-Z index, candidates must be on it). Any mismatch writes an `ingest_run` review item and stops the run. E3: validators (a) schema with a source on every node, part, cap and policy entry; (b) courses and lists exist; (c) quotes verbatim after decoding entities and collapsing whitespace; (d) run A and run B agree node by node; (e) E4 found no difference; (f) golden plans in `data/golden/<program>/` behave as expected; (g) a major needs 9-19 courses (the fewest courses that satisfy the tree). (a)-(c) must pass for E3 to submit; (d)-(g) become flags in the review item.
+
+**Node-level agreement** (`compare.node_agreement`). A node agrees when its kind, counts, courses, selectors and constraints match; labels, ids, quotes, `needs_review` and weights are ignored, and so is the order of codes in a list. Children are paired by id, then by identical subtree, then by position. The policy counts as one extra node. Agreement = agreed / (reference nodes + extra candidate nodes).
+
+**Review items written by the pipeline** (`review_item.diff.kind` = `target_type`):
+- `program_version` (target id = the version id): `rules`, `second_run_rules`, `previous`, `nodes[]` (path, kind, label, summary, quote, url, snapshot_id, flags), `checks[]` (id, name, ok, skipped, problems), `backtranslation`, `agreement_runs`, `changes_from_previous`, `decision_hint` (`review` or `carry_over`), `snapshots`, `cost_usd`. The version itself is written with status `review`; an existing `published` version for the same program and year is never touched (the item then has `program_version_id: null` and `blocked`).
+- `course_batch` (target id `<year>:<subject>`): `courses[]`, `added`, `changed[]` (fields before/after), `removed`, `crosslist_groups`, `relations`, `requisites` (E1 results that passed), `unchanged`.
+- `requisite` (`<year>:<code>`): `raw_text`, `proposed`, `proposed_text`, `errors`, `source`.
+- `ingest_run` (`<year>:<step>`): `step`, `problems` (a blocked enumeration, a program E3 could not formalize, pages not fetched, course blocks that did not parse, the spending cap).
+- `catalog_change` (`<year>:<day>`): `changed[]` (url, before and after sha256) and `new_pages` from the monthly check.
+
+**Carry over.** When the new tree means exactly what last year's published tree meant and last year's quotes are still on this year's pages, the version holds last year's tree (catalog year updated) and the item says "unchanged"; it is still a curator who publishes it.
+
+**Review API** (admins only; `X-CSRF-Token` on every POST; `Cache-Control: private, no-store`):
+- `GET /admin/review-items?status=open|accepted|rejected` returns `Page[ReviewItemOut]`. `ReviewItemOut` adds typed `title`, `program_version_id`, `program_version_status`, `decision_hint`, `nodes` and `checks` read from the diff.
+- `POST /admin/review-items/{id}/decision` with `{decision: accept|edit|reject, edited?, note?}`. Only open items (409 otherwise).
+  - `program_version`: accept marks it ready; edit takes `edited.rules` (validated as `ProgramRules`, every node sourced, same id and year) and replaces the version's rules; reject sets the version to `draft`.
+  - `requisite`: accept or edit (`edited.prereq`) upserts `requisite`; the course must exist.
+  - `course_batch`: accept upserts the subject's courses, cross-list groups, relations, offering patterns and prerequisites for the new year; edit is refused (422).
+  - Other types (including the schedule pipeline's) only record the decision; an edit is kept as `diff.edited_content`.
+- `POST /admin/program-versions/{id}/publish`: the version must be in `review`, with no open item about it and not every item rejected. It sets `published`, `verified_by` (the admin's username) and `verified_at` (day). This is the only way a version reaches students.
+
+**Jobs.** `worker.ingest.jobs.cron_jobs()` registers the annual run (1 August, 04:00) and the monthly check (the 15th, 04:00) only when `CATALOG_INGEST_ENABLED=true`; the job functions also check it. Without `LLM_LIVE=true` the annual run still crawls and stages courses, and files one item saying the agents were skipped.
+
 ## Schedule pipeline (prompt 10)
 
 **Package.** `services/scraper/scraper`. It now depends on `quarterly-api`, and the worker depends on it. Nothing in it sends a request unless `SCHEDULE_SCRAPER_ENABLED=true` and `CLASS_SEARCH_URL` is set (`scraper.settings.require_enabled`, checked before a browser starts). Tests use only `services/scraper/fixtures/SYNTHETIC_*` and `FakeLLM`.

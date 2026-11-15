@@ -3263,6 +3263,25 @@ export interface components {
             min_fraction: number;
             source?: components["schemas"]["Source"] | null;
         };
+        /**
+         * ReviewCheck
+         * @description One of the ingestion validators (a)-(g).
+         */
+        ReviewCheck: {
+            /** Id */
+            id: string;
+            /** Name */
+            name: string;
+            /** Ok */
+            ok: boolean;
+            /** Problems */
+            problems?: string[];
+            /**
+             * Skipped
+             * @default false
+             */
+            skipped: boolean;
+        };
         /** ReviewDecision */
         ReviewDecision: {
             /**
@@ -3279,14 +3298,24 @@ export interface components {
         };
         /** ReviewItemOut */
         ReviewItemOut: {
+            /** Checks */
+            checks?: components["schemas"]["ReviewCheck"][];
             /** Decided At */
             decided_at?: string | null;
+            /** Decision Hint */
+            decision_hint?: string | null;
             /** Diff */
             diff: {
                 [key: string]: unknown;
             };
             /** Id */
             id: number;
+            /** Nodes */
+            nodes?: components["schemas"]["ReviewNode"][];
+            /** Program Version Id */
+            program_version_id?: number | null;
+            /** Program Version Status */
+            program_version_status?: ("draft" | "review" | "published") | null;
             /** Reason */
             reason?: string | null;
             /**
@@ -3298,6 +3327,33 @@ export interface components {
             target_id: string;
             /** Target Type */
             target_type: string;
+            /**
+             * Title
+             * @default
+             */
+            title: string;
+        };
+        /**
+         * ReviewNode
+         * @description One node of a proposed rule tree, with the quote it came from (prompt 09).
+         */
+        ReviewNode: {
+            /** Flags */
+            flags?: string[];
+            /** Kind */
+            kind: string;
+            /** Label */
+            label?: string | null;
+            /** Path */
+            path: string;
+            /** Quote */
+            quote?: string | null;
+            /** Snapshot Id */
+            snapshot_id?: string | null;
+            /** Summary */
+            summary: string;
+            /** Url */
+            url?: string | null;
         };
         /** ReviewRatingIn */
         ReviewRatingIn: {

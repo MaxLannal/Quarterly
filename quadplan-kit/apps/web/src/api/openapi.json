@@ -6214,6 +6214,42 @@
         "title": "Residency",
         "type": "object"
       },
+      "ReviewCheck": {
+        "description": "One of the ingestion validators (a)-(g).",
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "ok": {
+            "title": "Ok",
+            "type": "boolean"
+          },
+          "problems": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Problems",
+            "type": "array"
+          },
+          "skipped": {
+            "default": false,
+            "title": "Skipped",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "ok"
+        ],
+        "title": "ReviewCheck",
+        "type": "object"
+      },
       "ReviewDecision": {
         "properties": {
           "decision": {
@@ -6240,6 +6276,7 @@
           "note": {
             "anyOf": [
               {
+                "maxLength": 1000,
                 "type": "string"
               },
               {
@@ -6257,6 +6294,13 @@
       },
       "ReviewItemOut": {
         "properties": {
+          "checks": {
+            "items": {
+              "$ref": "#/components/schemas/ReviewCheck"
+            },
+            "title": "Checks",
+            "type": "array"
+          },
           "decided_at": {
             "anyOf": [
               {
@@ -6269,6 +6313,17 @@
             ],
             "title": "Decided At"
           },
+          "decision_hint": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Decision Hint"
+          },
           "diff": {
             "additionalProperties": true,
             "title": "Diff",
@@ -6277,6 +6332,40 @@
           "id": {
             "title": "Id",
             "type": "integer"
+          },
+          "nodes": {
+            "items": {
+              "$ref": "#/components/schemas/ReviewNode"
+            },
+            "title": "Nodes",
+            "type": "array"
+          },
+          "program_version_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Program Version Id"
+          },
+          "program_version_status": {
+            "anyOf": [
+              {
+                "enum": [
+                  "draft",
+                  "review",
+                  "published"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Program Version Status"
           },
           "reason": {
             "anyOf": [
@@ -6305,6 +6394,11 @@
           "target_type": {
             "title": "Target Type",
             "type": "string"
+          },
+          "title": {
+            "default": "",
+            "title": "Title",
+            "type": "string"
           }
         },
         "required": [
@@ -6315,6 +6409,81 @@
           "status"
         ],
         "title": "ReviewItemOut",
+        "type": "object"
+      },
+      "ReviewNode": {
+        "description": "One node of a proposed rule tree, with the quote it came from (prompt 09).",
+        "properties": {
+          "flags": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Flags",
+            "type": "array"
+          },
+          "kind": {
+            "title": "Kind",
+            "type": "string"
+          },
+          "label": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Label"
+          },
+          "path": {
+            "title": "Path",
+            "type": "string"
+          },
+          "quote": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Quote"
+          },
+          "snapshot_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Snapshot Id"
+          },
+          "summary": {
+            "title": "Summary",
+            "type": "string"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Url"
+          }
+        },
+        "required": [
+          "path",
+          "kind",
+          "summary"
+        ],
+        "title": "ReviewNode",
         "type": "object"
       },
       "ReviewRatingIn": {

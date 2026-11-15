@@ -3,7 +3,7 @@ import { AppShell } from "./AppShell";
 import AboutPage from "./pages/AboutPage";
 import AccountPage from "./pages/AccountPage";
 import AdminModerationPage from "./pages/AdminModerationPage";
-import AdminPage from "./pages/AdminPage";
+import AdminReviewPage from "./pages/AdminReviewPage";
 import ComparePlansPage from "./pages/ComparePlansPage";
 import CourseInstructorPage from "./pages/CourseInstructorPage";
 import CoursePage from "./pages/CoursePage";
@@ -48,7 +48,8 @@ export const routes: RouteObject[] = [
       { path: "/privacy", element: <PrivacyPage /> },
       { path: "/about", element: <AboutPage /> },
       { path: "/admin/moderation", element: <AdminModerationPage /> },
-      { path: "/admin/*", element: <AdminPage /> },
+      { path: "/admin", element: <AdminReviewPage /> },
+      { path: "/admin/review", element: <AdminReviewPage /> },
       { path: "*", element: <NotFoundPage /> },
     ],
   },

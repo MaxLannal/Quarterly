@@ -447,6 +447,30 @@ Forum choices made while building. Each is implemented as described and can be c
 - **P08-13. Logged-out students and the AI helpers.** Forum posts are only for logged-in students, so the plan generator and the advisor chat cannot read forum posts or summaries for someone who is not logged in; they still use catalog facts and course ratings.
   **Suggested:** keep it, so the AI cannot be used to read the forum without an account.
 
+
+## Prompt 09
+
+The catalog pipeline is built and tested with fake pages and a fake model only. Nothing below blocks the demo; each item has the default that is built now.
+
+- **P09-1. Programs that did not change since last year.** When this year's catalog says exactly what last year's did, the pipeline copies last year's published rules and marks them "Unchanged since last year". Should those go live by themselves?
+  **Suggested (built):** no. A curator still clicks Accept and then Publish, which takes seconds per program. Option: publish unchanged programs automatically, which saves clicks but means a student could see a new year's rules that no person looked at.
+- **P09-2. The "9 to 19 courses" check for majors.** The spec says a major needs between 9 and 19 courses. Our Mathematics BS needs 21 by that count, because the seed also lists the general-education math courses the major asks for.
+  **Suggested (built):** treat it as a flag for the reviewer, never a reason to reject. Option: leave general-education parts out of the count.
+- **P09-3. The contact address the crawler sends.** Every request to the catalog says who we are and gives an email address, so the University can reach us if the crawler causes trouble. Which address should it be?
+  **Suggested:** a project address (not a personal one), set as `CATALOG_CONTACT_EMAIL` in `.env`. The crawler refuses to run until it is set, and the address is never written to the logs.
+- **P09-4. When the yearly run happens.** It is set for 1 August at 4 a.m., with a check for changed pages on the 15th of every month. Both are off until `CATALOG_INGEST_ENABLED=true`.
+  **Suggested:** keep these dates and switch it on once the new catalog is out. Option: leave it off and start each yearly run by hand.
+- **P09-5. Courses that did not change.** New courses for the year arrive as one review item per subject (about 200), including subjects where nothing changed; those are labelled "no changes".
+  **Suggested (built):** keep this for the first real year, so a person sees every subject once. Later, accept unchanged subjects automatically.
+- **P09-6. Counting programs.** The run stops if our list of programs does not match the College's own counts ("68 majors and 57 minors") and the catalog's index. We count a BA and a BS in the same subject as one major, as the College seems to. If the College counts some joint degrees or tracks differently, the run will stop and a person must look.
+  **Suggested (built):** keep the strict stop. Option: allow a small difference and only warn.
+- **P09-7. How much a real run may spend.** The pilot (11 programs) is estimated at about $16 and stops at $25 (`INGEST_COST_CAP_USD`). A full yearly run over about 150 programs would cost roughly $200 at list prices.
+  **Suggested:** approve the pilot first; set the cap to about $250 only for the first full yearly run.
+- **P09-8. Who reviews.** Only admins can use the review page, like the moderation queue; accounts with the "curator" role cannot.
+  **Suggested (built):** admins only for now. Option: let curators review catalog changes too.
+- **P09-9. What the pilot compares.** The pilot runs the agents on the 11 programs we wrote by hand and checks the program list against our own list of those 11, not against the whole catalog index (the full index check runs in the yearly job).
+  **Suggested:** keep it that way; the pilot is meant to measure how well the agents read rules, not to find every program.
+
 ## Prompt 10
 
 Questions about the schedule pipeline (reading Class Search). The pipeline is built and tested, but only on pages we made up.

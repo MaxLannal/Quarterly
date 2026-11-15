@@ -7,6 +7,11 @@ from typing import Any
 from arq import cron
 from arq.connections import RedisSettings
 
+# Prompt 09: the annual catalog run and the monthly change check (off unless
+# CATALOG_INGEST_ENABLED=true; see worker.ingest.jobs).
+from worker.ingest.jobs import catalog_annual, catalog_monthly
+from worker.ingest.jobs import cron_jobs as catalog_cron_jobs
+
 
 async def noop(ctx: dict[str, Any]) -> str:
     """A job that does nothing; proves the queue round-trip works."""
@@ -91,10 +96,12 @@ async def startup(ctx: dict[str, Any]) -> None:
 
 
 class WorkerSettings:
-    functions = [noop, nightly_attributes]
+    functions = [noop, nightly_attributes, catalog_annual, catalog_monthly]
     on_startup = startup
     # Up to 200 + 500 model calls a night: allow an hour (arq's default is 5 minutes).
     cron_jobs = [cron(nightly_attributes, hour=3, minute=30, run_at_startup=False, timeout=3600)]
+    cron_jobs += catalog_cron_jobs()  # prompt 09
+
     # Prompt 10: the schedule watch, Mondays 04:00 (a no-op unless SCHEDULE_SCRAPER_ENABLED).
     functions += [weekly_schedule_watch]
     cron_jobs += [
