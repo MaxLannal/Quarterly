@@ -447,3 +447,27 @@ Forum choices made while building. Each is implemented as described and can be c
 - **P08-13. Logged-out students and the AI helpers.** Forum posts are only for logged-in students, so the plan generator and the advisor chat cannot read forum posts or summaries for someone who is not logged in; they still use catalog facts and course ratings.
   **Suggested:** keep it, so the AI cannot be used to read the forum without an account.
 
+## Prompt 10
+
+Questions about the schedule pipeline (reading Class Search). The pipeline is built and tested, but only on pages we made up.
+
+- **P10-1. Reading the real Class Search is blocked. We need a few real pages, and permission.** Nobody has seen a real Class Search results page while building this, and no request was sent to the site. The reader was built against invented pages (`services/scraper/fixtures/SYNTHETIC_*`, each with a big "SYNTHETIC" banner). It cannot read the real site until it has seen real pages. Scraping also stays off (`SCHEDULE_SCRAPER_ENABLED=false`) until the University says it is allowed.
+  **Suggested answer:** two steps.
+  1. **Permission.** Ask the Registrar (or whoever runs Class Search) one of two things. Is a slow automated read of the public guest Class Search allowed (one page a second, once a week)? Or can they send a data file instead? Write their answer here.
+  2. **Save a few real pages from your own browser.** This is you browsing normally, not the scraper.
+     - Open the public Class Search as a guest. Pick a term that is already posted (for example Autumn 2026) and search one subject, for example Computer Science (CMSC). If the results run over several pages, open page 2 as well.
+     - Do the same for one small subject (for example a language). If you find a subject with no classes that term, save that too.
+     - Save each results page with File > Save Page As... Choose "Webpage, HTML Only" (Chrome) or "Page Source" (Safari).
+     - Name the files like `REAL_class_search_2026-AU_CMSC_p1.html` and `..._p2.html`. Put them in `quadplan-kit/services/scraper/fixtures/`.
+     - Also save the search form before you search, as `REAL_class_search_form.html`. It shows what the term and subject menus are called.
+     - Please use the guest view: pages saved while logged in to my.UChicago may show your name. If one does, tell us and we will remove it before saving the file in the project.
+  With those pages, the reader's settings (`scraper.parse.DEFAULT_CONFIG`) and the form steps (`scraper.class_search.ClassSearchSite`) can be written for the real site in an hour or two.
+- **P10-2. Where the weekly check runs.** The weekly check is a worker job, but the browser it needs (Chromium) is installed only in the scraper container. This does not matter while scraping is off.
+  **Suggested:** when scraping is allowed, run the weekly check inside the scraper container (one line in `docker-compose.yml`). Option: also install Chromium in the worker container, which makes it much bigger.
+- **P10-3. Which AI model reads department pages.** The SPEC does not name one. It is set to Sonnet 5.5 (`dept_offerings_extraction` in `llm_routing.yaml`), like the other mid-difficulty reading tasks. Every item it returns must quote the page word for word. Code checks each quote, then a curator reviews the list.
+  **Suggested:** keep Sonnet 5.5. Option: Haiku 5.5, about 20 times cheaper. It could be tried once the hold on AI calls is lifted, and kept if its answers pass the checks as often.
+- **P10-4. Similar instructor names are never merged automatically.** Two different people's names often differ by one letter ("Demo Instructor A" and "Demo Instructor B"). So a name matches an existing instructor only when it is the same words, or a known other spelling of their name. Order, capital letters, accents and punctuation are ignored. A name that is close but different goes to the review queue. A name unlike anyone's becomes a new instructor, with their own forum pages.
+  **Suggested:** keep this. Option: let a very close name (one typo) merge on its own. That saves review work, but sometimes joins two different people's reviews.
+- **P10-5. Courses on the schedule that are not in the catalog.** If a section's course code is not in the catalog (a new or topics course), the section is not saved. The code goes to the review queue.
+  **Suggested:** keep this until the catalog pipeline (prompt 09) can add such courses after review.
+

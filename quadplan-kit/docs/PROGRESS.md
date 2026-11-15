@@ -372,3 +372,20 @@ Richard answered the questions from the steps 1-5 run (recorded in `docs/OPEN_QU
 - Also: `docs/schemas` regenerated (they lagged the `graduation_term` commit); drag and drop now drops on the quarter under the pointer (planner and onboarding).
 - **Evidence:** `make check` passed (planner_core 178, API 408, web 116, golden 115); `make e2e` 68 passed (55 screenshot tests skipped); `e2e/feedback-ui.spec.ts` covers each item; screenshots refreshed, new `plan-drawer`, `plan-check`, `plan-years`.
 - **Next:** F2-F6 to move in `docs/FEEDBACK.md`; DF-13 (phone jump buttons) is superseded by the drawer.
+
+## Schedule pipeline (prompt 10, 2026-11-15)
+
+**What works (tested on fixtures only):**
+- The Class Search scraper code exists but is switched off (`SCHEDULE_SCRAPER_ENABLED=false`, the default). It refuses to run until it is switched on and `CLASS_SEARCH_URL` is set. No request has ever been sent to Class Search or any University site.
+- A deterministic parser turns saved result pages into course sections (term, course, section, component, instructors, meetings, capacity, status). It raises an error on an unfamiliar layout instead of quietly returning nothing.
+- Checks:
+  - unknown course codes become review items;
+  - instructor names that are close but not certain become review items, never merged automatically;
+  - a department whose section count moves more than 30% from the same quarter last year raises an alert.
+- Updates: forum pages (through the cross-listing-aware `ensure_page`) and the "how likely is this course offered" numbers: (k+1)/5 from history, 1 for a posted schedule, 0.95 for an accepted department plan.
+- Department pages: an AI extraction step (tested with a fake model) for CS course-info. Every offering must carry a verbatim quote from the page, checked by code, and the result goes to review.
+- Self-repair: when parsing fails, an AI step proposes new selectors. A proposal must reproduce the last good counts on stored pages, and it always goes to review, never applied automatically.
+- A weekly worker job that does nothing while the switch is off.
+- Tests: 31 scraper tests.
+
+**What is blocked:** reading the real Class Search. The pages used are **synthetic** (`services/scraper/fixtures/SYNTHETIC_*`, clearly labelled), because no real pages have been saved and the University has not given permission. See P10-1 in `docs/OPEN_QUESTIONS.md` for how to save real pages from your browser.

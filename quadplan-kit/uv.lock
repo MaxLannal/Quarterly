@@ -1193,11 +1193,21 @@ name = "quarterly-scraper"
 version = "0.1.0"
 source = { editable = "services/scraper" }
 dependencies = [
+    { name = "llm-gateway" },
+    { name = "planner-core" },
     { name = "playwright" },
+    { name = "pydantic-settings" },
+    { name = "quarterly-api" },
 ]
 
 [package.metadata]
-requires-dist = [{ name = "playwright", specifier = ">=1.49" }]
+requires-dist = [
+    { name = "llm-gateway", editable = "packages/llm_gateway" },
+    { name = "planner-core", editable = "packages/planner_core" },
+    { name = "playwright", specifier = ">=1.49" },
+    { name = "pydantic-settings", specifier = ">=2.6" },
+    { name = "quarterly-api", editable = "services/api" },
+]
 
 [[package]]
 name = "quarterly-worker"
@@ -1209,6 +1219,7 @@ dependencies = [
     { name = "planner-core" },
     { name = "pydantic-settings" },
     { name = "quarterly-api" },
+    { name = "quarterly-scraper" },
 ]
 
 [package.metadata]
@@ -1218,6 +1229,7 @@ requires-dist = [
     { name = "planner-core", editable = "packages/planner_core" },
     { name = "pydantic-settings", specifier = ">=2.6" },
     { name = "quarterly-api", editable = "services/api" },
+    { name = "quarterly-scraper", editable = "services/scraper" },
 ]
 
 [[package]]
