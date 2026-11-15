@@ -73,6 +73,21 @@ async def weekly_schedule_watch(ctx: dict[str, Any]) -> str:
     return await asyncio.to_thread(run)  # pragma: no cover
 
 
+async def daily_chat_purge(ctx: dict[str, Any]) -> str:
+    """Advisor chat history is kept 30 days (SPEC `chat_message`), even if nobody chats."""
+    from api.agents.chat import purge_old_history
+    from api.db.session import get_engine
+    from sqlalchemy.orm import Session
+
+    def run() -> str:
+        with Session(get_engine()) as session:
+            gone = purge_old_history(session)
+            session.commit()
+        return f"purged {gone}"
+
+    return await asyncio.to_thread(run)
+
+
 async def hourly_spend_check(ctx: dict[str, Any]) -> str:
     """Prompt 12: log LLM SPEND ALARM when today's model spend passes LLM_SPEND_ALARM_USD."""
     from api.config import get_settings
@@ -108,7 +123,8 @@ class WorkerSettings:
         cron(weekly_schedule_watch, weekday=0, hour=4, minute=0, run_at_startup=False, timeout=7200)
     ]
     # Prompt 12: the daily LLM spend alarm, checked every hour.
-    functions += [hourly_spend_check]
+    functions += [hourly_spend_check, daily_chat_purge]
     cron_jobs += [cron(hourly_spend_check, minute=5, run_at_startup=False, timeout=60)]
+    cron_jobs += [cron(daily_chat_purge, hour=2, minute=45, run_at_startup=False, timeout=600)]
     redis_settings = RedisSettings.from_dsn(os.environ.get("REDIS_URL", "redis://localhost:6379/0"))
     health_check_interval = 10

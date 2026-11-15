@@ -443,3 +443,108 @@ It refuses to call a model unless both `CONFIRM_SPEND=yes` and `LLM_LIVE=true` a
 - D: the demo forum has no instructor on MATH 20700, so the journey uses CMSC 14100 with Demo Instructor A.
 
 **Next:** pick which gaps to build; the journeys record each one as a "gap" note on the test.
+
+## Goal wrap-up: FEEDBACK, prompts 09, 10, 12 (2026-11-15)
+
+### What was built
+1. **Every FEEDBACK item is resolved** (each marked "Resolved in <commit>" in `docs/FEEDBACK.md`, with its tests or screenshots):
+   - Generate plan names what to fix instead of "this is a bug".
+   - Summer comes before Autumn in each academic year.
+   - Years follow the years left (three for a second-year transfer), with add-a-year, remove-the-last-year and graduating early.
+   - Planner redesign: a right-hand drawer with the requirement tree, subtle errors behind "Check plan", and the AI advisor as a chat that opens from the top and is labelled "Generative AI".
+   - Filler text removed.
+   - Gentle motion, switched off under reduced motion.
+   - An "End suspension" button for admins.
+
+   SPEC changes are listed in `docs/SPEC-CHANGES.md`.
+2. **Catalog ingestion (prompt 09):** crawler, course parser, the E1-E4 AI steps (tested with a fake model only), checks (a)-(g), the year-over-year diff, the review console at `/admin/review`, and `make ingest-pilot`. Its free `--fake` run agrees with the hand seed on 146/146 rule nodes.
+3. **Schedule pipeline (prompt 10):** built and tested on clearly labelled synthetic pages. The scraper is off (`SCHEDULE_SCRAPER_ENABLED=false`) and has never contacted Class Search.
+4. **Hardening (prompt 12):**
+   - Journeys A-D run in a real browser against the full Docker stack, with a stand-in AI (`LLM_FAKE=e2e`), as part of `make e2e`.
+   - A load test (`make loadtest`).
+   - Encrypted nightly backups (`scripts/backup.sh`, restore tested).
+   - A single-VM deployment guide with Caddy (`docs/DEPLOY.md`).
+   - An hourly AI-spend alarm.
+   - A not-affiliated line in every page footer, no University logos, and "Not official advising" on the planner.
+   - Final security and spec reviews.
+
+### Specified in the SPEC but not built yet (final spec review, 2026-11-15)
+- **Planner and generator:**
+  - the Core is not pre-placed as requirement slots (journey A3);
+  - variants are "Option A/B/C", not names like "Exploratory CS";
+  - no control for the "Bx/MS application by a term" goal (B3);
+  - the study-abroad goal label shows the program id;
+  - no read-only shared snapshot;
+  - long solves are not moved to a background worker with a "verifying" badge;
+  - no "move the plan to a newer catalog year" action;
+  - no "Report an error" button on requirement nodes;
+  - Compare uses plans on this device and shows no server metrics.
+- **Program pages:** no sample path (`sample_path` is never filled).
+- **Accounts:** passkeys (optional in the SPEC).
+- **Forum:** no detection of vote bursts on a page; no takedown contact on the site.
+- **Curator console:** no ingestion-run history with diffs, no rule editor with live checks and golden tests, no LLM cost by task, and SQLAdmin is not mounted.
+- **Ingestion and schedule:**
+  - E2 does not crawl the study-abroad list, the joint-degree pages or department sites;
+  - the department-offerings extractor covers CS only;
+  - no study-abroad pipeline;
+  - the real Class Search parser is blocked (permission and real pages), so there is no weekly scrape;
+  - no Registrar feed.
+- **Seed coverage** (open questions):
+  - Economics specializations;
+  - physical-sciences combinations;
+  - placement-dependent rules;
+  - the CS curriculum-area breadth rule;
+  - study-abroad language courses;
+  - the catalog sentence for the Q6 transfer rule.
+- **Agents:**
+  - no real-model run of any agent yet (API hold);
+  - evals do not run nightly in CI;
+  - forum evidence in advisor answers is untested with a real model.
+- **Ops:** the spend alarm writes a log line but notifies no one.
+
+### Needs Richard (decisions or actions only you can take)
+- **Spend money:**
+  - run the AI evals and the pilot ingestion (commands below);
+  - choose a server and domain;
+  - choose an email provider for verification codes (`EMAIL_BACKEND=smtp`).
+- **University permission:** reading the public Class Search (P10-1). Until then the schedule scraper stays off and the parser works only on synthetic pages; save a few real result pages if you get permission.
+- **Catalog sources:** the transfer rule (1800 units here; transfer credit counts toward 3800) cites your answer, not the catalog. Find the catalog sentence before launch (Q6, `data/seed/REVIEW.md`). The `data/seed/REVIEW.md` hand check is still deferred.
+- **New questions** in `docs/OPEN_QUESTIONS.md`, each with a suggested answer:
+  - P09-1 to P09-9 (ingestion);
+  - P10-1 to P10-5 (schedule);
+  - P12-1 (re-run the load test on the real server).
+- **Security of your `.env`:** the two API key lines are written `NAME= value` with a space after `=`. Shells that read the file then try to run the key as a command, and print it in the error (this happened once in this session's local output). Remove the space. Consider rotating both keys.
+
+### Launch checklist (in order)
+1. `git pull`, then `make check` and `make e2e`. Both should end with exit code 0. `make e2e` also runs journeys A-D on the Docker stack.
+2. Fix `.env`: no space after `=`; real keys; `ENVIRONMENT=production` values from `docs/DEPLOY.md`.
+3. **AI evals** (costs money; prints an estimate first, stops at $20):
+   ```bash
+   make up
+   make evals                                       # free checks + the estimate only
+   CONFIRM_SPEND=yes make evals                     # the real run (A1 50 profiles, A2 100 cases)
+   CONFIRM_SPEND=yes uv run python evals/run.py --only a2   # or just the advisor half, ~$2
+   ```
+4. **Pilot ingestion** (costs money; prints an estimate first, stops at $25):
+   ```bash
+   make ingest-pilot ARGS=--fake                    # free rehearsal (should report 100%)
+   make ingest-pilot ARGS=--estimate                # estimate only, nothing spent (~$16)
+   # put CATALOG_CONTACT_EMAIL in .env, then:
+   CONFIRM_SPEND=yes LLM_LIVE=true make ingest-pilot ARGS=--programs=econ-ba   # one program, ~$2
+   CONFIRM_SPEND=yes LLM_LIVE=true make ingest-pilot                           # all 11; report: docs/ingest-pilot/report-live.md
+   ```
+   The goal is at least 95% node agreement with the hand seed. Read every disagreement in the report.
+5. Turn on the real AI for students only after the evals pass: `LLM_LIVE=true` in `.env`, then `make up`.
+6. Publish each program in `/admin/review` (students see only published programs; set `SHOW_UNPUBLISHED_PROGRAMS=false`).
+7. Deploy per `docs/DEPLOY.md`:
+   - `docker compose -f docker-compose.yml -f deploy/docker-compose.prod.yml up -d --build --wait`;
+   - seed;
+   - make yourself admin;
+   - set up the nightly `scripts/backup.sh` cron;
+   - test a restore once.
+8. On the server, run the load test (P12-1):
+   ```bash
+   LOAD_LOGIN=<user> LOAD_PASSWORD=<pw> LOAD_HOST=https://<domain>/api make loadtest
+   ```
+   Targets: verify 50/s with p95 < 500 ms; forum reads 100/s.
+9. Keep `SCHEDULE_SCRAPER_ENABLED=false` and `CATALOG_INGEST_ENABLED=false` until you decide otherwise.

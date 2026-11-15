@@ -249,7 +249,7 @@ export function Planner({ initial, autoGenerate = false }: PlannerProps) {
               onChange={(e) => dispatch({ type: "rename", name: e.target.value })}
               className="w-64 max-w-full font-display text-display-sm"
             />
-            <p className="text-caption text-muted">Not official advising. Check with your adviser.</p>
+            <p className="text-caption text-muted">Not official advising. Confirm with your adviser and My Planner.</p>
           </div>
           <div className="flex min-w-0 flex-col gap-1">
             <span className="text-caption-uppercase uppercase text-muted">Catalog {plan.catalog_year}</span>

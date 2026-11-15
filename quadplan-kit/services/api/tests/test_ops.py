@@ -31,3 +31,25 @@ def test_spend_alarm(migrated_db_url: str, caplog: pytest.LogCaptureFixture) -> 
             loud = check_spend(db, 4.0, today)
         assert loud.alarm and "LLM SPEND ALARM" in caplog.text and "$4.5" in caplog.text
     engine.dispose()
+
+
+def test_client_address_behind_caddy_and_nginx(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Spec review (final): with Caddy in front of nginx the client is 2 hops back; a spoofed
+    header from the client cannot move it."""
+    from api.auth.ratelimit import client_ip
+    from api.config import get_settings
+    from starlette.requests import Request
+
+    def request(xff: str) -> Request:
+        scope = {
+            "type": "http",
+            "headers": [(b"x-forwarded-for", xff.encode())],
+            "client": ("172.18.0.9", 1234),
+        }
+        return Request(scope)  # type: ignore[arg-type]
+
+    monkeypatch.setattr(get_settings(), "trusted_proxy_hops", 2)
+    assert client_ip(request("203.0.113.7, 172.18.0.5")) == "203.0.113.7"
+    assert client_ip(request("6.6.6.6, 203.0.113.7, 172.18.0.5")) == "203.0.113.7"
+    monkeypatch.setattr(get_settings(), "trusted_proxy_hops", 1)
+    assert client_ip(request("6.6.6.6, 203.0.113.7")) == "203.0.113.7"

@@ -182,7 +182,7 @@ test.describe("F4: planner layout", () => {
 test.describe("F5: text", () => {
   test("filler lines are gone; the legal lines stay", async ({ page }) => {
     await page.goto("/plan");
-    await expect(page.getByText("Not official advising. Check with your adviser.")).toBeVisible();
+    await expect(page.getByText("Not official advising. Confirm with your adviser and My Planner.")).toBeVisible();
     await expect(page.getByRole("contentinfo")).toContainText("Quarterly is a student project, not affiliated with the University of Chicago.");
     await page.getByRole("button", { name: "Generate plan" }).click();
     await expect(page.getByRole("dialog", { name: "Generate plan" })).toBeVisible();

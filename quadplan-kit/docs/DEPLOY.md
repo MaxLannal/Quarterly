@@ -38,7 +38,7 @@ docker compose exec api python -m api.cli seed      # the hand-checked catalog s
 
 Then, as an admin, publish each program in `/admin/review` (make the first admin with `docker compose exec db psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "UPDATE account SET role='admin' WHERE username='<name>';"`).
 
-`deploy/docker-compose.prod.yml` adds Caddy (`deploy/Caddyfile`: automatic TLS, HSTS, no access log, so no IP addresses are kept) and stops publishing the database, Redis, MinIO and the API on the host. The API runs 4 worker processes (`WEB_CONCURRENCY`).
+`deploy/docker-compose.prod.yml` sets `TRUSTED_PROXY_HOPS=2` (Caddy and nginx both append to `X-Forwarded-For`, so rate limits see each visitor's own address; with only nginx in front, as in development, it is 1) and adds Caddy (`deploy/Caddyfile`: automatic TLS, HSTS, no access log, so no IP addresses are kept) and stops publishing the database, Redis, MinIO and the API on the host. The API runs 4 worker processes (`WEB_CONCURRENCY`).
 
 ## 4. Backups
 

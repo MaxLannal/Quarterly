@@ -26,7 +26,8 @@ out="$OUT_DIR/quarterly-$day.dump.enc"
 docker compose exec -T db sh -c 'pg_dump -U "$POSTGRES_USER" -d "$POSTGRES_DB" -Fc --no-owner' \
   | openssl enc -aes-256-cbc -salt -pbkdf2 -iter 200000 -pass "file:$BACKUP_PASSPHRASE_FILE" -out "$out"
 chmod 600 "$out"
-(cd "$OUT_DIR" && shasum -a 256 "$(basename "$out")" > "$(basename "$out").sha256")
+sha256() { if command -v sha256sum >/dev/null; then sha256sum "$@"; else shasum -a 256 "$@"; fi; }
+(cd "$OUT_DIR" && sha256 "$(basename "$out")" > "$(basename "$out").sha256")
 size=$(wc -c < "$out" | tr -d ' ')
 [ "$size" -gt 1024 ] || { echo "backup: $out is suspiciously small ($size bytes)" >&2; exit 1; }
 

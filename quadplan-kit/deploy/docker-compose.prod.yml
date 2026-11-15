@@ -13,6 +13,8 @@ services:
     ports: !reset []
     environment:
       WEB_CONCURRENCY: "4"
+      # Caddy and nginx each append to X-Forwarded-For: the client's address is 2 hops back.
+      TRUSTED_PROXY_HOPS: "2"
   web:
     ports: !reset []
   caddy:

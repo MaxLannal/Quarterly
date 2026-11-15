@@ -1,7 +1,8 @@
 """Load test (prompt 12): POST /verify at 50 requests/second (p95 under 500 ms) and forum page
 reads at 100 requests/second.
 
-Run against a local stack (never a shared or production server):
+Run against your own stack: a local one, or the real server before launch (never a server
+other people are using):
 
     make loadtest            # both scenarios, 60 s each, against http://localhost:8000
 
