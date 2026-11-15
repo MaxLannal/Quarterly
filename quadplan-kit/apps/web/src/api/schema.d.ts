@@ -72,6 +72,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/admin/moderation/suspensions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Moderation Suspensions */
+        get: operations["moderation_suspensions_admin_moderation_suspensions_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/admin/moderation/{target_type}/{target_id}/decision": {
         parameters: {
             query?: never;
@@ -83,6 +100,23 @@ export interface paths {
         put?: never;
         /** Moderation Decision */
         post: operations["moderation_decision_admin_moderation__target_type___target_id__decision_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/admin/moderation/{target_type}/{target_id}/end-suspension": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Moderation End Suspension */
+        post: operations["moderation_end_suspension_admin_moderation__target_type___target_id__end_suspension_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1677,6 +1711,18 @@ export interface components {
         EmailStarted: {
             /** Pending Id */
             pending_id: string;
+        };
+        /** EndSuspensionResult */
+        EndSuspensionResult: {
+            /** Ended */
+            ended: boolean;
+            /** Target Id */
+            target_id: number;
+            /**
+             * Target Type
+             * @enum {string}
+             */
+            target_type: "post" | "comment";
         };
         /** ErrorEvent */
         ErrorEvent: {
@@ -3470,6 +3516,38 @@ export interface components {
              */
             weight: number;
         };
+        /**
+         * SuspensionOut
+         * @description An active suspension, shown by the removal that started it (admins never see who the
+         *     author is). One row per suspended author: the latest removal that suspended them.
+         */
+        SuspensionOut: {
+            /** Course Code */
+            course_code: string;
+            /** Excerpt */
+            excerpt: string;
+            /** Instructor Name */
+            instructor_name: string;
+            /**
+             * Removed Day
+             * Format: date
+             */
+            removed_day: string;
+            /** Target Id */
+            target_id: number;
+            /**
+             * Target Type
+             * @enum {string}
+             */
+            target_type: "post" | "comment";
+            /** Title */
+            title?: string | null;
+            /**
+             * Until
+             * Format: date
+             */
+            until: string;
+        };
         /** Term */
         Term: {
             /** End */
@@ -3833,6 +3911,35 @@ export interface operations {
             };
         };
     };
+    moderation_suspensions_admin_moderation_suspensions_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuspensionOut"][];
+                };
+            };
+            /** @description Not implemented yet */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+        };
+    };
     moderation_decision_admin_moderation__target_type___target_id__decision_post: {
         parameters: {
             query?: never;
@@ -3856,6 +3963,47 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ModerationResult"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Not implemented yet */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+        };
+    };
+    moderation_end_suspension_admin_moderation__target_type___target_id__end_suspension_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                target_type: "post" | "comment";
+                target_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EndSuspensionResult"];
                 };
             };
             /** @description Validation Error */

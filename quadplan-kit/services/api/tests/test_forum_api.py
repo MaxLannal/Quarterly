@@ -681,6 +681,29 @@ def test_suspensions_are_manual(f: ForumEnv) -> None:
     )
 
 
+def test_an_admin_can_end_a_suspension_early(f: ForumEnv) -> None:
+    """FEEDBACK "End suspension" (P08-14)."""
+    author, admin, other = f.user(), f.admin(), f.user()
+    first = post(f, author, "a_doe", discussion("rude one"))
+    second = post(f, author, "a_roe", discussion("rude two"))
+    for target in (first, second):
+        admin.post(
+            f"/admin/moderation/post/{target['id']}/decision",
+            {"decision": "remove", "suspend_days": 30},
+        )
+    assert other.get("/admin/moderation/suspensions").status_code == 403
+    listed = admin.get("/admin/moderation/suspensions").json()
+    # One row per suspended author (the latest removal), so rows never show a shared author.
+    assert [(s["target_type"], s["target_id"]) for s in listed] == [("post", second["id"])]
+    assert listed[0]["course_code"] == "TEST 10100" and listed[0]["title"] == "rude two"
+    ended = admin.post(f"/admin/moderation/post/{second['id']}/end-suspension")
+    assert ended.json() == {"target_type": "post", "target_id": second["id"], "ended": True}
+    assert admin.get("/admin/moderation/suspensions").json() == []
+    assert author.post(f"/forum/pages/{f.pages['a_doe']}/posts", discussion()).status_code == 201
+    again = admin.post(f"/admin/moderation/post/{second['id']}/end-suspension")
+    assert again.status_code == 404
+
+
 def test_posting_is_rate_limited(f: ForumEnv, monkeypatch: pytest.MonkeyPatch) -> None:
     from api.auth.ratelimit import HOUR, Limit
     from api.routers import forum as forum_router

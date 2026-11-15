@@ -9,7 +9,13 @@ from api.db.session import get_session
 from api.forum import admin as forum_admin
 from api.schemas.admin import ProgramVersionOut, ReviewDecision, ReviewItemOut
 from api.schemas.common import NOT_IMPLEMENTED, Page, not_implemented
-from api.schemas.forum import ModerationDecision, ModerationItemOut, ModerationResult
+from api.schemas.forum import (
+    EndSuspensionResult,
+    ModerationDecision,
+    ModerationItemOut,
+    ModerationResult,
+    SuspensionOut,
+)
 
 router = APIRouter(prefix="/admin", tags=["admin"], responses=NOT_IMPLEMENTED)
 
@@ -66,3 +72,18 @@ def moderation_decision(
     body: ModerationDecision,
 ) -> ModerationResult:
     return forum_admin.decide(db, admin, target_type, target_id, body)
+
+
+# Active suspensions (each shown by the removal that started it) and ending one early.
+@router.get("/moderation/suspensions", response_model=list[SuspensionOut])
+def moderation_suspensions(db: SessionDep, _: AdminDep) -> list[SuspensionOut]:
+    return forum_admin.suspensions(db)
+
+
+@router.post(
+    "/moderation/{target_type}/{target_id}/end-suspension", response_model=EndSuspensionResult
+)
+def moderation_end_suspension(
+    db: SessionDep, admin: AdminDep, target_type: Literal["post", "comment"], target_id: int
+) -> EndSuspensionResult:
+    return forum_admin.end_suspension(db, admin, target_type, target_id)

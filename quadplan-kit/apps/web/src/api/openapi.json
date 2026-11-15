@@ -1945,6 +1945,33 @@
         "title": "EmailStarted",
         "type": "object"
       },
+      "EndSuspensionResult": {
+        "properties": {
+          "ended": {
+            "title": "Ended",
+            "type": "boolean"
+          },
+          "target_id": {
+            "title": "Target Id",
+            "type": "integer"
+          },
+          "target_type": {
+            "enum": [
+              "post",
+              "comment"
+            ],
+            "title": "Target Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "target_type",
+          "target_id",
+          "ended"
+        ],
+        "title": "EndSuspensionResult",
+        "type": "object"
+      },
       "ErrorEvent": {
         "properties": {
           "message": {
@@ -6893,6 +6920,67 @@
         "title": "StudyAbroadGoal",
         "type": "object"
       },
+      "SuspensionOut": {
+        "description": "An active suspension, shown by the removal that started it (admins never see who the\nauthor is). One row per suspended author: the latest removal that suspended them.",
+        "properties": {
+          "course_code": {
+            "title": "Course Code",
+            "type": "string"
+          },
+          "excerpt": {
+            "title": "Excerpt",
+            "type": "string"
+          },
+          "instructor_name": {
+            "title": "Instructor Name",
+            "type": "string"
+          },
+          "removed_day": {
+            "format": "date",
+            "title": "Removed Day",
+            "type": "string"
+          },
+          "target_id": {
+            "title": "Target Id",
+            "type": "integer"
+          },
+          "target_type": {
+            "enum": [
+              "post",
+              "comment"
+            ],
+            "title": "Target Type",
+            "type": "string"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          },
+          "until": {
+            "format": "date",
+            "title": "Until",
+            "type": "string"
+          }
+        },
+        "required": [
+          "target_type",
+          "target_id",
+          "course_code",
+          "instructor_name",
+          "excerpt",
+          "removed_day",
+          "until"
+        ],
+        "title": "SuspensionOut",
+        "type": "object"
+      },
       "Term": {
         "additionalProperties": false,
         "properties": {
@@ -7623,6 +7711,41 @@
         ]
       }
     },
+    "/admin/moderation/suspensions": {
+      "get": {
+        "operationId": "moderation_suspensions_admin_moderation_suspensions_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/SuspensionOut"
+                  },
+                  "title": "Response Moderation Suspensions Admin Moderation Suspensions Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Not implemented yet"
+          }
+        },
+        "summary": "Moderation Suspensions",
+        "tags": [
+          "admin"
+        ]
+      }
+    },
     "/admin/moderation/{target_type}/{target_id}/decision": {
       "post": {
         "operationId": "moderation_decision_admin_moderation__target_type___target_id__decision_post",
@@ -7693,6 +7816,71 @@
           }
         },
         "summary": "Moderation Decision",
+        "tags": [
+          "admin"
+        ]
+      }
+    },
+    "/admin/moderation/{target_type}/{target_id}/end-suspension": {
+      "post": {
+        "operationId": "moderation_end_suspension_admin_moderation__target_type___target_id__end_suspension_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "target_type",
+            "required": true,
+            "schema": {
+              "enum": [
+                "post",
+                "comment"
+              ],
+              "title": "Target Type",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "target_id",
+            "required": true,
+            "schema": {
+              "title": "Target Id",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EndSuspensionResult"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Not implemented yet"
+          }
+        },
+        "summary": "Moderation End Suspension",
         "tags": [
           "admin"
         ]

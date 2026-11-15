@@ -68,6 +68,8 @@ EXPECTED = {
     ("post", "/admin/program-versions/{version_id}/publish"),
     ("get", "/admin/moderation"),
     ("post", "/admin/moderation/{target_type}/{target_id}/decision"),
+    ("get", "/admin/moderation/suspensions"),
+    ("post", "/admin/moderation/{target_type}/{target_id}/end-suspension"),
 }
 
 PLAN = {"catalog_year": "2026-27", "entry_term": "2026-AU"}

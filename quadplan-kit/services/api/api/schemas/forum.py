@@ -218,3 +218,23 @@ class ModerationResult(BaseModel):
     target_id: int
     status: Status
     author_suspended: bool = False
+
+
+class SuspensionOut(BaseModel):
+    """An active suspension, shown by the removal that started it (admins never see who the
+    author is). One row per suspended author: the latest removal that suspended them."""
+
+    target_type: Literal["post", "comment"]
+    target_id: int
+    course_code: str
+    instructor_name: str
+    title: str | None = None
+    excerpt: str
+    removed_day: dt.date
+    until: dt.date
+
+
+class EndSuspensionResult(BaseModel):
+    target_type: Literal["post", "comment"]
+    target_id: int
+    ended: bool

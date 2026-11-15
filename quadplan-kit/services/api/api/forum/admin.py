@@ -30,10 +30,12 @@ from api.forum.pseudonyms import DELETED
 from api.forum.service import _latest_actions, today
 from api.schemas.common import Page
 from api.schemas.forum import (
+    EndSuspensionResult,
     ModerationDecision,
     ModerationItemOut,
     ModerationReport,
     ModerationResult,
+    SuspensionOut,
 )
 
 TargetType = Literal["post", "comment"]
@@ -305,3 +307,83 @@ def decide(
         status=target.status,
         author_suspended=suspended,
     )
+
+
+# ------------------------------------------------------------------ ending a suspension early
+
+
+def _page_label(db: Session, page_id: int) -> tuple[str, str]:
+    row = db.execute(
+        sa.select(m.Course.code, m.Instructor.display_name)
+        .join(m.CourseInstructor, m.CourseInstructor.course_id == m.Course.id)
+        .join(m.Instructor, m.Instructor.id == m.CourseInstructor.instructor_id)
+        .where(m.CourseInstructor.id == page_id)
+    ).one()
+    return str(row[0]), str(row[1])
+
+
+def suspensions(db: Session) -> list[SuspensionOut]:
+    """Active suspensions, each shown by the latest removal that started it. Authors are found
+    by recomputing refs on the server and are never shown; one row per author, so two rows
+    never reveal a shared author."""
+    actions = db.scalars(
+        sa.select(m.ModerationAction)
+        .where(
+            m.ModerationAction.actor == "admin",
+            m.ModerationAction.action == "remove",
+            m.ModerationAction.reason.like("%[author suspended %"),
+        )
+        .order_by(m.ModerationAction.id.desc())
+    ).all()
+    seen: set[uuid.UUID] = set()
+    out: list[SuspensionOut] = []
+    for action in actions:
+        target_type: TargetType = "post" if action.target_type == "post" else "comment"
+        try:
+            target, page_id = _target(db, target_type, action.target_id)
+        except HTTPException:
+            continue  # deleted since
+        author = _find_account(db, page_id, target.author_ref)
+        if author is None or author.id in seen:
+            continue
+        seen.add(author.id)
+        if author.suspended_until is None or author.suspended_until <= today():
+            continue
+        code, name = _page_label(db, page_id)
+        out.append(
+            SuspensionOut(
+                target_type=target_type,
+                target_id=action.target_id,
+                course_code=code,
+                instructor_name=name,
+                title=target.title if isinstance(target, m.Post) else None,
+                excerpt=target.body_md[:120],
+                removed_day=action.created_day,
+                until=author.suspended_until,
+            )
+        )
+    return out
+
+
+def end_suspension(
+    db: Session, admin: m.Account, target_type: TargetType, target_id: int
+) -> EndSuspensionResult:
+    """Lift the suspension of the author of this removed item (P08-14, FEEDBACK "End
+    suspension")."""
+    target, page_id = _target(db, target_type, target_id)
+    author = _find_account(db, page_id, target.author_ref)
+    if author is None or author.suspended_until is None or author.suspended_until <= today():
+        raise HTTPException(status_code=404, detail="No active suspension for this item.")
+    author.suspended_until = None
+    db.add(
+        m.ModerationAction(
+            target_type=target_type,
+            target_id=target_id,
+            action="unsuspend",
+            reason="suspension ended early",
+            actor="admin",
+            actor_account_id=admin.id,
+        )
+    )
+    db.commit()
+    return EndSuspensionResult(target_type=target_type, target_id=target_id, ended=True)
