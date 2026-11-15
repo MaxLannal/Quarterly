@@ -7,7 +7,7 @@ NPM := npm --prefix $(WEB)
 COMPOSE := docker compose
 
 .PHONY: attributes help install env up down ps logs scraper-up lint typecheck test test-py test-web \
-        golden check e2e screenshots evals migrate seed seed-forum-demo api-client api-client-check format
+        golden check e2e e2e-stack screenshots evals migrate seed seed-forum-demo api-client api-client-check format
 
 help:
 	@grep -E '^[a-z-]+:' Makefile | cut -d: -f1 | sort | tr '\n' ' '; echo
@@ -66,8 +66,23 @@ golden:
 check: lint typecheck api-client-check test golden
 	@echo "make check: all passed"
 
+# Both end-to-end suites: the MSW suite (apps/web/e2e, mocked API), then journeys A-D against
+# the real Docker stack (e2e-stack). Fails if either fails.
 e2e:
 	$(NPM) run e2e
+	$(MAKE) e2e-stack
+
+# Journeys A-D (SPEC "Core user journeys", apps/web/e2e-stack/) against the real stack: seed
+# data, the request-driven fake LLM (LLM_FAKE=e2e, never a provider) and console email, from
+# docker-compose.e2e.yml. Note: this (re)starts the shared `quarterly` stack with those settings;
+# `make up` restores the normal ones. STACK_URL (default http://localhost:5173) picks the web.
+E2E_COMPOSE := $(COMPOSE) -f docker-compose.yml -f docker-compose.e2e.yml
+e2e-stack: env
+	$(E2E_COMPOSE) up -d --build --wait
+	$(MAKE) migrate
+	$(MAKE) seed
+	$(MAKE) seed-forum-demo
+	$(NPM) run e2e:stack
 
 # Design review screenshots: every page at 1440 and 390px wide into docs/screenshots/
 # (apps/web/e2e/screenshots.spec.ts). Uses E2E_PORT like `make e2e`.
