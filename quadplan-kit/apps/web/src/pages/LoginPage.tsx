@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { safeNext } from "@/features/auth/next";
 import { Button } from "@/components/ui/button";
 import { api, attempt } from "@/features/auth/api";
 import { signedIn } from "@/features/auth/session";
@@ -20,6 +21,7 @@ type View = { name: "login" } | { name: "reset-email" } | { name: "reset-code"; 
 /** SPEC "Accounts and anonymity", steps 4 (login) and 5 (password reset). */
 export default function LoginPage() {
   const navigate = useNavigate();
+  const [params] = useSearchParams();
   const [view, setView] = useState<View>({ name: "login" });
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
@@ -56,7 +58,7 @@ export default function LoginPage() {
       return;
     }
     signedIn(result.data);
-    navigate("/plan");
+    navigate(safeNext(params.get("next")));
   }
 
   async function startReset() {

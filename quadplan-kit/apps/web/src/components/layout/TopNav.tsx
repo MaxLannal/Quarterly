@@ -1,5 +1,6 @@
 import { useEffect, useId, useState, type FormEvent } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useAuthLinks } from "@/features/auth/next";
 import { Button } from "@/components/ui/button";
 import { Avatar } from "@/components/ui/card";
 import { CloseIcon, MenuIcon, SearchIcon } from "@/components/ui/icons";
@@ -88,6 +89,7 @@ function NavLinks({ vertical = false }: { vertical?: boolean }) {
  */
 export function TopNav() {
   const { data: session } = useSession();
+  const authLinks = useAuthLinks();
   const [open, setOpen] = useState(false);
   const location = useLocation();
   const panelId = useId();
@@ -101,7 +103,7 @@ export function TopNav() {
     </Link>
   ) : (
     <Button asChild variant="outline">
-      <Link to="/login">Log in</Link>
+      <Link to={authLinks.login}>Log in</Link>
     </Button>
   );
 

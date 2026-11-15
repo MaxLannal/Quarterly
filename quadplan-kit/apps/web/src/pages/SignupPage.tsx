@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { safeNext } from "@/features/auth/next";
 import { inlineLinkClass } from "@/components/layout/page";
 import { Button } from "@/components/ui/button";
 import { api, attempt } from "@/features/auth/api";
@@ -28,6 +29,7 @@ const USERNAME = /^[A-Za-z0-9_-]{3,32}$/;
 /** SPEC "Accounts and anonymity", protocol steps 1-3. */
 export default function SignupPage() {
   const navigate = useNavigate();
+  const [params] = useSearchParams();
   const [step, setStep] = useState<Step>({ name: "email" });
   const [email, setEmail] = useState("");
   const [code, setCode] = useState("");
@@ -106,7 +108,7 @@ export default function SignupPage() {
       return;
     }
     signedIn(result.data);
-    navigate("/plan");
+    navigate(safeNext(params.get("next")));
   }
 
   function onSubmit(event: FormEvent) {

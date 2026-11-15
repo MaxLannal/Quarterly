@@ -45,7 +45,10 @@ describe("forum pages", () => {
     renderRoute("/courses/TEST%2010000/i/fake-instructor-a");
     const notice = (await screen.findByText(/Reviews and discussion are for logged-in students/)).closest("div") as HTMLElement;
     expect(screen.getByRole("heading", { level: 1, name: "Course × instructor forum" })).toBeInTheDocument();
-    expect(within(notice).getByRole("link", { name: "Log in" })).toHaveAttribute("href", "/login");
+    // After logging in, the student comes back to this page (P08-10).
+    const back = encodeURIComponent("/courses/TEST%2010000/i/fake-instructor-a");
+    expect(within(notice).getByRole("link", { name: "Log in" })).toHaveAttribute("href", `/login?next=${back}`);
+    expect(within(notice).getByRole("link", { name: "create an account" })).toHaveAttribute("href", `/signup?next=${back}`);
   });
 
   it("shows the header, ratings, summary slot, tabs and posts", async () => {

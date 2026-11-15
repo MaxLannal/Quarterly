@@ -14,6 +14,16 @@ test("my plans: duplicate, compare, import on login", async ({ page }) => {
   await expect(page.getByRole("heading", { level: 1, name: "Compare plans" })).toBeVisible();
   await expect(page.getByText("1 courses are the same in both.")).toBeVisible();
 
+  // Deleting asks first, in place (DF-7); Cancel keeps the plan.
+  await page.goto("/plans");
+  const copyDelete = page.getByRole("button", { name: /^Delete / }).last();
+  await copyDelete.click();
+  await page.getByRole("button", { name: "Cancel" }).click();
+  await expect(page.getByLabel("Name of plan")).toHaveCount(2);
+  await page.getByRole("button", { name: /^Delete / }).last().click();
+  await page.getByRole("button", { name: "Yes, delete" }).click();
+  await expect(page.getByLabel("Name of plan")).toHaveCount(1);
+
   // Log in (mock auth), then reload: the shell imports the device's plans.
   await page.goto("/plans");
   await expect(page.getByRole("link", { name: "Log in" }).first()).toBeVisible();

@@ -1,5 +1,6 @@
 import { useId, useState, type FormEvent, type ReactNode } from "react";
 import { Link } from "react-router-dom";
+import { useAuthLinks } from "@/features/auth/next";
 import { PageContainer, PageHeader } from "@/components/layout/page";
 import { Button } from "@/components/ui/button";
 import { Stat } from "@/components/ui/card";
@@ -14,13 +15,14 @@ import { OPTIONAL_RATING_FIELDS, RATING_FIELDS, REPORT_REASONS } from "./rules";
 
 /** Every forum page needs a login (SPEC sitemap). Shown instead of the page when logged out. */
 export function LoginRequired({ title, eyebrow }: { title: string; eyebrow?: ReactNode }) {
+  const authLinks = useAuthLinks();
   return (
     <PageContainer width="reading" as="section">
       <PageHeader eyebrow={eyebrow} title={title} size="md" />
       <Notice tone="info">
         <p>
-          Reviews and discussion are for logged-in students. <Link to="/login">Log in</Link> or{" "}
-          <Link to="/signup">create an account</Link> with your uchicago.edu address. Other readers only ever see a
+          Reviews and discussion are for logged-in students. <Link to={authLinks.login}>Log in</Link> or{" "}
+          <Link to={authLinks.signup}>create an account</Link> with your uchicago.edu address. Other readers only ever see a
           pseudonym that is different on every page.
         </p>
       </Notice>

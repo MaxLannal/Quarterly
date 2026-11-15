@@ -178,6 +178,17 @@ test("guidelines page lists the community rules", async ({ page }) => {
   await expect(page.getByText("No names of other students.")).toBeVisible();
 });
 
+test("logging in from a forum page comes back to it", async ({ page }) => {
+  await page.goto(FORUM);
+  await page.getByRole("main").getByRole("link", { name: "Log in" }).click();
+  await expect(page).toHaveURL(/\/login\?next=/);
+  await page.getByLabel("Username or email").fill("fake-user");
+  await page.getByLabel("Password").fill("fake password 123");
+  await page.getByRole("button", { name: "Log in" }).click();
+  await expect(page).toHaveURL(new RegExp(`${FORUM.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`));
+  await expect(page.getByRole("heading", { level: 1, name: /with Fake Instructor A/ })).toBeVisible();
+});
+
 test("admin moderation queue: remove and choose to suspend the author", async ({ page }) => {
   // The mock seeds one held post by another (fake) author; state lives in the page, so the
   // queue is opened directly rather than after posting from another page load.

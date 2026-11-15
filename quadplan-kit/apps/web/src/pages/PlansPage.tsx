@@ -34,6 +34,8 @@ export default function PlansPage() {
   const { data: session, isLoading } = useSession();
   const [doc, setDoc] = useState(() => loadPlans());
   const refresh = () => setDoc(loadPlans());
+  // DESIGN.md: deleting asks "are you sure?" in place (DF-7).
+  const [confirming, setConfirming] = useState<string | null>(null);
 
   function open(p: LocalPlan) {
     setActive(p.localId);
@@ -97,16 +99,28 @@ export default function PlansPage() {
                       Set primary
                     </Button>
                   )}
-                  <Button
-                    variant="destructive"
-                    onClick={() => {
-                      deletePlan(p.localId);
-                      refresh();
-                    }}
-                    aria-label={`Delete ${p.name}`}
-                  >
-                    Delete
-                  </Button>
+                  {confirming === p.localId ? (
+                    <span role="group" aria-label={`Delete ${p.name}?`} className="flex flex-wrap items-center gap-2">
+                      <span className="text-body-sm text-ink">Delete this plan?</span>
+                      <Button
+                        variant="destructive"
+                        onClick={() => {
+                          deletePlan(p.localId);
+                          setConfirming(null);
+                          refresh();
+                        }}
+                      >
+                        Yes, delete
+                      </Button>
+                      <Button variant="ghost" onClick={() => setConfirming(null)}>
+                        Cancel
+                      </Button>
+                    </span>
+                  ) : (
+                    <Button variant="destructive" onClick={() => setConfirming(p.localId)} aria-label={`Delete ${p.name}`}>
+                      Delete
+                    </Button>
+                  )}
                 </div>
               </Card>
             ))}

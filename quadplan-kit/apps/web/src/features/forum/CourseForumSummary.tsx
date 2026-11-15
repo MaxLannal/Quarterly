@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useAuthLinks } from "@/features/auth/next";
 import { inlineLinkClass, Section } from "@/components/layout/page";
 import { Notice, Spinner } from "@/components/ui/misc";
 import { useSession } from "@/features/auth/session";
@@ -12,6 +13,7 @@ import { RatingStats } from "./parts";
  */
 export function CourseForumSummary({ code }: { code: string }) {
   const session = useSession();
+  const authLinks = useAuthLinks();
   const loggedIn = session.status === "authenticated";
   const q = useCourseForum(code, loggedIn);
 
@@ -22,7 +24,7 @@ export function CourseForumSummary({ code }: { code: string }) {
       ) : !loggedIn ? (
         <Notice tone="info">
           <p>
-            <Link to="/login">Log in</Link> to see ratings and read reviews from students.
+            <Link to={authLinks.login}>Log in</Link> to see ratings and read reviews from students.
           </p>
         </Notice>
       ) : q.isLoading ? (

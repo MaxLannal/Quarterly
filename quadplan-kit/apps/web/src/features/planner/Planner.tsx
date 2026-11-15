@@ -263,15 +263,28 @@ export function Planner({ initial, autoGenerate = false }: PlannerProps) {
             New here? <Link to="/onboarding" className="font-medium">Set up your plan</Link> with your entry term, programs and goals, or drag courses in from the requirement list.
           </Notice>
         )}
+        {/* Phones and small tablets stack the three columns; these jump straight to each one
+            (DF-13), so the advisor is not several screens below the grid. */}
+        <nav aria-label="Jump to" className="flex flex-wrap gap-2 lg:hidden">
+          {[
+            ["plan-requirements", "Requirements"],
+            ["plan-grid", "Plan"],
+            ["plan-details", "Issues and advisor"],
+          ].map(([id, label]) => (
+            <Button key={id} asChild variant="outline" size="sm">
+              <a href={`#${id}`}>{label}</a>
+            </Button>
+          ))}
+        </nav>
         <DndContext sensors={sensors} onDragEnd={onDragEnd} accessibility={{ announcements }}>
           <div className="mt-2 grid items-start gap-6 lg:grid-cols-[300px_minmax(0,1fr)] xl:grid-cols-[300px_minmax(0,1fr)_340px]">
-            <section aria-label="Requirements" className="min-w-0 rounded-xl border border-hairline bg-surface-card p-4">
+            <section id="plan-requirements" aria-label="Requirements" className="min-w-0 scroll-mt-4 rounded-xl border border-hairline bg-surface-card p-4">
               <RequirementRail details={programQueries.map((q, i) => ({ ...q, id: programIds[i] ?? "" }))} progress={report?.progress} onAddProgram={() => setPickPrograms(true)} />
             </section>
-            <section aria-label="Plan grid" className="min-w-0">
+            <section id="plan-grid" aria-label="Plan grid" className="min-w-0 scroll-mt-4">
               <PlanGrid years={state.years} showSummer={showSummer} onToggleSummer={() => setShowSummer(!showSummer)} onYears={(n) => dispatch({ type: "years", years: n })} />
             </section>
-            <section aria-label="Issues, goals and advisor" className="min-w-0 rounded-xl border border-hairline bg-surface-card px-4 pb-4 pt-2 lg:col-span-2 xl:col-span-1">
+            <section id="plan-details" aria-label="Issues, goals and advisor" className="min-w-0 scroll-mt-4 rounded-xl border border-hairline bg-surface-card px-4 pb-4 pt-2 lg:col-span-2 xl:col-span-1">
               <Tabs
                 label="Plan details"
                 tabs={[

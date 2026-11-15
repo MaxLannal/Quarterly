@@ -130,3 +130,15 @@ test("planner: no axe violations", async ({ page }) => {
   const results = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"]).analyze();
   expect(results.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
 });
+
+test("on a phone, jump buttons reach the advisor without scrolling past the grid", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/plan");
+  const jump = page.getByRole("navigation", { name: "Jump to" });
+  await expect(jump).toBeVisible();
+  await jump.getByRole("link", { name: "Issues and advisor" }).click();
+  await expect(page).toHaveURL(/#plan-details$/);
+  await expect(page.getByRole("region", { name: "Issues, goals and advisor" })).toBeInViewport();
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await expect(jump).toBeHidden();
+});

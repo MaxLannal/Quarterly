@@ -51,7 +51,9 @@ colors:
   semantic-success-wash: "#F2F3EE"
   semantic-warning: "#9A5324"   # PMS 1675 — warning text
   semantic-warning-icon: "#C68220"  # Yellow, PMS 153 — icons only (3.2:1)
+  semantic-warning-wash: "#F7F1ED"  # derived: warning at 8% on white (added 2026-11-14, DF-6)
   semantic-info: "#155F83"      # Blue, PMS 633
+  semantic-info-wash: "#ECF2F5"     # derived: info at 8% on white (added 2026-11-14, DF-6)
 
   # Data visualization (UChicago secondary palette, in this order)
   data-1: "#155F83"             # Blue
@@ -327,8 +329,8 @@ All values trace back to the UChicago Identity Guidelines. Values marked **deriv
 |---|---|---|
 | Error | `{colors.semantic-error}` #8F3931 | `{colors.semantic-error-wash}` |
 | Success | `{colors.semantic-success}` #616530 | `{colors.semantic-success-wash}` |
-| Warning | `{colors.semantic-warning}` #9A5324 (icon #C68220) | — |
-| Info | `{colors.semantic-info}` #155F83 | — |
+| Warning | `{colors.semantic-warning}` #9A5324 (icon #C68220) | `{colors.semantic-warning-wash}` |
+| Info | `{colors.semantic-info}` #155F83 | `{colors.semantic-info-wash}` |
 
 Error red and maroon are close (1.46:1 between them). Always pair errors with an icon and a message; never fill a button with the error color.
 
