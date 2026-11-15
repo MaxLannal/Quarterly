@@ -479,6 +479,12 @@ class CollegePolicy(Model):
     #: Plan year in which a civilization sequence taken abroad may still finish the Core.
     civ_abroad_year: int | None = None
     residency_min_fraction: float | None = None
+    #: Units that must be taken at the College itself (planned, in progress or completed
+    #: courses), whatever was transferred in.
+    residency_min_units: int | None = None
+    #: Transfer credit (transfer items and credits) counts toward `units_by_enrollment`.
+    #: None = not encoded (it does not count).
+    transfer_counts_by_enrollment: bool | None = None
     max_quarters: int | None = None
     sources: dict[str, Source] = Field(default_factory=dict)
     needs_review: list[str] = Field(default_factory=list)
@@ -494,6 +500,8 @@ class CollegePolicy(Model):
             "core_complete_by",
             "civ_abroad_year",
             "residency_min_fraction",
+            "residency_min_units",
+            "transfer_counts_by_enrollment",
             "max_quarters",
         )
         missing = [f for f in scalar if getattr(self, f) is not None and f not in self.sources]

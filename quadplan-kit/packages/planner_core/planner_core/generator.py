@@ -625,14 +625,14 @@ class _Builder:
             )
         )
         added = sum(f.units * f.used for f in self.floating.values())
-        total = sum(t.units for t in self.fixed.items if t.status in ENROLLED)
-        total += sum(i.units or 100 for i in self.fixed.placeholders)
-        other = sum(t.units for t in self.fixed.items if t.status not in ENROLLED)
-        other += sum(c.units for c in self.plan.credits)
+        at_college, other, transfer = self._fixed_units()
         if college.total_units is not None:
-            m.add(total + other + added >= college.total_units).only_enforce_if(lit)
+            m.add(at_college + other + added >= college.total_units).only_enforce_if(lit)
         if college.units_by_enrollment is not None:
-            m.add(total + added >= college.units_by_enrollment).only_enforce_if(lit)
+            by_enrollment = at_college + (transfer if college.transfer_counts_by_enrollment else 0)
+            m.add(by_enrollment + added >= college.units_by_enrollment).only_enforce_if(lit)
+        if college.residency_min_units is not None:
+            m.add(at_college + added >= college.residency_min_units).only_enforce_if(lit)
         if college.max_quarters is not None:
             m.add(sum(self.active.values()) <= college.max_quarters).only_enforce_if(lit)
 
@@ -933,6 +933,16 @@ class _Builder:
             for var in f.place.values():
                 self.m.add_hint(var, solver.boolean_value(var))
 
+    def _fixed_units(self) -> tuple[int, int, int]:
+        """Units already in the plan: (at the College, everything else, transfer credit)."""
+        at_college = sum(t.units for t in self.fixed.items if t.status in ENROLLED)
+        at_college += sum(i.units or 100 for i in self.fixed.placeholders)
+        other = sum(t.units for t in self.fixed.items if t.status not in ENROLLED)
+        other += sum(c.units for c in self.plan.credits)
+        transfer = sum(t.units for t in self.fixed.items if t.status == "transfer")
+        transfer += sum(c.units for c in self.plan.credits if c.kind == "transfer")
+        return at_college, other, transfer
+
     def capacity(self) -> Infeasibility | None:
         """An exact check before solving: can the quarters left hold the units still needed to
         graduate, under the per-quarter unit and course limits? It names the limits that make
@@ -940,15 +950,19 @@ class _Builder:
         college = self.college
         if college is None:
             return None
-        enrolled = sum(t.units for t in self.fixed.items if t.status in ENROLLED)
-        enrolled += sum(i.units or 100 for i in self.fixed.placeholders)
-        other = sum(t.units for t in self.fixed.items if t.status not in ENROLLED)
-        other += sum(c.units for c in self.plan.credits)
+        enrolled, other, transfer = self._fixed_units()
         needs = []
+        at_college_needs = []  # needs only courses taken here can meet
         if college.total_units is not None:
             needs.append(college.total_units - enrolled - other)
         if college.units_by_enrollment is not None:
-            needs.append(college.units_by_enrollment - enrolled)
+            counted = transfer if college.transfer_counts_by_enrollment else 0
+            needs.append(college.units_by_enrollment - enrolled - counted)
+            if not counted:
+                at_college_needs.append(needs[-1])
+        if college.residency_min_units is not None:
+            needs.append(college.residency_min_units - enrolled)
+            at_college_needs.append(needs[-1])
         need = max(needs, default=0)
         if need <= 0:
             return None
@@ -1019,10 +1033,7 @@ class _Builder:
             )
         else:
             labels = "; ".join(caps[k][0].label.lower() for k in binding)
-            at_college = (
-                college.units_by_enrollment is not None
-                and college.units_by_enrollment - enrolled == need
-            )
+            at_college = need in at_college_needs
             what = "units taken at the College" if at_college else "units"
             message = (
                 f"To graduate you still need {need} more {what}, but the quarters left can hold "

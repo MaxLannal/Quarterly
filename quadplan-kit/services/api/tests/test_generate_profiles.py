@@ -20,7 +20,6 @@ CALC = ["MATH 15100"]
 #: Profiles with no plan, and the exact set of limits the explanation must name.
 CONFLICTS = {
     "first-year, no placement yet": {"program:cmsc-bs"},
-    "transfer, CS BA": {"graduation", "load"},
     "transfer, Economics": {"graduation", "load"},
     "graduate early: impossible": {"graduation", "load", "goal:g"},
     "three courses a quarter": {"graduation", "goal:l"},
@@ -102,7 +101,7 @@ PROFILES: list[tuple[str, PlanState, dict[str, Any], str, str]] = [
             credits=[{"kind": "transfer", "label": "First-year credit elsewhere", "units": 1200}],
         ),
         {},
-        "infeasible",
+        "plan",  # transfer credit counts toward the 3800 (Q6); 1800 at the College is easy
         "",
     ),
     (

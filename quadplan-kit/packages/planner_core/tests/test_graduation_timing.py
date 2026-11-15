@@ -81,6 +81,44 @@ def test_4200_units_with_3800_by_enrollment() -> None:
     assert partial.status == "errors" and partial.certificate is None
 
 
+def test_transfer_credit_counts_by_enrollment_and_1800_at_the_college() -> None:
+    """Q6 (Richard, 2026-11-14): transfer credit counts toward the 3800 by enrollment, and at
+    least 1800 units must be taken at the College."""
+    rules = ruleset(
+        college=college(
+            total_units=4200,
+            units_by_enrollment=3800,
+            residency_min_units=1800,
+            transfer_counts_by_enrollment=True,
+        )
+    )
+
+    def run(p: PlanState) -> Report:
+        return verify(p, rules, CAT, V09)
+
+    # A transfer student: 2400 of transfer credit and 18 courses here.
+    transfer = [{"kind": "transfer", "label": "Two years elsewhere", "units": 2400}]
+    ok = run(plan(quarters(FILL[:18]), credits=transfer))
+    rows = {r.node_id: (r.satisfied, r.have, r.need) for r in ok.progress}
+    assert rows["college/units_by_enrollment"] == (True, 4200, 3800)
+    assert rows["college/residency_min_units"] == (True, 1800, 1800)
+    assert "units" not in messages(ok)
+    # 17 courses here: the totals hold, but only 1700 units at the College.
+    short = run(plan(quarters(FILL[:17]), credits=[{**transfer[0], "units": 2500}]))
+    assert (
+        "Graduation needs 1800 units taken at the College; this plan has 1700 so far "
+        "(100 to go)." in messages(short)
+    )
+    # Exam credit never counts by enrollment.
+    ap = [{"kind": "AP", "label": "AP", "units": 2400}]
+    exam = run(plan(quarters(FILL[:18]), credits=ap))
+    assert "3800 units earned by enrollment; this plan has 1800" in messages(exam)
+    # Without the flag (the earlier encoding) transfer credit does not count.
+    strict = ruleset(college=college(total_units=4200, units_by_enrollment=3800))
+    old = verify(plan(quarters(FILL[:18]), credits=transfer), strict, CAT, V09)
+    assert "3800 units earned by enrollment" in messages(old)
+
+
 def test_v09_core_language_and_missing_values() -> None:
     rules = ruleset(CORE, MAJOR, college=college(language_node="core/language"))
     no_core = verify(plan(programs=["fake-ba"]), rules, CAT, V09)

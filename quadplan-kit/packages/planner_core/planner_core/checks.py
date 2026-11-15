@@ -485,15 +485,24 @@ def check_v06(facts: PlanFacts, idx: Index) -> list[Issue]:
 # --------------------------------------------------------------------------------------------
 
 
-def unit_totals(facts: PlanFacts) -> tuple[int, int]:
-    """(total units, units by enrollment). Total counts every course item, placeholder and
-    credit; "by enrollment" leaves out transfer and exam items and credits."""
+def unit_totals(facts: PlanFacts, college: CollegePolicy | None = None) -> tuple[int, int, int]:
+    """(total units, units by enrollment, units at the College). Total counts every course
+    item, placeholder and credit. "At the College" is planned, in-progress and completed
+    courses and placeholders. "By enrollment" adds transfer items and transfer credits when
+    the policy says transfer credit counts (Q6); exam items and AP/placement credits never do."""
     placeholders = sum(facts.loads.values()) - sum(
         t.units for courses in facts.by_term.values() for t in courses
     )
-    enrolled = sum(t.units for t in facts.items if t.status in ENROLLED) + placeholders
+    at_college = sum(t.units for t in facts.items if t.status in ENROLLED) + placeholders
     other = sum(t.units for t in facts.items if t.status not in ENROLLED)
-    return enrolled + other + sum(c.units for c in facts.plan.credits), enrolled
+    credits = sum(c.units for c in facts.plan.credits)
+    transfer = sum(t.units for t in facts.items if t.status == "transfer") + sum(
+        c.units for c in facts.plan.credits if c.kind == "transfer"
+    )
+    by_enrollment = at_college
+    if college is not None and college.transfer_counts_by_enrollment:
+        by_enrollment += transfer
+    return at_college + other + credits, by_enrollment, at_college
 
 
 def check_v09(
@@ -506,14 +515,18 @@ def check_v09(
     issues: list[Issue] = []
     progress: list[NodeProgress] = []
     assumptions: list[str] = []
-    total, enrolled = unit_totals(facts)
+    total, enrolled, at_college = unit_totals(facts, college)
     for field, have, label, what in (
         ("total_units", total, "Units toward the degree", "units in total"),
         ("units_by_enrollment", enrolled, "Units by enrollment", "units earned by enrollment"),
+        ("residency_min_units", at_college, "Units at the College", "units taken at the College"),
     ):
         need = getattr(college, field)
         if need is None:
-            assumptions.append(f"The College policy does not encode {field}; it was not checked.")
+            if field != "residency_min_units":
+                assumptions.append(
+                    f"The College policy does not encode {field}; it was not checked."
+                )
             continue
         progress.append(
             NodeProgress(

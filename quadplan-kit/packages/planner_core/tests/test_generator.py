@@ -404,6 +404,18 @@ def test_graduating_too_early_names_the_shortfall() -> None:
     assert "more courses than your remaining quarters allow" in result.infeasible.message
 
 
+def test_transfer_credit_and_the_units_needed_at_the_college() -> None:
+    transfer = [{"kind": "transfer", "label": "Elsewhere", "units": 700}]
+    counted = {"transfer_counts_by_enrollment": True}
+    # Transfer credit counts by enrollment: a plan exists with few courses here.
+    ok = run(plan(credits=transfer), rules=ruleset(residency_min_units=300, **counted))
+    assert ok.infeasible is None and ok.variants
+    # More units must be taken here than six quarters can hold.
+    far = run(plan(credits=transfer), rules=ruleset(residency_min_units=2000, **counted))
+    assert far.infeasible is not None
+    assert "2000 more units taken at the College" in far.infeasible.message
+
+
 def test_conflicting_limits_are_listed() -> None:
     goals = [{"id": "few", "type": "course_load", "max_courses": 1}]
     result = run(plan(goals=goals), max_courses_per_term=1)

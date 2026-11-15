@@ -29,6 +29,9 @@ Status words used below:
 - **P08-4. Which term a reviewer can pick.** Yes, keep it as built.
 - **P08-5. Cross-listed courses.** Yes: one forum page per cross-listed group and instructor, shown under every code.
 - **Q6. Transfer students.** Transfer students must take at least 1800 units at UChicago (the residency requirement). Transfer credits count toward the 3800 units "earned by enrollment".
+  > Richard: "Transfer student need to meet the 1800 credit residency requirement, meaning that they have to minimally take 1800 credits at Uchicago. Transfer credits count towards the 3800 credit requirement"
+
+  Encoded in `data/seed/2026-27/college_policy.yaml` (`residency_min_units`, `transfer_counts_by_enrollment`) with this quote as the source and both fields marked for review. **Before deployment:** find the catalog sentence for each and replace the source.
 - **Q11. Pace and grading strictness.** Add the two optional 1-5 questions to the review form.
 - **P08-2.** Accept; mention it on the privacy page.
 

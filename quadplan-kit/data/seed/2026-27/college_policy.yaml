@@ -50,6 +50,8 @@ language_node: core/language
 core_complete_by: Y2-SP
 civ_abroad_year: 3
 residency_min_fraction: 0.5
+residency_min_units: 1800
+transfer_counts_by_enrollment: true
 max_quarters: 12
 sources:
   total_units:
@@ -82,6 +84,14 @@ sources:
   residency_min_fraction:
     url: http://collegecatalog.uchicago.edu/thecollege/degreerequirements/
     quote: Additionally, at least half of the requirements for any majors or minors must be completed in residence.
+  residency_min_units:
+    # Richard's decision (OPEN_QUESTIONS Q6, 2026-11-14), quoted verbatim; find the catalog sentence before deployment.
+    url: docs/OPEN_QUESTIONS.md#answers-to-the-questions-from-the-steps-1-5-run-richard-2026-11-14
+    quote: Transfer student need to meet the 1800 credit residency requirement, meaning that they have to minimally take 1800
+      credits at Uchicago.
+  transfer_counts_by_enrollment:
+    url: docs/OPEN_QUESTIONS.md#answers-to-the-questions-from-the-steps-1-5-run-richard-2026-11-14
+    quote: Transfer credits count towards the 3800 credit requirement
   max_quarters:
     url: http://collegecatalog.uchicago.edu/thecollege/gradingandacademicstatus/
     quote: Students in the College are permitted to enroll in a total of 12 quarters (i.e., four years if taken consecutively)
@@ -89,5 +99,7 @@ sources:
       quarters based on the total units of transfer credit they were awarded upon admission.
 needs_review:
 - core_complete_by
+- residency_min_units
+- transfer_counts_by_enrollment
 - civ_abroad_year
 - overload_reasons
