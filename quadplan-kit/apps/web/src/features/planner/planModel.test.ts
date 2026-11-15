@@ -64,6 +64,18 @@ describe("years and the graduation quarter (FEEDBACK F3)", () => {
     expect(planYears(s.plan)).toBe(3);
   });
 
+  it("stops at seven years, the longest plan the API accepts", () => {
+    let s = editor([]);
+    for (let i = 0; i < 3; i += 1) s = editorReducer(s, { type: "addYear" });
+    expect(s.plan.graduation_term).toBe("2106-SP");
+    expect(planYears(s.plan)).toBe(7);
+    const next = editorReducer(s, { type: "addYear" });
+    expect(next.plan).toBe(s.plan);
+    expect(next.error).toBe("A plan can be at most 7 years long.");
+    expect(editorReducer(s, { type: "graduation", term: "2107-AU" }).error).toBe("A plan can be at most 7 years long.");
+    expect(editorReducer(s, { type: "graduation", term: "2106-WI" }).error).toBeNull();
+  });
+
   it("refuses to remove a year that has courses", () => {
     const s = editor([item("a", "TEST 10000", "2103-WI")]);
     const next = editorReducer(s, { type: "removeYear" });

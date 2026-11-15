@@ -5,7 +5,7 @@
  */
 import type { ChangeOp, Goal, PlanItem, PlanProgram, PlanState } from "@/api/types";
 import { applyOps, ChangeOpError } from "./changes";
-import { catalogStartYear, classYearLabel, graduationTerm, isBefore, planYearCount, termAt, yearIndex } from "./terms";
+import { MAX_PLAN_YEARS, catalogStartYear, classYearLabel, graduationTerm, isBefore, planYearCount, termAt, yearIndex } from "./terms";
 
 let counter = 0;
 export function newItemId(): string {
@@ -140,9 +140,13 @@ function itemsInYear(plan: PlanState, year: number): PlanItem[] {
   });
 }
 
+const TOO_LONG = `A plan can be at most ${MAX_PLAN_YEARS} years long.`;
+
 /** "Add a year": graduate in the Spring of the year after the current last year. */
-export function addYear(plan: PlanState): PlanState {
-  return { ...plan, graduation_term: termAt(plan.entry_term, planYears(plan) + 1, "SP") };
+export function addYear(plan: PlanState): { ok: true; plan: PlanState } | { ok: false; error: string } {
+  const years = planYears(plan);
+  if (years >= MAX_PLAN_YEARS) return { ok: false, error: TOO_LONG };
+  return { ok: true, plan: { ...plan, graduation_term: termAt(plan.entry_term, years + 1, "SP") } };
 }
 
 /** "Remove last year": refused while that year has courses, or when it is the only year. */
@@ -189,9 +193,12 @@ export function editorReducer(state: EditorState, action: EditorAction): EditorS
     case "graduation":
       if (action.term.endsWith("-SU")) return { ...state, error: "You cannot graduate in a Summer quarter." };
       if (isBefore(action.term, state.plan.entry_term)) return { ...state, error: "Your last quarter cannot be before your first." };
+      if (yearIndex(action.term, state.plan.entry_term) > MAX_PLAN_YEARS) return { ...state, error: TOO_LONG };
       return withPlan(state, { ...state.plan, graduation_term: action.term });
-    case "addYear":
-      return withPlan(state, addYear(state.plan));
+    case "addYear": {
+      const r = addYear(state.plan);
+      return r.ok ? withPlan(state, r.plan) : { ...state, error: r.error };
+    }
     case "removeYear": {
       const r = removeYear(state.plan);
       return r.ok ? withPlan(state, r.plan) : { ...state, error: r.error };

@@ -747,7 +747,7 @@ A student proves once that they own a `@uchicago.edu` address and creates an acc
 | Email address | Yes, only in `account.email` | Yes, by anyone with database access |
 | Username, password hash (argon2id), plans | Yes | Through the email |
 | Forum posts, comments, votes | Yes, with `author_ref = HMAC(server_key, account_id ‖ page_id)` | Not from a leaked database alone; yes for someone holding the server key and the database |
-| IP addresses | Not by the app; proxy logs truncated to /24 and kept 24 hours for abuse response | Weakly, for 24 hours |
+| IP addresses | Not by the app; rate limits use a hashed, Redis-only counter that expires within 24 hours; the proxies (Caddy, nginx) keep no access or error logs | Weakly, for 24 hours |
 | Timestamps | Day-level only | Coarse |
 
 ### Threats and honest limits

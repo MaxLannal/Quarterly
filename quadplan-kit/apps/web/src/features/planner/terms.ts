@@ -121,6 +121,12 @@ export function graduationTerm(plan: { entry_term: string; entry_year_level?: nu
   return plan.graduation_term ?? defaultGraduationTerm(plan.entry_term, plan.entry_year_level ?? 1);
 }
 
+/**
+ * The longest plan: the graduation quarter at most 6 academic years after entry, so 7 plan
+ * years. Same limit as `planner_core.models.PlanState` (the API refuses longer plans).
+ */
+export const MAX_PLAN_YEARS = 7;
+
 /** Number of plan years shown: up to and including the graduation quarter's year. */
 export function planYearCount(entryTerm: string, lastTerm: string): number {
   return Math.max(1, yearIndex(lastTerm, entryTerm));

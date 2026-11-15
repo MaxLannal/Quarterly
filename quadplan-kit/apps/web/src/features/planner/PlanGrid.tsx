@@ -15,6 +15,7 @@ import {
   classYearLabel,
   graduationTerm,
   isBefore,
+  MAX_PLAN_YEARS,
   planTerms,
   QUARTERS,
   resolveTermRef,
@@ -94,10 +95,11 @@ function QuarterCell({ term, items }: { term: string; items: PlanItem[] }) {
 
 const NUMBER_WORDS = ["One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight"];
 
-/** Graduation choices: Autumn, Winter and Spring from the first quarter to one year past the last. */
+/** Graduation choices: Autumn, Winter and Spring from the first quarter to one year past the
+ * last, never past the longest plan the API accepts. */
 function graduationChoices(entryTerm: string, years: number): string[] {
   const out: string[] = [];
-  for (let y = 1; y <= years + 1; y += 1) {
+  for (let y = 1; y <= Math.min(years + 1, MAX_PLAN_YEARS); y += 1) {
     for (const q of ["AU", "WI", "SP"] as const) {
       const t = termAt(entryTerm, y, q);
       if (!isBefore(t, entryTerm)) out.push(t);
@@ -200,6 +202,7 @@ export function PlanGrid({ showSummer, onToggleSummer, onGraduation, onAddYear }
               setYearMsg(null);
               onAddYear();
             }}
+            disabled={years >= MAX_PLAN_YEARS}
           >
             Add a year
           </Button>
