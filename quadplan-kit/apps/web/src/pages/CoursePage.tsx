@@ -3,7 +3,7 @@ import { ApiError, isNotAvailable } from "@/api/client";
 import { useCourse } from "@/api/hooks";
 import { inlineLinkClass, LoadingState, PageContainer, PageHeader, Section, standaloneLinkClass, tallTargetClass } from "@/components/layout/page";
 import { Avatar } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
+import { cn, isWebUrl } from "@/lib/utils";
 import { Badge, CourseCode, NotAvailable } from "@/components/ui/misc";
 import { AddToPlanButton } from "@/features/courses/AddToPlanButton";
 import { AttributeCard, OfferingsTable, PrereqGraph } from "@/features/courses/CourseParts";
@@ -142,7 +142,7 @@ export default function CoursePage() {
           </Section>
         </div>
 
-        {c.source?.url && (
+        {isWebUrl(c.source?.url) && (
           <p className="text-caption text-muted">
             Source:{" "}
             <a href={c.source.url} className={inlineLinkClass} rel="noreferrer" target="_blank">

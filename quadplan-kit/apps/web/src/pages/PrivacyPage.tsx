@@ -119,6 +119,15 @@ export default function PrivacyPage() {
         </li>
       </ul>
 
+      <h2 className="mt-6 font-display text-display-sm">The AI features</h2>
+      <p>
+        When the AI features are on, what you type to the advisor and your plan are sent to an AI
+        provider (Anthropic, with OpenRouter as a backup) to write the answer, after email
+        addresses and phone numbers are removed. Forum posts are sent too, to write the “What
+        students say” summaries and when the advisor looks them up. Your email address is never sent. Advisor chats are kept for 30
+        days, and are deleted with their plan.
+      </p>
+
       <h2 className="mt-6 font-display text-display-sm">Export and deletion</h2>
       <p>
         On your{" "}

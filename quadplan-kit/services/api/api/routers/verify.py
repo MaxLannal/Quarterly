@@ -25,6 +25,7 @@ from api.db.session import get_session
 from api.repo.rules import UnknownProgramsError, load_verify_inputs
 from api.schemas.plans import VerifyRequest
 
+MAX_SOLVER_S = 5.0
 router = APIRouter(tags=["verify"])
 logger = logging.getLogger("api.verify")
 
@@ -71,11 +72,15 @@ def verify_plan(
             ],
         ) from exc
 
+    # Anyone may call /verify: the solver gets at most the generator's 5 s, whatever is asked.
+    options = body.options.model_copy(
+        update={"solver_time_limit_s": min(body.options.solver_time_limit_s, MAX_SOLVER_S)}
+    )
     digest = sha256_of(
         {
             "rules": rules.model_dump(mode="json", by_alias=True),
             "catalog": catalog.model_dump(mode="json", by_alias=True),
-            "options": body.options.model_dump(mode="json", by_alias=True),
+            "options": options.model_dump(mode="json", by_alias=True),
         }
     )
     key = f"verify:{CORE_VERSION}:{digest}:{plan_hash(plan)}"
@@ -86,7 +91,7 @@ def verify_plan(
     except (redis.RedisError, OSError, ValueError):
         logger.warning("verify cache read failed; computing without the cache")
 
-    report, problems = verify_checked(plan, rules, catalog, body.options)
+    report, problems = verify_checked(plan, rules, catalog, options)
     if problems:
         # The solver and the checker disagree: a bug in one of them. Never cached.
         logger.error(

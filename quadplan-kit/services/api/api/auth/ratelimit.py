@@ -8,6 +8,7 @@ within 24 hours. Nothing here logs.
 from __future__ import annotations
 
 import datetime as dt
+import ipaddress
 from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Annotated
@@ -75,9 +76,23 @@ def client_ip(request: Request) -> str:
     return request.client.host if request.client else "unknown"
 
 
+def address_bucket(address: str) -> str:
+    """What one rate-limit counter covers: an IPv4 address, or an IPv6 /64 (a home or phone
+    network gets a whole /64, so moving inside it must not reset the limits)."""
+    try:
+        ip = ipaddress.ip_address(address)
+    except ValueError:
+        return address
+    if isinstance(ip, ipaddress.IPv6Address):
+        if ip.ipv4_mapped is not None:
+            return str(ip.ipv4_mapped)
+        return str(ipaddress.IPv6Network((ip, 64), strict=False))
+    return str(ip)
+
+
 def ip_subject(request: Request) -> str:
     day = dt.datetime.now(dt.UTC).date().isoformat()
-    return "ip:" + subject_hash("ip", f"{day}|{client_ip(request)}")
+    return "ip:" + subject_hash("ip", f"{day}|{address_bucket(client_ip(request))}")
 
 
 def email_subject(email: str) -> str:

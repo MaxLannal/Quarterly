@@ -292,6 +292,10 @@ def test_production_refuses_development_settings() -> None:
     ).production_problems()
     assert len(problems) == 5
     assert Settings(_env_file=None, environment="production", **SAFE).production_problems() == []
+    unpublished = Settings(
+        _env_file=None, environment="production", show_unpublished_programs=True, **SAFE
+    ).production_problems()
+    assert unpublished == ["SHOW_UNPUBLISHED_PROGRAMS would show programs no curator published"]
 
 
 @pytest.mark.parametrize("environment", [None, "", "prod", "staging", "Development", "dev"])

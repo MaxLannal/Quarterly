@@ -27,11 +27,13 @@ class VersionOut(BaseModel):
 
 
 def check_db() -> bool:
+    """One pooled connection (the health check needs no login, so it must not open a new
+    engine and connection per call)."""
+    from api.db.session import get_engine
+
     try:
-        engine = sa.create_engine(get_settings().database_url, connect_args={"connect_timeout": 2})
-        with engine.connect() as conn:
+        with get_engine().connect() as conn:
             conn.execute(sa.text("SELECT 1"))
-        engine.dispose()
         return True
     except Exception:
         return False

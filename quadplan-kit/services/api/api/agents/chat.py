@@ -147,6 +147,15 @@ def purge_old_history(db: Session) -> int:
     return int(getattr(gone, "rowcount", 0) or 0)
 
 
+def forget_chats(db: Session, plan_ids: list[uuid.UUID]) -> None:
+    """A plan's advisor chats go with the plan (plan or account deletion); the messages
+    follow by cascade. Otherwise they would outlive it by up to 30 days."""
+    if plan_ids:
+        db.execute(
+            sa.delete(m.AgentRun).where(m.AgentRun.kind == "chat", m.AgentRun.plan_id.in_(plan_ids))
+        )
+
+
 def chat_run(db: Session, plan: m.Plan) -> m.AgentRun:
     """The plan's conversation (one `agent_run` of kind `chat` per plan)."""
     run = db.scalar(

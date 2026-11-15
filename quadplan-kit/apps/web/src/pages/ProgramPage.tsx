@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { isWebUrl } from "@/lib/utils";
 import { Link, useParams } from "react-router-dom";
 import { ApiError, isNotAvailable } from "@/api/client";
 import { useProgram } from "@/api/hooks";
@@ -134,7 +135,7 @@ export default function ProgramPage() {
               {p.sources.map((s, i) => (
                 <li key={i} className="text-body-sm">
                   <blockquote className="border-l-2 border-hairline-strong pl-4 text-body">{s.quote}</blockquote>
-                  {s.url && (
+                  {isWebUrl(s.url) && (
                     <a href={s.url} className={`${inlineLinkClass} mt-2 inline-flex min-h-11 items-center pl-4`} target="_blank" rel="noreferrer">
                       Catalog source ({p.catalog_year})
                     </a>

@@ -99,4 +99,7 @@ def delete_account(db: Session, account: m.Account, posts: Literal["delete", "ke
             sa.update(m.Report).where(m.Report.reporter_ref.in_(refs)).values(reporter_ref=None)
         )
         db.execute(sa.delete(m.Pseudonym).where(m.Pseudonym.author_ref.in_(refs)))
+    from api.agents.chat import forget_chats
+
+    forget_chats(db, list(db.scalars(sa.select(m.Plan.id).where(m.Plan.account_id == account.id))))
     db.delete(account)

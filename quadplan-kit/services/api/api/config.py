@@ -75,6 +75,8 @@ class Settings(BaseSettings):
             problems.append("SESSION_COOKIE_SECURE must be true")
         if self.llm_fake:
             problems.append("LLM_FAKE would answer students with canned test replies")
+        if self.show_unpublished_programs:
+            problems.append("SHOW_UNPUBLISHED_PROGRAMS would show programs no curator published")
         return problems
 
 

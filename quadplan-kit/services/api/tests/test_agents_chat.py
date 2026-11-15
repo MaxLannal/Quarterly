@@ -378,6 +378,20 @@ def test_history_older_than_30_days_is_deleted(env: Env) -> None:
         assert "old" not in contents and contents[0] == "new"
 
 
+def test_deleting_a_plan_deletes_its_chat(env: Env) -> None:
+    """Final security review (low 1): chat history does not outlive its plan."""
+    headers, plan = saved_plan(env)
+    chat(env, "apply it", headers=headers, plan=plan)
+    with env.db() as db:
+        assert db.scalar(sa.select(sa.func.count()).select_from(m.ChatMessage))
+    assert env.client.delete(f"/plans/{plan['id']}", headers=headers).status_code == 204
+    with env.db() as db:
+        assert not db.scalar(sa.select(sa.func.count()).select_from(m.ChatMessage))
+        assert not db.scalar(
+            sa.select(sa.func.count()).select_from(m.AgentRun).where(m.AgentRun.kind == "chat")
+        )
+
+
 # ------------------------------------------------------------------ review fixes (step 3)
 
 

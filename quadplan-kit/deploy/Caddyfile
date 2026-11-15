@@ -3,8 +3,8 @@
 {
 	# No IP addresses in Caddy's own log (CLAUDE.md). Its error log and the Go server's log
 	# messages are left out; every other line (e.g. the proxy's "aborting with incomplete
-	# response" when a student leaves an advisor stream) loses the visitor's address and
-	# request headers.
+	# response" when a student leaves an advisor stream) loses the visitor's address, the
+	# request headers and any address inside the error text.
 	log default {
 		format filter {
 			wrap json
@@ -13,6 +13,9 @@
 				request>remote_port delete
 				request>client_ip delete
 				request>headers delete
+				# Go's connection errors name both ends ("write tcp <server>-><visitor>:<port>:
+				# connection reset by peer"): mask every IPv4 and [IPv6] address in them.
+				error regexp "([0-9]{1,3}([.][0-9]{1,3}){3}|[[][0-9A-Fa-f:.%]+[]])(:[0-9]+)?" "[address]"
 			}
 		}
 		exclude http.log.error http.stdlib
@@ -31,6 +34,8 @@
 		Referrer-Policy "same-origin"
 		X-Frame-Options "DENY"
 		Permissions-Policy "camera=(), microphone=(), geolocation=()"
+		# Defence in depth that cannot break the app's own scripts or styles.
+		Content-Security-Policy "object-src 'none'; base-uri 'none'; frame-ancestors 'none'"
 		-Server
 	}
 	# The web container serves the app and proxies /api/* to the API.

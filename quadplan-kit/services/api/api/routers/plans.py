@@ -266,7 +266,11 @@ def update_plan(plan_id: uuid.UUID, body: PlanUpdate, db: Db, me: Me) -> PlanOut
 
 @router.delete("/{plan_id}", status_code=204, response_class=Response)
 def delete_plan(plan_id: uuid.UUID, db: Db, me: Me) -> None:
-    db.delete(_plan(db, me, plan_id))
+    from api.agents.chat import forget_chats
+
+    plan = _plan(db, me, plan_id)
+    forget_chats(db, [plan.id])
+    db.delete(plan)
     db.commit()
 
 

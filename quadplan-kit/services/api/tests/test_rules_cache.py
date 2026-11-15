@@ -46,6 +46,19 @@ def test_cached_inputs_equal_the_queried_ones(migrated_db_url: str) -> None:
         for a, b in zip(queried, cached, strict=True):
             assert a.model_dump(mode="json") == b.model_dump(mode="json")
         assert repo._year(db, "1999-00", ttl=60) is None
+        # With the cache on (as in Docker), the public loader answers it once, no loop
+        # (final security review A).
+        from api.config import get_settings
+
+        settings = get_settings()
+        saved = settings.rules_cache_ttl_s
+        settings.rules_cache_ttl_s = 60.0
+        try:
+            again = repo.load_verify_inputs(db, made_up, show_unpublished=True)
+        finally:
+            settings.rules_cache_ttl_s = saved
+        for a, b in zip(queried, again, strict=True):
+            assert a.model_dump(mode="json") == b.model_dump(mode="json")
         assert not any(year == "1999-00" for _, year in repo._years)
         # A stale copy is served while one background refresh reloads it.
         before = repo._year(db, "2026-27", ttl=60)

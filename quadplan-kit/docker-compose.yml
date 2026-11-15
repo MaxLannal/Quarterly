@@ -9,7 +9,16 @@ services:
   db:
     image: postgres:16
     # API workers (WEB_CONCURRENCY, default 4) x up to 20 pooled connections (api.db.session).
-    command: ["postgres", "-c", "max_connections=200"]
+    # No row values in the server log: an error's DETAIL (e.g. "Key (email)=(...) already
+    # exists") and the failing statement are left out (CLAUDE.md: never log emails).
+    command:
+      - postgres
+      - -c
+      - max_connections=200
+      - -c
+      - log_error_verbosity=terse
+      - -c
+      - log_min_error_statement=panic
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-quarterly}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-quarterly}

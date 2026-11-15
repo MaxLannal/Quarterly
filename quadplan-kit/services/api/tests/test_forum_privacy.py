@@ -301,3 +301,14 @@ def test_seed_forum_demo_is_development_only(f: ForumEnv, monkeypatch: pytest.Mo
             == []
         )
         assert db.scalars(select(m.Post)).all() == []
+
+
+@pytest.mark.parametrize("text", ["a." * 10000, "a-" * 10000, "x@" + "a." * 10000, "1" * 20000])
+def test_the_scrub_stays_fast_on_hostile_text(text: str) -> None:
+    """One slow pattern holds the whole API worker (final security review D): it took 9 s on
+    20,000 characters before the address parts were bounded."""
+    import time
+
+    start = time.perf_counter()
+    scrub(text)
+    assert time.perf_counter() - start < 1.0

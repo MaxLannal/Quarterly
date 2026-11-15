@@ -491,6 +491,16 @@ Earlier runs on the busy laptop varied (P12-1), so run it again on the real serv
     - **N2:** the development compose file published the database, Redis, MinIO and the API on every network interface. They now bind to 127.0.0.1. The production override sets `ENVIRONMENT=production`. DEPLOY.md sets `COMPOSE_FILE`, and the checklist no longer says `make up` on the server.
   - Lows fixed: a typed "[author suspended" note is refused; a made-up catalog year never loads whole tables; the crawler fetches https pages only; /privacy and DEPLOY.md cover backups and restores.
   - New privacy questions for Richard: P12-2 (the suspensions list) and P12-3 (restores).
+- **Final full-repository reviews at 57c6723 (2026-11-15):**
+  - spec-reviewer: one medium, fixed in 42daec8. The https-only crawler skipped the seed's `http://` catalog pages, so the paid pilot would have had no pages for 9 of 11 programs. The crawler now fetches them over https; a test runs the live page fetch on the seed's addresses with a mock server. Lows fixed: privacy wording, the E3 model row in SPEC-CHANGES, the missing E3 and A4 eval sets listed below.
+  - security-privacy-reviewer: six mediums, all fixed with tests or a reproduction:
+    - **A:** a made-up catalog year made `/verify` call itself in a loop, with the cache on as in Docker.
+    - **B:** Caddy's error text still held the visitor's address and port; now masked (reproduced and re-tested on Caddy 2.8).
+    - **C:** Postgres wrote the email of a duplicate sign-up to its log; errors are now terse and never echo the statement (checked on a throwaway server).
+    - **D:** one slow email pattern froze an API process for 9 s on a long post; now 0.06 s.
+    - **E:** a burst of logins could use about 10 GB of memory; at most 4 password checks run at once per process, and the rest get "busy, try again".
+    - **F:** all IPv6 visitors would share one rate limit; DEPLOY.md now uses an IPv4 record only, with steps to add IPv6, and IPv6 is counted per /64.
+  - Lows fixed: chats are deleted with their plan or account; the solver time on `/verify` is capped at 5 s; the health check reuses the connection pool; `SHOW_UNPUBLISHED_PROGRAMS` is refused in production; data links render only for http(s); a minimal Content-Security-Policy; /privacy now says what the AI features send to the provider.
 
 ### Specified in the SPEC but not built yet (final spec review, 2026-11-15)
 - **Planner and generator:**

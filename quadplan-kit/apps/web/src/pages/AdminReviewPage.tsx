@@ -9,7 +9,7 @@ import { LoginRequired } from "@/features/forum/parts";
 import { plural } from "@/features/forum/format";
 import { useSession } from "@/features/auth/session";
 import { usePublishVersion, useReviewDecision, useReviewItems, type ReviewCheck, type ReviewItem, type ReviewNode, type ReviewStatus } from "@/features/review/api";
-import { cn } from "@/lib/utils";
+import { cn, isWebUrl } from "@/lib/utils";
 
 const TITLE = "Curator console";
 
@@ -92,7 +92,7 @@ function NodeRow({ node }: { node: ReviewNode }) {
         ) : (
           <p className="text-body-sm text-error">No source quote.</p>
         )}
-        {node.url && /^https?:\/\//i.test(node.url) && (
+        {isWebUrl(node.url) && (
           <figcaption className="mt-1 text-caption text-muted">
             <a href={node.url} className={inlineLinkClass} target="_blank" rel="noreferrer noopener">
               Source page

@@ -108,6 +108,24 @@ def load_verify_inputs(
             whole_catalog=whole_catalog,
             section_terms=section_terms,
         )
+    return _load_queried(
+        session,
+        plan,
+        show_unpublished=show_unpublished,
+        whole_catalog=whole_catalog,
+        section_terms=section_terms,
+    )
+
+
+def _load_queried(
+    session: Session,
+    plan: PlanState,
+    *,
+    show_unpublished: bool,
+    whole_catalog: bool,
+    section_terms: list[str] | None,
+) -> tuple[RuleSet, Catalog]:
+    """`load_verify_inputs` straight from the database (only the plan's rows)."""
     year = plan.catalog_year
     programs = load_programs(session, plan, show_unpublished=show_unpublished)
     policy = session.get(m.CollegePolicy, year)
@@ -566,8 +584,8 @@ def load_verify_inputs_cached(
     """`load_verify_inputs` from the in-process year cache (programs are still read live)."""
     year = plan.catalog_year
     y = _year(session, year, ttl)
-    if y is None:  # not a catalog year: the per-plan loader reads only the plan's courses
-        return load_verify_inputs(
+    if y is None:  # not a catalog year: the per-plan queries read only the plan's courses
+        return _load_queried(
             session,
             plan,
             show_unpublished=show_unpublished,

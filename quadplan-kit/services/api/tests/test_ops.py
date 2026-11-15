@@ -53,3 +53,14 @@ def test_client_address_behind_caddy_and_nginx(monkeypatch: pytest.MonkeyPatch) 
     assert client_ip(request("6.6.6.6, 203.0.113.7, 172.18.0.5")) == "203.0.113.7"
     monkeypatch.setattr(get_settings(), "trusted_proxy_hops", 1)
     assert client_ip(request("6.6.6.6, 203.0.113.7")) == "203.0.113.7"
+
+
+def test_ipv6_visitors_are_counted_per_64() -> None:
+    """Final security review (low 6): rotating inside one /64 must not reset the limits."""
+    from api.auth.ratelimit import address_bucket
+
+    assert address_bucket("2001:db8:1:2::1") == address_bucket("2001:db8:1:2:ffff::9")
+    assert address_bucket("2001:db8:1:2::1") != address_bucket("2001:db8:1:3::1")
+    assert address_bucket("::ffff:203.0.113.7") == address_bucket("203.0.113.7") == "203.0.113.7"
+    assert address_bucket("203.0.113.7") != address_bucket("203.0.113.8")
+    assert address_bucket("unknown") == "unknown"

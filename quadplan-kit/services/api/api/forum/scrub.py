@@ -10,12 +10,16 @@ import re
 EMAIL_MARK = "[email removed]"
 PHONE_MARK = "[phone removed]"
 
-_EMAIL = re.compile(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,}")
+# Parts are bounded (an address's local part is at most 64 characters, a domain label 63):
+# unbounded `+` here made matching quadratic, about 9 s on a 20,000-character post.
+_LOCAL = r"[A-Za-z0-9._%+-]{1,64}"
+_LABEL = r"[A-Za-z0-9-]{1,63}"
+_EMAIL = re.compile(rf"{_LOCAL}@{_LABEL}(?:\.{_LABEL}){{0,8}}\.[A-Za-z]{{2,24}}")
 _AT = r"(?:\s*\(at\)\s*|\s*\[at\]\s*|\s*\{at\}\s*|\s+at\s+)"
 _DOT = r"(?:\s*\.\s*|\s*\(dot\)\s*|\s*\[dot\]\s*|\s*\{dot\}\s*|\s+dot\s+)"
 # "jdoe at uchicago dot edu", "jdoe [at] uchicago [dot] edu", "jdoe(at)uchicago.edu".
 _EMAIL_SPELLED = re.compile(
-    rf"\b[A-Za-z0-9._%+-]+{_AT}[A-Za-z0-9-]+(?:{_DOT}[A-Za-z0-9-]+)*"
+    rf"\b{_LOCAL}{_AT}{_LABEL}(?:{_DOT}{_LABEL}){{0,8}}"
     rf"{_DOT}(?:edu|com|org|net|io|gov|us|me|co)\b",
     re.IGNORECASE,
 )

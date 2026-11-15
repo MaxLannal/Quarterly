@@ -34,3 +34,8 @@ const twMerge = extendTailwindMerge({
 export function cn(...inputs: ClassValue[]): string {
   return twMerge(clsx(inputs));
 }
+
+/** Links built from data are rendered only for http(s) URLs (never `javascript:` or `data:`). */
+export function isWebUrl(url: string | null | undefined): url is string {
+  return !!url && /^https?:\/\//i.test(url);
+}
