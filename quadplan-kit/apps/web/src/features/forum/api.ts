@@ -117,6 +117,30 @@ export function useModerationQueue(enabled: boolean) {
   });
 }
 
+/** Active suspensions, each shown by the removal that started it (admins only). */
+export function useSuspensions(enabled: boolean) {
+  return useQuery({
+    queryKey: [...forumKeys.all, "suspensions"] as const,
+    queryFn: async () => unwrap(await api.GET("/admin/moderation/suspensions")),
+    enabled,
+    retry: false,
+  });
+}
+
+/** End a suspension early (FEEDBACK "End suspension", P08-14). */
+export function useEndSuspension() {
+  const refresh = useRefresh();
+  return useMutation({
+    mutationFn: async ({ targetType, targetId }: { targetType: "post" | "comment"; targetId: number }) =>
+      unwrap(
+        await api.POST("/admin/moderation/{target_type}/{target_id}/end-suspension", {
+          params: { path: { target_type: targetType, target_id: targetId } },
+        }),
+      ),
+    onSuccess: refresh,
+  });
+}
+
 /** Invalidate every forum read after a write (lists, the thread, ratings, the queue). */
 function useRefresh() {
   const client = useQueryClient();

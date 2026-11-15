@@ -7,7 +7,7 @@ import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { Badge, CourseCode, ErrorText, Notice } from "@/components/ui/misc";
 import { useSession } from "@/features/auth/session";
-import { useModerationDecision, useModerationQueue, type ModerationItem } from "@/features/forum/api";
+import { useEndSuspension, useModerationDecision, useModerationQueue, useSuspensions, type ModerationItem } from "@/features/forum/api";
 import { plural, relativeDay, threadPath } from "@/features/forum/format";
 import { LoginRequired, PostBody } from "@/features/forum/parts";
 
@@ -176,6 +176,44 @@ export default function AdminModerationPage() {
           ))}
         </div>
       )}
+      <Suspensions onDone={setDone} />
     </PageContainer>
+  );
+}
+
+/** Active suspensions, each listed by the removal that started it: the author is never shown. */
+function Suspensions({ onDone }: { onDone: (message: string) => void }) {
+  const list = useSuspensions(true);
+  const end = useEndSuspension();
+  const rows = list.data ?? [];
+  if (!rows.length) return null;
+  return (
+    <section aria-labelledby="suspensions" className="mt-10 flex flex-col gap-3">
+      <h2 id="suspensions" className="font-display text-display-sm">
+        Suspensions
+      </h2>
+      {rows.map((s) => (
+        <Card key={`${s.target_type}-${s.target_id}`} as="article" aria-label={`Suspension from ${s.target_type} ${s.target_id}`} className="flex flex-wrap items-center justify-between gap-3">
+          <div className="min-w-0">
+            <p className="text-body-sm text-ink">{s.title ?? s.excerpt}</p>
+            <p className="text-caption text-muted">
+              <CourseCode>{s.course_code}</CourseCode> with {s.instructor_name} · suspended until {s.until}
+            </p>
+          </div>
+          <Button
+            variant="outline"
+            disabled={end.isPending}
+            onClick={() =>
+              end.mutate(
+                { targetType: s.target_type, targetId: s.target_id },
+                { onSuccess: () => onDone(`Suspension ended: ${s.title ?? `${s.target_type} ${s.target_id}`}.`) },
+              )
+            }
+          >
+            End suspension
+          </Button>
+        </Card>
+      ))}
+    </section>
   );
 }

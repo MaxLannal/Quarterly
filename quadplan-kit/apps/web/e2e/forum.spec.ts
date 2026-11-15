@@ -205,6 +205,12 @@ test("admin moderation queue: remove and choose to suspend the author", async ({
   await item.getByLabel("When removing, also suspend the author").selectOption("30");
   await item.getByRole("button", { name: "Remove" }).click();
   await expect(page.getByRole("status").filter({ hasText: "Removed: Fake held post. The author is suspended for 30 days." })).toBeVisible();
+  // The suspension can be ended early (FEEDBACK "End suspension"); the author is never shown.
+  const suspension = page.getByRole("region", { name: "Suspensions" }).or(page.getByRole("article", { name: /^Suspension from post/ }));
+  await expect(page.getByRole("article", { name: /^Suspension from post/ })).toContainText("Fake held post");
+  await page.getByRole("button", { name: "End suspension" }).click();
+  await expect(page.getByRole("status").filter({ hasText: "Suspension ended: Fake held post." })).toBeVisible();
+  await expect(suspension).toHaveCount(0);
   await expect(page.getByText("Nothing to review")).toBeVisible();
 });
 

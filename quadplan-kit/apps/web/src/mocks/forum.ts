@@ -59,6 +59,7 @@ interface CommentRec {
 }
 
 let posts: PostRec[] = [];
+let suspensions: S["SuspensionOut"][] = [];
 let comments: CommentRec[] = [];
 let votes = new Map<string, number>(); // `${type}:${id}:${voter}` -> ±1
 let reports: { id: number; target_type: "post" | "comment"; target_id: number; reason: string; status: string; from: string }[] = [];
@@ -159,6 +160,7 @@ function seed() {
 seed();
 
 export function resetForumMock() {
+  suspensions = [];
   seed();
 }
 
@@ -471,6 +473,27 @@ export const forumHandlers = [
     for (const r of reports) if (r.target_type === type && r.target_id === id && r.status === "open") r.status = body.decision === "approve" ? "dismissed" : "upheld";
     if (body.decision === "approve" && body.suspend_days) return err("A suspension goes with removing the post or comment.", 422);
     const suspended = body.decision === "remove" && !!body.suspend_days;
+    if (suspended && body.suspend_days) {
+      const title = type === "post" ? (target as Post).title ?? null : null;
+      const until = new Date(Date.now() + body.suspend_days * 86_400_000).toISOString().slice(0, 10);
+      suspensions = [
+        { target_type: type, target_id: id, course_code: "TEST 10000", instructor_name: FAKE_INSTRUCTOR.display_name, title, excerpt: target.body_md.slice(0, 120), removed_day: new Date().toISOString().slice(0, 10), until },
+        ...suspensions,
+      ];
+    }
     return json<S["ModerationResult"]>({ target_type: type, target_id: id, status: target.status, author_suspended: suspended });
+  }),
+  http.get(`${A}/admin/moderation/suspensions`, () => {
+    if (!flag(ADMIN_FLAG)) return err("Only admins can use the moderation queue.", 403);
+    return json<S["SuspensionOut"][]>(suspensions);
+  }),
+  http.post(`${A}/admin/moderation/:type/:id/end-suspension`, ({ params }) => {
+    if (!flag(ADMIN_FLAG)) return err("Only admins can use the moderation queue.", 403);
+    const type = String(params.type) as "post" | "comment";
+    const id = Number(params.id);
+    const before = suspensions.length;
+    suspensions = suspensions.filter((s) => !(s.target_type === type && s.target_id === id));
+    if (suspensions.length === before) return err("No active suspension for this item.", 404);
+    return json<S["EndSuspensionResult"]>({ target_type: type, target_id: id, ended: true });
   }),
 ];
