@@ -333,6 +333,18 @@
       "default": null,
       "title": "Residency Min Fraction"
     },
+    "residency_min_units": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Residency Min Units"
+    },
     "sources": {
       "additionalProperties": {
         "$ref": "#/$defs/Source"
@@ -351,6 +363,18 @@
       ],
       "default": null,
       "title": "Total Units"
+    },
+    "transfer_counts_by_enrollment": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Transfer Counts By Enrollment"
     },
     "units_by_enrollment": {
       "anyOf": [
