@@ -49,6 +49,8 @@ class Settings(BaseSettings):
     #: (CLAUDE.md, 2026-11-14): with it off the agents take their fallbacks (default elective
     #: ranking, no rationale; the advisor answers only typed confirmations).
     llm_live: bool = False
+    #: Daily model spend (USD, from llm_call) above which the worker logs LLM SPEND ALARM.
+    llm_spend_alarm_usd: float = 5.0
 
     def production_problems(self) -> list[str]:
         """Settings that are unsafe outside development (checked at start-up)."""

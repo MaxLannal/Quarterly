@@ -16,4 +16,4 @@ ENV GIT_SHA=$GIT_SHA
 WORKDIR /app/services/api
 EXPOSE 8000
 HEALTHCHECK --interval=5s --timeout=3s --retries=20 CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/health', timeout=2)"
-CMD ["sh", "-c", "if [ -f alembic.ini ]; then alembic upgrade head; fi && uvicorn api.main:app --host 0.0.0.0 --port 8000 --no-access-log"]
+CMD ["sh", "-c", "if [ -f alembic.ini ]; then alembic upgrade head; fi && uvicorn api.main:app --host 0.0.0.0 --port 8000 --no-access-log --workers ${WEB_CONCURRENCY:-4}"]
