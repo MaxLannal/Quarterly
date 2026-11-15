@@ -1,7 +1,46 @@
-import { expect, type Locator, type Page } from "@playwright/test";
+import { expect, test, type Locator, type Page } from "@playwright/test";
 import { freshIdentity, signupCode } from "./stack";
 
 // Browser steps shared by the journeys (real stack: catalog 2026-27, seeded programs).
+
+/** A SPEC step the app does not do yet: recorded on the test (and printed), never faked. */
+export function gap(description: string) {
+  test.info().annotations.push({ type: "gap", description });
+  console.log(`GAP ${description}`);
+}
+
+/** The verifier badge has a result for the current plan (no "checking…"). */
+export async function verifierSettled(page: Page) {
+  const badge = page.getByTestId("verifier-badge");
+  await expect(badge).toHaveText(/^(Valid|\d+ warnings?|\d+ errors?)$/);
+  return (await badge.innerText()).trim();
+}
+
+/** The logged-in account's saved plans, from the real API. */
+export async function accountPlans(page: Page): Promise<{ id: string; name: string }[]> {
+  return page.evaluate(async () => {
+    const r = await fetch("/api/plans", { credentials: "same-origin" });
+    return r.ok ? ((await r.json()) as { id: string; name: string }[]) : [];
+  });
+}
+
+/**
+ * 2-3 variants, each checked by the verifier (a report badge) and each with a rationale line per
+ * quarter it explains ("Autumn 2026: ...").
+ */
+export async function expectVariants(variants: Locator) {
+  const n = await variants.count();
+  expect(n).toBeGreaterThanOrEqual(2);
+  expect(n).toBeLessThanOrEqual(3);
+  for (let i = 0; i < n; i++) {
+    const v = variants.nth(i);
+    await expect(v.getByRole("heading", { level: 3 })).toHaveText(/^Option [A-C]$/);
+    await expect(v.getByText(/^(Valid|\d+ warnings?|\d+ errors?)$/).first()).toBeVisible();
+    const lines = await v.locator("ul li:has(strong)").allInnerTexts();
+    expect(lines.length).toBeGreaterThan(0);
+    for (const line of lines) expect(line).toMatch(/^(Autumn|Winter|Spring|Summer) \d{4}: \S/);
+  }
+}
 
 export function card(page: Page, code: string): Locator {
   return page.locator(`[data-testid="course-card"][data-course="${code}"]`);

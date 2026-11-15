@@ -81,11 +81,23 @@ export function newLocalId(): string {
   return `plan-${Math.random().toString(36).slice(2, 10)}`;
 }
 
-/** Insert or replace a plan and make it active. Returns whether it was stored. */
+/**
+ * Insert or replace a plan and make it active. Returns whether it was stored. The import
+ * bookkeeping already stored for this plan (`importedFor`, `remoteId`) is kept when the caller
+ * does not set it: the planner autosaves from the plan it opened with, which predates an import
+ * that ran while it was open, and dropping the ids would import or save the plan a second time.
+ */
 export function upsertPlan(plan: LocalPlan, makeActive = true): boolean {
   const doc = loadPlans();
   const idx = doc.plans.findIndex((p) => p.localId === plan.localId);
-  const stored = migrateLegacyYears({ ...plan, updatedDay: today() });
+  const prev = idx >= 0 ? doc.plans[idx] : undefined;
+  const importedFor = [...new Set([...(prev?.importedFor ?? []), ...(plan.importedFor ?? [])])];
+  const stored = migrateLegacyYears({
+    ...plan,
+    ...(importedFor.length ? { importedFor } : {}),
+    ...((plan.remoteId ?? prev?.remoteId) ? { remoteId: plan.remoteId ?? prev?.remoteId } : {}),
+    updatedDay: today(),
+  });
   if (idx >= 0) doc.plans[idx] = stored;
   else doc.plans.push(stored);
   if (stored.isPrimary) {
@@ -118,11 +130,22 @@ export function toPlanCreate(plan: LocalPlan): PlanCreate {
   return { name: plan.name, is_primary: plan.isPrimary, state: plan.state };
 }
 
-/** Record a successful import. The local copy is kept so nothing is lost. */
-export function markImported(accountId: string, localIds: string[]): boolean {
+/** The server plan id stored for a local plan (set by a save or by import on login). */
+export function storedRemoteId(localId: string): string | undefined {
+  return loadPlans().plans.find((p) => p.localId === localId)?.remoteId;
+}
+
+/**
+ * Record a successful import: `imported` maps each local plan id to the account plan it became,
+ * so a later Save updates that plan instead of creating a second one. The local copy is kept so
+ * nothing is lost.
+ */
+export function markImported(accountId: string, imported: Record<string, string | undefined>): boolean {
   const doc = loadPlans();
-  doc.plans = doc.plans.map((p) =>
-    localIds.includes(p.localId) ? { ...p, importedFor: [...new Set([...(p.importedFor ?? []), accountId])] } : p,
-  );
+  doc.plans = doc.plans.map((p) => {
+    if (!(p.localId in imported)) return p;
+    const remoteId = imported[p.localId] ?? p.remoteId;
+    return { ...p, ...(remoteId ? { remoteId } : {}), importedFor: [...new Set([...(p.importedFor ?? []), accountId])] };
+  });
   return savePlans(doc);
 }

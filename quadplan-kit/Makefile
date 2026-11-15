@@ -82,6 +82,8 @@ e2e-stack: env
 	$(MAKE) migrate
 	$(MAKE) seed
 	$(MAKE) seed-forum-demo
+	# The forum AI summaries (journey D), written inside the api container so the fake LLM answers.
+	$(E2E_COMPOSE) exec -T api python -m api.cli attributes
 	$(NPM) run e2e:stack
 
 # Design review screenshots: every page at 1440 and 390px wide into docs/screenshots/

@@ -1,13 +1,14 @@
 import { expect, test } from "@playwright/test";
-import { card, gridByTerm, generate, openPanel, signUp } from "./journey";
+import { accountPlans, drag, expectVariants, gap, generate, gridByTerm, signUp, verifierSettled } from "./journey";
 
-test("journey A: incoming first-year plans, generates, edits and saves to a new account", async ({ page }) => {
-  // 1. Home -> Start planning (no login).
+// SPEC "Core user journeys" A: incoming first-year with no plan (real stack, fake LLM).
+test("journey A: first-year onboards, generates, drags a course and saves to a new account", async ({ page }) => {
+  // A1. Home -> Start planning, no login.
   await page.goto("/");
   await page.getByRole("link", { name: "Start planning" }).click();
   await expect(page.getByRole("heading", { level: 1, name: "Planner setup" })).toBeVisible();
 
-  // 2. Onboarding: entry quarter, a placement, interests, career chips.
+  // A2. Onboarding: entry quarter, a placement result, an interest, career-goal chips.
   await expect(page.getByLabel("Catalog year")).toHaveValue("2026-27");
   await page.getByLabel("First quarter at UChicago").selectOption("2026-AU");
   await page.getByRole("radio", { name: "First-year" }).check();
@@ -34,23 +35,40 @@ test("journey A: incoming first-year plans, generates, edits and saves to a new 
   await expect(page.getByText("Computer Science (BS), The Core (general education)")).toBeVisible();
   await page.getByRole("button", { name: "Create plan" }).click();
 
-  // 3. The planner opens, with the Generate popup.
+  // A3. The planner opens on the new plan, with the Generate popup.
   await expect(page).toHaveURL(/\/plan\?generate=1$/);
   await expect(page.getByRole("list", { name: "Programs on this plan" })).toContainText("Computer Science (BS)");
+  gap("A3: the Core is not pre-placed as requirement slots; the grid starts empty.");
 
-  // 4. Generate: verified variants, one rationale line per quarter (fake LLM).
+  // A4. Generate: 2-3 verified variants, a rationale line per quarter (from the fake LLM).
   const { dialog, variants } = await generate(page);
-  await page.screenshot({ path: "test-results/a-variants.png", fullPage: true });
-  console.log(await dialog.innerText());
-  expect(await variants.count()).toBeGreaterThan(0);
-  const first = variants.first();
-  await expect(first).toContainText("Keeps the load even and moves the programs forward.");
-  await first.getByRole("button", { name: "Apply", exact: true }).click();
+  await expectVariants(variants);
+  gap('A4: variants are named "Option A/B/C", not "Exploratory CS" / "Econ-leaning" / "Balanced".');
+  await variants.first().getByRole("button", { name: "Apply", exact: true }).click();
   await expect(dialog).toBeHidden();
+  await verifierSettled(page);
 
-  console.log(JSON.stringify(await gridByTerm(page)));
-  await openPanel(page, "Check plan");
-  await page.screenshot({ path: "test-results/a-applied.png", fullPage: true });
-  void card;
-  void signUp;
+  // A5. Swap a course by drag-and-drop; the verifier re-runs in under a second.
+  const before = await gridByTerm(page);
+  const moved = before["2027-SP"]?.[0];
+  if (!moved) throw new Error("no course in Spring 2027 after applying the variant");
+  const target = page.getByTestId("quarter-2028-SP");
+  const verified = page.waitForResponse((r) => r.url().endsWith("/api/verify") && r.request().method() === "POST");
+  const dropped = Date.now();
+  await drag(page, page.getByRole("button", { name: `Drag ${moved}`, exact: true }), target);
+  await verified;
+  await verifierSettled(page);
+  const elapsed = Date.now() - dropped;
+  expect((await gridByTerm(page))["2028-SP"]).toContain(moved);
+  expect(elapsed, `drop to verified badge took ${elapsed} ms`).toBeLessThan(1000);
+
+  // A6. Create an account to save it: the local plan is imported, and Save updates that plan.
+  const plan = await gridByTerm(page);
+  await signUp(page, "a", "/plan");
+  await expect.poll(() => accountPlans(page).then((p) => p.length)).toBe(1);
+  await page.getByRole("button", { name: "Save", exact: true }).click();
+  await expect(page.getByText("Saved to your account.")).toBeVisible();
+  const saved = await accountPlans(page);
+  expect(saved, "exactly one account plan after sign-up and Save").toHaveLength(1);
+  expect(await gridByTerm(page)).toEqual(plan);
 });

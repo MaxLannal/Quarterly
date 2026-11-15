@@ -31,7 +31,7 @@ import { applyOps, ChangeOpError } from "./changes";
 import { highlightFor, PlannerContext, type PlannerContextValue, type RequirementTag } from "./context";
 import { GoalsTab } from "./GoalsTab";
 import { IssuesTab } from "./IssuesTab";
-import { upsertPlan, type LocalPlan } from "./localPlans";
+import { storedRemoteId, upsertPlan, type LocalPlan } from "./localPlans";
 import { addCourseOps, editorReducer, initEditor, itemLabel, moveItemOps, type EditResult } from "./planModel";
 import { DrawerButton, PlanDrawer, type DrawerTab } from "./PlanDrawer";
 import { PlanGrid } from "./PlanGrid";
@@ -196,9 +196,11 @@ export function Planner({ initial, autoGenerate = false }: PlannerProps) {
       setSaveMsg(ok ? "Saved on this device. Log in to save it to your account." : "Could not save: this browser is blocking storage.");
       return;
     }
+    // An import on login that ran while this plan was open stored the account plan's id.
+    const accountPlanId = remoteId ?? storedRemoteId(initial.localId);
     try {
-      const res = remoteId
-        ? await api.PATCH("/plans/{plan_id}", { params: { path: { plan_id: remoteId } }, body: { name: state.name, state: plan } })
+      const res = accountPlanId
+        ? await api.PATCH("/plans/{plan_id}", { params: { path: { plan_id: accountPlanId } }, body: { name: state.name, state: plan } })
         : await api.POST("/plans", { body: { name: state.name, is_primary: initial.isPrimary, state: plan } });
       if (res.response.status === 501) {
         setSaveMsg("Saving to your account is not available yet. Your plan is saved on this device.");
@@ -223,7 +225,7 @@ export function Planner({ initial, autoGenerate = false }: PlannerProps) {
     {
       key: "goals" as const,
       label: "Goals",
-      content: <GoalsTab goals={plan.goals ?? []} entryTerm={plan.entry_term} terms={terms} issues={issues} programs={allPrograms} onChange={(goals) => dispatch({ type: "goals", goals })} />,
+      content: <GoalsTab goals={plan.goals ?? []} entryTerm={plan.entry_term} terms={terms} issues={issues} programs={allPrograms} planPrograms={programIds} onChange={(goals) => dispatch({ type: "goals", goals })} />,
     },
     {
       key: "issues" as const,
