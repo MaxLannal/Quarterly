@@ -1,6 +1,6 @@
 """Build realistic full plans for the load test from the real 2026-27 seed (no API, no LLM).
 
-    uv run python loadtest/make_plans.py   # writes loadtest/plans.json
+uv run python loadtest/make_plans.py   # writes loadtest/plans.json
 """
 
 from __future__ import annotations
@@ -13,7 +13,13 @@ from planner_core.generator import generate
 from planner_core.models import GenerateOptions, PlanState
 
 ROOT = Path(__file__).resolve().parents[1]
-COMBOS = [["core", "cmsc-bs"], ["core", "cmsc-ba"], ["core", "math-bs"], ["core", "econ-ba"], ["core", "math-ba"]]
+COMBOS = [
+    ["core", "cmsc-bs"],
+    ["core", "cmsc-ba"],
+    ["core", "math-bs"],
+    ["core", "econ-ba"],
+    ["core", "math-ba"],
+]
 
 
 def main() -> None:
@@ -29,7 +35,9 @@ def main() -> None:
                 "programs": [{"program_id": p} for p in programs],
             }
         )
-        result = generate(state, build_rules(bundle, programs), catalog, GenerateOptions(variants=3))
+        result = generate(
+            state, build_rules(bundle, programs), catalog, GenerateOptions(variants=3)
+        )
         plans += [v.plan.model_dump(mode="json") for v in result.variants]
     electives = sorted({c.code for c in catalog.courses if c.code.split(" ")[1] < "30000"})[:300]
     out = {"plans": plans, "electives": electives}

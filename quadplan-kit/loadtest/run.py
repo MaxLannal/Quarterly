@@ -51,7 +51,8 @@ def main() -> int:
             for name in names:
                 row = rows[name]
                 p95 = float(row["95%"])
-                print(f"  {name}: n={row['Request Count']} median={row['Median Response Time']} ms p95={p95:.0f} ms")
+                median = row["Median Response Time"]
+                print(f"  {name}: n={row['Request Count']} median={median} ms p95={p95:.0f} ms")
                 failed |= p95 >= P95_MS
             failed |= fails > 0 or rps < rate * 0.95
     print("\nRESULT:", "targets missed" if failed else "all targets met")
