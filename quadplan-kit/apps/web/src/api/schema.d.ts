@@ -1714,6 +1714,11 @@ export interface components {
         };
         /** ForumPageOut */
         ForumPageOut: {
+            /**
+             * Also Listed As
+             * @default []
+             */
+            also_listed_as: string[];
             /** Course Code */
             course_code: string;
             /** Course Title */

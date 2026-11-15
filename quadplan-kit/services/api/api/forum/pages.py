@@ -40,20 +40,39 @@ def _sort_terms(terms: Collection[str]) -> list[str]:
     return sorted(valid, key=term_key)
 
 
+def crosslisted_codes(db: Session, code: str) -> list[str]:
+    """`code` and every code it is cross-listed with (in any catalog year), sorted. A course
+    with the same instructor has one forum page under all of them (P08-5, Richard 2026-11-14)."""
+    groups = (
+        sa.select(m.CrosslistGroup.group_id)
+        .join(m.Course, m.Course.id == m.CrosslistGroup.course_id)
+        .where(m.Course.code == code)
+    )
+    siblings = db.scalars(
+        sa.select(m.Course.code)
+        .join(m.CrosslistGroup, m.CrosslistGroup.course_id == m.Course.id)
+        .where(m.CrosslistGroup.group_id.in_(groups))
+    )
+    return sorted({code, *siblings})
+
+
 def ensure_page(
     db: Session, course_id: int, instructor_id: int, term_id: str | None = None
 ) -> m.CourseInstructor:
     """The page for this course x instructor, created on first sight, with its term range
-    widened to `term_id`. One page per course *code*: a course row of another catalog year
-    with the same code reuses the existing page, so reviews do not split by catalog year.
-    The caller commits."""
+    widened to `term_id`. One page per course *code* and its cross-listings: a course row of
+    another catalog year, or another code of the same cross-listed course, reuses the existing
+    page, so reviews do not split. The caller commits."""
     course = db.get(m.Course, course_id)
     if course is None:
         raise PageNotFoundError(f"no course {course_id}")
     page = db.scalar(
         sa.select(m.CourseInstructor)
         .join(m.Course, m.Course.id == m.CourseInstructor.course_id)
-        .where(m.Course.code == course.code, m.CourseInstructor.instructor_id == instructor_id)
+        .where(
+            m.Course.code.in_(crosslisted_codes(db, course.code)),
+            m.CourseInstructor.instructor_id == instructor_id,
+        )
         .order_by(m.CourseInstructor.id)
         .limit(1)
     )
@@ -77,7 +96,7 @@ def find_page(db: Session, course: str, instructor_slug: str) -> m.CourseInstruc
         sa.select(m.CourseInstructor)
         .join(m.Course, m.Course.id == m.CourseInstructor.course_id)
         .join(m.Instructor, m.Instructor.id == m.CourseInstructor.instructor_id)
-        .where(m.Course.code == code, m.Instructor.slug == instructor_slug)
+        .where(m.Course.code.in_(crosslisted_codes(db, code)), m.Instructor.slug == instructor_slug)
         .order_by(m.CourseInstructor.id)
         .limit(1)
     )
@@ -94,14 +113,14 @@ def get_page(db: Session, page_id: int) -> m.CourseInstructor:
 
 
 def terms_taught(db: Session, page: m.CourseInstructor) -> set[str]:
-    """Terms with a section of this course code taught by this instructor, plus the page's
-    recorded first and last terms."""
-    code = sa.select(m.Course.code).where(m.Course.id == page.course_id).scalar_subquery()
+    """Terms with a section of this course (under any of its cross-listed codes) taught by this
+    instructor, plus the page's recorded first and last terms."""
+    code = db.scalar(sa.select(m.Course.code).where(m.Course.id == page.course_id)) or ""
     rows = db.scalars(
         sa.select(m.Section.term_id)
         .join(m.Course, m.Course.id == m.Section.course_id)
         .where(
-            m.Course.code == code,
+            m.Course.code.in_(crosslisted_codes(db, code)),
             sa.literal(page.instructor_id) == sa.func.any(m.Section.instructor_ids),
         )
         .distinct()
@@ -232,6 +251,7 @@ def page_out(db: Session, page: m.CourseInstructor) -> ForumPageOut:
     return ForumPageOut(
         id=page.id,
         course_code=course.code,
+        also_listed_as=[c for c in crosslisted_codes(db, course.code) if c != course.code],
         course_title=course.title,
         instructor=instructor_summary(instructor),
         terms_taught=_sort_terms(terms_taught(db, page)),
@@ -247,13 +267,13 @@ def _pages_of_code(db: Session, code: str) -> list[tuple[m.CourseInstructor, m.I
         sa.select(m.CourseInstructor, m.Instructor)
         .join(m.Course, m.Course.id == m.CourseInstructor.course_id)
         .join(m.Instructor, m.Instructor.id == m.CourseInstructor.instructor_id)
-        .where(m.Course.code == code)
+        .where(m.Course.code.in_(crosslisted_codes(db, code)))
         .order_by(m.Instructor.display_name, m.CourseInstructor.id)
     )
     seen: set[int] = set()
     out = []
     for page, instructor in rows:
-        if instructor.id in seen:  # one page per code x instructor (ensure_page)
+        if instructor.id in seen:  # one page per cross-listed course x instructor (ensure_page)
             continue
         seen.add(instructor.id)
         out.append((page, instructor))

@@ -193,6 +193,7 @@ export function ForumPageView({ code, slug }: { code: string; slug: string }) {
               {page.instructor.display_name}
             </Link>
             {page.instructor.department && <span>{page.instructor.department}</span>}
+            {(page.also_listed_as ?? []).length > 0 && <span>Also listed as {(page.also_listed_as ?? []).join(", ")}</span>}
             <span>{terms.length ? `Taught ${terms.map(termLabel).join(", ")}` : "Terms taught not recorded yet"}</span>
             <Link to={`/courses/${encodeURIComponent(page.course_code)}`} className={cn(inlineLinkClass, tallTargetClass)}>
               Course page

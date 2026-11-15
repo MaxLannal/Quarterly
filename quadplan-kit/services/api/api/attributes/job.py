@@ -43,6 +43,7 @@ from api.attributes.aggregate import (
 )
 from api.attributes.records import forget_extractions, hidden_citations
 from api.db import models as m
+from api.forum.pages import crosslisted_codes
 
 log = logging.getLogger("api.attributes")
 
@@ -343,23 +344,25 @@ def _aggregate(db: Session, today: dt.date, stats: Stats) -> None:
     estimates = _estimates(db)
     per_course: dict[str, dict[str, list[Rating]]] = defaultdict(lambda: defaultdict(list))
     per_department: dict[str, dict[str, list[Rating]]] = defaultdict(lambda: defaultdict(list))
+    # A cross-listed course has one page per instructor under all its codes (P08-5), so its
+    # ratings count for every code it is listed under.
+    siblings = {code: crosslisted_codes(db, code) for code in set(code_of.values())}
     for page, by_key in per_page.items():
         code = code_of.get(page)
         if code is None:
             continue
         for key, ratings in by_key.items():
-            per_course[code][key] += ratings
-            per_department[code.split(" ")[0]][key] += ratings
-    courses = sorted(set(code_of.values()))
+            for sibling in siblings[code]:
+                per_course[sibling][key] += ratings
+            for dept_code in {c.split(" ")[0] for c in siblings[code]}:
+                per_department[dept_code][key] += ratings
+    courses = sorted({c for codes in siblings.values() for c in codes})
     for code in courses:
         for key in FORUM_KEYS:
             ratings = per_course[code][key]
-            dept = [
-                r
-                for c in courses
-                if c.split(" ")[0] == code.split(" ")[0] and c != code
-                for r in per_course[c][key]
-            ]
+            # The department's average without this course's own posts.
+            own = {r.post_id for r in ratings}
+            dept = [r for r in per_department[code.split(" ")[0]][key] if r.post_id not in own]
             estimate = estimates.get(code, {}).get(key)
             prior = department_prior(dept) or (
                 Prior(estimate, K_ESTIMATE, "estimate") if estimate is not None else None

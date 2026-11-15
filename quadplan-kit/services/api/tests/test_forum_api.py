@@ -107,6 +107,41 @@ def test_page_lookup_and_header(f: ForumEnv) -> None:
     assert by_code.headers["cache-control"] == "private, no-store"
 
 
+def test_cross_listed_codes_share_one_page(f: ForumEnv) -> None:
+    from api.forum.pages import ensure_page
+
+    with f.env.db() as db:
+        intro = db.scalars(select(m.Course).where(m.Course.code == "TEST 10100")).one()
+        other = m.Course(
+            catalog_year=intro.catalog_year,
+            subject="XTST",
+            number="10100",
+            code="XTST 10100",
+            title="Fake Intro (cross-listed)",
+        )
+        db.add(other)
+        db.flush()
+        db.add_all(
+            [
+                m.CrosslistGroup(group_id="fake:TEST 10100", course_id=intro.id),
+                m.CrosslistGroup(group_id="fake:TEST 10100", course_id=other.id),
+            ]
+        )
+        doe = db.scalars(select(m.Instructor.id).where(m.Instructor.slug == "jane-doe")).one()
+        # A schedule naming the other code for the same instructor finds the same page.
+        assert ensure_page(db, other.id, doe).id == f.pages["a_doe"]
+        db.commit()
+    user = f.user()
+    post(f, user, "a_doe", REVIEW)
+    via_other = user.get("/forum/pages", params={"course": "XTST 10100", "instructor": "jane-doe"})
+    assert via_other.status_code == 200, via_other.text
+    assert via_other.json()["id"] == f.pages["a_doe"]
+    assert via_other.json()["also_listed_as"] == ["XTST 10100"]
+    pooled = user.get("/forum/courses/XTST%2010100").json()
+    assert {p["page_id"] for p in pooled["pages"]} == {f.pages["a_doe"], f.pages["a_roe"]}
+    assert pooled["ratings"]["n_reviews"] == 1
+
+
 # ------------------------------------------------------------------------------------ reviews
 
 

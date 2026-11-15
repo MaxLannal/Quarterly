@@ -226,6 +226,7 @@ function forumPage(id: number): S["ForumPageOut"] | undefined {
     id,
     course_code: page.course.code,
     course_title: page.course.title,
+    also_listed_as: [],
     instructor: FAKE_INSTRUCTOR,
     terms_taught: ["2099-AU", "2100-WI"],
     n_reviews: summary.n_reviews ?? 0,

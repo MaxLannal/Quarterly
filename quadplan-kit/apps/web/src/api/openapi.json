@@ -2028,6 +2028,14 @@
       },
       "ForumPageOut": {
         "properties": {
+          "also_listed_as": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Also Listed As",
+            "type": "array"
+          },
           "course_code": {
             "title": "Course Code",
             "type": "string"

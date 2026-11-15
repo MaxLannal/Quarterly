@@ -21,6 +21,8 @@ class ForumPageOut(BaseModel):
     id: int
     course_code: str
     course_title: str
+    #: The other codes this course is cross-listed under; the page is the same under all.
+    also_listed_as: list[str] = []
     instructor: InstructorSummary
     terms_taught: list[str] = []
     n_reviews: int = 0

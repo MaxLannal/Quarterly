@@ -321,6 +321,33 @@ def test_pace_and_grading_come_from_the_reviews_that_answered(db: Session) -> No
 
 
 @pytest.mark.db
+def test_cross_listed_codes_get_the_same_numbers(db: Session) -> None:
+    page = make_page(db)
+    course = db.scalars(sa.select(m.Course).where(m.Course.code == "TEST 10000")).one()
+    other = m.Course(
+        catalog_year=course.catalog_year,
+        subject="XTST",
+        number="10000",
+        code="XTST 10000",
+        title="Fake (cross-listed)",
+    )
+    db.add(other)
+    db.flush()
+    db.add_all(
+        [
+            m.CrosslistGroup(group_id="fake:x", course_id=course.id),
+            m.CrosslistGroup(group_id="fake:x", course_id=other.id),
+        ]
+    )
+    for w in (6, 8, 10):
+        review(db, page, workload=w)
+    run_nightly(db, UnavailableLLM(), TODAY)
+    mine = value(db, "course", "TEST 10000", "workload_hours")
+    theirs = value(db, "course", "XTST 10000", "workload_hours")
+    assert mine is not None and theirs is not None and mine.value == theirs.value == 8
+
+
+@pytest.mark.db
 def test_old_reviews_weigh_half(db: Session) -> None:
     page = make_page(db)
     review(db, page, workload=10)
