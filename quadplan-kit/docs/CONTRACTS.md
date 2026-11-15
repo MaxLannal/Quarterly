@@ -238,3 +238,57 @@ The 20 synthetic profiles in `services/api/tests/test_generate_profiles.py` each
 - **Cold start (Sonnet):** a rubric gives workload and difficulty from the description and level, stored as an estimate. Only courses that have a forum page get one, at most 200 a night.
 
 Post text is passed to the model inside `<untrusted_source>`, and these calls hold no tools. Without a model, the job skips the A3 steps and aggregates the structured ratings only.
+
+## Schedule pipeline (prompt 10)
+
+**Package.** `services/scraper/scraper`. It now depends on `quarterly-api`, and the worker depends on it. Nothing in it sends a request unless `SCHEDULE_SCRAPER_ENABLED=true` and `CLASS_SEARCH_URL` is set (`scraper.settings.require_enabled`, checked before a browser starts). Tests use only `services/scraper/fixtures/SYNTHETIC_*` and `FakeLLM`.
+
+**Flow.**
+1. `class_search.crawl` (Playwright, 1 page a second).
+2. `snapshots.record_snapshot`: the bytes go to MinIO under `class-search/<sha[:2]>/<sha>.html`, plus one `source_snapshot` row. The same URL with the same bytes reuses its row.
+3. `pipeline.run_schedule(db, store, term_id, snapshot_ids)`.
+4. If the run fails, `repair.propose_repair`.
+
+`watch.weekly_watch` does all four for the next two quarters. The worker cron `weekly_schedule_watch` (Mondays 04:00) calls it, and returns `disabled: ...` when the flag is off.
+
+**Parser.** `parse.parse_page(html, ParserConfig)` reads a page using selectors stored as data (`scraper.dom`: tag, `.class`, `#id`, `[attr=value]`, descendant, `>`, commas). It raises `ParseError` when:
+- the results marker is missing;
+- there are no course blocks and no empty-page marker;
+- a cell cannot be read;
+- a page lists the same section twice.
+
+Fields:
+- Meetings are stored as `[{days: [Mon..Sun], start: "HH:MM", end: "HH:MM", location?}]`.
+- `status` is `open`, `closed`, `waitlist` or `cancelled`. A later run of the same term sets `not_listed` on a section it no longer shows.
+- `capacity` is the enrolment limit.
+
+**A run** is one `extraction_run` row: `kind = schedule_parse`, `model = deterministic`, `prompt_version` = the parser version, `input_snapshot_ids`, and `status` `ok` or `failed`. Its `output` holds `counts_by_subject`, `counts_by_snapshot` (the "last good counts"), `review_item_ids`, `new_instructors` and `errors`.
+
+A failed run (any page error, or zero sections) writes nothing else. An ok run:
+- upserts `section` by term, course, section number and component;
+- creates an instructor for each name that is not similar to anyone's;
+- calls `api.forum.pages.ensure_page` for every instructor of every section that is not cancelled (cross-listed codes share a page);
+- updates `offering_pattern` for the subjects it covered.
+
+**Review items.** `target_type` is the kind, repeated in `diff.kind`. There is one open item per kind and target; re-runs refresh it.
+
+| kind | target_id | raised when | accepting does |
+| --- | --- | --- | --- |
+| `schedule_unknown_code` | `<term>:<code>` | a code is not in the catalog; its sections are not saved | nothing yet (prompt 09 adds the course) |
+| `schedule_instructor_match` | `<term>:<normalised name>` | a name is close to an instructor's (score >= 0.80) but not the same | `apply.apply_instructor_match(db, id, instructor_id or None)`: adds an alias or a new person, then the sections and forum pages |
+| `schedule_count_alert` | `<term>:<subject>` | the section count differs by more than 30% from the same quarter last year | nothing (the sections were saved; it is a warning) |
+| `schedule_parser_repair` | `run:<failed run id>` | a run failed; `diff.proposed_config` is the verified proposal, or null | `pipeline.active_config` uses the newest accepted proposal |
+| `schedule_dept_plan` | `<department>:<academic year>` | a department page was read; see `diff.accepted`, `unknown_codes`, `rejected` | `apply.apply_department_plan_item(db, id)`: p = 0.95 |
+
+The `apply_*` functions refuse items that are not `accepted`.
+
+**Offering pattern.** `p = (k + 1) / 5`, where k is the number of the last 3 years (this one included) with a listed, non-cancelled section in that quarter. Courses are matched by code across catalog years, and the pattern is stored on the newest course row. The method says where p came from:
+- `posted_schedule`: p = 1, from a posted schedule;
+- `department_plan`: p = 0.95, from an accepted department plan, with `evidence_terms` = the planned term. It is skipped when that same term's schedule is already posted;
+- `history`: the formula.
+
+**Agents.**
+- `repair.propose_repair` runs `scraper_repair`. Its tools are read-only: `read_snapshot(snapshot_id, offset)` (HTML inside `<untrusted_source>`) and `try_config(config)`. It ends with `submit_parser_config({config, explanation})`. A proposal must reproduce the last good run's count on each of that run's snapshots, and parse every failed snapshot with at least one section. Both the submit check and code after the run verify this.
+- `dept_pages.extract_department_plan` calls `dept_offerings_extraction`, with no tools. Each offering's quote must be on the page and contain the code, every quarter named and the instructor.
+
+Prompts: `prompts/scraper_repair.md`, `prompts/dept_offerings.md`.

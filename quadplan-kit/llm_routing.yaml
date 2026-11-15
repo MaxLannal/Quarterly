@@ -89,6 +89,14 @@ tasks:
     effort: low       # thinking stays on: leave room for it plus the label
     max_tokens: 1024
     fallback: {provider: openrouter, model: anthropic/claude-haiku-5.5}
+  # Prompt 10: department offering pages -> planned offerings with verbatim quotes (E-style,
+  # every item checked by code, then human review). Not in the SPEC routing table; Sonnet 5.5
+  # like the other mid-difficulty ingestion tasks (docs/OPEN_QUESTIONS.md P10-3).
+  dept_offerings_extraction:
+    model: claude-sonnet-5-5
+    effort: low
+    max_tokens: 8000
+    fallback: {provider: openrouter, model: anthropic/claude-sonnet-5.5}
 
 # List prices in USD per million tokens, for llm_call.cost_usd. Anthropic: SPEC "Model routing"
 # and the models overview (cache reads at the published rate, cache writes 1.25x input; the
