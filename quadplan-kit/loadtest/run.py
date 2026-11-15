@@ -7,8 +7,9 @@
     LOAD_DOCKER_NETWORK=quarterly_default LOAD_HOST=http://web:5173/api \
         LOAD_LOGIN=... LOAD_PASSWORD=... uv run python loadtest/run.py
 
-Targets: POST /verify at 50 requests/second with p95 under 500 ms; forum page reads at 100
-requests/second (p95 under 500 ms too); no failed requests.
+Targets (prompt 12): POST /verify at 50 requests/second with p95 under 500 ms; forum page
+reads at 100 requests/second. No failed requests. The forum p95 is printed for information:
+the prompt sets no latency target for it.
 """
 
 from __future__ import annotations
@@ -27,6 +28,8 @@ SCENARIOS = [
     ("Verifier", 50, ["POST /verify"]),
     ("ForumReader", 100, ["GET /forum/pages/{id}", "GET /forum/pages/{id}/posts"]),
 ]
+#: Endpoints with a p95 target (prompt 12 gives one for /verify only).
+P95_CHECKED = {"POST /verify"}
 P95_MS = 500.0
 
 
@@ -73,7 +76,7 @@ def main() -> int:
                 p95 = float(row["95%"])
                 median = row["Median Response Time"]
                 print(f"  {name}: n={row['Request Count']} median={median} ms p95={p95:.0f} ms")
-                failed |= p95 >= P95_MS
+                failed |= name in P95_CHECKED and p95 >= P95_MS
             failed |= fails > 0 or rps < rate * 0.95
     print("\nRESULT:", "targets missed" if failed else "all targets met")
     return 1 if failed else 0

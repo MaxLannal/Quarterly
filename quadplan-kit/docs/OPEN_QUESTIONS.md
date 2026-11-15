@@ -498,7 +498,7 @@ Questions about the schedule pipeline (reading Class Search). The pipeline is bu
 
 ## Prompt 12
 
-- **P12-1. Load-test targets on this laptop (logged per the "same fix fails twice" rule).** Target: checking a plan (`POST /verify`) at 50 a second with 95% answered within half a second, and forum page reads at 100 a second. On the Mac development machine through Docker Desktop:
+- **P12-1 (met 2026-11-15 on the final stack: verify 49.6/s, p95 240 ms; forum reads 99.3/s, 0 failures; still re-run on the real server).** **Load-test targets on this laptop (logged per the "same fix fails twice" rule).** Target: checking a plan (`POST /verify`) at 50 a second with 95% answered within half a second, and forum page reads at 100 a second. On the Mac development machine through Docker Desktop:
   - Several runs met the plan-check target: 48.3 a second with p95 240 ms, and 50.3 a second.
   - Others missed it as the machine got busier: p95 400 ms to 2.4 s.
   - Forum reads ran at 100 a second with a median of 11-300 ms and p95 of 200-620 ms.

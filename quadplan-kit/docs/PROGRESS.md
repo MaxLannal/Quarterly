@@ -468,6 +468,13 @@ It refuses to call a model unless both `CONFIRM_SPEND=yes` and `LLM_LIVE=true` a
    - A not-affiliated line in every page footer, no University logos, and "Not official advising" on the planner.
    - Final security and spec reviews.
 
+### Load test (prompt 12, final run on the Docker stack through nginx, 2026-11-15)
+`make loadtest` (`loadtest/run.py`):
+- `POST /verify`: 49.6 requests/second, median 27 ms, p95 240 ms. The target is 50/s with p95 under 500 ms: **met**.
+- Forum page reads: 99.3 requests/second with 0 failures. The target is 100/s: **met**. The p95 was 550-560 ms on this laptop; the prompt sets no latency target for forum reads.
+
+Earlier runs on the busy laptop varied (P12-1), so run it again on the real server (launch checklist step 8).
+
 ### Final reviews (2026-11-15)
 - **spec-reviewer (whole spec):**
   - one high finding: behind Caddy every visitor shared one rate limit. Fixed in 7122207 (nginx appends to `X-Forwarded-For`; production `TRUSTED_PROXY_HOPS=2`; tested);
