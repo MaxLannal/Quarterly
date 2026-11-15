@@ -190,10 +190,11 @@ Mockups of six key screens, with sample data, are on the design canvas: [QuadPla
 
 ### Planner (`/plan`)
 
-- **Top bar:** plan name, catalog year, program chips ("CS BS", "Math BS", "CS Bx/MS"), **Generate plan** button, verifier badge (green "Valid", amber "3 warnings", red "2 errors"), Save.
-- **Left rail, Requirements:** one collapsible tree per program, each node with a progress bar. Clicking a node lists eligible courses, ranked by fit with goals; any course can be dragged onto the grid.
-- **Center, the grid:** rows are years (Y1–Y4, optional Y5), columns are Autumn, Winter, Spring, Summer (Summer collapsed by default). A course card shows code, short title, units, a color stripe for the requirement it fills, estimated hours/week and difficulty dots. Each quarter footer shows units, total hours/week, a difficulty index and that quarter's goal chips.
-- **Right rail, three tabs:** Issues (verifier output, each issue clickable to highlight cards), Goals (career and per-quarter), Advisor (chat).
+- **Top bar:** plan name, catalog year, program chips ("CS BS", "Math BS", "CS Bx/MS"), **Generate plan** button, a quiet **Check plan** button with a small count badge (errors stay subtle: most students are building a partial plan), Save, and a one-line "Not official advising" notice.
+- **Right drawer (slides in from the right; full screen on a phone):** Requirements, Issues and Goals. Requirements is a vertical tree per program (program → nodes → courses), each course shown as its code in bold with its name in small text and a subtle "n of m" per node; any course can be dragged onto the grid. Issues opens from **Check plan**.
+- **Center, the grid (the main width):** one row per academic year, from the entry quarter to the graduation quarter. An academic year runs Summer, Autumn, Winter, Spring: the summer *before* autumn belongs to it (Summer 2026 is in 2026–27), and there is no summer after the last spring. Summer is collapsed by default. Years are labelled by class year ("Second year" for a second-year transfer's first year). The plan's `graduation_term` sets its end: by default the Spring of the last year counted from the entry level (four years for a first-year, three for a second-year transfer); **Add a year**, **Remove last year** (only when it is empty) and **Graduating in** (an Autumn, Winter or Spring) change it. A course card shows code, short title, units, a color stripe for the requirement it fills, estimated hours/week and difficulty dots. Each quarter footer shows units, total hours/week, a difficulty index and that quarter's goal chips.
+- **Advisor (opens from the top, separate from the drawer):** clearly labelled generative AI ("Generative AI"; "Answers are written by an AI and can be wrong"), with a chat layout: student and AI message bubbles, a typing indicator while streaming, citation chips and proposal cards.
+- **Motion:** subtle transitions for the drawer, the advisor, dialogs and course cards, all off under `prefers-reduced-motion`.
 - **Interactions:** drag to add/move; a drop shows inline warnings at once (missing prerequisite, not usually offered that quarter); right-click to lock, mark completed, or remove. Every edit triggers a debounced full verification (target under 500 ms).
 - **States:** empty (requirement slots shown as dashed cards), verifying, valid, warnings, errors; read-only when viewing a shared snapshot.
 - **API:** `GET /plans/{id}`, `PATCH /plans/{id}/items`, `POST /verify`, `POST /agents/generate` (SSE), `POST /agents/chat` (SSE), `POST /plans/{id}/changesets/{cs}/apply`.
@@ -295,7 +296,7 @@ The model has nine groups of tables; the catalog, schedule and program groups ar
 
 | Table | Key fields | Notes |
 | --- | --- | --- |
-| `plan` | `id`, `account_id`, `name`, `catalog_year`, `entry_term`, `is_primary`, `updated_day` | Dates rounded to the day |
+| `plan` | `id`, `account_id`, `name`, `catalog_year`, `entry_term`, `entry_year_level`, `graduation_term` (nullable: the default last quarter), `is_primary`, `updated_day` | Dates rounded to the day |
 | `plan_program` | `plan_id`, `program_version_id`, `options` (JSONB: track, specialization) |  |
 | `plan_item` | `id`, `plan_id`, `course_id` or `slot_ref`, `term_id`, `status` (planned, in\_progress, completed, transfer, exam), `locked`, `units` | `slot_ref` is an unfilled requirement placeholder |
 | `credit` | `plan_id`, `kind` (AP, placement, transfer), `label`, `maps_to_course_id`, `units` |  |

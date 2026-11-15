@@ -25,13 +25,6 @@ Write down anything you notice: something broken, something confusing, or someth
 ## New
 
 <!-- Add new items here, newest first. -->
-### Generate Plan Faliure
-- Date: 2026-11-14
-- Where: Generate Plan
-- Issue: I click on "generate plan" and got the response "No plan fits all of these settings. The generator found plans, but none passed verification. This is a bug; it has been reported."
-- How important: Must fix
-- Status: New Issue
-
 ### Locations of Summer Quarter
 - Date: 2026-11-14
 - Where: Planner
@@ -79,3 +72,11 @@ Write down anything you notice: something broken, something confusing, or someth
 - Status: parked until you ask for it. It would sit on the removal decision that started the suspension, because admins never see who is suspended.
 
 ## Done
+
+### Generate Plan Faliure
+- Date: 2026-11-14
+- Where: Generate Plan
+- Issue: I click on "generate plan" and got the response "No plan fits all of these settings. The generator found plans, but none passed verification. This is a bug; it has been reported."
+- How important: Must fix
+- Status: New Issue
+- Resolved in 6ef392c: the cause was a credit (or completed course) whose code is not in the catalog, which made every generated option fail its check; the generator now names it ("Fix these first, then generate again: ..."), never says "bug", and onboarding refuses unknown codes. Tests: `test_unknown_things_already_in_the_plan_are_named_before_solving`, `e2e/onboarding.spec.ts`.
