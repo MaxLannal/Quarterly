@@ -180,3 +180,19 @@ for (const size of [
     });
   });
 }
+
+test("every page says Quarterly is not affiliated with the University, and shows no University marks", async ({ page }) => {
+  // Prompt 12 / goal: a footer notice on every page; no University logos, shields or wordmarks.
+  for (const path of MAIN_PAGES) {
+    await page.goto(path);
+    await expect(page.getByRole("contentinfo")).toContainText("Quarterly is a student project, not affiliated with the University of Chicago.");
+    const marks = await page.evaluate(() =>
+      [...document.querySelectorAll("img, svg image, [style*='background-image']")]
+        .map((el) => (el.getAttribute("src") ?? el.getAttribute("href") ?? el.getAttribute("style") ?? "").toLowerCase())
+        .filter((src) => /uchicago|shield|phoenix|wordmark|university/.test(src)),
+    );
+    expect(marks, path).toEqual([]);
+  }
+  await page.goto("/plan");
+  await expect(page.getByText("Not official advising", { exact: false }).first()).toBeVisible();
+});
