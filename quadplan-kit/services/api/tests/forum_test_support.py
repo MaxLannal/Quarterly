@@ -9,7 +9,6 @@ from dataclasses import dataclass, field
 from typing import Any
 
 import pytest
-from api.config import get_settings
 from api.db import models as m
 from auth_test_support import Env, auth_env, csrf
 from fastapi.testclient import TestClient
@@ -68,11 +67,22 @@ class ForumEnv:
             db.commit()
         return user
 
-    def answer(self, *labels: str | BaseException) -> None:
-        """Script the next A4 answers."""
-        queue = self.llm.script.setdefault("a4_moderation", [])
-        for label in labels:
-            queue.append(label if isinstance(label, BaseException) else {"label": label})
+    def hold(self, target_type: str, target_id: int, label: str = "identifying_info") -> None:
+        """Mark an item held by the model, as an earlier version of the forum did on submit
+        (posts now publish at once, P08-1), to test how held items are shown and moderated."""
+        with self.env.db() as db:
+            model = m.Post if target_type == "post" else m.Comment
+            db.execute(update(model).where(model.id == target_id).values(status="held"))
+            db.add(
+                m.ModerationAction(
+                    target_type=target_type,
+                    target_id=target_id,
+                    action="hold",
+                    reason=label,
+                    actor="model",
+                )
+            )
+            db.commit()
 
 
 def seed_pages(env: Env) -> dict[str, int]:
@@ -129,7 +139,6 @@ def seed_pages(env: Env) -> dict[str, int]:
 @contextmanager
 def forum_env(db_url: str, monkeypatch: pytest.MonkeyPatch) -> Iterator[ForumEnv]:
     # Independent of the developer's .env (which sets MODERATION_FALLBACK=publish).
-    monkeypatch.setattr(get_settings(), "moderation_fallback", "hold")
     with auth_env(db_url, monkeypatch) as env:
         llm = FakeLLM()
         env.app.dependency_overrides[get_llm] = lambda: llm

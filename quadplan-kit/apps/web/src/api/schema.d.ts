@@ -2353,6 +2353,8 @@ export interface components {
             decision: "approve" | "remove";
             /** Note */
             note?: string | null;
+            /** Suspend Days */
+            suspend_days?: number | null;
         };
         /** ModerationItemOut */
         ModerationItemOut: {

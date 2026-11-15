@@ -71,7 +71,7 @@ test("forum page: header, ratings, tabs, sorting, axe and 44px targets", async (
   await expect(discussion.getByRole("link", { name: "Fake question: is the midterm curved?" })).toBeVisible();
 });
 
-test("write a review and a discussion post; moderation notice; vote", async ({ page }) => {
+test("write a review and a discussion post; vote", async ({ page }) => {
   await logIn(page);
   await page.goto(FORUM);
   await page.getByRole("button", { name: "Write a review" }).click();
@@ -107,18 +107,17 @@ test("write a review and a discussion post; moderation notice; vote", async ({ p
   await up.click();
   await expect(up).toHaveAttribute("aria-pressed", "false");
 
-  // A rejected discussion post shows its reason to the author, who can ask for review.
+  // A discussion post appears at once: nothing checks it before it is published (P08-1).
   await page.getByRole("tab", { name: "Discussion" }).click();
   const panel = page.getByRole("tabpanel", { name: "Discussion" });
   await panel.getByRole("button", { name: "Start a discussion" }).click();
-  await panel.getByLabel("Title").fill("Fake rude post");
-  await panel.getByLabel("Your post").fill("[reject] fake");
+  await panel.getByLabel("Title").fill("Fake question about the midterm");
+  await panel.getByLabel("Your post").fill("Fake: how long was the midterm?");
   await panel.getByRole("button", { name: "Post", exact: true }).click();
-  await expect(panel.getByRole("status").filter({ hasText: "personal attack" })).toBeVisible();
-  const rejected = panel.getByRole("article", { name: "Fake rude post" });
-  await expect(rejected).toContainText("Not published because it reads as a personal attack");
-  await rejected.getByRole("button", { name: "Ask for human review" }).click();
-  await expect(rejected.getByRole("button", { name: "Review requested" })).toBeDisabled();
+  const posted = panel.getByRole("article", { name: "Fake question about the midterm" });
+  await expect(posted).toContainText("how long was the midterm");
+  await expect(posted).not.toContainText("Not published");
+  await expect(posted).not.toContainText("Held");
 });
 
 test("thread view: nested comments fold below depth 6, reply, report, axe", async ({ page }) => {
@@ -176,7 +175,7 @@ test("guidelines page lists the community rules", async ({ page }) => {
   await expect(page.getByText("No names of other students.")).toBeVisible();
 });
 
-test("admin moderation queue: approve a held post", async ({ page }) => {
+test("admin moderation queue: remove and choose to suspend the author", async ({ page }) => {
   // The mock seeds one held post by another (fake) author; state lives in the page, so the
   // queue is opened directly rather than after posting from another page load.
   await logIn(page, true);
@@ -186,8 +185,10 @@ test("admin moderation queue: approve a held post", async ({ page }) => {
   await expect(item).toContainText("Fake held post");
   await expect(item).toContainText("May identify someone");
   await expectNoSeriousAxeViolations(page);
-  await item.getByRole("button", { name: "Approve" }).click();
-  await expect(page.getByRole("status").filter({ hasText: "Approved and published: Fake held post." })).toBeVisible();
+  // Suspensions are never automatic (P08-3): the admin picks one while removing.
+  await item.getByLabel("When removing, also suspend the author").selectOption("30");
+  await item.getByRole("button", { name: "Remove" }).click();
+  await expect(page.getByRole("status").filter({ hasText: "Removed: Fake held post. The author is suspended for 30 days." })).toBeVisible();
   await expect(page.getByText("Nothing to review")).toBeVisible();
 });
 

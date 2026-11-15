@@ -3,7 +3,6 @@ from contextlib import contextmanager
 from typing import Annotated, Literal
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Response
-from llm_gateway.api import LLM, get_llm
 from sqlalchemy.orm import Session
 
 from api.auth.ratelimit import DAY, HOUR, Limit, account_subject, ip_limit
@@ -42,7 +41,6 @@ router = APIRouter(prefix="/forum", tags=["forum"], dependencies=[Depends(_priva
 SessionDep = Annotated[Session, Depends(get_session)]
 AccountDep = Annotated[Account, Depends(current_account)]
 StoreDep = Annotated[Store, Depends(get_store)]
-LLMDep = Annotated[LLM, Depends(get_llm)]
 
 # Per-account limits (Redis only, keyed by a hash of the account id). The per-IP limits on
 # the routes are loose, because a campus network shares addresses.
@@ -106,7 +104,6 @@ def create_post(
     db: SessionDep,
     account: AccountDep,
     store: StoreDep,
-    llm: LLMDep,
     page_id: int,
     body: PostCreate,
 ) -> PostOut:
@@ -114,7 +111,7 @@ def create_post(
     POSTS_PER_HOUR.hit(store, subject)
     POSTS_PER_DAY.hit(store, subject)
     with _not_found():
-        return service.create_post(db, llm, account, page_id, body)
+        return service.create_post(db, account, page_id, body)
 
 
 @router.get("/posts/{post_id}", response_model=PostDetail)
@@ -127,13 +124,12 @@ def update_post(
     db: SessionDep,
     account: AccountDep,
     store: StoreDep,
-    llm: LLMDep,
     post_id: int,
     body: PostUpdate,
 ) -> PostOut:
     EDITS_PER_HOUR.hit(store, account_subject(account.id))
     with _not_found():
-        return service.update_post(db, llm, account, post_id, body)
+        return service.update_post(db, account, post_id, body)
 
 
 @router.delete(
@@ -154,12 +150,11 @@ def create_comment(
     db: SessionDep,
     account: AccountDep,
     store: StoreDep,
-    llm: LLMDep,
     post_id: int,
     body: CommentCreate,
 ) -> CommentOut:
     COMMENTS_PER_HOUR.hit(store, account_subject(account.id))
-    return service.create_comment(db, llm, account, post_id, body)
+    return service.create_comment(db, account, post_id, body)
 
 
 @router.post("/votes", response_model=VoteOut, dependencies=[WRITE_IP])

@@ -3702,6 +3702,19 @@
               }
             ],
             "title": "Note"
+          },
+          "suspend_days": {
+            "anyOf": [
+              {
+                "maximum": 365.0,
+                "minimum": 1.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Suspend Days"
           }
         },
         "required": [

@@ -3,7 +3,8 @@
  * deliberately fake: "Fake Instructor A", pseudonyms such as "Fake Heron", posts that say they
  * are fake. Forum routes answer 401 unless the mock session is logged in, like the API.
  *
- * Mock moderation: a body containing "[hold]" is held for review, "[reject]" is not published.
+ * Posts publish at once (no check before publishing, P08-1); the seeded held post stands for one
+ * an earlier version of the forum held, so the moderation queue has an item.
  * Setting sessionStorage "quarterly.mock.admin" = "1" makes the mock session an admin.
  */
 import { http, HttpResponse } from "msw";
@@ -261,10 +262,8 @@ function threadComments(postId: number): Comment[] {
   return out;
 }
 
-function moderate(text: string): { status: Post["status"]; note: string | null } {
-  if (text.includes("[hold]")) return { status: "held", note: "Held for a moderator because it may identify a person." };
-  if (text.includes("[reject]"))
-    return { status: "removed", note: "Not published because it reads as a personal attack. If you think this is a mistake, ask for human review." };
+/** Posts and comments publish at once (P08-1): no check before publishing. */
+function published(): { status: Post["status"]; note: string | null } {
   return { status: "visible", note: null };
 }
 
@@ -344,7 +343,7 @@ export const forumHandlers = [
     if (body.kind === "review" && posts.some((p) => p.post.page_id === pageId && p.author === ME && p.post.kind === "review")) {
       return err("You have already reviewed this course with this instructor. Edit your review instead.", 409);
     }
-    const m = moderate(`${body.title ?? ""} ${body.body_md}`);
+    const m = published();
     const rec = addPost(pageId, ME, {
       kind: body.kind,
       title: body.title ?? null,
@@ -374,7 +373,7 @@ export const forumHandlers = [
     if (body.title !== undefined && rec.post.kind === "discussion") rec.post.title = body.title;
     if (body.ratings) rec.post.ratings = { ...body.ratings, grade_bucket: body.ratings.grade_bucket ?? null };
     if (body.term_taken) rec.post.term_taken = body.term_taken;
-    const m = moderate(`${rec.post.title ?? ""} ${rec.post.body_md}`);
+    const m = published();
     rec.post.status = m.status;
     rec.post.moderation_note = m.note;
     rec.post.edited_day = today();
@@ -393,7 +392,7 @@ export const forumHandlers = [
     if (!rec || rec.post.status !== "visible") return err("Post not found.", 404);
     const body = (await request.json()) as S["CommentCreate"];
     const c = addComment(rec.post.id, ME, body.body_md, body.parent_id ?? null);
-    const m = moderate(body.body_md);
+    const m = published();
     c.comment.status = m.status;
     c.comment.moderation_note = m.note;
     return json<S["CommentOut"]>({ ...c.comment, mine: true }, 201);
@@ -469,6 +468,8 @@ export const forumHandlers = [
     if (!target) return err("Not found.", 404);
     target.status = body.decision === "approve" ? "visible" : "removed";
     for (const r of reports) if (r.target_type === type && r.target_id === id && r.status === "open") r.status = body.decision === "approve" ? "dismissed" : "upheld";
-    return json<S["ModerationResult"]>({ target_type: type, target_id: id, status: target.status, author_suspended: false });
+    if (body.decision === "approve" && body.suspend_days) return err("A suspension goes with removing the post or comment.", 422);
+    const suspended = body.decision === "remove" && !!body.suspend_days;
+    return json<S["ModerationResult"]>({ target_type: type, target_id: id, status: target.status, author_suspended: suspended });
   }),
 ];

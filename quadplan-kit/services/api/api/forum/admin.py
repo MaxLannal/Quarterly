@@ -1,13 +1,14 @@
 """The moderation queue in the curator console (SPEC "Moderation and community rules").
 
-The queue holds every post or comment that is held for review or has an open report. An
-admin approves (publish, dismiss the reports) or removes (take down, uphold the reports).
-Three upheld removals suspend the author for 30 days.
+Posts are published without a check (P08-1), so the queue holds what students report (and
+any item an earlier version of the forum held). An admin approves (keep it, dismiss the
+reports) or removes (take it down, uphold the reports). When removing, the admin may also
+suspend the author for a number of days; suspensions are never automatic (P08-3).
 
 Forum rows carry no account id, so finding the author of a removed item means recomputing
 `author_ref(account, page)` for every account: only the server, which holds the key, can link
-an item to an account, and it does so only when a removal is upheld. Nothing about the author
-is shown to the moderator except whether the removal triggered a suspension.
+an item to an account, and it does so only when an admin asks for a suspension. Nothing about
+the author is shown to the moderator except whether the suspension was applied.
 """
 
 from __future__ import annotations
@@ -35,8 +36,6 @@ from api.schemas.forum import (
 )
 
 TargetType = Literal["post", "comment"]
-STRIKES_FOR_SUSPENSION = 3
-SUSPENSION_DAYS = 30
 
 
 def require_admin(account: m.Account) -> None:
@@ -256,19 +255,11 @@ def decide(
     body: ModerationDecision,
 ) -> ModerationResult:
     target, page_id = _target(db, target_type, target_id)
-    already_removed = target.status == "removed" and bool(
-        db.scalar(
-            sa.select(
-                sa.exists().where(
-                    m.ModerationAction.target_type == target_type,
-                    m.ModerationAction.target_id == target_id,
-                    m.ModerationAction.actor == "admin",
-                    m.ModerationAction.action == "remove",
-                )
-            )
-        )
-    )
     approve = body.decision == "approve"
+    if approve and body.suspend_days is not None:
+        raise HTTPException(
+            status_code=422, detail="A suspension goes with removing the post or comment."
+        )
     target.status = "visible" if approve else "removed"
     db.execute(
         sa.update(m.Report)
@@ -291,13 +282,13 @@ def decide(
     )
     db.flush()
     suspended = False
-    if not approve and not already_removed:
+    if body.suspend_days is not None:
         author = _find_account(db, page_id, target.author_ref)
-        if author is not None:
-            strikes = upheld_removals(db, author.id)
-            if strikes and strikes % STRIKES_FOR_SUSPENSION == 0:
-                author.suspended_until = today() + dt.timedelta(days=SUSPENSION_DAYS)
-                suspended = True
+        if author is not None:  # None: the author deleted their account
+            until = today() + dt.timedelta(days=body.suspend_days)
+            if author.suspended_until is None or author.suspended_until < until:
+                author.suspended_until = until
+            suspended = True
     db.commit()
     return ModerationResult(
         target_type=target_type,

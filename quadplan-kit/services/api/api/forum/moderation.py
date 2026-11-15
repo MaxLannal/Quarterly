@@ -1,14 +1,18 @@
-"""Agent A4: moderation on submit (SPEC "A4. Moderation").
+"""Agent A4: the moderation classifier (SPEC "A4. Moderation").
 
-Every post, comment and edit is first scrubbed (`api.forum.scrub`), then labelled by the
-`a4_moderation` task through `llm_gateway`. `ok` publishes; `identifying_info` and
-`misconduct_claim` are held for a human; clear abuse is rejected, with the reason shown to the
-author, who can ask for human review (a report on their own post).
+Students' posts and comments are NOT checked before they are published (Richard, 2026-11-14,
+OPEN_QUESTIONS P08-1): they go up at once after the email/phone scrub, and anything that breaks
+the guidelines is taken down through reports and the admin moderation queue. A4 now labels
+only the AI-written "What students say" summaries (`api.attributes.a3`), which publish only
+on `ok`.
 
 The classifier holds no tools at all, reads the text only inside `<untrusted_source>`, and its
 answer is one label from a closed set: forum text cannot make it do anything but pick a label.
 When it cannot answer (no client, an error, a malformed answer, or no answer within 3 seconds)
-the post is held for review, unless `MODERATION_FALLBACK=publish` in development or tests.
+`classify` returns None and the summary is not published.
+
+`decide` turns a label into the note an author sees; it is kept for posts that an earlier
+version of the forum held or rejected.
 """
 
 from __future__ import annotations
@@ -24,8 +28,6 @@ from typing import Literal
 
 from llm_gateway.api import LLM, Message
 from pydantic import BaseModel
-
-from api.config import get_settings
 
 log = logging.getLogger(__name__)
 
@@ -131,12 +133,6 @@ def classify(llm: LLM, text: str, *, source_id: str) -> Label | None:
 
 def decide(label: Label | None) -> Decision:
     if label is None:
-        settings = get_settings()
-        if settings.moderation_fallback == "publish" and settings.environment in (
-            "development",
-            "test",
-        ):
-            return Decision("visible", UNAVAILABLE, None)
         return Decision(
             "held",
             UNAVAILABLE,
@@ -152,7 +148,3 @@ def decide(label: Label | None) -> Decision:
         f"Not published because {LABEL_TEXT[label]}. "
         "If you think this is a mistake, ask for human review.",
     )
-
-
-def moderate(llm: LLM, text: str, *, source_id: str) -> Decision:
-    return decide(classify(llm, text, source_id=source_id))

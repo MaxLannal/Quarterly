@@ -180,11 +180,11 @@ export function useReport() {
 export function useModerationDecision() {
   const refresh = useRefresh();
   return useMutation({
-    mutationFn: async ({ item, decision }: { item: ModerationItem; decision: "approve" | "remove" }) =>
+    mutationFn: async ({ item, decision, suspendDays }: { item: ModerationItem; decision: "approve" | "remove"; suspendDays?: number }) =>
       unwrap(
         await api.POST("/admin/moderation/{target_type}/{target_id}/decision", {
           params: { path: { target_type: item.target_type, target_id: item.target_id } },
-          body: { decision },
+          body: { decision, suspend_days: suspendDays ?? null },
         }),
       ),
     onSuccess: refresh,

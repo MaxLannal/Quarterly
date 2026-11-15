@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { EmptyState, inlineLinkClass, LoadingState, PageContainer, PageHeader, tallTargetClass } from "@/components/layout/page";
 import { Button } from "@/components/ui/button";
+import { Label, Select } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { Badge, CourseCode, ErrorText, Notice } from "@/components/ui/misc";
@@ -23,22 +24,31 @@ const LABELS: Record<string, string> = {
   off_topic: "Off topic",
 };
 
+/** Suspension lengths an admin can pick when removing (P08-3: suspensions are always manual). */
+const SUSPENSIONS = [7, 30, 90] as const;
+
 function QueueItem({ item, onDone }: { item: ModerationItem; onDone: (message: string) => void }) {
   const decide = useModerationDecision();
   const reports = item.reports ?? [];
   const where = `${item.course_code} with ${item.instructor_name}`;
+  const [suspendDays, setSuspendDays] = useState<string>("");
+  const selectId = `suspend-${item.target_type}-${item.target_id}`;
+  const name = item.title ?? `${item.kind} ${item.target_id}`;
 
   function act(decision: "approve" | "remove") {
+    const days = decision === "remove" && suspendDays ? Number(suspendDays) : undefined;
     decide.mutate(
-      { item, decision },
+      { item, decision, suspendDays: days },
       {
         onSuccess: (r) =>
           onDone(
             decision === "approve"
-              ? `Approved and published: ${item.title ?? `${item.kind} ${item.target_id}`}. Reports dismissed.`
+              ? `Kept: ${name}. Reports dismissed.`
               : r.author_suspended
-                ? "Removed. That was the author's third upheld removal: they are suspended for 30 days."
-                : `Removed: ${item.title ?? `${item.kind} ${item.target_id}`}. Reports upheld.`,
+                ? `Removed: ${name}. The author is suspended for ${days} days.`
+                : days
+                  ? `Removed: ${name}. The author has deleted their account, so there was no one to suspend.`
+                  : `Removed: ${name}. Reports upheld.`,
           ),
       },
     );
@@ -77,6 +87,17 @@ function QueueItem({ item, onDone }: { item: ModerationItem; onDone: (message: s
           ))}
         </ul>
       )}
+      <div className="flex flex-col gap-1.5 sm:max-w-xs">
+        <Label htmlFor={selectId}>When removing, also suspend the author</Label>
+        <Select id={selectId} value={suspendDays} onChange={(e) => setSuspendDays(e.target.value)}>
+          <option value="">No suspension</option>
+          {SUSPENSIONS.map((d) => (
+            <option key={d} value={String(d)}>
+              For {d} days
+            </option>
+          ))}
+        </Select>
+      </div>
       <div className="flex flex-wrap gap-2">
         <Button variant="outline" disabled={decide.isPending} onClick={() => act("approve")}>
           Approve
@@ -129,7 +150,7 @@ export default function AdminModerationPage() {
       <PageHeader
         eyebrow="Curator console"
         title={TITLE}
-        description="Held posts and comments, and anything with an open report, oldest first. Approve publishes and dismisses the reports; Remove takes it down and upholds them. Three upheld removals suspend the author for 30 days."
+        description="Reported posts and comments, oldest first. Approve keeps it and dismisses the reports; Remove takes it down and upholds them. You may also suspend the author when removing: suspensions are never automatic, and you never see who the author is."
         meta={
           <Link to="/guidelines" className={cn(inlineLinkClass, tallTargetClass)}>
             Community guidelines

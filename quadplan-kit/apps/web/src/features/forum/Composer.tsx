@@ -49,7 +49,7 @@ export function CommunityRules({ className }: { className?: string }) {
         ))}
       </ul>
       <p className="mt-3 text-caption text-muted">
-        Email addresses and phone numbers are removed automatically. Posts are checked before they appear.{" "}
+        Email addresses and phone numbers are removed automatically. Your post appears right away; anyone can report it, and moderators take down what breaks the rules.{" "}
         <Link to="/guidelines" className="text-primary underline underline-offset-2">
           Full guidelines
         </Link>

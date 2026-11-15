@@ -26,16 +26,11 @@ export default function GuidelinesPage() {
         <Section id="moderation" title="How moderation works">
           <ul className="flex list-disc flex-col gap-2 pl-6">
             <li>Email addresses and phone numbers are removed from every post before anyone reads it.</li>
-            <li>An automatic check reads each post when you submit it. Most posts appear at once.</li>
+            <li>Posts and comments appear as soon as you submit them. Nothing reads them first.</li>
+            <li>Anyone can report a post or comment. Moderators read every report and take down what breaks these guidelines.</li>
             <li>
-              A post that might identify someone, or that claims misconduct, waits for a person to read it. A post that is clearly
-              abusive is not published, and you see why. If you think that was a mistake, you can ask for human review.
-            </li>
-            <li>If the automatic check is unavailable, your post waits for a moderator instead of appearing straight away.</li>
-            <li>Anyone can report a post or comment. Moderators read every report.</li>
-            <li>
-              Three posts removed by a moderator suspend an account from posting, commenting and voting for 30 days. You can still log
-              in and read.
+              When a moderator removes a post, they may also suspend its author from posting, commenting and voting for a while. That is
+              always a person&apos;s decision, never automatic. A suspended account can still log in and read.
             </li>
           </ul>
         </Section>

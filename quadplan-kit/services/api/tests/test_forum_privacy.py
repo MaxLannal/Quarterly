@@ -158,12 +158,10 @@ def _dump(f: ForumEnv) -> dict[str, list[dict[str, Any]]]:
 def test_xss_payloads_through_the_api(f: ForumEnv) -> None:
     user = f.user()
     for payload in XSS_PAYLOADS[:6]:
-        f.answer("ok")
         created = user.post(
             f"/forum/pages/{f.pages['a_doe']}/posts", discussion("t", payload)
         ).json()
         _assert_safe(created["body_html"])
-        f.answer("ok")
         c = user.post(f"/forum/posts/{created['id']}/comments", {"body_md": payload}).json()
         _assert_safe(c["body_html"])
 
@@ -173,12 +171,10 @@ def test_leaked_database_cannot_join_posts_across_pages(f: ForumEnv) -> None:
     alice, bob = f.user("alice-anon"), f.user("bob-anon")
     # Alice is active on two pages: posts, a review, a comment, votes and a report on each.
     for page, term in (("a_doe", "2099-AU"), ("b_doe", "2100-WI")):
-        f.answer("ok", "ok", "ok")
         p = alice.post(f"/forum/pages/{f.pages[page]}/posts", discussion(f"q {page}")).json()
         alice.post(f"/forum/pages/{f.pages[page]}/posts", {**REVIEW, "term_taken": term})
         alice.post(f"/forum/posts/{p['id']}/comments", {"body_md": "me again"})
         alice.post("/forum/votes", {"target_type": "post", "target_id": p["id"], "value": 1})
-        f.answer("ok")
         theirs = bob.post(f"/forum/pages/{f.pages[page]}/posts", discussion("bob")).json()
         alice.post(
             "/forum/reports", {"target_type": "post", "target_id": theirs["id"], "reason": "spam"}
@@ -248,7 +244,6 @@ def test_leaked_database_cannot_join_posts_across_pages(f: ForumEnv) -> None:
 @pytest.mark.db
 def test_account_deletion_finds_forum_rows_by_recomputing_refs(f: ForumEnv) -> None:
     user = f.user("leaving-soon")
-    f.answer("ok", "ok")
     p = user.post(f"/forum/pages/{f.pages['a_doe']}/posts", discussion()).json()
     user.post(f"/forum/pages/{f.pages['b_doe']}/posts", discussion()).json()
     user.post("/forum/votes", {"target_type": "post", "target_id": p["id"], "value": 1})

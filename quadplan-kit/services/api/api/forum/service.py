@@ -17,7 +17,6 @@ from typing import Any, Literal
 
 import sqlalchemy as sa
 from fastapi import HTTPException
-from llm_gateway.api import LLM
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session, aliased
@@ -75,23 +74,6 @@ def ensure_can_write(account: m.Account) -> None:
 
 
 # --------------------------------------------------------------------------- moderation notes
-
-
-def record_decision(
-    db: Session, target_type: TargetType, target_id: int, decision: moderation.Decision
-) -> None:
-    if decision.reason is None:
-        return
-    action = {"visible": "publish", "held": "hold", "removed": "reject"}[decision.status]
-    db.add(
-        m.ModerationAction(
-            target_type=target_type,
-            target_id=target_id,
-            action=action,
-            reason=decision.reason,
-            actor="model",
-        )
-    )
 
 
 def _latest_actions(
@@ -387,14 +369,8 @@ def _check_term(db: Session, page: m.CourseInstructor, term: str) -> None:
         )
 
 
-def _moderate_post(llm: LLM, title: str | None, body: str) -> moderation.Decision:
-    text = f"Title: {title}\n\n{body}" if title else body
-    return moderation.moderate(llm, text, source_id="forum-post")
-
-
-def create_post(
-    db: Session, llm: LLM, account: m.Account, page_id: int, body: PostCreate
-) -> PostOut:
+def create_post(db: Session, account: m.Account, page_id: int, body: PostCreate) -> PostOut:
+    """Published at once (P08-1): no check before publishing, only the email/phone scrub."""
     page = pages.get_page(db, page_id)
     ensure_can_write(account)
     ref = author_ref(account.id, page.id)
@@ -416,7 +392,6 @@ def create_post(
         _check_term(db, page, body.term_taken)
     title = scrub(body.title).strip() or None if body.title else None
     text = scrub(body.body_md)
-    decision = _moderate_post(llm, title, text)
     pseudonym = pseudonym_for(db, ref, page.id)
     post = m.Post(
         course_instructor_id=page.id,
@@ -426,7 +401,7 @@ def create_post(
         title=title,
         body_md=text,
         term_taken=body.term_taken,
-        status=decision.status,
+        status="visible",
     )
     db.add(post)
     try:
@@ -436,7 +411,6 @@ def create_post(
         raise HTTPException(status_code=409, detail="You have already reviewed this page.") from exc
     if body.kind == "review" and body.ratings is not None:
         db.add(m.ReviewRating(post_id=post.id, **_rating_columns(body.ratings)))
-    record_decision(db, "post", post.id, decision)
     db.commit()
     return _one_post(db, post.id, ref)
 
@@ -458,9 +432,7 @@ def _removed_by_admin(db: Session, target_type: TargetType, target_id: int) -> b
     return action is not None and action.actor == "admin" and action.action == "remove"
 
 
-def update_post(
-    db: Session, llm: LLM, account: m.Account, post_id: int, body: PostUpdate
-) -> PostOut:
+def update_post(db: Session, account: m.Account, post_id: int, body: PostUpdate) -> PostOut:
     post, ref = _own_post(db, account, post_id)
     if post.status == "removed" and _removed_by_admin(db, "post", post.id):
         raise HTTPException(status_code=409, detail="A moderator removed this post.")
@@ -492,9 +464,6 @@ def update_post(
     if text_changed:
         forget_extractions(db, [post.id])
         forget_summary(db, post.course_instructor_id, post.id)
-        decision = _moderate_post(llm, post.title, post.body_md)
-        post.status = decision.status
-        record_decision(db, "post", post.id, decision)
     post.edited_day = today()
     db.commit()
     return _one_post(db, post.id, ref)
@@ -639,8 +608,9 @@ def get_post(db: Session, account: m.Account, post_id: int) -> PostDetail:
 
 
 def create_comment(
-    db: Session, llm: LLM, account: m.Account, post_id: int, body: CommentCreate
+    db: Session, account: m.Account, post_id: int, body: CommentCreate
 ) -> CommentOut:
+    """Published at once (P08-1), like posts."""
     post = db.get(m.Post, post_id)
     if post is None:
         raise not_found()
@@ -658,7 +628,6 @@ def create_comment(
             raise HTTPException(status_code=409, detail="You can only reply to published comments.")
     ensure_can_write(account)
     text = scrub(body.body_md)
-    decision = moderation.moderate(llm, text, source_id="forum-comment")
     pseudonym = pseudonym_for(db, ref, post.course_instructor_id)
     new_id = int(
         db.scalar(sa.select(sa.func.nextval(sa.func.pg_get_serial_sequence("comment", "id")))) or 0
@@ -672,11 +641,9 @@ def create_comment(
         author_ref=ref,
         pseudonym_id=pseudonym.id,
         body_md=text,
-        status=decision.status,
+        status="visible",
     )
     db.add(comment)
-    db.flush()
-    record_decision(db, "comment", comment.id, decision)
     db.commit()
     db.refresh(comment)
     note = None

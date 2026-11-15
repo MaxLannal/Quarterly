@@ -21,6 +21,21 @@ Status words used below:
 - **Later:** explicitly deferred.
 - **Resolved:** already done in code.
 
+## Answers to the questions from the steps 1-5 run (Richard, 2026-11-14)
+
+**Decided**
+- **P08-1. Posts when the automatic check is down.** No check before a post is published. Posts go up at once (emails and phone numbers are still removed). Keep a way to take a post down when it breaks the guidelines: reports and the admin moderation queue.
+- **P08-3. Repeat suspensions.** Suspensions are always manual. Removing posts never suspends anyone automatically; an admin suspends by hand from the moderation queue.
+- **P08-4. Which term a reviewer can pick.** Yes, keep it as built.
+- **P08-5. Cross-listed courses.** Yes: one forum page per cross-listed group and instructor, shown under every code.
+- **Q6. Transfer students.** Transfer students must take at least 1800 units at UChicago (the residency requirement). Transfer credits count toward the 3800 units "earned by enrollment".
+- **Q11. Pace and grading strictness.** Add the two optional 1-5 questions to the review form.
+- **P08-2.** Accept; mention it on the privacy page.
+
+**OK (go with the suggestion):** P08-6 to P08-13, Q7 to Q10, Q12, Q13, DF-1 to DF-13, P7-1 to P7-8, and the Safari note (use Chrome or Firefox locally). P7-1 and P7-2 wait until Richard lifts the hold on API calls. DF-8 (Rare UI parts) and P08-11 (instructors in the home search) are later work.
+
+**Work these answers create (being built 2026-11-14):** P08-1, P08-3, P08-5, Q6, Q11, P08-2 (privacy page line), P08-10 (back to the page after login), DF-6 (note the two pale colors in DESIGN.md), DF-7 (delete confirmation), DF-12 (About page text), DF-13 (phone jump buttons).
+
 ## Work these answers create (not started)
 
 **Spec and docs**
