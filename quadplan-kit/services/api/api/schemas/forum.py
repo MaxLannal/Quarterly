@@ -59,6 +59,10 @@ class ReviewRatingIn(BaseModel):
     workload_hours: float = Field(ge=0, le=100)
     would_recommend: bool
     grade_bucket: GradeBucket | None = None
+    #: Optional: how fast the course moved, 1 (slow) to 5 (fast).
+    pace: int | None = Field(default=None, ge=1, le=5)
+    #: Optional: how strictly it was graded, 1 (generous) to 5 (strict).
+    grading_strictness: int | None = Field(default=None, ge=1, le=5)
 
 
 class PostCreate(BaseModel):

@@ -105,6 +105,9 @@ class RatingSummary(BaseModel):
     workload_hours: float | None = None
     #: Share of reviews that would recommend, 0..1.
     recommend_rate: float | None = None
+    #: Averages over the reviews that answered these optional questions (None if none did).
+    pace: float | None = None
+    grading_strictness: float | None = None
 
 
 class InstructorCourse(BaseModel):

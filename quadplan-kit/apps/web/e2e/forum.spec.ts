@@ -78,6 +78,7 @@ test("write a review and a discussion post; vote", async ({ page }) => {
   const form = page.getByRole("form", { name: "Write a review" });
   await expect(page.getByRole("complementary", { name: "Community rules" })).toContainText("No claims of misconduct");
   for (const name of ["Overall 4 of 5", "Difficulty 2 of 5", "Intellectual intensity 3 of 5"]) await pick(form, name);
+  await pick(form, "How fast it moved 4 of 5"); // optional; grading is left blank
   await form.getByLabel("Workload: hours per week outside class").fill("8");
   await form.getByRole("radio", { name: "Yes" }).check();
   await form.getByLabel("Term you took it").selectOption("2099-AU");
@@ -86,6 +87,8 @@ test("write a review and a discussion post; vote", async ({ page }) => {
   const mine = page.getByRole("article", { name: "Review by Fake Wren" });
   await expect(mine).toBeVisible();
   await expect(mine).toContainText("<script>alert(1)</script>"); // shown as text, never run
+  await expect(mine.getByText("Pace", { exact: true })).toBeVisible();
+  await expect(mine.getByText("Grading", { exact: true })).toHaveCount(0);
 
   // A second review on the same page is refused.
   await page.getByRole("button", { name: "Write a review" }).click();

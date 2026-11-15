@@ -50,6 +50,22 @@ function ReviewFacts({ post }: { post: Post }) {
           <Dots value={r.intellectual_intensity} label="Intellectual intensity" /> <span aria-hidden="true">{r.intellectual_intensity}</span>
         </dd>
       </div>
+      {r.pace != null && (
+        <div className="flex items-center gap-2">
+          <dt>Pace</dt>
+          <dd className="flex items-center gap-1.5 text-ink">
+            <Dots value={r.pace} label="How fast it moved" /> <span aria-hidden="true">{r.pace}</span>
+          </dd>
+        </div>
+      )}
+      {r.grading_strictness != null && (
+        <div className="flex items-center gap-2">
+          <dt>Grading</dt>
+          <dd className="flex items-center gap-1.5 text-ink">
+            <Dots value={r.grading_strictness} label="How strictly it was graded" /> <span aria-hidden="true">{r.grading_strictness}</span>
+          </dd>
+        </div>
+      )}
       <div className="flex items-center gap-2">
         <dt>Workload</dt>
         <dd className="text-ink tabular-nums">{r.workload_hours} h/wk</dd>

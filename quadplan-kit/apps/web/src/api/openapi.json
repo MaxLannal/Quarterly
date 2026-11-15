@@ -5899,6 +5899,17 @@
             ],
             "title": "Difficulty"
           },
+          "grading_strictness": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Grading Strictness"
+          },
           "intellectual_intensity": {
             "anyOf": [
               {
@@ -5925,6 +5936,17 @@
               }
             ],
             "title": "Overall"
+          },
+          "pace": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pace"
           },
           "recommend_rate": {
             "anyOf": [
@@ -6271,6 +6293,19 @@
             ],
             "title": "Grade Bucket"
           },
+          "grading_strictness": {
+            "anyOf": [
+              {
+                "maximum": 5.0,
+                "minimum": 1.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Grading Strictness"
+          },
           "intellectual_intensity": {
             "maximum": 5.0,
             "minimum": 1.0,
@@ -6282,6 +6317,19 @@
             "minimum": 1.0,
             "title": "Overall",
             "type": "integer"
+          },
+          "pace": {
+            "anyOf": [
+              {
+                "maximum": 5.0,
+                "minimum": 1.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pace"
           },
           "workload_hours": {
             "maximum": 100.0,

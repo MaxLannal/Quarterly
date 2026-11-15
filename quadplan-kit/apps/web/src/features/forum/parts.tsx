@@ -10,7 +10,7 @@ import { ErrorText, Notice } from "@/components/ui/misc";
 import { cn } from "@/lib/utils";
 import { useReport, useVote, type RatingSummary, type TargetType, type VoteValue } from "./api";
 import { plural } from "./format";
-import { RATING_FIELDS, REPORT_REASONS } from "./rules";
+import { OPTIONAL_RATING_FIELDS, RATING_FIELDS, REPORT_REASONS } from "./rules";
 
 /** Every forum page needs a login (SPEC sitemap). Shown instead of the page when logged out. */
 export function LoginRequired({ title, eyebrow }: { title: string; eyebrow?: ReactNode }) {
@@ -42,6 +42,8 @@ export function RatingStats({ ratings }: { ratings: RatingSummary }) {
         label="Would recommend"
         value={n && ratings.recommend_rate != null ? `${Math.round(ratings.recommend_rate * 100)}%` : "–"}
       />
+      {ratings.pace != null && <Stat label="Pace (5 fast)" value={`${fmt(ratings.pace)} / 5`} />}
+      {ratings.grading_strictness != null && <Stat label="Grading (5 strict)" value={`${fmt(ratings.grading_strictness)} / 5`} />}
     </dl>
   );
 }
@@ -50,7 +52,7 @@ export function RatingStats({ ratings }: { ratings: RatingSummary }) {
 export function RatingBars({ distribution }: { distribution: Record<string, number[]> }) {
   return (
     <div className="grid gap-6 sm:grid-cols-3">
-      {RATING_FIELDS.map((field) => {
+      {[...RATING_FIELDS, ...OPTIONAL_RATING_FIELDS.filter((f) => (distribution[f.key] ?? []).some((c) => c > 0))].map((field) => {
         const counts = distribution[field.key] ?? [0, 0, 0, 0, 0];
         const max = Math.max(1, ...counts);
         const total = counts.reduce((a, b) => a + b, 0);

@@ -22,7 +22,7 @@ from api.schemas.forum import (
     ForumSummaryOut,
 )
 
-RATED_FIELDS = ("overall", "difficulty", "intellectual_intensity")
+RATED_FIELDS = ("overall", "difficulty", "intellectual_intensity", "pace", "grading_strictness")
 
 
 class PageNotFoundError(LookupError):
@@ -126,6 +126,8 @@ def _visible_reviews() -> Any:
             m.ReviewRating.intellectual_intensity,
             m.ReviewRating.workload_hours,
             m.ReviewRating.would_recommend,
+            m.ReviewRating.pace,
+            m.ReviewRating.grading_strictness,
         )
         .join(m.ReviewRating, m.ReviewRating.post_id == m.Post.id)
         .where(m.Post.kind == "review", m.Post.status == "visible")
@@ -145,10 +147,12 @@ def ratings_by_page(db: Session, page_ids: Collection[int]) -> dict[int, RatingS
             sa.func.avg(reviews.c.intellectual_intensity),
             sa.func.avg(reviews.c.workload_hours),
             sa.func.avg(sa.case((reviews.c.would_recommend, 1.0), else_=0.0)),
+            sa.func.avg(reviews.c.pace),
+            sa.func.avg(reviews.c.grading_strictness),
         ).group_by(reviews.c.course_instructor_id)
     )
     out = {pid: RatingSummary() for pid in page_ids}
-    for pid, n, overall, difficulty, intensity, workload, recommend in rows:
+    for pid, n, overall, difficulty, intensity, workload, recommend, pace, grading in rows:
         out[pid] = RatingSummary(
             n_reviews=n,
             overall=_round(overall),
@@ -156,6 +160,8 @@ def ratings_by_page(db: Session, page_ids: Collection[int]) -> dict[int, RatingS
             intellectual_intensity=_round(intensity),
             workload_hours=_round(workload),
             recommend_rate=_round(recommend, 3),
+            pace=_round(pace),
+            grading_strictness=_round(grading),
         )
     return out
 
@@ -168,7 +174,7 @@ def pooled_ratings(db: Session, page_ids: Sequence[int]) -> RatingSummary:
     if not page_ids:
         return RatingSummary()
     reviews = _visible_reviews().where(m.Post.course_instructor_id.in_(page_ids)).subquery()
-    n, overall, difficulty, intensity, workload, recommend = db.execute(
+    n, overall, difficulty, intensity, workload, recommend, pace, grading = db.execute(
         sa.select(
             sa.func.count(),
             sa.func.avg(reviews.c.overall),
@@ -176,6 +182,8 @@ def pooled_ratings(db: Session, page_ids: Sequence[int]) -> RatingSummary:
             sa.func.avg(reviews.c.intellectual_intensity),
             sa.func.avg(reviews.c.workload_hours),
             sa.func.avg(sa.case((reviews.c.would_recommend, 1.0), else_=0.0)),
+            sa.func.avg(reviews.c.pace),
+            sa.func.avg(reviews.c.grading_strictness),
         )
     ).one()
     return RatingSummary(
@@ -185,6 +193,8 @@ def pooled_ratings(db: Session, page_ids: Sequence[int]) -> RatingSummary:
         intellectual_intensity=_round(intensity),
         workload_hours=_round(workload),
         recommend_rate=_round(recommend, 3),
+        pace=_round(pace),
+        grading_strictness=_round(grading),
     )
 
 
@@ -197,7 +207,7 @@ def distribution(db: Session, page_ids: Sequence[int]) -> dict[str, list[int]]:
     for name in RATED_FIELDS:
         col = reviews.c[name]
         for value, count in db.execute(sa.select(col, sa.func.count()).group_by(col)):
-            if 1 <= value <= 5:
+            if value is not None and 1 <= value <= 5:  # pace and grading are optional
                 out[name][value - 1] = count
     return out
 

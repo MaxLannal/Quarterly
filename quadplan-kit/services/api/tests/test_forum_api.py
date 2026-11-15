@@ -175,6 +175,23 @@ def test_review_term_must_be_one_the_instructor_taught(f: ForumEnv) -> None:
     assert post(f, user, "a_doe", with_grade)["ratings"]["grade_bucket"] == "prefer not to say"
 
 
+def test_pace_and_grading_are_optional_review_questions(f: ForumEnv) -> None:
+    a, b, reader = f.user(), f.user(), f.user()
+    answered = {**REVIEW, "ratings": {**REVIEW["ratings"], "pace": 4, "grading_strictness": 2}}
+    first = post(f, a, "a_doe", answered)
+    assert (first["ratings"]["pace"], first["ratings"]["grading_strictness"]) == (4, 2)
+    skipped = post(f, b, "a_doe", REVIEW)  # the old form: still a complete review
+    assert skipped["ratings"]["pace"] is None and skipped["ratings"]["grading_strictness"] is None
+    page = reader.get(f"/forum/pages/{f.pages['a_doe']}").json()
+    # Averages count only the reviews that answered; the others do not pull them down.
+    assert page["ratings"]["n_reviews"] == 2
+    assert (page["ratings"]["pace"], page["ratings"]["grading_strictness"]) == (4.0, 2.0)
+    course = reader.get("/forum/courses/TEST%2010100").json()
+    assert course["rating_distribution"]["pace"] == [0, 0, 0, 1, 0]
+    too_high = {**REVIEW, "ratings": {**REVIEW["ratings"], "pace": 6}}
+    assert f.user().post(f"/forum/pages/{f.pages['a_doe']}/posts", too_high).status_code == 422
+
+
 def test_term_filter_and_kind_filter(f: ForumEnv) -> None:
     a, b = f.user(), f.user()
     post(f, a, "b_doe", {**REVIEW, "term_taken": "2099-AU"})

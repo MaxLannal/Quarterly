@@ -237,6 +237,10 @@ def _ratings(
         per_page[page_id]["recommend_rate"].append(
             Rating(1.0 if rating.would_recommend else 0.0, w, post_id)
         )
+        for key in ("pace", "grading_strictness"):  # optional questions (Q11)
+            answer = getattr(rating, key)
+            if answer is not None:
+                per_page[page_id][key].append(Rating(float(answer), w, post_id))
     # Text values: discussion posts only (a review's own ratings already count), from the
     # extraction of the post's current text, and one value per author, page and key (the
     # median of everything that author's posts on the page say), so neither one post nor one

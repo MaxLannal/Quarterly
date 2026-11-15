@@ -524,6 +524,8 @@ class ReviewRating(Base):
         sa.CheckConstraint("difficulty BETWEEN 1 AND 5", name="difficulty"),
         sa.CheckConstraint("intellectual_intensity BETWEEN 1 AND 5", name="intensity"),
         sa.CheckConstraint("workload_hours >= 0", name="workload"),
+        sa.CheckConstraint("pace BETWEEN 1 AND 5", name="pace"),
+        sa.CheckConstraint("grading_strictness BETWEEN 1 AND 5", name="grading"),
     )
     post_id: Mapped[int] = mapped_column(
         sa.ForeignKey("post.id", ondelete="CASCADE"), primary_key=True
@@ -534,6 +536,9 @@ class ReviewRating(Base):
     workload_hours: Mapped[float]
     would_recommend: Mapped[bool]
     grade_bucket: Mapped[str | None] = mapped_column(sa.String(16))
+    #: Optional (Q11, Richard 2026-11-14): how fast the course moved, how strictly it was graded.
+    pace: Mapped[int | None] = mapped_column(sa.SmallInteger)
+    grading_strictness: Mapped[int | None] = mapped_column(sa.SmallInteger)
 
 
 class Comment(Base):

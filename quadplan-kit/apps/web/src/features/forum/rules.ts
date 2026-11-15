@@ -22,3 +22,9 @@ export const RATING_FIELDS = [
   { key: "difficulty", label: "Difficulty", low: "Easy", high: "Very hard" },
   { key: "intellectual_intensity", label: "Intellectual intensity", low: "Light", high: "Intense" },
 ] as const;
+
+/** Optional review questions (Q11, Richard 2026-11-14). */
+export const OPTIONAL_RATING_FIELDS = [
+  { key: "pace", label: "How fast it moved", low: "Slow", high: "Fast" },
+  { key: "grading_strictness", label: "How strictly it was graded", low: "Generous", high: "Strict" },
+] as const;

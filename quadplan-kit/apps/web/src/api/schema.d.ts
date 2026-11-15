@@ -3137,6 +3137,8 @@ export interface components {
         RatingSummary: {
             /** Difficulty */
             difficulty?: number | null;
+            /** Grading Strictness */
+            grading_strictness?: number | null;
             /** Intellectual Intensity */
             intellectual_intensity?: number | null;
             /**
@@ -3146,6 +3148,8 @@ export interface components {
             n_reviews: number;
             /** Overall */
             overall?: number | null;
+            /** Pace */
+            pace?: number | null;
             /** Recommend Rate */
             recommend_rate?: number | null;
             /** Workload Hours */
@@ -3248,10 +3252,14 @@ export interface components {
             difficulty: number;
             /** Grade Bucket */
             grade_bucket?: ("A-range" | "B-range" | "C or lower" | "P/F" | "prefer not to say") | null;
+            /** Grading Strictness */
+            grading_strictness?: number | null;
             /** Intellectual Intensity */
             intellectual_intensity: number;
             /** Overall */
             overall: number;
+            /** Pace */
+            pace?: number | null;
             /** Workload Hours */
             workload_hours: number;
             /** Would Recommend */

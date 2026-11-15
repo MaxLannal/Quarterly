@@ -244,6 +244,8 @@ def _ratings_in(rating: m.ReviewRating | None) -> ReviewRatingIn | None:
             "workload_hours": rating.workload_hours,
             "would_recommend": rating.would_recommend,
             "grade_bucket": _GRADE_IN.get(bucket, bucket) if bucket else None,
+            "pace": rating.pace,
+            "grading_strictness": rating.grading_strictness,
         }
     )
 

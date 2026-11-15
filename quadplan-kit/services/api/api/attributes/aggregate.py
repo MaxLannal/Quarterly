@@ -39,6 +39,8 @@ SCALES: dict[str, tuple[float, float]] = {
     "difficulty": (1.0, 5.0),
     "intellectual_intensity": (1.0, 5.0),
     "recommend_rate": (0.0, 1.0),
+    "pace": (1.0, 5.0),
+    "grading_strictness": (1.0, 5.0),
 }
 
 
@@ -119,5 +121,13 @@ def department_prior(ratings: list[Rating]) -> Prior | None:
     )
 
 
-#: Attributes the forum can update (pace and grading strictness have no forum source yet).
-FORUM_KEYS = ("workload_hours", "difficulty", "intellectual_intensity", "recommend_rate")
+#: Attributes the forum updates. Pace and grading strictness come from the optional review
+#: questions (Q11), so only from the reviews that answered them.
+FORUM_KEYS = (
+    "workload_hours",
+    "difficulty",
+    "intellectual_intensity",
+    "recommend_rate",
+    "pace",
+    "grading_strictness",
+)

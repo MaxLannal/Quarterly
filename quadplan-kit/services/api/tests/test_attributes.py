@@ -303,6 +303,24 @@ def test_escaped_quotes_still_match_the_post() -> None:
 
 
 @pytest.mark.db
+def test_pace_and_grading_come_from_the_reviews_that_answered(db: Session) -> None:
+    page = make_page(db)
+    posts = [review(db, page, workload=w) for w in (8, 9, 10, 11)]
+    for post_row, (pace, grading) in zip(
+        posts, [(4, 5), (4, 4), (5, None), (None, None)], strict=True
+    ):
+        rating = db.get(m.ReviewRating, post_row.id)
+        assert rating is not None
+        rating.pace, rating.grading_strictness = pace, grading
+    db.flush()
+    run_nightly(db, UnavailableLLM(), TODAY)
+    pace = value(db, "course", "TEST 10000", "pace")
+    assert pace is not None and pace.n == 3 and pace.value == pytest.approx(13 / 3, abs=1e-3)
+    # Only two reviews answered the grading question: below 3, nothing is published.
+    assert value(db, "course", "TEST 10000", "grading_strictness") is None
+
+
+@pytest.mark.db
 def test_old_reviews_weigh_half(db: Session) -> None:
     page = make_page(db)
     review(db, page, workload=10)

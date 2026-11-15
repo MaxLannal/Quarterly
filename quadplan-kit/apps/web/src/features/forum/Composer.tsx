@@ -6,7 +6,7 @@ import { ErrorText, Notice } from "@/components/ui/misc";
 import { termLabel } from "@/features/planner/terms";
 import { cn } from "@/lib/utils";
 import { useCreatePost, useUpdatePost, type ForumPage, type Post, type PostKind, type ReviewRatings } from "./api";
-import { COMMUNITY_RULES, GRADE_BUCKETS, RATING_FIELDS } from "./rules";
+import { COMMUNITY_RULES, GRADE_BUCKETS, OPTIONAL_RATING_FIELDS, RATING_FIELDS } from "./rules";
 
 type Scale = 1 | 2 | 3 | 4 | 5;
 type GradeBucket = NonNullable<ReviewRatings["grade_bucket"]>;
@@ -18,6 +18,8 @@ interface Draft {
   overall: Scale | null;
   difficulty: Scale | null;
   intellectual_intensity: Scale | null;
+  pace: Scale | null;
+  grading_strictness: Scale | null;
   workload: string;
   recommend: "yes" | "no" | "";
   grade: GradeBucket | "";
@@ -32,6 +34,8 @@ function draftFrom(post?: Post): Draft {
     overall: (r?.overall as Scale | undefined) ?? null,
     difficulty: (r?.difficulty as Scale | undefined) ?? null,
     intellectual_intensity: (r?.intellectual_intensity as Scale | undefined) ?? null,
+    pace: (r?.pace as Scale | null | undefined) ?? null,
+    grading_strictness: (r?.grading_strictness as Scale | null | undefined) ?? null,
     workload: r ? String(r.workload_hours) : "",
     recommend: r ? (r.would_recommend ? "yes" : "no") : "",
     grade: r?.grade_bucket ?? "",
@@ -67,6 +71,7 @@ function ScaleField({
   value,
   onChange,
   invalid,
+  onClear,
 }: {
   name: string;
   label: string;
@@ -75,11 +80,13 @@ function ScaleField({
   value: Scale | null;
   onChange: (v: Scale) => void;
   invalid: boolean;
+  /** Optional questions: shows "(optional)" and a way to take the answer back. */
+  onClear?: () => void;
 }) {
   return (
     <fieldset className="min-w-0">
       <legend className="mb-1.5 text-caption font-medium text-ink">
-        {label} <span className="font-normal text-muted">(1 {low}, 5 {high})</span>
+        {label} <span className="font-normal text-muted">(1 {low}, 5 {high}{onClear ? "; optional" : ""})</span>
       </legend>
       <div className="flex flex-wrap gap-1">
         {([1, 2, 3, 4, 5] as const).map((n) => (
@@ -97,6 +104,11 @@ function ScaleField({
             <span className="sr-only">{`${label} ${n} of 5`}</span>
           </label>
         ))}
+        {onClear && value !== null && (
+          <Button type="button" variant="ghost" onClick={onClear}>
+            Clear
+          </Button>
+        )}
       </div>
     </fieldset>
   );
@@ -156,6 +168,8 @@ export function Composer({
           workload_hours: workload,
           would_recommend: draft.recommend === "yes",
           grade_bucket: draft.grade || null,
+          pace: draft.pace,
+          grading_strictness: draft.grading_strictness,
         }
       : null;
     const done = (post: Post) => {
@@ -203,6 +217,21 @@ export function Composer({
                   value={draft[f.key]}
                   onChange={(v) => set(f.key, v)}
                   invalid={tried}
+                />
+              ))}
+            </div>
+            <div className="grid gap-5 sm:grid-cols-2">
+              {OPTIONAL_RATING_FIELDS.map((f) => (
+                <ScaleField
+                  key={f.key}
+                  name={`${id}-${f.key}`}
+                  label={f.label}
+                  low={f.low}
+                  high={f.high}
+                  value={draft[f.key]}
+                  onChange={(v) => set(f.key, v)}
+                  invalid={false}
+                  onClear={() => set(f.key, null)}
                 />
               ))}
             </div>
