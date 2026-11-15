@@ -43,17 +43,24 @@ def _sort_terms(terms: Collection[str]) -> list[str]:
 def crosslisted_codes(db: Session, code: str) -> list[str]:
     """`code` and every code it is cross-listed with (in any catalog year), sorted. A course
     with the same instructor has one forum page under all of them (P08-5, Richard 2026-11-14)."""
-    groups = (
-        sa.select(m.CrosslistGroup.group_id)
-        .join(m.Course, m.Course.id == m.CrosslistGroup.course_id)
-        .where(m.Course.code == code)
-    )
-    siblings = db.scalars(
-        sa.select(m.Course.code)
-        .join(m.CrosslistGroup, m.CrosslistGroup.course_id == m.Course.id)
-        .where(m.CrosslistGroup.group_id.in_(groups))
-    )
-    return sorted({code, *siblings})
+    found = {code}
+    frontier = {code}
+    while frontier:  # follow chains: A ~ B in one catalog year, B ~ C in another
+        groups = (
+            sa.select(m.CrosslistGroup.group_id)
+            .join(m.Course, m.Course.id == m.CrosslistGroup.course_id)
+            .where(m.Course.code.in_(frontier))
+        )
+        siblings = set(
+            db.scalars(
+                sa.select(m.Course.code)
+                .join(m.CrosslistGroup, m.CrosslistGroup.course_id == m.Course.id)
+                .where(m.CrosslistGroup.group_id.in_(groups))
+            )
+        )
+        frontier = siblings - found
+        found |= siblings
+    return sorted(found)
 
 
 def ensure_page(

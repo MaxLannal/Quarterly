@@ -3714,7 +3714,7 @@
           "suspend_days": {
             "anyOf": [
               {
-                "maximum": 365.0,
+                "maximum": 90.0,
                 "minimum": 1.0,
                 "type": "integer"
               },

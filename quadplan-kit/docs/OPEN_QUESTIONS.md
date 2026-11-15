@@ -35,6 +35,10 @@ Status words used below:
 - **Q11. Pace and grading strictness.** Add the two optional 1-5 questions to the review form.
 - **P08-2.** Accept; mention it on the privacy page.
 
+**New question from building these answers (2026-11-14)**
+- **P08-14. Suspended students, account deletion, and lifting a suspension.** A suspended student cannot delete their account until the suspension ends (now at most 90 days, the longest choice in the admin menu). There is also no button yet for an admin to end a suspension early.
+  **Suggested:** keep the block (otherwise deleting and signing up again would dodge the suspension), keep 90 days as the longest, and add an "end suspension" action to the admin page later. Option: let suspended students delete their account at any time; their email is then free to sign up again.
+
 **OK (go with the suggestion):** P08-6 to P08-13, Q7 to Q10, Q12, Q13, DF-1 to DF-13, P7-1 to P7-8, and the Safari note (use Chrome or Firefox locally). P7-1 and P7-2 wait until Richard lifts the hold on API calls. DF-8 (Rare UI parts) and P08-11 (instructors in the home search) are later work.
 
 **Work these answers create (being built 2026-11-14):** P08-1, P08-3, P08-5, Q6, Q11, P08-2 (privacy page line), P08-10 (back to the page after login), DF-6 (note the two pale colors in DESIGN.md), DF-7 (delete confirmation), DF-12 (About page text), DF-13 (phone jump buttons).

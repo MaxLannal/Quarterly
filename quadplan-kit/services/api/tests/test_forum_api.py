@@ -579,6 +579,36 @@ def test_reports_queue_and_decisions(f: ForumEnv) -> None:
     assert author.delete(f"/forum/posts/{bad['id']}").status_code == 409
 
 
+def test_removing_a_post_forgets_its_quotes_and_the_page_summary(f: ForumEnv) -> None:
+    author, admin = f.user(), f.admin()
+    target = post(f, author, "a_doe", discussion("names someone", "It was clearly J. Smith."))
+    with f.env.db() as db:
+        db.add(
+            m.ExtractionRun(
+                kind="a3_extraction",
+                model="a3_forum_extraction",
+                prompt_version="1",
+                output={"post_id": target["id"], "exam_style": [{"quote": "J. Smith"}]},
+                status="ok",
+            )
+        )
+        db.add(
+            m.ForumSummary(
+                course_instructor_id=f.pages["a_doe"],
+                text="Mixed views [1].",
+                citations=[{"post_id": 999999}],  # draws on the post without citing it
+                model="a3_forum_summary",
+                n_posts=1,
+                computed_at=dt.date.today(),
+            )
+        )
+        db.commit()
+    admin.post(f"/admin/moderation/post/{target['id']}/decision", {"decision": "remove"})
+    with f.env.db() as db:
+        assert db.scalars(select(m.ExtractionRun)).all() == []
+        assert db.get(m.ForumSummary, f.pages["a_doe"]) is None
+
+
 def test_suspensions_are_manual(f: ForumEnv) -> None:
     author, admin, bystander = f.user(), f.admin(), f.user()
     targets = [
@@ -594,6 +624,12 @@ def test_suspensions_are_manual(f: ForumEnv) -> None:
         assert r.json()["author_suspended"] is False
     with f.env.db() as db:
         assert set(db.scalars(select(m.Account.suspended_until)).all()) == {None}
+    # At most 90 days, the longest choice in the admin menu.
+    too_long = admin.post(
+        f"/admin/moderation/comment/{rude_comment['id']}/decision",
+        {"decision": "remove", "suspend_days": 120},
+    )
+    assert too_long.status_code == 422
     # A suspension only comes with a removal.
     bad = admin.post(
         f"/admin/moderation/comment/{rude_comment['id']}/decision",
@@ -618,6 +654,13 @@ def test_suspensions_are_manual(f: ForumEnv) -> None:
         ).one()
         assert account.suspended_until == dt.datetime.now(dt.UTC).date() + dt.timedelta(days=30)
         assert account.status == "active"  # they can still log in
+        reasons = db.scalars(
+            select(m.ModerationAction.reason).where(
+                m.ModerationAction.target_type == "comment",
+                m.ModerationAction.target_id == rude_comment["id"],
+            )
+        ).all()
+        assert reasons == ["[author suspended 30 days]"]  # the length is on record
 
     # Suspended: reading works; posting, commenting and voting do not.
     assert author.get(f"/forum/pages/{f.pages['a_doe']}/posts").status_code == 200

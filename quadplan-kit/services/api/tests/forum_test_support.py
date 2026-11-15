@@ -138,7 +138,7 @@ def seed_pages(env: Env) -> dict[str, int]:
 
 @contextmanager
 def forum_env(db_url: str, monkeypatch: pytest.MonkeyPatch) -> Iterator[ForumEnv]:
-    # Independent of the developer's .env (which sets MODERATION_FALLBACK=publish).
+    # Independent of the developer's .env.
     with auth_env(db_url, monkeypatch) as env:
         llm = FakeLLM()
         env.app.dependency_overrides[get_llm] = lambda: llm

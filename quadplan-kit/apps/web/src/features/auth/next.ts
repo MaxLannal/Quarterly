@@ -7,9 +7,20 @@ const DEFAULT = "/plan";
  * Only a path on this site is accepted, so a crafted link cannot send anyone elsewhere.
  */
 export function safeNext(raw: string | null | undefined): string {
-  if (!raw || !raw.startsWith("/") || raw.startsWith("//") || raw.startsWith("/\\")) return DEFAULT;
-  if (raw.startsWith("/login") || raw.startsWith("/signup")) return DEFAULT;
-  return raw;
+  // Control characters (browsers drop tabs and newlines, so "/\t/x" reads as "//x") and
+  // backslashes are never part of a page path here.
+  // eslint-disable-next-line no-control-regex
+  if (!raw || !raw.startsWith("/") || /[\u0000-\u001f\u007f\\]/.test(raw)) return DEFAULT;
+  let url: URL;
+  try {
+    url = new URL(raw, "https://quarterly.invalid");
+  } catch {
+    return DEFAULT;
+  }
+  if (url.origin !== "https://quarterly.invalid") return DEFAULT; // "//host" and the like
+  const path = url.pathname + url.search + url.hash;
+  if (path.startsWith("/login") || path.startsWith("/signup")) return DEFAULT;
+  return path;
 }
 
 function withNext(page: "/login" | "/signup", from: string): string {

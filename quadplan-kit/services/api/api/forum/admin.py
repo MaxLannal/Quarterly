@@ -22,6 +22,7 @@ import sqlalchemy as sa
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
+from api.attributes.records import forget_extractions
 from api.auth.hashing import author_ref
 from api.db import models as m
 from api.forum.markdown import render_markdown
@@ -270,16 +271,24 @@ def decide(
         )
         .values(status="dismissed" if approve else "upheld")
     )
+    reason = body.note
+    if body.suspend_days is not None:  # the length is kept with the decision that set it
+        reason = f"{body.note or ''} [author suspended {body.suspend_days} days]".strip()
     db.add(
         m.ModerationAction(
             target_type=target_type,
             target_id=target_id,
             action="approve" if approve else "remove",
-            reason=body.note,
+            reason=reason,
             actor="admin",
             actor_account_id=admin.id,
         )
     )
+    if not approve and target_type == "post":
+        # Nothing derived from a removed post may outlive it: its extracted quotes, and the
+        # page's "What students say" (which may draw on it without citing it).
+        forget_extractions(db, [target_id])
+        db.execute(sa.delete(m.ForumSummary).where(m.ForumSummary.course_instructor_id == page_id))
     db.flush()
     suspended = False
     if body.suspend_days is not None:

@@ -208,8 +208,9 @@ class ModerationDecision(BaseModel):
     decision: Literal["approve", "remove"]
     note: str | None = Field(default=None, max_length=1000)
     #: With "remove" only: also suspend the author from posting, commenting and voting for this
-    #: many days. Suspensions are always an admin's choice, never automatic (P08-3).
-    suspend_days: int | None = Field(default=None, ge=1, le=365)
+    #: many days (at most 90, the longest choice in the admin menu). Suspensions are always an
+    #: admin's choice, never automatic (P08-3).
+    suspend_days: int | None = Field(default=None, ge=1, le=90)
 
 
 class ModerationResult(BaseModel):

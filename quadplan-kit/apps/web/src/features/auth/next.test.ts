@@ -11,6 +11,11 @@ describe("safeNext", () => {
     ["/\\evil.example", "/plan"],
     ["/login", "/plan"],
     ["/signup?next=/x", "/plan"],
+    ["/\t/evil.example", "/plan"],
+    ["/\n/evil.example", "/plan"],
+    ["/%2F/evil.example", "/%2F/evil.example"], // stays a path on this site
+    ["javascript:alert(1)", "/plan"],
+    ["/courses/../plan", "/plan"],
   ])("%s -> %s", (raw, expected) => {
     expect(safeNext(raw)).toBe(expected);
   });

@@ -97,8 +97,8 @@ def delete_account(
 ) -> None:
     _refuse_while_restricted(account)
     _confirm_password(store, account, body.password)
-    # Deleting and signing up again would also reset suspension strikes: wait 30 days after a
-    # moderator's upheld removal.
+    # Deleting and signing up again would wipe the record of a recent upheld removal that a
+    # moderator may still act on (for example with a suspension): wait 30 days (P08-12).
     since = dt.datetime.now(dt.UTC).date() - dt.timedelta(days=30)
     if upheld_removals(db, account.id, since) > 0:
         raise HTTPException(
