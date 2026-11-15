@@ -37,21 +37,22 @@ function QueueItem({ item, onDone }: { item: ModerationItem; onDone: (message: s
 
   function act(decision: "approve" | "remove") {
     const days = decision === "remove" && suspendDays ? Number(suspendDays) : undefined;
-    decide.mutate(
-      { item, decision, suspendDays: days },
-      {
-        onSuccess: (r) =>
-          onDone(
-            decision === "approve"
-              ? `Kept: ${name}. Reports dismissed.`
-              : r.author_suspended
-                ? `Removed: ${name}. The author is suspended for ${days} days.`
-                : days
-                  ? `Removed: ${name}. The author has deleted their account, so there was no one to suspend.`
-                  : `Removed: ${name}. Reports upheld.`,
-          ),
-      },
-    );
+    // mutateAsync, not per-call onSuccess: the queue refresh removes this item (and unmounts
+    // this card) before React Query would run a per-call callback, so the message got lost.
+    decide
+      .mutateAsync({ item, decision, suspendDays: days })
+      .then((r) =>
+        onDone(
+          decision === "approve"
+            ? `Kept: ${name}. Reports dismissed.`
+            : r.author_suspended
+              ? `Removed: ${name}. The author is suspended for ${days} days.`
+              : days
+                ? `Removed: ${name}. The author has deleted their account, so there was no one to suspend.`
+                : `Removed: ${name}. Reports upheld.`,
+        ),
+      )
+      .catch(() => undefined); // shown by decide.error
   }
 
   return (
@@ -204,10 +205,10 @@ function Suspensions({ onDone }: { onDone: (message: string) => void }) {
             variant="outline"
             disabled={end.isPending}
             onClick={() =>
-              end.mutate(
-                { targetType: s.target_type, targetId: s.target_id },
-                { onSuccess: () => onDone(`Suspension ended: ${s.title ?? `${s.target_type} ${s.target_id}`}.`) },
-              )
+              void end
+                .mutateAsync({ targetType: s.target_type, targetId: s.target_id })
+                .then(() => onDone(`Suspension ended: ${s.title ?? `${s.target_type} ${s.target_id}`}.`))
+                .catch(() => undefined)
             }
           >
             End suspension
