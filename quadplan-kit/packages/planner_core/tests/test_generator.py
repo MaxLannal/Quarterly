@@ -463,6 +463,26 @@ def test_explaining_stays_within_the_time_limit() -> None:
     assert time.monotonic() - started < 1.5
 
 
+def test_unknown_things_already_in_the_plan_are_named_before_solving() -> None:
+    """FEEDBACK "Generate Plan Failure": a credit mapping to a code the catalog does not have,
+    or a completed course from another catalog, used to make every variant fail V01 ("none
+    passed verification. This is a bug")."""
+    credit = [{"kind": "AP", "label": "AP", "maps_to": "NOPE 10000", "units": 100}]
+    result = run(plan(credits=credit))
+    assert result.infeasible is not None and not result.alerts
+    assert result.infeasible.message == (
+        "Fix these first, then generate again: A credit maps to NOPE 10000, which is not in "
+        "the 2099-00 catalog."
+    )
+    done = [{"course": "NOPE 10000", "term": "2099-AU", "status": "completed"}]
+    result = run(plan(items=done))
+    assert result.infeasible is not None and "NOPE 10000 is not in the 2099-00 catalog" in (
+        result.infeasible.message
+    )
+    # A planned course the catalog does not know is simply replaced.
+    assert run(plan(items=[{"course": "NOPE 10000", "term": "2099-AU"}])).variants
+
+
 def test_rejected_variants_raise_an_alert(monkeypatch: pytest.MonkeyPatch) -> None:
     def broken(p: PlanState, *_: Any) -> tuple[Report, list[str]]:
         return Report(status="errors", plan_hash="x", core_version="x"), ["boom"]
@@ -470,7 +490,10 @@ def test_rejected_variants_raise_an_alert(monkeypatch: pytest.MonkeyPatch) -> No
     monkeypatch.setattr(gen, "verify_checked", broken)
     result = run(plan())
     assert result.variants == [] and result.alerts and "ALERT" in result.alerts[0]
-    assert result.infeasible is not None and "bug" in result.infeasible.message
+    # Never "this is a bug": the student is told what the check found (FEEDBACK, 2026-11-14).
+    assert result.infeasible is not None
+    assert result.infeasible.message.startswith("No plan could be checked:")
+    assert "bug" not in result.infeasible.message
 
 
 def test_without_college_policy() -> None:

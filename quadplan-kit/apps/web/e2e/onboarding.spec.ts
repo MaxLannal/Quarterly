@@ -11,9 +11,13 @@ test("onboarding: five steps create a plan and open the generator", async ({ pag
   await page.getByRole("radio", { name: "First-year" }).check();
   await page.getByRole("button", { name: "Next" }).click();
 
-  // 2. Credits
+  // 2. Credits. A code the catalog does not have is refused here (it used to make every
+  // generated plan fail: FEEDBACK "Generate Plan Failure").
   await page.getByLabel("Kind").selectOption("AP");
   await page.getByLabel("Description").fill("Fake AP exam");
+  await page.getByLabel("Counts as course (if known)").fill("NOPE 10000");
+  await page.getByRole("button", { name: "Add credit" }).click();
+  await expect(page.getByRole("alert")).toHaveText("NOPE 10000 is not in the 2099-00 catalog. Leave this empty if you are not sure.");
   await page.getByLabel("Counts as course (if known)").fill("TEST 10000");
   await page.getByRole("button", { name: "Add credit" }).click();
   await expect(page.getByText("AP: Fake AP exam → TEST 10000")).toBeVisible();

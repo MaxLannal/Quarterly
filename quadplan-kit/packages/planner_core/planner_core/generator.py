@@ -36,7 +36,7 @@ from typing import Any
 
 from ortools.sat.python import cp_model
 
-from planner_core.checks import P_OFFERED_WARN, reason_applies
+from planner_core.checks import P_OFFERED_WARN, check_v01, reason_applies
 from planner_core.dsl import expr_courses, residency_fraction, share_applies
 from planner_core.goalcompile import GoalSpec, compile_goals, term_label
 from planner_core.index import ENROLLED, Index, PlanFacts, Taken, grade_ok
@@ -1283,6 +1283,15 @@ def generate(
             f"{MAX_YEARS} years of the entry quarter).",
             [],
         )
+    # Something already in the plan that the catalog does not know (a credit that maps to an
+    # unknown code, a completed course from another year's catalog...) would be carried into
+    # every variant and fail V01: say so before solving (FEEDBACK "Generate Plan Failure").
+    unknown = _input_problems(plan, rules, catalog)
+    if unknown:
+        return _impossible(
+            "Fix these first, then generate again: " + " ".join(unknown[:3]),
+            [],
+        )
     b = _Builder(plan, rules, catalog, options)
     b.deadline = deadline
     early = b.build()
@@ -1321,6 +1330,7 @@ def generate(
             "No plan was found within the time limit. Try a smaller scope or fewer goals.", []
         )
     result = GenerateResult()
+    first_errors: list[str] = []
     earlier: list[dict[str, str]] = []
     for n in range(options.variants):
         if n > 0:
@@ -1337,6 +1347,7 @@ def generate(
         report, problems = verify_checked(vplan, rules, catalog)
         if problems or report.certificate is None or report.status == "errors":
             codes = sorted({i.code for i in report.issues if i.level == "error"})
+            first_errors.extend(i.message for i in report.issues if i.level == "error")
             result.alerts.append(
                 f"ALERT {label} was dropped: verify/check_certificate rejected it "
                 f"(errors {codes}, checker problems {problems[:3]})."
@@ -1349,11 +1360,29 @@ def generate(
             )
         )
     if not result.variants and result.alerts:
+        # Never a dead end: say what the check found (the alert is logged for us as well).
+        reason = first_errors[0] if first_errors else "the plan's certificate did not check out"
         result.infeasible = Infeasibility(
-            message="The generator found plans, but none passed verification. This is a bug; it "
-            "has been reported.",
+            message=f"No plan could be checked: {reason} Change this in your plan and generate "
+            "again.",
         )
     return result
+
+
+def _input_problems(plan: PlanState, rules: RuleSet, catalog: Catalog) -> list[str]:
+    """V01 errors about what the student already has in the plan (credits, completed,
+    in-progress, transfer, exam and locked courses), which the generator keeps as they are."""
+    kept = [
+        i
+        for i in plan.items
+        if i.course is None
+        or i.locked
+        or i.status in ("completed", "in_progress", "transfer", "exam")
+    ]
+    fixed = plan.model_copy(update={"items": kept})
+    idx = Index(catalog, rules)
+    issues = check_v01(fixed, rules, catalog, PlanFacts(fixed, idx), idx)
+    return [i.message for i in issues if i.level == "error"]
 
 
 def _left(deadline: float) -> float:

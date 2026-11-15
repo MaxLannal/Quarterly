@@ -1,6 +1,7 @@
 import { DndContext, KeyboardSensor, PointerSensor, useDraggable, useDroppable, useSensor, useSensors, type DragEndEvent } from "@dnd-kit/core";
 import { useEffect, useId, useRef, useState, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
+import { api } from "@/api/client";
 import { useCatalogYears, usePrograms } from "@/api/hooks";
 import type { Credit, Goal, PlanState } from "@/api/types";
 import { PageContainer, PageHeader } from "@/components/layout/page";
@@ -97,11 +98,16 @@ function StepCredits({ d, set }: { d: Draft; set: (p: Partial<Draft>) => void })
   const [units, setUnits] = useState("100");
   const [err, setErr] = useState<string | null>(null);
 
-  function add(e: FormEvent) {
+  async function add(e: FormEvent) {
     e.preventDefault();
     const code = mapsTo.trim().toUpperCase();
     if (!label.trim()) return setErr("Describe the credit, e.g. “AP Calculus BC, score 5”.");
     if (code && !/^[A-Z]{2,5} \d{5}$/.test(code)) return setErr("Course codes look like “ABCD 12345”.");
+    if (code) {
+      // A code the catalog does not have would make every generated plan fail its check.
+      const { response } = await api.GET("/courses/{code}", { params: { path: { code }, query: { catalog_year: d.catalogYear } } });
+      if (response.status === 404) return setErr(`${code} is not in the ${d.catalogYear} catalog. Leave this empty if you are not sure.`);
+    }
     setErr(null);
     set({ credits: [...d.credits, { kind, label: label.trim(), maps_to: code || null, units: Math.max(0, Math.round(Number(units)) || 0) }] });
     setLabel("");
@@ -126,7 +132,7 @@ function StepCredits({ d, set }: { d: Draft; set: (p: Partial<Draft>) => void })
           ))}
         </ul>
       )}
-      <form onSubmit={add} className="grid gap-4 rounded-xl border border-hairline bg-canvas-soft p-5 sm:grid-cols-2" aria-label="Add a credit">
+      <form onSubmit={(e) => void add(e)} className="grid gap-4 rounded-xl border border-hairline bg-canvas-soft p-5 sm:grid-cols-2" aria-label="Add a credit">
         <div>
           <label htmlFor={`${id}-kind`} className={labelClass}>
             Kind
