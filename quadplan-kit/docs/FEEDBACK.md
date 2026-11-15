@@ -25,6 +25,47 @@ Write down anything you notice: something broken, something confusing, or someth
 ## New
 
 <!-- Add new items here, newest first. -->
+### Generate Plan Faliure
+- Date: 2026-11-14
+- Where: Generate Plan
+- Issue: I click on "generate plan" and got the response "No plan fits all of these settings. The generator found plans, but none passed verification. This is a bug; it has been reported."
+- How important: Must fix
+- Status: New Issue
+
+### Locations of Summer Quarter
+- Date: 2026-11-14
+- Where: Planner
+- What you want: Move the summer quarter of each year under the year after. For example, the summer quarter of 2026 should fall under the academic year 2026-2027. This is because a transfer student may take the summer quarter before the autumn quarter they are admitted for, and a graduating student cannot take courses in the summer. It makes sense to add it before. 
+- How important: Must fix
+- Status: New Issue
+
+### Number of Years
+- Date: 2026-11-14
+- Where: Planner
+- What you want: The default number of years for a transfer student should be how many years they have left. For example, if I come in as a second-year transfer student, I should have three years left. We should give the user the option to add years and also delete years. Some users also graduate early, so they may graduate in the winter or autumn quarter. That needs to also be an option. 
+- How important: Must fix
+- Status: New Issue
+
+### Planner GUI
+- Date: 2026-11-14
+- Where: Planner
+- What you want: improve the organization of the Planner graphical user interface. Embed issue goals and requirements as a window, like a bar that can pop up from the right, if this makes sense. For the program requirements, write it out like a tree that is organized vertically. Only include, very simply, the course code in bold and the name of the course in small text. Most of the users that are using this aren't anticipated to graduate, so you can keep the error very subtle. Embed "Error" as a button, whereas the student can use "Add" to check for error once they have a complete plan. The AI advisor should be incorporated as another page from another pop-up window from the top, and the graphical user interface has to be clear that this is generative AI. On the page where you chat with the AI, you need to make it look like you are chatting with an AI. Use design.md for inspiration. 
+- How important: Must fix
+- Status: New Issue
+
+### Text
+- Date: 2026-11-14
+- Where: Everywhere
+- What you want: review every line of text that is not instructional to the reader and that doesn't contribute to the content of the page. Remove them if it's not necessary. 
+- How important: Must fix
+- Status: New Issue
+
+### GUI Polishing
+- Date: 2026-11-14
+- Where: Everywhere
+- What you want: please do, when you're building this out, refer to design.md and add some tasteful animation to the workflow of a user interacting with the page. Try and think, improve, and polish the current graphical user interface. 
+- How important: Must fix
+- Status: New Issue
 
 ## In progress
 
