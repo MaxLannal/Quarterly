@@ -468,6 +468,16 @@ It refuses to call a model unless both `CONFIRM_SPEND=yes` and `LLM_LIVE=true` a
    - A not-affiliated line in every page footer, no University logos, and "Not official advising" on the planner.
    - Final security and spec reviews.
 
+### Final reviews (2026-11-15)
+- **spec-reviewer (whole spec):**
+  - one high finding: behind Caddy every visitor shared one rate limit. Fixed in 7122207 (nginx appends to `X-Forwarded-For`; production `TRUSTED_PROXY_HOPS=2`; tested);
+  - lows fixed: chat-history purge cron, privacy wording, planner notice wording, backup checksum tool, load-test wording;
+  - the load-test target is logged as P12-1.
+- **security-privacy-reviewer (whole repository):**
+  - four medium findings, all fixed in 7122207 and f744faa: the same rate-limit finding; the graduation quarter capped at 6 years; the rules cache limited to real catalog years; no client IPs in Caddy's error log;
+  - six lows fixed in f744faa: the end-suspension guard; no admin usernames on program pages; safe source links in the review console; https crawling; backup umask and off-site expiry; pilot spend logged.
+- **No high or medium finding is left open.**
+
 ### Specified in the SPEC but not built yet (final spec review, 2026-11-15)
 - **Planner and generator:**
   - the Core is not pre-placed as requirement slots (journey A3);
