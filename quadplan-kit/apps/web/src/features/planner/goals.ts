@@ -60,6 +60,15 @@ export const TERM_PRESETS: TermPreset[] = [
   },
 ];
 
+/**
+ * The study-abroad program a "Study abroad" chip refers to: the one already on the plan when
+ * there is one (a student who added Paris means Paris), otherwise the first in the catalog.
+ */
+export function studyAbroadProgramFor(planProgramIds: readonly string[], catalog: readonly { id: string; type: string }[]): string | undefined {
+  const blocks = catalog.filter((p) => p.type === "study_abroad_block");
+  return blocks.find((p) => planProgramIds.includes(p.id))?.id ?? blocks[0]?.id;
+}
+
 export function interestGoal(tags: string[]): Goal {
   return { ...base, type: "interest", id: goalId("interest"), scope: "career", term: null, tags, min_share: null };
 }

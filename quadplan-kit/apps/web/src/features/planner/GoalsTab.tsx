@@ -3,7 +3,7 @@ import type { Goal, Issue, ProgramSummary } from "@/api/types";
 import { Button } from "@/components/ui/button";
 import { controlClass, controlCompactClass } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { CAREER_PRESETS, TERM_PRESETS } from "./goals";
+import { CAREER_PRESETS, studyAbroadProgramFor, TERM_PRESETS } from "./goals";
 import { goalLabel } from "./metrics";
 import { termLabel } from "./terms";
 
@@ -14,6 +14,8 @@ interface GoalsTabProps {
   terms: string[];
   issues: Issue[];
   programs: ProgramSummary[];
+  /** Program ids on the plan: "Study abroad" picks the study-abroad program among them first. */
+  planPrograms: string[];
   onChange: (goals: Goal[]) => void;
 }
 
@@ -37,14 +39,14 @@ function GoalRow({ goal, issues, onRemove }: { goal: Goal; issues: Issue[]; onRe
   );
 }
 
-export function GoalsTab({ goals, entryTerm, terms, issues, programs, onChange }: GoalsTabProps) {
+export function GoalsTab({ goals, entryTerm, terms, issues, programs, planPrograms, onChange }: GoalsTabProps) {
   const career = goals.filter((g) => g.scope === "career");
   const perTerm = goals.filter((g) => g.scope === "term");
   const [preset, setPreset] = useState(TERM_PRESETS[0]?.key ?? "");
   const [term, setTerm] = useState(terms[0] ?? "");
   const presetId = useId();
   const termId = useId();
-  const abroad = programs.find((p) => p.type === "study_abroad_block")?.id;
+  const abroad = studyAbroadProgramFor(planPrograms, programs);
   const remove = (id: string) => onChange(goals.filter((g) => g.id !== id));
 
   function addTermGoal() {

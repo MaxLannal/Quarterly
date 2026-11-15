@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { CloseIcon } from "@/components/ui/icons";
 import { ChoiceRow, controlClass, controlCompactClass } from "@/components/ui/input";
 import { Notice } from "@/components/ui/misc";
-import { CAREER_PRESETS, interestGoal, TERM_PRESETS } from "@/features/planner/goals";
+import { CAREER_PRESETS, interestGoal, studyAbroadProgramFor, TERM_PRESETS } from "@/features/planner/goals";
 import { newLocalId, today, upsertPlan } from "@/features/planner/localPlans";
 import { goalLabel } from "@/features/planner/metrics";
 import { emptyPlan } from "@/features/planner/planModel";
@@ -395,7 +395,7 @@ export function OnboardingWizard() {
   const [stored, setStored] = useState(true);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const set = (p: Partial<Draft>) => setD((x) => ({ ...x, ...p }));
-  const abroad = (programsQ.data ?? []).find((p) => p.type === "study_abroad_block")?.id;
+  const abroad = studyAbroadProgramFor(d.programs, programsQ.data ?? []);
   const coreIds = (programsQ.data ?? []).filter((p) => p.type === "core").map((p) => p.id);
 
   // Default to the newest catalog year once the API lists them.

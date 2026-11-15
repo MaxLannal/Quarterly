@@ -14,13 +14,12 @@ export async function importLocalPlans(accountId: string): Promise<ImportStatus>
   const pending = plansToImport(accountId, loadPlans());
   if (pending.length === 0) return "idle";
   try {
-    const { response } = await api.POST("/plans/import", { body: { plans: pending.map(toPlanCreate) } });
+    const { data, response } = await api.POST("/plans/import", { body: { plans: pending.map(toPlanCreate) } });
     if (response.status === 501) return "unavailable";
     if (!response.ok) return "failed";
-    markImported(
-      accountId,
-      pending.map((p) => p.localId),
-    );
+    // The server answers with the new plans in request order. They exist now, so every plan is
+    // marked imported even if an id were missing (retrying would create them a second time).
+    markImported(accountId, Object.fromEntries(pending.map((p, i) => [p.localId, data?.[i]?.id])));
     return "imported";
   } catch {
     return "failed";

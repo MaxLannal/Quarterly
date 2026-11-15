@@ -10,7 +10,8 @@
     "lint": "eslint . --max-warnings 0",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "test": "vitest run",
-    "e2e": "playwright test"
+    "e2e": "playwright test",
+    "e2e:stack": "playwright test -c playwright.stack.config.ts"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",

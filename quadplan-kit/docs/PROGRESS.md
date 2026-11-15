@@ -425,3 +425,21 @@ It refuses to call a model unless both `CONFIRM_SPEND=yes` and `LLM_LIVE=true` a
 - Tests: 31 scraper tests.
 
 **What is blocked:** reading the real Class Search. The pages used are **synthetic** (`services/scraper/fixtures/SYNTHETIC_*`, clearly labelled), because no real pages have been saved and the University has not given permission. See P10-1 in `docs/OPEN_QUESTIONS.md` for how to save real pages from your browser.
+
+## End-to-end journeys A-D on the real stack (2026-11-15)
+
+**What changed:**
+- `make e2e` now runs both suites: the mocked one (`apps/web/e2e`), then `make e2e-stack`, which starts the Docker stack with `docker-compose.e2e.yml`, migrates, seeds, loads the fake forum demo, runs the forum summary job with the fake model, and runs `apps/web/e2e-stack/` (journeys A-D from the SPEC). The fake model (`LLM_FAKE=e2e`) answers every agent request; nothing reaches Claude or OpenRouter. Sign-up codes are read from the API log (console email).
+- Fix: after sign-up, the plans made while logged out are imported into the account, but Save then made a second copy. The import now remembers which account plan each one became, so Save updates it. Test: `localPlans.test.ts`; journey A checks there is exactly one account plan.
+- Fix: the "Study abroad" goal now uses the study-abroad program already on the plan (it always used the first one listed, Córdoba). Test: `goals.test.ts`; journey C.
+- Fix: the web server cut off the AI agents' live progress after 60 seconds of silence, and one agent step may take up to 75 seconds with a real model. The agent routes now wait up to 5 minutes (`apps/web/docker/nginx.conf`). The earlier "Plan generation failed" in the stack was the full disk, not this.
+
+**What the app does not do yet (found by the journeys):**
+- A3: the Core is not pre-placed as requirement slots; the grid starts empty.
+- A4: generated options are named "Option A/B/C", not names like "Exploratory CS".
+- B3: no control for the goal "Bx/MS application in Winter of 3rd year".
+- B4: for a second-year transfer with CS BS + Math BS + Bx/MS, no plan fits; the app lists exactly which rules conflict (shared-course limits, the unit limit per quarter, units and quarters to graduate, offering patterns).
+- C: the SPEC example says "Paris, Spring Y2", but the catalog offers the Paris program in Autumn only, so the journey uses Autumn of year 2. The goal shows the program's internal id ("civ-abroad-paris-mdd") instead of its name.
+- D: the demo forum has no instructor on MATH 20700, so the journey uses CMSC 14100 with Demo Instructor A.
+
+**Next:** pick which gaps to build; the journeys record each one as a "gap" note on the test.

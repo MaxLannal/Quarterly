@@ -2,7 +2,7 @@ import { http, HttpResponse } from "msw";
 import { importedPlans } from "@/mocks/handlers";
 import { server } from "@/mocks/node";
 import { importLocalPlans } from "./importOnLogin";
-import { activePlan, deletePlan, loadPlans, plansToImport, STORAGE_KEY, upsertPlan, type LocalPlan } from "./localPlans";
+import { activePlan, deletePlan, loadPlans, plansToImport, STORAGE_KEY, storedRemoteId, upsertPlan, type LocalPlan } from "./localPlans";
 import { emptyPlan } from "./planModel";
 
 const local = (id: string, extra: Partial<LocalPlan> = {}): LocalPlan => ({
@@ -73,6 +73,21 @@ describe("import on login", () => {
     expect(loadPlans().plans).toHaveLength(1);
     expect(plansToImport(ACCOUNT)).toEqual([]);
     expect(await importLocalPlans(ACCOUNT)).toBe("idle");
+  });
+
+  it("stores the account plan id, and an autosave from the plan opened before keeps it", async () => {
+    await fetch(`${window.location.origin}/api/auth/login`, { method: "POST", body: "{}" });
+    const opened = local("a");
+    upsertPlan(opened);
+    expect(await importLocalPlans(ACCOUNT)).toBe("imported");
+    const remoteId = storedRemoteId("a");
+    expect(remoteId).toMatch(/^[0-9a-f-]{36}$/);
+    // The planner autosaves from the plan it opened with (no remoteId, no importedFor): Save must
+    // still find the imported plan, and the next login must not import it again.
+    upsertPlan({ ...opened, name: "Edited" });
+    expect(storedRemoteId("a")).toBe(remoteId);
+    expect(plansToImport(ACCOUNT)).toEqual([]);
+    expect(loadPlans().plans[0]?.name).toBe("Edited");
   });
 
   it("keeps the local copy when the endpoint is not built yet (501)", async () => {
