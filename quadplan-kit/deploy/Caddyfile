@@ -1,9 +1,21 @@
 # Caddy in front of the stack on a single VM (docs/DEPLOY.md). Caddy gets and renews the TLS
 # certificate itself. Replace quarterly.example.org with the real domain (set QUARTERLY_DOMAIN).
 {
-	# Caddy's error log records the client's IP address; keep it out (no IPs in logs).
+	# No IP addresses in Caddy's own log (CLAUDE.md). Its error log and the Go server's log
+	# messages are left out; every other line (e.g. the proxy's "aborting with incomplete
+	# response" when a student leaves an advisor stream) loses the visitor's address and
+	# request headers.
 	log default {
-		exclude http.log.error
+		format filter {
+			wrap json
+			fields {
+				request>remote_ip delete
+				request>remote_port delete
+				request>client_ip delete
+				request>headers delete
+			}
+		}
+		exclude http.log.error http.stdlib
 	}
 }
 

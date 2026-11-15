@@ -522,7 +522,9 @@ def _refresh(key: tuple[str, str], bind: Any, year: str) -> None:
             _refreshing.discard(key)
 
 
-def _year(session: Session, year: str, ttl: float) -> _Year:
+def _year(session: Session, year: str, ttl: float) -> _Year | None:
+    """The cached copy of `year`, or None when it is not a catalog year (never loaded in full
+    or cached, so a request naming a made-up year cannot make the server read whole tables)."""
     bind = session.get_bind()
     key = (str(getattr(bind, "url", "")), year)
     with _lock:
@@ -535,10 +537,11 @@ def _year(session: Session, year: str, ttl: float) -> _Year:
         if start:  # stale: serve this copy, refresh once in the background
             threading.Thread(target=_refresh, args=(key, bind, year), daemon=True).start()
         return found
+    if session.get(m.CatalogYear, year) is None:
+        return None
     loaded = _load_year(session, year)
-    if session.get(m.CatalogYear, year) is not None:  # never cache a year that does not exist
-        with _lock:
-            _years[key] = loaded
+    with _lock:
+        _years[key] = loaded
     return loaded
 
 
@@ -562,8 +565,16 @@ def load_verify_inputs_cached(
 ) -> tuple[RuleSet, Catalog]:
     """`load_verify_inputs` from the in-process year cache (programs are still read live)."""
     year = plan.catalog_year
-    programs = load_programs(session, plan, show_unpublished=show_unpublished)
     y = _year(session, year, ttl)
+    if y is None:  # not a catalog year: the per-plan loader reads only the plan's courses
+        return load_verify_inputs(
+            session,
+            plan,
+            show_unpublished=show_unpublished,
+            whole_catalog=whole_catalog,
+            section_terms=section_terms,
+        )
+    programs = load_programs(session, plan, show_unpublished=show_unpublished)
     code_of = y.code_of
     id_of = {code: i for i, code in code_of.items()}
     wanted = {i.course for i in plan.items if i.course} | {

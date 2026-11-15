@@ -25,6 +25,7 @@ Copy `.env.example` to `.env` and change these. With `ENVIRONMENT=production` th
 | `LLM_SPEND_ALARM_USD` | daily spend that raises the alarm (default 5) |
 | `CATALOG_INGEST_ENABLED`, `SCHEDULE_SCRAPER_ENABLED` | `false` (the schedule scraper stays off until the University permits it in writing) |
 | `QUARTERLY_DOMAIN` | the site's domain, for Caddy |
+| `COMPOSE_FILE` | `docker-compose.yml:deploy/docker-compose.prod.yml`, so every `docker compose` command (and `make up`) on the server uses the production settings. Without it, `make up` would publish the database, Redis, MinIO and the API (on 127.0.0.1 only, but still without the production checks). Never run `make e2e` on the server. |
 
 Write each value as `NAME=value` with no space after `=`.
 
@@ -38,7 +39,7 @@ docker compose exec api python -m api.cli seed      # the hand-checked catalog s
 
 Then, as an admin, publish each program in `/admin/review` (make the first admin with `docker compose exec db psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "UPDATE account SET role='admin' WHERE username='<name>';"`).
 
-`deploy/docker-compose.prod.yml` sets `TRUSTED_PROXY_HOPS=2` (Caddy and nginx both append to `X-Forwarded-For`, so rate limits see each visitor's own address; with only nginx in front, as in development, it is 1) and adds Caddy (`deploy/Caddyfile`: automatic TLS, HSTS, no access log, so no IP addresses are kept) and stops publishing the database, Redis, MinIO and the API on the host. The API runs 4 worker processes (`WEB_CONCURRENCY`).
+`deploy/docker-compose.prod.yml` sets `ENVIRONMENT=production` for the API and the worker, and `TRUSTED_PROXY_HOPS=2` (Caddy and nginx both append to `X-Forwarded-For`, so rate limits see each visitor's own address; with only nginx in front, as in development, it is 1) and adds Caddy (`deploy/Caddyfile`: automatic TLS, HSTS, no access log, and its own log keeps no IP addresses or request headers) and stops publishing the database, Redis, MinIO and the API on the host. The API runs 4 worker processes (`WEB_CONCURRENCY`).
 
 ## 4. Backups
 
@@ -57,6 +58,8 @@ docker compose stop api worker
 BACKUP_PASSPHRASE_FILE=/root/quarterly-backup.pass scripts/restore.sh backups/quarterly-YYYY-MM-DD.dump.enc
 docker compose start api worker
 ```
+
+A restore brings back accounts deleted after that backup was taken (with their emails). Restore only to recover from losing the database, and ask anyone who deleted their account in that window to delete it again (`docs/OPEN_QUESTIONS.md` P12-3).
 
 ## 5. Monitoring
 

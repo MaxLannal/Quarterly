@@ -12,9 +12,15 @@ services:
   api:
     ports: !reset []
     environment:
+      # Production whatever `.env` says: the API then refuses to start with development
+      # secrets, console email, insecure cookies or the e2e test AI (Settings.production_problems).
+      ENVIRONMENT: production
       WEB_CONCURRENCY: "4"
       # Caddy and nginx each append to X-Forwarded-For: the client's address is 2 hops back.
       TRUSTED_PROXY_HOPS: "2"
+  worker:
+    environment:
+      ENVIRONMENT: production
   web:
     ports: !reset []
   caddy:

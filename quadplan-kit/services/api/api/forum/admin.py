@@ -325,7 +325,8 @@ def _page_label(db: Session, page_id: int) -> tuple[str, str]:
 def suspensions(db: Session) -> list[SuspensionOut]:
     """Active suspensions, each shown by the latest removal that started it. Authors are found
     by recomputing refs on the server and are never shown; one row per author, so two rows
-    never reveal a shared author."""
+    never reveal a shared author. (An admin who suspends the same author twice does see the
+    older row replaced: OPEN_QUESTIONS P12-2.)"""
     actions = db.scalars(
         sa.select(m.ModerationAction)
         .where(

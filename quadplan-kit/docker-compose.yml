@@ -14,7 +14,7 @@ services:
       POSTGRES_USER: ${POSTGRES_USER:-quarterly}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-quarterly}
       POSTGRES_DB: ${POSTGRES_DB:-quarterly}
-    ports: ["5432:5432"]
+    ports: ["127.0.0.1:5432:5432"]
     volumes: [db-data:/var/lib/postgresql/data]
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
@@ -26,7 +26,7 @@ services:
     image: redis:7
     # Rate-limit counters (keyed IP hashes) must never reach disk: no RDB snapshots, no AOF.
     command: ["redis-server", "--save", "", "--appendonly", "no"]
-    ports: ["6379:6379"]
+    ports: ["127.0.0.1:6379:6379"]
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 3s
@@ -41,7 +41,7 @@ services:
     environment:
       MINIO_ROOT_USER: ${MINIO_ROOT_USER:-quarterly}
       MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-quarterly-dev-secret}
-    ports: ["9000:9000", "9001:9001"]
+    ports: ["127.0.0.1:9000:9000", "127.0.0.1:9001:9001"]
     volumes: [minio-data:/data]
     healthcheck:
       test: ["CMD", "mc", "ready", "local"]
@@ -57,7 +57,7 @@ services:
       TRUSTED_PROXY_HOPS: "1"  # nginx in the web service sets X-Forwarded-For
       RULES_CACHE_TTL_S: "${RULES_CACHE_TTL_S:-60}"  # catalog year kept in memory (prompt 12)
       PAGE_CACHE_TTL_S: "${PAGE_CACHE_TTL_S:-5}"  # forum page header reused for 5 s
-    ports: ["8000:8000"]
+    ports: ["127.0.0.1:8000:8000"]
     depends_on:
       db: {condition: service_healthy}
       redis: {condition: service_healthy}
@@ -72,7 +72,7 @@ services:
 
   web:
     build: {context: apps/web}
-    ports: ["5173:5173"]
+    ports: ["127.0.0.1:5173:5173"]
     depends_on:
       api: {condition: service_healthy}
 

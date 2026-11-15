@@ -484,6 +484,13 @@ Earlier runs on the busy laptop varied (P12-1), so run it again on the real serv
   - four medium findings, all fixed in 7122207 and f744faa: the same rate-limit finding; the graduation quarter capped at 6 years; the rules cache limited to real catalog years; no client IPs in Caddy's error log;
   - six lows fixed in f744faa: the end-suspension guard; no admin usernames on program pages; safe source links in the review console; https crawling; backup umask and off-site expiry; pilot spend logged.
 - **No high or medium finding is left open.**
+- **Re-review at 34457b1 (both reviewers again, 2026-11-15):** every earlier finding checked at HEAD.
+  - spec-reviewer: no high or medium. Two lows fixed in a1f15f0: the planner stops at 7 years, like the API; the SPEC privacy row now matches the proxies that keep no logs (recorded in SPEC-CHANGES).
+  - security-privacy-reviewer: two mediums, both fixed:
+    - **N1:** Caddy's proxy warnings (for example when a student leaves an advisor stream) still carried the visitor's IP address. Confirmed on Caddy 2.8 in a throwaway container. Caddy's log now drops the address fields and request headers from every line (tested the same way: no address left).
+    - **N2:** the development compose file published the database, Redis, MinIO and the API on every network interface. They now bind to 127.0.0.1. The production override sets `ENVIRONMENT=production`. DEPLOY.md sets `COMPOSE_FILE`, and the checklist no longer says `make up` on the server.
+  - Lows fixed: a typed "[author suspended" note is refused; a made-up catalog year never loads whole tables; the crawler fetches https pages only; /privacy and DEPLOY.md cover backups and restores.
+  - New privacy questions for Richard: P12-2 (the suspensions list) and P12-3 (restores).
 
 ### Specified in the SPEC but not built yet (final spec review, 2026-11-15)
 - **Planner and generator:**
@@ -529,11 +536,12 @@ Earlier runs on the busy laptop varied (P12-1), so run it again on the real serv
 - **New questions** in `docs/OPEN_QUESTIONS.md`, each with a suggested answer:
   - P09-1 to P09-9 (ingestion);
   - P10-1 to P10-5 (schedule);
-  - P12-1 (re-run the load test on the real server).
+  - P12-1 (re-run the load test on the real server);
+  - P12-2 (the admin suspensions list can link two removed posts) and P12-3 (a restore brings back recently deleted accounts): privacy choices for you.
 - **Security of your `.env`:** the two API key lines are written `NAME= value` with a space after `=`. Shells that read the file then try to run the key as a command, and print it in the error (this happened once in this session's local output). Remove the space. Consider rotating both keys.
 
 ### Launch checklist (in order)
-1. `git pull`, then `make check` and `make e2e`. Both should end with exit code 0. `make e2e` also runs journeys A-D on the Docker stack.
+1. On your own computer (never on the server): `git pull`, then `make check` and `make e2e`. Both should end with exit code 0. `make e2e` also runs journeys A-D on the Docker stack.
 2. Fix `.env`: no space after `=`; real keys; `ENVIRONMENT=production` values from `docs/DEPLOY.md`.
 3. **AI evals** (costs money; prints an estimate first, stops at $20):
    ```bash
@@ -551,7 +559,7 @@ Earlier runs on the busy laptop varied (P12-1), so run it again on the real serv
    CONFIRM_SPEND=yes LLM_LIVE=true make ingest-pilot                           # all 11; report: docs/ingest-pilot/report-live.md
    ```
    The goal is at least 95% node agreement with the hand seed. Read every disagreement in the report.
-5. Turn on the real AI for students only after the evals pass: `LLM_LIVE=true` in `.env`, then `make up`.
+5. Turn on the real AI for students only after the evals pass: `LLM_LIVE=true` in the server's `.env`, then restart with the production command in step 7 (with `COMPOSE_FILE` set as in `docs/DEPLOY.md`, `make up` on the server does the same).
 6. Publish each program in `/admin/review` (students see only published programs; set `SHOW_UNPUBLISHED_PROGRAMS=false`).
 7. Deploy per `docs/DEPLOY.md`:
    - `docker compose -f docker-compose.yml -f deploy/docker-compose.prod.yml up -d --build --wait`;

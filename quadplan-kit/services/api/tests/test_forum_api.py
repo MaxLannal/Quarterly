@@ -693,7 +693,7 @@ def test_an_admin_can_end_a_suspension_early(f: ForumEnv) -> None:
         )
     assert other.get("/admin/moderation/suspensions").status_code == 403
     listed = admin.get("/admin/moderation/suspensions").json()
-    # One row per suspended author (the latest removal), so rows never show a shared author.
+    # One row per suspended author (the latest removal that suspended them; OPEN_QUESTIONS P12-2).
     assert [(s["target_type"], s["target_id"]) for s in listed] == [("post", second["id"])]
     assert listed[0]["course_code"] == "TEST 10100" and listed[0]["title"] == "rude two"
     ended = admin.post(f"/admin/moderation/post/{second['id']}/end-suspension")
@@ -706,6 +706,12 @@ def test_an_admin_can_end_a_suspension_early(f: ForumEnv) -> None:
     visible = post(f, other, "a_doe", discussion("fine"))
     probe = admin.post(f"/admin/moderation/post/{visible['id']}/end-suspension")
     assert probe.status_code == 404
+    # A typed copy of the server's marker cannot fake one (security re-review N3).
+    faked = admin.post(
+        f"/admin/moderation/post/{visible['id']}/decision",
+        {"decision": "remove", "note": "spam [Author suspended 7 days]"},
+    )
+    assert faked.status_code == 422
 
 
 def test_posting_is_rate_limited(f: ForumEnv, monkeypatch: pytest.MonkeyPatch) -> None:

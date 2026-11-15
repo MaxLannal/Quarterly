@@ -23,6 +23,7 @@ def make(server, clock, **kw):  # type: ignore[no-untyped-def]
         allowed_hosts={server.host},
         clock=clock.time,
         sleep=clock.sleep,
+        require_https=False,  # the local test server speaks plain http
         **kw,
     )
     return crawler, store, log
@@ -104,7 +105,7 @@ def test_crawl_delay_in_robots_is_respected(catalog_server, clock) -> None:  # t
     assert clock.sleeps == [3.0, 3.0]
 
 
-def _mock_crawler(handler, clock):  # type: ignore[no-untyped-def]
+def _mock_crawler(handler, clock, require_https=False):  # type: ignore[no-untyped-def]
     return Crawler(
         archive=SnapshotArchive(MemoryStore(), MemoryLog()),
         contact=CONTACT,
@@ -112,7 +113,18 @@ def _mock_crawler(handler, clock):  # type: ignore[no-untyped-def]
         client=httpx.Client(transport=httpx.MockTransport(handler)),
         clock=clock.time,
         sleep=clock.sleep,
+        require_https=require_https,
     )
+
+
+def test_plain_http_pages_are_skipped_without_a_request(clock) -> None:  # type: ignore[no-untyped-def]
+    def handler(request: httpx.Request) -> httpx.Response:
+        raise AssertionError(f"no request expected, got {request.url}")
+
+    crawler = _mock_crawler(handler, clock, require_https=True)
+    assert crawler.fetch("http://catalog.test/thecollege/x/") is None
+    assert not crawler.allowed("http://catalog.test/thecollege/x/")
+    assert [s.reason for s in crawler.skipped] == ["not https"] and crawler.requests == 0
 
 
 @pytest.mark.parametrize("status", [401, 403, 500])

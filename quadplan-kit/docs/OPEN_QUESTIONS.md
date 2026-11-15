@@ -506,3 +506,11 @@ Questions about the schedule pipeline (reading Class Search). The pipeline is bu
   - Improvements made: catalog data kept in memory (preloaded and refreshed in the background), forum page headers reused for 5 s, a bigger database pool.
 
   **Suggested:** run `make loadtest` on the real server before launch (`docs/DEPLOY.md`, and the launch checklist in `docs/PROGRESS.md`). If it misses there, raise `WEB_CONCURRENCY` with the server's CPU count (each worker uses up to 20 database connections; Postgres allows 200).
+
+- **P12-2 (privacy; needs Richard).** **The admin "Suspensions" list can show that two removed posts have the same author.** The list has one row per suspended student, shown by the latest post that was removed with a suspension (never the student's name). If an admin suspends the same student twice, through two different posts, the first row disappears when the second appears. So the admin learns that those two posts were written by the same person, though not who it is (security re-review N7, 2026-11-15).
+  - **(a) Accept it (suggested).** Admins already read both posts, and one row per student keeps "End suspension" clear.
+  - **(b) One row per removal.** Ending a suspension would then clear all of that student's rows at once, which shows the same link at that moment; it only delays it.
+  - **(c) No list.** Admins end a suspension only from the removed post itself, so nothing changes on screen when a second suspension is added.
+- **P12-3 (privacy; needs Richard).** **Restoring a backup brings back accounts deleted after that backup.** Backups are kept 14 days. If the database is ever restored from one, accounts (with their emails) deleted since that backup come back. `/privacy` now says backups keep a deleted account for 14 days, and `docs/DEPLOY.md` says what to do after a restore.
+  - **(a) Restore only to recover from losing the database, and tell students deleted in that window to delete again (suggested for launch).**
+  - **(b) Keep a 14-day list of deleted account numbers (no emails) and delete them again automatically after a restore.** More work; closes the gap fully.

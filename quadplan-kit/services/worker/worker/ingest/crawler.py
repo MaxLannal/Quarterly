@@ -67,6 +67,9 @@ class Crawler:
     clock: Callable[[], float] = time.monotonic
     sleep: Callable[[float], None] = time.sleep
     max_requests: int = 5000
+    #: Only https pages become rule sources (a plain-http page could be altered on the way).
+    #: Off only for the tests' local catalog server.
+    require_https: bool = True
     skipped: list[Skipped] = field(default_factory=list)
     requests: int = 0
     _robots: dict[str, urllib.robotparser.RobotFileParser | None] = field(default_factory=dict)
@@ -79,6 +82,9 @@ class Crawler:
             self.client = httpx.Client(timeout=30.0, follow_redirects=False)
 
     # ---------------------------------------------------------------------- plumbing
+
+    def _scheme_ok(self, scheme: str) -> bool:
+        return scheme == "https" or (not self.require_https and scheme == "http")
 
     def _wait(self, delay: float) -> None:
         if self._last is not None:
@@ -131,17 +137,20 @@ class Crawler:
     # ------------------------------------------------------------------------- public
 
     def allowed(self, url: str) -> bool:
-        host = urllib.parse.urlsplit(url).netloc
-        if host not in self.allowed_hosts:
+        parts = urllib.parse.urlsplit(url)
+        if parts.netloc not in self.allowed_hosts or not self._scheme_ok(parts.scheme):
             return False
         parser = self._robots_for(url)
         return parser is not None and parser.can_fetch(self.agent, url)
 
     def fetch(self, url: str) -> Snapshot | None:
         """The snapshot, or None (recorded in `skipped`) when the URL may not be fetched."""
-        host = urllib.parse.urlsplit(url).netloc
-        if host not in self.allowed_hosts:
+        parts = urllib.parse.urlsplit(url)
+        if parts.netloc not in self.allowed_hosts:
             self.skipped.append(Skipped(url, "host not in the crawl list"))
+            return None
+        if not self._scheme_ok(parts.scheme):
+            self.skipped.append(Skipped(url, "not https"))
             return None
         parser = self._robots_for(url)
         if parser is None:

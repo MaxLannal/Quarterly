@@ -212,6 +212,14 @@ class ModerationDecision(BaseModel):
     #: admin's choice, never automatic (P08-3).
     suspend_days: int | None = Field(default=None, ge=1, le=90)
 
+    @model_validator(mode="after")
+    def _no_typed_marker(self) -> Self:
+        # "[author suspended N days]" is added by the server when an admin suspends; a typed
+        # copy would make "End suspension" answer for an item that started no suspension.
+        if self.note and "[author suspended" in self.note.lower():
+            raise ValueError("The note cannot contain “[author suspended”.")
+        return self
+
 
 class ModerationResult(BaseModel):
     target_type: Literal["post", "comment"]

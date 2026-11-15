@@ -127,7 +127,8 @@ export default function PrivacyPage() {
         </Link>{" "}
         you can download your account details and plans as JSON, and delete your account. Deleting
         removes the account, its email address, your plans and your sessions. You choose whether your
-        forum posts are deleted or kept as “[deleted account]”.
+        forum posts are deleted or kept as “[deleted account]”. Encrypted backups of the database
+        are kept for 14 days, so a deleted account stays in them until they expire.
       </p>
     </PageContainer>
   );

@@ -101,6 +101,7 @@ def crawl(server: Any, clock: Any) -> Any:
         allowed_hosts={server.host},
         clock=clock.time,
         sleep=clock.sleep,
+        require_https=False,  # the local test server speaks plain http
     )
     return crawl_catalog(crawler, server.base_url, counts_url=f"{server.base_url}/programs-study/")
 

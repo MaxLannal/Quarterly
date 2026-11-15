@@ -58,7 +58,7 @@ def test_annual_run_writes_review_items_and_review_versions(
     )
     script(fake, rules_yaml(tree))
     store = MemoryStore()
-    kw = {"clock": clock.time, "sleep": clock.sleep}
+    kw = {"clock": clock.time, "sleep": clock.sleep, "require_https": False}
     counts = annual_run(
         settings(catalog_server), factory, fake, agents=True, store=store, crawler_kw=kw
     )
@@ -135,7 +135,7 @@ def test_a_published_version_is_never_overwritten(
         fake,
         agents=True,
         store=MemoryStore(),
-        crawler_kw={"clock": clock.time, "sleep": clock.sleep},
+        crawler_kw={"clock": clock.time, "sleep": clock.sleep, "require_https": False},
     )
     with factory() as db:
         version = db.scalar(sa.select(m.ProgramVersion))
@@ -153,7 +153,7 @@ def test_monthly_check_files_one_item_for_changed_pages(
     factory: Any, catalog_server: Any, clock: Any
 ) -> None:
     s = settings(catalog_server)
-    kw = {"clock": clock.time, "sleep": clock.sleep}
+    kw = {"clock": clock.time, "sleep": clock.sleep, "require_https": False}
     store = MemoryStore()
     annual_run(s, factory, FakeLLM(), agents=False, store=store, crawler_kw=kw)
     assert monthly_check(s, factory, store=store, crawler_kw=kw) == 0
