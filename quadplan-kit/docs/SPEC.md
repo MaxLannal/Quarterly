@@ -617,11 +617,11 @@ Plan generator harness (see the diagram in the shared doc)
 
 Only steps 3 and 6 call a model, and each has a fallback, so a failed LLM call degrades the result instead of breaking it.
 
-1. **Load (code).** Plan state, programs, goals, locked items, the eligible courses for each unmet requirement node, attributes and offering patterns.
+1. **Load (code).** Plan state, programs, goals, locked items, the eligible courses for each unmet requirement node, attributes and offering patterns. Anything the plan already holds that the catalog does not know (a credit mapped to an unknown code, a completed course from another catalog) stops the run with "Fix these first, then generate again: ..." naming it.
 2. **Compile goals (code).** Each goal becomes solver bounds, rewards or penalties, as in the goal table above.
 3. **Choose electives (LLM).** For each unmet `select` node (often 30–100 candidates), the agent uses `search_courses`, `get_course` and `get_forum_summary` to rank up to 8 preferred courses with a one-line reason, then calls `submit_preferences`. Budget: 12 tool calls.
 4. **Solve (code).** CP-SAT places courses into terms: prerequisite order, `p_offered` ≥ 0.3, loads, hard goals, program satisfaction (the V07 model), locked items. Objective: preference weights + goal rewards − penalties for workload spikes. Each extra variant must differ from earlier ones in at least 4 placements.
-5. **Verify (code).** Full verifier and certificate check on every variant. A failure here is a bug and raises an alert; the variant is dropped.
+5. **Verify (code).** Full verifier and certificate check on every variant. A failure here is a bug and raises an alert; the variant is dropped. If every variant is dropped, the student sees what the check found, never a bare "this is a bug".
 6. **Explain (LLM).** The agent writes a rationale of 25 words or fewer per quarter, citing tool results. The server checks the course set is unchanged; if not, the rationale is discarded and the plan kept.
 7. **Return** each variant as a proposed `change_set`, streamed over SSE.
 

@@ -2749,6 +2749,8 @@ export interface components {
             entry_year_level: number;
             /** Goals */
             goals?: (components["schemas"]["CourseLoadGoal"] | components["schemas"]["WorkloadHoursGoal"] | components["schemas"]["DifficultyCapGoal"] | components["schemas"]["ChallengeGoal"] | components["schemas"]["ProtectGpaGoal"] | components["schemas"]["GraduateByGoal"] | components["schemas"]["StudyAbroadGoal"] | components["schemas"]["BxmsGoal"] | components["schemas"]["PremedGoal"] | components["schemas"]["InterestGoal"] | components["schemas"]["LightQuarterGoal"] | components["schemas"]["LanguageGoal"])[];
+            /** Graduation Term */
+            graduation_term?: string | null;
             /** Items */
             items?: components["schemas"]["PlanItem"][];
             /** Overload Reasons */

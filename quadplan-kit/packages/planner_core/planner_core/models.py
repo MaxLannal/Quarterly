@@ -818,6 +818,21 @@ class PlanState(Model):
     placements: list[str] = Field(default_factory=list)
     #: term -> OverloadReason.id claimed for a 500-unit quarter.
     overload_reasons: dict[TermId, Slug] = Field(default_factory=dict)
+    #: The student's last quarter (Autumn, Winter or Spring). None: the Spring of the last
+    #: year, counting the years left from `entry_year_level` (four for a first-year, three for
+    #: a second-year transfer). Set it to plan a fifth year, or to graduate early.
+    graduation_term: TermId | None = None
+
+    @model_validator(mode="after")
+    def _graduation_after_entry(self) -> Self:
+        if self.graduation_term is not None:
+            from planner_core.terms import parse_term, term_key
+
+            if parse_term(self.graduation_term)[1] == "SU":
+                raise ValueError("graduation_term cannot be a Summer quarter")
+            if term_key(self.graduation_term) < term_key(self.entry_term):
+                raise ValueError("graduation_term is before entry_term")
+        return self
 
 
 # --------------------------------------------------------------------------------------------

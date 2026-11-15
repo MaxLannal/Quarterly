@@ -71,6 +71,7 @@ def read_state(db: Session, plan: m.Plan) -> PlanState:
             "catalog_year": plan.catalog_year,
             "entry_term": plan.entry_term,
             "entry_year_level": plan.entry_year_level,
+            "graduation_term": plan.graduation_term,
             "placements": list(plan.placements),
             "overload_reasons": dict(plan.overload_reasons),
             "items": [
@@ -163,6 +164,7 @@ def write_state(
     plan.catalog_year = state.catalog_year
     plan.entry_term = state.entry_term
     plan.entry_year_level = state.entry_year_level
+    plan.graduation_term = state.graduation_term
     plan.placements = list(state.placements)
     plan.overload_reasons = dict(state.overload_reasons)
     plan.updated_day = dt.date.today()

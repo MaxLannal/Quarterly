@@ -62,7 +62,7 @@ from planner_core.preferences import MAX_PREFERENCE, interest_match, preferences
 from planner_core.prereqs import placement_values
 from planner_core.programs import plan_programs
 from planner_core.solver import ProgramModel
-from planner_core.terms import parse_term, resolve_term_ref, term_at, term_key
+from planner_core.terms import academic_year, parse_term, resolve_term_ref, term_at, term_key
 from planner_core.tree import Compiled, compile_program
 from planner_core.verify import verify_checked
 
@@ -113,14 +113,23 @@ FLOAT_TERM = "9999-AU"
 _STATUS_OK = (cp_model.OPTIMAL, cp_model.FEASIBLE)
 
 
+def graduation_term(plan: PlanState) -> str:
+    """The plan's last quarter: `plan.graduation_term`, else the Spring of the last year
+    (four years for a first-year, three for a second-year transfer...)."""
+    if plan.graduation_term is not None:
+        return plan.graduation_term
+    return term_at(plan.entry_term, max(1, 5 - plan.entry_year_level), "SP")
+
+
 def horizon(plan: PlanState) -> list[str]:
-    """The plan's quarters: Autumn, Winter and Spring of each remaining year (four years for a
-    first-year, fewer for a transfer), plus every quarter that already has an item."""
-    years = max(1, 5 - plan.entry_year_level)
+    """The plan's quarters: Autumn, Winter and Spring from the entry quarter through the
+    graduation quarter, plus every quarter that already has an item."""
+    last = graduation_term(plan)
+    years = max(1, academic_year(last) - academic_year(plan.entry_term) + 1)
     terms = {
         term_at(plan.entry_term, y, q) for y in range(1, years + 1) for q in ("AU", "WI", "SP")
     }
-    terms = {t for t in terms if term_key(t) >= term_key(plan.entry_term)}
+    terms = {t for t in terms if term_key(plan.entry_term) <= term_key(t) <= term_key(last)}
     terms |= {item.term for item in plan.items}
     return sorted(terms, key=term_key)
 

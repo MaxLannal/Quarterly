@@ -324,6 +324,8 @@ class Plan(Base):
     catalog_year: Mapped[str] = mapped_column(sa.ForeignKey("catalog_year.id"))
     entry_term: Mapped[str] = mapped_column(sa.String(7))
     entry_year_level: Mapped[int] = mapped_column(server_default="1")
+    #: Last quarter (planner_core PlanState.graduation_term); NULL = the default.
+    graduation_term: Mapped[str | None] = mapped_column(sa.String(7))
     placements: Mapped[list[str]] = _texts()
     overload_reasons: Mapped[dict[str, str]] = mapped_column(JSONB, server_default="{}")
     is_primary: Mapped[bool] = mapped_column(server_default=sa.false())

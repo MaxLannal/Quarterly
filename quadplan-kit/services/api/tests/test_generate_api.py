@@ -74,3 +74,26 @@ def test_generate_and_apply_for_a_saved_plan(env: Env) -> None:
     assert len(state["items"]) == len(variant["plan"]["items"])
     report = env.client.post("/verify", json={"plan": state}).json()
     assert report["status"] != "errors" and report["certificate"] is not None
+
+
+def test_graduation_quarter_is_saved_and_respected(env: Env) -> None:
+    """FEEDBACK "Number of Years": the plan ends at its graduation quarter."""
+    from planner_core.terms import term_key
+
+    early = {**STATE, "graduation_term": "2030-WI"}
+    headers = csrf(env.signup("early-heron"))
+    saved = env.client.post("/plans", json={"name": "Early", "state": early}, headers=headers)
+    assert saved.status_code == 201, saved.text
+    assert saved.json()["state"]["graduation_term"] == "2030-WI"
+    resp = env.client.post(
+        "/plans/generate", json={"plan": early, "options": {"variants": 1}}, headers=headers
+    )
+    assert resp.status_code == 200, resp.text
+    body = resp.json()
+    assert body["variants"], body["infeasible"]
+    terms = {i["term"] for i in body["variants"][0]["plan"]["items"]}
+    assert max(terms, key=term_key) <= "2030-WI" and "2030-SP" not in terms
+    bad = env.client.post(
+        "/plans/generate", json={"plan": {**STATE, "graduation_term": "2030-SU"}}, headers=headers
+    )
+    assert bad.status_code == 422

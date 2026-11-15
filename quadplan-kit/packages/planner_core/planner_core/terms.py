@@ -1,5 +1,8 @@
 """Term arithmetic. Term ids are `<calendar year>-<quarter>`: Autumn 2026 is `2026-AU`, the
-following Winter is `2027-WI`. An academic year runs AU, WI, SP, SU."""
+following Winter is `2027-WI`. An academic year runs SU, AU, WI, SP: the summer *before*
+autumn belongs to it (Summer 2026 is in 2026-27), because a transfer student may start with
+the summer before their first autumn and a graduating student takes nothing after their last
+spring (Richard, FEEDBACK 2026-11-14)."""
 
 from __future__ import annotations
 
@@ -8,7 +11,9 @@ from typing import cast
 from planner_core.models import Quarter
 
 #: Display order inside one academic year.
-QUARTERS: tuple[Quarter, ...] = ("AU", "WI", "SP", "SU")
+QUARTERS: tuple[Quarter, ...] = ("SU", "AU", "WI", "SP")
+#: Quarters that open an academic year in their own calendar year.
+_STARTS_YEAR = ("SU", "AU")
 #: Chronological order inside one calendar year.
 _CALENDAR_ORDER = {"WI": 0, "SP": 1, "SU": 2, "AU": 3}
 
@@ -31,9 +36,10 @@ def is_before(a: str, b: str) -> bool:
 
 
 def academic_year(term: str) -> int:
-    """The calendar year in which the term's academic year starts (2027-WI -> 2026)."""
+    """The calendar year in which the term's academic year starts (2027-WI -> 2026,
+    2026-SU -> 2026)."""
     year, quarter = parse_term(term)
-    return year if quarter == "AU" else year - 1
+    return year if quarter in _STARTS_YEAR else year - 1
 
 
 def year_index(term: str, entry_term: str) -> int:
@@ -44,7 +50,7 @@ def year_index(term: str, entry_term: str) -> int:
 def term_at(entry_term: str, year: int, quarter: Quarter) -> str:
     """The term id of `quarter` in plan year `year` (1-based)."""
     start = academic_year(entry_term) + year - 1
-    return f"{start if quarter == 'AU' else start + 1}-{quarter}"
+    return f"{start if quarter in _STARTS_YEAR else start + 1}-{quarter}"
 
 
 def resolve_term_ref(ref: str, entry_term: str) -> str:

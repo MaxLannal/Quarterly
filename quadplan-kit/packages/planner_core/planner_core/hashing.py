@@ -25,6 +25,8 @@ def sha256_of(data: Any) -> str:
 def plan_hash(plan: PlanState) -> str:
     """Order-insensitive hash of everything that affects verification. Item ids are ignored."""
     data = plan.model_dump(mode="json", by_alias=True)
+    if data.get("graduation_term") is None:  # added later: plans without it keep their hash
+        data.pop("graduation_term", None)
     for item in data["items"]:
         item.pop("id", None)
     for key in ("items", "credits", "programs", "goals"):
