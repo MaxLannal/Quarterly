@@ -7,7 +7,8 @@ NPM := npm --prefix $(WEB)
 COMPOSE := docker compose
 
 .PHONY: attributes help install env up down ps logs scraper-up lint typecheck test test-py test-web \
-        golden check e2e screenshots evals migrate seed seed-forum-demo api-client api-client-check format
+        golden check e2e screenshots evals migrate seed seed-forum-demo api-client api-client-check format \
+        loadtest
 
 help:
 	@grep -E '^[a-z-]+:' Makefile | cut -d: -f1 | sort | tr '\n' ' '; echo
@@ -115,3 +116,10 @@ api-client-check:
 	mkdir -p $$tmp/schemas && $(UV) run python -m api.cli schemas --out $$tmp/schemas >/dev/null; \
 	diff -r -q $$tmp/schemas docs/schemas >/dev/null || { echo "api-client-check: docs/schemas is stale; run make api-client"; exit 1; }; \
 	echo "api-client-check: generated client and JSON Schemas are up to date"
+
+# Prompt 12 load test (locust via uvx; never against a shared or production server):
+# POST /verify at 50 requests/second (p95 < 500 ms) and forum page reads at 100/second.
+# Needs an account for the forum reads: LOAD_LOGIN=<username> LOAD_PASSWORD=<password>.
+loadtest:
+	$(UV) run python loadtest/make_plans.py
+	LOAD_HOST=$${LOAD_HOST:-http://localhost:8000} $(UV) run python loadtest/run.py
