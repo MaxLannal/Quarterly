@@ -371,6 +371,21 @@ def end_suspension(
     """Lift the suspension of the author of this removed item (P08-14, FEEDBACK "End
     suspension")."""
     target, page_id = _target(db, target_type, target_id)
+    # Only on an item an admin removed with a suspension: otherwise this would tell an admin
+    # whether the author of any post happens to be suspended.
+    started = db.scalar(
+        sa.select(
+            sa.exists().where(
+                m.ModerationAction.target_type == target_type,
+                m.ModerationAction.target_id == target_id,
+                m.ModerationAction.actor == "admin",
+                m.ModerationAction.action == "remove",
+                m.ModerationAction.reason.like("%[author suspended %"),
+            )
+        )
+    )
+    if target.status != "removed" or not started:
+        raise HTTPException(status_code=404, detail="No active suspension for this item.")
     author = _find_account(db, page_id, target.author_ref)
     if author is None or author.suspended_until is None or author.suspended_until <= today():
         raise HTTPException(status_code=404, detail="No active suspension for this item.")

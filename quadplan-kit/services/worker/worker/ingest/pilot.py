@@ -563,7 +563,9 @@ def main(argv: list[str] | None = None) -> int:
         archive = stored_archive(settings)
         if archive is None:
             return 2
-        llm = Metered(gateway, cap_usd=cap)
+        from api.agents.llm import db_sink
+
+        llm = Metered(gateway, cap_usd=cap, on_record=db_sink)  # visible to the spend alarm
         pages = live_pages(programs, archive)
         report = run_pilot(llm, bundle, programs, pages, mode=mode)
 

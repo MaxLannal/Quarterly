@@ -321,6 +321,7 @@ class _Year:
     offerings: dict[int, list[OfferingPattern]]
     attributes: dict[str, list[AttributeValue]]
     sections: list[tuple[int, str, Section]] = field(default_factory=list)  # (id, code, row)
+    markers: dict[str, Section] = field(default_factory=dict)  # term -> its first section
     college: CollegePolicy | None = None
 
 
@@ -448,6 +449,26 @@ def _load_year(session: Session, year: str) -> _Year:
                     ],
                 )
             )
+    year_codes = set(code_of.values())
+    markers: dict[str, Section] = {}
+    for s, code in session.execute(
+        sa.select(m.Section, m.Course.code)
+        .join(m.Course, m.Course.id == m.Section.course_id)
+        .where(
+            m.Section.id.in_(
+                sa.select(sa.func.min(m.Section.id)).group_by(m.Section.term_id).scalar_subquery()
+            )
+        )
+    ):
+        markers[s.term_id] = Section(
+            term=s.term_id,
+            course=code,
+            section_no=s.section_no,
+            component=s.component,
+            instructor_ids=[str(i) for i in s.instructor_ids],
+            meetings=_valid(Meeting, s.meetings or []),
+            status=s.status,
+        )
     sections = [
         (
             s.id,
@@ -465,6 +486,7 @@ def _load_year(session: Session, year: str) -> _Year:
         for s, code in session.execute(
             sa.select(m.Section, m.Course.code)
             .join(m.Course, m.Course.id == m.Section.course_id)
+            .where(m.Course.code.in_(year_codes))
             .order_by(m.Section.id)
         )
     ]
@@ -480,6 +502,7 @@ def _load_year(session: Session, year: str) -> _Year:
         offerings=offerings,
         attributes=attributes,
         sections=sections,
+        markers=markers,
         college=CollegePolicy.model_validate(policy.rules) if policy is not None else None,
     )
 
@@ -513,8 +536,9 @@ def _year(session: Session, year: str, ttl: float) -> _Year:
             threading.Thread(target=_refresh, args=(key, bind, year), daemon=True).start()
         return found
     loaded = _load_year(session, year)
-    with _lock:
-        _years[key] = loaded
+    if session.get(m.CatalogYear, year) is not None:  # never cache a year that does not exist
+        with _lock:
+            _years[key] = loaded
     return loaded
 
 
@@ -567,7 +591,7 @@ def load_verify_inputs_cached(
     covered = {s.term for s in found}
     for term in terms:
         if term not in covered:
-            marker = next((s for _, _, s in y.sections if s.term == term), None)
+            marker = y.markers.get(term)
             if marker is not None:
                 found.append(marker)
     catalog = Catalog(

@@ -392,7 +392,7 @@ def publish(db: Session, admin: m.Account, version_id: int) -> ProgramVersionOut
     rules = _valid_rules(version.rules, version)
     version.checksum = sha256_of(rules)
     version.status = "published"
-    version.verified_by = admin.username
+    version.verified_by = "curator"  # public on program pages: never an admin's username
     version.verified_at = dt.date.today()
     db.commit()
     return ProgramVersionOut(

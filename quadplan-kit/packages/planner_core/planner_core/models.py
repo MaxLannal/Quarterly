@@ -832,6 +832,10 @@ class PlanState(Model):
                 raise ValueError("graduation_term cannot be a Summer quarter")
             if term_key(self.graduation_term) < term_key(self.entry_term):
                 raise ValueError("graduation_term is before entry_term")
+            from planner_core.terms import academic_year
+
+            if academic_year(self.graduation_term) - academic_year(self.entry_term) > 6:
+                raise ValueError("graduation_term is more than 6 years after entry_term")
         return self
 
 

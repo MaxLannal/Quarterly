@@ -50,7 +50,7 @@ crontab -e
 # 15 3 * * * cd /srv/quarterly/quadplan-kit && BACKUP_PASSPHRASE_FILE=/root/quarterly-backup.pass BACKUP_S3_TARGET=offsite/quarterly-backups scripts/backup.sh >> /var/log/quarterly-backup.log 2>&1
 ```
 
-Keep a copy of the passphrase somewhere other than the VM. Test a restore every few months:
+Keep a copy of the passphrase somewhere other than the VM. Give the off-site bucket the same 14-day limit, so deleted accounts' emails do not linger there: `mc ilm rule add --expire-days 14 offsite/quarterly-backups`. Test a restore every few months:
 
 ```bash
 docker compose stop api worker

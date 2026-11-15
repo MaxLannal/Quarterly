@@ -115,7 +115,8 @@ def review_nodes(
                 "summary": node_text(unit),
                 "quote": src.quote if src else None,
                 "snapshot_id": src.snapshot_id if src else None,
-                "url": (src.url or urls.get(src.snapshot_id or "")) if src else None,
+                # The snapshot's own URL, never one the model wrote (it could be anything).
+                "url": urls.get(src.snapshot_id or "") if src else None,
                 "flags": flags.get(path, []),
             }
         )
@@ -129,7 +130,7 @@ def review_nodes(
                 "summary": "Program-wide rule",
                 "quote": src.quote if src else None,
                 "snapshot_id": src.snapshot_id if src else None,
-                "url": src.url if src else None,
+                "url": urls.get(src.snapshot_id or "") if src else None,
                 "flags": flags.get(path, []) + flags.get(f"{rules.id}/policy", []),
             }
         )

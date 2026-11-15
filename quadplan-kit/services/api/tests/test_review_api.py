@@ -162,7 +162,7 @@ def test_accept_then_publish_reaches_students(f: ForumEnv) -> None:
     assert published.status_code == 200, published.text
     body = published.json()
     assert body["status"] == "published"
-    assert body["verified_by"] == "the-admin"
+    assert body["verified_by"] == "curator"  # never an admin username (public on program pages)
     assert admin.post(f"/admin/program-versions/{version_id}/publish").status_code == 409
     with f.env.db() as db:
         row = db.scalar(select(m.ReviewItem).where(m.ReviewItem.id == item_id))

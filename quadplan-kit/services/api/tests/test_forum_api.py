@@ -702,6 +702,10 @@ def test_an_admin_can_end_a_suspension_early(f: ForumEnv) -> None:
     assert author.post(f"/forum/pages/{f.pages['a_doe']}/posts", discussion()).status_code == 201
     again = admin.post(f"/admin/moderation/post/{second['id']}/end-suspension")
     assert again.status_code == 404
+    # Not on an item that did not start a suspension (security review L1).
+    visible = post(f, other, "a_doe", discussion("fine"))
+    probe = admin.post(f"/admin/moderation/post/{visible['id']}/end-suspension")
+    assert probe.status_code == 404
 
 
 def test_posting_is_rate_limited(f: ForumEnv, monkeypatch: pytest.MonkeyPatch) -> None:

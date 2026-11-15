@@ -92,7 +92,7 @@ function NodeRow({ node }: { node: ReviewNode }) {
         ) : (
           <p className="text-body-sm text-error">No source quote.</p>
         )}
-        {node.url && (
+        {node.url && /^https?:\/\//i.test(node.url) && (
           <figcaption className="mt-1 text-caption text-muted">
             <a href={node.url} className={inlineLinkClass} target="_blank" rel="noreferrer noopener">
               Source page

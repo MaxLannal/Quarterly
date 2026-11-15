@@ -19,7 +19,7 @@ class IngestSettings(BaseSettings):
 
     #: Run the annual catalog job and the monthly change check (Arq cron). Off by default.
     catalog_ingest_enabled: bool = False
-    catalog_base_url: str = "http://collegecatalog.uchicago.edu"
+    catalog_base_url: str = "https://collegecatalog.uchicago.edu"
     #: The College page that states how many majors and minors there are (one of the
     #: independent lists the program count must match).
     catalog_counts_url: str = "https://college.uchicago.edu/academics/programs-study"

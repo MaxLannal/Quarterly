@@ -1,5 +1,12 @@
 # Caddy in front of the stack on a single VM (docs/DEPLOY.md). Caddy gets and renews the TLS
 # certificate itself. Replace quarterly.example.org with the real domain (set QUARTERLY_DOMAIN).
+{
+	# Caddy's error log records the client's IP address; keep it out (no IPs in logs).
+	log default {
+		exclude http.log.error
+	}
+}
+
 {$QUARTERLY_DOMAIN:quarterly.example.org} {
 	encode zstd gzip
 	# No access log: the site must not keep IP addresses (SPEC "Accounts and anonymity").

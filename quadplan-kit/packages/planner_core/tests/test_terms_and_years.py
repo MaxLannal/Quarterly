@@ -40,5 +40,8 @@ def test_graduation_quarter_is_checked_and_does_not_change_old_hashes() -> None:
         plan(graduation_term="2030-SU")
     with pytest.raises(ValidationError, match="before entry_term"):
         plan(graduation_term="2026-SP")
+    with pytest.raises(ValidationError, match="more than 6 years"):  # security review M2
+        plan(graduation_term="9999-SP")
+    assert plan(graduation_term="2032-SP").graduation_term == "2032-SP"
     assert plan_hash(plan()) == plan_hash(plan(graduation_term=None))
     assert plan_hash(plan()) != plan_hash(plan(graduation_term="2030-WI"))

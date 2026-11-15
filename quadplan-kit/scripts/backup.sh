@@ -11,6 +11,7 @@
 # The dump holds account emails: never store it unencrypted, and keep the passphrase off the
 # server's backup target. Restore with scripts/restore.sh.
 set -euo pipefail
+umask 077  # the dump and its checksum are never readable by other users, even briefly
 
 cd "$(dirname "$0")/.."
 : "${BACKUP_PASSPHRASE_FILE:?set BACKUP_PASSPHRASE_FILE to a file holding the passphrase}"
