@@ -12,6 +12,7 @@ REQUIRED_TASKS = {
     "e1_prereq_formalizer",
     "e4_backtranslation_judge",
     "scraper_repair",
+    "dept_offerings_extraction",
     "a1_plan_generator",
     "a2_advisor_chat",
     "a2_advisor_chat_escalation",

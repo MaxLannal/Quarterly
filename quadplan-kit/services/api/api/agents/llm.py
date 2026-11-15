@@ -43,6 +43,12 @@ def db_sink(record: CallRecord) -> None:
 
 def configure_llm(settings: Settings) -> bool:
     """Install the real gateway when allowed and configured; returns whether it did."""
+    if settings.llm_fake == "e2e" and settings.environment in ("development", "test"):
+        from api.agents.e2e_llm import e2e_llm
+
+        set_llm(e2e_llm())
+        logger.warning("LLM_FAKE=e2e: model requests get canned test answers")
+        return True
     if not settings.llm_live:
         return False  # leave the current client (UnavailableLLM, or a test's fake) alone
     gateway = build_gateway(

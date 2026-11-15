@@ -9,12 +9,14 @@ dependencies = [
     "arq>=0.26",
     "pydantic-settings>=2.6",
     "quarterly-api",
+    "quarterly-scraper",
 ]
 
 [tool.uv.sources]
 planner-core = { workspace = true }
 llm-gateway = { workspace = true }
 quarterly-api = { workspace = true }
+quarterly-scraper = { workspace = true }
 
 [build-system]
 requires = ["hatchling"]

@@ -403,8 +403,25 @@ Result today: 146 of 146 nodes match (100%), 86 of 86 prerequisite sentences mat
 
 It refuses to call a model unless both `CONFIRM_SPEND=yes` and `LLM_LIVE=true` are set, prints the estimate first, and stops once it has spent $25 (change with `INGEST_COST_CAP_USD=10`, for example). It fetches 17 catalog and study-abroad pages, one per second. The report goes to `docs/ingest-pilot/report-live.md`. To try a single program first (about $2): `CONFIRM_SPEND=yes LLM_LIVE=true make ingest-pilot ARGS=--programs=econ-ba`.
 
-**Evidence:** `make check` passed (planner_core 178; API, worker and gateway 497; web 120; golden 115); `make e2e` 71 passed (55 screenshot tests skipped), including `e2e/review.spec.ts` (accept and publish, accessibility, admins only). New tests: `services/worker/tests/test_ingest_*.py` (crawler against a local FAKE catalog server, parsing, checks, the four agents with FakeLLM, the pipeline, the pilot and jobs, and a database run) and `services/api/tests/test_review_api.py`.
+**Evidence (after merging main with prompt 10):** `make check` passed (planner_core 178; API, worker, scraper and gateway 531; web 120; golden 115); `make e2e` 72 passed (55 screenshot tests skipped), including `e2e/review.spec.ts` (accept and publish, accessibility, admins only). New tests: `services/worker/tests/test_ingest_*.py` (crawler against a local FAKE catalog server, parsing, checks, the four agents with FakeLLM, the pipeline, the pilot and jobs, and a database run) and `services/api/tests/test_review_api.py`.
 
 **Not built yet:** the other curator-console parts the SPEC lists (ingestion-run history, a rule editor with live validation, LLM cost by task); E2 reads only the catalog and the College's counts page (study-abroad and department pages are not crawled); a real run of any agent.
 
 **Next:** Richard decides P09-1 to P09-9 and whether to run the real pilot; then the first yearly run on a copy of the database.
+
+## Schedule pipeline (prompt 10, 2026-11-15)
+
+**What works (tested on fixtures only):**
+- The Class Search scraper code exists but is switched off (`SCHEDULE_SCRAPER_ENABLED=false`, the default). It refuses to run until it is switched on and `CLASS_SEARCH_URL` is set. No request has ever been sent to Class Search or any University site.
+- A deterministic parser turns saved result pages into course sections (term, course, section, component, instructors, meetings, capacity, status). It raises an error on an unfamiliar layout instead of quietly returning nothing.
+- Checks:
+  - unknown course codes become review items;
+  - instructor names that are close but not certain become review items, never merged automatically;
+  - a department whose section count moves more than 30% from the same quarter last year raises an alert.
+- Updates: forum pages (through the cross-listing-aware `ensure_page`) and the "how likely is this course offered" numbers: (k+1)/5 from history, 1 for a posted schedule, 0.95 for an accepted department plan.
+- Department pages: an AI extraction step (tested with a fake model) for CS course-info. Every offering must carry a verbatim quote from the page, checked by code, and the result goes to review.
+- Self-repair: when parsing fails, an AI step proposes new selectors. A proposal must reproduce the last good counts on stored pages, and it always goes to review, never applied automatically.
+- A weekly worker job that does nothing while the switch is off.
+- Tests: 31 scraper tests.
+
+**What is blocked:** reading the real Class Search. The pages used are **synthetic** (`services/scraper/fixtures/SYNTHETIC_*`, clearly labelled), because no real pages have been saved and the University has not given permission. See P10-1 in `docs/OPEN_QUESTIONS.md` for how to save real pages from your browser.

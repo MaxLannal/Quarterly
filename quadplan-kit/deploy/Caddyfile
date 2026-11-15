@@ -1,0 +1,19 @@
+# Caddy in front of the stack on a single VM (docs/DEPLOY.md). Caddy gets and renews the TLS
+# certificate itself. Replace quarterly.example.org with the real domain (set QUARTERLY_DOMAIN).
+{$QUARTERLY_DOMAIN:quarterly.example.org} {
+	encode zstd gzip
+	# No access log: the site must not keep IP addresses (SPEC "Accounts and anonymity").
+	log {
+		output discard
+	}
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "same-origin"
+		X-Frame-Options "DENY"
+		Permissions-Policy "camera=(), microphone=(), geolocation=()"
+		-Server
+	}
+	# The web container serves the app and proxies /api/* to the API.
+	reverse_proxy web:5173
+}

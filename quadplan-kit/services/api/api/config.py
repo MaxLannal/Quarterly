@@ -49,6 +49,11 @@ class Settings(BaseSettings):
     #: (CLAUDE.md, 2026-11-14): with it off the agents take their fallbacks (default elective
     #: ranking, no rationale; the advisor answers only typed confirmations).
     llm_live: bool = False
+    #: "e2e": answer every model request with `api.agents.e2e_llm` (end-to-end tests of the
+    #: real stack; development and test only). Never calls a provider.
+    llm_fake: Literal["", "e2e"] = ""
+    #: Daily model spend (USD, from llm_call) above which the worker logs LLM SPEND ALARM.
+    llm_spend_alarm_usd: float = 5.0
 
     def production_problems(self) -> list[str]:
         """Settings that are unsafe outside development (checked at start-up)."""
@@ -63,6 +68,8 @@ class Settings(BaseSettings):
             problems.append("EMAIL_BACKEND=console would print verification codes")
         if not self.session_cookie_secure:
             problems.append("SESSION_COOKIE_SECURE must be true")
+        if self.llm_fake:
+            problems.append("LLM_FAKE would answer students with canned test replies")
         return problems
 
 
