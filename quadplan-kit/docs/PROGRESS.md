@@ -334,3 +334,29 @@ With `LLM_LIVE=false` it streams its steps, says "Using the default elective ran
 - **Checked on Docker:** the served bundle is byte-identical to a fresh build of `main`. A real Chromium logs in and lands on the planner with the account in the top bar.
 - **Safari note:** the session cookie is marked `Secure`. Safari does not keep `Secure` cookies on plain `http://localhost` (Chrome and Firefox do), so log in with Chrome or Firefox locally. Option: `SESSION_COOKIE_SECURE=false` in `.env` for local development only; the API refuses that setting outside development.
 - **Evidence:** `make check` passed (web 90); `make e2e` 56 passed.
+
+## Richard's answers built (2026-11-14)
+
+Richard answered the questions from the steps 1-5 run (recorded in `docs/OPEN_QUESTIONS.md`, "Answers to the questions from the steps 1-5 run"). What changed:
+- **No check before publishing (P08-1):** posts, comments and edits appear at once, after emails and phone numbers are removed. Anyone can report a post; an admin removes it from the moderation queue. Removing a post also deletes its extracted quotes and the page's "What students say" summary, which is rewritten that night. The AI check now runs only on those AI-written summaries.
+- **Manual suspensions only (P08-3):** removing posts never suspends anyone by itself. When removing, an admin may choose to suspend the author for 7, 30 or 90 days, without learning who the author is. The length is recorded with the decision.
+- **Optional review questions (Q11):** "How fast it moved" and "How strictly it was graded" (1-5, optional, with a Clear button). Averages and charts count only the reviews that answered. The nightly job publishes them as course numbers, and the "protect my GPA" goal uses grading strictness.
+- **Cross-listed courses (P08-5):** one forum page per cross-listed course and instructor, shown under every code ("Also listed as ..."). Course numbers are the same for every code. The advisor finds the page under any code.
+- **Transfer students (Q6):** transfer credit counts toward the 3800 units by enrollment, and at least 1800 units must be taken at UChicago. The rule is in the verifier (a new "Units at the College" row), the generator and the seed. Its source is Richard's answer, quoted verbatim and marked for review until the catalog sentence is found. The CS BA transfer profile now gets a verified plan.
+- **Smaller items:**
+  - the Log in / Sign up links bring students back to the page they came from (P08-10), and only paths on this site are accepted;
+  - deleting a plan asks "Delete this plan? Yes, delete / Cancel" (DF-7);
+  - the About page has the three disclaimers (DF-12);
+  - on phones the planner has jump buttons to Requirements, Plan, and Issues and advisor (DF-13);
+  - DESIGN.md lists the warning and info background colors (DF-6);
+  - the privacy page explains the suspension trace (P08-2).
+- **Reviews:** a spec review and a security review of these changes found no high findings. One medium (the advisor's forum tools ignored cross-listed codes) and all the lows were fixed, each with tests. They covered:
+  - return links everywhere;
+  - privacy wording;
+  - REVIEW.md rows for the two Q6 fields;
+  - stricter return-link checks;
+  - derived data deleted on removal;
+  - a 90-day cap;
+  - cross-listing chains.
+  One new question for Richard: **P08-14** (suspended students and account deletion; ending a suspension early).
+- **Evidence:** `make check` passed (planner_core 174, API 407, web 104, golden 115); `make e2e` 58 passed (49 screenshot tests skipped); screenshots refreshed (`make screenshots`).

@@ -41,7 +41,7 @@ Status words used below:
 
 **OK (go with the suggestion):** P08-6 to P08-13, Q7 to Q10, Q12, Q13, DF-1 to DF-13, P7-1 to P7-8, and the Safari note (use Chrome or Firefox locally). P7-1 and P7-2 wait until Richard lifts the hold on API calls. DF-8 (Rare UI parts) and P08-11 (instructors in the home search) are later work.
 
-**Work these answers create (being built 2026-11-14):** P08-1, P08-3, P08-5, Q6, Q11, P08-2 (privacy page line), P08-10 (back to the page after login), DF-6 (note the two pale colors in DESIGN.md), DF-7 (delete confirmation), DF-12 (About page text), DF-13 (phone jump buttons).
+**Work these answers create (done 2026-11-14, see PROGRESS):** P08-1, P08-3, P08-5, Q6, Q11, P08-2 (privacy page line), P08-10 (back to the page after login), DF-6 (note the two pale colors in DESIGN.md), DF-7 (delete confirmation), DF-12 (About page text), DF-13 (phone jump buttons).
 
 ## Work these answers create (not started)
 
