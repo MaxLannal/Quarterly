@@ -1,4 +1,5 @@
-"""The API surface is frozen (prompt 01): every endpoint exists with its schema; stubs return 501."""
+"""The API surface is frozen (prompt 01): every endpoint exists with its schema (the last stubs,
+the review queue, were implemented in prompt 09)."""
 
 import pytest
 from api.main import app
@@ -96,19 +97,20 @@ def test_openapi_lists_every_endpoint() -> None:
     )
 
 
+# Prompt 09 implemented the last stubs (the review queue); no endpoint answers 501 any more.
 @pytest.mark.parametrize(
     ("method", "path", "body"),
     [
         ("get", "/admin/review-items", None),
+        ("post", "/admin/review-items/1/decision", {"decision": "accept"}),
+        ("post", "/admin/program-versions/1/publish", None),
     ],
 )
-def test_stubs_return_501_after_validation(
+def test_review_endpoints_are_no_longer_stubs(
     method: str, path: str, body: dict[str, object] | None
 ) -> None:
-    client = TestClient(app)
-    resp = client.request(method.upper(), path, json=body)
-    assert resp.status_code == 501, resp.text
-    assert resp.json()["detail"].startswith("Not implemented yet")
+    resp = TestClient(app).request(method.upper(), path, json=body)
+    assert resp.status_code == 401, resp.text  # a login is needed, not "not implemented"
 
 
 def test_request_validation_happens_before_the_stub() -> None:

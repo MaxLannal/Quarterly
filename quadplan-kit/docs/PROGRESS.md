@@ -372,3 +372,39 @@ Richard answered the questions from the steps 1-5 run (recorded in `docs/OPEN_QU
 - Also: `docs/schemas` regenerated (they lagged the `graduation_term` commit); drag and drop now drops on the quarter under the pointer (planner and onboarding).
 - **Evidence:** `make check` passed (planner_core 178, API 408, web 116, golden 115); `make e2e` 68 passed (55 screenshot tests skipped); `e2e/feedback-ui.spec.ts` covers each item; screenshots refreshed, new `plan-drawer`, `plan-check`, `plan-years`.
 - **Next:** F2-F6 to move in `docs/FEEDBACK.md`; DF-13 (phone jump buttons) is superseded by the drawer.
+
+
+## Prompt 09 · Catalog ingestion pipeline and review console (2026-11-15)
+
+Built and tested with FAKE catalog pages and a fake model only (no request to the Claude, Anthropic or OpenRouter APIs, and none to the College Catalog). Code: `services/worker/worker/ingest/`, prompts `prompts/e1_prereq.md`, `e2_enumerator.md`, `e3_formalizer.md`, `e3b_formalizer.md`, `e4_backtranslation.md`, the review API in `services/api/api/review/`, the page `apps/web/src/pages/AdminReviewPage.tsx`. Contracts: `docs/CONTRACTS.md` "Catalog ingestion (prompt 09)". Questions: `docs/OPEN_QUESTIONS.md` "Prompt 09".
+
+- **Crawler:** catalog index, A-Z index, program and course pages, and the College's counts page. It obeys robots.txt, waits at least a second between requests, says who it is with the contact address from `CATALOG_CONTACT_EMAIL` (it will not start without one), and stores every response in MinIO with a `source_snapshot` row and its sha256. Tested against a local server serving FAKE CourseLeaf pages (`services/worker/tests/fixtures/catalog/`).
+- **Course blocks** are read by plain code into staged course, cross-listing and relation rows. Each subject becomes one review item showing what is new, changed or removed since last year; nothing is written until a curator accepts it.
+- **E1** (prerequisite sentence to rule), **E2** (list of programs; the run stops if the count does not match at least two independent lists), **E3** (program rules, run twice with a reordered prompt and a different model, tools `read_snapshot`, `lookup_course`, `get_course_list`, `validate_rules` up to 5 times, `run_golden`, `submit_rules`) and **E4** (writes the rules back in English and lists differences from the page).
+- **Checks (a)-(g)**, including the word-for-word quote check, and a **diff against last year's published rules**: unchanged programs are marked "Unchanged since last year" (still published by a person, P09-1); changed ones list what changed.
+- **Review console** at `/admin/review` (replaces the "Coming soon" page): each rule beside the catalog's own words, flags where the second run disagrees, where something changed or where the English check found a difference, the check results, Accept / Edit / Reject per item, and "Publish this version". Admins only, with the CSRF token, like the moderation queue. The three admin endpoints that answered 501 now work.
+- **Jobs:** a yearly run (1 August) and a monthly check for changed pages (the 15th). Both do nothing unless `CATALOG_INGEST_ENABLED=true` (off by default, in `.env.example`).
+
+### Pilot ingestion (for Richard)
+
+**What it does.** It runs the four catalog agents on the 11 programs we wrote by hand (`data/seed/2026-27/programs/`) and compares what the agents produce with our hand-written rules, piece by piece (each requirement, group of courses or limit is one "node"). The target is that at least 95% of the nodes match. The report lists every node that does not match, so we can see whether the agent or our hand copy is wrong. It also checks the agents' reading of 86 prerequisite sentences and their list of programs. Apart from keeping a copy of the catalog pages it reads, nothing is written to the database, and nothing is shown to students.
+
+**The free version (safe to run any time).** A stand-in model answers with our own hand-written rules, on pages built from our own quotes. It checks that the whole pipeline and the report work, so it always shows 100%; it says nothing about how good the real model is.
+
+    make ingest-pilot ARGS=--fake
+
+Result today: 146 of 146 nodes match (100%), 86 of 86 prerequisite sentences match (28 of them would still go to a person, because they name courses outside our seed or cannot be written as a rule), all 11 programs found. Report: `docs/ingest-pilot/report-fake.md`. One check is flagged: the Mathematics BS needs 21 courses by the "9 to 19 courses" rule (P09-2).
+
+**The real version (costs money; only when you say so).**
+
+1. Put `ANTHROPIC_API_KEY` and `CATALOG_CONTACT_EMAIL` (see P09-3) in `.env`, and start the stack with `make up` (the fetched pages are kept in MinIO and the database).
+2. See the estimate without spending anything: `make ingest-pilot ARGS=--estimate` (about $16 at list prices for the 11 programs).
+3. Run it: `CONFIRM_SPEND=yes LLM_LIVE=true make ingest-pilot`
+
+It refuses to call a model unless both `CONFIRM_SPEND=yes` and `LLM_LIVE=true` are set, prints the estimate first, and stops once it has spent $25 (change with `INGEST_COST_CAP_USD=10`, for example). It fetches 17 catalog and study-abroad pages, one per second. The report goes to `docs/ingest-pilot/report-live.md`. To try a single program first (about $2): `CONFIRM_SPEND=yes LLM_LIVE=true make ingest-pilot ARGS=--programs=econ-ba`.
+
+**Evidence:** `make check` passed (planner_core 178; API, worker and gateway 497; web 120; golden 115); `make e2e` 71 passed (55 screenshot tests skipped), including `e2e/review.spec.ts` (accept and publish, accessibility, admins only). New tests: `services/worker/tests/test_ingest_*.py` (crawler against a local FAKE catalog server, parsing, checks, the four agents with FakeLLM, the pipeline, the pilot and jobs, and a database run) and `services/api/tests/test_review_api.py`.
+
+**Not built yet:** the other curator-console parts the SPEC lists (ingestion-run history, a rule editor with live validation, LLM cost by task); E2 reads only the catalog and the College's counts page (study-abroad and department pages are not crawled); a real run of any agent.
+
+**Next:** Richard decides P09-1 to P09-9 and whether to run the real pilot; then the first yearly run on a copy of the database.

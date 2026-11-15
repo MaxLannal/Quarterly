@@ -20,6 +20,7 @@ import {
 } from "./data";
 import { agentHandlers, generateVariants } from "./agents";
 import { forumHandlers, resetForumMock } from "./forum";
+import { resetReviewMock, reviewHandlers } from "./review";
 import { mockVerify } from "./verify";
 
 type S = components["schemas"];
@@ -98,6 +99,7 @@ export function resetMockState() {
   importedPlans.length = 0;
   setLoggedIn(false);
   resetForumMock();
+  resetReviewMock();
 }
 
 // ------------------------------------------------------------------------------------------
@@ -281,10 +283,8 @@ export const handlers = [
     json<S["ChangeSet"]>({ id: dec(params.cs), plan_id: dec(params.id), origin: "chat", ops: [], base_plan_hash: "mock", status: "discarded", preview_report: null }),
   ),
 
-  // Admin (prompt 09)
-  http.get(`${A}/admin/review-items`, () => json<S["Page_ReviewItemOut_"]>({ items: [], total: 0, limit: 50, offset: 0 })),
-  http.post(`${A}/admin/review-items/:id/decision`, () => notFound("Review item")),
-  http.post(`${A}/admin/program-versions/:id/publish`, () => notFound("Program version")),
+  // Admin review queue (prompt 09): src/mocks/review.ts
+  ...reviewHandlers,
 ];
 
 /** A predicate for the courses a node path accepts (mock eligibility). */
