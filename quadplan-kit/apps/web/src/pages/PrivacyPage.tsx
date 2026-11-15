@@ -23,7 +23,7 @@ const STORED: { data: string; stored: string; linkable: string }[] = [
   {
     data: "IP addresses",
     stored:
-      "Not by the app. Rate limits use a scrambled counter that expires within 24 hours. No proxy or web server logs are kept.",
+      "Not by the app. Rate limits use a scrambled counter that expires within 24 hours. No proxy or web server log keeps IP addresses.",
     linkable: "Weakly, for 24 hours.",
   },
   {

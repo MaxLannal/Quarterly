@@ -45,6 +45,7 @@ from planner_core.models import Expr, ProgramRules
 
 from worker.ingest.catalog import CatalogView, from_bundle
 from worker.ingest.compare import Agreement, count_nodes, node_agreement
+from worker.ingest.courseleaf import https_url
 from worker.ingest.e1 import formalize as e1_formalize
 from worker.ingest.e2 import ProgramCandidate, ReferenceList, enumerate_programs
 from worker.ingest.e3 import E3Context
@@ -110,9 +111,10 @@ def estimate(n_programs: int, n_sentences: int) -> float:
 
 
 def program_urls(program: ProgramSeed) -> list[str]:
+    """The program's pages, as https (the seed cites them as http; the crawler fetches https)."""
     urls = [s.url for s in program.sources if s.url]
     urls += [src.url for _, src in sources_of(program.rules_only()) if src is not None and src.url]
-    return list(dict.fromkeys(urls))
+    return list(dict.fromkeys(https_url(u) for u in urls))
 
 
 def fake_pages(programs: list[ProgramSeed], archive: SnapshotArchive) -> dict[str, Snapshot]:
@@ -121,10 +123,10 @@ def fake_pages(programs: list[ProgramSeed], archive: SnapshotArchive) -> dict[st
     for p in programs:
         for s in p.sources:
             if s.url:
-                quotes.setdefault(s.url, []).append(s.quote)
+                quotes.setdefault(https_url(s.url), []).append(s.quote)
         for _, src in sources_of(p.rules_only()):
             if src is not None and src.url:
-                quotes.setdefault(src.url, []).append(src.quote)
+                quotes.setdefault(https_url(src.url), []).append(src.quote)
     pages = {}
     for url, items in quotes.items():
         body = "".join(f"<p>{html.escape(q)}</p>\n" for q in dict.fromkeys(items))
@@ -167,7 +169,10 @@ def stored_archive(settings: Any) -> SnapshotArchive | None:
     return SnapshotArchive(store, DbSnapshotLog(sessionmaker(engine)))
 
 
-def live_pages(programs: list[ProgramSeed], archive: SnapshotArchive) -> dict[str, Snapshot]:
+def live_pages(
+    programs: list[ProgramSeed], archive: SnapshotArchive, **crawler_kw: Any
+) -> dict[str, Snapshot]:
+    """`crawler_kw` is for tests (a mock transport and clock)."""
     from worker.ingest.crawler import Crawler
     from worker.ingest.settings import get_ingest_settings
 
@@ -179,6 +184,7 @@ def live_pages(programs: list[ProgramSeed], archive: SnapshotArchive) -> dict[st
         contact=settings.catalog_contact_email,
         allowed_hosts=hosts,
         interval_s=settings.catalog_request_interval_s,
+        **crawler_kw,
     )
     pages = {}
     for url in dict.fromkeys(urls):

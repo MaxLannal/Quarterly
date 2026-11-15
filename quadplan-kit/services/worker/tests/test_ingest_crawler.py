@@ -117,14 +117,24 @@ def _mock_crawler(handler, clock, require_https=False):  # type: ignore[no-untyp
     )
 
 
-def test_plain_http_pages_are_skipped_without_a_request(clock) -> None:  # type: ignore[no-untyped-def]
+def test_http_pages_are_fetched_over_https_and_other_schemes_skipped(clock) -> None:  # type: ignore[no-untyped-def]
+    asked: list[str] = []
+
     def handler(request: httpx.Request) -> httpx.Response:
-        raise AssertionError(f"no request expected, got {request.url}")
+        asked.append(str(request.url))
+        if request.url.path == "/robots.txt":
+            return httpx.Response(200, text="User-agent: *\nAllow: /\n")
+        return httpx.Response(200, html="<p>page</p>")
 
     crawler = _mock_crawler(handler, clock, require_https=True)
-    assert crawler.fetch("http://catalog.test/thecollege/x/") is None
-    assert not crawler.allowed("http://catalog.test/thecollege/x/")
-    assert [s.reason for s in crawler.skipped] == ["not https"] and crawler.requests == 0
+    snap = crawler.fetch("http://catalog.test/thecollege/x/")
+    assert snap is not None and snap.url == "https://catalog.test/thecollege/x/"
+    assert asked and all(u.startswith("https://") for u in asked)
+    assert crawler.allowed("http://catalog.test/thecollege/x/")
+    before = len(asked)
+    assert crawler.fetch("ftp://catalog.test/thecollege/x/") is None
+    assert not crawler.allowed("ftp://catalog.test/thecollege/x/")
+    assert [s.reason for s in crawler.skipped] == ["not https"] and len(asked) == before
 
 
 @pytest.mark.parametrize("status", [401, 403, 500])

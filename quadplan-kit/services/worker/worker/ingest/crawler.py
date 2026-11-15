@@ -67,8 +67,9 @@ class Crawler:
     clock: Callable[[], float] = time.monotonic
     sleep: Callable[[float], None] = time.sleep
     max_requests: int = 5000
-    #: Only https pages become rule sources (a plain-http page could be altered on the way).
-    #: Off only for the tests' local catalog server.
+    #: Only https pages become rule sources (a plain-http page could be altered on the way):
+    #: http URLs are fetched as https, other schemes skipped. Off only for the tests' local
+    #: catalog server.
     require_https: bool = True
     skipped: list[Skipped] = field(default_factory=list)
     requests: int = 0
@@ -82,6 +83,9 @@ class Crawler:
             self.client = httpx.Client(timeout=30.0, follow_redirects=False)
 
     # ---------------------------------------------------------------------- plumbing
+
+    def _upgraded(self, url: str) -> str:
+        return courseleaf.https_url(url) if self.require_https else url
 
     def _scheme_ok(self, scheme: str) -> bool:
         return scheme == "https" or (not self.require_https and scheme == "http")
@@ -137,6 +141,7 @@ class Crawler:
     # ------------------------------------------------------------------------- public
 
     def allowed(self, url: str) -> bool:
+        url = self._upgraded(url)
         parts = urllib.parse.urlsplit(url)
         if parts.netloc not in self.allowed_hosts or not self._scheme_ok(parts.scheme):
             return False
@@ -144,7 +149,9 @@ class Crawler:
         return parser is not None and parser.can_fetch(self.agent, url)
 
     def fetch(self, url: str) -> Snapshot | None:
-        """The snapshot, or None (recorded in `skipped`) when the URL may not be fetched."""
+        """The snapshot, or None (recorded in `skipped`) when the URL may not be fetched. An
+        http URL is fetched (and recorded) as https."""
+        url = self._upgraded(url)
         parts = urllib.parse.urlsplit(url)
         if parts.netloc not in self.allowed_hosts:
             self.skipped.append(Skipped(url, "host not in the crawl list"))

@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import asyncio
 from pathlib import Path
+from typing import Any
 
 import pytest
 from worker.ingest import pilot
@@ -28,6 +29,44 @@ def test_fake_pilot_reports_full_agreement(
     assert "| cmsc-ba | 12 | 12 | 100.0% | 100.0% | none | 0 |" in report
     assert "## Every disagreement with the hand seed\n\nNone." in report
     assert "E2 enumeration: 2/2 pilot programs found; reconciliation passed" in report
+
+
+def test_live_pages_fetch_the_seeds_http_pages_over_https(
+    monkeypatch: pytest.MonkeyPatch, clock: Any
+) -> None:
+    """The seed cites catalog pages as http://; the paid pilot must still get every page,
+    over https (spec review of 57c6723). No network: a mock transport answers."""
+    import httpx
+    from worker.ingest.snapshots import memory_archive
+
+    bundle = pilot.load_bundle(pilot.ROOT / "data" / "seed" / "2026-27")
+    programs = [p for p in bundle.programs if p.id in ("econ-ba", "core")]
+    cited = {s.url for p in programs for s in p.sources if s.url}
+    assert cited and all(u.startswith("http://") for u in cited)  # how the seed writes them
+    asked: list[str] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        asked.append(str(request.url))
+        if request.url.path == "/robots.txt":
+            return httpx.Response(200, text="User-agent: *\nAllow: /\n")
+        return httpx.Response(200, html="<html><body><p>page</p></body></html>")
+
+    monkeypatch.setenv("CATALOG_CONTACT_EMAIL", "catalog-bot-test@example.edu")
+    get_ingest_settings.cache_clear()
+    try:
+        pages = pilot.live_pages(
+            programs,
+            memory_archive("t"),
+            client=httpx.Client(transport=httpx.MockTransport(handler)),
+            clock=clock.time,
+            sleep=clock.sleep,
+        )
+    finally:
+        get_ingest_settings.cache_clear()
+    wanted = {u for p in programs for u in pilot.program_urls(p)}
+    assert set(pages) == wanted and len(wanted) >= len(cited)
+    assert all(u.startswith("https://") for u in asked)
+    assert all(snap.url.startswith("https://") for snap in pages.values())
 
 
 def test_the_report_lists_every_disagreement() -> None:

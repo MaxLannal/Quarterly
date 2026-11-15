@@ -33,7 +33,7 @@ from pydantic import ValidationError
 
 from worker.ingest.catalog import CatalogView
 from worker.ingest.compare import Agreement
-from worker.ingest.courseleaf import normalize
+from worker.ingest.courseleaf import https_url, normalize
 from worker.ingest.golden import GoldenOutcome
 
 MAJOR_MIN_COURSES, MAJOR_MAX_COURSES = 9, 19
@@ -170,7 +170,9 @@ def check_quotes(
     for path, src in sources_of(rules):
         if src is None:
             continue
-        sid = src.snapshot_id or ids_by_url.get(src.url or "")
+        url = src.url or ""
+        # http and https are the same page (the crawler fetches http URLs as https).
+        sid = src.snapshot_id or ids_by_url.get(url) or ids_by_url.get(https_url(url))
         if sid is None or sid not in texts_by_id:
             problems.append(
                 f"{path}: the quote points at a page that was not fetched "

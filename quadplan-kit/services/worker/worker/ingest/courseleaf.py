@@ -122,6 +122,13 @@ class _Builder(HTMLParser):
         self.stack[-1].children.append(data)
 
 
+def https_url(url: str) -> str:
+    """The https form of an http URL (other URLs unchanged). The seed cites catalog pages as
+    `http://...`; they are fetched and compared as https, so the same page is one URL."""
+    parts = urllib.parse.urlsplit(url)
+    return parts._replace(scheme="https").geturl() if parts.scheme == "http" else url
+
+
 def parse_html(text: str) -> Element:
     builder = _Builder()
     builder.feed(text)

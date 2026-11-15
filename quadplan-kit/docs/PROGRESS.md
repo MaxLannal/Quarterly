@@ -523,6 +523,7 @@ Earlier runs on the busy laptop varied (P12-1), so run it again on the real serv
 - **Agents:**
   - no real-model run of any agent yet (API hold);
   - evals do not run nightly in CI;
+  - only the A1 and A2 eval sets exist: no E3 formalizer eval (15 programs with gold trees; the pilot covers 11) and no A4 moderation eval (200 labelled posts, at least 95% recall on identifying information), and evals do not yet gate a prompt-version change;
   - forum evidence in advisor answers is untested with a real model.
 - **Ops:** the spend alarm writes a log line but notifies no one.
 

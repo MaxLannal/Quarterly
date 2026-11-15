@@ -14,4 +14,5 @@ Each line records a change to `docs/SPEC.md` that came from Richard's feedback (
 | 2026-11-14 | OPEN_QUESTIONS Q11 | Review ratings | Optional pace and grading-strictness questions (1–5). |
 | 2026-11-14 | OPEN_QUESTIONS P08-5 | Data model, `course_instructor` | One forum page per cross-listed group and instructor, shown under every code. |
 | 2026-11-14 | OPEN_QUESTIONS Q6 | Checks, V09 | Transfer credit counts toward the 3800 units by enrollment; at least 1800 units must be taken at the College. |
-| 2026-11-15 | CLAUDE.md hard rule "Never log email addresses or IP addresses" | Accounts and anonymity, What is stored | Proxies keep no logs with IP addresses (Caddy and nginx have no access log; Caddy's error log is off). Replaces "proxy logs truncated to /24 and kept 24 hours". |
+| 2026-11-15 | CLAUDE.md hard rule "Never log email addresses or IP addresses" | Accounts and anonymity, What is stored | No proxy log keeps IP addresses (Caddy and nginx have no access log; Caddy's error log is off and its own log drops the address fields and request headers). Replaces "proxy logs truncated to /24 and kept 24 hours". |
+| 2026-11-14 | OPEN_QUESTIONS decision 6 (Richard: Fable is overkill) | Model routing; catalog ingestion, step 5 | E3 program formalizer runs on Opus 5.5 (effort high) and the E3b second opinion on Sonnet 5.5, instead of Fable 5.2. |
