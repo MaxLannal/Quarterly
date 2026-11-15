@@ -30,6 +30,9 @@ data/seed (hand-verified YAML) · data/golden (must-pass / must-fail plans) · p
 - The hand check of `data/seed/REVIEW.md` is deferred until before deployment.
 - Do not send any request to the Claude or OpenRouter APIs (no evals, test runs or agent runs) until Richard says so (2026-11-14). Build and test LLM code against fake clients only.
 
+## Richard's feedback
+- `docs/FEEDBACK.md` is where Richard writes issues he finds and changes he wants. Read it at the start of every task. Move items you take to "In progress", and finished ones to "Done" with the date and what changed.
+
 ## Questions for Richard
 - Anywhere you leave Richard a question (`docs/OPEN_QUESTIONS.md`, `docs/PROGRESS.md`, review notes, chat), write it in plain, jargon-free language that a non-engineer can follow.
 - Always include your suggested answer, or two or three options with what each one means in practice.
