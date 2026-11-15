@@ -266,7 +266,7 @@ The model has nine groups of tables; the catalog, schedule and program groups ar
 | `term` | `id` ("2026-AU"), `year`, `quarter` (AU, WI, SP, SU), `start`, `end` |  |
 | `instructor` | `id`, `slug`, `display_name`, `department`, `aliases[]` | Names de-duplicated across sources |
 | `section` | `id`, `term_id`, `course_id`, `section_no`, `component`, `instructor_ids[]`, `meetings` (JSONB), `capacity`, `status`, `source_id`, `scraped_at` |  |
-| `course_instructor` | `id`, `course_id`, `instructor_id`, `first_term`, `last_term`, `n_terms` | The key of every forum page |
+| `course_instructor` | `id`, `course_id`, `instructor_id`, `first_term`, `last_term`, `n_terms` | The key of every forum page; one page per cross-listed group and instructor, shown under every code (P08-5) |
 | `offering_pattern` | `course_id`, `quarter`, `p_offered`, `evidence_terms[]`, `method` | Predicted availability for future years |
 
 ### Programs
@@ -504,7 +504,7 @@ The verifier is a pure function, `verify(plan, rules, catalog) → report + cert
 | V06 | No meeting-time clashes, for terms with posted sections | Warning | Interval check |
 | V07 | Each program's rule tree is satisfied | Error, listing exactly what is missing | CP-SAT assignment |
 | V08 | Sharing limits between programs (minor vs major, minor vs Core, Bx/MS vs major) | Error | Inside the V07 model |
-| V09 | Graduation: 4200 units, 3800 by enrollment, Core and Language Competence, half of each program in residence, quarters within the allotment | Error | Arithmetic + V07 |
+| V09 | Graduation: 4200 units, 3800 by enrollment (transfer credit counts toward it), at least 1800 units taken at the College, Core and Language Competence, half of each program in residence, quarters within the allotment | Error | Arithmetic + V07 |
 | V10 | Timing: Core finished by end of 2nd year (civ abroad allowed in 3rd); `apply_by` and `complete_by` | Warning | Term comparison |
 | V11 | Goals (see table below): hard goals error, soft goals warn with a score | Error or warning | Predicate per goal |
 | V12 | Grading: no Pass/Fail where a node forbids it | Error | Lookup |
@@ -587,7 +587,7 @@ Prices are list prices per million input / output tokens from the [models overvi
 | A1 plan generator | `claude-opus-5-5` | $4 / $20 | Tool use and judgment on electives |
 | A2 advisor chat | `claude-sonnet-5-5` (escalate to Opus 5.5 for whole-plan comparisons) | $2 / $10 | Interactive latency |
 | A3 forum extraction / summaries | Haiku 5.5 / Sonnet 5.5 |  | Nightly batch |
-| A4 moderation | `claude-haiku-5-5` |  | Runs on every post |
+| A4 moderation | `claude-haiku-5-5` |  | Runs on every AI summary (not on students' posts, P08-1) |
 
 OpenRouter is a fallback: `llm_gateway` maps each model to its OpenRouter name and retries there after two provider errors.
 
@@ -652,7 +652,7 @@ Their steps are in Data ingestion. Harness specifics for the formalizer (E3): to
 
 ### A4. Moderation
 
-On submit, Haiku 5.5 labels a post `ok`, `personal_attack`, `identifying_info`, `harassment`, `sexual`, `misconduct_claim`, `spam` or `off_topic`. `ok` publishes immediately; `identifying_info` and `misconduct_claim` are held for a human; clear abuse is rejected with the reason shown to the author, who can ask for human review. A regex pass strips emails and phone numbers first.
+Students' posts, comments and edits are **not** checked before they are published (Richard, 2026-11-14, P08-1): a regex pass strips emails and phone numbers, then the post appears at once; guideline breaks are taken down through reports and the admin queue. Haiku 5.5 labels only AI-written text: a "What students say" summary publishes only when A4 says `ok` (labels `ok`, `personal_attack`, `identifying_info`, `harassment`, `sexual`, `misconduct_claim`, `spam`, `off_topic`).
 
 ### Evals
 
@@ -688,6 +688,8 @@ The forum follows theCourseForum's idea of one page per course × instructor ([t
 | Would recommend | yes / no | Yes |
 | Term taken | term picker | Yes |
 | Grade received | A-range, B-range, C or lower, P/F, prefer not to say | No |
+| Pace | 1–5 (slow to fast) | No (Q11) |
+| Grading strictness | 1–5 (generous to strict) | No (Q11) |
 
 ### Sorting
 
@@ -709,8 +711,8 @@ The forum follows theCourseForum's idea of one page per course × instructor ([t
 ### Moderation and community rules
 
 - Rules (shown in the composer): talk about the course and the teaching, not anyone's private life; no names of other students; no claims of misconduct (report those to the University instead); no slurs or harassment.
-- Automatic pass on submit (agent A4), user reports, and a human queue in the console.
-- Three upheld removals suspend an account for 30 days; bans are per account. Because each verified email can hold one account, a ban cannot be dodged by signing up again with the same address.
+- No automatic check before publishing (P08-1): user reports and a human queue in the console take posts down.
+- Suspensions are always an admin's choice (P08-3): when removing an item, the admin may suspend its author for 7, 30 or 90 days without learning who the author is; an admin can end a suspension early from the console. Bans are per account. Because each verified email can hold one account, a ban cannot be dodged by signing up again with the same address; an account cannot be deleted while suspended or within 30 days of an upheld removal (P08-12, P08-14).
 - Instructors are not given a reply channel in v1; revisit with the University.
 
 ### Forum → course attributes
