@@ -286,6 +286,10 @@ Harness issues fixed along the way (not app bugs):
   - Re-run the three Opus profiles with the new limits (about $0.60) before deciding to keep
   Opus anywhere.
   - Production routing is unchanged until you decide (`docs/OPEN_QUESTIONS.md` P13-1).
+  - **Update (after this run):** Richard chose Sonnet 5.5 (P13-1), and `a1_plan_generator`
+  now uses the settings these tests ran (commit 4049a63). The Opus route stays as
+  `a1_plan_generator_opus`. No live calls were made after the report, so the ledger total
+  stays $1.7249.
 
 ## 6. Estimated cost per real user action
 
