@@ -5,7 +5,7 @@ import { useCatalogYears, usePrograms } from "@/api/hooks";
 import type { Credit, Goal, PlanState } from "@/api/types";
 import { PageContainer, PageHeader } from "@/components/layout/page";
 import { Button } from "@/components/ui/button";
-import { CloseIcon } from "@/components/ui/icons";
+import { CheckIcon, CloseIcon } from "@/components/ui/icons";
 import { ChoiceRow, controlClass, controlCompactClass } from "@/components/ui/input";
 import { Notice } from "@/components/ui/misc";
 import { CAREER_PRESETS, interestGoal, studyAbroadProgramFor, TERM_PRESETS } from "@/features/planner/goals";
@@ -43,18 +43,6 @@ function StepEntry({ d, set, years }: { d: Draft; set: (p: Partial<Draft>) => vo
   return (
     <div className="space-y-3">
       <div>
-        <label htmlFor={`${id}-cy`} className={labelClass}>
-          Catalog year
-        </label>
-        <select id={`${id}-cy`} className={box} value={d.catalogYear} onChange={(e) => set({ catalogYear: e.target.value, entryTerm: `${catalogStartYear(e.target.value)}-AU` })}>
-          {years.map((y) => (
-            <option key={y} value={y}>
-              {y}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div>
         <label htmlFor={`${id}-entry`} className={labelClass}>
           First quarter at UChicago
         </label>
@@ -65,6 +53,20 @@ function StepEntry({ d, set, years }: { d: Draft; set: (p: Partial<Draft>) => vo
             </option>
           ))}
         </select>
+      </div>
+      <div>
+        <label htmlFor={`${id}-cy`} className={labelClass}>
+          Catalog year
+        </label>
+        <select id={`${id}-cy`} className={box} value={d.catalogYear} onChange={(e) => set({ catalogYear: e.target.value, entryTerm: `${catalogStartYear(e.target.value)}-AU` })}>
+          {years.map((y) => (
+            <option key={y} value={y}>
+              {y}
+            </option>
+          ))}
+        </select>
+        {/* D11 O-3: say what the catalog year is, for students who have never heard the term. */}
+        <p className="mt-1 text-caption text-muted">The College Catalog edition your requirements follow; usually the year you start.</p>
       </div>
       <fieldset>
         <legend className={labelClass}>Status</legend>
@@ -256,14 +258,14 @@ function StepGoals({ d, set, hasAbroad }: { d: Draft; set: (p: Partial<Draft>) =
       </fieldset>
       <DndContext sensors={sensors} collisionDetection={collision} onDragEnd={onDragEnd}>
         <fieldset>
-          <legend className={labelClass}>Quarter goals: drag a chip onto a quarter, or pick one and press Place</legend>
+          <legend className={labelClass}>Goals for one quarter: choose a quarter and press Place, or drag a goal onto the timeline</legend>
           <ul className="flex flex-col gap-2">
             {TERM_PRESETS.map((p) => (
               <ChipSource key={p.key} k={p.key} label={p.label} terms={terms} onPlace={(t) => place(p.key, t)} disabled={p.key === "study_abroad" && !hasAbroad} />
             ))}
           </ul>
         </fieldset>
-        <div className="grid grid-cols-3 gap-2" aria-label="Timeline">
+        <div role="group" className="grid grid-cols-1 gap-2 min-[480px]:grid-cols-3" aria-label="Timeline">
           {terms.map((t) => (
             <TimelineCell
               key={t}
@@ -357,10 +359,18 @@ export function OnboardingWizard() {
 
   return (
     <PageContainer width="reading">
-      <PageHeader title="Planner setup" size="md" className="mb-6" />
+      <PageHeader title="Planner setup" description="Five short steps. You can change everything later in the planner." size="md" className="mb-6" />
       <ol className="flex flex-wrap gap-2 text-caption" aria-label="Steps">
         {STEPS.map((s, i) => (
-          <li key={s} aria-current={i === step ? "step" : undefined} className={cn("rounded-pill border px-3 py-1.5", i === step ? "border-primary bg-primary-wash font-medium text-ink" : i < step ? "border-hairline-strong text-ink" : "border-hairline text-muted")}>
+          // D11 O-1: only the current step is a pill; the others are plain text (they are not buttons),
+          // done steps with a check.
+          <li
+            key={s}
+            aria-current={i === step ? "step" : undefined}
+            className={cn("inline-flex items-center gap-1 rounded-pill px-3 py-1.5", i === step ? "bg-primary-wash font-medium text-ink" : i < step ? "text-ink" : "text-muted")}
+          >
+            {i < step && <CheckIcon className="size-3.5 text-success" aria-hidden="true" />}
+            {i < step && <span className="sr-only">Done: </span>}
             {i + 1}. {s}
           </li>
         ))}
@@ -394,9 +404,15 @@ export function OnboardingWizard() {
               <dt className="font-medium">Goals</dt>
               <dd>{goals.length ? goals.map((g) => `${goalLabel(g)}${g.term ? ` (${termLabel(g.term)})` : ""}`).join("; ") : "None"}</dd>
             </dl>
-            <ChoiceRow type="checkbox" className="font-medium" checked={d.generate} onChange={(e) => set({ generate: e.target.checked })}>
-              Generate a starting plan
-            </ChoiceRow>
+            <div>
+              <ChoiceRow type="checkbox" className="font-medium" checked={d.generate} onChange={(e) => set({ generate: e.target.checked })} aria-describedby="generate-hint">
+                Generate a starting plan
+              </ChoiceRow>
+              {/* D11 O-4: honest about AI (PRODUCT.md). */}
+              <p id="generate-hint" className="pl-8 text-caption text-muted">
+                Written by AI, then checked by the verifier. You choose what to keep.
+              </p>
+            </div>
             {!stored && (
               <Notice tone="error" role="alert">
                 This browser is blocking storage, so the plan cannot be kept. Allow site data or log in to save plans.
