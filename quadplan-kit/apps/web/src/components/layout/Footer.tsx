@@ -1,28 +1,34 @@
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 
+// The same sections as the top bar (D11 C-1): Plan, Catalog, Forum, and the site itself.
 const COLUMNS: { title: string; links: { to: string; label: string }[] }[] = [
   {
     title: "Plan",
     links: [
       { to: "/plan", label: "Planner" },
       { to: "/plans", label: "My plans" },
+    ],
+  },
+  {
+    title: "Catalog",
+    links: [
+      { to: "/courses", label: "Course search" },
       { to: "/programs", label: "Program explorer" },
     ],
   },
   {
-    title: "Read",
+    title: "Forum",
     links: [
-      { to: "/courses", label: "Course search" },
-      { to: "/instructors", label: "Instructors" },
+      { to: "/instructors", label: "Forum" },
+      { to: "/guidelines", label: "Community guidelines" },
     ],
   },
   {
     title: "Quarterly",
     links: [
-      { to: "/guidelines", label: "Community guidelines" },
-      { to: "/privacy", label: "Privacy" },
       { to: "/about", label: "About Quarterly" },
+      { to: "/privacy", label: "Privacy" },
     ],
   },
 ];
@@ -42,7 +48,7 @@ export function Footer() {
     <footer className="border-t border-hairline bg-canvas">
       <div
         className={cn(
-          "mx-auto grid w-full grid-cols-2 gap-x-6 gap-y-8 px-4 py-10 sm:px-6 md:grid-cols-[2fr_repeat(3,1fr)] md:gap-10 md:py-12 lg:px-8",
+          "mx-auto grid w-full grid-cols-2 gap-x-6 gap-y-8 px-4 py-10 sm:px-6 md:grid-cols-[2fr_repeat(4,1fr)] md:gap-10 md:py-12 lg:px-8",
           wide ? "max-w-tool" : "max-w-content",
         )}
       >
@@ -50,7 +56,7 @@ export function Footer() {
           <p className="font-display text-display-sm font-medium tracking-[-0.24px] text-ink">Quarterly</p>
           <p className="mt-2 text-body-sm text-body">
             Quarterly is a student project, not affiliated with the University
-            of Chicago.
+            of Chicago. It is not official advising.
           </p>
         </div>
         {COLUMNS.map((col) => (

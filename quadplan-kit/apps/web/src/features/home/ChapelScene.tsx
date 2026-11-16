@@ -51,7 +51,8 @@ export function ChapelScene() {
     return () => window.clearTimeout(id);
   }, []);
   return (
-    <div className="home-scene w-full">
+    // D11 H-4: edge to edge on a phone, so the chapel is not a small strip.
+    <div className="home-scene -mx-4 w-[calc(100%+2rem)] sm:mx-0 sm:w-full">
       <ascii-scene
         src="/ascii-scene/scene.rockefeller.json"
         weather-src="/api/weather"

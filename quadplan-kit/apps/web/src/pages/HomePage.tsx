@@ -6,6 +6,7 @@ import { Orb } from "@/components/ui/card";
 import { SearchIcon } from "@/components/ui/icons";
 import { controlClass } from "@/components/ui/input";
 import { ChapelScene } from "@/features/home/ChapelScene";
+import { activePlan } from "@/features/planner/localPlans";
 import { cn } from "@/lib/utils";
 
 /** hero-band: canvas, the wordmark as headline, search and one primary pill, one orb; beside it
@@ -14,6 +15,13 @@ import { cn } from "@/lib/utils";
 export default function HomePage() {
   const navigate = useNavigate();
   const [q, setQ] = useState("");
+  const [hasPlan] = useState(() => {
+    try {
+      return activePlan() !== null;
+    } catch {
+      return false;
+    }
+  });
   function submit(e: FormEvent) {
     e.preventDefault();
     navigate(
@@ -21,12 +29,12 @@ export default function HomePage() {
     );
   }
   return (
-    <section className="relative isolate overflow-hidden">
+    <section aria-label="Quarterly" className="relative isolate overflow-hidden">
       <Orb
         color="maroon"
         className="-left-16 top-0 size-[320px] sm:left-0 sm:size-[480px] lg:-top-6 lg:left-[8%] lg:size-[560px]"
       />
-      <div className="mx-auto grid w-full max-w-content items-center gap-10 px-4 py-16 sm:px-6 sm:py-24 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:px-8 lg:py-section">
+      <div className="mx-auto grid w-full max-w-content items-center gap-10 px-4 pb-12 pt-10 sm:px-6 sm:py-24 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:px-8 lg:py-section">
         <div className="flex min-w-0 flex-col items-start gap-8">
           <h1 className="font-display text-[64px] font-normal leading-none tracking-[-1.92px] text-ink text-balance sm:text-display-hero">
             Quarterly
@@ -35,10 +43,10 @@ export default function HomePage() {
             role="search"
             onSubmit={submit}
             className="flex w-full max-w-xl flex-col gap-3 sm:flex-row"
-            aria-label="Search courses and instructors"
+            aria-label="Search courses"
           >
             <label htmlFor="home-search" className="sr-only">
-              Search courses and instructors
+              Search courses
             </label>
             <div className="relative min-w-0 flex-1">
               <SearchIcon className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-muted" />
@@ -47,7 +55,7 @@ export default function HomePage() {
                 type="search"
                 value={q}
                 onChange={(e) => setQ(e.target.value)}
-                placeholder="Course code or title"
+                placeholder="Code or title, e.g. CMSC 14100"
                 className={cn(controlClass, "rounded-pill pl-11")}
               />
             </div>
@@ -62,12 +70,15 @@ export default function HomePage() {
             <Button asChild variant="outline">
               <Link to="/instructors">Browse reviews</Link>
             </Button>
-            <Link
-              to="/plan"
-              className={cn(standaloneLinkClass, "px-2 text-button")}
-            >
-              Open my plan
-            </Link>
+            {/* D11 H-3: only when there is a plan to open. */}
+            {hasPlan && (
+              <Link
+                to="/plan"
+                className={cn(standaloneLinkClass, "px-2 text-button")}
+              >
+                Open my plan
+              </Link>
+            )}
           </div>
         </div>
         <ChapelScene />

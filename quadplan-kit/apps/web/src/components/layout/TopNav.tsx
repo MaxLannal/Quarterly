@@ -7,6 +7,9 @@ import { CloseIcon, MenuIcon, SearchIcon } from "@/components/ui/icons";
 import { useSession } from "@/lib/session";
 import { cn } from "@/lib/utils";
 
+/** Pages with their own course search box; the bar hides its copy there (D11 H-1, CS-1). */
+const PAGE_HAS_SEARCH = new Set(["/", "/courses"]);
+
 /** A forum page or thread: /courses/:code/i/:instructor[/t/:id]. */
 const FORUM_PATH = /^\/courses\/[^/]+\/i\//;
 
@@ -61,6 +64,7 @@ function SearchBox() {
   return (
     <form
       role="search"
+      aria-label="Site search"
       onSubmit={submit}
       className="relative flex w-full min-w-0 items-center"
     >
@@ -76,7 +80,7 @@ function SearchBox() {
         className={cn(
           // A quiet filled field (D6, FEEDBACK "Minor design changes"): no outline until it is used;
           // the icon and placeholder say what it is. Focus: white, with the maroon ring.
-          "min-h-11 w-full min-w-0 rounded-pill border border-transparent bg-surface-strong pl-10 pr-4 text-body-sm text-ink transition-colors duration-150 placeholder:text-muted",
+          "min-h-11 w-full min-w-0 rounded-pill border border-transparent bg-surface-strong pl-11 pr-4 text-body-sm text-ink transition-colors duration-150 placeholder:text-muted",
           "hover:bg-hairline-soft hover:border-hairline focus-visible:outline-none focus:border-primary focus:bg-surface-card focus:shadow-[inset_0_0_0_1px_var(--color-primary)]",
         )}
       />
@@ -167,9 +171,12 @@ export function TopNav() {
         >
           <NavLinks vertical={open} />
         </nav>
-        <div className="order-1 w-full pb-3 md:order-none md:ml-auto md:w-auto md:max-w-[17rem] md:flex-1 md:pb-0">
-          <SearchBox />
-        </div>
+        {/* D11 H-1/CS-1: home and course search have their own search box; one is enough. */}
+        {!PAGE_HAS_SEARCH.has(location.pathname) && (
+          <div className="order-1 w-full pb-3 md:order-none md:ml-auto md:w-auto md:max-w-[17rem] md:flex-1 md:pb-0">
+            <SearchBox />
+          </div>
+        )}
         <div className="ml-auto flex items-center gap-1 md:ml-2">
           {account}
           <Button
