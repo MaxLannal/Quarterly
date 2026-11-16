@@ -599,4 +599,6 @@ Earlier runs on the busy laptop varied (P12-1), so run it again on the real serv
 - Verdict: every plan the live agents produced (18 generations, 26 variants) passed `verify` and `check_certificate`; the chat apply path keeps errors visible with no certificate; injections caused no write.
 - Five bugs found and fixed, each with a regression test first: E1 JSON-string answers; advisor tool schemas rejected by the API (every advisor turn failed); scope classifier, A1 rationale and Opus preference output limits too tight.
 - Needs Richard: P13-1 (Sonnet 5.5 vs Opus 5.5 for A1). Not run (budget): the Opus re-run after the fix.
+- Known flake (2026-11-16): journey C once failed under heavy machine load. The generator's time-limited solve returned another valid plan that also holds HIST 10102, and the test checks which courses the verifier credits to the Core's civilization requirement; the next run passed. If it recurs, make the test accept any plan where the Paris courses are eligible for that requirement.
+- `make up` and `make e2e-stack` now recreate the web container after the API, so nginx never keeps a dead API address (every journey once got 502s after a rebuild).
 
