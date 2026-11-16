@@ -7,7 +7,10 @@ import { card, gap, verifierSettled } from "./journey";
 async function transferCredit(page: Page, label: string, code: string | null, units: string) {
   await page.getByLabel("Kind").selectOption("transfer");
   await page.getByLabel("Description").fill(label);
-  if (code) await page.getByLabel("Counts as course (if known)").fill(code);
+  if (code) {
+    await page.getByLabel("Counts as course (if known)").fill(code);
+    await page.getByRole("option", { name: new RegExp(`^${code}`) }).click();
+  }
   await page.getByLabel("Units").fill(units);
   await page.getByRole("button", { name: "Add credit" }).click();
   // Each add looks the code up in the catalog first: wait for it before the next one.

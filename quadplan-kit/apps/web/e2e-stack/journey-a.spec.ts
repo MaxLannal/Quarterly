@@ -17,6 +17,7 @@ test("journey A: first-year onboards, generates, drags a course and saves to a n
   await page.getByLabel("Kind").selectOption("placement");
   await page.getByLabel("Description").fill("Calculus placement");
   await page.getByLabel("Counts as course (if known)").fill("MATH 15100");
+  await page.getByRole("option", { name: /^MATH 15100/ }).click();
   await page.getByRole("button", { name: "Add credit" }).click();
   await expect(page.getByText("placement: Calculus placement → MATH 15100")).toBeVisible();
   await page.getByRole("button", { name: "Next" }).click();

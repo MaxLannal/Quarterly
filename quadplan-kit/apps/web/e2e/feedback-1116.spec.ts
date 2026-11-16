@@ -57,8 +57,9 @@ test("credits: see, edit, remove and add test, placement and transfer credits in
   await add.getByLabel("Description").fill("AP Calculus BC, score 5");
   await add.getByLabel("Counts as course (if known)").fill("NOPE 10000");
   await add.getByRole("button", { name: "Add credit" }).click();
-  await expect(add.getByRole("alert")).toHaveText("NOPE 10000 is not in the 2099-00 catalog. Leave this empty if you are not sure.");
+  await expect(add.getByRole("alert")).toHaveText("Choose the course from the list, or clear the field if you are not sure.");
   await add.getByLabel("Counts as course (if known)").fill("TEST 10000");
+  await add.getByRole("option", { name: /^TEST 10000/ }).click();
   await add.getByRole("button", { name: "Add credit" }).click();
   const list = drawer.getByRole("list", { name: "Your credits" });
   await expect(list).toContainText("AP: AP Calculus BC, score 5 → TEST 10000 · 100 units");

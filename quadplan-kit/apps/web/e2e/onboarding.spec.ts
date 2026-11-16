@@ -15,10 +15,14 @@ test("onboarding: five steps create a plan and open the generator", async ({ pag
   // generated plan fail: FEEDBACK "Generate Plan Failure").
   await page.getByLabel("Kind").selectOption("AP");
   await page.getByLabel("Description").fill("Fake AP exam");
+  // FEEDBACK 2026-11-16: the course is chosen from the catalog, never typed free.
   await page.getByLabel("Counts as course (if known)").fill("NOPE 10000");
+  await expect(page.getByRole("listbox", { name: "Matching courses" })).toContainText("No course matches");
   await page.getByRole("button", { name: "Add credit" }).click();
-  await expect(page.getByRole("alert")).toHaveText("NOPE 10000 is not in the 2099-00 catalog. Leave this empty if you are not sure.");
-  await page.getByLabel("Counts as course (if known)").fill("TEST 10000");
+  await expect(page.getByRole("alert")).toHaveText("Choose the course from the list, or clear the field if you are not sure.");
+  await page.getByLabel("Counts as course (if known)").fill("Fake Introduction I");
+  await page.getByRole("option", { name: /^TEST 10000/ }).click();
+  await expect(page.getByTestId("course-picked")).toContainText("TEST 10000");
   await page.getByRole("button", { name: "Add credit" }).click();
   await expect(page.getByText("AP: Fake AP exam → TEST 10000")).toBeVisible();
   await page.getByRole("button", { name: "Next" }).click();

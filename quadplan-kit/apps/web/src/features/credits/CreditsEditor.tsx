@@ -3,6 +3,7 @@ import { api } from "@/api/client";
 import type { Credit } from "@/api/types";
 import { Button } from "@/components/ui/button";
 import { controlClass } from "@/components/ui/input";
+import { CoursePicker } from "@/features/courses/CoursePicker";
 import { cn } from "@/lib/utils";
 
 const labelClass = "mb-1.5 block text-caption font-medium text-ink";
@@ -42,12 +43,14 @@ function CreditForm({ initial, catalogYear, submitLabel, ariaLabel, onSubmit, on
   const [label, setLabel] = useState(initial?.label ?? "");
   const [mapsTo, setMapsTo] = useState(initial?.maps_to ?? "");
   const [units, setUnits] = useState(String(initial?.units ?? 100));
+  const [pending, setPending] = useState("");
   const [err, setErr] = useState<string | null>(null);
 
   async function submit(e: FormEvent) {
     e.preventDefault();
     const code = mapsTo.trim().toUpperCase();
     if (!label.trim()) return setErr("Describe the credit, e.g. “AP Calculus BC, score 5”.");
+    if (!code && pending) return setErr("Choose the course from the list, or clear the field if you are not sure.");
     const problem = await codeProblem(code, catalogYear);
     if (problem) return setErr(problem);
     setErr(null);
@@ -55,6 +58,7 @@ function CreditForm({ initial, catalogYear, submitLabel, ariaLabel, onSubmit, on
     if (!initial) {
       setLabel("");
       setMapsTo("");
+      setPending("");
     }
   }
 
@@ -82,7 +86,7 @@ function CreditForm({ initial, catalogYear, submitLabel, ariaLabel, onSubmit, on
         <label htmlFor={`${id}-maps`} className={labelClass}>
           Counts as course (if known)
         </label>
-        <input id={`${id}-maps`} className={controlClass} placeholder="ABCD 12345" value={mapsTo} onChange={(e) => setMapsTo(e.target.value)} />
+        <CoursePicker id={`${id}-maps`} catalogYear={catalogYear} value={mapsTo} onChange={(code) => setMapsTo(code)} onPendingChange={setPending} />
       </div>
       <div>
         <label htmlFor={`${id}-units`} className={labelClass}>

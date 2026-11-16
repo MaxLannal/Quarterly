@@ -1,0 +1,133 @@
+import { useDeferredValue, useId, useState } from "react";
+import { useCourseSearch } from "@/api/hooks";
+import { Button } from "@/components/ui/button";
+import { controlClass } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
+
+interface CoursePickerProps {
+  id: string;
+  catalogYear: string;
+  /** The chosen course code, or "" for none. */
+  value: string;
+  onChange: (code: string, title?: string) => void;
+  /** Text typed but not chosen yet; the form refuses to save while it is set. */
+  onPendingChange?: (text: string) => void;
+}
+
+/**
+ * Pick a course of the catalog by code or name (FEEDBACK "Select Course to map when Start
+ * Planning", 2026-11-16): the student may type either, but only a course chosen from the list
+ * is accepted, so a credit can never point at a course the catalog does not have.
+ */
+export function CoursePicker({ id, catalogYear, value, onChange, onPendingChange }: CoursePickerProps) {
+  const listId = useId();
+  const [text, setText] = useState("");
+  const [title, setTitle] = useState<string | undefined>(undefined);
+  const [active, setActive] = useState(0);
+  const [open, setOpen] = useState(false);
+  const query = useDeferredValue(text.trim());
+  const search = useCourseSearch({ q: query, catalog_year: catalogYear, limit: 8 }, query.length >= 2);
+  const options = query.length >= 2 ? (search.data?.items ?? []) : [];
+
+  function type(next: string) {
+    setText(next);
+    setOpen(true);
+    setActive(0);
+    onPendingChange?.(next.trim());
+  }
+
+  function choose(code: string, courseTitle: string) {
+    onChange(code, courseTitle);
+    setTitle(courseTitle);
+    setText("");
+    setOpen(false);
+    onPendingChange?.("");
+  }
+
+  if (value) {
+    return (
+      <div className="flex min-h-11 flex-wrap items-center justify-between gap-2 rounded-md border border-hairline-strong bg-surface-card pl-3 pr-1 text-body-sm text-ink" data-testid="course-picked">
+        <span>
+          <span className="font-medium tabular-nums">{value}</span>
+          {title ? <span className="text-muted"> · {title}</span> : null}
+        </span>
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          aria-label={`Change the course (${value})`}
+          onClick={() => {
+            onChange("");
+            setTitle(undefined);
+          }}
+        >
+          Change
+        </Button>
+      </div>
+    );
+  }
+
+  const expanded = open && query.length >= 2;
+  return (
+    <div className="relative">
+      <input
+        id={id}
+        role="combobox"
+        aria-expanded={expanded}
+        aria-controls={listId}
+        aria-autocomplete="list"
+        aria-activedescendant={expanded && options[active] ? `${listId}-${active}` : undefined}
+        autoComplete="off"
+        className={controlClass}
+        placeholder="Type a code or name, then choose"
+        value={text}
+        onChange={(e) => type(e.target.value)}
+        onFocus={() => setOpen(true)}
+        // Options keep focus on this field when clicked (mousedown is prevented), so a blur
+        // means focus really left: close now. (A delayed close could fire after the list had
+        // been reopened by typing, and hide it again.)
+        onBlur={() => setOpen(false)}
+        onKeyDown={(e) => {
+          if (!expanded) return;
+          if (e.key === "ArrowDown") {
+            e.preventDefault();
+            setActive((a) => Math.min(a + 1, Math.max(options.length - 1, 0)));
+          } else if (e.key === "ArrowUp") {
+            e.preventDefault();
+            setActive((a) => Math.max(a - 1, 0));
+          } else if (e.key === "Enter" && options[active]) {
+            e.preventDefault();
+            choose(options[active].code, options[active].title);
+          } else if (e.key === "Escape") {
+            setOpen(false);
+          }
+        }}
+      />
+      {expanded && (
+        <ul id={listId} role="listbox" aria-label="Matching courses" className="absolute z-30 mt-1 max-h-72 w-full overflow-auto rounded-md border border-hairline bg-surface-card py-1 shadow-overlay">
+          {options.length === 0 ? (
+            <li className="px-3 py-2 text-body-sm text-muted">{search.isFetching ? "Searching…" : "No course matches. Check the code, or leave this empty."}</li>
+          ) : (
+            options.map((c, i) => (
+              <li
+                key={c.code}
+                id={`${listId}-${i}`}
+                role="option"
+                aria-selected={i === active}
+                onMouseDown={(e) => {
+                  e.preventDefault(); // keep focus; choose on click
+                  choose(c.code, c.title);
+                }}
+                onMouseEnter={() => setActive(i)}
+                className={cn("flex min-h-11 cursor-pointer items-center gap-2 px-3 text-body-sm text-ink", i === active && "bg-primary-wash")}
+              >
+                <span className="font-medium tabular-nums">{c.code}</span>
+                <span className="truncate text-muted">{c.title}</span>
+              </li>
+            ))
+          )}
+        </ul>
+      )}
+    </div>
+  );
+}
