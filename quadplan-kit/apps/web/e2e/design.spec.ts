@@ -163,6 +163,19 @@ for (const size of [
       await expectNoSeriousAxeViolations(page);
     });
 
+    test(`home and course search @${size.width}: no serious axe violations`, async ({ page }) => {
+      await page.goto("/");
+      await expect(page.getByRole("heading", { level: 1, name: "Quarterly" })).toBeVisible();
+      await expectNoSeriousAxeViolations(page);
+      await page.goto("/courses");
+      await expect(page.getByRole("heading", { level: 1, name: "Course search" })).toBeVisible();
+      await expectNoSeriousAxeViolations(page);
+      await page.getByLabel("Code or title").fill("Fake");
+      await page.getByRole("form", { name: "Course filters" }).getByRole("button", { name: "Search", exact: true }).click();
+      await expect(page.getByRole("region", { name: "Results" })).toBeVisible();
+      await expectNoSeriousAxeViolations(page);
+    });
+
     test(`forum page and thread @${size.width}: no serious axe violations`, async ({ page }) => {
       await logIn(page);
       await page.goto(FORUM);
