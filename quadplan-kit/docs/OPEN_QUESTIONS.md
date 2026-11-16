@@ -531,3 +531,8 @@ Questions about the schedule pipeline (reading Class Search). The pipeline is bu
 **Richard's answer: Yes, (a), Sonnet is fine**
 
 Done 2026-11-16: `a1_plan_generator` now uses the Sonnet 5.5 settings (`llm_routing.yaml`, SPEC routing table, SPEC-CHANGES).
+
+## End-to-end tests
+
+- **E2E-1 (flaky test, logged after the same fix failed twice; 2026-11-16).** The F4 test drags a course from the requirements drawer onto a quarter with a real mouse drag. Under heavy machine load (Docker builds during `make e2e`) the drop sometimes misses. Measuring the target after the drag starts did not fully fix it, so the test now tries the drag up to three times and still requires the course to land. Suggested: if it keeps flaking, drive the drag with dnd-kit's keyboard sensor instead of the mouse.
+

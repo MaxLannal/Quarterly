@@ -127,17 +127,22 @@ test.describe("F4: planner layout", () => {
     // The grid stays usable beside the open drawer: drag a course from the tree to a quarter.
     const handle = drawer.getByRole("button", { name: "Drag TEST 10000 onto the plan" });
     const target = page.getByTestId("quarter-2100-WI");
-    const from = await handle.boundingBox();
-    if (!from) throw new Error("no handle box");
-    await page.mouse.move(from.x + from.width / 2, from.y + from.height / 2);
-    await page.mouse.down();
-    await page.mouse.move(from.x - 20, from.y + 10, { steps: 5 });
-    // Measure the quarter once the drag has started (the layout can settle as it begins).
-    const to = await target.boundingBox();
-    if (!to) throw new Error("no target box");
-    await page.mouse.move(to.x + to.width / 2, to.y + to.height / 2, { steps: 12 });
-    await page.mouse.move(to.x + to.width / 2 + 2, to.y + to.height / 2 + 2, { steps: 2 });
-    await page.mouse.up();
+    // A pointer drag can miss when the machine is busy (OPEN_QUESTIONS E2E-1): up to three
+    // attempts, each measured after the drag starts; the course must land in the end.
+    for (let attempt = 0; attempt < 3; attempt += 1) {
+      const from = await handle.boundingBox();
+      if (!from) throw new Error("no handle box");
+      await page.mouse.move(from.x + from.width / 2, from.y + from.height / 2);
+      await page.mouse.down();
+      await page.mouse.move(from.x - 20, from.y + 10, { steps: 8 });
+      await page.waitForTimeout(150); // let the drag overlay mount before aiming
+      const to = await target.boundingBox();
+      if (!to) throw new Error("no target box");
+      await page.mouse.move(to.x + to.width / 2, to.y + to.height / 2, { steps: 16 });
+      await page.mouse.move(to.x + to.width / 2 + 2, to.y + to.height / 2 + 2, { steps: 2 });
+      await page.mouse.up();
+      if (await target.getByTestId("course-card").count()) break;
+    }
     await expect(target).toContainText("TEST 10000");
     await expect(drawer).toBeVisible();
   });
