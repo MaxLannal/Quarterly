@@ -1,7 +1,6 @@
 import { DndContext, KeyboardSensor, pointerWithin, PointerSensor, rectIntersection, useDraggable, useDroppable, useSensor, useSensors, type CollisionDetection, type DragEndEvent } from "@dnd-kit/core";
-import { useEffect, useId, useRef, useState, type FormEvent } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { api } from "@/api/client";
 import { useCatalogYears, usePrograms } from "@/api/hooks";
 import type { Credit, Goal, PlanState } from "@/api/types";
 import { PageContainer, PageHeader } from "@/components/layout/page";
@@ -15,6 +14,7 @@ import { goalLabel } from "@/features/planner/metrics";
 import { emptyPlan } from "@/features/planner/planModel";
 import { catalogStartYear, catalogYearFor, defaultGraduationTerm, planTerms, planYearCount, termLabel } from "@/features/planner/terms";
 import { ProgramChecklist } from "@/features/programs/ProgramPicker";
+import { CreditsEditor } from "@/features/credits/CreditsEditor";
 import { cn } from "@/lib/utils";
 
 const STEPS = ["Entry term", "Credits", "Programs", "Goals", "Review"];
@@ -91,86 +91,13 @@ function StepEntry({ d, set, years }: { d: Draft; set: (p: Partial<Draft>) => vo
 }
 
 function StepCredits({ d, set }: { d: Draft; set: (p: Partial<Draft>) => void }) {
-  const id = useId();
-  const [kind, setKind] = useState<Credit["kind"]>("AP");
-  const [label, setLabel] = useState("");
-  const [mapsTo, setMapsTo] = useState("");
-  const [units, setUnits] = useState("100");
-  const [err, setErr] = useState<string | null>(null);
-
-  async function add(e: FormEvent) {
-    e.preventDefault();
-    const code = mapsTo.trim().toUpperCase();
-    if (!label.trim()) return setErr("Describe the credit, e.g. “AP Calculus BC, score 5”.");
-    if (code && !/^[A-Z]{2,5} \d{5}$/.test(code)) return setErr("Course codes look like “ABCD 12345”.");
-    if (code) {
-      // A code the catalog does not have would make every generated plan fail its check.
-      const { response } = await api.GET("/courses/{code}", { params: { path: { code }, query: { catalog_year: d.catalogYear } } });
-      if (response.status === 404) return setErr(`${code} is not in the ${d.catalogYear} catalog. Leave this empty if you are not sure.`);
-    }
-    setErr(null);
-    set({ credits: [...d.credits, { kind, label: label.trim(), maps_to: code || null, units: Math.max(0, Math.round(Number(units)) || 0) }] });
-    setLabel("");
-    setMapsTo("");
-  }
-
   return (
-    <div className="space-y-3">
-      <p className="text-body-sm text-body">Optional. Credits with no known equivalent are flagged for manual mapping.</p>
-      {d.credits.length > 0 && (
-        <ul className="space-y-2">
-          {d.credits.map((c, i) => (
-            <li key={i} className="flex items-center justify-between gap-2 rounded-lg border border-hairline bg-canvas-soft py-1 pl-4 pr-1 text-body-sm text-ink">
-              <span>
-                {c.kind}: {c.label}
-                {c.maps_to ? ` → ${c.maps_to}` : " (needs mapping)"} · {c.units} units
-              </span>
-              <Button variant="ghost" onClick={() => set({ credits: d.credits.filter((_, n) => n !== i) })} aria-label={`Remove credit ${c.label}`}>
-                Remove
-              </Button>
-            </li>
-          ))}
-        </ul>
-      )}
-      <form onSubmit={(e) => void add(e)} className="grid gap-4 rounded-xl border border-hairline bg-canvas-soft p-5 sm:grid-cols-2" aria-label="Add a credit">
-        <div>
-          <label htmlFor={`${id}-kind`} className={labelClass}>
-            Kind
-          </label>
-          <select id={`${id}-kind`} className={box} value={kind} onChange={(e) => setKind(e.target.value as Credit["kind"])}>
-            <option value="AP">AP exam</option>
-            <option value="placement">Placement</option>
-            <option value="transfer">Transfer credit</option>
-          </select>
-        </div>
-        <div>
-          <label htmlFor={`${id}-label`} className={labelClass}>
-            Description
-          </label>
-          <input id={`${id}-label`} className={box} value={label} onChange={(e) => setLabel(e.target.value)} />
-        </div>
-        <div>
-          <label htmlFor={`${id}-maps`} className={labelClass}>
-            Counts as course (if known)
-          </label>
-          <input id={`${id}-maps`} className={box} placeholder="ABCD 12345" value={mapsTo} onChange={(e) => setMapsTo(e.target.value)} />
-        </div>
-        <div>
-          <label htmlFor={`${id}-units`} className={labelClass}>
-            Units
-          </label>
-          <input id={`${id}-units`} type="number" min={0} className={box} value={units} onChange={(e) => setUnits(e.target.value)} />
-        </div>
-        {err && (
-          <p role="alert" className="text-caption font-medium text-error sm:col-span-2">
-            {err}
-          </p>
-        )}
-        <Button type="submit" variant="outline" className="sm:col-span-2">
-          Add credit
-        </Button>
-      </form>
-    </div>
+    <CreditsEditor
+      credits={d.credits}
+      catalogYear={d.catalogYear}
+      onChange={(credits) => set({ credits })}
+      intro="Optional. Credits with no known equivalent are flagged for manual mapping. You can change them later under Credits in the planner."
+    />
   );
 }
 

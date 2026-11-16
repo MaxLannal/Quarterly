@@ -47,7 +47,7 @@ function QuarterCell({ term, items }: { term: string; items: PlanItem[] }) {
       aria-labelledby={headingId}
       data-testid={`quarter-${term}`}
       className={cn(
-        "flex min-h-28 min-w-0 flex-col rounded-xl border border-hairline bg-canvas-soft p-3 transition-[border-color,background-color,box-shadow] duration-200 sm:min-h-44",
+        "flex min-h-24 min-w-0 flex-col rounded-lg border border-hairline bg-canvas-soft p-2 transition-[border-color,background-color,box-shadow] duration-200 sm:min-h-36",
         isOver && "border-primary bg-primary-wash shadow-hover",
         highlight.terms.has(term) && "ring-2 ring-primary ring-offset-2 ring-offset-canvas",
       )}
@@ -209,7 +209,7 @@ export function PlanGrid({ name, onRename, showSummer, onToggleSummer, onGraduat
   }
 
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col gap-5">
       <div className="flex flex-wrap items-end justify-between gap-x-4 gap-y-3">
         <PlanName name={name} onRename={onRename} />
         <div className="flex flex-wrap items-end gap-2">

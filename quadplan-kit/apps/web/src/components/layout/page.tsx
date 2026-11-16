@@ -26,7 +26,7 @@ export function PageContainer({
   className?: string;
   children: ReactNode;
 }) {
-  return <Tag className={cn("mx-auto w-full px-4 pb-24 pt-8 sm:px-6 sm:pt-12 lg:px-8", WIDTHS[width], className)}>{children}</Tag>;
+  return <Tag className={cn("mx-auto w-full px-4 pb-16 pt-6 sm:px-6 sm:pt-8 lg:px-8", WIDTHS[width], className)}>{children}</Tag>;
 }
 
 /** Section label: caption-uppercase, muted (e.g. "COURSE", "STEP 2 OF 5"). */
@@ -64,7 +64,7 @@ export function PageHeader({
   children?: ReactNode;
 }) {
   return (
-    <header className={cn("mb-10 flex flex-col gap-4", className)}>
+    <header className={cn("mb-6 flex flex-col gap-3", className)}>
       {eyebrow && <Eyebrow>{eyebrow}</Eyebrow>}
       <h1 className={cn("font-display text-ink", TITLE_SIZES[size])}>{title}</h1>
       {meta && <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-caption text-muted">{meta}</div>}
@@ -105,7 +105,7 @@ export function Section({
   return (
     <section id={id} aria-labelledby={title ? headingId : undefined} aria-label={title ? undefined : ariaLabel} className={cn("min-w-0 scroll-mt-24", className)}>
       {(title || actions) && (
-        <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
+        <div className="mb-3 flex flex-wrap items-end justify-between gap-3">
           <div className="min-w-0">
             {title && (
               <h2 id={headingId} className={cn("text-ink", SECTION_TITLES[size])}>

@@ -32,6 +32,7 @@ import { GoalsTab } from "./GoalsTab";
 import { IssuesTab } from "./IssuesTab";
 import { storedRemoteId, upsertPlan, type LocalPlan } from "./localPlans";
 import { addCourseOps, editorReducer, initEditor, itemLabel, moveItemOps, type EditResult } from "./planModel";
+import { CreditsEditor } from "@/features/credits/CreditsEditor";
 import { DrawerButton, PlanDrawer, type DrawerTab } from "./PlanDrawer";
 import { PlanGrid } from "./PlanGrid";
 import { RequirementTree } from "./RequirementTree";
@@ -226,6 +227,16 @@ export function Planner({ initial, autoGenerate = false }: PlannerProps) {
       content: <GoalsTab goals={plan.goals ?? []} entryTerm={plan.entry_term} terms={terms} issues={issues} programs={allPrograms} planPrograms={programIds} onChange={(goals) => dispatch({ type: "goals", goals })} />,
     },
     {
+      key: "credits" as const,
+      label: "Credits",
+      content: (
+        <div className="space-y-3">
+          <h3 className="text-title-sm">Test, placement and transfer credits</h3>
+          <CreditsEditor credits={plan.credits ?? []} catalogYear={plan.catalog_year} onChange={(credits) => dispatch({ type: "credits", credits })} />
+        </div>
+      ),
+    },
+    {
       key: "issues" as const,
       label: "Issues",
       content: <IssuesTab verify={verify} selected={selectedIssue} onSelect={setSelectedIssue} />,
@@ -234,7 +245,7 @@ export function Planner({ initial, autoGenerate = false }: PlannerProps) {
 
   return (
     <PlannerContext.Provider value={ctx}>
-      <div className="mx-auto flex w-full max-w-tool flex-col gap-4 px-4 pb-24 pt-6 sm:px-6 lg:px-8">
+      <div className="mx-auto flex w-full max-w-tool flex-col gap-3 px-4 pb-16 pt-4 sm:px-6 lg:px-8">
         <h1 className="sr-only">Planner</h1>
         <div className="flex flex-wrap items-start gap-x-8 gap-y-4">
           <div className="flex min-w-0 flex-col gap-1 self-end">
@@ -277,6 +288,10 @@ export function Planner({ initial, autoGenerate = false }: PlannerProps) {
           </DrawerButton>
           <DrawerButton active={drawer.tab === "goals"} open={drawer.open} onClick={() => toggleDrawer("goals")}>
             Goals
+          </DrawerButton>
+          <DrawerButton active={drawer.tab === "credits"} open={drawer.open} onClick={() => toggleDrawer("credits")}>
+            Credits
+            {(plan.credits ?? []).length > 0 && <span className="text-muted tabular-nums">{(plan.credits ?? []).length}</span>}
           </DrawerButton>
           <DrawerButton
             active={drawer.tab === "issues"}

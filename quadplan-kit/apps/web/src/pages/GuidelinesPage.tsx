@@ -10,7 +10,7 @@ export default function GuidelinesPage() {
         title="Community guidelines"
         description="The forum is for honest, useful notes about courses and teaching. These rules keep it fair to students and instructors."
       />
-      <div className="flex flex-col gap-12 text-body-md text-body">
+      <div className="flex flex-col gap-8 text-body-md text-body">
         <Section id="rules" title="The rules">
           <ol className="flex list-decimal flex-col gap-2 pl-6">
             {COMMUNITY_RULES.map((rule) => (

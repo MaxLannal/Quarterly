@@ -103,7 +103,7 @@ export default function ProgramPage() {
         )}
       </PageHeader>
 
-      <div className="grid gap-12 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] lg:gap-8">
+      <div className="grid gap-8 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] lg:gap-8">
         <Section id="req" title="Requirements">
           <Card>
             <ul className="-my-2">
@@ -112,7 +112,7 @@ export default function ProgramPage() {
           </Card>
         </Section>
 
-        <div className="flex flex-col gap-12">
+        <div className="flex flex-col gap-8">
           <Section id="sample" title="Sample path">
             {sample.length === 0 ? (
               <p className="text-body-sm text-muted">No sample path yet.</p>

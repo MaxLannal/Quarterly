@@ -23,7 +23,7 @@ export default function ProgramsPage() {
           <ErrorText>Could not load programs.</ErrorText>
         )
       ) : (
-        <div className="flex flex-col gap-12">
+        <div className="flex flex-col gap-8">
           {groupPrograms(q.data ?? []).map(([type, programs]) => (
             <Section key={type} id={`type-${type}`} title={TYPE_LABELS[type]}>
               <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

@@ -151,13 +151,15 @@ typography:
     letterSpacing: 0
 
 rounded:
+  # Tightened 2026-11-16 (FEEDBACK "A more compact interface": round less on corners);
+  # buttons and chips keep the pill.
   none: 0px
   xs: 4px
-  sm: 6px
-  md: 8px
-  lg: 12px
-  xl: 16px
-  xxl: 24px
+  sm: 4px
+  md: 6px
+  lg: 8px
+  xl: 10px
+  xxl: 14px
   pill: 9999px
   full: 9999px
 

@@ -81,7 +81,7 @@ export default function CoursePage() {
 
       <CourseOverview course={c} />
 
-      <div className="flex flex-col gap-10">
+      <div className="flex flex-col gap-8">
         <Section
           id="prereq"
           title="Prerequisites"
@@ -106,14 +106,14 @@ export default function CoursePage() {
           <PrereqGraph course={c} />
         </Dialog>
 
-        <div className="grid gap-10 lg:grid-cols-2 lg:gap-6">
+        <div className="grid gap-8 lg:grid-cols-2 lg:gap-6">
           <Section id="offer" title="Offerings">
             <OfferingsTable course={c} />
           </Section>
           <AttributeCard course={c} />
         </div>
 
-        <div className="grid gap-10 lg:grid-cols-2 lg:gap-6">
+        <div className="grid gap-8 lg:grid-cols-2 lg:gap-6">
           <Section id="counts" title="Counts toward">
             {c.counts_toward.length === 0 ? (
               <p className="text-body-sm text-muted">No program requirements list this course.</p>

@@ -20,6 +20,14 @@ function CourseNode({ code, current = false }: { code: string; current?: boolean
 }
 
 /** What the course needs → the course → what it unlocks. */
+
+/** What a predicted quarter rests on (`OfferingPattern.method`). */
+const OFFERING_BASIS: Record<string, string> = {
+  catalog: "Catalog “Terms Offered”",
+  summer_session: "Summer Session course finder",
+  history: "Past schedules",
+};
+
 export function PrereqGraph({ course }: { course: CourseDetail }) {
   return (
     <figure className="rounded-xl border border-hairline bg-surface-card p-6" aria-labelledby="prereq-graph-caption">
@@ -102,7 +110,7 @@ export function OfferingsTable({ course }: { course: CourseDetail }) {
                     {confidence(o.p_offered)} ({Math.round(o.p_offered * 100)}%)
                   </td>
                   <td className="py-2 pr-3">
-                    {o.method === "catalog" ? "Catalog “Terms Offered”" : o.method}
+                    {OFFERING_BASIS[o.method] ?? o.method}
                     {o.evidence_terms?.length ? ` (${o.evidence_terms.map(termLabel).join(", ")})` : ""}
                   </td>
                 </tr>

@@ -6,7 +6,7 @@ import { Tabs, type RailTab } from "@/components/ui/tabs";
 import { usePresence } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 
-export type DrawerTab = "requirements" | "goals" | "issues";
+export type DrawerTab = "requirements" | "goals" | "credits" | "issues";
 
 export const DRAWER_ID = "plan-panel";
 

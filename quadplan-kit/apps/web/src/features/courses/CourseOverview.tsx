@@ -24,7 +24,7 @@ export function CourseOverview({ course }: { course: CourseDetail }) {
   const n = pooled?.n_reviews ?? 0;
 
   return (
-    <section aria-labelledby="overview-heading" className="mb-8 rounded-lg border border-hairline bg-surface-card px-4 py-3">
+    <section aria-labelledby="overview-heading" className="mb-6 rounded-lg border border-hairline bg-surface-card px-4 py-3">
       <h2 id="overview-heading" className="sr-only">
         Overview
       </h2>

@@ -55,7 +55,7 @@ export default function PlansPage() {
   return (
     <PageContainer className="max-w-4xl">
       <PageHeader title="My plans" eyebrow="Plans" />
-      <div className="flex flex-col gap-12">
+      <div className="flex flex-col gap-8">
       <Section id="device-plans" title="On this device">
         {doc.plans.length === 0 ? (
           <EmptyState>

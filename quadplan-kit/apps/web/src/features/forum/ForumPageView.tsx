@@ -197,7 +197,7 @@ export function ForumPageView({ code, slug }: { code: string; slug: string }) {
           </>
         }
       />
-      <div className="flex flex-col gap-12">
+      <div className="flex flex-col gap-8">
         <Section id="ratings" title="Ratings" description={page.n_reviews ? `From ${plural(page.n_reviews ?? 0, "review")}` : "No reviews yet"}>
           <div className="flex flex-col gap-6">
             <RatingStats ratings={page.ratings ?? { n_reviews: 0 }} />

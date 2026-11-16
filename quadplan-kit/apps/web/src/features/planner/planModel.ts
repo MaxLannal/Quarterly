@@ -3,7 +3,7 @@
  * completed, remove, add) becomes a list of ops applied with `applyOps`, the same operations the
  * server accepts in `PATCH /plans/{id}/items`.
  */
-import type { ChangeOp, Goal, PlanItem, PlanProgram, PlanState } from "@/api/types";
+import type { ChangeOp, Credit, Goal, PlanItem, PlanProgram, PlanState } from "@/api/types";
 import { applyOps, ChangeOpError } from "./changes";
 import { MAX_PLAN_YEARS, catalogStartYear, classYearLabel, graduationTerm, isBefore, planYearCount, termAt, yearIndex } from "./terms";
 
@@ -118,6 +118,7 @@ export type EditorAction =
   | { type: "rename"; name: string }
   | { type: "programs"; programs: PlanProgram[] }
   | { type: "goals"; goals: Goal[] }
+  | { type: "credits"; credits: Credit[] }
   | { type: "graduation"; term: string }
   | { type: "addYear" }
   | { type: "removeYear" }
@@ -190,6 +191,8 @@ export function editorReducer(state: EditorState, action: EditorAction): EditorS
       return { ...state, plan: { ...state.plan, programs: action.programs }, revision: state.revision + 1 };
     case "goals":
       return { ...state, plan: { ...state.plan, goals: action.goals }, revision: state.revision + 1 };
+    case "credits":
+      return withPlan(state, { ...state.plan, credits: action.credits });
     case "graduation":
       if (action.term.endsWith("-SU")) return { ...state, error: "You cannot graduate in a Summer quarter." };
       if (isBefore(action.term, state.plan.entry_term)) return { ...state, error: "Your last quarter cannot be before your first." };
