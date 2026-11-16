@@ -53,6 +53,7 @@ For every changes below, consult the installed plugin impeccable: https://github
     - D10 Resolved in 1d0c891: the orb is maroon-derived (#A44A4A, maroon at 70% on the page colour). DESIGN.md records these approved departures.
 
 Do a full runthrough with \impeccable to improve all UI and UX workflow components. Critique every part of the website and make improvements. **[D11 `critique` + `audit`, then `polish`; `harden` and `adapt` on the planner and forum; findings in docs/DESIGN-REVIEW.md]**
+- D11 Resolved in db55ef4: every area was critiqued (three isolated design reviewers) and audited (detector, axe at 1440 and 390, overflow, target sizes); 62 findings with priorities are in `docs/DESIGN-REVIEW.md`. All 8 P1s and 49 of the P2/P3s are fixed (commits 9eeebf7 to db55ef4), PL-4 in part; 5 are deferred with a reason (none needs a decision now). Polish on every area, harden and adapt on the planner and forum. Screenshots: `docs/screenshots/before/` and `docs/screenshots/after/` (55 each).
 
 ## In progress
 
