@@ -5,7 +5,7 @@ import { useCourseSearch, type CourseSearchParams } from "@/api/hooks";
 import type { CourseSummary } from "@/api/types";
 import { Button } from "@/components/ui/button";
 import { ChevronIcon } from "@/components/ui/icons";
-import { PageContainer } from "@/components/layout/page";
+import { EmptyState, PageContainer } from "@/components/layout/page";
 import { Card } from "@/components/ui/card";
 import { controlClass } from "@/components/ui/input";
 import {
@@ -129,7 +129,7 @@ export default function CoursesPage() {
               id={field("q")}
               type="search"
               className={cn(box, "min-w-0 flex-1")}
-              placeholder="A code or title, e.g. CMSC 14100 or Calculus"
+              placeholder="Code or title, e.g. CMSC 14100"
               value={draft.q ?? ""}
               onChange={set("q")}
             />
@@ -287,17 +287,37 @@ export default function CoursesPage() {
             )
           ) : (
             <>
-              <p
-                className="text-caption-uppercase uppercase text-muted"
-                role="status"
-              >
+              <p className="text-caption text-muted" role="status">
                 {q.data?.total ?? 0} course{q.data?.total === 1 ? "" : "s"}
               </p>
+              {(q.data?.total ?? 0) === 0 ? (
+                // D11 CS-4: a way out instead of an empty list and dead paging.
+                <EmptyState
+                  title="No courses match"
+                  className="mt-4"
+                  action={
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        setDraft({});
+                        setSp(new URLSearchParams());
+                      }}
+                    >
+                      Clear the search
+                    </Button>
+                  }
+                >
+                  Try a shorter code or title, or fewer filters.
+                </EmptyState>
+              ) : (
               <ul className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {q.data?.items.map((c) => (
                   <CourseRow key={c.code} c={c} />
                 ))}
               </ul>
+              )}
+              {/* Paging only when there is more than one page. */}
+              {(q.data?.total ?? 0) > PAGE && (
               <div className="mt-8 flex gap-3">
                 <Button
                   variant="outline"
@@ -314,6 +334,7 @@ export default function CoursesPage() {
                   Next
                 </Button>
               </div>
+              )}
             </>
           )}
         </section>
