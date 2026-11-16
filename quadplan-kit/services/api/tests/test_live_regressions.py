@@ -50,8 +50,37 @@ def test_the_scope_classifier_has_room_for_its_answer() -> None:
 
     from llm_gateway.routing import load_routing
 
-    pairs = json.loads((Path(__file__).parent / "fixtures" / "live" / "p3-off-homework.json").read_text())
+    pairs = json.loads(
+        (Path(__file__).parent / "fixtures" / "live" / "p3-off-homework.json").read_text()
+    )
     truncated = [p for p in pairs if p["response"]["stop_reason"] == "max_tokens"]
     assert truncated and all(p["response"]["tool_calls"][0]["input"] == {} for p in truncated)
     used = max(p["response"]["usage"]["output_tokens"] for p in truncated)
     assert load_routing().route("a2_scope_classifier").max_tokens >= 4 * used
+
+
+def test_a1_output_limits_leave_room_for_both_answers() -> None:
+    """Live finding (phase 1): with the per-step limits of prompt 13 (preferences 1500,
+    rationale 1200), every rationale was cut off mid-answer (stop_reason max_tokens, an empty
+    submit_rationale) on Sonnet 5.5 and Opus 5.5, so no plan got its rationale; and on Opus
+    5.5, whose thinking cannot be turned off, submit_preferences was cut off too, so A1 fell
+    back to the default ranking. The recordings are the real answers."""
+    import json
+    from pathlib import Path
+
+    from api.agents import generate
+
+    limits = {
+        "submit_preferences": generate.PREFERENCES_MAX_TOKENS,
+        "submit_rationale": generate.RATIONALE_MAX_TOKENS,
+    }
+    seen: dict[str, int] = {}
+    for name in ("a1-p1-undecided-sonnet.json", "a1-p2-cs-math-bxms-opus.json"):
+        for pair in json.loads((Path(__file__).parent / "fixtures" / "live" / name).read_text()):
+            r = pair["response"]
+            for call in r["tool_calls"]:
+                if call["name"] in limits and r["stop_reason"] == "max_tokens":
+                    seen[call["name"]] = max(seen.get(call["name"], 0), r["usage"]["output_tokens"])
+    assert set(seen) == {"submit_preferences", "submit_rationale"}  # both were cut off live
+    for tool, used in seen.items():
+        assert limits[tool] >= 2.5 * used, (tool, limits[tool], used)

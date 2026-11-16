@@ -59,9 +59,11 @@ from api.schemas.agents import (
 logger = logging.getLogger("api.agents")
 
 TASK = "a1_plan_generator"
-#: Output limits per step (prompt 13, rule 4: preferences 1500, rationale 1200).
-PREFERENCES_MAX_TOKENS = 1500
-RATIONALE_MAX_TOKENS = 1200
+#: Output limits per step. Prompt 13 suggested preferences 1500 and rationale 1200; live, both
+#: were cut off mid-answer (Opus 5.5 cannot turn thinking off; the rationale covers every
+#: quarter of every variant), so A1 lost its rationale and Opus its preferences.
+PREFERENCES_MAX_TOKENS = 4000
+RATIONALE_MAX_TOKENS = 3000
 PREFERENCES_BUDGET = Budget(tool_calls=12, tokens=120_000, seconds=60)
 RATIONALE_BUDGET = Budget(tool_calls=6, tokens=60_000, seconds=45)
 MAX_RATIONALE_WORDS = 25
