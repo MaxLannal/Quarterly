@@ -1,7 +1,8 @@
 """Expression evaluation for prerequisites, co-requisites and restrictions (V03).
 
 Semantics (SPEC "Prerequisite expressions"):
-- `course`: met by a course completed, credited or planned in a strictly earlier term. A
+- `course`: met by a course completed, credited or planned in a strictly earlier term, or in
+  the same term when that term is a Summer quarter (summer sessions run in sequence). A
   cross-listed, `equivalent` or `replaces` partner counts as the course. With `min_grade`, a
   completed course whose recorded grade is lower does not count; a course without a grade yet
   is assumed to meet it.
@@ -23,6 +24,7 @@ from fnmatch import fnmatchcase
 
 from planner_core.index import PlanFacts, Taken, grade_ok
 from planner_core.models import STANDINGS, Atom, Expr
+from planner_core.terms import is_summer
 
 
 @dataclass
@@ -68,7 +70,9 @@ def evaluate(expr: Expr, item: Taken, facts: PlanFacts, *, coreq: bool = False) 
 def _atom(atom: Atom, item: Taken, facts: PlanFacts, coreq: bool) -> Evaluation:
     assert item.term is not None
     if atom.kind in ("course", "concurrent"):
-        strict = atom.kind == "course" and not coreq
+        # In a Summer quarter a prerequisite may sit in the same quarter (its sessions run in
+        # sequence): `terms.is_summer`.
+        strict = atom.kind == "course" and not coreq and not is_summer(item.term)
         hit = prior(atom.value, item, facts, strict=strict)
         if hit is None or not grade_ok(hit.grade, atom.min_grade):
             return Evaluation(ok=False, missing=[atom])

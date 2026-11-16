@@ -62,7 +62,14 @@ from planner_core.preferences import MAX_PREFERENCE, interest_match, preferences
 from planner_core.prereqs import placement_values
 from planner_core.programs import plan_programs
 from planner_core.solver import ProgramModel
-from planner_core.terms import academic_year, parse_term, resolve_term_ref, term_at, term_key
+from planner_core.terms import (
+    academic_year,
+    is_summer,
+    parse_term,
+    resolve_term_ref,
+    term_at,
+    term_key,
+)
 from planner_core.tree import Compiled, compile_program
 from planner_core.verify import verify_checked
 
@@ -472,7 +479,8 @@ class _Builder:
     def _atom(self, atom: Atom, term: str, coreq: bool, own: str) -> Any:
         facts, idx = self.fixed, self.idx
         if atom.kind in ("course", "concurrent"):
-            strict = atom.kind == "course" and not coreq
+            # Same reading as the verifier: a Summer quarter may hold its own prerequisite.
+            strict = atom.kind == "course" and not coreq and not is_summer(term)
             limit = term_key(term)
             alts = idx.alts(atom.value) - {own}
             for key in alts:

@@ -2,7 +2,7 @@
   "$defs": {
     "Atom": {
       "additionalProperties": false,
-      "description": "`course`: met by a course completed, credited or planned in a strictly earlier term.\n`concurrent`: same or earlier term. `placement`/`standing`: plan facts.\n`program`: enrolment restriction (glob on program ids, e.g. `cmsc-*`).\n`consent`: never blocks; always produces a warning.",
+      "description": "`course`: met by a course completed, credited or planned in a strictly earlier term (or\nthe same term when it is a Summer quarter). `concurrent`: same or earlier term.\n`placement`/`standing`: plan facts.\n`program`: enrolment restriction (glob on program ids, e.g. `cmsc-*`).\n`consent`: never blocks; always produces a warning.",
       "properties": {
         "kind": {
           "enum": [

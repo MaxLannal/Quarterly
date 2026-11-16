@@ -396,7 +396,7 @@ One small JSON format (authored as YAML) expresses both course prerequisites and
 
 - **Atoms:** `{course: "CMSC 14200", min_grade: "C-"}`, `{concurrent: "MATH 20300"}` (co-requisite), `{placement: "MATH 15100"}`, `{standing: "third-year"}`, `{program: "cmsc-*"}` (enrolment restriction), `{consent: "instructor"}`.
 - **Combinators:** `{all: [...]}`, `{any: [...]}`, `{n_of: 2, of: [...]}`.
-- **Meaning:** a `course` atom is met by a course completed, credited or planned in a strictly earlier term; `concurrent` by the same or an earlier term; `placement` and `standing` by plan facts; `consent` never blocks but always produces a warning.
+- **Meaning:** a `course` atom is met by a course completed, credited or planned in a strictly earlier term, or in the same term when that term is a Summer quarter (summer sessions run in sequence, so HUMA 11500 and 11600 may share one summer; FEEDBACK 2026-11-16); `concurrent` by the same or an earlier term; `placement` and `standing` by plan facts; `consent` never blocks but always produces a warning.
 - **Human form,** generated for display: "CMSC 14200 and (MATH 15900 or MATH 16300)".
 
 ### Program rule trees
@@ -498,7 +498,7 @@ The verifier is a pure function, `verify(plan, rules, catalog) → report + cert
 | --- | --- | --- | --- |
 | V01 | Course exists in the plan's catalog year; cross-listed codes collapse to one | Error | Lookup |
 | V02 | No duplicates (unless repeatable); no mutually exclusive pairs; exam credit forfeited when the equivalent course is taken | Error | Lookup |
-| V03 | Prerequisites met by earlier terms; co-requisites by the same or an earlier term; consent produces a warning | Error | Expression evaluation |
+| V03 | Prerequisites met by earlier terms (or the same Summer quarter); co-requisites by the same or an earlier term; consent produces a warning | Error | Expression evaluation |
 | V04 | Course offered in that quarter: posted schedule wins, else `p_offered` < 0.3 warns | Warning or error | Lookup |
 | V05 | 300–400 units in Autumn, Winter, Spring; 500 only where an overload reason applies (joint-degree need in 3rd year, graduation need in 4th, Reading and Research or BA thesis, a 200-unit language course) | Error, or "needs petition" warning | Arithmetic |
 | V06 | No meeting-time clashes, for terms with posted sections | Warning | Interval check |
@@ -539,7 +539,7 @@ The solver is large and could have bugs; the checker is small and boring on purp
 }
 ```
 
-`check_certificate(plan, rules, certificate) → bool` runs in linear time without a solver: every assigned course is in the plan and matches its node's selector; node counts and bounds hold; share limits hold; every prerequisite witness sits in an earlier term and satisfies the expression; loads and goals recompute to the same values. It stays under about 300 lines so a person can review it line by line.
+`check_certificate(plan, rules, certificate) → bool` runs in linear time without a solver: every assigned course is in the plan and matches its node's selector; node counts and bounds hold; share limits hold; every prerequisite witness sits in an earlier term (or the same Summer quarter) and satisfies the expression; loads and goals recompute to the same values. It stays under about 300 lines so a person can review it line by line.
 
 ### Goal predicates
 

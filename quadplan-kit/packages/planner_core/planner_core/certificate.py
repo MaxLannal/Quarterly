@@ -42,6 +42,7 @@ from planner_core.models import (
     Selector,
     SlotNode,
 )
+from planner_core.terms import is_summer
 from planner_core.tree import out_of_order, stricter
 
 #: Course key -> the plan's records of that course (credits and items).
@@ -289,7 +290,7 @@ def _holds(expr: Expr, item: Taken, by: set[str], recs: Records, idx: Index, cor
     atom = expr.atom
     if atom.kind not in ("course", "concurrent"):
         return f"{atom.kind}:{atom.value}" in by
-    same_term_ok = atom.kind == "concurrent" or coreq
+    same_term_ok = atom.kind == "concurrent" or coreq or is_summer(item.term)
     return any(
         t.ref in by
         and (t.order < item.order or (same_term_ok and t.order == item.order))

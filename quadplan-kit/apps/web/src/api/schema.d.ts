@@ -1020,8 +1020,9 @@ export interface components {
         };
         /**
          * Atom
-         * @description `course`: met by a course completed, credited or planned in a strictly earlier term.
-         *     `concurrent`: same or earlier term. `placement`/`standing`: plan facts.
+         * @description `course`: met by a course completed, credited or planned in a strictly earlier term (or
+         *     the same term when it is a Summer quarter). `concurrent`: same or earlier term.
+         *     `placement`/`standing`: plan facts.
          *     `program`: enrolment restriction (glob on program ids, e.g. `cmsc-*`).
          *     `consent`: never blocks; always produces a warning.
          */

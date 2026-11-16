@@ -35,6 +35,14 @@ def is_before(a: str, b: str) -> bool:
     return term_key(a) < term_key(b)
 
 
+def is_summer(term: str | None) -> bool:
+    """Summer is split into sessions, so a sequence can run inside one Summer quarter: a
+    prerequisite taken in the same Summer quarter counts (HUMA 11500 and 11600 in one summer),
+    while a skipped course is still missing (Richard, FEEDBACK "Allow Summer Sequences",
+    2026-11-16)."""
+    return term is not None and term.endswith("-SU")
+
+
 def academic_year(term: str) -> int:
     """The calendar year in which the term's academic year starts (2027-WI -> 2026,
     2026-SU -> 2026)."""
