@@ -32,5 +32,5 @@ test("my plans: duplicate, compare, import on login", async ({ page }) => {
   await expect(page.getByRole("link", { name: "fake-user" })).toBeVisible();
   await expect(page.getByText("Your plans from this device were added to your account.")).toBeVisible();
   await expect(page.getByRole("heading", { name: "In your account" })).toBeVisible();
-  await expect(page.getByText(/My plan \(primary\)/)).toBeVisible();
+  await expect(page.getByText(/My Plan \(primary\)/)).toBeVisible();
 });
