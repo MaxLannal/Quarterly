@@ -1,7 +1,7 @@
 import { useDeferredValue, useId, useState } from "react";
 import { useCourseSearch } from "@/api/hooks";
 import { Button } from "@/components/ui/button";
-import { controlClass } from "@/components/ui/input";
+import { controlClass, controlCompactClass } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
 interface CoursePickerProps {
@@ -12,6 +12,8 @@ interface CoursePickerProps {
   onChange: (code: string, title?: string) => void;
   /** Text typed but not chosen yet; the form refuses to save while it is set. */
   onPendingChange?: (text: string) => void;
+  /** Smaller text and padding, for dense forms such as the planner's credits drawer. */
+  compact?: boolean;
 }
 
 /**
@@ -19,14 +21,24 @@ interface CoursePickerProps {
  * Planning", 2026-11-16): the student may type either, but only a course chosen from the list
  * is accepted, so a credit can never point at a course the catalog does not have.
  */
-export function CoursePicker({ id, catalogYear, value, onChange, onPendingChange }: CoursePickerProps) {
+export function CoursePicker({
+  id,
+  catalogYear,
+  value,
+  onChange,
+  onPendingChange,
+  compact = false,
+}: CoursePickerProps) {
   const listId = useId();
   const [text, setText] = useState("");
   const [title, setTitle] = useState<string | undefined>(undefined);
   const [active, setActive] = useState(0);
   const [open, setOpen] = useState(false);
   const query = useDeferredValue(text.trim());
-  const search = useCourseSearch({ q: query, catalog_year: catalogYear, limit: 8 }, query.length >= 2);
+  const search = useCourseSearch(
+    { q: query, catalog_year: catalogYear, limit: 8 },
+    query.length >= 2,
+  );
   const options = query.length >= 2 ? (search.data?.items ?? []) : [];
 
   function type(next: string) {
@@ -46,7 +58,10 @@ export function CoursePicker({ id, catalogYear, value, onChange, onPendingChange
 
   if (value) {
     return (
-      <div className="flex min-h-11 flex-wrap items-center justify-between gap-2 rounded-md border border-hairline-strong bg-surface-card pl-3 pr-1 text-body-sm text-ink" data-testid="course-picked">
+      <div
+        className="flex min-h-11 flex-wrap items-center justify-between gap-2 rounded-md border border-hairline-strong bg-surface-card pl-3 pr-1 text-body-sm text-ink"
+        data-testid="course-picked"
+      >
         <span>
           <span className="font-medium tabular-nums">{value}</span>
           {title ? <span className="text-muted"> · {title}</span> : null}
@@ -76,10 +91,16 @@ export function CoursePicker({ id, catalogYear, value, onChange, onPendingChange
         aria-expanded={expanded}
         aria-controls={listId}
         aria-autocomplete="list"
-        aria-activedescendant={expanded && options[active] ? `${listId}-${active}` : undefined}
+        aria-activedescendant={
+          expanded && options[active] ? `${listId}-${active}` : undefined
+        }
         autoComplete="off"
-        className={controlClass}
-        placeholder="Type a code or name, then choose"
+        className={cn(controlClass, compact && controlCompactClass)}
+        placeholder={
+          compact
+            ? "Code or name, then choose"
+            : "Type a code or name, then choose"
+        }
         value={text}
         onChange={(e) => type(e.target.value)}
         onFocus={() => setOpen(true)}
@@ -104,9 +125,18 @@ export function CoursePicker({ id, catalogYear, value, onChange, onPendingChange
         }}
       />
       {expanded && (
-        <ul id={listId} role="listbox" aria-label="Matching courses" className="absolute z-30 mt-1 max-h-72 w-full overflow-auto rounded-md border border-hairline bg-surface-card py-1 shadow-overlay">
+        <ul
+          id={listId}
+          role="listbox"
+          aria-label="Matching courses"
+          className="absolute z-30 mt-1 max-h-72 w-full overflow-auto rounded-md border border-hairline bg-surface-card py-1 shadow-overlay"
+        >
           {options.length === 0 ? (
-            <li className="px-3 py-2 text-body-sm text-muted">{search.isFetching ? "Searching…" : "No course matches. Check the code, or leave this empty."}</li>
+            <li className="px-3 py-2 text-body-sm text-muted">
+              {search.isFetching
+                ? "Searching…"
+                : "No course matches. Check the code, or leave this empty."}
+            </li>
           ) : (
             options.map((c, i) => (
               <li
@@ -119,7 +149,10 @@ export function CoursePicker({ id, catalogYear, value, onChange, onPendingChange
                   choose(c.code, c.title);
                 }}
                 onMouseEnter={() => setActive(i)}
-                className={cn("flex min-h-11 cursor-pointer items-center gap-2 px-3 text-body-sm text-ink", i === active && "bg-primary-wash")}
+                className={cn(
+                  "flex min-h-11 cursor-pointer items-center gap-2 px-3 text-body-sm text-ink",
+                  i === active && "bg-primary-wash",
+                )}
               >
                 <span className="font-medium tabular-nums">{c.code}</span>
                 <span className="truncate text-muted">{c.title}</span>
