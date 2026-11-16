@@ -7,16 +7,27 @@ export function card(page: Page, code: string) {
 }
 
 /** Toolbar button for a drawer tab ("Requirements", "Goals", or "Check plan"). */
-function panelButton(page: Page, name: "Requirements" | "Goals" | "Check plan") {
-  return page.getByRole("button", { name: name === "Check plan" ? /^Check plan/ : name, exact: name !== "Check plan" });
+function panelButton(
+  page: Page,
+  name: "Requirements" | "Goals" | "Check plan",
+) {
+  return page.getByRole("button", {
+    name: name === "Check plan" ? /^Check plan/ : name,
+    exact: name !== "Check plan",
+  });
 }
 
 /** Opens the right-hand drawer at a tab (no-op when that tab is already showing). */
-export async function openPanel(page: Page, name: "Requirements" | "Goals" | "Check plan") {
+export async function openPanel(
+  page: Page,
+  name: "Requirements" | "Goals" | "Check plan",
+) {
   const drawer = page.getByTestId("plan-drawer");
   if (await drawer.isVisible()) {
     // Already open (on a phone it covers the toolbar): switch tabs inside it.
-    await drawer.getByRole("tab", { name: name === "Check plan" ? "Issues" : name }).click();
+    await drawer
+      .getByRole("tab", { name: name === "Check plan" ? "Issues" : name })
+      .click();
   } else {
     await panelButton(page, name).click();
   }
@@ -40,12 +51,23 @@ export async function addProgram(page: Page, name: string) {
 }
 
 /** Keyboard path: requirement tree node -> course "Add" -> quarter picker. Leaves the drawer open. */
-export async function addCourseViaTree(page: Page, node: RegExp, code: string, term: string) {
+export async function addCourseViaTree(
+  page: Page,
+  node: RegExp,
+  code: string,
+  term: string,
+) {
   await openPanel(page, "Requirements");
-  const nodeButton = page.getByTestId("plan-drawer").getByRole("button", { name: node });
-  if ((await nodeButton.getAttribute("aria-expanded")) !== "true") await nodeButton.click();
+  const nodeButton = page
+    .getByTestId("plan-drawer")
+    .getByRole("button", { name: node });
+  if ((await nodeButton.getAttribute("aria-expanded")) !== "true")
+    await nodeButton.click();
   await page.getByRole("button", { name: `Add ${code} to a quarter` }).click();
-  await page.getByRole("dialog", { name: `Add ${code} to…` }).getByRole("button", { name: term, exact: true }).click();
+  await page
+    .getByRole("dialog", { name: `Add ${code} to…` })
+    .getByRole("button", { name: term, exact: true })
+    .click();
   await expect(card(page, code).first()).toBeAttached();
 }
 
@@ -53,7 +75,13 @@ export async function addCourseViaTree(page: Page, node: RegExp, code: string, t
 export async function plannerWithCourses(page: Page) {
   await page.goto("/plan");
   await addProgram(page, "Fake Program");
-  for (const code of ["TEST 10000", "TEST 10100"]) await addCourseViaTree(page, /^Fake introductory sequence/, code, "Autumn 2099");
+  for (const code of ["TEST 10000", "TEST 10100"])
+    await addCourseViaTree(
+      page,
+      /^Fake introductory sequence/,
+      code,
+      "Autumn 2099",
+    );
   await expect(card(page, "TEST 10100")).toContainText("Prerequisite not met.");
 }
 
@@ -66,10 +94,15 @@ export async function openAdvisor(page: Page) {
 
 export async function logIn(page: Page, admin = false) {
   await page.goto("/guidelines");
-  await expect(page.getByRole("heading", { level: 1, name: "Community guidelines" })).toBeVisible();
+  await expect(
+    page.getByRole("heading", { level: 1, name: "Community guidelines" }),
+  ).toBeVisible();
   await page.evaluate(async (asAdmin) => {
     if (asAdmin) sessionStorage.setItem("quarterly.mock.admin", "1");
-    await fetch("/api/auth/login", { method: "POST", body: JSON.stringify({ login: "fake-user", password: "x" }) });
+    await fetch("/api/auth/login", {
+      method: "POST",
+      body: JSON.stringify({ login: "fake-user", password: "x" }),
+    });
   }, admin);
 }
 
@@ -79,8 +112,21 @@ export async function settle(page: Page) {
     Promise.all(
       document
         .getAnimations()
-        .filter((a) => Number.isFinite(Number(a.effect?.getComputedTiming().endTime)))
+        .filter((a) =>
+          Number.isFinite(Number(a.effect?.getComputedTiming().endTime)),
+        )
         .map((a) => a.finished.catch(() => undefined)),
     ),
   );
+}
+
+/** The planner's graduation quarter (D8: shown as text; the pencil opens the list). */
+export const graduation = (page: Page) => page.getByTestId("graduation");
+
+export async function setGraduation(page: Page, term: string) {
+  await page
+    .getByRole("button", { name: /^Change graduation quarter/ })
+    .click();
+  await page.getByLabel("Graduating in").selectOption(term);
+  await expect(graduation(page)).toHaveAttribute("data-term", term);
 }

@@ -3,7 +3,11 @@ import { useEffect, useId, useRef, useState } from "react";
 import type { Goal, PlanItem } from "@/api/types";
 import { Button } from "@/components/ui/button";
 import { PencilIcon } from "@/components/ui/icons";
-import { controlClass, controlCompactClass, Input } from "@/components/ui/input";
+import {
+  controlClass,
+  controlCompactClass,
+  Input,
+} from "@/components/ui/input";
 import { Badge } from "@/components/ui/misc";
 import { cn } from "@/lib/utils";
 import { usePlanner } from "./context";
@@ -49,10 +53,14 @@ function QuarterCell({ term, items }: { term: string; items: PlanItem[] }) {
       className={cn(
         "flex min-h-24 min-w-0 flex-col rounded-lg border border-hairline bg-canvas-soft p-2 transition-[border-color,background-color,box-shadow] duration-200 sm:min-h-36",
         isOver && "border-primary bg-primary-wash shadow-hover",
-        highlight.terms.has(term) && "ring-2 ring-primary ring-offset-2 ring-offset-canvas",
+        highlight.terms.has(term) &&
+          "ring-2 ring-primary ring-offset-2 ring-offset-canvas",
       )}
     >
-      <h4 id={headingId} className="mb-2 text-caption-uppercase uppercase text-muted">
+      <h4
+        id={headingId}
+        className="mb-2 text-caption-uppercase uppercase text-muted"
+      >
         {termLabel(term)}
       </h4>
       {items.length === 0 ? (
@@ -62,11 +70,17 @@ function QuarterCell({ term, items }: { term: string; items: PlanItem[] }) {
       ) : (
         <ul className="flex flex-1 flex-col gap-2">
           {items.map((item) => (
-            <CourseCard key={item.id ?? `${item.course}-${item.term}`} item={item} />
+            <CourseCard
+              key={item.id ?? `${item.course}-${item.term}`}
+              item={item}
+            />
           ))}
         </ul>
       )}
-      <footer className="mt-3 border-t border-hairline pt-2 text-caption tabular-nums text-muted" data-testid={`footer-${term}`}>
+      <footer
+        className="mt-3 border-t border-hairline pt-2 text-caption tabular-nums text-muted"
+        data-testid={`footer-${term}`}
+      >
         <div className="flex flex-wrap gap-x-3">
           <span>
             {m.units}
@@ -76,10 +90,15 @@ function QuarterCell({ term, items }: { term: string; items: PlanItem[] }) {
             {round1(m.hours)}
             {m.hoursPartial && m.courses ? "+" : ""} h/wk
           </span>
-          <span title="Difficulty index: the sum of course difficulty (1–5 each)">Difficulty {round1(m.difficulty)}</span>
+          <span title="Difficulty index: the sum of course difficulty (1–5 each)">
+            Difficulty {round1(m.difficulty)}
+          </span>
         </div>
         {goals.length > 0 && (
-          <ul className="mt-2 flex flex-wrap gap-1" aria-label={`Goals for ${termLabel(term)}`}>
+          <ul
+            className="mt-2 flex flex-wrap gap-1"
+            aria-label={`Goals for ${termLabel(term)}`}
+          >
             {goals.map((g) => (
               <li key={g.id}>
                 <Badge casing="normal" className="py-0.5">
@@ -95,7 +114,13 @@ function QuarterCell({ term, items }: { term: string; items: PlanItem[] }) {
 }
 
 /** The plan's name as the grid's heading, with a pencil to rename it (FEEDBACK 2026-11-16). */
-function PlanName({ name, onRename }: { name: string; onRename: (name: string) => void }) {
+function PlanName({
+  name,
+  onRename,
+}: {
+  name: string;
+  onRename: (name: string) => void;
+}) {
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState(name);
   const input = useRef<HTMLInputElement>(null);
@@ -139,7 +164,9 @@ function PlanName({ name, onRename }: { name: string; onRename: (name: string) =
   }
   return (
     <div className="flex min-w-0 items-center gap-1">
-      <h2 className="truncate font-display text-display-sm sm:text-display-md">{name || "My Plan"}</h2>
+      <h2 className="truncate font-display text-display-sm sm:text-display-md">
+        {name || "My Plan"}
+      </h2>
       <button
         type="button"
         aria-label="Rename plan"
@@ -150,6 +177,80 @@ function PlanName({ name, onRename }: { name: string; onRename: (name: string) =
         className="flex size-11 shrink-0 items-center justify-center rounded-md text-gray-dark transition-colors hover:bg-canvas-soft hover:text-ink"
       >
         <PencilIcon size={18} />
+      </button>
+    </div>
+  );
+}
+
+/**
+ * The graduation quarter as a quiet line of text with a pencil, like the plan's name (D8, FEEDBACK
+ * "Minor design changes"). The pencil opens the quarter list in place; choosing one applies it,
+ * Escape or leaving the list keeps the old one.
+ */
+function GraduationField({
+  value,
+  choices,
+  onChange,
+}: {
+  value: string;
+  choices: string[];
+  onChange: (term: string) => void;
+}) {
+  const [editing, setEditing] = useState(false);
+  const selectId = useId();
+  const select = useRef<HTMLSelectElement>(null);
+  const pencil = useRef<HTMLButtonElement>(null);
+  const wasEditing = useRef(false);
+  useEffect(() => {
+    if (editing) select.current?.focus();
+    else if (wasEditing.current) pencil.current?.focus();
+    wasEditing.current = editing;
+  }, [editing]);
+  if (editing) {
+    return (
+      <div className="flex items-center gap-2 text-caption text-muted">
+        <label htmlFor={selectId}>Graduating in</label>
+        <select
+          ref={select}
+          id={selectId}
+          value={value}
+          onChange={(e) => {
+            onChange(e.target.value);
+            setEditing(false);
+          }}
+          onBlur={() => setEditing(false)}
+          onKeyDown={(e) => {
+            if (e.key === "Escape") setEditing(false);
+          }}
+          className={cn(controlClass, controlCompactClass, "w-40 text-caption")}
+        >
+          {choices.map((t) => (
+            <option key={t} value={t}>
+              {termLabel(t)}
+            </option>
+          ))}
+        </select>
+      </div>
+    );
+  }
+  return (
+    <div
+      className="flex items-center text-caption text-muted"
+      data-testid="graduation"
+      data-term={value}
+    >
+      <span>
+        Graduating in{" "}
+        <span className="font-medium text-body-strong">{termLabel(value)}</span>
+      </span>
+      <button
+        ref={pencil}
+        type="button"
+        aria-label={`Change graduation quarter (${termLabel(value)})`}
+        onClick={() => setEditing(true)}
+        className="flex size-11 shrink-0 items-center justify-center rounded-md text-gray-dark transition-colors hover:bg-canvas-soft hover:text-ink"
+      >
+        <PencilIcon size={15} />
       </button>
     </div>
   );
@@ -182,10 +283,16 @@ interface PlanGridProps {
  * Autumn, Winter and Spring (FEEDBACK F2). The grid ends at the graduation quarter (F3); items
  * outside it are listed under "Other terms".
  */
-export function PlanGrid({ name, onRename, showSummer, onToggleSummer, onGraduation, onAddYear }: PlanGridProps) {
+export function PlanGrid({
+  name,
+  onRename,
+  showSummer,
+  onToggleSummer,
+  onGraduation,
+  onAddYear,
+}: PlanGridProps) {
   const { plan } = usePlanner();
   const [yearMsg, setYearMsg] = useState<string | null>(null);
-  const gradId = useId();
   const items = plan.items ?? [];
   const last = graduationTerm(plan);
   const years = planYears(plan);
@@ -193,7 +300,8 @@ export function PlanGrid({ name, onRename, showSummer, onToggleSummer, onGraduat
   const terms = planTerms(plan.entry_term, last);
   const shown = new Set(terms);
   const byTerm = new Map<string, PlanItem[]>();
-  for (const item of items) byTerm.set(item.term, [...(byTerm.get(item.term) ?? []), item]);
+  for (const item of items)
+    byTerm.set(item.term, [...(byTerm.get(item.term) ?? []), item]);
   const outside = items.filter((i) => !shown.has(i.term));
   const choices = graduationChoices(plan.entry_term, years);
   if (!choices.includes(last)) choices.push(last);
@@ -210,22 +318,19 @@ export function PlanGrid({ name, onRename, showSummer, onToggleSummer, onGraduat
 
   return (
     <div className="flex flex-col gap-5">
-      <div className="flex flex-wrap items-end justify-between gap-x-4 gap-y-3">
+      <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-3">
         <PlanName name={name} onRename={onRename} />
-        <div className="flex flex-wrap items-end gap-2">
-          <div className="flex flex-col gap-1">
-            <label htmlFor={gradId} className="text-caption-uppercase uppercase text-muted">
-              Graduating in
-            </label>
-            <select id={gradId} value={last} onChange={(e) => onGraduation(e.target.value)} className={cn(controlClass, controlCompactClass, "w-44")}>
-              {choices.map((t) => (
-                <option key={t} value={t}>
-                  {termLabel(t)}
-                </option>
-              ))}
-            </select>
-          </div>
-          <Button variant="outline" onClick={onToggleSummer} aria-pressed={showSummer}>
+        <div className="flex flex-wrap items-center gap-2">
+          <GraduationField
+            value={last}
+            choices={choices}
+            onChange={onGraduation}
+          />
+          <Button
+            variant="outline"
+            onClick={onToggleSummer}
+            aria-pressed={showSummer}
+          >
             {showSummer ? "Hide Summer" : "Show Summer"}
           </Button>
         </div>
@@ -234,23 +339,46 @@ export function PlanGrid({ name, onRename, showSummer, onToggleSummer, onGraduat
         const start = academicYear(termAt(plan.entry_term, y, "AU"));
         const summer = termAt(plan.entry_term, y, "SU");
         const summerItems = byTerm.get(summer) ?? [];
-        const yearTerms = QUARTERS.map((q) => termAt(plan.entry_term, y, q)).filter((t) => shown.has(t));
-        const visible = yearTerms.filter((t) => showSummer || !t.endsWith("-SU"));
+        const yearTerms = QUARTERS.map((q) =>
+          termAt(plan.entry_term, y, q),
+        ).filter((t) => shown.has(t));
+        const visible = yearTerms.filter(
+          (t) => showSummer || !t.endsWith("-SU"),
+        );
         return (
-          <section key={y} aria-labelledby={`year-${y}`} data-testid={`year-${y}`}>
-            <h3 id={`year-${y}`} className="mb-3 flex flex-wrap items-baseline gap-x-2 font-display text-display-sm">
+          <section
+            key={y}
+            aria-labelledby={`year-${y}`}
+            data-testid={`year-${y}`}
+          >
+            <h3
+              id={`year-${y}`}
+              className="mb-3 flex flex-wrap items-baseline gap-x-2 font-display text-display-sm"
+            >
               {classYearLabel(y, level)}{" "}
-              <span className="font-sans text-caption tabular-nums text-muted">{academicYearLabel(start)}</span>
+              <span className="font-sans text-caption tabular-nums text-muted">
+                {academicYearLabel(start)}
+              </span>
               {!showSummer && summerItems.length > 0 && (
                 <span className="font-sans text-caption text-muted">
                   {" "}
-                  · {termLabel(summer)}: {summerItems.length} course{summerItems.length === 1 ? "" : "s"} (hidden)
+                  · {termLabel(summer)}: {summerItems.length} course
+                  {summerItems.length === 1 ? "" : "s"} (hidden)
                 </span>
               )}
             </h3>
-            <div className={cn("grid grid-cols-1 gap-3 sm:grid-cols-3", showSummer && "xl:grid-cols-4")}>
+            <div
+              className={cn(
+                "grid grid-cols-1 gap-3 sm:grid-cols-3",
+                showSummer && "xl:grid-cols-4",
+              )}
+            >
               {visible.map((term) => (
-                <QuarterCell key={term} term={term} items={byTerm.get(term) ?? []} />
+                <QuarterCell
+                  key={term}
+                  term={term}
+                  items={byTerm.get(term) ?? []}
+                />
               ))}
             </div>
           </section>
@@ -268,7 +396,11 @@ export function PlanGrid({ name, onRename, showSummer, onToggleSummer, onGraduat
           >
             Add a year
           </Button>
-          <Button variant="ghost" onClick={removeLastYear} disabled={years <= 1}>
+          <Button
+            variant="ghost"
+            onClick={removeLastYear}
+            disabled={years <= 1}
+          >
             Remove last year
           </Button>
         </div>
