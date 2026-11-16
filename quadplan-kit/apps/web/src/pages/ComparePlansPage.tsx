@@ -64,7 +64,7 @@ export default function ComparePlansPage() {
 
   return (
     <PageContainer className="max-w-4xl">
-      <PageHeader title="Compare plans" eyebrow="Plans" />
+      <PageHeader title="Compare plans" />
       {plans.length < 2 ? (
         <EmptyState>
           You need two plans to compare.{" "}

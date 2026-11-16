@@ -11,13 +11,11 @@ export default function ProgramsPage() {
   const q = usePrograms();
   return (
     <PageContainer>
-      <div className="mb-6 flex justify-center">
+      {/* D11 PR-2: the switch lines up with this page's left-aligned header. */}
+      <div className="mb-6 flex">
         <CatalogToggle current="programs" />
       </div>
-      <PageHeader
-        title="Program explorer"
-        eyebrow="Programs"
-      />
+      <PageHeader title="Program explorer" />
       {q.isLoading ? (
         <LoadingState label="Loading programs" />
       ) : q.error ? (

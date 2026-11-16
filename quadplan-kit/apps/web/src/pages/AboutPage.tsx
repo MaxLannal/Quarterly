@@ -13,7 +13,7 @@ export default function AboutPage() {
       width="reading"
       className="flex flex-col gap-6 text-body-md text-body"
     >
-      <PageHeader title="About" eyebrow="Quarterly" className="mb-2" />
+      <PageHeader title="About" className="mb-2" />
       <p>
         Quarterly is a student project. It is not run by, connected to or
         endorsed by the University of Chicago.

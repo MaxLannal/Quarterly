@@ -41,7 +41,7 @@ export default function InstructorPage() {
   const courses = i.courses ?? [];
   return (
     <PageContainer as="article" width="reading">
-      <PageHeader eyebrow="Instructor" title={i.display_name} meta={i.department ? <span>{i.department}</span> : undefined} />
+      <PageHeader title={i.display_name} meta={<span>Instructor{i.department ? ` · ${i.department}` : ""}</span>} />
       <Section id="courses" title="Courses taught" description={plural(courses.length, "course")}>
         {!loggedIn && (
           <Notice tone="info" className="mb-4">

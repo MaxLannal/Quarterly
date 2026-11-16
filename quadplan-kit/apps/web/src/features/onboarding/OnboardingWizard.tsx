@@ -357,7 +357,7 @@ export function OnboardingWizard() {
 
   return (
     <PageContainer width="reading">
-      <PageHeader title="Planner setup" eyebrow="Start planning" size="md" className="mb-6" />
+      <PageHeader title="Planner setup" size="md" className="mb-6" />
       <ol className="flex flex-wrap gap-2 text-caption" aria-label="Steps">
         {STEPS.map((s, i) => (
           <li key={s} aria-current={i === step ? "step" : undefined} className={cn("rounded-pill border px-3 py-1.5", i === step ? "border-primary bg-primary-wash font-medium text-ink" : i < step ? "border-hairline-strong text-ink" : "border-hairline text-muted")}>

@@ -36,7 +36,7 @@ const STORED: { data: string; stored: string; linkable: string }[] = [
 export default function PrivacyPage() {
   return (
     <PageContainer width="reading" as="section" className="flex flex-col gap-6 text-body-md text-body [&_strong]:font-medium [&_strong]:text-ink">
-      <PageHeader title="Privacy" eyebrow="What we store" className="mb-2" />
+      <PageHeader title="Privacy" description="What Quarterly stores about you, and why." className="mb-2" />
       <p>
         Quarterly is built by students, for students. This page says plainly what we keep about you
         and what that means. The short version:{" "}

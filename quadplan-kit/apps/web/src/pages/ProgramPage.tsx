@@ -13,6 +13,19 @@ import { compareTerms, termLabel } from "@/features/planner/terms";
 import { StatusBadge, TYPE_LABELS } from "@/features/programs/ProgramPicker";
 import { describe, ruleTree, type RuleEntry } from "@/features/programs/rules";
 
+/** One program's type, in the singular (D11 PR-4; TYPE_LABELS are group headings). */
+const TYPE_SINGULAR: Record<keyof typeof TYPE_LABELS, string> = {
+  core: "Core curriculum",
+  major: "Major",
+  minor: "Minor",
+  bxms: "Bx/MS program",
+  joint: "Joint degree",
+  specialization: "Specialization",
+  track: "Track",
+  preprofessional: "Pre-professional path",
+  study_abroad_block: "Study-abroad block",
+};
+
 const COURSE_CODE = /\b[A-Z]{2,5} \d{5}\b/g;
 
 /** Text with every course code linked to its course page (D11 PR-1: the explorer is not a dead end). */
@@ -103,9 +116,9 @@ export default function ProgramPage() {
     <PageContainer as="article">
       <PageHeader
         title={p.name}
-        eyebrow={TYPE_LABELS[p.type]}
         meta={
           <>
+            <span>{TYPE_SINGULAR[p.type]}</span>
             {p.degree && <span>{p.degree}</span>}
             {p.department && <span>{p.department}</span>}
             <span>Catalog {p.catalog_year}</span>
