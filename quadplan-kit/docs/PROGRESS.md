@@ -602,3 +602,15 @@ Earlier runs on the busy laptop varied (P12-1), so run it again on the real serv
 - Known flake (2026-11-16): journey C once failed under heavy machine load. The generator's time-limited solve returned another valid plan that also holds HIST 10102, and the test checks which courses the verifier credits to the Core's civilization requirement; the next run passed. If it recurs, make the test accept any plan where the Paris courses are eligible for that requirement.
 - `make up` and `make e2e-stack` now recreate the web container after the API, so nginx never keeps a dead API address (every journey once got 502s after a rebuild).
 
+
+## FEEDBACK of 2026-11-16, second batch (goal 3: 13:43-14:40 CST)
+Four items and half of the fifth resolved; TRNC 10100 is in progress (below).
+- **Course picker for credits (0abe529, 2eda4c9):** "Counts as course" is a search-and-choose field; typed text that was not chosen is refused.
+- **Catalog menu (0abe529):** one "Catalog" menu item with a Courses/Programs switch; course search shows only a centred search box until you search.
+- **Colour strips (86c961d):** each colour is a kind of requirement, the same on every plan (major maroon, second major blue, Core yellow, minor green, study abroad orange, Bx/MS mauve, pre-professional dark green, none grey). Labels and reasons in FEEDBACK.md.
+- **ASCII chapel scene (25e36f5):** live scene beside the homepage text; time of day and Hyde Park weather (via our own cached `GET /weather`, so no visitor request leaves the site); trees sway under a sweeping pointer; a click sends a shooting star at night or birds by day; still under reduced motion. Files: `apps/web/public/ascii-scene/`, converter and docs in `tools/ascii-scene/`.
+- **Minor issues (b44c09a):** a card's open menu sits in front of the cards below. **TRNC 10100: in progress.** Added in b44c09a, then taken out: with it in the catalog the plan generator timed out in journeys A-C (a `credit_only` tag that keeps it out of the generator fixed C only). Its row was deleted from the dev database. Next: find why one never-offered repeatable course slows the generator, then add it back.
+- Tests: `make check` passes; `make e2e` passed after items 1-4 (the browser suite and journeys A-D); for the menu fix the browser suite passed (85).
+- Test fixes along the way: the drawer drag test retries a missed drag (OPEN_QUESTIONS E2E-1); journey C's two preference checks no longer fail on the generator's time-limited choices (E2E-2).
+- Before launch (OPEN_QUESTIONS DF-A1): replace the watermarked demo photo behind the chapel scene; Open-Meteo's free service is non-commercial only.
+- Next: Richard's next FEEDBACK items; the deferred catalog questions before deployment.

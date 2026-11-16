@@ -24,21 +24,28 @@ Write down anything you notice: something broken, something confusing, or someth
 
 ## New
 
+## In progress
+
+### Minor issues
+- TRNC 10100 is currently not in the catalog. It is transfer general credit and every transfer student will receive some of them. They do not count as a course for any specific programs but students can use it to meet credit requirements. Add this to the catalog.
+- Expanded menu on Planner will move behind the course cards, it needs to be in front
+- In progress: TRNC 10100 was added in b44c09a and taken out again in the next commit. With it in the catalog, the plan generator ran out of time in the end-to-end journeys A, B and C. Leaving it out of the generator's candidates (a "credit only" tag) fixed C but not A and B, and the time ran out before I found why. What is left: find why the generator slows down; add the course back (the entry is in b44c09a: 100 units, can be received many times, counts for no program or the Core, only toward total units); then run the journeys again.
+- Resolved in b44c09a: a course card's open menu now sits in front of the cards below it (the card is lifted while its menu is open). e2e test (failed before the fix) and screenshot `fb1116-card-menu-in-front.png`.
+
+## Later
+
+## Done
+
 ### ASCII Scene
 - Date 2026-11-16
 - Where: Homepage (landing page)
 - What: I want to implement some ascii art on my homepage. Look at /Users/richardgao/Downloads/ascii-scene and add it to my repo. For now, use the demo picture. Follow the instruction and make sure it blends well in a good location of the landing page. You may increase the density of the characters if you'd like. I would also want you to take the design a step further - fetch the current time and weather, and create different version of the schene that turns them in to unique animations according to the time of day and weather. I would also appriciate if you the user's cursor can interact with the ascii element, such as the tree will swing (like wind blow) when the cursor sweep over, a shooting star comes down the night sky when the user clicks. Things like this. Make your unique design choices and implement high quality design.
 - Status: new
-
-### Minor issues
-- TRNC 10100 is currently not in the catalog. It is transfer general credit and every transfer student will receive some of them. They do not count as a course for any specific programs but students can use it to meet credit requirements. Add this to the catalog.
-- Expanded menu on Planner will move behind the course cards, it needs to be in front
-
-## In progress
-
-## Later
-
-## Done
+- Resolved in 25e36f5: the live chapel scene sits beside the homepage text (below it on a phone), straight on the page's background with dissolving edges and denser characters. It follows the real time of day (dawn, morning, noon, golden hour, dusk, night: sun, moon, twinkling stars, street lamps and glowing windows at night) and Hyde Park's weather (clear, cloudy, rain, storm with lightning, snow, fog).
+  - Weather comes from our own server (`/api/weather`, asks Open-Meteo at most every 15 minutes), so a visitor's browser never contacts another site; the caption credits Open-Meteo.
+  - Interaction: sweep the pointer across the trees and they sway like a gust; click the sky at night for a shooting star, or by day for a few birds. Under "reduce motion" the scene stays still.
+  - Before launch (OPEN_QUESTIONS DF-A1): the drawing comes from the watermarked demo photo, so it needs your own photo; and Open-Meteo's free service is for non-commercial use only.
+  - Proof: `test_weather.py`, e2e `ascii-scene.spec.ts`, screenshots `docs/screenshots/ascii-*.png` (six states at 1440, two at 1024 and 390); make e2e: 84 passed, journeys A-D passed.
 
 ### Color strip before the course cade
 - Date: 2026-11-16
