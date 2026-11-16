@@ -47,7 +47,7 @@ export function Footer() {
         )}
       >
         <div className="col-span-2 max-w-xs md:col-span-1">
-          <p className="font-display text-display-sm text-ink">Quarterly</p>
+          <p className="font-display text-display-sm font-medium tracking-[-0.24px] text-ink">Quarterly</p>
           <p className="mt-2 text-body-sm text-body">
             Quarterly is a student project, not affiliated with the University
             of Chicago.

@@ -18,10 +18,11 @@ const NAV: { to: string; label: string; current: (path: string) => boolean }[] =
   { to: "/instructors", label: "Forum", current: (p) => /^\/(instructors|guidelines)(\/|$)/.test(p) || FORUM_PATH.test(p) },
 ];
 
-/** The text wordmark (DESIGN.md "Brand & logo": no university marks). */
+/** The text wordmark (DESIGN.md "Brand & logo": no university marks), set in Newsreader 500 so it
+ * holds its own in the bar (D4, FEEDBACK "Minor design changes"). */
 export function Wordmark({ className }: { className?: string }) {
   return (
-    <Link to="/" className={cn("flex min-h-11 shrink-0 items-center rounded-xs font-display text-display-sm text-ink", className)}>
+    <Link to="/" className={cn("flex min-h-11 shrink-0 items-center rounded-xs font-display text-display-sm font-medium tracking-[-0.24px] text-ink", className)}>
       Quarterly
     </Link>
   );
