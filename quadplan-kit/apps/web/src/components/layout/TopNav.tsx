@@ -11,18 +11,40 @@ import { cn } from "@/lib/utils";
 const FORUM_PATH = /^\/courses\/[^/]+\/i\//;
 
 /** Each link is the current section for its own path and the pages that belong to it. */
-const NAV: { to: string; label: string; current: (path: string) => boolean }[] = [
-  { to: "/plan", label: "Plan", current: (p) => /^\/(plan|plans|onboarding)(\/|$)/.test(p) },
-  // Courses and programs share one item; a switch on each page moves between them (FEEDBACK 2026-11-16).
-  { to: "/courses", label: "Catalog", current: (p) => (/^\/courses(\/|$)/.test(p) && !FORUM_PATH.test(p)) || /^\/programs(\/|$)/.test(p) },
-  { to: "/instructors", label: "Forum", current: (p) => /^\/(instructors|guidelines)(\/|$)/.test(p) || FORUM_PATH.test(p) },
-];
+const NAV: { to: string; label: string; current: (path: string) => boolean }[] =
+  [
+    {
+      to: "/plan",
+      label: "Plan",
+      current: (p) => /^\/(plan|plans|onboarding)(\/|$)/.test(p),
+    },
+    // Courses and programs share one item; a switch on each page moves between them (FEEDBACK 2026-11-16).
+    {
+      to: "/courses",
+      label: "Catalog",
+      current: (p) =>
+        (/^\/courses(\/|$)/.test(p) && !FORUM_PATH.test(p)) ||
+        /^\/programs(\/|$)/.test(p),
+    },
+    {
+      to: "/instructors",
+      label: "Forum",
+      current: (p) =>
+        /^\/(instructors|guidelines)(\/|$)/.test(p) || FORUM_PATH.test(p),
+    },
+  ];
 
 /** The text wordmark (DESIGN.md "Brand & logo": no university marks), set in Newsreader 500 so it
  * holds its own in the bar (D4, FEEDBACK "Minor design changes"). */
 export function Wordmark({ className }: { className?: string }) {
   return (
-    <Link to="/" className={cn("flex min-h-11 shrink-0 items-center rounded-xs font-display text-display-sm font-medium tracking-[-0.24px] text-ink", className)}>
+    <Link
+      to="/"
+      className={cn(
+        "flex min-h-11 shrink-0 items-center rounded-xs font-display text-display-sm font-medium tracking-[-0.24px] text-ink",
+        className,
+      )}
+    >
       Quarterly
     </Link>
   );
@@ -37,7 +59,11 @@ function SearchBox() {
     navigate(term ? `/courses?q=${encodeURIComponent(term)}` : "/courses");
   }
   return (
-    <form role="search" onSubmit={submit} className="relative flex w-full min-w-0 items-center">
+    <form
+      role="search"
+      onSubmit={submit}
+      className="relative flex w-full min-w-0 items-center"
+    >
       <label htmlFor="site-search" className="sr-only">
         Search courses
       </label>
@@ -48,11 +74,19 @@ function SearchBox() {
         onChange={(e) => setQ(e.target.value)}
         placeholder="Search courses"
         className={cn(
-          "min-h-11 w-full min-w-0 rounded-pill border border-border-input bg-surface-card pl-4 pr-12 text-body-sm text-ink placeholder:text-muted",
-          "focus-visible:outline-none focus:border-primary focus:shadow-[inset_0_0_0_1px_var(--color-primary)]",
+          // A quiet filled field (D6, FEEDBACK "Minor design changes"): no outline until it is used;
+          // the icon and placeholder say what it is. Focus: white, with the maroon ring.
+          "min-h-11 w-full min-w-0 rounded-pill border border-transparent bg-surface-strong pl-10 pr-4 text-body-sm text-ink transition-colors duration-150 placeholder:text-muted",
+          "hover:bg-hairline-soft hover:border-hairline focus-visible:outline-none focus:border-primary focus:bg-surface-card focus:shadow-[inset_0_0_0_1px_var(--color-primary)]",
         )}
       />
-      <Button type="submit" variant="ghost" size="icon" aria-label="Search" className="absolute right-0 text-muted hover:text-ink">
+      <Button
+        type="submit"
+        variant="ghost"
+        size="icon"
+        aria-label="Search"
+        className="absolute left-0 text-muted hover:bg-transparent hover:text-ink"
+      >
         <SearchIcon />
       </Button>
     </form>
@@ -98,7 +132,10 @@ export function TopNav() {
   useEffect(() => setOpen(false), [location.pathname]);
 
   const account = session ? (
-    <Link to="/account" className="flex min-h-11 items-center gap-2 rounded-pill pl-1 pr-3 text-nav-link text-ink hover:bg-surface-strong">
+    <Link
+      to="/account"
+      className="flex min-h-11 items-center gap-2 rounded-pill pl-1 pr-3 text-nav-link text-ink hover:bg-surface-strong"
+    >
       <Avatar name={session.account.username} />
       {session.account.username}
     </Link>
@@ -110,19 +147,27 @@ export function TopNav() {
 
   return (
     <header className="border-b border-hairline bg-canvas">
-      <div className={cn("mx-auto flex w-full flex-wrap", location.pathname === "/plan" ? "max-w-tool" : "max-w-content", "items-center gap-x-2 px-4 sm:px-6 md:h-16 md:flex-nowrap lg:px-8")}>
+      <div
+        className={cn(
+          "mx-auto flex w-full flex-wrap",
+          location.pathname === "/plan" ? "max-w-tool" : "max-w-content",
+          "items-center gap-x-2 px-4 sm:px-6 md:h-16 md:flex-nowrap lg:px-8",
+        )}
+      >
         <Wordmark className="mr-2 h-16 md:h-auto" />
         <nav
           id={panelId}
           aria-label="Main"
           className={cn(
             "items-center gap-1 md:flex",
-            open ? "order-last mb-3 flex w-full flex-col items-stretch border-t border-hairline pt-3 md:order-none md:mb-0 md:w-auto md:flex-row md:items-center md:border-0 md:pt-0" : "hidden",
+            open
+              ? "order-last mb-3 flex w-full flex-col items-stretch border-t border-hairline pt-3 md:order-none md:mb-0 md:w-auto md:flex-row md:items-center md:border-0 md:pt-0"
+              : "hidden",
           )}
         >
           <NavLinks vertical={open} />
         </nav>
-        <div className="order-1 w-full pb-3 md:order-none md:ml-auto md:w-auto md:max-w-sm md:flex-1 md:pb-0">
+        <div className="order-1 w-full pb-3 md:order-none md:ml-auto md:w-auto md:max-w-[17rem] md:flex-1 md:pb-0">
           <SearchBox />
         </div>
         <div className="ml-auto flex items-center gap-1 md:ml-2">
