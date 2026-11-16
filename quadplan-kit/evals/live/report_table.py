@@ -18,7 +18,11 @@ LIVE = Path(__file__).resolve().parent
 
 def rows(name: str) -> list[dict[str, Any]]:
     path = LIVE / name
-    return [json.loads(line) for line in path.read_text().splitlines() if line.strip()] if path.exists() else []
+    return (
+        [json.loads(line) for line in path.read_text().splitlines() if line.strip()]
+        if path.exists()
+        else []
+    )
 
 
 def main() -> None:
@@ -28,17 +32,24 @@ def main() -> None:
     last: dict[str, dict[str, Any]] = {}
     for r in results:
         last[r["test_id"]] = r
-    print("| Test id | Phase | Model | Result | Tokens in / out (cache read / write) | Cost | Latency |")
+    print(
+        "| Test id | Phase | Model | Result | Tokens in / out (cache read / write) | Cost | Latency |"
+    )
     print("| --- | --- | --- | --- | --- | --- | --- |")
     for r in last.values():
         tokens = f"{r['input_tokens']} / {r['output_tokens']} ({r['cache_read_tokens']} / {r['cache_write_tokens']})"
-        print(f"| `{r['test_id']}` | {r['phase'][-1]} | {r['model']} | {r['result']} | {tokens} | ${r['cost_usd']:.4f} | {r['latency_s']} s |")
+        print(
+            f"| `{r['test_id']}` | {r['phase'][-1]} | {r['model']} | {r['result']} | {tokens} | ${r['cost_usd']:.4f} | {r['latency_s']} s |"
+        )
     print()
     by_phase: dict[str, float] = defaultdict(float)
     for e in ledger:
         by_phase[e["phase"]] += e["cost_usd"]
     total = sum(by_phase.values())
-    print(f"Ledger: {len(ledger)} calls, total ${total:.4f}; " + ", ".join(f"{p} ${v:.4f}" for p, v in sorted(by_phase.items())))
+    print(
+        f"Ledger: {len(ledger)} calls, total ${total:.4f}; "
+        + ", ".join(f"{p} ${v:.4f}" for p, v in sorted(by_phase.items()))
+    )
     print()
     tasks: dict[str, list[float]] = defaultdict(list)
     for e in ledger:
@@ -50,7 +61,13 @@ def main() -> None:
     print()
 
     def per_test(prefix: str, model: str | None = None) -> list[float]:
-        return [r["cost_usd"] for r in last.values() if r["test_id"].startswith(prefix) and r["result"] != "not run (budget)" and (model is None or r["model"] == model)]
+        return [
+            r["cost_usd"]
+            for r in last.values()
+            if r["test_id"].startswith(prefix)
+            and r["result"] != "not run (budget)"
+            and (model is None or r["model"] == model)
+        ]
 
     for label, prefix, model in (
         ("plan generation, Sonnet 5.5", "a1-p", "claude-sonnet-5-5"),
@@ -62,7 +79,9 @@ def main() -> None:
     ):
         costs = [c for c in per_test(prefix, model) if c > 0]
         if costs:
-            print(f"- {label}: mean ${mean(costs):.4f} over {len(costs)} runs (min ${min(costs):.4f}, max ${max(costs):.4f})")
+            print(
+                f"- {label}: mean ${mean(costs):.4f} over {len(costs)} runs (min ${min(costs):.4f}, max ${max(costs):.4f})"
+            )
 
 
 if __name__ == "__main__":
