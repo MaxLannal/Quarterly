@@ -98,7 +98,7 @@ export default function ComparePlansPage() {
           {d && d.onlyA.length + d.onlyB.length + d.moved.length === 0 && (
             // D11 MP-3: one sentence when there is nothing to compare.
             <p role="status" className="text-body-sm text-body">
-              Same courses in the same quarters.
+              Same courses in the same quarters: {d.same} course{d.same === 1 ? "" : "s"} in both plans.
             </p>
           )}
           {d && d.onlyA.length + d.onlyB.length + d.moved.length > 0 && (
@@ -130,7 +130,9 @@ export default function ComparePlansPage() {
                   </li>
                 )),
               )}
-              <p className="text-body-sm text-muted sm:col-span-3">{d.same} courses are the same in both.</p>
+              <p className="text-body-sm text-muted sm:col-span-3">
+                {d.same} course{d.same === 1 ? " is" : "s are"} the same in both.
+              </p>
             </div>
           )}
         </div>

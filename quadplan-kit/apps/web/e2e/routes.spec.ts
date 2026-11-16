@@ -11,7 +11,7 @@ const ROUTES: [string, string][] = [
   ["/courses/TEST%2010000", "TEST 10000 · Fake Introduction I"],
   ["/courses/MATH%2020700/i/jane-doe", "Course × instructor forum"],
   ["/courses/MATH%2020700/i/jane-doe/t/1", "Thread"],
-  ["/instructors", "Instructors"],
+  ["/instructors", "Forum"],
   ["/instructors/fake-instructor-a", "Fake Instructor A"],
   ["/programs", "Program explorer"],
   ["/programs/fake-major", "Fake Program"],

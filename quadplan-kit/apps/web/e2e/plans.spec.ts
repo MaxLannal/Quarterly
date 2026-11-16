@@ -12,7 +12,8 @@ test("my plans: duplicate, compare, import on login", async ({ page }) => {
   await expect(page.getByLabel("Name of plan")).toHaveCount(2);
   await page.getByRole("link", { name: "Compare two plans" }).click();
   await expect(page.getByRole("heading", { level: 1, name: "Compare plans" })).toBeVisible();
-  await expect(page.getByText("1 courses are the same in both.")).toBeVisible();
+  // Identical plans: one sentence with the count (D11 MP-3).
+  await expect(page.getByText("Same courses in the same quarters: 1 course in both plans.")).toBeVisible();
 
   // Deleting asks first, in place (DF-7); Cancel keeps the plan.
   await page.goto("/plans");

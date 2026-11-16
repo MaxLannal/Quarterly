@@ -24,7 +24,7 @@ test("onboarding: five steps create a plan and open the generator", async ({ pag
   await page.getByRole("option", { name: /^TEST 10000/ }).click();
   await expect(page.getByTestId("course-picked")).toContainText("TEST 10000");
   await page.getByRole("button", { name: "Add credit" }).click();
-  await expect(page.getByText("AP: Fake AP exam → TEST 10000")).toBeVisible();
+  await expect(page.getByText("AP exam: Fake AP exam → TEST 10000")).toBeVisible();
   await page.getByRole("button", { name: "Next" }).click();
 
   // 3. Programs

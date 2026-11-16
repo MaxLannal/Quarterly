@@ -13,7 +13,7 @@ const KINDS: { value: Credit["kind"]; label: string }[] = [
   { value: "transfer", label: "Transfer credit" },
 ];
 
-/** One line per credit: "AP: AP Calculus BC → MATH 15100 · 100 units". */
+/** One line per credit: "AP exam: AP Calculus BC → MATH 15100 · 100 units". */
 export function creditText(c: Credit): string {
   // D11 CR-1: the kind's own label, and plain words for an unmatched credit.
   const kind = KINDS.find((k) => k.value === c.kind)?.label ?? c.kind;
