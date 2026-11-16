@@ -24,6 +24,36 @@ Write down anything you notice: something broken, something confusing, or someth
 
 ## New
 
+### Minor design changes
+For every changes below, consult the installed plugin impeccable: https://github.com/pbakaus/impeccable
+
+*Design pass (numbering added by Claude, 2026-11-16, for the design-pass goal; Richard's text unchanged): D1-D10 are the changes below in order (the first bullet is D1, the deletions, and D2, the larger wordmark), D11 is the full runthrough. Each tag names the Impeccable command used.*
+
+- Delete the following text from homescreen because I think they're unncessary:
+    - "No account needed to plan: your plan stays on this device until you log in."
+    - "Rockefeller Chapel, live from Hyde Park · Weather by Open-Meteo.com"
+    - "Plan your courses with a verifier that checks every requirement, and read what students say about each class." After delete, enlarge the quarterly word and slightly bold it. **[D1 `distill`: the deletions; D2 `typeset`: the larger, bolder word]**
+    - D1 Resolved in 6584a4a: the subhead, the "No account needed" note and the chapel caption are gone; the Open-Meteo credit (its licence requires one) moved to the About page.
+    - D2 Resolved in 9e045fc: "Quarterly" is 96px (64px on a phone) and one weight heavier (Newsreader 400).
+- Make the menu list on the bottom of the screen more compact. Now the distance between each line is too long **[D3 `layout`]**
+    - D3 Resolved in 60e867c: footer link rows are 32px with a mouse (44px targets stay on touch screens); on a phone the link columns sit two across.
+- Make the quarterly character on the menu bar more bolded **[D4 `typeset`]**
+    - D4 Resolved in 75dfd83: the top-bar wordmark (and the footer's) is Newsreader 500.
+- Currently the "Courses/Program" switch on the course search is too big and the color is too bold. Make the design smaller, and make the color more obvious and subtle. you may also want to consider implementing some animation according to DESIGN.md **[D5 `quieter` + `animate`]**
+    - D5 Resolved in 7401744: a small segmented control (light track, white pill, maroon label, 32px drawn with 44px targets); the pill slides from the side you left (200ms, still under reduced motion).
+- The "Search courses" pill on the menu bar is too obvious. Make it more subtle. **[D6 `quieter`]**
+    - D6 Resolved in 9447e95: a quiet filled field with no outline until hovered or focused, icon on the left, a little narrower; focus keeps the maroon ring.
+- The rockerfeller chapel on the homescreen has a great design and great interactions. It still looks to faint. Increase the density of the ASCII character to make the image more solid. **[D7 `bolder`]**
+    - D7 Resolved in 5e59e65: the finest level of the drawing (190 characters across at desktop), darker ink, more contrast and colour, softer edge fade. Screenshots `docs/screenshots/ascii-*.png`.
+- Similar to the "My Plan" field, the Graduating in field should also be fixed, and can be edited with a pencil button from the side. It's size should be alot smaller and more subtle. **[D8 `distill`]**
+    - D8 Resolved in c3bda96: "Graduating in Spring 2030" is a line of caption text with a pencil; the pencil opens the quarter list in place, like renaming the plan.
+- At the planner -> credits -> edit field, "Counts as course (if known)" has a weirdly aligned text and is very big. Work on the design so it's not intrusive. **[D9 `layout`]**
+    - D9 Resolved in 5ddae6c: the credit form is one column (Kind and Units share the first row); "Counts as course (if known)" sits on one line above a full-width field, with "(if known)" lighter.
+- Change the color of the glowing orb behind "Quarterly" in the homescreen to be aligned with the theme color, not blue. If that is not feasible, delete it. **[D10 `colorize`]**
+    - D10 Resolved in 1d0c891: the orb is maroon-derived (#A44A4A, maroon at 70% on the page colour). DESIGN.md records these approved departures.
+
+Do a full runthrough with \impeccable to improve all UI and UX workflow components. Critique every part of the website and make improvements. **[D11 `critique` + `audit`, then `polish`; `harden` and `adapt` on the planner and forum; findings in docs/DESIGN-REVIEW.md]**
+
 ## In progress
 
 ### Minor issues
