@@ -29,6 +29,7 @@ data/seed (hand-verified YAML) · data/golden (must-pass / must-fail plans) · p
 - A default decides how to read a quote; it never replaces a missing quote. Product, security and privacy questions still go to Richard.
 - The hand check of `data/seed/REVIEW.md` is deferred until before deployment.
 - Do not send any request to the Claude or OpenRouter APIs (no evals, test runs or agent runs) until Richard says so (2026-11-14). Build and test LLM code against fake clients only.
+  - 2026-11-16: Richard allowed prompt 13's live tests (through `llm_gateway.live.LiveBudgetGuard`, $4.50 cap; done, `docs/LIVE-TEST-REPORT.md`) and turned the app's AI features on for his own testing (`LLM_LIVE=true` in `.env`). Claude still runs no other paid calls (evals, pilot ingestion, new live tests) without his say-so.
 
 ## Richard's feedback
 - `docs/FEEDBACK.md` is where Richard writes issues he finds and changes he wants. Read it at the start of every task. Move items you take to "In progress", and finished ones to "Done" with the date and what changed.
