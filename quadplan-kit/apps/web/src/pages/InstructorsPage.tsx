@@ -1,15 +1,20 @@
 import { useState, type FormEvent } from "react";
 import { Link } from "react-router-dom";
-import { EmptyState, LoadingState, PageContainer, PageHeader } from "@/components/layout/page";
+import { EmptyState, LoadingState, PageContainer, PageHeader, standaloneLinkClass } from "@/components/layout/page";
 import { Button } from "@/components/ui/button";
 import { Avatar } from "@/components/ui/card";
 import { Input, Label } from "@/components/ui/input";
 import { ErrorText } from "@/components/ui/misc";
 import { useInstructors } from "@/features/forum/api";
 import { plural } from "@/features/forum/format";
+import { useSession } from "@/lib/session";
 
-/** Instructor directory. Names are public (P03-12); ratings and reviews need a login. */
+/**
+ * The Forum's front door (D11 FO-1): most students arrive with a course, so the page leads there,
+ * and keeps the instructor directory (names are public, P03-12; reviews need a login).
+ */
 export default function InstructorsPage() {
+  const { data: session } = useSession();
   const [draft, setDraft] = useState("");
   const [q, setQ] = useState("");
   const list = useInstructors(q);
@@ -22,13 +27,18 @@ export default function InstructorsPage() {
   const items = list.data?.items ?? [];
   return (
     <PageContainer as="section" width="reading">
-      <PageHeader
-        title="Instructors"
-        description="Ratings, reviews and discussion are for logged-in students."
-      />
+      <PageHeader title="Forum" description="Reviews and discussion for each course, one page for each instructor who teaches it." />
+      <p className="mb-6 flex flex-wrap items-center gap-x-2 text-body-sm text-body">
+        Know the course?
+        <Link to="/courses" className={standaloneLinkClass}>
+          Find it in course search
+        </Link>
+        <span>: its page lists the instructors and links to their reviews.</span>
+      </p>
+      {!session && <p className="mb-6 text-caption text-muted">Log in to read and write reviews.</p>}
       <form role="search" aria-label="Search instructors" onSubmit={submit} className="mb-8 flex flex-wrap items-end gap-3">
         <div className="flex min-w-0 flex-1 flex-col gap-1.5">
-          <Label htmlFor="instructor-q">Search instructors</Label>
+          <Label htmlFor="instructor-q">Or search by instructor</Label>
           <Input id="instructor-q" type="search" value={draft} onChange={(e) => setDraft(e.target.value)} placeholder="Name" />
         </div>
         <Button type="submit" variant="outline">

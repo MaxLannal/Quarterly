@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { isWebUrl } from "@/lib/utils";
+import { useState, type ReactNode } from "react";
+import { cn, isWebUrl } from "@/lib/utils";
 import { Link, useParams } from "react-router-dom";
 import { ApiError, isNotAvailable } from "@/api/client";
 import { useProgram } from "@/api/hooks";
@@ -13,6 +13,26 @@ import { compareTerms, termLabel } from "@/features/planner/terms";
 import { StatusBadge, TYPE_LABELS } from "@/features/programs/ProgramPicker";
 import { describe, ruleTree, type RuleEntry } from "@/features/programs/rules";
 
+const COURSE_CODE = /\b[A-Z]{2,5} \d{5}\b/g;
+
+/** Text with every course code linked to its course page (D11 PR-1: the explorer is not a dead end). */
+function LinkedCodes({ text }: { text: string }) {
+  const parts: ReactNode[] = [];
+  let last = 0;
+  for (const m of text.matchAll(COURSE_CODE)) {
+    const at = m.index ?? 0;
+    if (at > last) parts.push(text.slice(last, at));
+    parts.push(
+      <Link key={at} to={`/courses/${encodeURIComponent(m[0])}`} className={cn(inlineLinkClass, "tabular-nums")}>
+        {m[0]}
+      </Link>,
+    );
+    last = at + m[0].length;
+  }
+  if (last < text.length) parts.push(text.slice(last));
+  return <>{parts}</>;
+}
+
 function RuleList({ entry }: { entry: RuleEntry }) {
   return (
     <li className="py-2">
@@ -22,7 +42,9 @@ function RuleList({ entry }: { entry: RuleEntry }) {
           Needs review
         </Badge>
       ) : null}
-      <span className="block text-body-sm text-body">{describe(entry)}</span>
+      <span className="block text-body-sm text-body">
+        <LinkedCodes text={describe(entry)} />
+      </span>
       {entry.children.length > 0 && (
         <ul className="ml-1 mt-1 border-l border-hairline-strong pl-5">
           {entry.children.map((c) => (
@@ -122,7 +144,7 @@ export default function ProgramPage() {
                   <li key={n} className="flex items-baseline gap-3 py-3 text-body-sm">
                     <span className="w-6 shrink-0 text-caption tabular-nums text-muted">{n + 1}.</span>
                     <span className="text-ink">
-                      {i.course ?? i.slot_ref} · <span className="text-body">{termLabel(i.term)}</span>
+                      {i.course ? <LinkedCodes text={i.course} /> : i.slot_ref} · <span className="text-body">{termLabel(i.term)}</span>
                     </span>
                   </li>
                 ))}

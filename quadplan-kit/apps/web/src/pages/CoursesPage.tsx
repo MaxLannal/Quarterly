@@ -4,6 +4,7 @@ import { isNotAvailable } from "@/api/client";
 import { useCourseSearch, type CourseSearchParams } from "@/api/hooks";
 import type { CourseSummary } from "@/api/types";
 import { Button } from "@/components/ui/button";
+import { ChevronIcon } from "@/components/ui/icons";
 import { PageContainer } from "@/components/layout/page";
 import { Card } from "@/components/ui/card";
 import { controlClass } from "@/components/ui/input";
@@ -134,8 +135,10 @@ export default function CoursesPage() {
             />
             <Button type="submit">Search</Button>
           </div>
-          <details className="mt-3" open={filtered}>
-            <summary className="mx-auto flex min-h-11 w-fit cursor-pointer items-center rounded-md px-2 text-body-sm text-muted hover:text-ink">
+          <details className="group mt-3" open={filtered}>
+            {/* D11 CS-2: a chevron shows it opens. */}
+            <summary className="mx-auto flex min-h-11 w-fit cursor-pointer list-none items-center gap-1.5 rounded-md px-2 text-body-sm text-body hover:text-ink [&::-webkit-details-marker]:hidden">
+              <ChevronIcon className="size-4 text-muted transition-transform duration-150 group-open:rotate-90 motion-reduce:transition-none" />
               More filters
             </summary>
             <div className="mt-2 grid grid-cols-2 gap-x-3 gap-y-4 rounded-lg border border-hairline bg-surface-card p-4 sm:gap-4 lg:grid-cols-3">

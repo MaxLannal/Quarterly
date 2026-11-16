@@ -159,7 +159,7 @@ test("thread view: nested comments fold below depth 6, reply, report, axe", asyn
 
 test("instructors: public names; course page ratings need login", async ({ page }) => {
   await page.goto("/instructors");
-  await expect(page.getByRole("heading", { level: 1, name: "Instructors" })).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1, name: "Forum" })).toBeVisible();
   await page.getByRole("link", { name: /Fake Instructor A/ }).click();
   await expect(page.getByRole("heading", { level: 1, name: "Fake Instructor A" })).toBeVisible();
   await expect(page.getByText("to see ratings and read reviews.")).toBeVisible();

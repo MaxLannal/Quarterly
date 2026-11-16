@@ -254,7 +254,7 @@ const SHOTS: Shot[] = [
   },
   {
     name: "instructors",
-    run: async (p) => (await p.goto("/instructors"), h1(p, "Instructors")),
+    run: async (p) => (await p.goto("/instructors"), h1(p, "Forum")),
   },
   {
     name: "instructor",

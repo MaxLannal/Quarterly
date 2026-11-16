@@ -56,7 +56,7 @@ export function RatingBars({ distribution }: { distribution: Record<string, numb
     <div className="grid gap-6 sm:grid-cols-3">
       {[...RATING_FIELDS, ...OPTIONAL_RATING_FIELDS.filter((f) => (distribution[f.key] ?? []).some((c) => c > 0))].map((field) => {
         const counts = distribution[field.key] ?? [0, 0, 0, 0, 0];
-        const max = Math.max(1, ...counts);
+        // Bars are shares of all ratings (D11 FO-3), so 1 of 2 ratings draws half a bar.
         const total = counts.reduce((a, b) => a + b, 0);
         return (
           <figure key={field.key} className="min-w-0">
@@ -73,7 +73,7 @@ export function RatingBars({ distribution }: { distribution: Record<string, numb
                       {score}
                     </span>
                     <span aria-hidden="true" className="h-2 flex-1 overflow-hidden rounded-pill bg-surface-strong">
-                      <span className="block h-full rounded-pill bg-primary" style={{ width: `${(count / max) * 100}%` }} />
+                      <span className="block h-full rounded-pill bg-primary" style={{ width: `${(count / (total || 1)) * 100}%` }} />
                     </span>
                     <span aria-hidden="true" className="w-6 text-right">
                       {count}

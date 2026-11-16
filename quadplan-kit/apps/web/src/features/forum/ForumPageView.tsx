@@ -12,6 +12,7 @@ import { termLabel } from "@/features/planner/terms";
 import { usePosts, useForumPage, type ForumPage, type PostKind, type Sort } from "./api";
 import { Composer } from "./Composer";
 import { plural, relativeDay, threadPath } from "./format";
+import { ChevronIcon } from "@/components/ui/icons";
 import { RatingBars, RatingStats } from "./parts";
 import { PostCard } from "./PostCard";
 
@@ -201,7 +202,16 @@ export function ForumPageView({ code, slug }: { code: string; slug: string }) {
         <Section id="ratings" title="Ratings" description={page.n_reviews ? `From ${plural(page.n_reviews ?? 0, "review")}` : "No reviews yet"}>
           <div className="flex flex-col gap-6">
             <RatingStats ratings={page.ratings ?? { n_reviews: 0 }} />
-            <RatingBars distribution={page.rating_distribution ?? {}} />
+            {/* D11 FO-2: the per-score breakdown folds away, so reviews start near the top on a phone. */}
+            <details className="group">
+              <summary className="inline-flex min-h-11 cursor-pointer list-none items-center gap-1.5 rounded-xs text-body-sm font-medium text-ink hover:text-primary [&::-webkit-details-marker]:hidden">
+                <ChevronIcon className="size-4 text-muted transition-transform duration-150 group-open:rotate-90 motion-reduce:transition-none" />
+                Rating breakdown
+              </summary>
+              <div className="mt-3">
+                <RatingBars distribution={page.rating_distribution ?? {}} />
+              </div>
+            </details>
           </div>
         </Section>
         <SummarySlot page={page} />
