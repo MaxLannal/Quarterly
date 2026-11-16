@@ -99,7 +99,7 @@ test("planner: generate popup and advisor proposal", async ({ page }) => {
   await dialog.getByRole("button", { name: "Generate" }).click();
   const variant = dialog.getByRole("article", { name: "Variant Fake balanced" });
   await expect(variant).toBeVisible();
-  await variant.getByRole("button", { name: "View diff" }).click();
+  await variant.getByRole("button", { name: "See changes" }).click();
   await expect(variant).toContainText("Add TEST 10000 to Autumn 2099");
   await variant.getByRole("button", { name: "Apply", exact: true }).click();
   await expect(dialog).toBeHidden();

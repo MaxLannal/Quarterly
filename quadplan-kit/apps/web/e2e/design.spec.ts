@@ -54,7 +54,9 @@ test("the DESIGN.md fonts load from the bundle", async ({ page }) => {
   const loaded = await page.evaluate(async () => {
     await document.fonts.ready;
     return {
-      display: document.fonts.check('300 64px "Newsreader"'),
+      // The home page uses Newsreader 400 (the headline, D2) and 500 (the wordmarks, D4); a browser
+      // loads only the faces a page uses.
+      display: document.fonts.check('400 96px "Newsreader"') && document.fonts.check('500 24px "Newsreader"'),
       body: document.fonts.check('400 16px "Inter Variable"'),
       h1: getComputedStyle(document.querySelector("h1") as Element).fontFamily,
     };

@@ -12,7 +12,7 @@ import { opsForTerms, termsTouched } from "@/features/planner/changes";
 import { opText } from "@/features/planner/context";
 import { goalLabel, round1 } from "@/features/planner/metrics";
 import { compareTerms, graduationTerm, planTerms, termLabel } from "@/features/planner/terms";
-import { ReportBadge } from "@/features/planner/VerifierBadge";
+import { ReportBadge, reportText } from "@/features/planner/VerifierBadge";
 import { CitationChip } from "@/features/advisor/AdvisorPanel";
 import { applyStoredChangeSet, currentTerm, GENERATOR_MODE, generateDeterministic } from "./deterministic";
 
@@ -281,7 +281,8 @@ function VariantCard({ v, onApply, onDiscard }: { v: VariantEvent; onApply: (ops
         <h3 className="text-title-sm">{v.label}</h3>
         <ReportBadge report={v.report} />
       </div>
-      <p className="text-caption tabular-nums text-muted">
+      {/* GE-3 (D11): the figures that differ between options read as text, not a muted caption. */}
+      <p className="text-body-sm tabular-nums text-body-strong">
         {avg != null && `Average ${round1(avg)} h/wk`}
         {avg != null && hardest != null && " · "}
         {hardest != null && `Hardest quarter ${round1(hardest)} h/wk`}
@@ -324,15 +325,28 @@ function VariantCard({ v, onApply, onDiscard }: { v: VariantEvent; onApply: (ops
               </ChoiceRow>
             ))}
           </div>
-          <Button className="mt-1" disabled={picked.length === 0} onClick={() => onApply(opsForTerms(v.change_set.ops, picked), picked)}>
+          <Button variant="outline" className="mt-1" disabled={picked.length === 0} onClick={() => onApply(opsForTerms(v.change_set.ops, picked), picked)}>
             Apply {picked.length} quarter{picked.length === 1 ? "" : "s"}
           </Button>
         </fieldset>
       )}
-      <div className="flex flex-wrap gap-2 border-t border-hairline pt-3">
-        <Button onClick={() => onApply(v.change_set.ops, null)}>Apply</Button>
+      {/* GE-1/GE-2 (D11): say what Apply changes, and warn when the option still has errors. Apply is an
+          outline button on every option, so the popup never shows two or three maroon primaries. */}
+      <div className="space-y-1 border-t border-hairline pt-3 text-caption text-muted">
+        <p>
+          Apply changes {touched.length} quarter{touched.length === 1 ? "" : "s"}
+          {touched.length > 0 && touched.length <= 4 ? `: ${touched.map(termLabel).join(", ")}` : ""}.
+        </p>
+        {v.report.status === "errors" && (
+          <p className="font-medium text-error">This option has {reportText(v.report)}. Applying it leaves your plan with errors to fix.</p>
+        )}
+      </div>
+      <div className="flex flex-wrap gap-2">
+        <Button variant="outline" onClick={() => onApply(v.change_set.ops, null)}>
+          Apply
+        </Button>
         <Button variant="outline" aria-expanded={showDiff} onClick={() => setShowDiff(!showDiff)}>
-          {showDiff ? "Hide diff" : "View diff"}
+          {showDiff ? "Hide changes" : "See changes"}
         </Button>
         <Button variant="outline" aria-expanded={picking} onClick={() => setPicking(!picking)}>
           Apply selected quarters

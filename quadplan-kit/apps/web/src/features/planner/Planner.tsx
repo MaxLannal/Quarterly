@@ -415,7 +415,18 @@ export function Planner({ initial, autoGenerate = false }: PlannerProps) {
           }}
         />
       </Dialog>
-      <GenerateDialog open={generateOpen} onClose={() => setGenerateOpen(false)} plan={plan} planId={savedPlanId} onApply={tryOps} />
+      <GenerateDialog
+        open={generateOpen}
+        onClose={() => setGenerateOpen(false)}
+        plan={plan}
+        planId={savedPlanId}
+        onApply={(ops) => {
+          // GE-2 (D11): confirm the change in the planner once the popup closes.
+          const ok = tryOps(ops);
+          if (ok) setSaveMsg("Applied the generated plan. The plan check beside your plan's name shows the result.");
+          return ok;
+        }}
+      />
       <AdvisorSheet open={advisorOpen} onClose={() => setAdvisorOpen(false)} plan={plan} planId={savedPlanId} onApply={tryOps} />
     </PlannerContext.Provider>
   );
