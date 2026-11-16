@@ -24,12 +24,6 @@ Write down anything you notice: something broken, something confusing, or someth
 
 ## New
 
-### Course Search and Programs GUI
-- Date: 2026-11-16
-- Where: Course Search
-- Want: Combine Courses and Program in to one menu item the menu bar, and enable a toggle under the Courses/Programs tab to switch between them. For the course search page, do not list the courses below the search field. Center the search field in the center to make it simplistic.
-- Status: New
-
 ### Color strip before the course cade
 - Date: 2026-11-16
 - Where: Planner
@@ -51,6 +45,14 @@ Write down anything you notice: something broken, something confusing, or someth
 ## Later
 
 ## Done
+
+### Course Search and Programs GUI
+- Date: 2026-11-16
+- Where: Course Search
+- Want: Combine Courses and Program in to one menu item the menu bar, and enable a toggle under the Courses/Programs tab to switch between them. For the course search page, do not list the courses below the search field. Center the search field in the center to make it simplistic.
+- Status: New
+- Resolved in 0abe529 (test fix 2eda4c9): the top menu has one "Catalog" item for courses and programs, with a Courses / Programs switch at the top of both pages; course search is a single centered field (department, level, quarter and the rest under "More filters") and lists nothing until you search. Proof: e2e `courses.spec.ts` "course search lists nothing until a search", `feedback-1116.spec.ts` "catalog"; screenshots `fb1116-course-search-empty.png`, `-results.png`, `fb1116-programs-toggle.png` (make e2e passed).
+
 
 ### Select Course to map when Start Planning
 - Date 2026-11-16
