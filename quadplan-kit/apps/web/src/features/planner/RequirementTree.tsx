@@ -9,7 +9,7 @@ import { CheckIcon, ChevronIcon, GripIcon } from "@/components/ui/icons";
 import { Badge, ErrorText, NotAvailable, Spinner } from "@/components/ui/misc";
 import { cn } from "@/lib/utils";
 import { describe, progressByNode, ruleTree, type RuleEntry } from "@/features/programs/rules";
-import { REQUIREMENT_COLORS, usePlanner } from "./context";
+import { STRIP_CLASSES, stripKind, usePlanner, type StripKind } from "./context";
 import { termLabel } from "./terms";
 
 /** Subtle progress: "3 of 5", with a check once the node is met (FEEDBACK F4: no alarm). */
@@ -136,7 +136,7 @@ function initiallyOpen(entry: RuleEntry, out = new Set<string>()): Set<string> {
   return out;
 }
 
-function ProgramTree({ program, index, progress }: { program: ProgramDetail; index: number; progress: Map<string, NodeProgress> }) {
+function ProgramTree({ program, kind, progress }: { program: ProgramDetail; kind: StripKind; progress: Map<string, NodeProgress> }) {
   const tree = ruleTree(program.id, program.rules);
   const [open, setOpen] = useState<Set<string>>(() => initiallyOpen(tree));
   const toggle = (path: string) =>
@@ -149,7 +149,7 @@ function ProgramTree({ program, index, progress }: { program: ProgramDetail; ind
   // The root is the program itself: its children are the tree's first level.
   const top = tree.children.length > 0 ? tree.children : [tree];
   return (
-    <section aria-label={program.name} className={cn("border-l-[3px] pl-3", REQUIREMENT_COLORS[index % REQUIREMENT_COLORS.length])}>
+    <section aria-label={program.name} className={cn("border-l-[3px] pl-3", STRIP_CLASSES[kind])} data-kind={kind}>
       <h3 className="flex flex-wrap items-center gap-x-2 gap-y-1 text-title-sm">
         <span className="min-w-0 flex-1">{program.name}</span>
         {program.status !== "published" && <Badge tone="warning">In review</Badge>}
@@ -173,14 +173,16 @@ interface RequirementTreeProps {
 /** Program requirements as a vertical tree: program, its nodes, then courses (FEEDBACK F4). */
 export function RequirementTree({ details, progress, onAddProgram }: RequirementTreeProps) {
   const byNode = progressByNode(progress);
+  const ids = details.map((d) => d.id);
+  const types = new Map(details.flatMap((d) => (d.data ? [[d.id, d.data.type] as const] : [])));
   return (
     <div className="flex flex-col gap-6">
       {details.length === 0 && <EmptyState>Add a program to see its requirements.</EmptyState>}
-      {details.map((d, i) =>
+      {details.map((d) =>
         d.isLoading ? (
           <Spinner key={d.id} label={`Loading ${d.id}`} />
         ) : d.data ? (
-          <ProgramTree key={d.id} program={d.data} index={i} progress={byNode} />
+          <ProgramTree key={d.id} program={d.data} kind={stripKind(d.id, ids, types)} progress={byNode} />
         ) : (
           <ErrorText key={d.id}>{isNotAvailable(d.error) ? `Program ${d.id} is not available yet.` : `Could not load program ${d.id}.`}</ErrorText>
         ),

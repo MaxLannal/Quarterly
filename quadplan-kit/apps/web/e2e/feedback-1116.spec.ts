@@ -128,3 +128,15 @@ test("catalog: one menu item, a switch between courses and programs, a centered 
   await expect(page.getByRole("heading", { level: 1, name: "Program explorer" })).toBeVisible();
   await shot(page, "programs-toggle");
 });
+
+test("colour strips say what a course counts toward: the major is maroon, in the card and the tree", async ({ page }) => {
+  await page.goto("/plan");
+  await addProgram(page, "Fake Program");
+  await addCourseViaTree(page, /^Fake introductory sequence/, "TEST 10000", "Autumn 2099");
+  await expect(page.getByTestId("plan-drawer").getByRole("region", { name: "Fake Program" })).toHaveAttribute("data-kind", "major");
+  await closePanel(page);
+  const c = card(page, "TEST 10000");
+  await expect(c).toHaveAttribute("data-kind", "major");
+  await expect(c).toHaveClass(/border-l-primary/);
+  await shot(page, "colour-strips");
+});

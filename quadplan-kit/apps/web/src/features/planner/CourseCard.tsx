@@ -7,7 +7,7 @@ import { ErrorIcon, GripIcon, LockIcon, MoreIcon, WarningIcon } from "@/componen
 import { Badge, Dots } from "@/components/ui/misc";
 import { inlineLinkClass } from "@/components/layout/page";
 import { cn } from "@/lib/utils";
-import { issuesForItem, REQUIREMENT_COLORS, usePlanner } from "./context";
+import { issuesForItem, STRIP_CLASSES, usePlanner } from "./context";
 import { attribute, isEstimate, itemUnits, round1 } from "./metrics";
 import { summarizeIssue } from "./issueText";
 import { itemLabel, removeItemOps, setCompletedOps, toggleLockOps } from "./planModel";
@@ -51,6 +51,7 @@ export function CourseCard({ item }: { item: PlanItem }) {
       data-testid="course-card"
       data-course={item.course ?? undefined}
       data-term={item.term}
+      data-kind={isSlot ? undefined : (tag?.kind ?? "none")}
       data-highlighted={item.id && highlight.items.has(item.id) ? "true" : undefined}
       onContextMenu={(e) => {
         e.preventDefault();
@@ -59,7 +60,7 @@ export function CourseCard({ item }: { item: PlanItem }) {
       className={cn(
         // The card settles into place when it mounts: on load, and after a drop into a new quarter.
         "relative flex animate-settle flex-col rounded-lg border border-l-[3px] border-hairline bg-surface-card text-caption text-ink transition-[box-shadow,opacity] hover:shadow-hover",
-        isSlot ? "border-dashed border-hairline-strong border-l-hairline-strong bg-canvas-soft" : tag ? REQUIREMENT_COLORS[tag.color % REQUIREMENT_COLORS.length] : "border-l-hairline-strong",
+        isSlot ? "border-dashed border-hairline-strong border-l-hairline-strong bg-canvas-soft" : STRIP_CLASSES[tag?.kind ?? "none"],
         completed && "bg-canvas-soft",
         item.id && highlight.items.has(item.id) && "ring-2 ring-primary ring-offset-2 ring-offset-canvas-soft",
         // While dragging, the drag overlay follows the pointer; the card stays as a faint placeholder.

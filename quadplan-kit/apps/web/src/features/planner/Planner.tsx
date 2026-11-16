@@ -16,7 +16,7 @@ import { useEffect, useMemo, useReducer, useState } from "react";
 import { Link } from "react-router-dom";
 import { api } from "@/api/client";
 import { useCourseMap, usePlanPrograms, usePrograms } from "@/api/hooks";
-import type { ChangeOp, Issue, PlanItem } from "@/api/types";
+import type { ChangeOp, Issue, PlanItem, ProgramSummary } from "@/api/types";
 import { Button } from "@/components/ui/button";
 import { Dialog } from "@/components/ui/dialog";
 import { CloseIcon, SparkIcon } from "@/components/ui/icons";
@@ -27,7 +27,7 @@ import { ProgramPickerBody, StatusBadge } from "@/features/programs/ProgramPicke
 import { useMediaQuery } from "@/lib/motion";
 import { useSession } from "@/lib/session";
 import { applyOps, ChangeOpError } from "./changes";
-import { highlightFor, PlannerContext, type PlannerContextValue, type RequirementTag } from "./context";
+import { highlightFor, PlannerContext, stripKind, type PlannerContextValue, type RequirementTag } from "./context";
 import { GoalsTab } from "./GoalsTab";
 import { IssuesTab } from "./IssuesTab";
 import { storedRemoteId, upsertPlan, type LocalPlan } from "./localPlans";
@@ -57,7 +57,12 @@ export function dropResult(data: DragData | undefined, toTerm: string | undefine
 }
 
 /** Requirement tag per course: the deepest progress node that counts it. */
-function requirementTags(progress: { node_id: string; program_id: string; label?: string | null; courses?: string[] }[], programIds: string[], names: Map<string, string>): Map<string, RequirementTag> {
+function requirementTags(
+  progress: { node_id: string; program_id: string; label?: string | null; courses?: string[] }[],
+  programIds: string[],
+  names: Map<string, string>,
+  types: Map<string, ProgramSummary["type"]>,
+): Map<string, RequirementTag> {
   const out = new Map<string, RequirementTag & { depth: number }>();
   for (const p of progress) {
     const depth = p.node_id.split("/").length;
@@ -68,7 +73,7 @@ function requirementTags(progress: { node_id: string; program_id: string; label?
       out.set(code, {
         programId: p.program_id,
         label: `${names.get(p.program_id) ?? p.program_id} · ${leaf}`,
-        color: Math.max(0, programIds.indexOf(p.program_id)),
+        kind: stripKind(p.program_id, programIds, types),
         depth,
       });
     }
@@ -114,7 +119,9 @@ export function Planner({ initial, autoGenerate = false }: PlannerProps) {
   const programQueries = usePlanPrograms(programIds, plan.catalog_year);
   const names = new Map(allPrograms.map((p) => [p.id, p.name]));
   programQueries.forEach((q) => q.data && names.set(q.data.id, q.data.name));
-  const tags = requirementTags(report?.progress ?? [], programIds, names);
+  const types = new Map(allPrograms.map((p) => [p.id, p.type]));
+  programQueries.forEach((q) => q.data && types.set(q.data.id, q.data.type));
+  const tags = requirementTags(report?.progress ?? [], programIds, names, types);
   const issues = report?.issues ?? [];
   const errorCount = issues.filter((i) => i.level === "error").length;
   const highlight = useMemo(() => highlightFor(selectedIssue, items), [selectedIssue, items]);
