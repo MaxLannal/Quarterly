@@ -28,13 +28,12 @@ export default function InstructorsPage() {
   return (
     <PageContainer as="section" width="reading">
       <PageHeader title="Forum" description="Reviews and discussion for each course, one page for each instructor who teaches it." />
-      <p className="mb-6 flex flex-wrap items-center gap-x-2 text-body-sm text-body">
-        Know the course?
+      <div className="mb-6">
+        <p className="text-body-sm text-body">Know the course? Its page lists the instructors and links to their reviews.</p>
         <Link to="/courses" className={standaloneLinkClass}>
-          Find it in course search
+          Find a course
         </Link>
-        <span>: its page lists the instructors and links to their reviews.</span>
-      </p>
+      </div>
       {!session && <p className="mb-6 text-caption text-muted">Log in to read and write reviews.</p>}
       <form role="search" aria-label="Search instructors" onSubmit={submit} className="mb-8 flex flex-wrap items-end gap-3">
         <div className="flex min-w-0 flex-1 flex-col gap-1.5">

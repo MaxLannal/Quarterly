@@ -261,7 +261,7 @@ export default function AccountPage() {
               <Avatar name={session.account.username} />
               <p>
                 Logged in as <span className="font-medium">{session.account.username}</span>{" "}
-                <span className="text-muted">(account created {session.account.created_day})</span>
+                <span className="text-muted">(account created {dayInWords(session.account.created_day)})</span>
               </p>
             </div>
             <Button type="button" variant="outline" disabled={busy} onClick={() => void logOut()}>
@@ -280,4 +280,11 @@ export default function AccountPage() {
       ) : null}
     </PageContainer>
   );
+}
+
+/** "2026-11-16" as "Nov 16, 2026" (D11 polish); day-level dates only. */
+function dayInWords(day: string): string {
+  const [y, m, d] = day.split("-").map(Number);
+  if (!y || !m || !d) return day;
+  return new Date(Date.UTC(y, m - 1, d)).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric", timeZone: "UTC" });
 }
