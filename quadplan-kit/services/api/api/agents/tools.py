@@ -80,6 +80,14 @@ def _obj(properties: dict[str, Any]) -> dict[str, Any]:
 
 
 _NULLABLE_STR = {"type": ["string", "null"]}
+
+
+def _nullable_enum(*values: str) -> dict[str, Any]:
+    """One of `values`, or null. Written as `anyOf`: the API rejects an `enum` next to a list
+    of types (live test, prompt 13: "Enum value 'AU' does not match declared type")."""
+    return {"anyOf": [{"type": "string", "enum": list(values)}, {"type": "null"}]}
+
+
 _CODE = {"type": "string", "description": 'A course code such as "MATH 20700".'}
 
 
@@ -444,7 +452,7 @@ TOOLS: dict[str, Any] = {
                 "query": {**_NULLABLE_STR, "description": "Words in the code or title"},
                 "subject": {**_NULLABLE_STR, "description": "e.g. CMSC"},
                 "level": {"type": ["integer", "null"], "description": "10000, 20000, ..."},
-                "quarter": {"type": ["string", "null"], "enum": ["AU", "WI", "SP", "SU", None]},
+                "quarter": _nullable_enum("AU", "WI", "SP", "SU"),
                 "core_tag": {**_NULLABLE_STR, "description": "A Core area, e.g. huma"},
                 "max_workload_hours": {"type": ["number", "null"]},
             }
@@ -482,7 +490,7 @@ TOOLS: dict[str, Any] = {
         _obj(
             {
                 "code": _CODE,
-                "kind": {"type": ["string", "null"], "enum": ["review", "discussion", None]},
+                "kind": _nullable_enum("review", "discussion"),
                 "limit": {"type": ["integer", "null"]},
             }
         ),

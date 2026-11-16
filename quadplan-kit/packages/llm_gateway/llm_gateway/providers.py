@@ -77,7 +77,11 @@ class AnthropicBackend(Backend):
         except anthropic.RateLimitError as exc:
             raise ProviderError("rate limited") from exc
         except anthropic.APIStatusError as exc:
-            raise ProviderError(f"status {exc.status_code}", fatal=exc.status_code < 500) from exc
+            # The API's own explanation (never the key) makes a rejected request diagnosable.
+            detail = str(getattr(exc, "message", "") or "")[:300]
+            raise ProviderError(
+                f"status {exc.status_code}: {detail}", fatal=exc.status_code < 500
+            ) from exc
         except anthropic.APIConnectionError as exc:  # includes timeouts
             raise ProviderError("connection") from exc
         return _anthropic_turn(response)
