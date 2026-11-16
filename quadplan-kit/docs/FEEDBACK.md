@@ -24,46 +24,52 @@ Write down anything you notice: something broken, something confusing, or someth
 
 ## New
 
+## In progress
+
+## Later
+
+## Done
+
 ### Check Summer Catalog
 - Date: 2026-11-16
 - Where: Plan, catalog
 - Issue: There are summer session classes that are clearly not documented. Refer to https://summer.uchicago.edu/undergraduates/undergraduate-course-finder/ and document these classes
 - Status: new
+- Resolved in 3254069 (offerings label 8385842): the 152 Summer Session courses open to College students are now in `data/seed/2026-27/summer_courses.yaml`, each citing its page on summer.uchicago.edu; the 108 that are in our course list are offered in Summer in the planner. The other 44 are not in the 2026-27 course list and the site states no units, so they are documented but not yet plannable (OPEN_QUESTIONS DF-S1, suggested default: add as 100-unit courses). Proof: `services/api/tests/test_seed_summer.py`.
 
 ### Allow Summer Sequences
 - Date: 2026-11-16
 - Where: Plan
 - Issue: Summer classes can be taken in sequence during summer quarter, since the summer quarter are broken in to sessions. If the student are doing a sequence in the summer quarter and all of those course appears to be in the same quarter, allow it. But if they are skipping classes, produce a warning. For example, having HUMA 11500 and 11600 both in summer quarter is acceptable, but having HUMA 11500 and 11700 without 11600 is not. 
 - Status: new
+- Resolved in f546d06: in a Summer quarter a prerequisite in the same Summer quarter counts (HUMA 11500 and 11600 together is fine), a skipped course (11500 and 11700 without 11600) is still flagged, and other quarters are unchanged; the same rule is in the verifier, the certificate checker and the plan generator. Proof: `packages/planner_core/tests/test_summer_sequences.py`.
 
 ### Viewing and Editing Test, Placement and Transfer Credits
 - Date: 2026-11-16
 - Where: Plan
 - Issue: Currently there is no way to edit the imported grades and transfer credits, or at least its not intuitive enough for the users to find it. Please have an interface that allows the users to check their imported test credit and transfer credit.
 - Status: new
+- Resolved in 8385842: a "Credits" button in the planner toolbar (with a count) opens a panel listing every AP, placement and transfer credit, with Edit, Remove and Add (the same catalog check as onboarding); onboarding uses the same editor. Proof: e2e `feedback-1116.spec.ts` "credits: ...", screenshot `docs/screenshots/fb1116-credits.png`.
 
 ### Concatnating Error Messages
 - Date: 2026-11-16
 - Where: Plan
 - Issue: Currently the error message displayed is too verbose everywhere. User is very difficult to extract information form that chunk of test. Please, for every possible error method, you need to find a way to concatnate it and present it in a much simpler way. For instance, I am getting the error message "Prerequisite of MATH 20250 in 2026-AU is not met: MATH 16300 is not in the plan; MATH 16310 is not in the plan; MATH 15910 is not in the plan; MATH 15900 is not in the plan; MATH 19900 is not in the plan. Requirement: MATH 16300 or MATH 16310 or MATH 15910 or MATH 15900 or MATH 19900.", you can perhaps abbreviate to "Prerequisite not met. View prerequisite (with hyperlink)" in planner dashboard, and "Prerequisite of MATH 20250 not met. View prerequisite (with hyperlink)". A general rule of thumb moving foward is that we want to present to user the most essential information.
 - Status: new
+- Resolved in 49cb235: every issue now shows one short line: on a course card "Prerequisite not met. View prerequisite" (the link opens the course page at its prerequisites), in the plan check "Prerequisite of MATH 20250 not met." with the full message under "Details"; other checks show their first clause with readable quarter names. Proof: `issueText.test.ts`, e2e `planner.spec.ts` and `feedback-1116.spec.ts` "short issues: ...", screenshot `fb1116-planner-compact.png`.
 
 ### A more compact interface
 - Date: 2026-11-16
 - Where: Everywhere
 - Issue: Keep the current interface but make the UI a bit more compact, so a laptop screen can display more info. This can be done by various ways (decreasing margins, round less on corners). Please still consult DESIGN.md for aesthetics.
 - Status: new
+- Resolved in 8385842: smaller corner radii (cards 8px, panels 10px; buttons keep the pill, DESIGN.md updated) and tighter spacing on every page and in the planner grid, with 44px touch targets kept. Proof: screenshots `docs/screenshots/fb1116-*.png`.
 
 ### minor issues
 - "Three-year plan" or "Four-year plan" on planner -> change to "My Plan", and then add a light colored pencil icon beside it to allow user to change the name of the plan. Then, delete the plan name field on the top.
 - Change "AI advisor" to "Ask Quarterly". Delete the grey "Generative AI" icon in the chatting interface.
 - In course pages, fold the prerequisite graph as a small icon on the right of prerequisite "view prerequisite graph" and expand a window to diplay the graph. Move "instructors" and "student ratings" as a compacted overview below the title and above prerequisite.
-
-## In progress
-
-## Later
-
-## Done
+- Resolved in 49cb235: the planner heading is the plan's name ("My Plan" by default) with a light pencil to rename it, and the plan-name field at the top is gone; "AI advisor" is now "Ask Quarterly" without the grey "Generative AI" badge (the sheet still says answers are written by an AI); on course pages the prerequisite graph opens in a window from "View prerequisite graph", and instructors and student ratings are a compact overview under the title. Proof: e2e `feedback-1116.spec.ts`, `courses.spec.ts`, `forum.spec.ts`; screenshots `fb1116-ask-quarterly.png`, `fb1116-course-overview.png`, `fb1116-prereq-graph.png`.
 
 ### Generate Plan Faliure
 - Date: 2026-11-14

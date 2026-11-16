@@ -584,3 +584,12 @@ Earlier runs on the busy laptop varied (P12-1), so run it again on the real serv
    ```
    Targets: verify 50/s with p95 < 500 ms; forum reads 100/s.
 9. Keep `SCHEDULE_SCRAPER_ENABLED=false` and `CATALOG_INGEST_ENABLED=false` until you decide otherwise.
+
+## FEEDBACK of 2026-11-16 (step 1 of the live-test goal)
+- **Summer catalog (3254069):** `python -m api.seed.summer` reads the Summer Session course finder; 152 offerings in `data/seed/2026-27/summer_courses.yaml`; catalog courses the Summer Session offers are offered in Summer; 44 summer-only courses documented but not plannable (DF-S1).
+- **Summer sequences (f546d06):** a prerequisite in the same Summer quarter counts (verifier, checker, generator).
+- **Short issue messages (49cb235):** one short line per issue with a "View prerequisite" link; the full text under "Details".
+- **Minor issues (49cb235):** "My Plan" heading with a pencil to rename; "Ask Quarterly" without the badge; course page overview and prerequisite graph window.
+- **Credits panel and compact layout (8385842):** edit test, placement and transfer credits from the planner; smaller radii and tighter spacing (DESIGN.md updated).
+- Proof: `e2e/feedback-1116.spec.ts`, `docs/screenshots/fb1116-*.png`, unit tests named in FEEDBACK.md.
+
