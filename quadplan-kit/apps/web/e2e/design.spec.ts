@@ -195,6 +195,23 @@ for (const size of [
   });
 }
 
+test("on a touch screen, footer links and the catalog switch keep 44px targets (D3, D5)", async ({ browser }) => {
+  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true });
+  const page = await context.newPage();
+  await page.goto("/courses");
+  await expect(page.getByRole("heading", { level: 1, name: "Course search" })).toBeVisible();
+  expect(await page.evaluate(() => matchMedia("(pointer: coarse)").matches)).toBe(true);
+  for (const link of await page.getByRole("contentinfo").getByRole("link").all()) {
+    expect((await link.boundingBox())!.height, (await link.textContent()) ?? "footer link").toBeGreaterThanOrEqual(44);
+  }
+  // The switch is drawn 32px tall; its ::after strip makes the target 44px.
+  for (const link of await page.getByRole("navigation", { name: "Courses or programs" }).getByRole("link").all()) {
+    const target = await link.evaluate((el) => parseFloat(getComputedStyle(el, "::after").height));
+    expect(target, (await link.textContent()) ?? "switch link").toBeGreaterThanOrEqual(44);
+  }
+  await context.close();
+});
+
 test("every page says Quarterly is not affiliated with the University, and shows no University marks", async ({ page }) => {
   // Prompt 12 / goal: a footer notice on every page; no University logos, shields or wordmarks.
   for (const path of MAIN_PAGES) {
