@@ -84,3 +84,13 @@ def test_a1_output_limits_leave_room_for_both_answers() -> None:
     assert set(seen) == {"submit_preferences", "submit_rationale"}  # both were cut off live
     for tool, used in seen.items():
         assert limits[tool] >= 2.5 * used, (tool, limits[tool], used)
+
+
+def test_the_test_run_cannot_reach_a_real_model() -> None:
+    """`.env` now turns the app's AI on (LLM_LIVE=true, real keys); tests must not inherit it."""
+    from api.config import Settings
+
+    settings = Settings()  # reads .env, but the root conftest's environment wins
+    assert settings.llm_live is False
+    assert settings.anthropic_api_key.get_secret_value() == ""
+    assert settings.openrouter_api_key.get_secret_value() == ""
