@@ -1,4 +1,4 @@
-import { useDeferredValue, useId, useState } from "react";
+import { useDeferredValue, useEffect, useId, useRef, useState } from "react";
 import { useCourseSearch } from "@/api/hooks";
 import { Button } from "@/components/ui/button";
 import { controlClass, controlCompactClass } from "@/components/ui/input";
@@ -30,6 +30,19 @@ export function CoursePicker({
   compact = false,
 }: CoursePickerProps) {
   const listId = useId();
+  const input = useRef<HTMLInputElement>(null);
+  // True while a mouse or touch press is down anywhere on the page (see onBlur).
+  const pressing = useRef(false);
+  useEffect(() => {
+    const down = () => void (pressing.current = true);
+    const up = () => window.setTimeout(() => void (pressing.current = false), 0);
+    document.addEventListener("pointerdown", down, true);
+    document.addEventListener("pointerup", up, true);
+    return () => {
+      document.removeEventListener("pointerdown", down, true);
+      document.removeEventListener("pointerup", up, true);
+    };
+  }, []);
   const [text, setText] = useState("");
   const [title, setTitle] = useState<string | undefined>(undefined);
   const [active, setActive] = useState(0);
@@ -86,6 +99,7 @@ export function CoursePicker({
   return (
     <div className="relative">
       <input
+        ref={input}
         id={id}
         role="combobox"
         aria-expanded={expanded}
@@ -105,9 +119,19 @@ export function CoursePicker({
         onChange={(e) => type(e.target.value)}
         onFocus={() => setOpen(true)}
         // Options keep focus on this field when clicked (mousedown is prevented), so a blur
-        // means focus really left: close now. (A delayed close could fire after the list had
-        // been reopened by typing, and hide it again.)
-        onBlur={() => setOpen(false)}
+        // means focus really left. (The close below checks focus first, so it never hides a
+        // list that was reopened in the meantime.)
+        // The list sits in the page flow (D11 CR-4), so closing it moves what is below. After a press
+        // elsewhere, close once that click has landed, so the button being clicked does not jump away;
+        // after a keyboard move, close now. Stay open if focus came back to this field.
+        onBlur={() => {
+          if (!pressing.current) return setOpen(false);
+          const close = () => {
+            if (document.activeElement !== input.current) setOpen(false);
+          };
+          document.addEventListener("click", close, { once: true });
+          window.setTimeout(close, 500);
+        }}
         onKeyDown={(e) => {
           if (!expanded) return;
           if (e.key === "ArrowDown") {

@@ -57,14 +57,17 @@ export function CourseOverview({ course }: { course: CourseDetail }) {
             {course.instructors.length === 0 ? (
               <span className="text-muted">No instructors recorded yet.</span>
             ) : (
+              <>
+              {/* CP-3 (D11): the instructor links lead to the forum; say so. */}
+              <p className="text-caption text-muted">Choose an instructor to read their reviews and discussion.</p>
               <ul className="flex flex-wrap gap-x-5" aria-label="Instructors">
                 {course.instructors.map((i) => {
                   const page = pages.get(i.instructor.slug);
                   const reviews = page?.ratings?.n_reviews ?? 0;
                   const when = i.first_term && i.last_term ? `${termLabel(i.first_term)}–${termLabel(i.last_term)}` : plural(i.n_terms, "term");
                   return (
-                    <li key={i.instructor.slug} className="flex min-h-11 items-baseline gap-1.5 py-2">
-                      <Link to={pagePath(course.code, i.instructor.slug)} className={cn(inlineLinkClass, "text-body-strong")}>
+                    <li key={i.instructor.slug} className="flex min-h-11 items-center gap-1.5">
+                      <Link to={pagePath(course.code, i.instructor.slug)} className={cn(inlineLinkClass, "inline-flex min-h-11 items-center text-body-strong")}>
                         {i.instructor.display_name}
                       </Link>
                       <span className="text-caption text-muted tabular-nums">
@@ -74,6 +77,7 @@ export function CourseOverview({ course }: { course: CourseDetail }) {
                   );
                 })}
               </ul>
+              </>
             )}
           </dd>
         </div>

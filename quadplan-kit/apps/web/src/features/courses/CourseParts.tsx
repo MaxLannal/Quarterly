@@ -107,7 +107,7 @@ export function OfferingsTable({ course }: { course: CourseDetail }) {
                 <tr key={o.quarter} className="border-b border-hairline">
                   <th scope="row" className="py-2 pr-3 font-normal text-ink">{quarterName(o.quarter)}</th>
                   <td className="py-2 pr-3">
-                    {confidence(o.p_offered)} ({Math.round(o.p_offered * 100)}%)
+                    {o.p_offered === 0 ? "Not expected" : `${confidence(o.p_offered)} (${Math.round(o.p_offered * 100)}%)`}
                   </td>
                   <td className="py-2 pr-3">
                     {OFFERING_BASIS[o.method] ?? o.method}
@@ -167,9 +167,9 @@ const ATTR_LABELS: Record<AttributeValue["key"], string> = {
 };
 
 function attrValue(a: AttributeValue): string {
-  if (a.key === "workload_hours") return `${round1(a.value)} h/week`;
+  if (a.key === "workload_hours") return `${round1(a.value)} h/wk`;
   if (a.key === "recommend_rate") return `${Math.round(a.value * 100)}%`;
-  return `${round1(a.value)} of 5`;
+  return `${round1(a.value)} / 5`;
 }
 
 /** Workload, difficulty, intensity, pace; each with n, confidence and source. */
@@ -180,17 +180,23 @@ export function AttributeCard({ course }: { course: CourseDetail }) {
       <h2 id="attr-heading" className="font-display text-display-sm">
         Course attributes
       </h2>
+      {/* CP-1/CP-2 (D11): say what these numbers are, next to the overview's student ratings. */}
+      <p className="mt-1 text-caption text-muted">
+        What the planner uses for this course, from all instructors. An estimate is not based on student ratings yet; the
+        overview above shows what students rated.
+      </p>
       {attrs.length === 0 ? (
         <p className="mt-4 text-body-sm text-muted">No attributes yet.</p>
       ) : (
-        <dl className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <dl className="mt-3 grid grid-cols-1 gap-x-6 sm:grid-cols-2">
           {attrs.map((a) => (
-            <div key={a.key} className="rounded-lg bg-canvas-soft p-4">
+            // CP-5 (D11): hairline rows, not cards inside a card.
+            <div key={a.key} className="border-t border-hairline py-3">
               <dt className="text-caption text-muted">{ATTR_LABELS[a.key]}</dt>
               <dd className="mt-0.5 text-title-sm tabular-nums">{attrValue(a)}</dd>
               <dd className="mt-2 text-caption text-muted">
                 {isEstimate(a) ? (
-                  <Badge tone="warning" casing="normal">Estimate</Badge>
+                  <Badge tone="neutral" casing="normal">Estimate</Badge>
                 ) : (
                   <Badge tone="info" casing="normal">From {a.n} forum ratings</Badge>
                 )}
