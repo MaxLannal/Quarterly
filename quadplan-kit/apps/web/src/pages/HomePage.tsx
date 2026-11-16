@@ -28,7 +28,7 @@ export default function HomePage() {
       />
       <div className="mx-auto grid w-full max-w-content items-center gap-10 px-4 py-16 sm:px-6 sm:py-24 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:px-8 lg:py-section">
         <div className="flex min-w-0 flex-col items-start gap-8">
-          <h1 className="font-display text-display-md text-ink sm:text-display-xl lg:text-display-mega">
+          <h1 className="font-display text-[64px] font-normal leading-none tracking-[-1.92px] text-ink text-balance sm:text-display-hero">
             Quarterly
           </h1>
           <form

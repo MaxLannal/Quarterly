@@ -85,6 +85,11 @@
   --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
 
   /* Type scale: `text-<token>` sets size, line height, tracking and weight together */
+  /* The home page's wordmark headline (D2): larger and one step heavier than display-mega. */
+  --text-display-hero: 96px;
+  --text-display-hero--line-height: 1;
+  --text-display-hero--letter-spacing: -2.88px;
+  --text-display-hero--font-weight: 400;
   --text-display-mega: 64px;
   --text-display-mega--line-height: 1.05;
   --text-display-mega--letter-spacing: -1.92px;
