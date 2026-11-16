@@ -39,6 +39,7 @@ import { RequirementTree } from "./RequirementTree";
 import { TermPickerDialog } from "./TermPickerDialog";
 import { graduationTerm, planTerms, termLabel } from "./terms";
 import { useVerify } from "./useVerify";
+import { PlanVerdict } from "./VerifierBadge";
 
 type DragData = { kind: "item"; itemId: string } | { kind: "course"; code: string };
 
@@ -356,6 +357,7 @@ export function Planner({ initial, autoGenerate = false }: PlannerProps) {
             <section id="plan-grid" aria-label="Plan grid" className="min-w-0 flex-1">
               <PlanGrid
                 name={state.name}
+                verdict={<PlanVerdict verify={verify} onOpen={() => setDrawer({ open: true, tab: "issues" })} />}
                 onRename={(name) => dispatch({ type: "rename", name })}
                 showSummer={showSummer}
                 onToggleSummer={() => setShowSummer(!showSummer)}

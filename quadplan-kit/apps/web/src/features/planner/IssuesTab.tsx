@@ -66,8 +66,8 @@ function IssuesList({ verify, selected, onSelect }: IssuesTabProps) {
               <li
                 key={`${issue.code}-${i}`}
                 className={cn(
-                  "animate-rise rounded-lg border border-l-[3px] border-hairline bg-surface-card text-body-sm text-ink",
-                  issue.level === "error" ? "border-l-error" : issue.level === "warning" ? "border-l-warning-icon" : "border-l-info",
+                  // PL-5 (D11): no coloured strip; the icon and level label carry the severity.
+                  "animate-rise rounded-lg border border-hairline bg-surface-card text-body-sm text-ink",
                   isSel && "border-primary bg-primary-wash",
                 )}
                 style={{ animationDelay: `${Math.min(i, 8) * 30}ms` }}

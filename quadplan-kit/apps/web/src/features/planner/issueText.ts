@@ -75,6 +75,13 @@ export function summarizeIssue(issue: Issue): IssueSummary {
     return { card: "Time conflict.", list: `${a} and ${b} meet at the same time.` };
   }
 
+  // A requirement that is not met: "<requirement>: needs <what>"; keep both halves (PL-2, D11).
+  const needs = /^(.+?): needs (.+?)(?:\s*\(|;|\.\s|\.?$)/.exec(message);
+  if (needs) {
+    const text = readableTerms(`${needs[1] ?? ""}: needs ${(needs[2] ?? "").trim()}`);
+    return { card: sentence(text), list: sentence(text) };
+  }
+
   // Everything else: the first clause, with term ids made readable.
   const head = readableTerms(firstClause(message));
   const cardText = course ? head.replace(new RegExp(`^${course}\\s*`), "").replace(TERM, "") : head;

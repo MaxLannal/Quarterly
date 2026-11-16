@@ -124,12 +124,14 @@ export function CoursePicker({
           }
         }}
       />
+      {/* In the page flow, not floating: it pushes the form's buttons down instead of covering them,
+          and a drawer's scroll area cannot clip it (D11 CR-4). */}
       {expanded && (
         <ul
           id={listId}
           role="listbox"
           aria-label="Matching courses"
-          className="absolute z-30 mt-1 max-h-72 w-full overflow-auto rounded-md border border-hairline bg-surface-card py-1 shadow-overlay"
+          className="mt-1 max-h-60 w-full overflow-auto rounded-md border border-hairline bg-surface-card py-1"
         >
           {options.length === 0 ? (
             <li className="px-3 py-2 text-body-sm text-muted">

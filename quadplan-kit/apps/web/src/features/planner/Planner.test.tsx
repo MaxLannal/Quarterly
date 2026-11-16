@@ -59,6 +59,8 @@ describe("Planner with mocks", () => {
     // Errors stay subtle: a small count on "Check plan", the list inside the panel.
     expect(await screen.findByRole("button", { name: "Check plan (1 error)" })).toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: "Check plan (1 error)" }));
-    expect(await screen.findByText("1 error")).toBeInTheDocument();
+    expect(await within(screen.getByTestId("plan-drawer")).findByText("1 error")).toBeInTheDocument();
+    // PL-1 (D11): the verdict also sits beside the plan's name, and opens the plan check.
+    expect(screen.getByTestId("plan-verdict")).toHaveTextContent("1 error");
   });
 });

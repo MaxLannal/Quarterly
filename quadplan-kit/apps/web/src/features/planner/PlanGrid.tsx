@@ -1,5 +1,5 @@
 import { useDroppable } from "@dnd-kit/core";
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 import type { Goal, PlanItem } from "@/api/types";
 import { Button } from "@/components/ui/button";
 import { PencilIcon } from "@/components/ui/icons";
@@ -64,8 +64,9 @@ function QuarterCell({ term, items }: { term: string; items: PlanItem[] }) {
         {termLabel(term)}
       </h4>
       {items.length === 0 ? (
+        // PL-3 (D11): say what is there, not only how to drag.
         <p className="flex flex-1 items-center justify-center rounded-lg border border-dashed border-hairline-strong p-3 text-center text-caption text-muted">
-          Drop a course here
+          No courses yet
         </p>
       ) : (
         <ul className="flex flex-1 flex-col gap-2">
@@ -77,10 +78,13 @@ function QuarterCell({ term, items }: { term: string; items: PlanItem[] }) {
           ))}
         </ul>
       )}
+      {/* PL-3 (D11): an empty quarter shows no row of zeros; the footer stays for its goals. */}
+      {(items.length > 0 || goals.length > 0) && (
       <footer
         className="mt-3 border-t border-hairline pt-2 text-caption tabular-nums text-muted"
         data-testid={`footer-${term}`}
       >
+        {items.length > 0 && (
         <div className="flex flex-wrap gap-x-3">
           <span>
             {m.units}
@@ -94,6 +98,7 @@ function QuarterCell({ term, items }: { term: string; items: PlanItem[] }) {
             Difficulty {round1(m.difficulty)}
           </span>
         </div>
+        )}
         {goals.length > 0 && (
           <ul
             className="mt-2 flex flex-wrap gap-1"
@@ -109,6 +114,7 @@ function QuarterCell({ term, items }: { term: string; items: PlanItem[] }) {
           </ul>
         )}
       </footer>
+      )}
     </section>
   );
 }
@@ -271,6 +277,8 @@ function graduationChoices(entryTerm: string, years: number): string[] {
 
 interface PlanGridProps {
   name: string;
+  /** The plan check's verdict, shown beside the name (PL-1, D11). */
+  verdict?: ReactNode;
   onRename: (name: string) => void;
   showSummer: boolean;
   onToggleSummer: () => void;
@@ -285,6 +293,7 @@ interface PlanGridProps {
  */
 export function PlanGrid({
   name,
+  verdict,
   onRename,
   showSummer,
   onToggleSummer,
@@ -319,7 +328,10 @@ export function PlanGrid({
   return (
     <div className="flex flex-col gap-5">
       <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-3">
-        <PlanName name={name} onRename={onRename} />
+        <div className="flex min-w-0 flex-wrap items-center gap-x-3">
+          <PlanName name={name} onRename={onRename} />
+          {verdict}
+        </div>
         <div className="flex flex-wrap items-center gap-2">
           <GraduationField
             value={last}

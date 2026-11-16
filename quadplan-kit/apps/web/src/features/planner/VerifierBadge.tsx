@@ -46,3 +46,24 @@ export function VerifierBadge({ verify }: { verify: VerifyState }) {
     </span>
   );
 }
+
+/**
+ * The plan check's verdict beside the plan's name (PL-1, D11): "Valid", "2 warnings" or "3 errors",
+ * as a button that opens the plan check. "Valid" only when the server says so.
+ */
+export function PlanVerdict({ verify, onOpen }: { verify: VerifyState; onOpen: () => void }) {
+  const checking = verify.status === "verifying" || (verify.status === "idle" && !verify.report);
+  const text = verify.report ? reportText(verify.report) : verify.status === "unavailable" ? "Not checked yet" : checking ? "Checking…" : "Check failed";
+  return (
+    <button
+      type="button"
+      onClick={onOpen}
+      data-testid="plan-verdict"
+      aria-label={`Plan check: ${text}. Open the plan check`}
+      className="inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-pill px-1 transition-opacity hover:opacity-80"
+    >
+      {verify.report ? <ReportBadge report={verify.report} /> : <Badge tone="neutral" casing="normal">{text}</Badge>}
+      {checking && verify.report && <span className="text-caption text-muted">checking…</span>}
+    </button>
+  );
+}
