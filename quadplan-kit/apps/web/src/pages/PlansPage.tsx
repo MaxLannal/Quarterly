@@ -76,11 +76,12 @@ export default function PlansPage() {
                     id={`name-${p.localId}`}
                     defaultValue={p.name}
                     onBlur={(e) => e.target.value.trim() && e.target.value !== p.name && rename(p, e.target.value.trim())}
-                    className="text-body-strong"
+                    // D11 MP-1: the name reads as the plan's title; its field shows on hover and focus.
+                    className="-ml-3 border-transparent bg-transparent text-title-sm hover:border-hairline-strong focus:bg-surface-card"
                   />
                   <span className="text-caption text-muted">
                     {p.isPrimary ? "Primary · " : ""}
-                    {(p.state.items ?? []).length} items · updated {p.updatedDay}
+                    {(p.state.items ?? []).length} course{(p.state.items ?? []).length === 1 ? "" : "s"} · updated {dayInWords(p.updatedDay)}
                   </span>
                 </div>
                 <div className="flex flex-wrap gap-x-2">
@@ -151,4 +152,11 @@ export default function PlansPage() {
       </div>
     </PageContainer>
   );
+}
+
+/** "2026-11-16" as "Nov 16, 2026" (D11 MP-1); day-level dates only. */
+function dayInWords(day: string): string {
+  const [y, m, d] = day.split("-").map(Number);
+  if (!y || !m || !d) return day;
+  return new Date(Date.UTC(y, m - 1, d)).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric", timeZone: "UTC" });
 }
