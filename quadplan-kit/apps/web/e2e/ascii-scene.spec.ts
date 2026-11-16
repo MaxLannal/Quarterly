@@ -41,7 +41,7 @@ async function setState(page: Page, time: string, weather: string) {
   await page.waitForTimeout(400);
 }
 
-test("the homepage shows the chapel scene, with its weather from our own server and a credit", async ({
+test("the homepage shows the chapel scene, with its weather from our own server; Open-Meteo is credited on /about", async ({
   page,
 }) => {
   const weather: string[] = [];
@@ -53,11 +53,12 @@ test("the homepage shows the chapel scene, with its weather from our own server 
   await expect(
     page.getByRole("img", { name: /Rockefeller Chapel/ }),
   ).toBeVisible();
+  await expect.poll(() => weather).toContain("/api/weather");
+  expect(weather.every((p) => p === "/api/weather")).toBe(true);
+  await page.goto("/about");
   await expect(
     page.getByRole("link", { name: "Open-Meteo.com" }),
   ).toHaveAttribute("href", "https://open-meteo.com/");
-  await expect.poll(() => weather).toContain("/api/weather");
-  expect(weather.every((p) => p === "/api/weather")).toBe(true);
 });
 
 test("a click sends a shooting star down the night sky; by day it sends up birds", async ({

@@ -8,8 +8,9 @@ import { controlClass } from "@/components/ui/input";
 import { ChapelScene } from "@/features/home/ChapelScene";
 import { cn } from "@/lib/utils";
 
-/** hero-band: canvas, display-mega headline, body-md subhead, search and one primary pill, one orb;
- * beside it (below it on narrow screens) the live ASCII chapel scene (FEEDBACK "ASCII Scene"). */
+/** hero-band: canvas, the wordmark as headline, search and one primary pill, one orb; beside it
+ * (below it on narrow screens) the live ASCII chapel scene (FEEDBACK "ASCII Scene"). No subhead or
+ * footnote: Richard cut them (FEEDBACK "Minor design changes" D1, 2026-11-16). */
 export default function HomePage() {
   const navigate = useNavigate();
   const [q, setQ] = useState("");
@@ -27,15 +28,9 @@ export default function HomePage() {
       />
       <div className="mx-auto grid w-full max-w-content items-center gap-10 px-4 py-16 sm:px-6 sm:py-24 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:px-8 lg:py-section">
         <div className="flex min-w-0 flex-col items-start gap-8">
-          <div className="flex max-w-3xl flex-col gap-5">
-            <h1 className="font-display text-display-md text-ink sm:text-display-xl lg:text-display-mega">
-              Quarterly
-            </h1>
-            <p className="max-w-reading text-title-sm font-normal text-body">
-              Plan your courses with a verifier that checks every requirement,
-              and read what students say about each class.
-            </p>
-          </div>
+          <h1 className="font-display text-display-md text-ink sm:text-display-xl lg:text-display-mega">
+            Quarterly
+          </h1>
           <form
             role="search"
             onSubmit={submit}
@@ -74,10 +69,6 @@ export default function HomePage() {
               Open my plan
             </Link>
           </div>
-          <p className="text-caption text-muted">
-            No account needed to plan: your plan stays on this device until you
-            log in.
-          </p>
         </div>
         <ChapelScene />
       </div>

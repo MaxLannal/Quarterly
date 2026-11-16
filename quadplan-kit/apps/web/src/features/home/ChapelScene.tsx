@@ -31,7 +31,7 @@ const sceneStyle = {
 /**
  * The homepage's animated ASCII drawing of Rockefeller Chapel (FEEDBACK "ASCII Scene",
  * 2026-11-16). Sky, light and weather follow the real time and weather in Hyde Park (weather from
- * our own `/api/weather`, so no request leaves the site). Sweeping the pointer across the trees
+ * our own `/api/weather`, so no request leaves the site; Open-Meteo is credited on /about). Sweeping the pointer across the trees
  * makes them sway; a click sends a shooting star down the night sky, or birds up by day. Still
  * under reduced motion. The drawing is decorative; the page works without it.
  */
@@ -49,7 +49,7 @@ export function ChapelScene() {
     return () => window.clearTimeout(id);
   }, []);
   return (
-    <figure className="home-scene m-0 w-full">
+    <div className="home-scene w-full">
       <ascii-scene
         src="/ascii-scene/scene.rockefeller.json"
         weather-src="/api/weather"
@@ -58,16 +58,6 @@ export function ChapelScene() {
         label="Animated drawing of Rockefeller Chapel in characters, following the time of day and the weather in Hyde Park"
         style={sceneStyle}
       />
-      <figcaption className="mt-2 text-center text-caption text-muted">
-        Rockefeller Chapel, live from Hyde Park · Weather by{" "}
-        <a
-          href="https://open-meteo.com/"
-          className="underline decoration-hairline-strong underline-offset-2 hover:text-ink"
-          rel="noopener noreferrer"
-        >
-          Open-Meteo.com
-        </a>
-      </figcaption>
-    </figure>
+    </div>
   );
 }
