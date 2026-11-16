@@ -25,12 +25,19 @@ type Entry =
 // target (same technique as Button size "sm"). Tabular Inter: course codes never use the serif.
 const chipClass =
   "inline-flex min-h-11 items-center rounded-pill border-[6px] border-transparent bg-surface-strong bg-clip-padding px-3 text-caption tabular-nums text-ink";
-const chipLinkClass = `${chipClass} underline underline-offset-2 hover:bg-hairline focus-visible:outline-offset-[-4px]`;
+// D11 AD-3: a linked chip is told apart by its maroon text, not an underline inside a pill.
+const chipLinkClass = `${chipClass} text-primary hover:bg-hairline hover:text-primary-hover focus-visible:outline-offset-[-4px]`;
+
+/** "workload 13 h/wk · n=34" reads as "Workload 13 h/wk (34 ratings)" (D11 AD-3). */
+export function chipLabel(label: string): string {
+  const t = label.replace(/\s*·\s*n=(\d+)/, (_, n: string) => ` (${n} rating${n === "1" ? "" : "s"})`);
+  return t.charAt(0).toUpperCase() + t.slice(1);
+}
 
 function ChipLink({ to, label }: { to: string; label: string }) {
   return (
     <Link to={to} className={chipLinkClass}>
-      {label}
+      {chipLabel(label)}
     </Link>
   );
 }
@@ -53,7 +60,7 @@ function ForumCitationChip({ c }: { c: Citation }) {
     const { course_code: code, instructor } = page.data;
     return <ChipLink to={isPost ? threadPath(code, instructor.slug, Number(c.id)) : pagePath(code, instructor.slug)} label={c.label} />;
   }
-  return <span className={chipClass}>{c.label}</span>;
+  return <span className={chipClass}>{chipLabel(c.label)}</span>;
 }
 
 export function CitationChip({ c }: { c: Citation }) {
@@ -65,7 +72,7 @@ export function CitationChip({ c }: { c: Citation }) {
     if (code) return <ChipLink to={`/courses/${encodeURIComponent(code)}`} label={c.label} />;
   }
   if (c.kind === "post" || c.kind === "summary") return <ForumCitationChip c={c} />;
-  return <span className={chipClass}>{c.label}</span>;
+  return <span className={chipClass}>{chipLabel(c.label)}</span>;
 }
 
 /**

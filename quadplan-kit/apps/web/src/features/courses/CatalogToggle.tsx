@@ -53,8 +53,9 @@ export function CatalogToggle({ current }: { current: Kind }) {
         <span
           aria-hidden="true"
           className={cn(
-            "absolute bottom-0.5 left-0 top-0.5 rounded-pill bg-surface-card shadow-[0_1px_2px_rgba(0,0,0,0.08)] ring-1 ring-hairline",
-            at.animate && "transition-[transform,width] duration-200 ease-out motion-reduce:transition-none",
+            // D11 A-2/A-3: a token shadow; the segments share one width, so only the transform moves.
+            "absolute bottom-0.5 left-0 top-0.5 rounded-pill bg-surface-card shadow-hover ring-1 ring-hairline",
+            at.animate && "transition-transform duration-200 ease-out motion-reduce:transition-none",
           )}
           style={{ transform: `translateX(${at.x}px)`, width: at.w }}
         />
@@ -67,7 +68,7 @@ export function CatalogToggle({ current }: { current: Kind }) {
           aria-current={current === key ? "page" : undefined}
           className={cn(
             // 32px drawn, 44px to tap: the ::after strip extends the target above and below.
-            "relative z-10 inline-flex h-8 items-center rounded-pill px-4 text-caption font-medium transition-colors duration-150",
+            "relative z-10 inline-flex h-8 w-24 items-center justify-center rounded-pill text-caption font-medium transition-colors duration-150",
             "after:absolute after:inset-x-0 after:-inset-y-1.5 after:content-['']",
             current === key ? "text-primary" : "text-muted hover:text-ink",
           )}
