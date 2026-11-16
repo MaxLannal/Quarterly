@@ -26,7 +26,7 @@ export function groupPrograms(programs: ProgramSummary[]): [ProgramSummary["type
 }
 
 export function StatusBadge({ status }: { status: string }) {
-  return status === "published" ? null : <Badge tone="warning">{status === "review" ? "In review" : status}</Badge>;
+  return status === "published" ? null : <Badge tone="warning" casing="normal">{status === "review" ? "Not yet hand-checked" : status}</Badge>;
 }
 
 /** Checkbox list of programs grouped by type; "in review" ones are labelled. */

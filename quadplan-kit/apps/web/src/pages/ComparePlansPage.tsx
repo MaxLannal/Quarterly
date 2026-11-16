@@ -95,11 +95,17 @@ export default function ComparePlansPage() {
               </Select>
             </Field>
           </Card>
-          {d && (
+          {d && d.onlyA.length + d.onlyB.length + d.moved.length === 0 && (
+            // D11 MP-3: one sentence when there is nothing to compare.
+            <p role="status" className="text-body-sm text-body">
+              Same courses in the same quarters.
+            </p>
+          )}
+          {d && d.onlyA.length + d.onlyB.length + d.moved.length > 0 && (
             <div className="grid gap-4 sm:grid-cols-3">
               {column(
                 "only-a",
-                "Only in A",
+                `Only in ${pa?.name ?? "the first plan"}`,
                 d.onlyA.map((x, i) => (
                   <li key={i} className="py-2">
                     {x.course} · {termLabel(x.term)}
@@ -108,7 +114,7 @@ export default function ComparePlansPage() {
               )}
               {column(
                 "only-b",
-                "Only in B",
+                `Only in ${pb?.name ?? "the second plan"}`,
                 d.onlyB.map((x, i) => (
                   <li key={i} className="py-2">
                     {x.course} · {termLabel(x.term)}

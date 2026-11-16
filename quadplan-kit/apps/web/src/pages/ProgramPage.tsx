@@ -51,8 +51,8 @@ function RuleList({ entry }: { entry: RuleEntry }) {
     <li className="py-2">
       <span className="text-body-strong text-ink">{entry.label}</span>
       {entry.node?.needs_review || entry.part?.needs_review ? (
-        <Badge tone="warning" className="ml-2 align-middle">
-          Needs review
+        <Badge tone="warning" casing="normal" className="ml-2 align-middle">
+          Not yet hand-checked
         </Badge>
       ) : null}
       <span className="block text-body-sm text-body">

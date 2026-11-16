@@ -51,7 +51,7 @@ describe("Planner with mocks", () => {
     await user.click(await screen.findByRole("button", { name: "+ Program" }));
     const dialog = screen.getByRole("dialog", { name: "Programs" });
     await user.click(await within(dialog).findByRole("checkbox", { name: /Fake Minor/ }));
-    expect(within(dialog).getByText("In review")).toBeInTheDocument();
+    expect(within(dialog).getByText("Not yet hand-checked")).toBeInTheDocument();
     await user.click(within(dialog).getByRole("button", { name: "Save programs" }));
     await user.click(screen.getByRole("button", { name: "Requirements" }));
     const node = await screen.findByRole("button", { name: /^Fake theory part/ });

@@ -152,7 +152,7 @@ function ProgramTree({ program, kind, progress }: { program: ProgramDetail; kind
     <section aria-label={program.name} className={cn("border-l-[3px] pl-3", STRIP_CLASSES[kind])} data-kind={kind}>
       <h3 className="flex flex-wrap items-center gap-x-2 gap-y-1 text-title-sm">
         <span className="min-w-0 flex-1">{program.name}</span>
-        {program.status !== "published" && <Badge tone="warning">In review</Badge>}
+        {program.status !== "published" && <Badge tone="warning" casing="normal">Not yet hand-checked</Badge>}
         <Progress p={progress.get(tree.path)} />
       </h3>
       <ul className="mt-1 flex flex-col">

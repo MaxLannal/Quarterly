@@ -4,7 +4,7 @@ test("program explorer and program page", async ({ page }) => {
   await page.goto("/programs");
   await expect(page.getByRole("heading", { level: 1, name: "Program explorer" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Majors" })).toBeVisible();
-  await expect(page.getByRole("listitem").filter({ hasText: "Fake Minor" })).toContainText("In review");
+  await expect(page.getByRole("listitem").filter({ hasText: "Fake Minor" })).toContainText("Not yet hand-checked");
   await page.getByRole("link", { name: "Fake Program" }).click();
 
   await expect(page.getByRole("heading", { level: 1, name: "Fake Program" })).toBeVisible();

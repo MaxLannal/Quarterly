@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 
 /** Pages with their own course search box; the bar hides its copy there (D11 H-1, CS-1). */
 const PAGE_HAS_SEARCH = new Set(["/", "/courses"]);
+const AUTH_PAGES = new Set(["/login", "/signup"]);
 
 /** A forum page or thread: /courses/:code/i/:instructor[/t/:id]. */
 const FORUM_PATH = /^\/courses\/[^/]+\/i\//;
@@ -143,7 +144,8 @@ export function TopNav() {
       <Avatar name={session.account.username} />
       {session.account.username}
     </Link>
-  ) : (
+  ) : AUTH_PAGES.has(location.pathname) ? null : (
+    // D11 AU-3: no "Log in" pill on the login and sign-up pages themselves.
     <Button asChild variant="outline">
       <Link to={authLinks.login}>Log in</Link>
     </Button>

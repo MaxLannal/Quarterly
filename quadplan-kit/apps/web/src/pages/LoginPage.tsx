@@ -147,7 +147,8 @@ export default function LoginPage() {
             <Button type="submit" disabled={busy}>
               {busy ? "Logging in…" : "Log in"}
             </Button>
-            <Button type="button" variant="ghost" onClick={() => show({ name: "reset-email" })}>
+            {/* D11 AU-2: the same link style as "Create an account". */}
+            <Button type="button" variant="link" className={linkClass} onClick={() => show({ name: "reset-email" })}>
               Forgot password?
             </Button>
           </>
