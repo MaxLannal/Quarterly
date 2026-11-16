@@ -128,12 +128,15 @@ test.describe("F4: planner layout", () => {
     const handle = drawer.getByRole("button", { name: "Drag TEST 10000 onto the plan" });
     const target = page.getByTestId("quarter-2100-WI");
     const from = await handle.boundingBox();
-    const to = await target.boundingBox();
-    if (!from || !to) throw new Error("no boxes");
+    if (!from) throw new Error("no handle box");
     await page.mouse.move(from.x + from.width / 2, from.y + from.height / 2);
     await page.mouse.down();
     await page.mouse.move(from.x - 20, from.y + 10, { steps: 5 });
+    // Measure the quarter once the drag has started (the layout can settle as it begins).
+    const to = await target.boundingBox();
+    if (!to) throw new Error("no target box");
     await page.mouse.move(to.x + to.width / 2, to.y + to.height / 2, { steps: 12 });
+    await page.mouse.move(to.x + to.width / 2 + 2, to.y + to.height / 2 + 2, { steps: 2 });
     await page.mouse.up();
     await expect(target).toContainText("TEST 10000");
     await expect(drawer).toBeVisible();
