@@ -94,7 +94,7 @@ test("credits: see, edit, remove and add test, placement and transfer credits in
   await add.getByRole("button", { name: "Add credit" }).click();
   const list = drawer.getByRole("list", { name: "Your credits" });
   await expect(list).toContainText(
-    "AP: AP Calculus BC, score 5 → TEST 10000 · 100 units",
+    "AP exam: AP Calculus BC, score 5 → TEST 10000 · 100 units",
   );
   // The toolbar button shows how many credits there are.
   await expect(page.getByRole("button", { name: "Credits 1" })).toBeVisible();
@@ -103,7 +103,7 @@ test("credits: see, edit, remove and add test, placement and transfer credits in
   await add.getByLabel("Description").fill("Community college statistics");
   await add.getByRole("button", { name: "Add credit" }).click();
   await expect(list).toContainText(
-    "transfer: Community college statistics (needs mapping) · 100 units",
+    "Transfer credit: Community college statistics (not matched to a course yet) · 100 units",
   );
 
   await list
@@ -115,13 +115,18 @@ test("credits: see, edit, remove and add test, placement and transfer credits in
   await edit.getByLabel("Units").fill("50");
   await edit.getByRole("button", { name: "Save credit" }).click();
   await expect(list).toContainText(
-    "transfer: Community college statistics (needs mapping) · 50 units",
+    "Transfer credit: Community college statistics (not matched to a course yet) · 50 units",
   );
   await shot(page, "credits");
 
   await list
     .getByRole("button", { name: "Remove credit Community college statistics" })
     .click();
+  // Removing confirms in place (D11 CR-2): "Keep" leaves it, "Yes, remove" removes it.
+  await list.getByRole("button", { name: "Keep" }).click();
+  await expect(list).toContainText("Community college statistics");
+  await list.getByRole("button", { name: "Remove credit Community college statistics" }).click();
+  await list.getByRole("button", { name: "Yes, remove" }).click();
   await expect(list).not.toContainText("Community college statistics");
   // Kept with the plan.
   await page.reload();

@@ -41,7 +41,7 @@ test("journey C: Paris block in Autumn Y2 and at most 3 courses per quarter in Y
   await page.getByLabel("Counts as course (if known)").fill("MATH 15100");
   await page.getByRole("option", { name: /^MATH 15100/ }).click();
   await page.getByRole("button", { name: "Add credit" }).click();
-  await expect(page.getByText("placement: Calculus placement → MATH 15100")).toBeVisible();
+  await expect(page.getByText("Placement: Calculus placement → MATH 15100")).toBeVisible();
   await page.getByRole("button", { name: "Next" }).click();
 
   // C1. Pin the Paris civilization program as a block in Autumn of the second year. The

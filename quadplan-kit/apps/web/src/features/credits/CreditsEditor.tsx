@@ -15,7 +15,9 @@ const KINDS: { value: Credit["kind"]; label: string }[] = [
 
 /** One line per credit: "AP: AP Calculus BC → MATH 15100 · 100 units". */
 export function creditText(c: Credit): string {
-  return `${c.kind}: ${c.label}${c.maps_to ? ` → ${c.maps_to}` : " (needs mapping)"} · ${c.units} units`;
+  // D11 CR-1: the kind's own label, and plain words for an unmatched credit.
+  const kind = KINDS.find((k) => k.value === c.kind)?.label ?? c.kind;
+  return `${kind}: ${c.label}${c.maps_to ? ` → ${c.maps_to}` : " (not matched to a course yet)"} · ${c.units} units`;
 }
 
 /** Refuses a course code the catalog does not have: it would make every generated plan fail
@@ -200,6 +202,7 @@ export function CreditsEditor({
   intro,
 }: CreditsEditorProps) {
   const [editing, setEditing] = useState<number | null>(null);
+  const [confirming, setConfirming] = useState<number | null>(null);
   return (
     <div className="space-y-3">
       {intro && <p className="text-body-sm text-body">{intro}</p>}
@@ -228,38 +231,48 @@ export function CreditsEditor({
                 className="flex flex-wrap items-center justify-between gap-x-2 rounded-lg border border-hairline bg-canvas-soft py-1 pl-4 pr-1 text-body-sm text-ink"
               >
                 <span className="min-w-0 py-2">{creditText(c)}</span>
-                <span className="flex">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setEditing(i)}
-                    aria-label={`Edit credit ${c.label}`}
-                  >
-                    Edit
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => {
-                      onChange(credits.filter((_, n) => n !== i));
-                      setEditing(null);
-                    }}
-                    aria-label={`Remove credit ${c.label}`}
-                  >
-                    Remove
-                  </Button>
-                </span>
+                {confirming === i ? (
+                  // D11 CR-2: confirm in place (DESIGN.md destructive pattern); removing can change the plan check.
+                  <span className="flex items-center gap-1" role="group" aria-label={`Remove credit ${c.label}?`}>
+                    <span className="px-2 text-caption text-muted">Remove?</span>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="text-error"
+                      onClick={() => {
+                        onChange(credits.filter((_, n) => n !== i));
+                        setEditing(null);
+                        setConfirming(null);
+                      }}
+                    >
+                      Yes, remove
+                    </Button>
+                    <Button variant="ghost" size="sm" onClick={() => setConfirming(null)}>
+                      Keep
+                    </Button>
+                  </span>
+                ) : (
+                  <span className="flex">
+                    <Button variant="ghost" size="sm" onClick={() => setEditing(i)} aria-label={`Edit credit ${c.label}`}>
+                      Edit
+                    </Button>
+                    <Button variant="ghost" size="sm" className="text-error" onClick={() => setConfirming(i)} aria-label={`Remove credit ${c.label}`}>
+                      Remove
+                    </Button>
+                  </span>
+                )}
               </li>
             ),
           )}
         </ul>
       )}
-      <CreditForm
-        catalogYear={catalogYear}
-        submitLabel="Add credit"
-        ariaLabel="Add a credit"
-        onSubmit={(c) => onChange([...credits, c])}
-      />
+      {/* D11 CR-3: a heading for the add form, hidden while another credit is being edited. */}
+      {editing === null && (
+        <>
+          <h3 className="pt-2 text-body-sm font-medium text-ink">Add a credit</h3>
+          <CreditForm catalogYear={catalogYear} submitLabel="Add credit" ariaLabel="Add a credit" onSubmit={(c) => onChange([...credits, c])} />
+        </>
+      )}
     </div>
   );
 }
