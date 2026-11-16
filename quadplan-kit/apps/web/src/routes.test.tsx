@@ -26,7 +26,8 @@ describe("top nav", () => {
   it.each([
     ["/plans", "Plan"],
     ["/onboarding", "Plan"],
-    ["/courses/TEST%2010000", "Courses"],
+    ["/courses/TEST%2010000", "Catalog"],
+    ["/programs", "Catalog"], // courses and programs share one item (FEEDBACK 2026-11-16)
     ["/courses/TEST%2010000/i/fake-instructor-a", "Forum"],
     ["/guidelines", "Forum"],
   ])("marks the section of %s as current", async (path, label) => {
