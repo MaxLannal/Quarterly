@@ -584,7 +584,7 @@ Prices are list prices per million input / output tokens from the [models overvi
 | E2 program enumerator | `claude-opus-5-5` | $4 / $20 | Cross-checking many pages |
 | E1 prerequisite sentence → DSL | `claude-haiku-5-5` | from $0.10 / $0.50 | High volume, short inputs |
 | E4 back-translation judge, scraper repair | `claude-sonnet-5-5` | $2 / $10 | Mid-difficulty, fast |
-| A1 plan generator | `claude-opus-5-5` | $4 / $20 | Tool use and judgment on electives |
+| A1 plan generator | `claude-sonnet-5-5` (thinking between tools) | $2 / $10 | Tool use and judgment on electives; every plan is still verified and certified, so the cheaper model is enough (Richard, 2026-11-16, after the live test) |
 | A2 advisor chat | `claude-sonnet-5-5` (escalate to Opus 5.5 for whole-plan comparisons) | $2 / $10 | Interactive latency |
 | A3 forum extraction / summaries | Haiku 5.5 / Sonnet 5.5 |  | Nightly batch |
 | A4 moderation | `claude-haiku-5-5` |  | Runs on every AI summary (not on students' posts, P08-1) |

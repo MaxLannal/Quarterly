@@ -1349,13 +1349,21 @@ def phase1(live: Live) -> None:
             }
         }
     )
+    opus_routing = routing.model_copy(
+        update={
+            "tasks": {
+                **routing.tasks,
+                "a1_plan_generator": routing.tasks["a1_plan_generator_opus"],
+            }
+        }
+    )
     sonnet, opus = (
         model_of(sonnet_routing, "a1_plan_generator"),
-        model_of(routing, "a1_plan_generator"),
+        model_of(opus_routing, "a1_plan_generator"),
     )
     runs = [(p, sonnet_routing, sonnet, "sonnet") for p in profiles()]
     runs += [
-        (p, routing, opus, "opus")
+        (p, opus_routing, opus, "opus")
         for p in profiles()
         if p["id"].split("-")[1] in ("p2", "p3", "p5")
     ]

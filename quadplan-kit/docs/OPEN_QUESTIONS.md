@@ -528,3 +528,6 @@ Questions about the schedule pipeline (reading Class Search). The pipeline is bu
   - **(a) Sonnet 5.5 (suggested).** About a third of the cost. The checker guarantees the plan whichever model ranks the electives. Change `a1_plan_generator` in `llm_routing.yaml` to the `a1_plan_generator_sonnet` settings.
   - **(b) Keep Opus 5.5.** First re-run the three Opus profiles with the new output limits (about $0.60), because in this run its elective choices were cut off.
 
+**Richard's answer: Yes, (a), Sonnet is fine**
+
+Done 2026-11-16: `a1_plan_generator` now uses the Sonnet 5.5 settings (`llm_routing.yaml`, SPEC routing table, SPEC-CHANGES).
