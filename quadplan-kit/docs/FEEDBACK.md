@@ -24,12 +24,6 @@ Write down anything you notice: something broken, something confusing, or someth
 
 ## New
 
-### Select Course to map when Start Planning
-- Date 2026-11-16
-- Where: Start planning page
-- Issue: When students are manually entering their test/transfer/placement credits, make the "Counts as course" a selection field. The User may enter course code, course name, but they have to ultimatly select an avaliable class. This resolves any mapping faliure.
-- Status: New
-
 ### Course Search and Programs GUI
 - Date: 2026-11-16
 - Where: Course Search
@@ -57,6 +51,14 @@ Write down anything you notice: something broken, something confusing, or someth
 ## Later
 
 ## Done
+
+### Select Course to map when Start Planning
+- Date 2026-11-16
+- Where: Start planning page
+- Issue: When students are manually entering their test/transfer/placement credits, make the "Counts as course" a selection field. The User may enter course code, course name, but they have to ultimatly select an avaliable class. This resolves any mapping faliure.
+- Status: New
+- Resolved in 4ab3360: "Counts as course" is now a course picker: type a code or a name, then choose from the catalog's matches; text that was not chosen blocks saving, so a credit can never map to a missing course. Used in onboarding and the planner's Credits panel. Proof: e2e `onboarding.spec.ts`, `feedback-1116.spec.ts` "credits", journeys A-C (make e2e passed).
+
 
 ### Check Summer Catalog
 - Date: 2026-11-16
