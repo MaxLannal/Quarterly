@@ -13,6 +13,7 @@ holds no tools.
 
 from __future__ import annotations
 
+import json
 import re
 from dataclasses import dataclass, field
 from typing import Any
@@ -60,6 +61,13 @@ def check_expr(
 ) -> tuple[Expr | None, list[str]]:
     if raw is None:
         return None, ["no expression"]
+    if isinstance(raw, str) and raw.strip().startswith(("{", "[")):
+        # Live finding (prompt 13, phase 4): Haiku 5.5 may send the expression as a
+        # JSON-encoded string; a bare string is otherwise one course code.
+        try:
+            raw = json.loads(raw)
+        except json.JSONDecodeError:
+            return None, ["does not parse: the expression is not valid JSON"]
     try:
         expr = Expr.model_validate(raw)
     except ValidationError as exc:
