@@ -65,6 +65,10 @@ export function CourseCard({ item }: { item: PlanItem }) {
         item.id && highlight.items.has(item.id) && "ring-2 ring-primary ring-offset-2 ring-offset-canvas-soft",
         // While dragging, the drag overlay follows the pointer; the card stays as a faint placeholder.
         isDragging && "opacity-40",
+        // Each card is its own layer (the settle animation keeps its end transform), so a card
+        // further down would paint over this card's open menu: lift the card while it is open
+        // (FEEDBACK "Minor issues", 2026-11-16).
+        menuOpen && "z-30",
       )}
     >
       {/* Header row: drag handle, code and units, actions menu (each control a 44px target).
