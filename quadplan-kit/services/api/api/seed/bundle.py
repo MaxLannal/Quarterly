@@ -9,7 +9,15 @@ from pathlib import Path
 from typing import Any
 
 import yaml
-from api.seed.models import CourseListsFile, CoursesFile, ProgramSeed, SeedCourse, TermsFile
+from api.seed.models import (
+    CourseListsFile,
+    CoursesFile,
+    ProgramSeed,
+    SeedCourse,
+    SummerFile,
+    SummerOffering,
+    TermsFile,
+)
 from planner_core.dsl import expr_courses, iter_nodes, iter_parts
 from planner_core.models import (
     Catalog,
@@ -44,6 +52,7 @@ class SeedBundle:
     course_lists: list[CourseList] = field(default_factory=list)
     programs: list[ProgramSeed] = field(default_factory=list)
     college: CollegePolicy | None = None
+    summer: list[SummerOffering] = field(default_factory=list)
 
 
 def _read(path: Path) -> Any:
@@ -81,6 +90,8 @@ def load_bundle(year_dir: Path) -> SeedBundle:
         bundle.college = _parse(CollegePolicy, path)
     for path in sorted((year_dir / "programs").glob("*.yaml")):
         bundle.programs.append(_parse(ProgramSeed, path))
+    if (path := year_dir / "summer_courses.yaml").exists():
+        bundle.summer = _parse(SummerFile, path).summer_courses
     return bundle
 
 
@@ -194,6 +205,7 @@ def _crosslist_groups(courses: list[SeedCourse]) -> list[list[str]]:
 def build_catalog(bundle: SeedBundle) -> Catalog:
     relations: dict[tuple[str, str, str], CourseRelation] = {}
     offerings: list[OfferingPattern] = []
+    summer = {code for s in bundle.summer for code in (s.code, *s.crosslists)}
     for c in bundle.courses:
         for kind, refs in (
             ("equivalent", c.equivalents),
@@ -206,11 +218,23 @@ def build_catalog(bundle: SeedBundle) -> Catalog:
                     (a, b, kind), CourseRelation(a=a, b=b, kind=kind, source=c.source)
                 )
         if c.terms_offered:
-            quarters = ["AU", "WI", "SP"] + (["SU"] if "SU" in c.terms_offered else [])
+            # A course the Summer Session offers is offered in Summer even where the catalog's
+            # "Terms Offered" line leaves Summer out. A course without that line has no
+            # pattern at all (no warning anywhere), so Summer is not added to it alone.
+            from_summer = "SU" not in c.terms_offered and c.code in summer
+            quarters = ["AU", "WI", "SP"] + (
+                ["SU"] if "SU" in c.terms_offered or from_summer else []
+            )
             for q in quarters:
-                p = P_LISTED if q in c.terms_offered else P_UNLISTED
+                listed = q in c.terms_offered or (q == "SU" and from_summer)
+                method = "summer_session" if q == "SU" and from_summer else "catalog"
                 offerings.append(
-                    OfferingPattern(course=c.code, quarter=q, p_offered=p, method="catalog")
+                    OfferingPattern(
+                        course=c.code,
+                        quarter=q,
+                        p_offered=P_LISTED if listed else P_UNLISTED,
+                        method=method,
+                    )
                 )
     return Catalog(
         catalog_year=bundle.catalog_year,

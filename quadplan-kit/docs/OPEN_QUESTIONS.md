@@ -94,6 +94,8 @@ Status words used below:
 
 ## Deferred until before deployment
 
+- **DF-S1 (summer-only courses; 2026-11-16).** **44 Summer Session courses are not in the planner.** The Summer Session course finder lists 152 courses open to College students (`data/seed/2026-27/summer_courses.yaml`). The 108 that are in our course list are now offered in Summer in the planner. The other 44 are not in our 2026-27 course list (for example PHIL 20100 Introduction to Logic, PHYS 13300 Waves, Optics & Heat, the Summer Intensive language courses, and some graduate courses such as MAPS 36035), and the summer site does not say how many units they carry, so they are documented in that file but cannot be added to a plan yet (strict reading: no invented units).
+  - **Suggested default:** add each as a 100-unit course citing its summer page (most College courses are 100 units), after checking whether the full College Catalog lists it; leave graduate (30000-level) and no-credit (NOCR) courses out.
 **Later (by Richard)**
 - OpenRouter model names (3).
 - Sending email to real users; development uses the console backend (P04-6).

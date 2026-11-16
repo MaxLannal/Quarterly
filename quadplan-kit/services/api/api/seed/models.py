@@ -3,6 +3,7 @@
 Layout of one catalog year (all files optional; see docs/CONTRACTS.md):
     terms.yaml            {terms: [Term]}
     courses.yaml          {courses: [SeedCourse]}   and/or courses/*.yaml with the same shape
+    summer_courses.yaml   SummerFile (Summer Session offerings; adds Summer to `terms_offered`)
     course_lists.yaml     {course_lists: [CourseList]}
     college_policy.yaml   CollegePolicy
     programs/*.yaml       one ProgramSeed per file
@@ -60,6 +61,34 @@ class SeedCourse(Model):
 
 class CoursesFile(Model):
     courses: list[SeedCourse]
+
+
+class SummerOffering(Model):
+    """One Summer Session course open to College students, from the Summer Session course
+    finder (summer.uchicago.edu; Richard, FEEDBACK "Check Summer Catalog", 2026-11-16).
+    `source.quote` is the course code exactly as the course's page shows it."""
+
+    code: CourseCode
+    section: str | None = None
+    title: str
+    #: "Undergraduate", or "Both" (open to College and pre-college students).
+    audience: Literal["Undergraduate", "Both"]
+    session: str | None = None
+    start: dt.date | None = None
+    end: dt.date | None = None
+    modality: str | None = None
+    core: bool = False
+    crosslists: list[CourseCode] = Field(default_factory=list)
+    #: The course is in this catalog year's course list. Courses that are not are documented
+    #: here but not added to the planner: the site states no units (OPEN_QUESTIONS DF-S1).
+    in_catalog: bool
+    source: Source
+
+
+class SummerFile(Model):
+    summer: int
+    fetched: dt.date
+    summer_courses: list[SummerOffering]
 
 
 class TermsFile(Model):

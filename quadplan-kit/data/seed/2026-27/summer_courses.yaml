@@ -1,0 +1,2049 @@
+# Summer Session 2026 courses open to College students, from the course
+# finder at https://summer.uchicago.edu/undergraduates/undergraduate-course-finder/ (fetched 2026-11-16).
+# Written by `python -m api.seed.summer`; source.quote is the course code as the page
+# shows it. Courses with in_catalog: false are not in this catalog year's course list
+# and are not added to the planner (no units are stated; OPEN_QUESTIONS DF-S1).
+summer: 2026
+fetched: '2026-11-16'
+summer_courses:
+- code: ARTH 14402
+  section: '10'
+  title: Introduction to the Arts of the Italian Renaissance
+  audience: Both
+  session: Session 2
+  start: '2026-07-06'
+  end: '2026-07-24'
+  modality: Remote
+  core: true
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/introduction-to-the-arts-of-the-italian-renaissance/
+    quote: ARTH 14402 10
+- code: ARTH 16010
+  section: '10'
+  title: Mesoamerican Architecture
+  audience: Both
+  session: Session 1
+  start: '2026-06-15'
+  end: '2026-07-02'
+  modality: Remote
+  core: true
+  crosslists:
+  - ARCH 16010
+  - LACS 16010
+  in_catalog: false
+  source:
+    url: https://summer.uchicago.edu/courses/mesoamerican-architecture/
+    quote: ARTH 16010 10
+- code: ARTH 16460
+  section: '10'
+  title: Modern Latin American Art
+  audience: Both
+  session: Session 1
+  start: '2026-06-15'
+  end: '2026-07-02'
+  modality: Remote
+  core: true
+  crosslists:
+  - LACS 16460
+  in_catalog: false
+  source:
+    url: https://summer.uchicago.edu/courses/modern-latin-american-art/
+    quote: ARTH 16460 10
+- code: ARTH 17002
+  section: '20'
+  title: Drawing and the Making of Architecture
+  audience: Undergraduate
+  session: September Term
+  start: '2026-08-24'
+  end: '2026-09-11'
+  modality: Residential
+  core: true
+  crosslists:
+  - ARCH 17002
+  in_catalog: false
+  source:
+    url: https://summer.uchicago.edu/courses/drawing-and-the-making-of-architecture/
+    quote: ARTH 17002 20
+- code: ARTV 10100
+  section: '10'
+  title: 'Visual Language: On Images (10)'
+  audience: Both
+  session: Session 1
+  start: '2026-06-15'
+  end: '2026-07-02'
+  modality: Remote
+  core: true
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/visual-language-on-images-10/
+    quote: ARTV 10100 10
+- code: ARTV 10100
+  section: '11'
+  title: 'Visual Language: On Images (11)'
+  audience: Both
+  session: Session 2
+  start: '2026-07-06'
+  end: '2026-07-24'
+  modality: Remote
+  core: true
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/visual-language-on-images-97/
+    quote: ARTV 10100 11
+- code: ARTV 10100
+  section: '12'
+  title: 'Visual Language: On Images (12)'
+  audience: Both
+  session: Session 2
+  start: '2026-07-06'
+  end: '2026-07-24'
+  modality: Remote
+  core: true
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/visual-language-on-images-92/
+    quote: ARTV 10100 12
+- code: ARTV 10100
+  section: '20'
+  title: 'Visual Language: On Images (20)'
+  audience: Undergraduate
+  session: September Term
+  start: '2026-08-24'
+  end: '2026-09-11'
+  modality: Remote
+  core: true
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/visual-language-on-image/
+    quote: ARTV 10100 20
+- code: ARTV 10100
+  section: '21'
+  title: 'Visual Language: On Images (21)'
+  audience: Undergraduate
+  session: September Term
+  start: '2026-08-24'
+  end: '2026-09-11'
+  modality: Residential
+  core: true
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/visual-language-on-images-93/
+    quote: ARTV 10100 21
+- code: ARTV 10100
+  section: '22'
+  title: 'Visual Language: On Images (22)'
+  audience: Undergraduate
+  session: September Term
+  start: '2026-08-24'
+  end: '2026-09-11'
+  modality: Remote
+  core: true
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/visual-language-on-images-sept/
+    quote: ARTV 10100 22
+- code: ARTV 10300
+  section: '20'
+  title: On Time and Space
+  audience: Undergraduate
+  session: September Term
+  start: '2026-08-24'
+  end: '2026-09-11'
+  modality: Remote
+  core: true
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/on-time-and-space/
+    quote: ARTV 10300 20
+- code: ASTR 12610
+  section: '10'
+  title: Black Holes
+  audience: Both
+  session: Session 2
+  start: '2026-07-06'
+  end: '2026-07-24'
+  modality: Remote
+  core: true
+  crosslists:
+  - PHSC 12610
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/black-holes/
+    quote: ASTR 12610 10
+- code: ASTR 12700
+  section: '10'
+  title: Stars
+  audience: Both
+  session: Session 1
+  start: '2026-06-15'
+  end: '2026-07-02'
+  modality: Remote
+  core: true
+  crosslists:
+  - PHSC 12700
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/stars/
+    quote: ASTR 12700 10
+- code: ASTR 12720
+  section: '20'
+  title: Exoplanets
+  audience: Undergraduate
+  session: September Term
+  start: '2026-08-24'
+  end: '2026-09-11'
+  modality: Remote
+  core: true
+  crosslists:
+  - PHSC 12720
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/exoplanets/
+    quote: ASTR 12720 20
+- code: ASTR 20500
+  section: '10'
+  title: Introduction to Python Programming with Applications to Astrophysics
+  audience: Undergraduate
+  session: Session 1
+  start: '2026-06-15'
+  end: '2026-07-02'
+  modality: Remote
+  in_catalog: false
+  source:
+    url: https://summer.uchicago.edu/courses/introduction-to-python-programming-with-applications-to-astrophysics/
+    quote: ASTR 20500 10
+- code: BIOS 10140
+  section: '10'
+  title: Inquiry-based Exploration of Biology
+  audience: Undergraduate
+  session: Session 3
+  start: '2026-07-27'
+  end: '2026-08-14'
+  modality: Residential
+  core: true
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/inquiry-based-exploration-of-biology/
+    quote: BIOS 10140 10
+- code: BIOS 11141
+  section: '20'
+  title: Introduction to Computational Biology
+  audience: Undergraduate
+  session: September Term
+  start: '2026-08-24'
+  end: '2026-09-11'
+  modality: Remote
+  core: true
+  in_catalog: false
+  source:
+    url: https://summer.uchicago.edu/courses/introduction-to-computational-biology/
+    quote: BIOS 11141 20
+- code: BIOS 11142
+  section: '20'
+  title: 'Forensic Biology: “Who done it?” – DNA tells the story'
+  audience: Undergraduate
+  session: September Term
+  start: '2026-08-24'
+  end: '2026-09-11'
+  modality: Residential
+  core: true
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/forensic-biology-who-done-it-dna-tells-the-story/
+    quote: BIOS 11142 20
+- code: BIOS 12114
+  section: '10'
+  title: Nutritional Science
+  audience: Both
+  session: Session 1
+  start: '2026-06-15'
+  end: '2026-07-02'
+  modality: Remote
+  core: true
+  in_catalog: false
+  source:
+    url: https://summer.uchicago.edu/courses/nutritional-science/
+    quote: BIOS 12114 10
+- code: BIOS 13134
+  section: '10'
+  title: 'It''s Not Easy Being Green: An Introduction to Plant Biology'
+  audience: Undergraduate
+  session: Session 1
+  start: '2026-06-15'
+  end: '2026-07-17'
+  modality: Remote
+  core: true
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/its-not-easy-being-green-an-introduction-to-plant-biology/
+    quote: BIOS 13134 10
+- code: BIOS 15127
+  section: '20'
+  title: Plants, Pathogens, and People
+  audience: Undergraduate
+  session: September Term
+  start: '2026-08-24'
+  end: '2026-09-11'
+  modality: Residential
+  core: true
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/plants-pathogens-and-people/
+    quote: BIOS 15127 20
+- code: BIOS 20151
+  section: '10'
+  title: Introduction to Quantitative Modeling in Biology
+  audience: Both
+  session: Session 3
+  start: '2026-07-27'
+  end: '2026-08-14'
+  modality: Remote
+  core: true
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/introduction-to-quantitative-modeling-in-biology/
+    quote: BIOS 20151 10
+- code: BIOS 20200
+  section: '20'
+  title: Introduction to Biochemistry
+  audience: Undergraduate
+  session: September Term
+  start: '2026-08-24'
+  end: '2026-09-11'
+  modality: Residential
+  in_catalog: false
+  source:
+    url: https://summer.uchicago.edu/courses/introduction-to-biochemistry/
+    quote: BIOS 20200 20
+- code: BIOS 27725
+  section: '20'
+  title: Biogeography and Distribution of Species
+  audience: Undergraduate
+  session: September Term
+  start: '2026-08-24'
+  end: '2026-09-11'
+  modality: Residential
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/biogeography-and-distribution-of-species/
+    quote: BIOS 27725 20
+- code: BUSN 20330
+  section: '10'
+  title: Building the New Venture
+  audience: Undergraduate
+  session: Session 1
+  start: '2026-06-15'
+  end: '2026-08-14'
+  modality: Remote
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/building-the-new-venture/
+    quote: BUSN 20330 10
+- code: BUSN 20600
+  section: '10'
+  title: Marketing Management
+  audience: Undergraduate
+  session: Session 1
+  start: '2026-06-15'
+  end: '2026-08-14'
+  modality: Remote
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/marketing-management/
+    quote: BUSN 20600 10
+- code: CHEM 10000
+  section: '20'
+  title: Organic Chemistry Workshop
+  audience: Undergraduate
+  session: September Term
+  start: '2026-08-24'
+  end: '2026-09-11'
+  modality: Remote
+  in_catalog: false
+  source:
+    url: https://summer.uchicago.edu/courses/organic-chemistry-workshop/
+    quote: CHEM 10000 20
+- code: CHEM 11100
+  section: '10'
+  title: Comprehensive General Chemistry 1
+  audience: Undergraduate
+  session: Session 1
+  start: '2026-06-15'
+  end: '2026-07-02'
+  modality: Hybrid
+  core: true
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/comprehensive-general-chemistry-1/
+    quote: CHEM 11100 10
+- code: CHEM 11200
+  section: '10'
+  title: Comprehensive General Chemistry 2
+  audience: Undergraduate
+  session: Session 2
+  start: '2026-07-06'
+  end: '2026-07-24'
+  modality: Hybrid
+  core: true
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/comprehensive-general-chemistry-2/
+    quote: CHEM 11200 10
+- code: CHEM 11300
+  section: '10'
+  title: Comprehensive General Chemistry 3
+  audience: Undergraduate
+  session: Session 3
+  start: '2026-07-27'
+  end: '2026-08-14'
+  modality: Hybrid
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/comprehensive-general-chemistry-3/
+    quote: CHEM 11300 10
+- code: CHEM 25000
+  section: '20'
+  title: 'The Drug Discovery Process: from Lead to the Clinic'
+  audience: Undergraduate
+  session: September Term
+  start: '2026-08-24'
+  end: '2026-09-11'
+  modality: Remote
+  in_catalog: false
+  source:
+    url: https://summer.uchicago.edu/courses/the-drug-discovery-process-from-lead-to-the-clinic/
+    quote: CHEM 25000 20
+- code: CMSC 14100
+  section: '10'
+  title: Introduction to Computer Science I
+  audience: Undergraduate
+  session: Session 1
+  start: '2026-06-15'
+  end: '2026-08-07'
+  modality: Residential
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/introduction-to-computer-science-i/
+    quote: CMSC 14100 10
+- code: CMSC 14300
+  section: '10'
+  title: Systems Programming I
+  audience: Undergraduate
+  session: Session 1
+  start: '2026-06-15'
+  end: '2026-08-07'
+  modality: Residential
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/systems-programming-i/
+    quote: CMSC 14300 10
+- code: CMSC 14400
+  section: '10'
+  title: Systems Programming II
+  audience: Undergraduate
+  session: Session 1
+  start: '2026-06-15'
+  end: '2026-08-07'
+  modality: Residential
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/systems-programming-ii/
+    quote: CMSC 14400 10
+- code: CMSC 27100
+  section: '10'
+  title: Discrete Mathematics
+  audience: Undergraduate
+  session: Session 1
+  start: '2026-06-15'
+  end: '2026-08-07'
+  modality: Residential
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/discrete-mathematics/
+    quote: CMSC 27100 10
+- code: CMSC 33260
+  section: '10'
+  title: Internet Censorship and Online Speech
+  audience: Both
+  session: Session 2
+  start: '2026-07-06'
+  end: '2026-07-24'
+  modality: Remote
+  crosslists:
+  - CMSC 23260
+  - MADD 23620
+  - PARR 33260
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/internet-censorship-and-online-speech/
+    quote: CMSC 33260 10
+- code: CRWR 12150
+  section: '20'
+  title: 'Intro to Genres: Writing for TV: The Writers’ Room'
+  audience: Undergraduate
+  session: September Term
+  start: '2026-08-24'
+  end: '2026-09-11'
+  modality: Remote
+  core: true
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/intro-to-genres-writing-for-tv-the-writers-room/
+    quote: CRWR 12150 20
+- code: DATA 11800
+  section: '20'
+  title: Introduction to Data Science I
+  audience: Undergraduate
+  session: September Term
+  start: '2026-08-24'
+  end: '2026-09-11'
+  modality: Remote
+  core: true
+  crosslists:
+  - STAT 11800
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/introduction-to-data-science-i/
+    quote: DATA 11800 20
+- code: DATA 11900
+  section: '20'
+  title: Introduction to Data Science II
+  audience: Undergraduate
+  session: September Term
+  start: '2026-08-24'
+  end: '2026-09-11'
+  modality: Remote
+  crosslists:
+  - STAT 11900
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/introduction-to-data-science-ii/
+    quote: DATA 11900 20
+- code: DATA 12000
+  section: '20'
+  title: Computer Science for Data Science
+  audience: Undergraduate
+  session: September Term
+  start: '2026-08-24'
+  end: '2026-09-11'
+  modality: Remote
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/computer-science-for-data-science/
+    quote: DATA 12000 20
+- code: DIGS 20022
+  section: '10'
+  title: 'The Programming Humanist: Text Analysis in the Age of AI'
+  audience: Both
+  session: Session 1
+  start: '2026-06-15'
+  end: '2026-07-02'
+  modality: Remote
+  in_catalog: false
+  source:
+    url: https://summer.uchicago.edu/courses/the-programming-humanist-text-analysis-in-the-age-of-ai/
+    quote: DIGS 20022 10
+- code: ECON 10000
+  section: '10'
+  title: Principles of Microeconomics
+  audience: Undergraduate
+  session: Session 1
+  start: '2026-06-15'
+  end: '2026-07-17'
+  modality: Residential
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/principles-of-microeconomics/
+    quote: ECON 10000 10
+- code: ECON 10200
+  section: '10'
+  title: Principles of Macroeconomics
+  audience: Undergraduate
+  session: Session 3
+  start: '2026-07-20'
+  end: '2026-08-21'
+  modality: Residential
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/principles-of-macroeconomics/
+    quote: ECON 10200 10
+- code: ECON 10700
+  section: '10'
+  title: Introductory Game Theory (Session 3)
+  audience: Undergraduate
+  session: Session 3
+  start: '2026-07-20'
+  end: '2026-08-21'
+  modality: Residential
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/introductory-game-theory/
+    quote: ECON 10700 10
+- code: ECON 10700
+  section: '20'
+  title: Introductory Game Theory (Sept)
+  audience: Undergraduate
+  session: September Term
+  start: '2026-08-24'
+  end: '2026-09-11'
+  modality: Residential
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/introductory-game-theory-sept/
+    quote: ECON 10700 20
+- code: ECON 11020
+  section: '10'
+  title: Introduction to Econometrics
+  audience: Undergraduate
+  session: Session 1
+  start: '2026-06-15'
+  end: '2026-07-17'
+  modality: Residential
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/introduction-to-econometrics/
+    quote: ECON 11020 10
+- code: ECON 13300
+  section: '20'
+  title: Introduction to the Macroeconomics of Monetary and Fiscal Policy
+  audience: Undergraduate
+  session: September Term
+  start: '2026-08-24'
+  end: '2026-09-11'
+  modality: Residential
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/introduction-to-the-macroeconomics-of-monetary-and-fiscal-policy/
+    quote: ECON 13300 20
+- code: ECON 13310
+  section: '10'
+  title: 'Introduction to Macroeconomic Analysis: A Data Driven Approach'
+  audience: Undergraduate
+  session: Session 3
+  start: '2026-07-20'
+  end: '2026-08-21'
+  modality: Residential
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/introduction-to-macroeconomic-analysis-a-data-driven-approach/
+    quote: ECON 13310 10
+- code: ECON 15030
+  section: '20'
+  title: Basics of Corporate, Banking and Investment Finance
+  audience: Undergraduate
+  session: September Term
+  start: '2026-08-24'
+  end: '2026-09-11'
+  modality: Residential
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/basics-of-corporate-banking-and-investment-finance/
+    quote: ECON 15030 20
+- code: ECON 15500
+  section: '10'
+  title: Introduction to Development Economics
+  audience: Undergraduate
+  session: Session 1
+  start: '2026-06-15'
+  end: '2026-07-17'
+  modality: Residential
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/introduction-to-development-economics/
+    quote: ECON 15500 10
+- code: ECON 17100
+  section: '20'
+  title: Introduction to International Trade
+  audience: Undergraduate
+  session: September Term
+  start: '2026-08-24'
+  end: '2026-09-11'
+  modality: Residential
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/introduction-to-international-trade/
+    quote: ECON 17100 20
+- code: ECON 20000
+  section: '10'
+  title: Elements of Economic Analysis 1
+  audience: Undergraduate
+  session: Session 1
+  start: '2026-06-15'
+  end: '2026-07-17'
+  modality: Residential
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/elements-of-economic-analysis-1/
+    quote: ECON 20000 10
+- code: ECON 20100
+  section: '10'
+  title: Elements of Economic Analysis 2
+  audience: Undergraduate
+  session: Session 1
+  start: '2026-06-15'
+  end: '2026-07-17'
+  modality: Residential
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/elements-of-economic-analysis-2/
+    quote: ECON 20100 10
+- code: ECON 20200
+  section: '10'
+  title: Elements of Economic Analysis 3
+  audience: Undergraduate
+  session: Session 1
+  start: '2026-06-15'
+  end: '2026-07-17'
+  modality: Residential
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/elements-of-economic-analysis-3/
+    quote: ECON 20200 10
+- code: ECON 21020
+  section: '10'
+  title: Econometrics
+  audience: Undergraduate
+  session: Session 1
+  start: '2026-06-15'
+  end: '2026-07-17'
+  modality: Residential
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/econometrics/
+    quote: ECON 21020 10
+- code: ECON 24000
+  section: '10'
+  title: Labor Economics
+  audience: Undergraduate
+  session: Session 3
+  start: '2026-07-20'
+  end: '2026-08-21'
+  modality: Residential
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/labor-economics/
+    quote: ECON 24000 10
+- code: EDSO 33002
+  section: '10'
+  title: Schooling and Identity
+  audience: Undergraduate
+  session: Session 1
+  start: '2026-06-15'
+  end: '2026-07-10'
+  modality: Remote
+  crosslists:
+  - CHDV 23003
+  - EDSO 23002
+  - RDIN 23002
+  - RDIN 33002
+  - SOCI 20530
+  - SOCI 30530
+  in_catalog: false
+  source:
+    url: https://summer.uchicago.edu/courses/schooling-and-identity/
+    quote: EDSO 33002 10
+- code: ENGL 13651
+  section: '10'
+  title: 'A Brief History of Doom: Ragnarok & Other Apocalypses'
+  audience: Both
+  session: Session 1
+  start: '2026-06-15'
+  end: '2026-07-02'
+  modality: Remote
+  in_catalog: false
+  source:
+    url: https://summer.uchicago.edu/courses/a-brief-history-of-doom-ragnarok-and-other-apocalypses/
+    quote: ENGL 13651 10
+- code: FINM 25000
+  section: '10'
+  title: Quantitative Portfolio Management and Algorithmic Trading
+  audience: Undergraduate
+  session: Session 1
+  start: '2026-06-15'
+  end: '2026-08-14'
+  modality: Remote
+  in_catalog: false
+  source:
+    url: https://summer.uchicago.edu/courses/quantitative-portfolio-management-and-algorithmic-trading/
+    quote: FINM 25000 10
+- code: FREN 10123
+  section: '10'
+  title: Summer Intensive Elementary French
+  audience: Undergraduate
+  session: Session 1
+  start: '2026-06-15'
+  end: '2026-08-07'
+  modality: Remote
+  core: true
+  in_catalog: false
+  source:
+    url: https://summer.uchicago.edu/courses/summer-intensive-elementary-french/
+    quote: FREN 10123 10
+- code: GISC 28702
+  section: '10'
+  title: Introduction to GIS and Spatial Analysis
+  audience: Undergraduate
+  session: Session 1
+  start: '2026-06-15'
+  end: '2026-07-17'
+  modality: Residential
+  crosslists:
+  - ARCH 28702
+  - CEGU 28702
+  - GISC 38702
+  - PPHA 38712
+  - SOCI 20283
+  - SOCI 30283
+  in_catalog: false
+  source:
+    url: https://summer.uchicago.edu/courses/introduction-to-gis-and-spatial-analysis/
+    quote: GISC 28702 10
+- code: GNSE 15002
+  section: '10'
+  title: Gender and Sexuality in World Civilizations I
+  audience: Both
+  session: Session 1
+  start: '2026-06-15'
+  end: '2026-07-02'
+  modality: Remote
+  core: true
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/gender-and-sexuality-in-world-civilizations-i/
+    quote: GNSE 15002 10
+- code: GNSE 15003
+  section: '10'
+  title: Gender and Sexuality in World Civilizations II
+  audience: Both
+  session: Session 2
+  start: '2026-07-06'
+  end: '2026-07-23'
+  modality: Remote
+  core: true
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/gender-and-sexuality-in-world-civilizations-ii/
+    quote: GNSE 15003 10
+- code: GNSE 21503
+  section: '10'
+  title: 'Sarah Baartman through Schitt''s Creek: An Introduction to Gender and Popular Culture'
+  audience: Both
+  session: Session 1
+  start: '2026-06-15'
+  end: '2026-07-02'
+  modality: Remote
+  in_catalog: false
+  source:
+    url: https://summer.uchicago.edu/courses/sarah-baartman-through-schitts-creek-an-introduction-to-gender-and-popular/
+    quote: GNSE 21503 10
+- code: GREK 10123
+  section: '10'
+  title: Summer Intensive Introductory Ancient Greek
+  audience: Both
+  session: Session 1
+  start: '2026-06-15'
+  end: '2026-08-07'
+  modality: Remote
+  core: true
+  in_catalog: false
+  source:
+    url: https://summer.uchicago.edu/courses/summer-intensive-introductory-ancient-greek/
+    quote: GREK 10123 10
+- code: GREK 20123
+  section: '10'
+  title: Summer Intensive Intermediate Ancient Greek
+  audience: Both
+  session: Session 1
+  start: '2026-06-15'
+  end: '2026-07-24'
+  modality: Remote
+  in_catalog: false
+  source:
+    url: https://summer.uchicago.edu/courses/summer-intensive-intermediate-ancient-greek/
+    quote: GREK 20123 10
+- code: GRMN 10123
+  section: '10'
+  title: Summer Intensive Introductory German
+  audience: Undergraduate
+  session: Session 1
+  start: '2026-06-15'
+  end: '2026-07-31'
+  modality: Remote
+  in_catalog: false
+  source:
+    url: https://summer.uchicago.edu/courses/summer-intensive-introductory-german/
+    quote: GRMN 10123 10
+- code: GRMN 25823
+  section: '10'
+  title: Fascism
+  audience: Both
+  session: Session 1
+  start: '2026-06-15'
+  end: '2026-07-02'
+  modality: Remote
+  crosslists:
+  - DEMS 25823
+  - GRMN 35823
+  - HIST 22508
+  - HIST 32508
+  - PHIL 25823
+  - PHIL 35823
+  in_catalog: false
+  source:
+    url: https://summer.uchicago.edu/courses/fascism/
+    quote: GRMN 25823 10
+- code: HIST 10101
+  section: '10'
+  title: African Civilization 1
+  audience: Undergraduate
+  session: Session 1
+  start: '2026-06-15'
+  end: '2026-07-02'
+  modality: Remote
+  core: true
+  crosslists:
+  - ANTH 20701
+  - MDVL 10101
+  - SOSC 20101
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/african-civilization-1/
+    quote: HIST 10101 10
+- code: HIST 10102
+  section: '10'
+  title: African Civilization 2
+  audience: Undergraduate
+  session: Session 2
+  start: '2026-07-06'
+  end: '2026-07-24'
+  modality: Remote
+  core: true
+  crosslists:
+  - ANTH 20702
+  - SOSC 20202
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/african-civilization-2/
+    quote: HIST 10102 10
+- code: HIST 13100
+  section: '10'
+  title: History of Western Civilization 1
+  audience: Undergraduate
+  session: Session 1
+  start: '2026-06-15'
+  end: '2026-07-02'
+  modality: Remote
+  core: true
+  crosslists:
+  - SOSC 28110
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/history-of-western-civilization-1/
+    quote: HIST 13100 10
+- code: HIST 13200
+  section: '10'
+  title: History of Western Civilization 2
+  audience: Undergraduate
+  session: Session 2
+  start: '2026-07-06'
+  end: '2026-07-24'
+  modality: Remote
+  core: true
+  crosslists:
+  - SOSC 28210
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/history-of-western-civilization-2/
+    quote: HIST 13200 10
+- code: HIST 13300
+  section: '10'
+  title: History of Western Civilization 3
+  audience: Undergraduate
+  session: Session 3
+  start: '2026-07-27'
+  end: '2026-08-14'
+  modality: Remote
+  core: true
+  crosslists:
+  - SOSC 28310
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/history-of-western-civilization-3/
+    quote: HIST 13300 10
+- code: HIST 13600
+  section: '10'
+  title: America in World Civilization II
+  audience: Both
+  session: Session 1
+  start: '2026-06-15'
+  end: '2026-07-02'
+  modality: Remote
+  core: true
+  crosslists:
+  - SOSC 28600
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/america-in-world-civilization-ii/
+    quote: HIST 13600 10
+- code: HIST 13700
+  section: '10'
+  title: America in World Civilization III
+  audience: Both
+  session: Session 2
+  start: '2026-07-06'
+  end: '2026-07-24'
+  modality: Remote
+  core: true
+  crosslists:
+  - SOSC 28700
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/america-in-world-civilization-iii/
+    quote: HIST 13700 10
+- code: HIST 29806
+  section: '10'
+  title: Archival Methods and Historical Thinking
+  audience: Undergraduate
+  session: Session 1
+  start: '2026-06-15'
+  end: '2026-07-17'
+  modality: Residential
+  crosslists:
+  - MDVL 29806
+  - RLST 20806
+  in_catalog: false
+  source:
+    url: https://summer.uchicago.edu/courses/archival-methods-and-historical-thinking/
+    quote: HIST 29806 10
+- code: HMRT 24638
+  section: '20'
+  title: Global Challenges to Human Rights
+  audience: Undergraduate
+  session: September Term
+  start: '2026-08-24'
+  end: '2026-09-11'
+  modality: Remote
+  crosslists:
+  - HMRT 34638
+  in_catalog: false
+  source:
+    url: https://summer.uchicago.edu/courses/global-challenges-to-human-rights/
+    quote: HMRT 24638 20
+- code: HUMA 11000
+  section: '10'
+  title: Readings in World Literature I
+  audience: Undergraduate
+  session: Session 4
+  start: '2026-08-03'
+  end: '2026-08-21'
+  modality: Residential
+  core: true
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/readings-in-world-literature-i/
+    quote: HUMA 11000 10
+- code: HUMA 11100
+  section: '20'
+  title: Readings in World Literature II
+  audience: Undergraduate
+  session: September Term
+  start: '2026-08-24'
+  end: '2026-09-11'
+  modality: Residential
+  core: true
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/readings-in-world-literature-ii/
+    quote: HUMA 11100 20
+- code: HUMA 11500
+  section: '10'
+  title: Philosophical Perspectives 1
+  audience: Undergraduate
+  session: Session 4
+  start: '2026-08-03'
+  end: '2026-08-21'
+  modality: Residential
+  core: true
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/philosophical-perspectives-1/
+    quote: HUMA 11500 10
+- code: HUMA 11600
+  section: '20'
+  title: Philosophical Perspectives 2
+  audience: Undergraduate
+  session: September Term
+  start: '2026-08-24'
+  end: '2026-09-11'
+  modality: Residential
+  core: true
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/philosophical-perspectives-2/
+    quote: HUMA 11600 20
+- code: HUMA 12300
+  section: '10'
+  title: Human Being and Citizen I (10)
+  audience: Undergraduate
+  session: Session 4
+  start: '2026-08-03'
+  end: '2026-08-21'
+  modality: Residential
+  core: true
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/human-being-and-citizen-i/
+    quote: HUMA 12300 10
+- code: HUMA 12300
+  section: '11'
+  title: Human Being and Citizen I (11)
+  audience: Undergraduate
+  session: Session 4
+  start: '2026-08-03'
+  end: '2026-08-21'
+  modality: Residential
+  core: true
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/human-being-and-citizen-i-section-11/
+    quote: HUMA 12300 11
+- code: HUMA 12400
+  section: '20'
+  title: Human Being and Citizen II (20)
+  audience: Undergraduate
+  session: September Term
+  start: '2026-08-24'
+  end: '2026-09-11'
+  modality: Residential
+  core: true
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/human-being-and-citizen-ii/
+    quote: HUMA 12400 20
+- code: HUMA 12400
+  section: '21'
+  title: Human Being and Citizen II (21)
+  audience: Undergraduate
+  session: September Term
+  start: '2026-08-24'
+  end: '2026-09-11'
+  modality: Residential
+  core: true
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/human-being-and-citizen-ii-21/
+    quote: HUMA 12400 21
+- code: HUMA 14000
+  section: '10'
+  title: 'Reading Cultures: Collection, Travel, Exchange I - 10'
+  audience: Undergraduate
+  session: Session 4
+  start: '2026-08-03'
+  end: '2026-08-21'
+  modality: Residential
+  core: true
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/reading-cultures-collection-travel-exchange-i/
+    quote: HUMA 14000 10
+- code: HUMA 14000
+  section: '11'
+  title: 'Reading Cultures: Collection, Travel, Exchange I - 11'
+  audience: Undergraduate
+  session: Session 4
+  start: '2026-08-03'
+  end: '2026-08-21'
+  modality: Residential
+  core: true
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/reading-cultures-collection-travel-exchange-i-section-92/
+    quote: HUMA 14000 11
+- code: HUMA 14100
+  section: '20'
+  title: 'Reading Cultures: Collection, Travel, Exchange II - 20'
+  audience: Undergraduate
+  session: September Term
+  start: '2026-08-24'
+  end: '2026-09-11'
+  modality: Residential
+  core: true
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/reading-cultures-collection-travel-exchange-ii/
+    quote: HUMA 14100 20
+- code: HUMA 14100
+  section: '92'
+  title: 'Reading Cultures: Collection, Travel, Exchange II - 21'
+  audience: Undergraduate
+  session: September Term
+  start: '2026-08-24'
+  end: '2026-09-11'
+  modality: Residential
+  core: true
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/reading-cultures-collection-travel-exchange-ii-section-92/
+    quote: HUMA 14100 92
+- code: HUMA 16000
+  section: '10'
+  title: 'Media Aesthetics: Image, Text, Sound I (10)'
+  audience: Undergraduate
+  session: Session 4
+  start: '2026-08-03'
+  end: '2026-08-21'
+  modality: Residential
+  core: true
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/media-aesthetics-image-text-sound-i/
+    quote: HUMA 16000 10
+- code: HUMA 16000
+  section: '11'
+  title: 'Media Aesthetics: Image, Text, Sound I (11)'
+  audience: Undergraduate
+  session: Session 4
+  start: '2026-08-03'
+  end: '2026-08-21'
+  modality: Residential
+  core: true
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/media-aesthetics-image-text-sound-i-11/
+    quote: HUMA 16000 11
+- code: HUMA 16100
+  section: '20'
+  title: 'Media Aesthetics: Image, Text, Sound II (20)'
+  audience: Undergraduate
+  session: September Term
+  start: '2026-08-24'
+  end: '2026-09-11'
+  modality: Residential
+  core: true
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/media-aesthetics-image-text-sound-ii/
+    quote: HUMA 16100 20
+- code: HUMA 16100
+  section: '21'
+  title: 'Media Aesthetics: Image, Text, Sound II (21)'
+  audience: Undergraduate
+  session: September Term
+  start: '2026-08-24'
+  end: '2026-09-11'
+  modality: Residential
+  core: true
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/media-aesthetics-image-text-sound-ii-21/
+    quote: HUMA 16100 21
+- code: JAPN 10123
+  section: '10'
+  title: Summer Intensive Elementary Japanese
+  audience: Both
+  session: Session 1
+  start: '2026-06-15'
+  end: '2026-08-07'
+  modality: Remote
+  core: true
+  in_catalog: false
+  source:
+    url: https://summer.uchicago.edu/courses/summer-intensive-elementary-japanese/
+    quote: JAPN 10123 10
+- code: LACS 16200
+  section: '10'
+  title: Introduction to Latin American Civilization II
+  audience: Both
+  session: Session 1
+  start: '2026-06-15'
+  end: '2026-07-02'
+  modality: Remote
+  core: true
+  crosslists:
+  - ANTH 23102
+  - HIST 16102
+  - RDIN 16200
+  - SOSC 26200
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/introduction-to-latin-american-civilization-ii/
+    quote: LACS 16200 10
+- code: LACS 16300
+  section: '10'
+  title: Introduction to Latin American Civilization III
+  audience: Both
+  session: Session 2
+  start: '2026-07-06'
+  end: '2026-07-24'
+  modality: Remote
+  core: true
+  crosslists:
+  - ANTH 23103
+  - HIST 16103
+  - SOSC 26300
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/introduction-to-latin-american-civilization-iii/
+    quote: LACS 16300 10
+- code: LATN 20123
+  section: '10'
+  title: Summer Intensive Intermediate Latin
+  audience: Undergraduate
+  session: Session 1
+  start: '2026-06-15'
+  end: '2026-07-24'
+  modality: Remote
+  in_catalog: false
+  source:
+    url: https://summer.uchicago.edu/courses/summer-intensive-intermediate-latin/
+    quote: LATN 20123 10
+- code: MACS 30500
+  section: '10'
+  title: Computing for the Social Sciences
+  audience: Undergraduate
+  session: Session 1
+  start: '2026-06-15'
+  end: '2026-07-17'
+  modality: Remote
+  crosslists:
+  - CHDV 30511
+  - MACS 20500
+  - MAPS 30500
+  - PLSC 30235
+  - PSYC 30510
+  - SOCI 20278
+  - SOCI 40176
+  - SOSC 26032
+  in_catalog: false
+  source:
+    url: https://summer.uchicago.edu/courses/computing-for-the-social-sciences/
+    quote: MACS 30500 10
+- code: MADD 12320
+  section: '10'
+  title: Critical Videogame Studies
+  audience: Both
+  session: Session 1
+  start: '2026-06-15'
+  end: '2026-08-07'
+  modality: Remote
+  crosslists:
+  - CMST 27916
+  - ENGL 12320
+  - GNSE 22320
+  - SIGN 26038
+  in_catalog: false
+  source:
+    url: https://summer.uchicago.edu/courses/critical-videogame-studies/
+    quote: MADD 12320 10
+- code: MADD 26210
+  section: '10'
+  title: Media Art and Design Practice
+  audience: Both
+  session: Session 2
+  start: '2026-07-06'
+  end: '2026-07-24'
+  modality: Remote
+  core: true
+  crosslists:
+  - ARTV 16210
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/media-art-and-design-practice/
+    quote: MADD 26210 10
+- code: MAPS 36035
+  section: '10'
+  title: Approaches to Social Science Research Design
+  audience: Undergraduate
+  session: Session 1
+  start: '2026-06-15'
+  end: '2026-07-17'
+  modality: Residential
+  crosslists:
+  - GLST 26035
+  - PLSC 26035
+  - SOCI 28099
+  - SOSC 26035
+  in_catalog: false
+  source:
+    url: https://summer.uchicago.edu/courses/approaches-to-social-science-research-design/
+    quote: MAPS 36035 10
+- code: MATH 18400
+  section: '10'
+  title: Mathematical Methods in the Physical Sciences II
+  audience: Undergraduate
+  session: Session 1
+  start: '2026-06-15'
+  end: '2026-07-17'
+  modality: Remote
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/mathematical-methods-in-the-physical-sciences-ii/
+    quote: MATH 18400 10
+- code: MATH 19620
+  section: '10'
+  title: Linear Algebra
+  audience: Undergraduate
+  session: Session 1
+  start: '2026-06-15'
+  end: '2026-07-17'
+  modality: Remote
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/linear-algebra/
+    quote: MATH 19620 10
+- code: MATH 20300
+  section: '10'
+  title: Analysis in Rn I
+  audience: Undergraduate
+  session: Session 1
+  start: '2026-06-15'
+  end: '2026-07-17'
+  modality: Remote
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/analysis-in-rn-i/
+    quote: MATH 20300 10
+- code: NEAA 20019
+  section: '20'
+  title: Field Archaeology in Spain
+  audience: Undergraduate
+  session: September Term
+  start: '2026-08-23'
+  end: '2026-09-19'
+  modality: Residential
+  crosslists:
+  - ANTH 26612
+  - CLAS 20091
+  - CLCV 20091
+  - HIST 20503
+  - NEAA 30091
+  in_catalog: false
+  source:
+    url: https://summer.uchicago.edu/courses/field-archaeology-in-spain/
+    quote: NEAA 20019 20
+- code: NOCR 00012
+  section: '00'
+  title: A Survey of University of Chicago Economics and its Business Applications
+  audience: Undergraduate
+  session: Session 1
+  start: '2026-06-22'
+  end: '2026-07-02'
+  modality: Residential
+  in_catalog: false
+  source:
+    url: https://summer.uchicago.edu/courses/a-survey-of-university-of-chicago-economics-and-its-business-applications/
+    quote: NOCR 00012 00
+- code: NOCR 00012
+  section: '01'
+  title: A Survey of Chicago Economics and its Business Applications (UTP)
+  audience: Undergraduate
+  session: September Term
+  start: '2026-08-31'
+  end: '2026-09-12'
+  modality: Residential
+  in_catalog: false
+  source:
+    url: https://summer.uchicago.edu/courses/a-survey-of-chicago-economics-and-its-business-applications-utp/
+    quote: NOCR 00012 01
+- code: PBPL 22300
+  section: '10'
+  title: Policy Implementation
+  audience: Both
+  session: Session 1
+  start: '2026-06-15'
+  end: '2026-07-02'
+  modality: Remote
+  in_catalog: false
+  source:
+    url: https://summer.uchicago.edu/courses/policy-implementation/
+    quote: PBPL 22300 10
+- code: PHIL 20100
+  section: '20'
+  title: Introduction to Logic
+  audience: Undergraduate
+  session: September Term
+  start: '2026-08-24'
+  end: '2026-09-11'
+  modality: Residential
+  crosslists:
+  - CHSS 33500
+  - HIPS 20700
+  - PHIL 30000
+  in_catalog: false
+  source:
+    url: https://summer.uchicago.edu/courses/elementary-logic/
+    quote: PHIL 20100 20
+- code: PHIL 23501
+  section: '10'
+  title: Philosophy of Mind
+  audience: Undergraduate
+  session: Session 1
+  start: '2026-06-15'
+  end: '2026-07-03'
+  modality: Remote
+  crosslists:
+  - HIPS 20401
+  in_catalog: false
+  source:
+    url: https://summer.uchicago.edu/courses/philosophy-of-mind/
+    quote: PHIL 23501 10
+- code: PHIL 23502
+  section: '20'
+  title: Introduction to the Philosophy of Mind
+  audience: Undergraduate
+  session: September Term
+  start: '2026-08-24'
+  end: '2026-09-11'
+  modality: Remote
+  in_catalog: false
+  source:
+    url: https://summer.uchicago.edu/courses/introduction-to-the-philosophy-of-mind/
+    quote: PHIL 23502 20
+- code: PHSC 13410
+  section: '20'
+  title: 'Global Warming: Understanding the Forecast - Session 2'
+  audience: Undergraduate
+  session: September Term
+  start: '2026-08-24'
+  end: '2026-09-11'
+  modality: Residential
+  core: true
+  crosslists:
+  - ENSC 13410
+  - GEOS 13410
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/global-warming-understanding-the-forecast-91-session-2/
+    quote: PHSC 13410 20
+- code: PHSC 13410
+  section: '20'
+  title: 'Global Warming: Understanding the Forecast - September Term'
+  audience: Undergraduate
+  session: September Term
+  start: '2026-08-24'
+  end: '2026-09-11'
+  modality: Residential
+  core: true
+  crosslists:
+  - ENSC 13410
+  - GEOS 13410
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/global-warming-understanding-the-forecast/
+    quote: PHSC 13410 20
+- code: PHYS 13100
+  section: '10'
+  title: Mechanics
+  audience: Undergraduate
+  session: Session 1
+  start: '2026-06-15'
+  end: '2026-07-08'
+  modality: Residential
+  core: true
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/mechanics/
+    quote: PHYS 13100 10
+- code: PHYS 13200
+  section: '10'
+  title: Electricity & Magnetism
+  audience: Undergraduate
+  session: Session 2
+  start: '2026-07-09'
+  end: '2026-07-29'
+  modality: Residential
+  core: true
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/electricity-and-magnetism/
+    quote: PHYS 13200 10
+- code: PHYS 13300
+  section: '10'
+  title: Waves, Optics & Heat
+  audience: Undergraduate
+  session: Session 3
+  start: '2026-07-30'
+  end: '2026-08-19'
+  modality: Residential
+  in_catalog: false
+  source:
+    url: https://summer.uchicago.edu/courses/waves-optics-and-heat/
+    quote: PHYS 13300 10
+- code: PLSC 24860
+  section: '20'
+  title: Congress in Chaos? Understanding Legislative Function and Dysfunction
+  audience: Undergraduate
+  session: September Term
+  start: '2026-08-24'
+  end: '2026-09-11'
+  modality: Remote
+  in_catalog: false
+  source:
+    url: https://summer.uchicago.edu/courses/congress-in-chaos-understanding-legislative-function-and-dysfunction/
+    quote: PLSC 24860 20
+- code: PSYC 20200
+  section: '10'
+  title: Psychological Research Methods
+  audience: Undergraduate
+  session: Session 1
+  start: '2026-06-15'
+  end: '2026-07-17'
+  modality: Remote
+  in_catalog: false
+  source:
+    url: https://summer.uchicago.edu/courses/psychological-research-methods/
+    quote: PSYC 20200 10
+- code: PSYC 20300
+  section: '10'
+  title: Introduction to Biological Psychology
+  audience: Both
+  session: Session 1
+  start: '2026-06-15'
+  end: '2026-07-02'
+  modality: Remote
+  crosslists:
+  - CHDV 20300
+  - NSCI 21015
+  in_catalog: false
+  source:
+    url: https://summer.uchicago.edu/courses/introduction-to-biological-psychology/
+    quote: PSYC 20300 10
+- code: RDIN 24003
+  section: '10'
+  title: 'Colonizations III: Decolonization, Revolution, Freedom'
+  audience: Undergraduate
+  session: Session 2
+  start: '2026-07-06'
+  end: '2026-07-24'
+  modality: Remote
+  core: true
+  crosslists:
+  - ANTH 24003
+  - HIST 18303
+  - SALC 20702
+  - SOSC 24003
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/colonizations-iii-decolonization-revolution-freedom/
+    quote: RDIN 24003 10
+- code: RLST 10100
+  section: '10'
+  title: Introduction to Religious Studies
+  audience: Both
+  session: Session 2
+  start: '2026-07-06'
+  end: '2026-07-24'
+  modality: Remote
+  crosslists:
+  - SOCI 20541
+  in_catalog: false
+  source:
+    url: https://summer.uchicago.edu/courses/introduction-to-religious-studies/
+    quote: RLST 10100 10
+- code: SOCI 20104
+  section: '20'
+  title: Urban Structure and Process
+  audience: Undergraduate
+  session: September Term
+  start: '2026-08-24'
+  end: '2026-09-11'
+  modality: Residential
+  crosslists:
+  - ARCH 20104
+  - CEGU 20104
+  - CHST 20104
+  - GEOG 22700
+  - SOSC 25100
+  in_catalog: false
+  source:
+    url: https://summer.uchicago.edu/courses/urban-structure-and-process/
+    quote: SOCI 20104 20
+- code: SOCI 20242
+  section: '20'
+  title: States, Markets, and Bodies
+  audience: Undergraduate
+  session: September Term
+  start: '2026-08-24'
+  end: '2026-09-11'
+  modality: Remote
+  crosslists:
+  - GLST 24242
+  - GNSE 20242
+  in_catalog: false
+  source:
+    url: https://summer.uchicago.edu/courses/states-markets-and-bodies/
+    quote: SOCI 20242 20
+- code: SOSC 12400
+  section: '10'
+  title: Self, Culture and Society 1 (10)
+  audience: Undergraduate
+  session: Session 1
+  start: '2026-06-15'
+  end: '2026-07-02'
+  modality: Remote
+  core: true
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/self-culture-and-society-1-91/
+    quote: SOSC 12400 10
+- code: SOSC 12400
+  section: '11'
+  title: Self, Culture and Society 1 (11)
+  audience: Undergraduate
+  session: Session 1
+  start: '2026-06-15'
+  end: '2026-07-02'
+  modality: Remote
+  core: true
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/self-culture-and-society-1-92/
+    quote: SOSC 12400 11
+- code: SOSC 12400
+  section: '12'
+  title: Self, Culture and Society 1 (12)
+  audience: Undergraduate
+  session: Session 1
+  start: '2026-06-15'
+  end: '2026-07-02'
+  modality: Remote
+  core: true
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/self-culture-and-society-1-97/
+    quote: SOSC 12400 12
+- code: SOSC 12400
+  section: '20'
+  title: Self, Culture, and Society 1 (20)
+  audience: Undergraduate
+  session: September Term
+  start: '2026-08-24'
+  end: '2026-09-11'
+  modality: Remote
+  core: true
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/self-culture-and-society-93/
+    quote: SOSC 12400 20
+- code: SOSC 12500
+  section: '10'
+  title: Self, Culture and Society 2 (10)
+  audience: Undergraduate
+  session: Session 2
+  start: '2026-07-06'
+  end: '2026-07-24'
+  modality: Remote
+  core: true
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/self-culture-and-society-2-91/
+    quote: SOSC 12500 10
+- code: SOSC 12500
+  section: '11'
+  title: Self, Culture, and Society 2 (11)
+  audience: Undergraduate
+  session: Session 2
+  start: '2026-07-06'
+  end: '2026-07-24'
+  modality: Remote
+  core: true
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/self-culture-and-society-2-93/
+    quote: SOSC 12500 11
+- code: SOSC 12500
+  section: '12'
+  title: Self, Culture and Society 2 (12)
+  audience: Undergraduate
+  session: Session 2
+  start: '2026-07-06'
+  end: '2026-07-24'
+  modality: Remote
+  core: true
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/self-culture-and-society-2-92/
+    quote: SOSC 12500 12
+- code: SOSC 12600
+  section: '10'
+  title: Self, Culture and Society 3 (10)
+  audience: Undergraduate
+  session: Session 3
+  start: '2026-07-27'
+  end: '2026-08-14'
+  modality: Remote
+  core: true
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/self-culture-and-society-3-91/
+    quote: SOSC 12600 10
+- code: SOSC 12600
+  section: '11'
+  title: Self, Culture, and Society 3 (11)
+  audience: Undergraduate
+  session: Session 3
+  start: '2026-07-27'
+  end: '2026-08-14'
+  modality: Remote
+  core: true
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/self-culture-and-society-3-93/
+    quote: SOSC 12600 11
+- code: SOSC 12600
+  section: '12'
+  title: Self, Culture and Society 3 (12)
+  audience: Undergraduate
+  session: Session 3
+  start: '2026-07-27'
+  end: '2026-08-14'
+  modality: Remote
+  core: true
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/self-culture-and-society-3/
+    quote: SOSC 12600 12
+- code: SOSC 15100
+  section: '10'
+  title: Classics of Social and Political Thought I
+  audience: Undergraduate
+  session: Session 1
+  start: '2026-06-15'
+  end: '2026-07-02'
+  modality: Remote
+  core: true
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/classics-of-social-and-political-thought-i/
+    quote: SOSC 15100 10
+- code: SOSC 15200
+  section: '10'
+  title: Classics of Social and Political Thought II
+  audience: Undergraduate
+  session: Session 2
+  start: '2026-07-06'
+  end: '2026-07-24'
+  modality: Remote
+  core: true
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/classics-of-social-and-political-thought-ii/
+    quote: SOSC 15200 10
+- code: SOSC 15300
+  section: '10'
+  title: Classics of Social and Political Thought III
+  audience: Undergraduate
+  session: Session 3
+  start: '2026-07-27'
+  end: '2026-08-14'
+  modality: Remote
+  core: true
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/classics-of-social-and-political-thought-iii/
+    quote: SOSC 15300 10
+- code: SOSC 20112
+  section: '10'
+  title: Introductory Statistical Methods and Applications for the Social Sciences
+  audience: Both
+  session: Session 1
+  start: '2026-06-15'
+  end: '2026-07-02'
+  modality: Remote
+  crosslists:
+  - SOSC 30112
+  in_catalog: false
+  source:
+    url: https://summer.uchicago.edu/courses/introductory-statistical-methods-and-applications-for-the-social-sciences/
+    quote: SOSC 20112 10
+- code: SOSC 20224
+  section: '10'
+  title: 'Participant Observation and Interviews: Introduction to Ethnographic Methods'
+  audience: Undergraduate
+  session: Session 1
+  start: '2026-06-15'
+  end: '2026-07-17'
+  modality: Residential
+  crosslists:
+  - ANTH 21432
+  - ANTH 31432
+  - GLST 26220
+  - SOCI 20515
+  - SOSC 30224
+  in_catalog: false
+  source:
+    url: https://summer.uchicago.edu/courses/participant-observation-and-interviews-introduction-to-ethnographic-methods/
+    quote: SOSC 20224 10
+- code: SPAN 10123
+  section: '10'
+  title: Summer Intensive Elementary Spanish
+  audience: Both
+  session: Session 1
+  start: '2026-06-15'
+  end: '2026-08-07'
+  modality: Remote
+  core: true
+  in_catalog: false
+  source:
+    url: https://summer.uchicago.edu/courses/summer-intensive-elementary-spanish/
+    quote: SPAN 10123 10
+- code: STAT 22000
+  section: '20'
+  title: Statistical Methods and Applications
+  audience: Undergraduate
+  session: September Term
+  start: '2026-08-24'
+  end: '2026-09-11'
+  modality: Remote
+  core: true
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/statistical-methods-and-applications/
+    quote: STAT 22000 20
+- code: STAT 25100
+  section: '10'
+  title: Introduction to Mathematical Probability
+  audience: Undergraduate
+  session: Session 4
+  start: '2026-08-03'
+  end: '2026-09-11'
+  modality: Hybrid
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/introduction-to-mathematical-probability/
+    quote: STAT 25100 10
+- code: STAT 27815
+  section: '20'
+  title: Practical R Programming
+  audience: Undergraduate
+  session: September Term
+  start: '2026-08-24'
+  end: '2026-09-11'
+  modality: Remote
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/practical-r-programming/
+    quote: STAT 27815 20
+- code: TAPS 10100
+  section: '10'
+  title: 'Drama: Embodiment & Transformation'
+  audience: Both
+  session: Session 1
+  start: '2026-06-15'
+  end: '2026-07-02'
+  modality: Remote
+  core: true
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/drama-embodiment-and-transformation/
+    quote: TAPS 10100 10
+- code: TAPS 10200
+  section: '20'
+  title: Acting Fundamentals
+  audience: Undergraduate
+  session: September Term
+  start: '2026-08-24'
+  end: '2026-09-11'
+  modality: Residential
+  core: true
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/acting-fundamentals/
+    quote: TAPS 10200 20
+- code: WRIT 10100
+  section: '10'
+  title: 'Inquiry, Conversation, Argument: What Does Business Owe Society?'
+  audience: Undergraduate
+  session: Session 4
+  start: '2026-08-03'
+  end: '2026-09-11'
+  modality: Residential
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/inquiry-conversation-argument-what-does-business-owe-society/
+    quote: WRIT 10100 10
+- code: WRIT 10100
+  section: '11'
+  title: 'Inquiry, Conversation, Argument: What Does the Idea of Utopia Suggest About Human Nature?'
+  audience: Undergraduate
+  session: Session 4
+  start: '2026-08-03'
+  end: '2026-09-11'
+  modality: Residential
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/inquiry-conversation-argument-what-does-the-idea-of-utopia-suggest-about/
+    quote: WRIT 10100 11
+- code: WRIT 10100
+  section: '12'
+  title: 'Inquiry, Conversation, Argument: Are We More Than Our Habits?'
+  audience: Undergraduate
+  session: Session 4
+  start: '2026-08-03'
+  end: '2026-09-11'
+  modality: Residential
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/inquiry-conversation-argument-are-we-more-than-our-habits/
+    quote: WRIT 10100 12
+- code: WRIT 10100
+  section: '13'
+  title: 'Inquiry, Conversation, Argument: Why Tell Stories of War?'
+  audience: Undergraduate
+  session: Session 4
+  start: '2026-08-03'
+  end: '2026-09-11'
+  modality: Residential
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/inquiry-conversation-argument-why-tell-stories-of-war/
+    quote: WRIT 10100 13
+- code: WRIT 10100
+  section: '14'
+  title: 'Inquiry, Conversation, Argument: What kind of future does invention imagine?'
+  audience: Undergraduate
+  session: Session 4
+  start: '2026-08-03'
+  end: '2026-09-11'
+  modality: Residential
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/inquiry-conversation-argument-what-makes-the-world-weird/
+    quote: WRIT 10100 14
+- code: WRIT 10100
+  section: '15'
+  title: 'Inquiry, Conversation, Argument: Why do we read?'
+  audience: Undergraduate
+  session: Session 4
+  start: '2026-08-03'
+  end: '2026-09-11'
+  modality: Residential
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/inquiry-conversation-argument-why-do-we-read/
+    quote: WRIT 10100 15
+- code: WRIT 10100
+  section: '16'
+  title: 'Inquiry, Conversation, Argument: What is privacy in an age of surveillance?'
+  audience: Undergraduate
+  session: Session 4
+  start: '2026-08-03'
+  end: '2026-09-11'
+  modality: Residential
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/inquiry-conversation-argument-what-is-privacy-in-an-age-of-surveillance/
+    quote: WRIT 10100 16
+- code: WRIT 10100
+  section: '17'
+  title: 'Inquiry, Conversation, Argument: What is friendship for?'
+  audience: Undergraduate
+  session: Session 4
+  start: '2026-08-03'
+  end: '2026-09-11'
+  modality: Residential
+  in_catalog: true
+  source:
+    url: https://summer.uchicago.edu/courses/inquiry-conversation-argument-what-is-friendship-for/
+    quote: WRIT 10100 17
