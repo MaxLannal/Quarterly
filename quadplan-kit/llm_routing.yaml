@@ -78,7 +78,8 @@ tasks:
   a2_scope_classifier:        # in_scope / off_topic / confirmation / suspicious
     model: claude-haiku-5-5
     effort: low
-    max_tokens: 50            # prompt 13: classifier 50, thinking off
+    max_tokens: 200           # prompt 13 asked for 50; live, Haiku 5.5 was cut off at 50 on 5 of
+                              # 6 off-topic messages (an empty answer, then the dearer advisor ran)
     thinking: disabled
     fallback: {provider: openrouter, model: anthropic/claude-haiku-5.5}
   a3_forum_extraction:

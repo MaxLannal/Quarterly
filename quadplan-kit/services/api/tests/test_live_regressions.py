@@ -38,3 +38,20 @@ def test_no_agent_tool_schema_puts_an_enum_on_a_list_of_types() -> None:
     assert len(schemas) >= 8
     bad = {name: paths for name, schema in schemas.items() if (paths := _enum_on_type_list(schema))}
     assert bad == {}
+
+
+def test_the_scope_classifier_has_room_for_its_answer() -> None:
+    """Live finding (phase 3): at max_tokens 50, Haiku 5.5 stopped mid-answer (stop_reason
+    max_tokens, an empty `submit`) on 5 of 6 off-topic messages. The chat then took its
+    in_scope fallback and paid for the Sonnet advisor instead of the fixed refusal. The
+    recording is the real answer; the limit must leave ample room above what it used."""
+    import json
+    from pathlib import Path
+
+    from llm_gateway.routing import load_routing
+
+    pairs = json.loads((Path(__file__).parent / "fixtures" / "live" / "p3-off-homework.json").read_text())
+    truncated = [p for p in pairs if p["response"]["stop_reason"] == "max_tokens"]
+    assert truncated and all(p["response"]["tool_calls"][0]["input"] == {} for p in truncated)
+    used = max(p["response"]["usage"]["output_tokens"] for p in truncated)
+    assert load_routing().route("a2_scope_classifier").max_tokens >= 4 * used
