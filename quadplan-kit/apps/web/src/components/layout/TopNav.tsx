@@ -81,7 +81,7 @@ function SearchBox() {
         className={cn(
           // A quiet filled field (D6, FEEDBACK "Minor design changes"): no outline until it is used;
           // the icon and placeholder say what it is. Focus: white, with the maroon ring.
-          "min-h-11 w-full min-w-0 rounded-pill border border-transparent bg-surface-strong pl-11 pr-4 text-body-sm text-ink transition-colors duration-150 placeholder:text-muted",
+          "min-h-11 w-full min-w-0 rounded-pill border border-transparent bg-surface-strong pl-11 pr-4 text-body-sm pointer-coarse:text-body-md text-ink transition-colors duration-150 placeholder:text-muted",
           "hover:bg-hairline-soft hover:border-hairline focus-visible:outline-none focus:border-primary focus:bg-surface-card focus:shadow-[inset_0_0_0_1px_var(--color-primary)]",
         )}
       />

@@ -16,7 +16,8 @@ export const controlClass = cn(
 );
 
 /** Compact controls for dense panels (planner rails, dialogs): same 44px height, 15px text. */
-export const controlCompactClass = "px-3 text-body-sm";
+// 16px on touch screens: iOS Safari zooms the page into a smaller field on focus (D11 harden).
+export const controlCompactClass = "px-3 text-body-sm pointer-coarse:text-body-md";
 
 export const Input = React.forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLInputElement> & { compact?: boolean }>(
   ({ className, compact, ...props }, ref) => <input ref={ref} className={cn(controlClass, compact && controlCompactClass, className)} {...props} />,

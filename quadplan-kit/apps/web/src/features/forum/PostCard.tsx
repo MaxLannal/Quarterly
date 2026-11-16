@@ -134,7 +134,9 @@ export function PostCard({
   const appeal = useReport();
   const Heading = (["h1", "h2", "h3"] as const)[headingLevel - 1] ?? "h3";
   const headingClass =
-    headingLevel === 1 ? "font-display text-display-sm text-ink sm:text-display-md" : headingLevel === 2 ? "font-display text-display-sm text-ink" : "text-title-sm text-ink";
+    // [overflow-wrap:anywhere]: a long unbroken word in a title wraps instead of widening the page (D11 harden).
+    (headingLevel === 1 ? "font-display text-display-sm text-ink sm:text-display-md" : headingLevel === 2 ? "font-display text-display-sm text-ink" : "text-title-sm text-ink") +
+    " [overflow-wrap:anywhere]";
   const label = `${post.kind} by ${post.pseudonym}`;
   const title = post.title ?? (post.kind === "review" ? `Review by ${post.pseudonym}` : "Untitled post");
   const visible = post.status === "visible";

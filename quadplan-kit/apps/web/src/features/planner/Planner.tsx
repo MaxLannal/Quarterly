@@ -246,7 +246,7 @@ export function Planner({ initial, autoGenerate = false }: PlannerProps) {
     },
     {
       key: "issues" as const,
-      label: "Issues",
+      label: "Check plan", // D11 PL-4: the same name as the toolbar button that opens it
       content: <IssuesTab verify={verify} selected={selectedIssue} onSelect={setSelectedIssue} />,
     },
   ];
@@ -291,33 +291,37 @@ export function Planner({ initial, autoGenerate = false }: PlannerProps) {
 
         {/* Toolbar: the panels open on demand, so the grid keeps the page (FEEDBACK F4). */}
         <div className="flex flex-wrap items-center gap-x-2 gap-y-1 border-y border-hairline py-2">
-          <DrawerButton active={drawer.tab === "requirements"} open={drawer.open} onClick={() => toggleDrawer("requirements")}>
-            Requirements
-          </DrawerButton>
-          <DrawerButton active={drawer.tab === "goals"} open={drawer.open} onClick={() => toggleDrawer("goals")}>
-            Goals
-          </DrawerButton>
-          <DrawerButton active={drawer.tab === "credits"} open={drawer.open} onClick={() => toggleDrawer("credits")}>
-            Credits
-            {(plan.credits ?? []).length > 0 && <span className="text-muted tabular-nums">{(plan.credits ?? []).length}</span>}
-          </DrawerButton>
-          <DrawerButton
-            active={drawer.tab === "issues"}
-            open={drawer.open}
-            onClick={() => toggleDrawer("issues")}
-          >
-            Check plan{" "}
-            {errorCount > 0 && <span className="sr-only">({errorCount} {errorCount === 1 ? "error" : "errors"})</span>}
-            {errorCount > 0 && (
-              <span aria-hidden="true" data-testid="issue-count" className="inline-flex min-w-5 animate-fade-in justify-center rounded-pill bg-error-wash px-1.5 text-caption tabular-nums text-error">
-                {errorCount}
-              </span>
-            )}
-          </DrawerButton>
-          <Button variant="outline" aria-haspopup="dialog" onClick={() => setAdvisorOpen(true)}>
-            <SparkIcon className="text-primary" />
-            Ask Quarterly
-          </Button>
+          {/* D11 adapt: on a phone the panel buttons are one row that scrolls sideways, so the toolbar
+              takes two rows instead of three; from 640px they wrap as before. */}
+          <div className="-mx-4 flex min-w-0 items-center gap-2 overflow-x-auto px-4 py-0.5 [scrollbar-width:none] sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0 [&>*]:shrink-0">
+            <DrawerButton active={drawer.tab === "requirements"} open={drawer.open} onClick={() => toggleDrawer("requirements")}>
+              Requirements
+            </DrawerButton>
+            <DrawerButton active={drawer.tab === "goals"} open={drawer.open} onClick={() => toggleDrawer("goals")}>
+              Goals
+            </DrawerButton>
+            <DrawerButton active={drawer.tab === "credits"} open={drawer.open} onClick={() => toggleDrawer("credits")}>
+              Credits
+              {(plan.credits ?? []).length > 0 && <span className="text-muted tabular-nums">{(plan.credits ?? []).length}</span>}
+            </DrawerButton>
+            <DrawerButton
+              active={drawer.tab === "issues"}
+              open={drawer.open}
+              onClick={() => toggleDrawer("issues")}
+            >
+              Check plan{" "}
+              {errorCount > 0 && <span className="sr-only">({errorCount} {errorCount === 1 ? "error" : "errors"})</span>}
+              {errorCount > 0 && (
+                <span aria-hidden="true" data-testid="issue-count" className="inline-flex min-w-5 animate-fade-in justify-center rounded-pill bg-error-wash px-1.5 text-caption tabular-nums text-error">
+                  {errorCount}
+                </span>
+              )}
+            </DrawerButton>
+            <Button variant="outline" aria-haspopup="dialog" onClick={() => setAdvisorOpen(true)}>
+              <SparkIcon className="text-primary" />
+              Ask Quarterly
+            </Button>
+          </div>
           <div className="flex flex-wrap items-center gap-2 sm:ml-auto">
             <Button variant="outline" onClick={() => void save()}>
               Save

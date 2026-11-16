@@ -26,7 +26,7 @@ export async function openPanel(
   if (await drawer.isVisible()) {
     // Already open (on a phone it covers the toolbar): switch tabs inside it.
     await drawer
-      .getByRole("tab", { name: name === "Check plan" ? "Issues" : name })
+      .getByRole("tab", { name })
       .click();
   } else {
     await panelButton(page, name).click();

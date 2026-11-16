@@ -66,7 +66,7 @@ export async function gridByTerm(page: Page): Promise<Record<string, string[]>> 
 export async function openPanel(page: Page, name: "Requirements" | "Goals" | "Check plan") {
   const drawer = page.getByTestId("plan-drawer");
   if (await drawer.isVisible()) {
-    await drawer.getByRole("tab", { name: name === "Check plan" ? "Issues" : name }).click();
+    await drawer.getByRole("tab", { name }).click();
   } else {
     await page.getByRole("button", { name: name === "Check plan" ? /^Check plan/ : name, exact: name !== "Check plan" }).click();
   }

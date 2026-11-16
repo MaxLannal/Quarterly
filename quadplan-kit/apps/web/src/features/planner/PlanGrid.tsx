@@ -228,7 +228,7 @@ function GraduationField({
           onKeyDown={(e) => {
             if (e.key === "Escape") setEditing(false);
           }}
-          className={cn(controlClass, controlCompactClass, "w-40 text-caption")}
+          className={cn(controlClass, controlCompactClass, "w-40 text-caption pointer-coarse:text-body-md")}
         >
           {choices.map((t) => (
             <option key={t} value={t}>
