@@ -64,6 +64,8 @@ class AnthropicBackend(Backend):
             kwargs["tool_choice"] = {"type": "auto"}
         if request.effort is not None:
             kwargs["output_config"] = {"effort": request.effort}
+        if request.thinking is not None:
+            kwargs["thinking"] = {"type": request.thinking}
         client = self._client.with_options(timeout=max(1.0, request.timeout_s))
         try:
             if request.refusal_fallback:

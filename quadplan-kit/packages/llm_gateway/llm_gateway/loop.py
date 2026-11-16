@@ -139,10 +139,11 @@ def run_loop[T: BaseModel](
             system=spec.system,
             messages=list(messages),
             tools=specs,
-            max_tokens=route.max_tokens,
+            max_tokens=min(route.max_tokens, spec.max_tokens or route.max_tokens),
             effort=route.effort,
             timeout_s=remaining,
             refusal_fallback=route.refusal_fallback,
+            thinking=route.thinking,
         )
         began = clock()
         try:

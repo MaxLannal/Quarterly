@@ -35,6 +35,7 @@ tasks:
     model: claude-haiku-5-5
     effort: null
     max_tokens: 1024
+    thinking: disabled
     fallback: {provider: openrouter, model: anthropic/claude-haiku-5.5}
   e4_backtranslation_judge:
     model: claude-sonnet-5-5
@@ -49,13 +50,23 @@ tasks:
   a1_plan_generator:          # A1 steps 3 (electives) and 6 (rationale)
     model: claude-opus-5-5
     effort: medium
-    max_tokens: 8000
+    max_tokens: 8000            # each step asks for less: preferences 1500, rationale 1200
     refusal_fallback: true
     fallback: {provider: openrouter, model: anthropic/claude-opus-5.5}
+  # Prompt 13 (live tests): the same agent on Sonnet 5.5, to compare with Opus 5.5 before
+  # choosing production routing. Used only by evals/live (it swaps this in for A1).
+  a1_plan_generator_sonnet:
+    model: claude-sonnet-5-5
+    effort: medium
+    max_tokens: 8000
+    thinking: between_tools
+    refusal_fallback: true
+    fallback: {provider: openrouter, model: anthropic/claude-sonnet-5.5}
   a2_advisor_chat:
     model: claude-sonnet-5-5
     effort: low
-    max_tokens: 4000
+    max_tokens: 800             # prompt 13: chat answer 800
+    thinking: between_tools
     refusal_fallback: true
     fallback: {provider: openrouter, model: anthropic/claude-sonnet-5.5}
   a2_advisor_chat_escalation: # whole-plan comparisons
@@ -67,27 +78,32 @@ tasks:
   a2_scope_classifier:        # in_scope / off_topic / confirmation / suspicious
     model: claude-haiku-5-5
     effort: low
-    max_tokens: 1024          # thinking stays on (adaptive); room for it plus the label
+    max_tokens: 50            # prompt 13: classifier 50, thinking off
+    thinking: disabled
     fallback: {provider: openrouter, model: anthropic/claude-haiku-5.5}
   a3_forum_extraction:
     model: claude-haiku-5-5
     effort: null
     max_tokens: 2000
+    thinking: disabled
     fallback: {provider: openrouter, model: anthropic/claude-haiku-5.5}
   a3_forum_summary:
     model: claude-sonnet-5-5
     effort: low  # a short structured answer; null would mean high on Sonnet 5.5
-    max_tokens: 2000
+    max_tokens: 400            # prompt 13: summary 400
+    thinking: between_tools
     fallback: {provider: openrouter, model: anthropic/claude-sonnet-5.5}
   a3_cold_start_estimate:
     model: claude-sonnet-5-5
     effort: low  # a short structured answer; null would mean high on Sonnet 5.5
     max_tokens: 2000
+    thinking: between_tools
     fallback: {provider: openrouter, model: anthropic/claude-sonnet-5.5}
   a4_moderation:
     model: claude-haiku-5-5
-    effort: low       # thinking stays on: leave room for it plus the label
-    max_tokens: 1024
+    effort: low
+    max_tokens: 100           # prompt 13: moderation 100, thinking off
+    thinking: disabled
     fallback: {provider: openrouter, model: anthropic/claude-haiku-5.5}
   # Prompt 10: department offering pages -> planned offerings with verbatim quotes (E-style,
   # every item checked by code, then human review). Not in the SPEC routing table; Sonnet 5.5
@@ -98,13 +114,16 @@ tasks:
     max_tokens: 8000
     fallback: {provider: openrouter, model: anthropic/claude-sonnet-5.5}
 
-# List prices in USD per million tokens, for llm_call.cost_usd. Anthropic: SPEC "Model routing"
-# and the models overview (cache reads at the published rate, cache writes 1.25x input; the
-# Haiku cache-read rate is assumed 0.1x input). OpenRouter names are priced like their models.
+# List prices in USD per million tokens, for llm_call.cost_usd and the live-test budget guard.
+# Checked 2026-11-16 against the Claude models overview (prompt 13): Opus 5.5 $4 / $20, cache
+# reads $0.20; Sonnet 5.5 $2 / $10, cache reads $0.10; Haiku 5.5 $0.10 / $0.50 (prompts of 100K
+# tokens or fewer). Cache writes 1.25x input (5-minute). The Haiku 5.5 cache-read rate is not
+# published there, so it is priced at the higher candidate, the full input rate (prompt 13:
+# "if a price is unclear, use the higher one"). OpenRouter names are priced like their models.
 prices:
   claude-opus-5-5:            {input: 4.00, output: 20.00, cache_read: 0.20, cache_write: 5.00}
   claude-sonnet-5-5:          {input: 2.00, output: 10.00, cache_read: 0.10, cache_write: 2.50}
-  claude-haiku-5-5:           {input: 0.10, output: 0.50, cache_read: 0.01, cache_write: 0.125}
+  claude-haiku-5-5:           {input: 0.10, output: 0.50, cache_read: 0.10, cache_write: 0.125}
   anthropic/claude-opus-5.5:  {input: 4.00, output: 20.00, cache_read: 0.20, cache_write: 5.00}
   anthropic/claude-sonnet-5.5: {input: 2.00, output: 10.00, cache_read: 0.10, cache_write: 2.50}
-  anthropic/claude-haiku-5.5: {input: 0.10, output: 0.50, cache_read: 0.01, cache_write: 0.125}
+  anthropic/claude-haiku-5.5: {input: 0.10, output: 0.50, cache_read: 0.10, cache_write: 0.125}

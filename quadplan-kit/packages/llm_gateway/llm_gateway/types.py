@@ -112,6 +112,8 @@ class AgentSpec[T: BaseModel]:
     #: Ids the caller already handed the model (e.g. the plan's own courses); they count as
     #: returned by a tool for citation checks.
     known_ids: Iterable[str] = ()
+    #: A tighter output limit than the task's route for this run (e.g. A1's rationale step).
+    max_tokens: int | None = None
 
 
 @dataclass
@@ -164,6 +166,8 @@ class ModelRequest:
     effort: str | None
     timeout_s: float
     refusal_fallback: bool = False
+    #: `TaskRoute.thinking`: None keeps the model's default.
+    thinking: str | None = None
 
 
 @dataclass(frozen=True)

@@ -42,6 +42,10 @@ class TaskRoute(_Model):
     #: Ask the API to re-run a declined request on another model (server-side fallback,
     #: "default" routing; Opus and Sonnet only).
     refusal_fallback: bool = False
+    #: Turn thinking off where the model allows it: "disabled" (Haiku 5.5, effort high or
+    #: below) or "between_tools" (Sonnet 5.5, effort high or below). None keeps the model's
+    #: adaptive default (the only choice on Opus 5.5).
+    thinking: Literal["disabled", "between_tools"] | None = None
 
 
 class Price(_Model):

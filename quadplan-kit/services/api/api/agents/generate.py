@@ -59,6 +59,9 @@ from api.schemas.agents import (
 logger = logging.getLogger("api.agents")
 
 TASK = "a1_plan_generator"
+#: Output limits per step (prompt 13, rule 4: preferences 1500, rationale 1200).
+PREFERENCES_MAX_TOKENS = 1500
+RATIONALE_MAX_TOKENS = 1200
 PREFERENCES_BUDGET = Budget(tool_calls=12, tokens=120_000, seconds=60)
 RATIONALE_BUDGET = Budget(tool_calls=6, tokens=60_000, seconds=45)
 MAX_RATIONALE_WORDS = 25
@@ -230,6 +233,7 @@ def preferences_spec(
             strict=True,
         ),
         budget=PREFERENCES_BUDGET,
+        max_tokens=PREFERENCES_MAX_TOKENS,
     )
 
 
@@ -366,6 +370,7 @@ def rationale_spec(
         ),
         budget=RATIONALE_BUDGET,
         known_ids=known,
+        max_tokens=RATIONALE_MAX_TOKENS,
     )
 
 

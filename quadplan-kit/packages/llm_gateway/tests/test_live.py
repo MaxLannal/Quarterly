@@ -9,6 +9,7 @@ from pathlib import Path
 
 import pytest
 from llm_gateway.live import (
+    PHASE_CAPS_USD,
     TOTAL_CAP_USD,
     BudgetExceeded,
     GuardedGateway,
@@ -17,6 +18,7 @@ from llm_gateway.live import (
     LiveBudgetGuard,
     Recorder,
     replay_gateway,
+    secrets_in,
     worst_case_usd,
 )
 from llm_gateway.loop import Backend
@@ -117,23 +119,32 @@ def ask(gateway: GuardedGateway, task: str = "cheap") -> Answer:
 
 def entry(phase: str, cost: float) -> LedgerEntry:
     return LedgerEntry(
-        day="2026-11-16",
+        time="2026-11-16T08:00:00+00:00",
+        test_id="t",
         phase=phase,
-        case="c",
         task="cheap",
         provider="anthropic",
         model="claude-haiku-5-5",
-        in_tokens=1,
-        out_tokens=1,
-        cache_read_tokens=0,
+        input_tokens=1,
+        output_tokens=1,
         cache_write_tokens=0,
+        cache_read_tokens=0,
         cost_usd=cost,
+        latency_ms=1,
         ok=True,
     )
 
 
-def test_the_total_cap_is_four_fifty() -> None:
+def test_the_caps_are_prompt_13s() -> None:
     assert TOTAL_CAP_USD == 4.50
+    assert PHASE_CAPS_USD == {
+        "phase0": 0.10,
+        "phase1": 1.80,
+        "phase2": 0.40,
+        "phase3": 1.40,
+        "phase4": 0.30,
+        "phase5": 0.50,
+    }
 
 
 def test_the_ledger_appends_and_sums(tmp_path: Path) -> None:
@@ -154,7 +165,7 @@ def test_a_call_is_charged_recorded_and_attributed(tmp_path: Path) -> None:
     with g.running("phase0", "smoke-haiku"):
         assert ask(gateway).label == "ok"
     [row] = g.ledger.entries()
-    assert (row.phase, row.case, row.task, row.model, row.ok) == (
+    assert (row.phase, row.test_id, row.task, row.model, row.ok) == (
         "phase0",
         "smoke-haiku",
         "cheap",
@@ -162,8 +173,8 @@ def test_a_call_is_charged_recorded_and_attributed(tmp_path: Path) -> None:
         True,
     )
     assert row.cost_usd == pytest.approx((1000 * 0.10 + 100 * 0.50) / 1_000_000)
-    recorded = (tmp_path / "rec" / "phase0" / "smoke-haiku" / "001.json").read_text()
-    assert json.loads(recorded)["turn"]["tool_calls"][0]["name"] == "submit"
+    recorded = (tmp_path / "rec" / "smoke-haiku.json").read_text()
+    assert json.loads(recorded)[0]["response"]["tool_calls"][0]["name"] == "submit"
     everything = recorded + (tmp_path / "ledger.jsonl").read_text()
     assert provider.api_key not in everything and "api_key" not in everything
 
@@ -253,7 +264,7 @@ def test_a_recording_replays_without_a_provider(tmp_path: Path) -> None:
     )
     with g.running("phase0", "case-1"):
         live = ask(gateway)
-    replay = replay_gateway(ROUTING, tmp_path / "rec" / "phase0" / "case-1")
+    replay = replay_gateway(ROUTING, tmp_path / "rec" / "case-1.json")
     assert (
         replay.structured(
             "cheap",
@@ -275,3 +286,56 @@ def test_a_recording_replays_without_a_provider(tmp_path: Path) -> None:
     assert g.ledger.total() == pytest.approx(
         (1000 * 0.10 + 100 * 0.50) / 1_000_000
     )  # replay spent nothing
+
+
+def test_the_ledger_survives_a_restart(tmp_path: Path) -> None:
+    """A new run (a new guard over the same ledger file) starts from what was spent."""
+    first = guard(tmp_path, {"phase1": 10.0})
+    gateway = GuardedGateway(
+        ROUTING, primary=FakeProvider(), fallback=None, guard=first, recorder=None
+    )
+    with first.running("phase1", "a"):
+        ask(gateway)
+    spent = first.spent()
+    assert spent > 0
+    second = LiveBudgetGuard(
+        Ledger(tmp_path / "ledger.jsonl"),
+        ROUTING,
+        phase_caps={"phase1": 10.0},
+        total_cap_usd=spent + 0.0001,
+    )
+    gateway = GuardedGateway(
+        ROUTING, primary=FakeProvider(), fallback=None, guard=second, recorder=None
+    )
+    with second.running("phase1", "b"), pytest.raises(BudgetExceeded, match="total cap"):
+        ask(gateway)
+
+
+def test_cache_tokens_are_charged_at_their_own_prices(tmp_path: Path) -> None:
+    g = guard(tmp_path, {"phase0": 1.0})
+    usage = Usage(
+        input_tokens=100, output_tokens=50, cache_read_tokens=4000, cache_write_tokens=2000
+    )
+    gateway = GuardedGateway(
+        ROUTING, primary=FakeProvider(usage=usage), fallback=None, guard=g, recorder=None
+    )
+    with g.running("phase0", "cache"):
+        ask(gateway)
+    [row] = g.ledger.entries()
+    assert (row.cache_read_tokens, row.cache_write_tokens) == (4000, 2000)
+    expected = (100 * 0.10 + 50 * 0.50 + 4000 * 0.01 + 2000 * 0.125) / 1_000_000
+    assert row.cost_usd == pytest.approx(expected)
+
+
+def test_recordings_hold_no_key_or_auth_header(tmp_path: Path) -> None:
+    clean = tmp_path / "clean.json"
+    clean.write_text('[{"request": {"system": "hi"}}]')
+    leaked = tmp_path / "leaked.json"
+    leaked.write_text('{"headers": {"x-api-key": "abc"}, "k": "sk-ant-api03-ABCDEFGHIJKL"}')
+    configured = tmp_path / "configured.json"
+    configured.write_text('{"note": "the-real-key-value-123"}')
+    assert secrets_in([clean], known=["the-real-key-value-123"]) == []
+    found = secrets_in([leaked, configured], known=["the-real-key-value-123"])
+    assert any(f.startswith("leaked.json") for f in found)
+    assert "configured.json: contains a configured API key" in found
+    assert not any("the-real-key-value-123" in f for f in found)
