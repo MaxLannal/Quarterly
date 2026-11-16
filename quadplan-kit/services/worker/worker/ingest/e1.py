@@ -61,7 +61,7 @@ def check_expr(
 ) -> tuple[Expr | None, list[str]]:
     if raw is None:
         return None, ["no expression"]
-    if isinstance(raw, str) and raw.strip().startswith(("{", "[")):
+    if isinstance(raw, str) and raw.strip().startswith(("{", "[", '"')):
         # Live finding (prompt 13, phase 4): Haiku 5.5 may send the expression as a
         # JSON-encoded string; a bare string is otherwise one course code.
         try:

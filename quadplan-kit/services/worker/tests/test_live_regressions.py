@@ -25,8 +25,22 @@ def test_e1_reads_an_expression_the_model_sent_as_a_json_string(course: str) -> 
     seed = next(c for c in bundle.courses if c.code == course)
     hand = {r.course: r.prereq for r in build_requisites(bundle) if r.prereq is not None}[course]
     gateway = replay_gateway(load_routing(), FIXTURES / f"p4-e1-{course.replace(' ', '')}.json")
-    result = formalize(gateway, course=course, sentence=seed.prereq_text or "", catalog=from_bundle(bundle))
+    result = formalize(
+        gateway, course=course, sentence=seed.prereq_text or "", catalog=from_bundle(bundle)
+    )
     assert result.expr is not None, result.errors
     assert not [e for e in result.errors if e.startswith("does not parse")]
     if course == "CMSC 14100":
         assert result.ok and expr_to_text(result.expr) == expr_to_text(hand)
+
+
+def test_e1_reads_a_course_code_sent_as_a_quoted_json_string() -> None:
+    """Live finding (phase 5 re-run): Haiku 5.5 also sent one course as '"CMSC 15400"'."""
+    bundle = load_bundle(ROOT / "data" / "seed" / "2026-27")
+    seed = next(c for c in bundle.courses if c.code == "CMSC 23240")
+    gateway = replay_gateway(load_routing(), FIXTURES / "p4-e1-CMSC23240.json")
+    result = formalize(
+        gateway, course="CMSC 23240", sentence=seed.prereq_text or "", catalog=from_bundle(bundle)
+    )
+    assert result.expr is not None, result.errors
+    assert "CMSC 15400" in expr_to_text(result.expr)

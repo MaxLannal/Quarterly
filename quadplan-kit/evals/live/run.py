@@ -139,6 +139,16 @@ class Forecast:
             self.costs.append(row["cost_usd"])
 
 
+#: Phase 5: the only test ids to run (exact, or a prefix ending in "*"); empty = all.
+ONLY: set[str] = set()
+
+
+def skip(test_id: str) -> bool:
+    if not ONLY:
+        return False
+    return not any(test_id == t or (t.endswith("*") and test_id.startswith(t[:-1])) for t in ONLY)
+
+
 @contextmanager
 def case(live: Live, phase: str, test_id: str) -> Iterator[float]:
     with live.guard.running(phase, test_id):
@@ -182,6 +192,8 @@ def phase0(live: Live) -> None:
     plan = [(m, "anthropic") for m in sorted(anthropic_models)] + [(m, "openrouter") for m in sorted(openrouter_models)]
     for model, provider in plan:
         test_id = f"p0-smoke-{model.replace('/', '_')}"
+        if skip(test_id):
+            continue
         route = anthropic_models.get(model)
         thinking = route.thinking if provider == "anthropic" and route is not None else None
         request = ModelRequest(
@@ -284,6 +296,8 @@ def phase4(live: Live) -> None:
     a4_model = model_of(routing, "a4_moderation")
     for post_id, expected, text in A4_POSTS:
         test_id = f"p4-a4-{post_id}"
+        if skip(test_id):
+            continue
         if not forecast.fits():
             forecast.add(live.result("phase4", test_id, a4_model, None, time.monotonic()))
             continue
@@ -296,12 +310,15 @@ def phase4(live: Live) -> None:
     recall = sum(labels.get(p) == "identifying_info" for p in ident) / len(ident)
     kept = sum(labels.get(p) == "ok" for p in fair) / len(fair)
     print(f"A4: identifying_info recall {recall:.0%} (need 100%), fair reviews kept {kept:.0%} (need 90%)")
-    live.result("phase4", "p4-a4-summary", a4_model, recall == 1.0 and kept >= 0.9, time.monotonic(), identifying_recall=recall, fair_kept=kept, note=f"recall {recall:.0%}, kept {kept:.0%}")
+    if not skip("p4-a4-summary"):
+        live.result("phase4", "p4-a4-summary", a4_model, recall == 1.0 and kept >= 0.9, time.monotonic(), identifying_recall=recall, fair_kept=kept, note=f"recall {recall:.0%}, kept {kept:.0%}")
 
     a3x_model = model_of(routing, "a3_forum_extraction")
     forecast = Forecast(live, "phase4", 0.001)
     for post_id, text in A3_POSTS:
         test_id = f"p4-a3x-{post_id}"
+        if skip(test_id):
+            continue
         if not forecast.fits():
             forecast.add(live.result("phase4", test_id, a3x_model, None, time.monotonic()))
             continue
@@ -317,6 +334,8 @@ def phase4(live: Live) -> None:
     forecast = Forecast(live, "phase4", 0.01)
     for page_id, posts in A3_PAGES:
         test_id = f"p4-a3s-{page_id}"
+        if skip(test_id):
+            continue
         if not forecast.fits():
             forecast.add(live.result("phase4", test_id, a3s_model, None, time.monotonic()))
             continue
@@ -344,6 +363,8 @@ def phase4(live: Live) -> None:
     exact = 0
     for code, sentence in sentences:
         test_id = f"p4-e1-{code.replace(' ', '')}"
+        if skip(test_id):
+            continue
         if not forecast.fits():
             forecast.add(live.result("phase4", test_id, e1_model, None, time.monotonic()))
             continue
@@ -554,6 +575,8 @@ def phase3(live: Live) -> None:
         forecast = Forecast(live, "phase3", 0.02)
         for name, turns, plan in IN_SCOPE:
             test_id = f"p3-in-{name}"
+            if skip(test_id):
+                continue
             if not forecast.fits():
                 forecast.add(live.result("phase3", test_id, advisor, None, time.monotonic()))
                 continue
@@ -615,6 +638,8 @@ def phase3(live: Live) -> None:
         forecast = Forecast(live, "phase3", 0.0005)
         for name, text in off_topic:
             test_id = f"p3-off-{name}"
+            if skip(test_id):
+                continue
             if not forecast.fits():
                 forecast.add(live.result("phase3", test_id, classifier, None, time.monotonic()))
                 continue
@@ -628,6 +653,8 @@ def phase3(live: Live) -> None:
         forecast = Forecast(live, "phase3", 0.03)
         for pid, course, text in INJECTIONS:
             test_id = f"p3-{pid}"
+            if skip(test_id):
+                continue
             if not forecast.fits():
                 forecast.add(live.result("phase3", test_id, advisor, None, time.monotonic()))
                 continue
@@ -724,6 +751,8 @@ def phase1(live: Live) -> None:
     forecast = {"sonnet": Forecast(live, "phase1", 0.10), "opus": Forecast(live, "phase1", 0.25)}
     for profile, rt, model, name in runs:
         test_id = f"{profile['id']}-{name}"
+        if skip(test_id):
+            continue
         if not forecast[name].fits():
             forecast[name].add(live.result("phase1", test_id, model, None, time.monotonic()))
             continue
@@ -801,6 +830,8 @@ def main(argv: list[str] | None = None) -> int:
 def rerun(live: Live, test_ids: list[str]) -> None:
     """Phase 5: re-run failed-and-fixed cases, charged to phase5."""
     wanted = {t for t in test_ids if t}
+    ONLY.clear()
+    ONLY.update(wanted)
     original_running = live.guard.running
 
     @contextmanager
