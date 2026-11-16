@@ -23,6 +23,8 @@ env:
 
 up: env
 	$(COMPOSE) up -d --build --wait
+	# nginx (web) looks up "api" once, at start: when api was recreated, web must be too.
+	$(COMPOSE) up -d --wait --force-recreate --no-deps web
 	$(COMPOSE) ps
 
 down:
@@ -80,6 +82,9 @@ e2e:
 E2E_COMPOSE := $(COMPOSE) -f docker-compose.yml -f docker-compose.e2e.yml
 e2e-stack: env
 	$(E2E_COMPOSE) up -d --build --wait
+	# nginx (web) looks up "api" once, at start; the e2e settings recreate api, so web too
+	# (otherwise every /api request is a 502 from the old address).
+	$(E2E_COMPOSE) up -d --wait --force-recreate --no-deps web
 	$(MAKE) migrate
 	$(MAKE) seed
 	$(MAKE) seed-forum-demo
