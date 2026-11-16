@@ -1,4 +1,5 @@
 import { useId, useState } from "react";
+import { summarizeIssue } from "./issueText";
 import type { Goal, Issue, ProgramSummary } from "@/api/types";
 import { Button } from "@/components/ui/button";
 import { controlClass, controlCompactClass } from "@/components/ui/input";
@@ -27,8 +28,8 @@ function GoalRow({ goal, issues, onRemove }: { goal: Goal; issues: Issue[]; onRe
         <div className="text-ink">{goalLabel(goal)}</div>
         {goal.term && <div className="text-caption text-muted">{termLabel(goal.term)}</div>}
         {mine.map((i, n) => (
-          <div key={n} className={i.level === "error" ? "mt-1 text-caption text-error" : "mt-1 text-caption text-warning"}>
-            {i.message}
+          <div key={n} title={i.message} className={i.level === "error" ? "mt-1 text-caption text-error" : "mt-1 text-caption text-warning"}>
+            {summarizeIssue(i).list}
           </div>
         ))}
       </div>

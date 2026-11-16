@@ -71,8 +71,8 @@ test("journey B: transfer student with CS BS + Math BS + Bx/MS sees what cannot 
 
   // B5. Advisor chat: the answer cites the course, then drafts a change set; the student
   // confirms by typing the confirmation sentence, and the change is applied to the plan.
-  await page.getByRole("button", { name: "AI advisor" }).click();
-  const sheet = page.getByRole("dialog", { name: "AI advisor" });
+  await page.getByRole("button", { name: "Ask Quarterly" }).click();
+  const sheet = page.getByRole("dialog", { name: "Ask Quarterly" });
   const input = sheet.getByLabel("Ask the advisor");
   await input.fill("Is Honors Analysis (MATH 20700) worth it if I want ML research?");
   await input.press("Enter");

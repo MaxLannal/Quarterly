@@ -1,13 +1,15 @@
 import { useDraggable } from "@dnd-kit/core";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import type { PlanItem } from "@/api/types";
 import { Menu, type MenuItem } from "@/components/ui/menu";
 import { ErrorIcon, GripIcon, LockIcon, MoreIcon, WarningIcon } from "@/components/ui/icons";
 import { Badge, Dots } from "@/components/ui/misc";
+import { inlineLinkClass } from "@/components/layout/page";
 import { cn } from "@/lib/utils";
 import { issuesForItem, REQUIREMENT_COLORS, usePlanner } from "./context";
 import { attribute, isEstimate, itemUnits, round1 } from "./metrics";
+import { summarizeIssue } from "./issueText";
 import { itemLabel, removeItemOps, setCompletedOps, toggleLockOps } from "./planModel";
 
 export function CourseCard({ item }: { item: PlanItem }) {
@@ -110,15 +112,27 @@ export function CourseCard({ item }: { item: PlanItem }) {
         )}
         {mine.length > 0 && (
           <ul className="mt-1.5 space-y-1">
-            {mine.map((i, n) => (
-              <li key={n} className="flex items-start gap-1.5 text-body">
-                {i.level === "error" ? <ErrorIcon size={14} className="mt-[3px] shrink-0 text-error" /> : <WarningIcon size={14} className="mt-[3px] shrink-0 text-warning-icon" />}
-                <span>
-                  <span className="sr-only">{i.level}: </span>
-                  {i.message}
-                </span>
-              </li>
-            ))}
+            {mine.map((i, n) => {
+              // Short form on the card; the full message is in the plan check (FEEDBACK 2026-11-16).
+              const short = summarizeIssue(i);
+              return (
+                <li key={n} className="flex items-start gap-1.5 text-body" title={i.message}>
+                  {i.level === "error" ? <ErrorIcon size={14} className="mt-[3px] shrink-0 text-error" /> : <WarningIcon size={14} className="mt-[3px] shrink-0 text-warning-icon" />}
+                  <span>
+                    <span className="sr-only">{i.level}: </span>
+                    {short.card}
+                    {short.link && (
+                      <>
+                        {" "}
+                        <Link to={short.link.href} className={inlineLinkClass}>
+                          {short.link.label}
+                        </Link>
+                      </>
+                    )}
+                  </span>
+                </li>
+              );
+            })}
           </ul>
         )}
       </div>

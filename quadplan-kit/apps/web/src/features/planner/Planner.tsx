@@ -12,7 +12,7 @@ import {
   type CollisionDetection,
   type DragStartEvent,
 } from "@dnd-kit/core";
-import { useEffect, useId, useMemo, useReducer, useState } from "react";
+import { useEffect, useMemo, useReducer, useState } from "react";
 import { Link } from "react-router-dom";
 import { api } from "@/api/client";
 import { useCourseMap, usePlanPrograms, usePrograms } from "@/api/hooks";
@@ -20,7 +20,6 @@ import type { ChangeOp, Issue, PlanItem } from "@/api/types";
 import { Button } from "@/components/ui/button";
 import { Dialog } from "@/components/ui/dialog";
 import { CloseIcon, SparkIcon } from "@/components/ui/icons";
-import { Input } from "@/components/ui/input";
 import { Notice } from "@/components/ui/misc";
 import { AdvisorSheet } from "@/features/advisor/AdvisorPanel";
 import { GenerateDialog } from "@/features/generate/GenerateDialog";
@@ -98,7 +97,6 @@ export function Planner({ initial, autoGenerate = false }: PlannerProps) {
   const [advisorOpen, setAdvisorOpen] = useState(false);
   const [dragging, setDragging] = useState<string | null>(null);
   const desktop = useMediaQuery("(min-width: 1024px)");
-  const nameId = useId();
   const { data: session } = useSession();
 
   const plan = state.plan;
@@ -239,16 +237,7 @@ export function Planner({ initial, autoGenerate = false }: PlannerProps) {
       <div className="mx-auto flex w-full max-w-tool flex-col gap-4 px-4 pb-24 pt-6 sm:px-6 lg:px-8">
         <h1 className="sr-only">Planner</h1>
         <div className="flex flex-wrap items-start gap-x-8 gap-y-4">
-          <div className="flex min-w-0 flex-col gap-1">
-            <label htmlFor={nameId} className="text-caption-uppercase uppercase text-muted">
-              Plan name
-            </label>
-            <Input
-              id={nameId}
-              value={state.name}
-              onChange={(e) => dispatch({ type: "rename", name: e.target.value })}
-              className="w-64 max-w-full font-display text-display-sm"
-            />
+          <div className="flex min-w-0 flex-col gap-1 self-end">
             <p className="text-caption text-muted">Not official advising. Confirm with your adviser and My Planner.</p>
           </div>
           <div className="flex min-w-0 flex-col gap-1">
@@ -304,7 +293,7 @@ export function Planner({ initial, autoGenerate = false }: PlannerProps) {
           </DrawerButton>
           <Button variant="outline" aria-haspopup="dialog" onClick={() => setAdvisorOpen(true)}>
             <SparkIcon className="text-primary" />
-            AI advisor
+            Ask Quarterly
           </Button>
           <div className="flex flex-wrap items-center gap-2 sm:ml-auto">
             <Button variant="outline" onClick={() => void save()}>
@@ -344,6 +333,8 @@ export function Planner({ initial, autoGenerate = false }: PlannerProps) {
           <div className="mt-2 flex items-start gap-6">
             <section id="plan-grid" aria-label="Plan grid" className="min-w-0 flex-1">
               <PlanGrid
+                name={state.name}
+                onRename={(name) => dispatch({ type: "rename", name })}
                 showSummer={showSummer}
                 onToggleSummer={() => setShowSummer(!showSummer)}
                 onGraduation={(term) => dispatch({ type: "graduation", term })}

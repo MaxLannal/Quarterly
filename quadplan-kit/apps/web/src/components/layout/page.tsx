@@ -103,7 +103,7 @@ export function Section({
 }) {
   const headingId = id ? `${id}-heading` : undefined;
   return (
-    <section aria-labelledby={title ? headingId : undefined} aria-label={title ? undefined : ariaLabel} className={cn("min-w-0", className)}>
+    <section id={id} aria-labelledby={title ? headingId : undefined} aria-label={title ? undefined : ariaLabel} className={cn("min-w-0 scroll-mt-24", className)}>
       {(title || actions) && (
         <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
           <div className="min-w-0">

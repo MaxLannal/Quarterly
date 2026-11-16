@@ -147,7 +147,7 @@ describe("AdvisorPanel as a chat (FEEDBACK F4)", () => {
     expect(screen.getByTestId("chat-bubble-user")).toHaveTextContent("You: Is TEST 20000 hard?");
     expect(screen.getByTestId("typing-indicator")).toHaveTextContent("The AI is writing…");
     release();
-    expect(await screen.findByTestId("chat-bubble-ai")).toHaveTextContent("AI advisor: A fake answer.");
+    expect(await screen.findByTestId("chat-bubble-ai")).toHaveTextContent("Quarterly (AI): A fake answer.");
     expect(screen.queryByTestId("typing-indicator")).toBeNull();
   });
 

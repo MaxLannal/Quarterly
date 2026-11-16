@@ -46,14 +46,14 @@ test.describe("F2: Summer opens the academic year", () => {
 test.describe("F3: number of years and the graduation quarter", () => {
   test("a second-year transfer gets three years; add and remove a year", async ({ page }) => {
     await transferPlan(page);
-    await expect(page.getByRole("heading", { name: "Three-year plan" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "My Plan" })).toBeVisible();
     await expect(page.getByRole("heading", { name: "Second year 2099–00" })).toBeVisible();
     await expect(page.getByRole("heading", { name: "Fourth year 2101–02" })).toBeVisible();
     await expect(page.getByTestId("year-4")).toHaveCount(0);
     await expect(page.getByLabel("Graduating in")).toHaveValue("2102-SP");
 
     await page.getByRole("button", { name: "Add a year" }).click();
-    await expect(page.getByRole("heading", { name: "Four-year plan" })).toBeVisible();
+    await expect(page.getByTestId("year-4")).toBeVisible();
     await expect(page.getByRole("heading", { name: "Fifth year 2102–03" })).toBeVisible();
     await expect(page.getByLabel("Graduating in")).toHaveValue("2103-SP");
     await page.getByRole("button", { name: "Remove last year" }).click();
@@ -69,7 +69,8 @@ test.describe("F3: number of years and the graduation quarter", () => {
 
     // The choice is kept with the plan.
     await page.reload();
-    await expect(page.getByRole("heading", { name: "Three-year plan" })).toBeVisible();
+    await expect(page.getByTestId("year-3")).toBeVisible();
+    await expect(page.getByTestId("year-4")).toHaveCount(0);
   });
 
   test("graduating in Winter hides the last Spring; its courses move to Other terms", async ({ page }) => {
@@ -96,7 +97,7 @@ test.describe("F3: number of years and the graduation quarter", () => {
       localStorage.setItem("quarterly.plans.v1", JSON.stringify({ version: 1, activeId: "old", plans: [{ localId: "old", name: "Old plan", isPrimary: true, state, updatedDay: "2099-01-01", years: 5 }] }));
     });
     await page.goto("/plan");
-    await expect(page.getByRole("heading", { name: "Five-year plan" })).toBeVisible();
+    await expect(page.getByTestId("year-5")).toBeVisible();
     await expect(page.getByLabel("Graduating in")).toHaveValue("2104-SP");
   });
 });
@@ -150,17 +151,19 @@ test.describe("F4: planner layout", () => {
     await check.click();
     const issues = page.getByRole("list", { name: "Verifier issues" });
     await expect(issues).toBeVisible();
-    await expect(issues).toContainText("TEST 10100 needs TEST 10000");
+    await expect(issues).toContainText("Prerequisite of TEST 10100 not met.");
     await expect(page.getByTestId("verifier-badge")).toContainText("error");
   });
 
-  test("the AI advisor opens from the top, labelled as generative AI, and reads as a chat", async ({ page }) => {
+  test("Ask Quarterly opens from the top, says it is AI, and reads as a chat", async ({ page }) => {
     await page.goto("/plan");
     const sheet = await openAdvisor(page);
     await sheet.evaluate((el) => Promise.all(el.getAnimations().map((a) => a.finished)));
     const box = await sheet.boundingBox();
     expect(Math.round(box?.y ?? -1)).toBe(0);
-    await expect(sheet.getByText("Generative AI", { exact: true })).toBeVisible();
+    // FEEDBACK 2026-11-16: "Ask Quarterly", without the grey "Generative AI" badge.
+    await expect(sheet.getByRole("heading", { name: "Ask Quarterly" })).toBeVisible();
+    await expect(sheet.getByText("Generative AI", { exact: true })).toHaveCount(0);
     await expect(sheet.getByText("Answers are written by an AI and can be wrong.")).toBeVisible();
     await expect(sheet.getByLabel("Ask the advisor")).toBeFocused();
     await sheet.getByLabel("Ask the advisor").fill("Is TEST 20000 hard?");
@@ -175,7 +178,7 @@ test.describe("F4: planner layout", () => {
     expect(ai?.x, JSON.stringify({ user, ai })).toBeLessThan(user?.x ?? 0);
     await sheet.getByRole("button", { name: "Close" }).click();
     await expect(sheet).toBeHidden();
-    await expect(page.getByRole("button", { name: "AI advisor" })).toBeFocused();
+    await expect(page.getByRole("button", { name: "Ask Quarterly" })).toBeFocused();
   });
 });
 
@@ -215,7 +218,7 @@ test.describe("F6: motion", () => {
     await page.goto("/plan");
     await page.getByRole("button", { name: "Requirements", exact: true }).click();
     await expect(page.getByTestId("plan-drawer")).toHaveCSS("animation-name", "drawer-in");
-    await page.getByRole("button", { name: "AI advisor" }).click();
+    await page.getByRole("button", { name: "Ask Quarterly" }).click();
     await expect(page.getByTestId("top-sheet")).toHaveCSS("animation-name", "sheet-in");
   });
 

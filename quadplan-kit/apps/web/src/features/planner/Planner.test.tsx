@@ -29,9 +29,10 @@ describe("Planner with endpoints that are not built yet (501)", () => {
     expect(await within(dialog).findByText(/Plan generation is not available yet/)).toBeInTheDocument();
     await user.click(within(dialog).getByRole("button", { name: "Close" }));
 
-    await user.click(screen.getByRole("button", { name: "AI advisor" }));
-    const advisor = screen.getByRole("dialog", { name: "AI advisor" });
-    expect(within(advisor).getByText("Generative AI")).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "Ask Quarterly" }));
+    const advisor = screen.getByRole("dialog", { name: "Ask Quarterly" });
+    expect(within(advisor).queryByText("Generative AI")).not.toBeInTheDocument();
+    expect(within(advisor).getByText(/Answers are written by an AI/)).toBeInTheDocument();
     await user.type(within(advisor).getByLabelText("Ask the advisor"), "Is TEST 20000 hard?");
     await user.click(within(advisor).getByRole("button", { name: "Send" }));
     expect(await within(advisor).findByText(/The advisor is not available yet/)).toBeInTheDocument();

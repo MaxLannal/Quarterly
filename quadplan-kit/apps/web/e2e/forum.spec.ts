@@ -164,13 +164,15 @@ test("instructors: public names; course page ratings need login", async ({ page 
   await expect(page.getByRole("heading", { level: 1, name: "Fake Instructor A" })).toBeVisible();
   await expect(page.getByText("to see ratings and read reviews.")).toBeVisible();
 
+  // FEEDBACK 2026-11-16: ratings and instructors are a compact overview under the title.
   await page.goto("/courses/TEST%2010000");
-  await expect(page.getByRole("heading", { name: "Student ratings" })).toBeVisible();
-  await expect(page.getByText("to see ratings and read reviews from students.")).toBeVisible();
+  const overview = page.getByRole("region", { name: "Overview" });
+  await expect(overview.getByText("Student ratings")).toBeVisible();
+  await expect(overview.getByText("to see ratings.")).toBeVisible();
   await logIn(page);
   await page.goto("/courses/TEST%2010000");
-  await expect(page.getByText("From 2 reviews")).toBeVisible();
-  await page.getByRole("link", { name: "Fake Instructor A" }).last().click();
+  await expect(overview.getByText("2 reviews")).toBeVisible();
+  await overview.getByRole("link", { name: "Fake Instructor A" }).click();
   await expect(page.getByRole("heading", { level: 1, name: /with Fake Instructor A/ })).toBeVisible();
 });
 

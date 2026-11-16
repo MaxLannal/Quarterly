@@ -1,20 +1,27 @@
-import { Link, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useLocation, useParams } from "react-router-dom";
 import { ApiError, isNotAvailable } from "@/api/client";
 import { useCourse } from "@/api/hooks";
 import { inlineLinkClass, LoadingState, PageContainer, PageHeader, Section, standaloneLinkClass, tallTargetClass } from "@/components/layout/page";
-import { Avatar } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Dialog } from "@/components/ui/dialog";
+import { GraphIcon } from "@/components/ui/icons";
 import { cn, isWebUrl } from "@/lib/utils";
 import { Badge, CourseCode, NotAvailable } from "@/components/ui/misc";
 import { AddToPlanButton } from "@/features/courses/AddToPlanButton";
 import { AttributeCard, OfferingsTable, PrereqGraph } from "@/features/courses/CourseParts";
-import { useSession } from "@/features/auth/session";
-import { CourseForumSummary } from "@/features/forum/CourseForumSummary";
-import { termLabel } from "@/features/planner/terms";
+import { CourseOverview } from "@/features/courses/CourseOverview";
 
 export default function CoursePage() {
   const { code = "" } = useParams();
   const q = useCourse(code);
-  const loggedIn = useSession().status === "authenticated";
+  const [graphOpen, setGraphOpen] = useState(false);
+  const { hash } = useLocation();
+  const loaded = !!q.data;
+  // Links such as "View prerequisite" (planner issues) land on a section of this page.
+  useEffect(() => {
+    if (loaded && hash) document.getElementById(hash.slice(1))?.scrollIntoView({ block: "start" });
+  }, [loaded, hash]);
 
   if (q.isLoading) {
     return (
@@ -72,8 +79,19 @@ export default function CoursePage() {
         actions={<AddToPlanButton code={c.code} catalogYear={c.catalog_year} />}
       />
 
-      <div className="flex flex-col gap-12">
-        <Section id="prereq" title="Prerequisites">
+      <CourseOverview course={c} />
+
+      <div className="flex flex-col gap-10">
+        <Section
+          id="prereq"
+          title="Prerequisites"
+          actions={
+            <Button variant="ghost" size="sm" onClick={() => setGraphOpen(true)}>
+              <GraphIcon size={16} />
+              View prerequisite graph
+            </Button>
+          }
+        >
           <div className="flex max-w-reading flex-col gap-2 text-body">
             <p className="text-ink">{c.prereq_human ?? c.prereq_text ?? "None listed."}</p>
             {c.prereq_text && c.prereq_human && (
@@ -83,47 +101,19 @@ export default function CoursePage() {
             )}
             {c.notes && <p className="text-body-sm">{c.notes}</p>}
           </div>
-          <div className="mt-5">
-            <PrereqGraph course={c} />
-          </div>
         </Section>
+        <Dialog open={graphOpen} onClose={() => setGraphOpen(false)} title={`Prerequisite graph: ${c.code}`} className="max-w-4xl">
+          <PrereqGraph course={c} />
+        </Dialog>
 
-        <div className="grid gap-12 lg:grid-cols-2 lg:gap-6">
+        <div className="grid gap-10 lg:grid-cols-2 lg:gap-6">
           <Section id="offer" title="Offerings">
             <OfferingsTable course={c} />
           </Section>
           <AttributeCard course={c} />
         </div>
 
-        <div className="grid gap-12 lg:grid-cols-2 lg:gap-6">
-          <Section id="instr" title="Instructors">
-            {c.instructors.length === 0 ? (
-              <p className="text-body-sm text-muted">No instructors recorded yet.</p>
-            ) : (
-              <ul className="divide-y divide-hairline border-y border-hairline">
-                {c.instructors.map((i) => (
-                  <li key={i.instructor.slug} className="flex items-center gap-3 py-3">
-                    <Avatar name={i.instructor.display_name} />
-                    <div className="min-w-0">
-                      <Link to={`/courses/${encodeURIComponent(c.code)}/i/${i.instructor.slug}`} className={cn(inlineLinkClass, tallTargetClass, "text-title-sm")}>
-                        {i.instructor.display_name}
-                      </Link>
-                      <p className="text-caption text-muted">
-                        {i.n_terms} term{i.n_terms === 1 ? "" : "s"}
-                        {i.first_term && i.last_term ? `, ${termLabel(i.first_term)}–${termLabel(i.last_term)}` : ""}
-                        {loggedIn ? "" : " · reviews need login"}
-                      </p>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </Section>
-
-          <CourseForumSummary code={c.code} />
-        </div>
-
-        <div className="grid gap-12 lg:grid-cols-2 lg:gap-6">
+        <div className="grid gap-10 lg:grid-cols-2 lg:gap-6">
           <Section id="counts" title="Counts toward">
             {c.counts_toward.length === 0 ? (
               <p className="text-body-sm text-muted">No program requirements list this course.</p>

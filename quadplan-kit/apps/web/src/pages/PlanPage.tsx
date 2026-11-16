@@ -22,7 +22,7 @@ export default function PlanPage() {
     if (local || years.isLoading) return;
     const plan: LocalPlan = {
       localId: newLocalId(),
-      name: "My plan",
+      name: "My Plan",
       isPrimary: true,
       state: emptyPlan(defaultCatalogYear(years.data?.map((y) => y.id))),
       updatedDay: today(),

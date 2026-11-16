@@ -416,7 +416,7 @@ export function OnboardingWizard() {
 
   function finish() {
     const state = buildPlanState(d, abroad, coreIds);
-    const ok = upsertPlan({ localId: newLocalId(), name: "My plan", isPrimary: true, state, updatedDay: today() });
+    const ok = upsertPlan({ localId: newLocalId(), name: "My Plan", isPrimary: true, state, updatedDay: today() });
     if (!ok) {
       setStored(false);
       return;

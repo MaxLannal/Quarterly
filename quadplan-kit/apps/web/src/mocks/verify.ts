@@ -18,16 +18,18 @@ export function mockVerify(plan: PlanState): Report {
     const code = item.course as string;
     byTerm.set(item.term, (byTerm.get(item.term) ?? 0) + 1);
     if (!findCourse(code)) {
-      issues.push({ code: "V02", level: "error", message: `${code} is not in the catalog.`, course_ids: [code], term_ids: [item.term] });
+      issues.push({ code: "V01", level: "error", message: `${code} is not in the ${plan.catalog_year} catalog.`, course_ids: [code], term_ids: [item.term] });
       continue;
     }
     for (const pre of prereqsOf(code)) {
-      const done = items.some((o) => o.course === pre && compareTerms(o.term, item.term) < 0);
+      // As the real verifier: an earlier quarter, or the same Summer quarter (summer sessions).
+      const sameSummer = (t: string) => t === item.term && item.term.endsWith("-SU");
+      const done = items.some((o) => o.course === pre && (compareTerms(o.term, item.term) < 0 || sameSummer(o.term)));
       if (!done) {
         issues.push({
-          code: "V01",
+          code: "V03",
           level: "error",
-          message: `${code} needs ${pre} in an earlier quarter.`,
+          message: `Prerequisite of ${code} in ${item.term} is not met: ${pre} is not in an earlier quarter. Requirement: ${pre}.`,
           course_ids: [code],
           term_ids: [item.term],
           fix_hints: [`Add ${pre} before ${termLabel(item.term)}.`],

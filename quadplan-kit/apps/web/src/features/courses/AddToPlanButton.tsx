@@ -18,7 +18,7 @@ export function AddToPlanButton({ code, catalogYear }: { code: string; catalogYe
     setPlan(
       activePlan() ?? {
         localId: newLocalId(),
-        name: "My plan",
+        name: "My Plan",
         isPrimary: true,
         state: emptyPlan(catalogYear),
         updatedDay: today(),

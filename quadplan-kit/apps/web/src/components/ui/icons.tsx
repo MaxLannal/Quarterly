@@ -121,3 +121,21 @@ export const SendIcon = (p: IconProps) => (
     <path d="M5 12h12M12 6l6 6-6 6" />
   </Svg>
 );
+
+/** Three linked nodes: the prerequisite graph. */
+export const GraphIcon = (p: IconProps) => (
+  <Svg {...p}>
+    <circle cx="6" cy="6" r="2.5" />
+    <circle cx="6" cy="18" r="2.5" />
+    <circle cx="18" cy="12" r="2.5" />
+    <path d="M8.3 7.2l7.4 3.6M8.3 16.8l7.4-3.6" />
+  </Svg>
+);
+
+/** A pencil: rename. */
+export const PencilIcon = (p: IconProps) => (
+  <Svg {...p}>
+    <path d="M4 20l1-4.5L15.5 5a2.1 2.1 0 013 3L8 18.5 4 20z" />
+    <path d="M13.5 7l3.5 3.5" />
+  </Svg>
+);

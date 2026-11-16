@@ -66,7 +66,7 @@ export default function ProgramPage() {
   const tree = ruleTree(p.id, p.rules);
 
   function addToPlan() {
-    const plan = activePlan() ?? { localId: newLocalId(), name: "My plan", isPrimary: true, state: emptyPlan(p.catalog_year), updatedDay: today() };
+    const plan = activePlan() ?? { localId: newLocalId(), name: "My Plan", isPrimary: true, state: emptyPlan(p.catalog_year), updatedDay: today() };
     const programs = plan.state.programs ?? [];
     if (programs.some((x) => x.program_id === p.id)) {
       setAdded(`${p.name} is already on your plan.`);

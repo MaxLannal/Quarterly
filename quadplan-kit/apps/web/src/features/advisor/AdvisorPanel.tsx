@@ -5,7 +5,7 @@ import { streamChat } from "@/api/sse";
 import type { ChangeOp, ChangeSet, ChatTurn, Citation, PlanState } from "@/api/types";
 import { Button } from "@/components/ui/button";
 import { CloseIcon, SparkIcon } from "@/components/ui/icons";
-import { Badge, NotAvailable, Notice } from "@/components/ui/misc";
+import { NotAvailable, Notice } from "@/components/ui/misc";
 import { TopSheet } from "@/components/ui/sheet";
 import { useSession } from "@/features/auth/session";
 import { useForumPageById, usePost } from "@/features/forum/api";
@@ -278,7 +278,7 @@ export function AdvisorPanel({ plan, planId = null, onApply, composerRef }: Advi
               ) : entry.kind === "assistant" ? (
                 <AiRow>
                   <div className="w-fit max-w-full rounded-xl rounded-tl-xs border border-hairline bg-surface-card px-4 py-2.5 text-body-sm text-body" data-testid="chat-bubble-ai">
-                    <span className="sr-only">AI advisor: </span>
+                    <span className="sr-only">Quarterly (AI): </span>
                     <p className="whitespace-pre-wrap">{entry.text}</p>
                     {entry.citations.length > 0 && (
                       <ul className="-mx-1.5 mt-1 flex flex-wrap" aria-label="Sources">
@@ -387,12 +387,8 @@ export function AdvisorSheet({ open, onClose, ...panel }: AdvisorPanelProps & { 
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
             <h2 id={titleId} className="font-display text-display-sm">
-              AI advisor
+              Ask Quarterly
             </h2>
-            <Badge casing="normal" icon={false} className="gap-1.5">
-              <SparkIcon size={12} />
-              Generative AI
-            </Badge>
           </div>
           <p id={descId} className="mt-1 text-caption text-muted">
             Answers are written by an AI and can be wrong. Not official advising.

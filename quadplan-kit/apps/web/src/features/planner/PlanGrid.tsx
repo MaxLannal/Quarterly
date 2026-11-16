@@ -1,8 +1,9 @@
 import { useDroppable } from "@dnd-kit/core";
-import { useId, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import type { Goal, PlanItem } from "@/api/types";
 import { Button } from "@/components/ui/button";
-import { controlClass, controlCompactClass } from "@/components/ui/input";
+import { PencilIcon } from "@/components/ui/icons";
+import { controlClass, controlCompactClass, Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/misc";
 import { cn } from "@/lib/utils";
 import { usePlanner } from "./context";
@@ -93,7 +94,66 @@ function QuarterCell({ term, items }: { term: string; items: PlanItem[] }) {
   );
 }
 
-const NUMBER_WORDS = ["One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight"];
+/** The plan's name as the grid's heading, with a pencil to rename it (FEEDBACK 2026-11-16). */
+function PlanName({ name, onRename }: { name: string; onRename: (name: string) => void }) {
+  const [editing, setEditing] = useState(false);
+  const [draft, setDraft] = useState(name);
+  const input = useRef<HTMLInputElement>(null);
+  const inputId = useId();
+  useEffect(() => {
+    if (editing) input.current?.select();
+  }, [editing]);
+  if (editing) {
+    const commit = () => {
+      const next = draft.trim();
+      if (next && next !== name) onRename(next);
+      setEditing(false);
+    };
+    return (
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          commit();
+        }}
+      >
+        <label htmlFor={inputId} className="sr-only">
+          Plan name
+        </label>
+        <Input
+          ref={input}
+          id={inputId}
+          value={draft}
+          maxLength={80}
+          onChange={(e) => setDraft(e.target.value)}
+          onBlur={commit}
+          onKeyDown={(e) => {
+            if (e.key === "Escape") {
+              setDraft(name);
+              setEditing(false);
+            }
+          }}
+          className="w-72 max-w-full font-display text-display-sm"
+        />
+      </form>
+    );
+  }
+  return (
+    <div className="flex min-w-0 items-center gap-1">
+      <h2 className="truncate font-display text-display-sm sm:text-display-md">{name || "My Plan"}</h2>
+      <button
+        type="button"
+        aria-label="Rename plan"
+        onClick={() => {
+          setDraft(name);
+          setEditing(true);
+        }}
+        className="flex size-11 shrink-0 items-center justify-center rounded-md text-gray-dark transition-colors hover:bg-canvas-soft hover:text-ink"
+      >
+        <PencilIcon size={18} />
+      </button>
+    </div>
+  );
+}
 
 /** Graduation choices: Autumn, Winter and Spring from the first quarter to one year past the
  * last, never past the longest plan the API accepts. */
@@ -109,6 +169,8 @@ function graduationChoices(entryTerm: string, years: number): string[] {
 }
 
 interface PlanGridProps {
+  name: string;
+  onRename: (name: string) => void;
   showSummer: boolean;
   onToggleSummer: () => void;
   onGraduation: (term: string) => void;
@@ -120,7 +182,7 @@ interface PlanGridProps {
  * Autumn, Winter and Spring (FEEDBACK F2). The grid ends at the graduation quarter (F3); items
  * outside it are listed under "Other terms".
  */
-export function PlanGrid({ showSummer, onToggleSummer, onGraduation, onAddYear }: PlanGridProps) {
+export function PlanGrid({ name, onRename, showSummer, onToggleSummer, onGraduation, onAddYear }: PlanGridProps) {
   const { plan } = usePlanner();
   const [yearMsg, setYearMsg] = useState<string | null>(null);
   const gradId = useId();
@@ -149,7 +211,7 @@ export function PlanGrid({ showSummer, onToggleSummer, onGraduation, onAddYear }
   return (
     <div className="flex flex-col gap-8">
       <div className="flex flex-wrap items-end justify-between gap-x-4 gap-y-3">
-        <h2 className="font-display text-display-sm sm:text-display-md">{NUMBER_WORDS[years - 1] ?? years}-year plan</h2>
+        <PlanName name={name} onRename={onRename} />
         <div className="flex flex-wrap items-end gap-2">
           <div className="flex flex-col gap-1">
             <label htmlFor={gradId} className="text-caption-uppercase uppercase text-muted">

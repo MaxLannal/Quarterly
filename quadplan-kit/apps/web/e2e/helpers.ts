@@ -54,12 +54,12 @@ export async function plannerWithCourses(page: Page) {
   await page.goto("/plan");
   await addProgram(page, "Fake Program");
   for (const code of ["TEST 10000", "TEST 10100"]) await addCourseViaTree(page, /^Fake introductory sequence/, code, "Autumn 2099");
-  await expect(card(page, "TEST 10100")).toContainText("earlier quarter");
+  await expect(card(page, "TEST 10100")).toContainText("Prerequisite not met.");
 }
 
 export async function openAdvisor(page: Page) {
-  await page.getByRole("button", { name: "AI advisor" }).click();
-  const sheet = page.getByRole("dialog", { name: "AI advisor" });
+  await page.getByRole("button", { name: "Ask Quarterly" }).click();
+  const sheet = page.getByRole("dialog", { name: "Ask Quarterly" });
   await expect(sheet).toBeVisible();
   return sheet;
 }

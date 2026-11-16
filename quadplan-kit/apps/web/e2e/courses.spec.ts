@@ -18,9 +18,15 @@ test("course search: header search, filters, results", async ({ page }) => {
 test("course page: prerequisites graph, offerings, attributes, add to plan", async ({ page }) => {
   await page.goto("/courses/TEST%2020000");
   await expect(page.getByRole("heading", { level: 1, name: "TEST 20000 · Fake Theory" })).toBeVisible();
-  const graph = page.getByRole("figure", { name: "Prerequisite graph" });
+  // FEEDBACK 2026-11-16: the graph opens in a window from "View prerequisite graph".
+  await expect(page.getByRole("figure", { name: "Prerequisite graph" })).toHaveCount(0);
+  await page.getByRole("button", { name: "View prerequisite graph" }).click();
+  const graphDialog = page.getByRole("dialog", { name: "Prerequisite graph: TEST 20000" });
+  const graph = graphDialog.getByRole("figure", { name: "Prerequisite graph" });
   await expect(graph.getByRole("link", { name: "TEST 10200" })).toBeVisible();
   await expect(graph.getByRole("link", { name: "TEST 25000" })).toBeVisible();
+  await graphDialog.getByRole("button", { name: /Close/ }).first().click();
+  await expect(graphDialog).toHaveCount(0);
   await expect(page.getByRole("table", { name: "Predicted quarters" })).toContainText("Likely (95%)");
   await expect(page.getByRole("table", { name: "Offerings by term" })).toContainText("Fake Instructor A");
   await expect(page.getByText("From 12 forum ratings").first()).toBeVisible();
