@@ -603,3 +603,12 @@ If the project uses Tailwind v4, mirror these in an `@theme` block so utilities 
 - Dark mode is not defined. Don't invent one; ask first.
 - ElevenLabs' letter-spacing was tuned for Waldenburg. If Newsreader looks cramped at 64px, loosen display tracking by up to 0.5px; change nothing else.
 - Form validation beyond focus/error, empty states and loading skeletons are not specified. Build them from existing tokens (hairlines, muted text, surface-strong plates).
+## Changes approved in FEEDBACK (2026-11-16, design pass)
+
+Richard's FEEDBACK "Minor design changes" overrides the rules above in these places only:
+
+- **Wordmark weight.** The home page's "Quarterly" headline is 96px Newsreader **400** (`text-display-hero`, 64px on a phone), and the top bar's and footer's wordmark is Newsreader **500**. Every other display heading stays at 300.
+- **Hero orb.** The home hero's orb is `orb-maroon` (#A44A4A, derived: maroon at 70% on the canvas), so the page's one atmospheric colour matches the accent. Other orbs keep the secondary hues.
+- **Catalog switch.** Courses/Programs is a small segmented control: `surface-strong` track, the current side on a white pill with maroon text; the pill slides 200ms ease-out between sides (still under reduced motion).
+- **Top-bar search.** A filled `surface-strong` field without an outline until it is hovered or focused; the icon and placeholder identify it.
+- **Footer links.** 32px rows with a mouse; 44px targets on touch screens.

@@ -23,7 +23,7 @@ export default function HomePage() {
   return (
     <section className="relative isolate overflow-hidden">
       <Orb
-        color="lake"
+        color="maroon"
         className="-left-16 top-0 size-[320px] sm:left-0 sm:size-[480px] lg:-top-6 lg:left-[8%] lg:size-[560px]"
       />
       <div className="mx-auto grid w-full max-w-content items-center gap-10 px-4 py-16 sm:px-6 sm:py-24 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:px-8 lg:py-section">

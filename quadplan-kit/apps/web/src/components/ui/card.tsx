@@ -37,7 +37,7 @@ export function Card({ as: Tag = "div", variant, interactive, className, ...prop
   return <Tag className={cn(cardVariants({ variant, interactive }), className)} {...props} />;
 }
 
-export type OrbColor = "lake" | "goldenrod" | "ivy" | "terracotta" | "rose";
+export type OrbColor = "lake" | "goldenrod" | "ivy" | "terracotta" | "rose" | "maroon";
 
 const ORB_VAR: Record<OrbColor, string> = {
   lake: "var(--color-orb-lake)",
@@ -45,6 +45,7 @@ const ORB_VAR: Record<OrbColor, string> = {
   ivy: "var(--color-orb-ivy)",
   terracotta: "var(--color-orb-terracotta)",
   rose: "var(--color-orb-rose)",
+  maroon: "var(--color-orb-maroon)",
 };
 
 /**

@@ -57,6 +57,8 @@
   --color-orb-ivy: #adb17d;
   --color-orb-terracotta: #d49464;
   --color-orb-rose: #b1746f;
+  /* Derived: maroon (#800000) at 70% on the canvas, for the home hero (D10, FEEDBACK "Minor design changes"). */
+  --color-orb-maroon: #a44a4a;
 
   /* Semantic */
   --color-error: #8f3931;
