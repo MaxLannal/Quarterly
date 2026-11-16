@@ -24,7 +24,41 @@ Write down anything you notice: something broken, something confusing, or someth
 
 ## New
 
-<!-- Add new items here, newest first. -->
+### Check Summer Catalog
+- Date: 2026-11-16
+- Where: Plan, catalog
+- Issue: There are summer session classes that are clearly not documented. Refer to https://summer.uchicago.edu/undergraduates/undergraduate-course-finder/ and document these classes
+- Status: new
+
+### Allow Summer Sequences
+- Date: 2026-11-16
+- Where: Plan
+- Issue: Summer classes can be taken in sequence during summer quarter, since the summer quarter are broken in to sessions. If the student are doing a sequence in the summer quarter and all of those course appears to be in the same quarter, allow it. But if they are skipping classes, produce a warning. For example, having HUMA 11500 and 11600 both in summer quarter is acceptable, but having HUMA 11500 and 11700 without 11600 is not. 
+- Status: new
+
+### Viewing and Editing Test, Placement and Transfer Credits
+- Date: 2026-11-16
+- Where: Plan
+- Issue: Currently there is no way to edit the imported grades and transfer credits, or at least its not intuitive enough for the users to find it. Please have an interface that allows the users to check their imported test credit and transfer credit.
+- Status: new
+
+### Concatnating Error Messages
+- Date: 2026-11-16
+- Where: Plan
+- Issue: Currently the error message displayed is too verbose everywhere. User is very difficult to extract information form that chunk of test. Please, for every possible error method, you need to find a way to concatnate it and present it in a much simpler way. For instance, I am getting the error message "Prerequisite of MATH 20250 in 2026-AU is not met: MATH 16300 is not in the plan; MATH 16310 is not in the plan; MATH 15910 is not in the plan; MATH 15900 is not in the plan; MATH 19900 is not in the plan. Requirement: MATH 16300 or MATH 16310 or MATH 15910 or MATH 15900 or MATH 19900.", you can perhaps abbreviate to "Prerequisite not met. View prerequisite (with hyperlink)" in planner dashboard, and "Prerequisite of MATH 20250 not met. View prerequisite (with hyperlink)". A general rule of thumb moving foward is that we want to present to user the most essential information.
+- Status: new
+
+### A more compact interface
+- Date: 2026-11-16
+- Where: Everywhere
+- Issue: Keep the current interface but make the UI a bit more compact, so a laptop screen can display more info. This can be done by various ways (decreasing margins, round less on corners). Please still consult DESIGN.md for aesthetics.
+- Status: new
+
+### minor issues
+- "Three-year plan" or "Four-year plan" on planner -> change to "My Plan", and then add a light colored pencil icon beside it to allow user to change the name of the plan. Then, delete the plan name field on the top.
+- Change "AI advisor" to "Ask Quarterly". Delete the grey "Generative AI" icon in the chatting interface.
+- In course pages, fold the prerequisite graph as a small icon on the right of prerequisite "view prerequisite graph" and expand a window to diplay the graph. Move "instructors" and "student ratings" as a compacted overview below the title and above prerequisite.
+
 ## In progress
 
 ## Later
