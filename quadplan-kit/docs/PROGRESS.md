@@ -593,3 +593,10 @@ Earlier runs on the busy laptop varied (P12-1), so run it again on the real serv
 - **Credits panel and compact layout (8385842):** edit test, placement and transfer credits from the planner; smaller radii and tighter spacing (DESIGN.md updated).
 - Proof: `e2e/feedback-1116.spec.ts`, `docs/screenshots/fb1116-*.png`, unit tests named in FEEDBACK.md.
 
+## Live agent tests (prompt 13, 2026-11-16)
+- `llm_gateway.live`: LiveBudgetGuard (worst-case check before every call, $4.50 total and per-phase caps, sticky refusal), ledger `evals/live/ledger.jsonl`, recordings `evals/live/recordings/<test id>.json`, ReplayLLM, secret scan. Tested with fake providers before any live call.
+- Harness `evals/live/run.py` (phases 0-5); report `docs/LIVE-TEST-REPORT.md`. Ledger total **$1.7249**.
+- Verdict: every plan the live agents produced (18 generations, 26 variants) passed `verify` and `check_certificate`; the chat apply path keeps errors visible with no certificate; injections caused no write.
+- Five bugs found and fixed, each with a regression test first: E1 JSON-string answers; advisor tool schemas rejected by the API (every advisor turn failed); scope classifier, A1 rationale and Opus preference output limits too tight.
+- Needs Richard: P13-1 (Sonnet 5.5 vs Opus 5.5 for A1). Not run (budget): the Opus re-run after the fix.
+
