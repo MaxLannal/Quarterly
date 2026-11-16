@@ -427,7 +427,7 @@ export function Planner({ initial, autoGenerate = false }: PlannerProps) {
           return ok;
         }}
       />
-      <AdvisorSheet open={advisorOpen} onClose={() => setAdvisorOpen(false)} plan={plan} planId={savedPlanId} onApply={tryOps} />
+      <AdvisorSheet open={advisorOpen} onClose={() => setAdvisorOpen(false)} plan={plan} planId={savedPlanId} onApply={tryOps} currentReport={verify.report ?? null} />
     </PlannerContext.Provider>
   );
 }

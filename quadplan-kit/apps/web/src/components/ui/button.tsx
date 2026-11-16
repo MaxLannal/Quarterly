@@ -23,7 +23,9 @@ export const buttonVariants = cva(
     variants: {
       variant: {
         /** button-primary: maroon pill, one per view. */
-        primary: "bg-primary text-on-primary hover:bg-primary-hover active:bg-primary-active",
+        // Disabled: a grey plate with muted text (still legible, 4.7:1), not a faded maroon that reads as active (D11 AD-4).
+        primary:
+          "bg-primary text-on-primary hover:bg-primary-hover active:bg-primary-active disabled:bg-surface-strong disabled:text-muted disabled:opacity-100 aria-disabled:bg-surface-strong aria-disabled:text-muted aria-disabled:opacity-100",
         /** button-outline: transparent pill, 1px hairline-strong line, ink text. */
         outline:
           "bg-transparent text-ink shadow-[inset_0_0_0_1px_var(--color-hairline-strong)] hover:bg-surface-strong active:bg-hairline",

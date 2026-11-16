@@ -2,7 +2,7 @@ import { useEffect, useId, useRef, useState, type FormEvent, type KeyboardEvent,
 import { Link } from "react-router-dom";
 import { api, isNotAvailable, unwrap } from "@/api/client";
 import { streamChat } from "@/api/sse";
-import type { ChangeOp, ChangeSet, ChatTurn, Citation, PlanState } from "@/api/types";
+import type { ChangeOp, ChangeSet, ChatTurn, Citation, PlanState, Report } from "@/api/types";
 import { Button } from "@/components/ui/button";
 import { CloseIcon, SparkIcon } from "@/components/ui/icons";
 import { NotAvailable, Notice } from "@/components/ui/misc";
@@ -83,14 +83,26 @@ export function confirmationPhrase(ops: ChangeOp[]): string | null {
   return parts.length ? `I agree to ${parts.join(" and ")}` : null;
 }
 
+const errorsIn = (r: Report) => (r.issues ?? []).filter((i) => i.level === "error").length;
+
+/** "(no change)", "(1 fewer)" or "(2 more)" errors after the change than now (AD-1, D11). */
+function errorDelta(now: Report, after: Report): string {
+  const d = errorsIn(after) - errorsIn(now);
+  if (d === 0) return now.status === after.status ? "no change" : "same number of errors";
+  return d < 0 ? `${-d} fewer error${d === -1 ? "" : "s"}` : `${d} more error${d === 1 ? "" : "s"}`;
+}
+
 export function ProposalCard({
   changeSet,
   state,
+  current = null,
   onApply,
   onDismiss,
 }: {
   changeSet: ChangeSet;
   state: CardState;
+  /** The plan check now, so the preview has something to compare with (AD-1, D11). */
+  current?: Report | null;
   onApply: () => void;
   onDismiss: () => void;
 }) {
@@ -104,8 +116,15 @@ export function ProposalCard({
         ))}
       </ul>
       {changeSet.preview_report && (
-        <p className="flex flex-wrap items-center gap-2 text-body">
+        <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-body">
+          {current && (
+            <>
+              Now: <ReportBadge report={current} />
+              <span aria-hidden="true" className="text-muted">→</span>
+            </>
+          )}
           After this change: <ReportBadge report={changeSet.preview_report} />
+          {current && <span className="text-caption text-muted">({errorDelta(current, changeSet.preview_report)})</span>}
         </p>
       )}
       {state === "proposed" ? (
@@ -135,6 +154,8 @@ interface AdvisorPanelProps {
   onApply: (ops: ChangeOp[]) => boolean;
   /** Ref to the message box (the advisor sheet focuses it on open). */
   composerRef?: RefObject<HTMLTextAreaElement>;
+  /** The plan check now, shown beside each proposal's preview (AD-1, D11). */
+  currentReport?: Report | null;
 }
 
 const MAX_HISTORY = 12;
@@ -152,7 +173,7 @@ function sameOps(a: ChangeSet, b: ChangeSet): boolean {
   return a.id && b.id ? a.id === b.id : JSON.stringify(a.ops) === JSON.stringify(b.ops) && a.base_plan_hash === b.base_plan_hash;
 }
 
-export function AdvisorPanel({ plan, planId = null, onApply, composerRef }: AdvisorPanelProps) {
+export function AdvisorPanel({ plan, planId = null, onApply, composerRef, currentReport = null }: AdvisorPanelProps) {
   const [entries, setEntries] = useState<Entry[]>([]);
   const [text, setText] = useState("");
   const [busy, setBusy] = useState(false);
@@ -296,6 +317,7 @@ export function AdvisorPanel({ plan, planId = null, onApply, composerRef }: Advi
                   <ProposalCard
                     changeSet={entry.changeSet}
                     state={entry.state}
+                    current={currentReport}
                     onApply={() => {
                       setError(null);
                       void applyChangeSet(entry.changeSet, null);
