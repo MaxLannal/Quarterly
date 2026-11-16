@@ -10,7 +10,7 @@ test("program explorer and program page", async ({ page }) => {
   await expect(page.getByRole("heading", { level: 1, name: "Fake Program" })).toBeVisible();
   await expect(page.getByText("2 courses from TEST courses numbered 25000–29999")).toBeVisible();
   await expect(page.getByRole("heading", { name: "Sample path" })).toBeVisible();
-  await page.getByRole("button", { name: "Add to my plan" }).click();
+  await page.getByRole("button", { name: "Add to plan" }).click();
   await expect(page.getByText("Added Fake Program to your plan.")).toBeVisible();
   await page.getByRole("link", { name: "Open the planner" }).click();
   await expect(page.getByRole("list", { name: "Programs on this plan" })).toContainText("Fake Program");

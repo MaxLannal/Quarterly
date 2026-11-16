@@ -5,7 +5,7 @@ import { LoadingState, PageContainer, PageHeader, Section, standaloneLinkClass }
 import { useSession } from "@/features/auth/session";
 import { useForumPage, usePost } from "@/features/forum/api";
 import { CommentForm, CommentTree } from "@/features/forum/CommentTree";
-import { pagePath, plural } from "@/features/forum/format";
+import { pagePath } from "@/features/forum/format";
 import { LoginRequired } from "@/features/forum/parts";
 import { PostCard } from "@/features/forum/PostCard";
 
@@ -55,7 +55,7 @@ function Thread({ code, slug, id }: { code: string; slug: string; id: number }) 
         onDeleted={() => navigate(back)}
       />
       <Section id="comments" title={`Comments (${p.n_comments ?? 0})`}
-        description={comments.length > 0 ? `Best first. ${plural(comments.length, "comment")} in this thread.` : undefined} size="sm">
+        description={comments.length > 0 ? "Best first." : undefined} size="sm">
         <div className="flex flex-col gap-6">
           {visible ? (
             <div ref={replyRef}>

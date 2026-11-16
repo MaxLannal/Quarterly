@@ -142,10 +142,11 @@ export default function SignupPage() {
               onChange={(e) => setEmail(e.target.value)}
               error={fieldError}
               hint="Only @uchicago.edu addresses. We email you a 6-digit code."
+              placeholder="cnetid@uchicago.edu"
             />
+            {/* D11 AU-1: one line before the button; the details are on the privacy page. */}
             <p className="text-body-sm text-muted">
-              We store this address so you can reset your password. Other students never see it;
-              forum posts use a separate pseudonym on each page.{" "}
+              Other students never see your email; the forum shows a pseudonym.{" "}
               <Link to="/privacy" className={inlineLinkClass}>
                 What we store
               </Link>

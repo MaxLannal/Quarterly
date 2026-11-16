@@ -26,6 +26,13 @@ const TYPE_SINGULAR: Record<keyof typeof TYPE_LABELS, string> = {
   study_abroad_block: "Study-abroad block",
 };
 
+/** "2099-07-01..." as "July 1, 2099" (D11 PR-4); the day only, as stored. */
+function humanDate(iso: string): string {
+  const [y, m, d] = iso.slice(0, 10).split("-").map(Number);
+  if (!y || !m || !d) return iso.slice(0, 10);
+  return new Date(Date.UTC(y, m - 1, d)).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric", timeZone: "UTC" });
+}
+
 const COURSE_CODE = /\b[A-Z]{2,5} \d{5}\b/g;
 
 /** Text with every course code linked to its course page (D11 PR-1: the explorer is not a dead end). */
@@ -125,8 +132,8 @@ export default function ProgramPage() {
             <StatusBadge status={p.status} />
           </>
         }
-        description={<p>{p.verified_at ? `Checked against the catalog on ${p.verified_at.slice(0, 10)}.` : "Not yet verified by a curator."}</p>}
-        actions={<Button onClick={addToPlan}>Add to my plan</Button>}
+        description={<p>{p.verified_at ? `Checked against the catalog on ${humanDate(p.verified_at)}.` : "Not yet verified by a curator."}</p>}
+        actions={<Button onClick={addToPlan}>Add to plan</Button>}
       >
         {added && (
           <Notice tone="success" role="status" className="max-w-reading">

@@ -313,6 +313,10 @@ function VariantCard({ v, onApply, onDiscard }: { v: VariantEvent; onApply: (ops
               <li key={i}>{opText(op)}</li>
             ))}
           </ul>
+          {/* D11 GE-4: applying part of an option lives with the changes it picks from. */}
+          <Button variant="ghost" size="sm" className="mt-1 px-0" aria-expanded={picking} onClick={() => setPicking(!picking)}>
+            Choose quarters to apply
+          </Button>
         </div>
       )}
       {picking && (
@@ -348,10 +352,7 @@ function VariantCard({ v, onApply, onDiscard }: { v: VariantEvent; onApply: (ops
         <Button variant="outline" aria-expanded={showDiff} onClick={() => setShowDiff(!showDiff)}>
           {showDiff ? "Hide changes" : "See changes"}
         </Button>
-        <Button variant="outline" aria-expanded={picking} onClick={() => setPicking(!picking)}>
-          Apply selected quarters
-        </Button>
-        <Button variant="ghost" onClick={onDiscard}>
+        <Button variant="ghost" className="ml-auto" onClick={onDiscard}>
           Discard
         </Button>
       </div>
