@@ -4,12 +4,16 @@ import { usePrograms } from "@/api/hooks";
 import { LoadingState, PageContainer, PageHeader, Section } from "@/components/layout/page";
 import { Card } from "@/components/ui/card";
 import { ErrorText, NotAvailable } from "@/components/ui/misc";
+import { CatalogToggle } from "@/features/courses/CatalogToggle";
 import { groupPrograms, StatusBadge, TYPE_LABELS } from "@/features/programs/ProgramPicker";
 
 export default function ProgramsPage() {
   const q = usePrograms();
   return (
     <PageContainer>
+      <div className="mb-6 flex justify-center">
+        <CatalogToggle current="programs" />
+      </div>
       <PageHeader
         title="Program explorer"
         eyebrow="Programs"

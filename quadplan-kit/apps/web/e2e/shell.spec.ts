@@ -4,7 +4,7 @@ test("home and app shell", async ({ page }) => {
   await page.goto("/");
   await expect(page.getByRole("heading", { level: 1, name: "Quarterly" })).toBeVisible();
   const nav = page.getByRole("navigation", { name: "Main" });
-  for (const name of ["Plan", "Courses", "Programs", "Forum"]) await expect(nav.getByRole("link", { name })).toBeVisible();
+  for (const name of ["Plan", "Catalog", "Forum"]) await expect(nav.getByRole("link", { name })).toBeVisible();
   await expect(page.getByRole("link", { name: "Log in" })).toBeVisible();
   await page.getByRole("link", { name: "Start planning" }).click();
   await expect(page.getByRole("heading", { level: 1, name: "Planner setup" })).toBeVisible();

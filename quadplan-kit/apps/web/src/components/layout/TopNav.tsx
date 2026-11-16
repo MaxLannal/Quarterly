@@ -13,8 +13,8 @@ const FORUM_PATH = /^\/courses\/[^/]+\/i\//;
 /** Each link is the current section for its own path and the pages that belong to it. */
 const NAV: { to: string; label: string; current: (path: string) => boolean }[] = [
   { to: "/plan", label: "Plan", current: (p) => /^\/(plan|plans|onboarding)(\/|$)/.test(p) },
-  { to: "/courses", label: "Courses", current: (p) => /^\/courses(\/|$)/.test(p) && !FORUM_PATH.test(p) },
-  { to: "/programs", label: "Programs", current: (p) => /^\/programs(\/|$)/.test(p) },
+  // Courses and programs share one item; a switch on each page moves between them (FEEDBACK 2026-11-16).
+  { to: "/courses", label: "Catalog", current: (p) => (/^\/courses(\/|$)/.test(p) && !FORUM_PATH.test(p)) || /^\/programs(\/|$)/.test(p) },
   { to: "/instructors", label: "Forum", current: (p) => /^\/(instructors|guidelines)(\/|$)/.test(p) || FORUM_PATH.test(p) },
 ];
 

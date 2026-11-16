@@ -114,3 +114,17 @@ test("course page: overview under the title; the prerequisite graph opens in a w
   await expect(page.getByRole("dialog", { name: "Prerequisite graph: TEST 20000" }).getByRole("figure", { name: "Prerequisite graph" })).toBeVisible();
   await shot(page, "prereq-graph");
 });
+
+test("catalog: one menu item, a switch between courses and programs, a centered search", async ({ page }) => {
+  await page.goto("/courses");
+  await expect(page.getByRole("heading", { level: 1, name: "Course search" })).toBeVisible();
+  await expect(page.getByRole("region", { name: "Results" })).toHaveCount(0);
+  await shot(page, "course-search-empty");
+  await page.getByLabel("Code or title").fill("Fake");
+  await page.getByRole("form", { name: "Course filters" }).getByRole("button", { name: "Search", exact: true }).click();
+  await expect(page.getByRole("region", { name: "Results" })).toBeVisible();
+  await shot(page, "course-search-results");
+  await page.getByRole("navigation", { name: "Courses or programs" }).getByRole("link", { name: "Programs" }).click();
+  await expect(page.getByRole("heading", { level: 1, name: "Program explorer" })).toBeVisible();
+  await shot(page, "programs-toggle");
+});

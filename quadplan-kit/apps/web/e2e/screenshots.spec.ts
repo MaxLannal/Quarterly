@@ -49,7 +49,7 @@ const SHOTS: Shot[] = [
       await p.goto("/courses");
       await h1(p, "Course search");
       await p.getByRole("button", { name: "Menu" }).click();
-      await expect(p.getByRole("navigation", { name: "Main" }).getByRole("link", { name: "Courses" })).toBeVisible();
+      await expect(p.getByRole("navigation", { name: "Main" }).getByRole("link", { name: "Catalog" })).toBeVisible();
     },
   },
   { name: "onboarding", run: async (p) => (await p.goto("/onboarding"), h1(p, "Planner setup")) },

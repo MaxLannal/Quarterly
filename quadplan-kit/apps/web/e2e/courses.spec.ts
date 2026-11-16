@@ -1,5 +1,20 @@
 import { expect, test } from "@playwright/test";
 
+test("course search lists nothing until a search; one centered field", async ({ page }) => {
+  await page.goto("/courses");
+  await expect(page.getByRole("heading", { level: 1, name: "Course search" })).toBeVisible();
+  await expect(page.getByRole("navigation", { name: "Courses or programs" }).getByRole("link", { name: "Courses" })).toHaveAttribute("aria-current", "page");
+  await expect(page.getByRole("region", { name: "Results" })).toHaveCount(0);
+  await expect(page.getByLabel("Quarter offered")).toBeHidden(); // folded under "More filters"
+  await page.getByLabel("Code or title").fill("Fake Elective");
+  await page.getByRole("form", { name: "Course filters" }).getByRole("button", { name: "Search", exact: true }).click();
+  await expect(page.getByRole("status").filter({ hasText: "3 courses" })).toBeVisible();
+  // The switch goes to programs; the menu's one "Catalog" item stays current.
+  await page.getByRole("navigation", { name: "Courses or programs" }).getByRole("link", { name: "Programs" }).click();
+  await expect(page.getByRole("heading", { level: 1, name: "Program explorer" })).toBeVisible();
+  await expect(page.getByRole("navigation", { name: "Main" }).getByRole("link", { name: "Catalog" })).toHaveAttribute("aria-current", "page");
+});
+
 test("course search: header search, filters, results", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("searchbox", { name: "Search courses", exact: true }).fill("Fake Elective");
@@ -8,8 +23,10 @@ test("course search: header search, filters, results", async ({ page }) => {
   await expect(page.getByRole("heading", { level: 1, name: "Course search" })).toBeVisible();
   await expect(page.getByRole("status").filter({ hasText: "3 courses" })).toBeVisible();
 
+  // FEEDBACK 2026-11-16: the extra filters sit under "More filters".
+  await page.getByText("More filters").click();
   await page.getByLabel("Quarter offered").selectOption("WI");
-  await page.getByRole("form", { name: "Course filters" }).getByRole("button", { name: "Search" }).click();
+  await page.getByRole("button", { name: "Apply filters" }).click();
   await expect(page.getByRole("status").filter({ hasText: "1 course" })).toBeVisible();
   await page.getByRole("link", { name: "TEST 25100 · Fake Elective in Networks" }).click();
   await expect(page.getByRole("heading", { level: 1, name: "TEST 25100 · Fake Elective in Networks" })).toBeVisible();
