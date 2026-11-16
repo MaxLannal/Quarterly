@@ -128,9 +128,10 @@ class Forecast:
 
         guess = (sum(self.costs) / len(self.costs) if self.costs else self.first_guess) * 1.5
         ledger = self.live.guard.ledger
+        phase = CHARGE_PHASE or self.phase  # re-runs are charged to phase 5
         return (
             not self.live.guard.refused
-            and ledger.phase_total(self.phase) + guess <= PHASE_CAPS_USD[self.phase]
+            and ledger.phase_total(phase) + guess <= PHASE_CAPS_USD[phase]
             and ledger.total() + guess <= TOTAL_CAP_USD
         )
 
@@ -141,6 +142,8 @@ class Forecast:
 
 #: Phase 5: the only test ids to run (exact, or a prefix ending in "*"); empty = all.
 ONLY: set[str] = set()
+#: The phase charged when it is not the phase being run (phase 5 re-runs).
+CHARGE_PHASE: str = ""
 
 
 def skip(test_id: str) -> bool:
@@ -710,7 +713,7 @@ def profiles() -> list[dict[str, Any]]:
     return [
         {"id": "a1-p1-undecided", "request": req(plan(["core"]), interests=["economics", "philosophy"], load=0.0)},
         {"id": "a1-p2-cs-math-bxms", "request": req(plan(["core", "cmsc-bs", "math-bs", "cmsc-bxms-1"]), goals=[{"id": "g1", "type": "bxms", "program_id": "cmsc-bxms-1", "apply_by": "Y3-SP"}], interests=["learning"], load=0.5)},
-        {"id": "a1-p3-transfer", "request": req(plan(["core", "econ-ba"], entry_year_level=2, credits=[{"kind": "transfer", "label": "Transfer: principles of economics", "maps_to": "ECON 10000", "units": 100}, {"kind": "AP", "label": "AP Statistics, 5", "maps_to": None, "units": 100}]), interests=["finance"], load=0.0)},
+        {"id": "a1-p3-transfer", "request": req(plan(["core", "econ-ba"], entry_year_level=2, credits=[{"kind": "transfer", "label": "First year at another college", "maps_to": None, "units": 900}, {"kind": "transfer", "label": "Transfer: principles of economics", "maps_to": "ECON 10000", "units": 100}]), interests=["finance"], load=0.0)},
         {"id": "a1-p4-econ-abroad", "request": req(plan(["core", "econ-ba", "civ-abroad-cordoba"]), goals=[{"id": "g1", "type": "study_abroad", "program_id": "civ-abroad-cordoba", "abroad_term": "Y3-SP"}], interests=["history"], load=0.0)},
         {"id": "a1-p5-lighter", "request": req(plan(["core", "math-ba"]), interests=["analysis"], load=-1.0)},
         {"id": "a1-p6-challenge", "request": req(plan(["core", "cmsc-ba"]), goals=[{"id": "g1", "type": "challenge", "min_index": 3.0}], interests=["systems"], load=0.5)},
@@ -761,7 +764,7 @@ def a1_checks(factory: Any, profile: dict[str, Any], evs: list[dict[str, Any]], 
             rules, catalog = load_verify_inputs(db, PlanState.model_validate(profile["request"]["plan"]), show_unpublished=True, whole_catalog=True)
         idx = Index(catalog, rules)
         share = sum(interest_match(idx, c, interests) for c in chosen) / len(chosen)
-        tagged = any(idx.tags(c) for c in catalog_codes(catalog))
+        tagged = any(c.tags for c in catalog.courses)  # the courses' own tags (not Core areas)
         if not tagged:
             # Prompt 13 checks interests by tags; the 2026-27 seed has no course tags, so the
             # share (by title words, the planner's own rule) is reported, not judged.
@@ -870,9 +873,11 @@ def main(argv: list[str] | None = None) -> int:
 
 def rerun(live: Live, test_ids: list[str]) -> None:
     """Phase 5: re-run failed-and-fixed cases, charged to phase5."""
+    global CHARGE_PHASE
     wanted = {t for t in test_ids if t}
     ONLY.clear()
     ONLY.update(wanted)
+    CHARGE_PHASE = "phase5"
     original_running = live.guard.running
 
     @contextmanager

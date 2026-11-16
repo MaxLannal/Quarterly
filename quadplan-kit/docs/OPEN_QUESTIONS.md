@@ -521,3 +521,10 @@ Questions about the schedule pipeline (reading Class Search). The pipeline is bu
   - **(b) Keep a 14-day list of deleted account numbers (no emails) and delete them again automatically after a restore.** More work; closes the gap fully.
 
 **Richard's answer: (a) is fine, since this is not very likely**
+
+## Prompt 13 (live agent tests)
+
+- **P13-1 (money; needs Richard).** **Which model should write the plan generator's elective choices and rationale?** In the live test (`docs/LIVE-TEST-REPORT.md` section 5), every plan from both models passed the checker. Sonnet 5.5 cost about $0.07 per generation; Opus 5.5 cost about $0.19 and was 1.5–4.7x slower.
+  - **(a) Sonnet 5.5 (suggested).** About a third of the cost. The checker guarantees the plan whichever model ranks the electives. Change `a1_plan_generator` in `llm_routing.yaml` to the `a1_plan_generator_sonnet` settings.
+  - **(b) Keep Opus 5.5.** First re-run the three Opus profiles with the new output limits (about $0.60), because in this run its elective choices were cut off.
+
