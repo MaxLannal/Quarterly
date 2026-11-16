@@ -85,6 +85,10 @@ function confidence(p: number): string {
 
 export function OfferingsTable({ course }: { course: CourseDetail }) {
   const offerings = [...course.offerings].sort((a, b) => "AU WI SP SU".indexOf(a.quarter) - "AU WI SP SU".indexOf(b.quarter));
+  const basisOf = (o: (typeof offerings)[number]) =>
+    `${OFFERING_BASIS[o.method] ?? o.method}${o.evidence_terms?.length ? ` (${o.evidence_terms.map(termLabel).join(", ")})` : ""}`;
+  // D11 CP-4: when every quarter has the same basis, say it once under the table.
+  const oneBasis = offerings.length > 1 && offerings.every((o) => basisOf(o) === basisOf(offerings[0]!)) ? basisOf(offerings[0]!) : null;
   return (
     <div className="space-y-8">
       <div className="overflow-x-auto">
@@ -94,7 +98,7 @@ export function OfferingsTable({ course }: { course: CourseDetail }) {
             <tr className="border-b border-hairline-strong">
               <th scope="col" className="py-2 pr-3 text-caption-uppercase uppercase text-muted">Quarter</th>
               <th scope="col" className="py-2 pr-3 text-caption-uppercase uppercase text-muted">Chance offered</th>
-              <th scope="col" className="py-2 pr-3 text-caption-uppercase uppercase text-muted">Basis</th>
+              {!oneBasis && <th scope="col" className="py-2 pr-3 text-caption-uppercase uppercase text-muted">Basis</th>}
             </tr>
           </thead>
           <tbody>
@@ -109,15 +113,13 @@ export function OfferingsTable({ course }: { course: CourseDetail }) {
                   <td className="py-2 pr-3">
                     {o.p_offered === 0 ? "Not expected" : `${confidence(o.p_offered)} (${Math.round(o.p_offered * 100)}%)`}
                   </td>
-                  <td className="py-2 pr-3">
-                    {OFFERING_BASIS[o.method] ?? o.method}
-                    {o.evidence_terms?.length ? ` (${o.evidence_terms.map(termLabel).join(", ")})` : ""}
-                  </td>
+                  {!oneBasis && <td className="py-2 pr-3">{basisOf(o)}</td>}
                 </tr>
               ))
             )}
           </tbody>
         </table>
+        {oneBasis && <p className="mt-2 text-caption text-muted">Basis: {oneBasis}</p>}
       </div>
       <div className="overflow-x-auto">
         <table className="w-full text-left text-body-sm text-body">

@@ -41,4 +41,10 @@ describe("short issue messages (FEEDBACK 'Concatenating Error Messages')", () =>
     expect(firstClause("Just one sentence.")).toBe("Just one sentence");
     expect(firstClause("First. Second.")).toBe("First");
   });
+
+  it("keeps what an unmet requirement needs (D11 PL-2)", () => {
+    expect(summarizeIssue(issue({ code: "V02", message: "Fake introductory sequence: needs 1 more course." })).list).toBe("Fake introductory sequence: needs 1 more course.");
+    expect(summarizeIssue(issue({ code: "V02", message: "Fake Program: Fake core courses needs 2 more courses." })).list).toBe("Fake Program: Fake core courses needs 2 more courses.");
+    expect(summarizeIssue(issue({ code: "V02", message: "Core: needs 15 courses in total, has 3 (a; b)." })).list).toBe("Core: needs 15 courses in total, has 3.");
+  });
 });

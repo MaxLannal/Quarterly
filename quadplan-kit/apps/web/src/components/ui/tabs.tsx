@@ -63,7 +63,8 @@ export function Tabs({ tabs, label, initial, active: controlled, onChange, end, 
               onClick={() => setActive(t.key)}
               onKeyDown={(e) => onKey(e, i)}
               className={cn(
-                "-mb-px inline-flex min-h-11 flex-1 cursor-pointer items-center justify-center gap-1.5 whitespace-nowrap border-b-2 px-3 text-nav-link transition-colors focus-visible:outline-offset-[-2px]",
+                // Phones: 14px and tighter padding, so four tabs and a close button fit 390px (D11 polish).
+                "-mb-px inline-flex min-h-11 flex-1 cursor-pointer items-center justify-center gap-1.5 whitespace-nowrap border-b-2 px-1.5 text-caption font-medium transition-colors focus-visible:outline-offset-[-2px] sm:px-3 sm:text-nav-link",
                 active === t.key ? "border-primary text-ink" : "border-transparent text-muted hover:text-ink",
               )}
             >

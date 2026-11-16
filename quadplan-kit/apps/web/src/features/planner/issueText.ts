@@ -76,9 +76,11 @@ export function summarizeIssue(issue: Issue): IssueSummary {
   }
 
   // A requirement that is not met: "<requirement>: needs <what>"; keep both halves (PL-2, D11).
-  const needs = /^(.+?): needs (.+?)(?:\s*\(|;|\.\s|\.?$)/.exec(message);
+  // Both "<requirement>: needs 1 more course" and "<program>: <requirement> needs 2 more courses".
+  // Requirement issues name no quarter (a quarter's overload "needs a petition" stays a first clause).
+  const needs = (issue.term_ids ?? []).length === 0 ? /^(.+?): (.*?\bneeds\b.+?)(?:\s*\(|;|\.\s|\.?$)/.exec(message) : null;
   if (needs) {
-    const text = readableTerms(`${needs[1] ?? ""}: needs ${(needs[2] ?? "").trim()}`);
+    const text = readableTerms(`${needs[1] ?? ""}: ${(needs[2] ?? "").trim()}`);
     return { card: sentence(text), list: sentence(text) };
   }
 

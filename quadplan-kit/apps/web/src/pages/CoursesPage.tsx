@@ -129,7 +129,7 @@ export default function CoursesPage() {
               id={field("q")}
               type="search"
               className={cn(box, "min-w-0 flex-1")}
-              placeholder="Code or title, e.g. CMSC 14100"
+              placeholder="Code or title"
               value={draft.q ?? ""}
               onChange={set("q")}
             />

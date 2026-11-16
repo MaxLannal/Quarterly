@@ -338,7 +338,7 @@ function VariantCard({ v, onApply, onDiscard }: { v: VariantEvent; onApply: (ops
           outline button on every option, so the popup never shows two or three maroon primaries. */}
       <div className="space-y-1 border-t border-hairline pt-3 text-caption text-muted">
         <p>
-          Apply changes {touched.length} quarter{touched.length === 1 ? "" : "s"}
+          Changes {touched.length} quarter{touched.length === 1 ? "" : "s"}
           {touched.length > 0 && touched.length <= 4 ? `: ${touched.map(termLabel).join(", ")}` : ""}.
         </p>
         {v.report.status === "errors" && (
