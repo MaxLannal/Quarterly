@@ -7611,6 +7611,32 @@
         "title": "VoteOut",
         "type": "object"
       },
+      "WeatherOut": {
+        "description": "WMO weather code and cloud cover (percent) now in Hyde Park.",
+        "properties": {
+          "cloud_cover": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cloud Cover"
+          },
+          "weather_code": {
+            "title": "Weather Code",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "weather_code",
+          "cloud_cover"
+        ],
+        "title": "WeatherOut",
+        "type": "object"
+      },
       "WorkloadHoursGoal": {
         "additionalProperties": false,
         "properties": {
@@ -10876,6 +10902,30 @@
         "summary": "Version",
         "tags": [
           "health"
+        ]
+      }
+    },
+    "/weather": {
+      "get": {
+        "operationId": "weather_weather_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WeatherOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "503": {
+            "description": "Weather is unavailable right now; show clear skies."
+          }
+        },
+        "summary": "Weather",
+        "tags": [
+          "weather"
         ]
       }
     }

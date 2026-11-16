@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rockefeller Chapel in ASCII</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+  /* Layout idea: one quiet editorial column; the drawing sits straight on the page and dissolves into it. */
+  :root {
+    --page: #F4EFE6;
+    --text: #2B2A33;
+    --muted: #6B665E;
+    --rule: #DDD5C7;
+    --display: "Newsreader", Georgia, "Times New Roman", serif;
+    --body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { --page: #15141B; --text: #ECE7DE; --muted: #A49E94; --rule: #2E2C36; color-scheme: dark; }
+  }
+  :root[data-theme="dark"] { --page: #15141B; --text: #ECE7DE; --muted: #A49E94; --rule: #2E2C36; color-scheme: dark; }
+
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--page); color: var(--text); font: 16px/1.6 var(--body); }
+  main { max-width: 1120px; margin: 0 auto; padding: 56px 24px 72px; display: grid; gap: 0; }
+  .eyebrow { font: 12px/1.4 var(--mono); letter-spacing: .06em; color: var(--muted); margin: 0 0 12px; }
+  h1 { font: 500 clamp(30px, 4.4vw, 46px)/1.12 var(--display); margin: 0 0 14px; max-width: 20ch; text-wrap: balance; }
+  .lede { color: var(--muted); max-width: 58ch; margin: 0 0 28px; }
+  ascii-scene {
+    --ascii-paper: var(--page);
+    --ascii-ink: var(--text);
+    --ascii-ink-mix: 0.1;
+    font: 12px/1 var(--mono);
+    color: var(--muted);
+  }
+  .foot { display: flex; flex-wrap: wrap; gap: 8px 16px; justify-content: center; align-items: center; margin-top: 14px; font: 12px/1.4 var(--mono); color: var(--muted); }
+  .foot button { font: inherit; padding: 5px 10px; border-radius: 999px; border: 1px solid var(--rule); background: transparent; color: var(--muted); cursor: pointer; }
+  .foot button[aria-pressed="true"] { color: var(--text); border-color: var(--text); }
+  .foot button:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
+  .note { text-align: center; font-size: 13px; color: var(--muted); margin: 16px auto 0; max-width: 60ch; }
+</style>
+</head>
+<body>
+<main>
+  <p class="eyebrow">41.79° N, 87.60° W · Hyde Park, Chicago</p>
+  <h1>Rockefeller Chapel, drawn in characters</h1>
+  <p class="lede">The sky and light follow the real sun position over the chapel right now. Weather follows live Hyde Park conditions when the page can reach Open-Meteo. Use the buttons to try other times and weather.</p>
+  <ascii-scene id="scene" src="./scene.rockefeller.json" controls time="auto" weather="auto"></ascii-scene>
+  <div class="foot" role="group" aria-label="Page background">
+    <span>Page:</span>
+    <button type="button" data-theme="light" aria-pressed="true">Paper</button>
+    <button type="button" data-theme="dark" aria-pressed="false">Dark</button>
+  </div>
+  <p class="note">Prototype drawn from a stock photo. Swap in your own photo before publishing.</p>
+</main>
+<script type="module" src="./ascii-scene.js"></script>
+<script>
+  const root = document.documentElement, scene = document.getElementById('scene');
+  const isDark = () => root.dataset.theme === 'dark' || (!root.dataset.theme && matchMedia('(prefers-color-scheme: dark)').matches);
+  function sync() {
+    scene.setAttribute('theme', isDark() ? 'dark' : 'paper');
+    document.querySelectorAll('.foot button').forEach(b => b.setAttribute('aria-pressed', String((b.dataset.theme === 'dark') === isDark())));
+  }
+  document.querySelectorAll('.foot button').forEach(b => b.addEventListener('click', () => { root.dataset.theme = b.dataset.theme; sync(); }));
+  matchMedia('(prefers-color-scheme: dark)').addEventListener('change', sync);
+  new MutationObserver(sync).observe(root, { attributes: true, attributeFilter: ['data-theme'] });
+  sync();
+</script>
+</body>
+</html>

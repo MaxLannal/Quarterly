@@ -45,7 +45,7 @@ dev = [
 [tool.ruff]
 line-length = 100
 target-version = "py312"
-extend-exclude = ["apps/web", "**/node_modules", "*.md"]
+extend-exclude = ["apps/web", "**/node_modules", "*.md", "tools/ascii-scene"]
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "B", "UP", "N", "SIM", "RUF"]

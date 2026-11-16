@@ -94,6 +94,8 @@ Status words used below:
 
 ## Deferred until before deployment
 
+- **DF-A1 (homepage chapel picture and weather; 2026-11-16).** **The chapel drawing on the homepage is made from a watermarked stock photo** (the demo picture you asked to use for now). It must not go live. Suggested: send me your own photo of Rockefeller Chapel; `tools/ascii-scene/` has the steps to convert it (about 15 minutes of my time). **Weather:** Open-Meteo's free service is for non-commercial use and asks for credit (the caption credits it). If Quarterly ever earns money (ads, paid plans), it needs Open-Meteo's paid plan (about EUR 29 a month) or the scene should switch to fixed "clear" weather. Suggested: keep the free service while Quarterly is a free student project.
+
 - **DF-S1 (summer-only courses; 2026-11-16).** **44 Summer Session courses are not in the planner.** The Summer Session course finder lists 152 courses open to College students (`data/seed/2026-27/summer_courses.yaml`). The 108 that are in our course list are now offered in Summer in the planner. The other 44 are not in our 2026-27 course list (for example PHIL 20100 Introduction to Logic, PHYS 13300 Waves, Optics & Heat, the Summer Intensive language courses, and some graduate courses such as MAPS 36035), and the summer site does not say how many units they carry, so they are documented in that file but cannot be added to a plan yet (strict reading: no invented units).
   - **Suggested default:** add each as a 100-unit course citing its summer page (most College courses are 100 units), after checking whether the full College Catalog lists it; leave graduate (30000-level) and no-credit (NOCR) courses out.
 **Later (by Richard)**

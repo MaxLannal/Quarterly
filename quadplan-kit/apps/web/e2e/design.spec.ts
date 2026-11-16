@@ -46,7 +46,8 @@ test("no request leaves the app's own origin (fonts, icons and images are bundle
 test("the DESIGN.md fonts load from the bundle", async ({ page }) => {
   const fontRequests: string[] = [];
   page.on("request", (r) => {
-    if (r.resourceType() === "font") fontRequests.push(new URL(r.url()).pathname);
+    // A data: URL is inside the bundle already (the homepage scene embeds its font that way).
+    if (r.resourceType() === "font" && !r.url().startsWith("data:")) fontRequests.push(new URL(r.url()).pathname);
   });
   await page.goto("/");
   await expect(page.getByRole("heading", { level: 1, name: "Quarterly" })).toBeVisible();

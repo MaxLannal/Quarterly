@@ -12,7 +12,7 @@ from api.auth.redaction import install_log_redaction
 from api.auth.sessions import csrf_guard
 from api.config import get_settings
 from api.health import router as health_router
-from api.routers import account, admin, agents, auth, catalog, forum, plans, verify
+from api.routers import account, admin, agents, auth, catalog, forum, plans, verify, weather
 
 
 @asynccontextmanager
@@ -51,7 +51,7 @@ def create_app() -> FastAPI:
         lifespan=lifespan,
     )
     app.include_router(health_router)
-    for module in (catalog, plans, verify, agents, forum, auth, account, admin):
+    for module in (catalog, plans, verify, agents, forum, auth, account, admin, weather):
         app.include_router(module.router)
     return app
 

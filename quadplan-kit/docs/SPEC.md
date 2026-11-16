@@ -171,7 +171,7 @@ Mockups of six key screens, with sample data, are on the design canvas: [QuadPla
 
 | Route | Page | Login | Purpose |
 | --- | --- | --- | --- |
-| `/` | Home | No | Search courses and instructors; "Start planning" and "Browse reviews" |
+| `/` | Home | No | Search courses and instructors; "Start planning" and "Browse reviews"; beside them a live ASCII drawing of Rockefeller Chapel that follows the time of day and the weather in Hyde Park (weather from `GET /weather`, which caches Open-Meteo for 15 minutes so no visitor request leaves the site; pointer sweep sways the trees, a click sends a shooting star at night or birds by day; still under reduced motion) |
 | `/onboarding` | Planner setup | No | Entry term, credits, programs, goals |
 | `/plan` | Planner | No (local) / Yes (to save) | 4-year grid, requirements, verifier, generate, chat |
 | `/plans` | My plans | Yes | List, rename, duplicate, set primary |

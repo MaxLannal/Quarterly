@@ -370,3 +370,13 @@
     scroll-behavior: auto !important;
   }
 }
+
+/* The homepage chapel scene (FEEDBACK "ASCII Scene"): reserve its 3:2 space before the module
+   loads, so the page does not shift. */
+ascii-scene {
+  display: block;
+  width: 100%;
+}
+ascii-scene:not(:defined) {
+  aspect-ratio: 3 / 2;
+}

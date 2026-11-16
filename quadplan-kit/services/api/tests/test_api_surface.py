@@ -71,6 +71,8 @@ EXPECTED = {
     ("post", "/admin/moderation/{target_type}/{target_id}/decision"),
     ("get", "/admin/moderation/suspensions"),
     ("post", "/admin/moderation/{target_type}/{target_id}/end-suspension"),
+    # homepage scene (FEEDBACK "ASCII Scene")
+    ("get", "/weather"),
 }
 
 PLAN = {"catalog_year": "2026-27", "entry_term": "2026-AU"}
