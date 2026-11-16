@@ -24,8 +24,10 @@ function loadScene(): void {
 const sceneStyle = {
   "--ascii-paper": "var(--color-canvas)",
   "--ascii-ink": "var(--color-ink)",
-  "--ascii-ink-mix": "0.14",
-  "--ascii-saturation": "0.85",
+  // D7 (FEEDBACK "Minor design changes"): a more solid drawing, with darker, fuller characters.
+  "--ascii-ink-mix": "0.06",
+  "--ascii-saturation": "0.95",
+  "--ascii-contrast": "1.3",
 } as CSSProperties;
 
 /**
@@ -53,8 +55,8 @@ export function ChapelScene() {
       <ascii-scene
         src="/ascii-scene/scene.rockefeller.json"
         weather-src="/api/weather"
-        fade="0.18"
-        density="4.6"
+        fade="0.12"
+        density="3.4"
         label="Animated drawing of Rockefeller Chapel in characters, following the time of day and the weather in Hyde Park"
         style={sceneStyle}
       />
