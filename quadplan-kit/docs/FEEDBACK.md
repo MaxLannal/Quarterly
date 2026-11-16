@@ -24,6 +24,34 @@ Write down anything you notice: something broken, something confusing, or someth
 
 ## New
 
+### Select Course to map when Start Planning
+- Date 2026-11-16
+- Where: Start planning page
+- Issue: When students are manually entering their test/transfer/placement credits, make the "Counts as course" a selection field. The User may enter course code, course name, but they have to ultimatly select an avaliable class. This resolves any mapping faliure.
+- Status: New
+
+### Course Search and Programs GUI
+- Date: 2026-11-16
+- Where: Course Search
+- Want: Combine Courses and Program in to one menu item the menu bar, and enable a toggle under the Courses/Programs tab to switch between them. For the course search page, do not list the courses below the search field. Center the search field in the center to make it simplistic.
+- Status: New
+
+### Color strip before the course cade
+- Date: 2026-11-16
+- Where: Planner
+- Want: now I have zero idea what is the rational between the color strips between the course cards. Can you please assign a label to each of the colors, and explain your choice to me? We don't want to display a legend to the users on the colors, so your design decisions have to be naturally clear to the users.
+- Status: New
+
+### ASCII Scene
+- Date 2026-11-16
+- Where: Homepage (landing page)
+- What: I want to implement some ascii art on my homepage. Look at /Users/richardgao/Downloads/ascii-scene and add it to my repo. For now, use the demo picture. Follow the instruction and make sure it blends well in a good location of the landing page. You may increase the density of the characters if you'd like. I would also want you to take the design a step further - fetch the current time and weather, and create different version of the schene that turns them in to unique animations according to the time of day and weather. I would also appriciate if you the user's cursor can interact with the ascii element, such as the tree will swing (like wind blow) when the cursor sweep over, a shooting star comes down the night sky when the user clicks. Things like this. Make your unique design choices and implement high quality design.
+- Status: new
+
+### Minor issues
+- TRNC 10100 is currently not in the catalog. It is transfer general credit and every transfer student will receive some of them. They do not count as a course for any specific programs but students can use it to meet credit requirements. Add this to the catalog.
+- Expanded menu on Planner will move behind the course cards, it needs to be in front
+
 ## In progress
 
 ## Later
