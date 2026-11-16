@@ -8,7 +8,8 @@ import { addCourseViaTree, closePanel, logIn, openAdvisor, openPanel, plannerWit
 // scale factor 1, animations off, saved to docs/screenshots/<name>-<width>.png. Runs only with
 // SCREENSHOTS=1 (`make screenshots`), so a normal `make e2e` writes no files.
 
-const OUT = resolve(dirname(fileURLToPath(import.meta.url)), "../../../docs/screenshots");
+// SCREENSHOTS_DIR (relative to quadplan-kit/docs/screenshots) keeps a set apart, e.g. "before".
+const OUT = resolve(dirname(fileURLToPath(import.meta.url)), "../../../docs/screenshots", process.env.SCREENSHOTS_DIR ?? "");
 const FORUM = "/courses/TEST%2010000/i/fake-instructor-a";
 const THREAD = `${FORUM}/t/3`;
 const WIDTHS = [
@@ -31,6 +32,7 @@ async function shoot(page: Page, name: string, size: { width: number; height: nu
   await page.evaluate(() => document.fonts.ready);
   await expect(page.locator('[role="status"]:has-text("Loading")')).toHaveCount(0);
   await page.mouse.move(0, size.height - 1);
+  mkdirSync(OUT, { recursive: true });
   await page.screenshot({ path: `${OUT}/${name}-${size.width}.png`, fullPage, animations: "disabled", caret: "hide" });
 }
 
@@ -150,7 +152,7 @@ const SHOTS: Shot[] = [
       await logIn(p);
       await p.goto("/courses/TEST%2010000");
       await h1(p, "TEST 10000 · Fake Introduction I");
-      await expect(p.getByText("From 2 reviews")).toBeVisible();
+      await expect(p.getByRole("region", { name: "Overview" }).getByText("Student ratings")).toBeVisible();
     },
   },
   {
