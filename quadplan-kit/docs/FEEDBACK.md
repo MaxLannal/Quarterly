@@ -24,12 +24,6 @@ Write down anything you notice: something broken, something confusing, or someth
 
 ## New
 
-### Color strip before the course cade
-- Date: 2026-11-16
-- Where: Planner
-- Want: now I have zero idea what is the rational between the color strips between the course cards. Can you please assign a label to each of the colors, and explain your choice to me? We don't want to display a legend to the users on the colors, so your design decisions have to be naturally clear to the users.
-- Status: New
-
 ### ASCII Scene
 - Date 2026-11-16
 - Where: Homepage (landing page)
@@ -45,6 +39,18 @@ Write down anything you notice: something broken, something confusing, or someth
 ## Later
 
 ## Done
+
+### Color strip before the course cade
+- Date: 2026-11-16
+- Where: Planner
+- Want: now I have zero idea what is the rational between the color strips between the course cards. Can you please assign a label to each of the colors, and explain your choice to me? We don't want to display a legend to the users on the colors, so your design decisions have to be naturally clear to the users.
+- Status: New
+- Resolved in 86c961d: the strip now says what kind of requirement a course fills, the same on every plan, and the requirement tree in the drawer uses the same colour for each program, so students learn it without a legend (each card also names its program and requirement in text). Was: the colour of the program's position on the plan, which meant nothing.
+  - Maroon: your (first) major, with its tracks and specializations. The site's own colour for the main thing a plan is for.
+  - Blue: a second major. Yellow: the Core (general education). Light green: a minor. Orange: a study-abroad block (away from campus). Mauve: a Bx/MS or joint degree (graduate-level work). Dark green: pre-professional.
+  - Grey: counts toward no requirement (a free elective).
+  - Proof: `stripKind.test.ts`, e2e `feedback-1116.spec.ts` "colour strips", screenshot `fb1116-colour-strips.png` (make e2e: 79 passed; journeys A-D passed after E2E-2).
+
 
 ### Course Search and Programs GUI
 - Date: 2026-11-16
