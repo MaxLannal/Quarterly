@@ -16,7 +16,7 @@ import {
 // scale factor 1, animations off, saved to docs/screenshots/<name>-<width>.png. Runs only with
 // SCREENSHOTS=1 (`make screenshots`), so a normal `make e2e` writes no files.
 
-// SCREENSHOTS_DIR (relative to quadplan-kit/docs/screenshots) keeps a set apart, e.g. "before".
+// SCREENSHOTS_DIR (relative to docs/screenshots) keeps a set apart, e.g. "before".
 const OUT = resolve(
   dirname(fileURLToPath(import.meta.url)),
   "../../../docs/screenshots",

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Nightly encrypted Postgres backup (prompt 12). Run from the quadplan-kit folder on the server:
+# Nightly encrypted Postgres backup (prompt 12). Run from the repository root on the server:
 #
 #   BACKUP_PASSPHRASE_FILE=/root/quarterly-backup.pass scripts/backup.sh
 #

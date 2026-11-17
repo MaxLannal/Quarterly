@@ -4,7 +4,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 // Node-side helpers for the stack journeys: the Docker Compose project lives two folders up
-// (quadplan-kit/). STACK_COMPOSE_DIR overrides it.
+// (the repository root). STACK_COMPOSE_DIR overrides it.
 const here = path.dirname(fileURLToPath(import.meta.url));
 export const COMPOSE_DIR = process.env.STACK_COMPOSE_DIR ?? path.resolve(here, "../../..");
 

@@ -7,7 +7,7 @@ The whole stack runs with Docker Compose on a single small Linux VM (2-4 vCPUs, 
 1. Create the VM (Ubuntu 24.04 LTS) and point the domain's DNS `A` record at it. Leave out an `AAAA` (IPv6) record for now: the stack's Docker network is IPv4 only, so Docker would hand every IPv6 visitor to Caddy from one internal address, and they would all share one set of rate limits. To add IPv6 later, enable it on the network in `deploy/docker-compose.prod.yml` (`networks: default: enable_ipv6: true` with an `fd00::/64`-style subnet), then check with `docker compose exec caddy netstat -tn` while connecting with `curl -6` that the peer is your own IPv6 address, not `172.x.0.1`.
 2. Install Docker Engine and the Compose plugin (`https://docs.docker.com/engine/install/ubuntu/`), plus `openssl` (already present) and, optionally, the MinIO client `mc` for off-site backups.
 3. Open ports 80 and 443 only (`ufw allow 80,443/tcp`), plus SSH.
-4. Clone the repository and `cd quadplan-kit`.
+4. Clone the repository and `cd` into it.
 
 ## 2. Production settings (`.env`)
 
@@ -48,7 +48,7 @@ Then, as an admin, publish each program in `/admin/review` (make the first admin
 ```bash
 openssl rand -base64 48 > /root/quarterly-backup.pass && chmod 600 /root/quarterly-backup.pass
 crontab -e
-# 15 3 * * * cd /srv/quarterly/quadplan-kit && BACKUP_PASSPHRASE_FILE=/root/quarterly-backup.pass BACKUP_S3_TARGET=offsite/quarterly-backups scripts/backup.sh >> /var/log/quarterly-backup.log 2>&1
+# 15 3 * * * cd /srv/quarterly && BACKUP_PASSPHRASE_FILE=/root/quarterly-backup.pass BACKUP_S3_TARGET=offsite/quarterly-backups scripts/backup.sh >> /var/log/quarterly-backup.log 2>&1
 ```
 
 Keep a copy of the passphrase somewhere other than the VM. Give the off-site bucket the same 14-day limit, so deleted accounts' emails do not linger there: `mc ilm rule add --expire-days 14 offsite/quarterly-backups`. Test a restore every few months:

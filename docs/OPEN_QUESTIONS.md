@@ -486,7 +486,7 @@ Questions about the schedule pipeline (reading Class Search). The pipeline is bu
      - Open the public Class Search as a guest. Pick a term that is already posted (for example Autumn 2026) and search one subject, for example Computer Science (CMSC). If the results run over several pages, open page 2 as well.
      - Do the same for one small subject (for example a language). If you find a subject with no classes that term, save that too.
      - Save each results page with File > Save Page As... Choose "Webpage, HTML Only" (Chrome) or "Page Source" (Safari).
-     - Name the files like `REAL_class_search_2026-AU_CMSC_p1.html` and `..._p2.html`. Put them in `quadplan-kit/services/scraper/fixtures/`.
+     - Name the files like `REAL_class_search_2026-AU_CMSC_p1.html` and `..._p2.html`. Put them in `services/scraper/fixtures/`.
      - Also save the search form before you search, as `REAL_class_search_form.html`. It shows what the term and subject menus are called.
      - Please use the guest view: pages saved while logged in to my.UChicago may show your name. If one does, tell us and we will remove it before saving the file in the project.
   With those pages, the reader's settings (`scraper.parse.DEFAULT_CONFIG`) and the form steps (`scraper.class_search.ClassSearchSite`) can be written for the real site in an hour or two.

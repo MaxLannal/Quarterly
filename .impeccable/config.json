@@ -1,0 +1,35 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "design-system-font",
+        "value": "ibm plex mono",
+        "files": [
+          "tools/ascii-scene/demo.html"
+        ],
+        "createdAt": "2026-11-16T21:34:51.379Z",
+        "reason": "Claude: tools/ascii-scene/demo.html is the upstream ascii-scene demo kept verbatim as reference, outside the app bundle (FEEDBACK 'ASCII Scene' instructions)"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "ibm plex sans",
+        "files": [
+          "tools/ascii-scene/demo.html"
+        ],
+        "createdAt": "2026-11-16T21:34:51.391Z",
+        "reason": "Claude: tools/ascii-scene/demo.html is the upstream ascii-scene demo kept verbatim as reference, outside the app bundle (FEEDBACK 'ASCII Scene' instructions)"
+      },
+      {
+        "rule": "wide-tracking",
+        "value": "*",
+        "files": [
+          "tools/ascii-scene/demo.html"
+        ],
+        "createdAt": "2026-11-16T21:34:51.422Z",
+        "reason": "Claude: tools/ascii-scene/demo.html is the upstream ascii-scene demo kept verbatim as reference, outside the app bundle (FEEDBACK 'ASCII Scene' instructions)"
+      }
+    ]
+  }
+}

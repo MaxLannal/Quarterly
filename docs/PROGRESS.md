@@ -8,7 +8,7 @@
 - React 18 + TypeScript (Vite) with Tailwind v4 + shadcn/ui (`components.json`, `Button`), TanStack Query, a placeholder page for every row of SPEC "Sitemap and every page", vitest and Playwright.
 - `docker-compose.yml`: postgres:16, redis:7, minio, api, worker, web with healthchecks and named volumes; scraper under the `scraper` profile (`make scraper-up`) because it is a heavy Chromium image and CLAUDE.md lists the `make up` services without it.
 - `Makefile` with every CLAUDE.md target plus `install`, `api-client`, `api-client-check`, `scraper-up`. `golden`, `e2e` (one smoke test per route), `evals` exist.
-- CI: `.github/workflows/ci.yml` at the git root (the project lives in `quadplan-kit/`), runs `make install && make check` with Postgres and Redis service containers.
+- CI: `.github/workflows/ci.yml` at the git root (the project then lived in `quadplan-kit/`; moved to the repository root on 2026-11-16), runs `make install && make check` with Postgres and Redis service containers.
 - `llm_routing.yaml` with the SPEC "Model routing" table (nothing reads it yet).
 
 **Evidence (2026-11-12):** `make up` → db, redis, minio, api, worker, web all `(healthy)`; `curl /health` → `{"status":"ok","db":true,"redis":true}`; worker `noop` round-trip → `ok`; every web route → HTTP 200 through nginx; `make e2e` → 20 passed; `make check` passed; `make scraper-up` → healthy, "chromium 158.0.8127.18 ready".
