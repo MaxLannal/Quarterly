@@ -1,0 +1,27 @@
+# Quarters from 2026-AU on. Term ids use the calendar year in which the quarter falls (Winter 2027 = 2027-WI).
+# Start/end dates are not encoded (the academic calendar was not part of this task).
+terms:
+- id: 2026-AU
+- id: 2027-WI
+- id: 2027-SP
+- id: 2027-SU
+- id: 2027-AU
+- id: 2028-WI
+- id: 2028-SP
+- id: 2028-SU
+- id: 2028-AU
+- id: 2029-WI
+- id: 2029-SP
+- id: 2029-SU
+- id: 2029-AU
+- id: 2030-WI
+- id: 2030-SP
+- id: 2030-SU
+- id: 2030-AU
+- id: 2031-WI
+- id: 2031-SP
+- id: 2031-SU
+- id: 2031-AU
+- id: 2032-WI
+- id: 2032-SP
+- id: 2032-SU

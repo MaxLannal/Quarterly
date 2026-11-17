@@ -1,0 +1,15 @@
+# Generated from the 2026-2027 UChicago College Catalog (fetched 2026-11-12) by hand-checked scripts;
+# every source.quote is copied verbatim (whitespace collapsed) from source.url. See data/seed/REVIEW.md.
+courses:
+- code: FNDL 24612
+  title: Dostoevsky
+  units: 100
+  notes: Cross-listed with HUMA 24800 (its catalog block lists FNDL 24612 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from HUMA 24800.
+  crosslists:
+  - HUMA 24800
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/humanities/
+    quote: 'Equivalent Course(s): RLST 28204, FNDL 24612, RLIT 39501, REES 30013, REES 20013'

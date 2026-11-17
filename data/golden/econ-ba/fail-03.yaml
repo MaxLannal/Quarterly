@@ -1,0 +1,54 @@
+# Golden plan (prompt 05). Course facts: data/seed/2026-27; rules: data/seed/REVIEW.md.
+id: econ-ba-fail-03
+description: STAT 22000 and STAT 23400 both taken (the catalog forbids credit for both)
+program: econ-ba
+expect: fail
+expected_codes:
+- V02
+checks:
+- V01
+- V02
+- V03
+- V07
+- V08
+- V12
+plan:
+  catalog_year: 2026-27
+  entry_term: 2026-AU
+  programs:
+  - program_id: econ-ba
+  placements:
+  - MATH 15100
+  items:
+  - course: MATH 15100
+    term: 2026-AU
+  - course: MATH 15200
+    term: 2027-WI
+  - course: MATH 15250
+    term: 2027-SP
+  - course: ECON 20000
+    term: 2027-AU
+  - course: MATH 15300
+    term: 2027-AU
+  - course: ECON 20100
+    term: 2028-WI
+  - course: MATH 19620
+    term: 2028-WI
+  - course: STAT 22000
+    term: 2028-WI
+  - course: ECON 20200
+    term: 2028-SP
+  - course: STAT 23400
+    term: 2028-SP
+  - course: ECON 21020
+    term: 2028-AU
+  - course: ECON 23950
+    term: 2028-AU
+  - course: ECON 21200
+    term: 2029-WI
+  - course: ECON 25000
+    term: 2029-WI
+  - course: ECON 26010
+    term: 2029-SP
+  - course: ECON 27000
+    term: 2029-SP

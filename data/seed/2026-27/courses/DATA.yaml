@@ -1,0 +1,713 @@
+# Generated from the 2026-2027 UChicago College Catalog (fetched 2026-11-12) by hand-checked scripts;
+# every source.quote is copied verbatim (whitespace collapsed) from source.url. See data/seed/REVIEW.md.
+courses:
+- code: DATA 10018
+  title: Pathways in Data Science
+  units: 100
+  description: In a world increasingly driven by information, data science has emerged as an all-encompassing term to describe
+    the process of collecting, processing, analyzing, and drawing conclusions from data. The ability to use data science tools
+    and understand their foundations is crucial for those who wish to engage with the greatest challenges in modern society.
+    This course introduces students to the full data science pipeline-question formulation, data collection, storage, computation,
+    visualization, inference, prediction, and communication. In addition to lectures, labs, discussions, and visits by guest
+    speakers, students will learn Python and Jupyter Notebooks and complete a capstone project using real-world data.
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/datascience/
+    quote: DATA 10018. Pathways in Data Science. 100 Units.
+- code: DATA 11800
+  title: Introduction to Data Science I
+  units: 100
+  description: Data science provides tools for gaining insight into specific problems using data, through computation, statistics
+    and visualization. This course introduces students to all aspects of a data analysis process, from posing questions, designing
+    data collection strategies, management+storing and processing of data, exploratory tools and visualization, statistical
+    inference, prediction, interpretation and communication of results. Simple techniques for data analysis are used to illustrate
+    both effective and fallacious uses of data science tools. Although this course is designed to be at the level of mathematical
+    sciences courses in the Core, with little background required, we expect the students to develop computational skills
+    that will allow them to analyze data. Computation will be done using Python and Jupyter Notebook.
+  core_tags:
+  - mathematical_sciences
+  crosslists:
+  - STAT 11800
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/datascience/
+    quote: DATA 11800. Introduction to Data Science I. 100 Units.
+- code: DATA 11900
+  title: Introduction to Data Science II
+  units: 100
+  description: This course is the second quarter of a two-quarter systematic introduction to the foundations of data science,
+    as well as to practical considerations in data analysis. A broad background on probability and statistical methodology
+    will be provided. More advanced topics on data privacy and ethics, reproducibility in science, data encryption, and basic
+    machine learning will be introduced. We will explore these concepts with real-world problems from different domains.
+  crosslists:
+  - STAT 11900
+  prereq:
+    any:
+    - DATA 11800
+    - consent: instructor
+  prereq_text: DATA 11800 or consent of instructor.
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/datascience/
+    quote: DATA 11900. Introduction to Data Science II. 100 Units.
+- code: DATA 12000
+  title: Computer Science for Data Science
+  units: 100
+  description: This course teaches computational thinking and programming skills to students in the Data Science program.
+    Topics include control structures and basic data types, abstraction and functional decomposition, classes and objects
+    in Python, basic algorithms, and an introduction to computer structure and low level representation of data types. Examples
+    will include the application of tools such as scraping web pages and rudimentary machine learning to a variety of fields.
+  prereq: DATA 11800
+  prereq_text: DATA 11800
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/datascience/
+    quote: DATA 12000. Computer Science for Data Science. 100 Units.
+- code: DATA 13600
+  title: Introduction to Data Engineering
+  units: 100
+  description: Data-driven models are revolutionizing science and industry. Scalable systems are needed to collect, stream,
+    process, and validate data at scale. This course is an introduction to "big" data engineering where students will receive
+    hands-on experience building and deploying realistic data-intensive systems. It will cover streaming, data cleaning, relational
+    data modeling and SQL, and Machine Learning model training. A core theme of the course is "scale," and we will discuss
+    the theory and the practice of programming with large external datasets that cannot fit in main memory on a single machine.
+    The course will consist of bi-weekly programming assignments, a midterm examination, and a final.
+  prereq:
+    any:
+    - DATA 11900
+    - DATA 12000
+    - CMSC 14200
+  prereq_text: DATA 11900, DATA 12000 or CMSC 14200
+  terms_offered:
+  - AU
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/datascience/
+    quote: DATA 13600. Introduction to Data Engineering. 100 Units.
+- code: DATA 13820
+  title: Data Science in Quantitative Finance and Risk Management
+  units: 100
+  description: Have you started or are about to start your investment journey? Do you want to know more about terms like "recession"
+    and "volatility," and how they might affect your own bank account? Are you interested in mathematics and its application
+    to human emotions? This course introduces the leading statistical models and methods which financial data researchers
+    use to understand ever-evolving markets and build insightful financial strategies, such as machine learning, risk calculation,
+    and portfolio management . At first, students will learn about the theoretical and applied foundations of regression and
+    classification designs for predicting market patterns. Next, students will gain exposure to proprietary metrics such as
+    Value-at-Risk(VaR) used to evaluate returns/losses of both single and multi-asset portfolios. Lastly, they will experiment
+    with portfolio allocation tactics by visualizing risk-to-reward graphs under various buying and selling conditions. These
+    techniques can be applied to the U.S. and foreign asset classes, including equities, commodities, and cryptocurrencies.
+    Students will experience how professionals in quantitative trading, hedge funds, and risk analytics collaborate to pitch
+    asset strategies to their clients, and form research teams to play a stock market game using the skills they learned throughout
+    the course with the objective of maximizing the teams' portfolio returns. All implementations will be done using Python.
+  crosslists:
+  - STAT 13820
+  terms_offered:
+  - SU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/datascience/
+    quote: DATA 13820. Data Science in Quantitative Finance and Risk Management. 100 Units.
+- code: DATA 20002
+  title: Cognitive Models
+  units: 100
+  description: A foundational principle of cognitive science is that the workings of cognitive systems--whether biological,
+    mechanical, or digital--can be productively represented by the operation of formal computational models. This course provides
+    a survey of popular modeling frameworks (such as Bayesian rational agents, connectionist networks, dynamical systems,
+    etc.), as well as the cognitive phenomena that these models have been used to simulate. We will discuss the theoretical
+    commitments of these models, assess strengths and weaknesses of each framework for addressing different types of cognitive
+    questions, and analyze the implications of these models' successes and failures for our understanding of the mind.
+  crosslists:
+  - PSYC 22002
+  - LING 20002
+  - LING 30002
+  - COGS 20002
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/datascience/
+    quote: DATA 20002. Cognitive Models. 100 Units.
+- code: DATA 20027
+  title: Quantitative Research Methods in Linguistics
+  units: 100
+  description: This course provides an introduction to how quantitative methods are used in the analysis of linguistic data.
+    This will include a foundation in statistical methods that can be applied to experimental and psycholinguistic data, including
+    probability theory, hypothesis testing, regression models and the use of Bayesian statistics. Further topics will include
+    a brief introduction to the use of basic machine learning algorithms in linguistic research and techniques that can be
+    used in the analysis of large linguistic datasets. The class will be grounded in case studies from a variety of subfields
+    of linguistics and provide hands-on examples through a guided introduction to programming. This class is intended for
+    students who are interested in jump-starting a path into linguistic data science and is designed to be accessible to those
+    with no experience in data science or programming.
+  crosslists:
+  - LING 22500
+  - LING 32500
+  - COGS 20027
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/datascience/
+    quote: DATA 20027. Quantitative Research Methods in Linguistics. 100 Units.
+- code: DATA 20195
+  title: Data and the State
+  units: 100
+  description: 'In order to regulate and govern, states must marshall data: the whos, whats, and wheres of a nation get rendered
+    in records and statistics, at least approximately. One of the most fundamental instruments for the "datafication" of the
+    population is a census - and the very first Article of the U.S. Constitution calls for one to be conducted every ten years.
+    That same sentence is also the source of the notorious "Three-Fifths Compromise" establishing an enumeration rule where
+    enslaved people count fractionally as much as free people: political arithmetic. In this course we will use Census data
+    as a jumping-off point for an investigation of data practices of governance, looking at a host of frameworks and mechanisms
+    to classify, measure, and locate. Students will learn to use a suite of modern packages for geospatial data science in
+    Python, including Pandas, GeoPandas, Shapely, and Matplotlib, and readings will include texts from geography, anthropology,
+    sociology, and science and technology studies. No prior knowledge assumed.'
+  crosslists:
+  - DATA 30195
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/datascience/
+    quote: DATA 20195. Data and the State. 100 Units.
+- code: DATA 20602
+  title: Thinking like a Computational Social Scientist
+  units: 100
+  description: Computational social science has never been more essential for understanding human behavior and the AI systems
+    increasingly intertwined with it. Students will learn the foundations of modern AI algorithms, from logistic regression
+    to LLM alignment and reasoning, alongside network science and natural language processing. Students will also build analytical
+    skills through formal paper presentations, oral exams, and an original research project. This is an intuitive introduction
+    without prerequisites.
+  crosslists:
+  - MACS 30267
+  - SOCI 40267
+  - MACS 20267
+  - PSYC 38520
+  - SOCI 20602
+  - HIST 49307
+  - PSYC 28520
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/datascience/
+    quote: DATA 20602. Thinking like a Computational Social Scientist. 100 Units.
+- code: DATA 20620
+  title: Artificial Intelligence, Innovation, and Growth
+  units: 100
+  description: Social and cultural innovation, alongside economic growth, are among the most compelling, critical and challenging
+    phenomena in modern social science. Innovation has always been associated with unleashing transformative growth in art,
+    science, and the economy, and in this class we explore these issues in the context of the contemporary emergence of Artificial
+    Intelligence (AI). AI represents a novel source of innovation in economy and society, but also a powerful tool for understanding,
+    modeling, and steering innovation in new ways. The primary purpose of this course is to enable students to understand
+    innovation and growth in the age of AI, and with tools from AI alongside theoretical frameworks and methods from economics,
+    sociology, evolution, and complex systems necessary for study them. The course strives to provide students with a background
+    in dynamic analysis, data analysis, and modern AI requisite for studying innovation in the modern age. We will also consider
+    a number of compelling theoretical and empirical challenges, ranging from the paradox of institutionalizing innovation
+    to inequalities that emerging AI capacities could create or remove to advances it could unleash in science and technology
+    to the spread of misinformation to consequences of AI tools and "agents" in all domains of modern life to existential
+    risks associated with AI. We will cover theories and models at an abstract and advanced level.
+  crosslists:
+  - SOCI 20620
+  - ECMA 33050
+  - ECON 23050
+  - SOCI 30620
+  - MACS 23050
+  - MACS 33050
+  prereq:
+    all:
+    - any:
+      - MATH 13200
+      - MATH 15200
+      - MATH 16200
+      - MATH 15910
+      - MATH 20250
+      - MATH 20300
+    - any:
+      - ECON 11010
+      - STAT 22000
+      - STAT 23400
+      - STAT 24400
+      - SOCI 20004
+      - SOCI 20602
+      - SOCI 20596
+  prereq_text: '[MATH 13200 or MATH 15200 or MATH 16200 or MATH 15910 or MATH 20250 or MATH 20300] and [ECON 11010 or STAT
+    22000 or STAT 23400 or STAT 24400 or SOCI 20004 or SOCI 20602 or SOCI 20596]'
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/datascience/
+    quote: DATA 20620. Artificial Intelligence, Innovation, and Growth. 100 Units.
+- code: DATA 21100
+  title: Mathematical Methods for Data Science I
+  units: 100
+  description: This course introduces topics in probability and calculus (III) for data science students. Topics covered include
+    random variables and probability distributions, independence, conditional probability, expected values, the central limit
+    theorem, the definite integral, integration of functions of several variables, sums and transformations of random variables,
+    multivariable calculus - partial derivatives, gradients, and gradient descent.
+  prereq:
+    all:
+    - any:
+      - concurrent: MATH 13200
+      - concurrent: MATH 15200
+      - concurrent: MATH 16200
+    - DATA 11800
+    - any:
+      - concurrent: DATA 11900
+      - CMSC 14100
+  prereq_text: MATH 13200 or 15200 or 16200 (could be taken concurrently), DATA 11800, DATA 11900 (could be taken concurrently)
+    or CMSC 14100
+  terms_offered:
+  - AU
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/datascience/
+    quote: DATA 21100. Mathematical Methods for Data Science I. 100 Units.
+  needs_review: true
+- code: DATA 21200
+  title: Mathematical Methods for Data Science II
+  units: 100
+  description: This course introduces topics in linear algebra for data science students. Topics covered include Vectors spaces,
+    linear transformations and associated subspaces, orthogonality and projections, orthogonal (orthonormal) matrices, eigenvectors
+    and eigenvalues, diagonalization, Det and Tr, matrix decompositions (LU decomposition, singular value decomposition),
+    and transfer matrices and discrete stochastic processes. Assignments and examples focus on results and algorithms that
+    are relevant to machine learning and data science.
+  prereq:
+    all:
+    - any:
+      - concurrent: MATH 13200
+      - concurrent: MATH 15200
+      - concurrent: MATH 16200
+    - DATA 11800
+    - any:
+      - concurrent: DATA 11900
+      - CMSC 14100
+  prereq_text: MATH 13200 or 15200 or 16200 (could be taken concurrently), DATA 11800, DATA 11900 (could be taken concurrently)
+    or CMSC 14100
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/datascience/
+    quote: DATA 21200. Mathematical Methods for Data Science II. 100 Units.
+  needs_review: true
+- code: DATA 21300
+  title: Models in Data Science
+  units: 100
+  description: This course introduces fundamental aspects of modeling data such as regression, linearization and linear models,
+    discrete dynamical systems, Markov chains, continuous dynamical systems, and stability analysis.
+  prereq:
+    all:
+    - concurrent: DATA 21100
+    - any:
+      - DATA 21200
+      - STAT 24300
+      - MATH 19620
+  prereq_text: DATA 21100 (or equivalent; could be taken concurrently), DATA 21200 or STAT 24300 or MATH 19620
+  terms_offered:
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/datascience/
+    quote: DATA 21300. Models in Data Science. 100 Units.
+  needs_review: true
+- code: DATA 22100
+  title: 'Introduction to Machine Learning: Concepts and Applications'
+  units: 100
+  description: This course introduces topics in current applications of machine learning for Data Science minor students.
+    Topics include machine learning models, supervised and unsupervised learning, loss functions, risk, empirical risk and
+    overfitting, regression and classification, clustering, gradient boosting, decision trees and random forests, and a brief
+    introduction to Neural Networks and deep learning.
+  mutually_exclusive:
+  - DATA 23100
+  prereq_text: DATA 11900 (could be taken concurrently) or CMSC 14200
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/datascience/
+    quote: 'DATA 22100. Introduction to Machine Learning: Concepts and Applications. 100 Units.'
+  needs_review: true
+- code: DATA 22700
+  title: Data Visualization and Communication
+  units: 100
+  description: This course introduces Data Science minors to best practices for presenting and communicating quantitative
+    data. Principles of data visualization include the use of colors and negative spaces, drawing attention to important details,
+    repetition of design motifs, appropriately using figures and tables, and combining different scales in a single figure.
+    The course also discusses how to avoid common distortions resulting in misleading plots and figures and how to effectively
+    communicate findings. Examples are chosen from a variety of fields, such as the biological sciences, the social sciences,
+    and the media.
+  prereq:
+    any:
+    - DATA 11800
+    - CMSC 14100
+  prereq_text: DATA 11800 or CMSC 14100
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/datascience/
+    quote: DATA 22700. Data Visualization and Communication. 100 Units.
+- code: DATA 23100
+  title: 'Machine Learning Fundamentals: Theory and Practice'
+  units: 100
+  description: This course introduces topics in current applications of machine learning for Data Science major students.
+    Topics include machine learning models, supervised and unsupervised learning, loss functions, risk, empirical risk and
+    overfitting, regression and classification, clustering, gradient boosting, decision trees and random forests, and a brief
+    introduction to Neural Networks and deep learning.
+  prereq_text: DATA 12000 (could be taken concurrently) or CMSC 14200; DATA 21100 (or equivalent); DATA 21300 (could be taken
+    concurrently) and DATA 21200 (or equivalent) recommended
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/datascience/
+    quote: 'DATA 23100. Machine Learning Fundamentals: Theory and Practice. 100 Units.'
+  needs_review: true
+- code: DATA 23700
+  title: Visualization for Data Science
+  units: 100
+  description: This course imparts design knowledge and technical skills around data visualization that data scientists need
+    for analysis and communication. Design principles for data visualization are based on frameworks for thinking about chart
+    construction, empirical research on human perception and cognition, a repertoire of design strategies, and theories about
+    what makes an effective chart. Data Science majors will build practical skills around visualization APIs, computational
+    notebooks, graphics editing software, and technical writing. Topics of interest include visualization software, spatial
+    and visual reasoning, cartography, making data interactive, persuasion and deception, uncertainty communication, and model
+    interpretability.
+  prereq_text: DATA 11900 or CMSC 14100, DATA 12000 (could be taken concurrently), DATA 21300 (could be taken concurrently)
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/datascience/
+    quote: DATA 23700. Visualization for Data Science. 100 Units.
+  needs_review: true
+- code: DATA 24100
+  title: Software Engineering for Data Science
+  units: 100
+  description: This course is designed to equip students with the practical skills and theoretical knowledge necessary to
+    excel at the intersection of data science and software engineering. Through a hands-on approach, students will delve into
+    the core tools and concepts that form the backbone of this interdisciplinary field, including data modeling, building
+    data pipelines and software development best-practices. Emphasis will be placed on real-world applications, enabling students
+    to work on projects that simulate professional scenarios and challenges. This course is ideal for those looking to deepen
+    their understanding of how data-focused technologies are developed and deployed.
+  prereq: DATA 12000
+  prereq_text: DATA 12000
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/datascience/
+    quote: DATA 24100. Software Engineering for Data Science. 100 Units.
+- code: DATA 25422
+  title: Machine Learning for Computer Systems
+  units: 100
+  description: This course will cover topics at the intersection of machine learning and systems, with a focus on applications
+    of machine learning to computer systems. Topics covered will include applications of machine learning models to security,
+    performance analysis, and prediction problems in systems; data preparation, feature selection, and feature extraction;
+    design, development, and evaluation of machine learning models and pipelines; fairness, interpretability, and explainability
+    of machine learning models; and testing and debugging of machine learning models. The topic of machine learning for computer
+    systems is broad. Given the expertise of the instructor, many of the examples this term will focus on applications to
+    computer networking. Yet, many of these principles apply broadly, across computer systems. You can and should think of
+    this course as a practical hands-on introduction to machine learning models and concepts that will allow you to apply
+    these models in practice. We'll focus on examples from networking, but you will walk away from the course with a good
+    understanding of how to apply machine learning models to real-world datasets, how to use machine learning to help computer
+    systems operate better, and the practical challenges with deploying machine learning models in practice."
+  crosslists:
+  - CMSC 35422
+  - DATA 35422
+  - CMSC 25422
+  prereq:
+    any:
+    - CMSC 14300
+    - CMSC 15400
+  prereq_text: CMSC 14300 or CMSC 15400
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/datascience/
+    quote: DATA 25422. Machine Learning for Computer Systems. 100 Units.
+- code: DATA 25900
+  title: Ethics, Fairness, Responsibility, and Privacy in Data Science
+  units: 100
+  description: This course takes a technical approach to exploring societal issues of ethics, fairness, responsibility, and
+    privacy related to the collection, use, and generalization of data. The course introduces fundamental techniques related
+    to data acquisition, data cleaning, sampling, statistical modeling, experimental design, feature engineering, and modeling
+    with machine learning. It then explores the problems that arise in different ways of performing those tasks, the fairness
+    and bias of machine learning models, data visualizations, and user interfaces. In addition, the course covers anonymization
+    and deanonymization, conceptions of privacy from a number of perspectives (statistical, legal, and philosophical), and
+    compliance with contractual or legal requirements around data. The course concludes by discussing current controversies
+    around the use and misuse of data. Through both programming assignments and discussions, students who complete the course
+    will learn how to design systems that are inclusive and respectful of all data subjects.
+  prereq: DATA 11900
+  prereq_text: DATA 11900
+  terms_offered:
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/datascience/
+    quote: DATA 25900. Ethics, Fairness, Responsibility, and Privacy in Data Science. 100 Units.
+- code: DATA 26100
+  title: Statistical Pitfalls and Misinterpretation of Data
+  units: 100
+  description: This course will provide tools for thinking critically about data and models that constitute evidence, e.g.,
+    for the purpose of making predictions, reaching decisions, judging the quality of information, or in the context of scientific
+    research. The course will examine examples of misleading language and graphics and discuss good practices in representing
+    and communicating data. Examples will include such pitfalls as data size effects, false linearity, biased or correlated
+    samples, mistaking correlation for causation, regression to the mean, and Simpson's paradox.
+  prereq:
+    all:
+    - MATH 13200
+    - any:
+      - DATA 11800
+      - CMSC 14100
+  prereq_text: MATH 13200 and DATA 11800 or CMSC 14100
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/datascience/
+    quote: DATA 26100. Statistical Pitfalls and Misinterpretation of Data. 100 Units.
+- code: DATA 27005
+  title: AI Agents for Social Science & Society
+  units: 100
+  description: 'This course takes the position that AI agents represent a fundamental transformation in both society and social
+    science methodology: from cartoons of social life to another dimension of sociality, and from tools that merely process
+    data to autonomous systems that can formulate hypotheses, conduct literature reviews, design studies, analyze complex
+    multimedia data, engage in theoretical reasoning, simulate human behavior and social dynamics, and reveal their own behaviors
+    that are playing an increasingly important role in the human social world. In this course, students will learn to understand
+    and construct AI agents that serve as research assistants (automating data collection and analysis), research subjects
+    (simulating human responses and social processes or revealing their own authentic behavior), research advisors (synthesizing
+    literature and proposing theoretical frameworks), research scientists (generating and testing hypotheses), and workers
+    within organizations, institutions, and societies for study, but also productive work and life.'
+  crosslists:
+  - DATA 37005
+  - MACS 37005
+  - MACS 27005
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/datascience/
+    quote: DATA 27005. AI Agents for Social Science & Society. 100 Units.
+- code: DATA 27100
+  title: Data Science Clinic I
+  units: 100
+  description: 'In order to enroll in this class, students must first submit an application and be matched with a project.
+    Visit the Data Science Clinic site for application deadlines, how to apply, and information session details: https://github.com/dsi-clinic/the-clinic.
+    The Data Science Clinic partners with public interest organizations to leverage data science research and technology to
+    address pressing social and environmental challenges. The Clinic also provides students with exposure to real-world projects
+    and problems that transcend the conventional classroom experience including: working with imperfect datasets, applying
+    models and algorithms to real-world data, navigating security and privacy issues, communicating results to a diverse set
+    of stakeholders (e.g., industry, public interest, government agencies), and translating information into actionable insights,
+    policy briefs and software prototypes. The Clinic is an experiential project-based course where students work in teams
+    as data scientists with real-world clients under the supervision of instructors. Students will be tasked with producing
+    key deliverables, such as data analysis, open source software, as well as final client presentations, and reports.'
+  crosslists:
+  - MACS 30300
+  - CAPP 30300
+  - MPCS 57300
+  - PPHA 30581
+  prereq_text: DATA 12000, DATA 13600, DATA 21100, DATA 21200, DATA 23100 (or equivalent) and by permission of instructor
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/datascience/
+    quote: DATA 27100. Data Science Clinic I. 100 Units.
+  needs_review: true
+- code: DATA 27200
+  title: Data Science Clinic II
+  units: 100
+  description: 'In order to enroll in this class, students must first submit an application and be matched with a project.
+    Visit the Data Science Clinic site for application deadlines, how to apply, and information session details: https://github.com/dsi-clinic/the-clinic.
+    This is the second course in a sequence of Data Science Clinics. The Data Science Clinic partners with public interest
+    organizations to leverage data science research and technology to address pressing social and environmental challenges.
+    The Clinic also provides students with exposure to real-world projects and problems that transcend the conventional classroom
+    experience including: working with imperfect datasets, applying models and algorithms to real-world data, navigating security
+    and privacy issues, communicating results to a diverse set of stakeholders (e.g., industry, public interest, government
+    agencies), and translating information into actionable insights, policy briefs and software prototypes. The Clinic is
+    an experiential project-based course where students work in teams as data scientists with real-world clients under the
+    supervision of instructors. Students will be tasked with producing key deliverables, such as data analysis, open source
+    software, as well as final client presentations, and reports.'
+  prereq: DATA 27100
+  prereq_text: DATA 27100
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/datascience/
+    quote: DATA 27200. Data Science Clinic II. 100 Units.
+- code: DATA 27400
+  title: Nonparametric Inference
+  units: 100
+  description: Nonparametric inference is about developing statistical methods and models that make weak assumptions. A typical
+    nonparametric approach estimates a nonlinear function from an infinite dimensional space rather than a linear model from
+    a finite dimensional space. This course gives an introduction to nonparametric inference, with a focus on density estimation,
+    regression, confidence sets, orthogonal functions, random processes, and kernels. The course treats nonparametric methodology
+    and its use, together with theory that explains the statistical properties of the methods.
+  crosslists:
+  - STAT 27400
+  - STAT 37400
+  - DATA 37400
+  prereq_text: STAT 24400 or STAT 24410 w/B- or better is required; alternatively STAT 22400 w/B+ or better and exposure to
+    multivariate calculus (MATH 16300 or MATH 16310 or MATH 18400 or MATH 19520 or MATH 20000 or MATH 20500 or MATH 20510
+    or MATH 20800) and linear algebra (MATH 18600 or 19620 or 20250 or 20700 or STAT 24300 or equivalent). Master's students
+    in Statistics can enroll without prerequisites. Master's students must be in Statistics, Computational and Applied Mathematics,
+    Data Science, Mathematics, or Financial Mathematics, or have consent of instructor.
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/datascience/
+    quote: DATA 27400. Nonparametric Inference. 100 Units.
+  needs_review: true
+- code: DATA 27420
+  title: Introduction to Causality with Machine Learning
+  units: 100
+  description: This course is an introduction to causal inference. We'll cover the core ideas of causal inference and what
+    distinguishes it from traditional observational modeling. This includes an introduction to some foundational ideas---structural
+    equation models, causal directed acyclic graphs, and then do calculus. The course has a particular emphasis on the estimation
+    of causal effects using machine learning methods.
+  crosslists:
+  - STAT 27420
+  prereq_text: '[STAT 24500 or STAT 24510 or STAT 27725] with a grade of B or higher or consent of instructor. Master''s students
+    must be in Statistics, Computational and Applied Mathematics, Data Science, Mathematics, or Financial Mathematics, or
+    have consent of instructor.'
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/datascience/
+    quote: DATA 27420. Introduction to Causality with Machine Learning. 100 Units.
+  needs_review: true
+- code: DATA 27751
+  title: Trustworthy Machine Learning
+  units: 100
+  description: Machine learning systems are routinely used in safety critical situations in the real world. However, they
+    often dramatically fail! This course covers foundational and practical concerns in building machine learning systems that
+    can be trusted. Topics include foundational issues---when do systems generalize, and why, essential results in fairness
+    and domain shifts, and evaluations beyond standard test/train splits. This is an intermediate level course in machine
+    learning; students should have at least one previous course in machine learning.
+  crosslists:
+  - STAT 37787
+  - STAT 27751
+  prereq:
+    any:
+    - STAT 27700
+    - STAT 37710
+    - consent: instructor
+  prereq_text: STAT 27700 or STAT 37710 or consent of instructor.
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/datascience/
+    quote: DATA 27751. Trustworthy Machine Learning. 100 Units.
+- code: DATA 29700
+  title: Reading and Research
+  units: 100
+  description: Instructor consent required. Students are required to submit the signed College Reading and Research Course
+    Form to the Director of Undergraduate Studies. Forms will be reviewed only after a student has secured a faculty sponsor
+    on the Committee on Data Science. Must be taken for a quality grade.
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/datascience/
+    quote: DATA 29700. Reading and Research. 100 Units.
+- code: DATA 30120
+  title: Technical Presentation
+  units: 100
+  notes: Cross-listed with CMSC 30120 (its catalog block lists DATA 30120 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from CMSC 30120.
+  crosslists:
+  - CMSC 30120
+  source:
+    url: http://graduateannouncements.uchicago.edu/graduate/departmentofcomputerscience/
+    quote: 'Equivalent Course(s): DATA 30120'
+- code: DATA 30195
+  title: Data and the State
+  units: 100
+  notes: Cross-listed with DATA 20195 (its catalog block lists DATA 30195 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from DATA 20195.
+  crosslists:
+  - DATA 20195
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/datascience/
+    quote: 'Equivalent Course(s): DATA 30195'
+- code: DATA 31500
+  title: Data Interaction
+  units: 100
+  notes: Cross-listed with CMSC 31500 (its catalog block lists DATA 31500 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from CMSC 31500.
+  crosslists:
+  - CMSC 31500
+  prereq_text: Consent of Instructor unless graduate student in Data Science
+  terms_offered:
+  - AU
+  - SP
+  source:
+    url: http://graduateannouncements.uchicago.edu/graduate/departmentofcomputerscience/
+    quote: 'Equivalent Course(s): DATA 31500'
+  needs_review: true
+- code: DATA 33255
+  title: Modeling Democracy
+  units: 100
+  notes: Cross-listed with CMSC 33255 (its catalog block lists DATA 33255 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from CMSC 33255.
+  crosslists:
+  - CMSC 33255
+  prereq_text: Consent of instructor unless graduate student in data science
+  terms_offered:
+  - WI
+  source:
+    url: http://graduateannouncements.uchicago.edu/graduate/departmentofcomputerscience/
+    quote: 'Equivalent Course(s): DATA 33255'
+  needs_review: true
+- code: DATA 35422
+  title: Machine Learning for Computer Systems
+  units: 100
+  notes: Cross-listed with CMSC 25422 (its catalog block lists DATA 35422 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from CMSC 25422.
+  crosslists:
+  - CMSC 25422
+  prereq:
+    any:
+    - CMSC 14300
+    - CMSC 15400
+  prereq_text: CMSC 14300 or CMSC 15400
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/computerscience/
+    quote: 'Equivalent Course(s): DATA 25422, CMSC 35422, DATA 35422'
+- code: DATA 35428
+  title: Large-Scale Machine Learning in Practice
+  units: 100
+  notes: Cross-listed with CMSC 35428 (its catalog block lists DATA 35428 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from CMSC 35428.
+  crosslists:
+  - CMSC 35428
+  source:
+    url: http://graduateannouncements.uchicago.edu/graduate/departmentofcomputerscience/
+    quote: 'Equivalent Course(s): DATA 35428'
+- code: DATA 37005
+  title: AI Agents for Social Science & Society
+  units: 100
+  notes: Cross-listed with DATA 27005 (its catalog block lists DATA 37005 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from DATA 27005.
+  crosslists:
+  - DATA 27005
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/datascience/
+    quote: 'Equivalent Course(s): DATA 37005, MACS 37005, MACS 27005'
+- code: DATA 37400
+  title: Nonparametric Inference
+  units: 100
+  notes: Cross-listed with DATA 27400 (its catalog block lists DATA 37400 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from DATA 27400.
+  crosslists:
+  - DATA 27400
+  prereq_text: STAT 24400 or STAT 24410 w/B- or better is required; alternatively STAT 22400 w/B+ or better and exposure to
+    multivariate calculus (MATH 16300 or MATH 16310 or MATH 18400 or MATH 19520 or MATH 20000 or MATH 20500 or MATH 20510
+    or MATH 20800) and linear algebra (MATH 18600 or 19620 or 20250 or 20700 or STAT 24300 or equivalent). Master's students
+    in Statistics can enroll without prerequisites. Master's students must be in Statistics, Computational and Applied Mathematics,
+    Data Science, Mathematics, or Financial Mathematics, or have consent of instructor.
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/datascience/
+    quote: 'Equivalent Course(s): STAT 27400, STAT 37400, DATA 37400'
+  needs_review: true
+- code: DATA 37712
+  title: Foundations of Machine Learning and AI - Part II
+  units: 100
+  notes: Cross-listed with CMSC 37712 (its catalog block lists DATA 37712 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from CMSC 37712.
+  crosslists:
+  - CMSC 37712
+  prereq_text: DATA 37711; Consent of Instructor unless graduate student in Data Science
+  terms_offered:
+  - WI
+  source:
+    url: http://graduateannouncements.uchicago.edu/graduate/departmentofcomputerscience/
+    quote: 'Equivalent Course(s): DATA 37712'
+  needs_review: true

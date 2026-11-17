@@ -1,0 +1,27 @@
+# Golden plan (prompt 05). Course facts: data/seed/2026-27; rules: data/seed/REVIEW.md.
+id: civ-abroad-paris-mdd-fail-04
+description: First course taken twice
+program: civ-abroad-paris-mdd
+expect: fail
+expected_codes:
+- V02
+checks:
+- V01
+- V02
+- V03
+- V07
+- V12
+plan:
+  catalog_year: 2026-27
+  entry_term: 2026-AU
+  programs:
+  - program_id: civ-abroad-paris-mdd
+  items:
+  - course: SOSC 19076
+    term: 2027-AU
+  - course: SOSC 19077
+    term: 2027-AU
+  - course: SOSC 19078
+    term: 2027-AU
+  - course: SOSC 19076
+    term: 2028-AU

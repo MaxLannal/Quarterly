@@ -1,0 +1,24 @@
+# Generated from the 2026-2027 UChicago College Catalog (fetched 2026-11-12) by hand-checked scripts;
+# every source.quote is copied verbatim (whitespace collapsed) from source.url. See data/seed/REVIEW.md.
+courses:
+- code: SPAN 10300
+  title: Beginning Elementary Spanish III
+  units: 100
+  description: 'SPAN 10300 is the third and final segment of the introductory-level course sequence in Spanish language and
+    Hispanic culture. The introductory course sequence in Spanish has two main objectives: 1) to enable students to understand
+    simple texts and dialogues and communicate successfully with highly proficient speakers about everyday, concrete topics;
+    and 2) to build students'' transcultural competence via exposure to different aspects of Spanish-speaking cultures. Using
+    a task-based approach, the course will provide students with a solid foundation in the basic patterns of spoken and written
+    communication in Spanish (grammar, syntax, vocabulary, sociolinguistic norms), with emphasis on all four linguistic skills
+    (speaking, listening, reading and writing).'
+  core_tags:
+  - language
+  prereq_text: SPAN 10200, SPAN 14100, or placement.
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/romancelanguagesliteratures/
+    quote: SPAN 10300. Beginning Elementary Spanish III. 100 Units.
+  needs_review: true

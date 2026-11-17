@@ -1,0 +1,198 @@
+# Generated from the 2026-2027 UChicago College Catalog (fetched 2026-11-12) by hand-checked scripts;
+# every source.quote is copied verbatim (whitespace collapsed) from source.url. See data/seed/REVIEW.md.
+courses:
+- code: CAAM 24310
+  title: 'Numerical Linear Algebra: An Introduction to Computation'
+  units: 100
+  notes: Cross-listed with STAT 24310 (its catalog block lists CAAM 24310 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from STAT 24310.
+  crosslists:
+  - STAT 24310
+  prereq_text: STAT 24300 or an equivalent introductory linear algebra class. Coding experience in Python, Matlab, R, or Julia
+    is strongly recommended. Master's students must be in Statistics, Computational and Applied Mathematics, Data Science,
+    Mathematics, or Financial Mathematics, or have consent of instructor.
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/statistics/
+    quote: 'Equivalent Course(s): CAAM 24310'
+  needs_review: true
+- code: CAAM 28000
+  title: Optimization
+  units: 100
+  notes: Cross-listed with STAT 28000 (its catalog block lists CAAM 28000 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from STAT 28000.
+  crosslists:
+  - STAT 28000
+  prereq:
+    all:
+    - any:
+      - MATH 20500
+      - MATH 20510
+      - MATH 20520
+      - MATH 20800
+    - any:
+      - STAT 24300
+      - MATH 20250
+      - MATH 20700
+  prereq_text: (MATH 20500 or MATH 20510 or MATH 20520 or MATH 20800) and (STAT 24300 or MATH 20250 or MATH 20700). Master's
+    students must be in Statistics, Computational and Applied Mathematics, Data Science, Mathematics, or Financial Mathematics,
+    or have consent of instructor.
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/statistics/
+    quote: 'Equivalent Course(s): CAAM 28000'
+- code: CAAM 28200
+  title: Dynamical Systems with Applications
+  units: 100
+  notes: Cross-listed with STAT 28200 (its catalog block lists CAAM 28200 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from STAT 28200.
+  crosslists:
+  - STAT 28200
+  prereq_text: MATH 27300 or (Multivariable calculus (MATH 18400 or 19520 or 20000 or 20400 or 20410 or PHYS 22100 or equivalent),
+    AND linear algebra, including eigenvalues & eigenvectors (MATH 18600 or 19620 or 20250 or 20700 or STAT 24300)). Previous
+    knowledge of elementary differential equations is helpful but not required. Master's students must be in Statistics, Computational
+    and Applied Mathematics, Data Science, Mathematics, or Financial Mathematics, or have consent of instructor.
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/statistics/
+    quote: 'Equivalent Course(s): CAAM 31405, STAT 31405, CAAM 28200'
+  needs_review: true
+- code: CAAM 30900
+  title: 'Mathematical Computation I: Matrix Computation Course'
+  units: 100
+  notes: Cross-listed with CMSC 37810 (its catalog block lists CAAM 30900 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from CMSC 37810.
+  crosslists:
+  - CMSC 37810
+  prereq_text: Linear algebra (STAT 24300 or equivalent) and some previous experience with statistics. Master's students must
+    be in Statistics, Computational and Applied Mathematics, Data Science, Mathematics, or Financial Mathematics, or have
+    consent of instructor.
+  terms_offered:
+  - AU
+  source:
+    url: http://graduateannouncements.uchicago.edu/graduate/departmentofcomputerscience/
+    quote: 'Equivalent Course(s): STAT 30900, CAAM 30900'
+  needs_review: true
+- code: CAAM 31015
+  title: 'Mathematical Computation IIA: Convex Optimization'
+  units: 100
+  notes: Cross-listed with CMSC 35470 (its catalog block lists CAAM 31015 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from CMSC 35470.
+  crosslists:
+  - CMSC 35470
+  prereq:
+    any:
+    - STAT 30900
+    - STAT 31430
+    - consent: instructor
+  prereq_text: STAT 30900 or STAT 31430 or consent of instructor.
+  terms_offered:
+  - SP
+  source:
+    url: http://graduateannouncements.uchicago.edu/graduate/departmentofcomputerscience/
+    quote: 'Equivalent Course(s): BUSN 36903, CAAM 31015, STAT 31015, TTIC 31070'
+- code: CAAM 31100
+  title: 'Mathematical Computation III: Numerical Methods for PDE''s'
+  units: 100
+  notes: Cross-listed with CMSC 37812 (its catalog block lists CAAM 31100 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from CMSC 37812.
+  crosslists:
+  - CMSC 37812
+  prereq_text: Some prior exposure to differential equations and linear algebra
+  source:
+    url: http://graduateannouncements.uchicago.edu/graduate/departmentofcomputerscience/
+    quote: 'Equivalent Course(s): STAT 31100, CAAM 31100, MATH 38309'
+  needs_review: true
+- code: CAAM 31140
+  title: 'Computational Imaging: Theory and Methods'
+  units: 100
+  notes: Cross-listed with CMSC 31140 (its catalog block lists CAAM 31140 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from CMSC 31140.
+  crosslists:
+  - CMSC 31140
+  source:
+    url: http://graduateannouncements.uchicago.edu/graduate/departmentofcomputerscience/
+    quote: 'Equivalent Course(s): CAAM 31140, STAT 31140'
+- code: CAAM 31405
+  title: Dynamical Systems with Applications
+  units: 100
+  notes: Cross-listed with STAT 28200 (its catalog block lists CAAM 31405 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from STAT 28200.
+  crosslists:
+  - STAT 28200
+  prereq_text: MATH 27300 or (Multivariable calculus (MATH 18400 or 19520 or 20000 or 20400 or 20410 or PHYS 22100 or equivalent),
+    AND linear algebra, including eigenvalues & eigenvectors (MATH 18600 or 19620 or 20250 or 20700 or STAT 24300)). Previous
+    knowledge of elementary differential equations is helpful but not required. Master's students must be in Statistics, Computational
+    and Applied Mathematics, Data Science, Mathematics, or Financial Mathematics, or have consent of instructor.
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/statistics/
+    quote: 'Equivalent Course(s): CAAM 31405, STAT 31405, CAAM 28200'
+  needs_review: true
+- code: CAAM 37710
+  title: Machine Learning
+  units: 100
+  notes: Cross-listed with CMSC 35400 (its catalog block lists CAAM 37710 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from CMSC 35400.
+  crosslists:
+  - CMSC 35400
+  prereq:
+    any:
+    - any:
+      - CMSC 35300
+      - STAT 27700
+      - STAT 31430
+      - STAT 30900
+      - STAT 24300
+      - STAT 24500
+      - STAT 24510
+    - consent: instructor
+  prereq_text: 'Must be a PhD or MS student in Statistics, Computer Science, or Computational and Applied Mathematics, and
+    has taken any one of: CMSC 35300/STAT 27700, STAT 31430, STAT 30900, STAT 24300, STAT 24500, or STAT 24510. Or consent
+    of the instructor.'
+  source:
+    url: http://graduateannouncements.uchicago.edu/graduate/departmentofcomputerscience/
+    quote: 'Equivalent Course(s): STAT 37710, CAAM 37710'
+  needs_review: true
+- code: CAAM 37788
+  title: Machine Learning on Graphs, Groups and Manifolds
+  units: 100
+  notes: Cross-listed with CMSC 35430 (its catalog block lists CAAM 37788 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from CMSC 35430.
+  crosslists:
+  - CMSC 35430
+  source:
+    url: http://graduateannouncements.uchicago.edu/graduate/departmentofcomputerscience/
+    quote: 'Equivalent Course(s): CAAM 37788, STAT 37788'
+- code: CAAM 37794
+  title: Special Topics in Machine Learning
+  units: 100
+  notes: Cross-listed with CMSC 35490 (its catalog block lists CAAM 37794 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from CMSC 35490.
+  crosslists:
+  - CMSC 35490
+  prereq_text: Students should be familiar with a numerical programming language like Python, Julia, R, or Matlab and the
+    content of CMSC 35400. Students should also have familiarity with the contents of MATH 27300 and MATH 27500 or similar.
+  terms_offered:
+  - AU
+  source:
+    url: http://graduateannouncements.uchicago.edu/graduate/departmentofcomputerscience/
+    quote: 'Equivalent Course(s): CAAM 37794, STAT 37794, MATH 37794'
+  needs_review: true
+- code: CAAM 37799
+  title: 'Topics in Machine Learning: Machine Learning and Inverse Problems'
+  units: 100
+  notes: Cross-listed with CMSC 37799 (its catalog block lists CAAM 37799 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from CMSC 37799.
+  crosslists:
+  - CMSC 37799
+  prereq:
+    any:
+    - STAT 37710
+    - CAAM 37710
+    - CMSC 35400
+    - consent: instructor
+  prereq_text: STAT 37710/CAAM 37710/CMSC 35400 or consent of instructor.
+  source:
+    url: http://graduateannouncements.uchicago.edu/graduate/departmentofcomputerscience/
+    quote: 'Equivalent Course(s): STAT 37799, CAAM 37799'

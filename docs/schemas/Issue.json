@@ -1,0 +1,96 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "code": {
+      "enum": [
+        "V01",
+        "V02",
+        "V03",
+        "V04",
+        "V05",
+        "V06",
+        "V07",
+        "V08",
+        "V09",
+        "V10",
+        "V11",
+        "V12"
+      ],
+      "title": "Code",
+      "type": "string"
+    },
+    "course_ids": {
+      "items": {
+        "examples": [
+          "CMSC 14100"
+        ],
+        "pattern": "^[A-Z]{2,5} \\d{5}$",
+        "type": "string"
+      },
+      "title": "Course Ids",
+      "type": "array"
+    },
+    "fix_hints": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Fix Hints",
+      "type": "array"
+    },
+    "goal_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Goal Id"
+    },
+    "level": {
+      "enum": [
+        "error",
+        "warning",
+        "info"
+      ],
+      "title": "Level",
+      "type": "string"
+    },
+    "message": {
+      "title": "Message",
+      "type": "string"
+    },
+    "node_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Node Id"
+    },
+    "term_ids": {
+      "items": {
+        "examples": [
+          "2026-AU"
+        ],
+        "pattern": "^\\d{4}-(AU|WI|SP|SU)$",
+        "type": "string"
+      },
+      "title": "Term Ids",
+      "type": "array"
+    }
+  },
+  "required": [
+    "code",
+    "level",
+    "message"
+  ],
+  "title": "Issue",
+  "type": "object"
+}

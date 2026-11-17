@@ -1,0 +1,39 @@
+# Production overrides for a single VM (docs/DEPLOY.md):
+#   docker compose -f docker-compose.yml -f deploy/docker-compose.prod.yml up -d --build --wait
+# Only Caddy is reachable from outside (80/443); the database, Redis, MinIO and the API are
+# not published on the host.
+services:
+  db:
+    ports: !reset []
+  redis:
+    ports: !reset []
+  minio:
+    ports: !reset []
+  api:
+    ports: !reset []
+    environment:
+      # Production whatever `.env` says: the API then refuses to start with development
+      # secrets, console email, insecure cookies or the e2e test AI (Settings.production_problems).
+      ENVIRONMENT: production
+      WEB_CONCURRENCY: "4"
+      # Caddy and nginx each append to X-Forwarded-For: the client's address is 2 hops back.
+      TRUSTED_PROXY_HOPS: "2"
+  worker:
+    environment:
+      ENVIRONMENT: production
+  web:
+    ports: !reset []
+  caddy:
+    image: caddy:2.8-alpine
+    restart: unless-stopped
+    depends_on: [web]
+    ports: ["80:80", "443:443"]
+    environment:
+      QUARTERLY_DOMAIN: ${QUARTERLY_DOMAIN:-quarterly.example.org}
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+volumes:
+  caddy_data:
+  caddy_config:

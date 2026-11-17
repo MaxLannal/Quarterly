@@ -1,0 +1,19 @@
+# FAKE FIXTURE for loader tests. Not real catalog data.
+courses:
+  - {code: TEST 10000, title: Fake Intro I, source: {url: "https://example.invalid/fake-catalog", quote: "FAKE FIXTURE - not a real course"}, terms_offered: [AU]}
+  - code: TEST 10100
+    title: Fake Intro II
+    prereq: TEST 10000
+    prereq_text: "TEST 10000"
+    terms_offered: [WI]
+    source: {url: "https://example.invalid/fake-catalog", quote: "FAKE FIXTURE - not a real course"}
+  - code: TEST 20000
+    title: Fake Advanced
+    prereq: {all: [TEST 10100, {consent: instructor}]}
+    prereq_text: "TEST 10100 and consent of instructor"
+    source: {url: "https://example.invalid/fake-catalog", quote: "FAKE FIXTURE - not a real course"}
+  - {code: TEST 20100, title: Fake Cross-listed, crosslists: [FAKE 20100], source: {url: "https://example.invalid/fake-catalog", quote: "FAKE FIXTURE - not a real course"}}
+  - {code: FAKE 20100, title: Fake Cross-listed, crosslists: [TEST 20100], source: {url: "https://example.invalid/fake-catalog", quote: "FAKE FIXTURE - not a real course"}}
+  - {code: TEST 20200, title: Fake Exclusive A, mutually_exclusive: [TEST 20300], source: {url: "https://example.invalid/fake-catalog", quote: "FAKE FIXTURE - not a real course"}}
+  - {code: TEST 20300, title: Fake Exclusive B, source: {url: "https://example.invalid/fake-catalog", quote: "FAKE FIXTURE - not a real course"}}
+  - {code: TEST 20400, title: Fake Elective, prereq: {concurrent: GONE 10000}, source: {url: "https://example.invalid/fake-catalog", quote: "FAKE FIXTURE - not a real course"}}

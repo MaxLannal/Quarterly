@@ -1,0 +1,63 @@
+# Generated from the 2026-2027 UChicago College Catalog (fetched 2026-11-12) by hand-checked scripts;
+# every source.quote is copied verbatim (whitespace collapsed) from source.url. See data/seed/REVIEW.md.
+courses:
+- code: REES 20013
+  title: Dostoevsky
+  units: 100
+  notes: Cross-listed with HUMA 24800 (its catalog block lists REES 20013 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from HUMA 24800.
+  crosslists:
+  - HUMA 24800
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/humanities/
+    quote: 'Equivalent Course(s): RLST 28204, FNDL 24612, RLIT 39501, REES 30013, REES 20013'
+- code: REES 26011
+  title: 'Russia and Eurasia: Empires, Societies, Cultures I (formerly Introduction to Russian Civilization)'
+  units: 100
+  notes: Cross-listed with HIST 13900 (its catalog block lists REES 26011 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from HIST 13900.
+  crosslists:
+  - HIST 13900
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): REES 26011, SOSC 24000'
+- code: REES 26012
+  title: 'Russia and Eurasia: Empires, Societies, Cultures II (formerly Introduction to Russian Civilization)'
+  units: 100
+  notes: Cross-listed with HIST 14000 (its catalog block lists REES 26012 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from HIST 14000.
+  crosslists:
+  - HIST 14000
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): SOSC 24100, REES 26012'
+- code: REES 26015
+  title: 'Russia and Eurasia: Empires, Societies, Cultures III, Russia and the West, 18th to 21st centuries'
+  units: 100
+  notes: Cross-listed with HIST 14100 (its catalog block lists REES 26015 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from HIST 14100.
+  crosslists:
+  - HIST 14100
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): SOSC 24200, REES 26015'
+- code: REES 30013
+  title: Dostoevsky
+  units: 100
+  notes: Cross-listed with HUMA 24800 (its catalog block lists REES 30013 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from HUMA 24800.
+  crosslists:
+  - HUMA 24800
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/humanities/
+    quote: 'Equivalent Course(s): RLST 28204, FNDL 24612, RLIT 39501, REES 30013, REES 20013'

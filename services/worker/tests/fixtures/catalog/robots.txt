@@ -1,0 +1,3 @@
+# FAKE robots.txt for the crawler tests.
+User-agent: *
+Disallow: /thecollege/drafts/

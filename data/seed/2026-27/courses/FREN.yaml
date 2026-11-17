@@ -1,0 +1,19 @@
+# Generated from the 2026-2027 UChicago College Catalog (fetched 2026-11-12) by hand-checked scripts;
+# every source.quote is copied verbatim (whitespace collapsed) from source.url. See data/seed/REVIEW.md.
+courses:
+- code: FREN 10300
+  title: Beginning Elementary French III
+  units: 100
+  description: This course is the final course in the three-quarter beginning sequence and builds on the work completed in
+    FREN 10200. It further develops students' communicative proficiency through sustained, task-based engagement with authentic
+    cultural content. The course emphasizes functional proficiency across present, past, and future time frames and engages
+    students across all three modes of communication (interpretive, interpersonal, and presentational). Continued engagement
+    with French and Francophone content fosters cultural awareness and supports deeper intercultural reflection. Successful
+    completion of FREN 10300 fulfills the College's language competence requirement.
+  core_tags:
+  - language
+  prereq_text: FREN 10200, FREN 12001, FREN 14100 or placement into FREN 10300
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/romancelanguagesliteratures/
+    quote: FREN 10300. Beginning Elementary French III. 100 Units.
+  needs_review: true

@@ -1,0 +1,58 @@
+# Generated from the 2026-2027 UChicago College Catalog (fetched 2026-11-12) by hand-checked scripts;
+# every source.quote is copied verbatim (whitespace collapsed) from source.url. See data/seed/REVIEW.md.
+courses:
+- code: JWSC 12000
+  title: 'Jewish Civilization I: Ancient Beginnings to Medieval Period'
+  units: 100
+  description: This course provides an interdisciplinary introduction to the textual, geo-political, social, economic, religious,
+    and cultural developments, transformations, and conflicts that shaped Jewish civilization between the first millennium
+    BCE and the end of the Middle Ages. Working both chronologically and thematically, we read a range of primary sources
+    tracking the development of the Jewish biblical canon, Jewish writings from the Greco-Roman period, the formation of rabbinic
+    Judaism, and the changes across the Jewish diaspora brought on by the rise and expansion of Christianity and Islam. Throughout
+    the course, we look at how Judaism was shaped by interactions with neighboring civilizations, as well as the debates Jewish
+    communities had among themselves about what Jewish civilization is or ought to be. Topics covered include the growing
+    significance of textual interpretation; Jewish political and religious vulnerability under foreign rule; anti-Judaism;
+    Jewish religious, cultural, and intellectual creativity; and the role played by class, gender, legal status, and other
+    hierarchies in our sources. Readings may include selections from the Hebrew Bible, the Dead Sea Scrolls, Christian New
+    Testament, Josephus, Philo, Talmud, the Qur'an, the Cairo Genizah, Maimonides, Kabbalah, Crusade Chronicles, and the edict
+    of Jewish expulsion from Spain. All texts are read in English translation.
+  core_tags:
+  - civilization
+  crosslists:
+  - MDVL 12000
+  - HIST 11701
+  - NEHC 22010
+  - RLST 22010
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'JWSC 12000. Jewish Civilization I: Ancient Beginnings to Medieval Period. 100 Units.'
+- code: JWSC 12001
+  title: 'Jewish Civilization II: Early Modern Period to 21st Century'
+  units: 100
+  description: 'Introduction to Jewish thought, experience, creativity, conflict, and relations with others from the 17th
+    century to the present in Europe, the Middle East, and the Americas. Ranging across Sephardi and Ashkenazi life, religious
+    and secular culture, philosophy and the arts, politics and the everyday, we focus on three key questions. First, how have
+    Jews faced the theological, intellectual, and normative challenges that modernity has posed to Judaism, and what forms
+    of Jewishness have they created in response? Second, how have Jews confronted the challenges, opportunities, and grave
+    dangers presented to them by the modern political ideologies of liberalism, nationalism, socialism and antisemitism, and
+    how have Jewish political efforts changed or failed to change Jews'' condition? Third, what defines the Jewish present
+    after a century marked by extremes of assimilation and extrusion, possibility and violence? We study the unprecedented
+    integration Jews have enjoyed in the US and the radically new forms of Jewish life taking shape in Israel, where a state
+    devoted to cultivating Jewish nationhood and the formation of a majority-Jewish Hebrew-speaking national society have
+    profoundly impacted the lives of both Jews and Palestinians. Our study of the Jewish present engages both conflict and
+    creativity: the violent Israeli-Palestinian conflict, Jewish confrontations with spiraling global tensions, the divides
+    that wrack Jewish life within, and new forms of Jewish art and thought.'
+  core_tags:
+  - civilization
+  crosslists:
+  - RLST 22011
+  - HIST 11702
+  - NEHC 22011
+  terms_offered:
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'JWSC 12001. Jewish Civilization II: Early Modern Period to 21st Century. 100 Units.'

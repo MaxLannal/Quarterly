@@ -1,0 +1,54 @@
+# Golden plan (prompt 05). Course facts: data/seed/2026-27; rules: data/seed/REVIEW.md.
+id: civ-abroad-paris-mdd-pass-05
+description: 'Program with the Core: the block also fills the Core civilization requirement'
+program: civ-abroad-paris-mdd
+expect: pass
+checks:
+- V01
+- V02
+- V03
+- V07
+- V12
+plan:
+  catalog_year: 2026-27
+  entry_term: 2026-AU
+  programs:
+  - program_id: civ-abroad-paris-mdd
+  - program_id: core
+  placements:
+  - MATH 15100
+  items:
+  - course: HUMA 11000
+    term: 2026-AU
+  - course: MATH 15100
+    term: 2026-AU
+  - course: WRIT 10100
+    term: 2026-AU
+  - course: HUMA 11100
+    term: 2027-WI
+  - course: MATH 15200
+    term: 2027-WI
+  - course: BIOS 10130
+    term: 2027-WI
+  - course: ARTV 10100
+    term: 2027-SP
+  - course: BIOS 11125
+    term: 2027-SP
+  - course: SPAN 10300
+    term: 2027-SP
+  - course: SOSC 12400
+    term: 2027-AU
+  - course: PHSC 11600
+    term: 2027-AU
+  - course: SOSC 19076
+    term: 2027-AU
+  - course: SOSC 19077
+    term: 2027-AU
+  - course: SOSC 19078
+    term: 2027-AU
+  - course: SOSC 12500
+    term: 2028-WI
+  - course: PHSC 11700
+    term: 2028-WI
+  - course: SOSC 12600
+    term: 2028-SP

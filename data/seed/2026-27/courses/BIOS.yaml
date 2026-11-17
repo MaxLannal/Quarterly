@@ -1,0 +1,1163 @@
+# Generated from the 2026-2027 UChicago College Catalog (fetched 2026-11-12) by hand-checked scripts;
+# every source.quote is copied verbatim (whitespace collapsed) from source.url. See data/seed/REVIEW.md.
+courses:
+- code: BIOS 10130
+  title: Principles of Biology
+  units: 100
+  description: What is life? How does it work and evolve? This course uses lectures, student-centered interactive learning
+    in the lab, assigned readings from both the popular press and primary scientific literature, and directed writing exercises
+    to explore the nature and functions of living organisms, their interactions with each other, and their environment.
+  notes: Credit cannot be earned for both BIOS 10130 and BIOS 10140.
+  core_tags:
+  - biological_sciences
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  - SU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: BIOS 10130. Principles of Biology. 100 Units.
+- code: BIOS 10140
+  title: Inquiry-based Exploration of Biology
+  units: 100
+  description: This inquiry-based approach permits students to learn fundamental biological principles while carrying out
+    scientific experiments and expanding our knowledge of living systems. Each course will focus on a different Grand Challenge
+    question in biology. In this context, students will conduct their own research projects to experience how biologists frame
+    questions and test hypotheses. Classes will take place in the lab, integrating lectures, discussions, and experiments
+    in active sessions, thus eliminating the separation between theory and practice. Students will also have an opportunity
+    to develop communication skills during the quarter, presenting their proposals and results to their peers and instructors.
+    Each course instructor will focus their section on a different major problem in the biological sciences that will frame
+    the students' research questions.
+  notes: Credit cannot be earned for both BIOS 10130 and BIOS 10140.
+  core_tags:
+  - biological_sciences
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: BIOS 10140. Inquiry-based Exploration of Biology. 100 Units.
+- code: BIOS 10500
+  title: Metabolism and Exercise
+  units: 100
+  description: Must be taken in sequence with BIOS 10501. This course examines the flow of energy through the human body -
+    from the nutrients we eat to the activities we perform. This course expands on the basic anatomy and physiology of BIOS
+    10501 to explore such phenomena as metabolism, temperature and fluid balance, exercise performance, and homeostatic control
+    in times of activity.
+  core_tags:
+  - biological_sciences
+  prereq_text: BIOS 10501. NO BIOLOGICAL SCIENCES MAJORS OR NON-BIOLOGY PRE-MED STUDENTS, except by petition.
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: BIOS 10500. Metabolism and Exercise. 100 Units.
+  needs_review: true
+- code: BIOS 10501
+  title: Systems of the Human Body
+  units: 100
+  description: Must be taken in sequence with BIOS 10500. This course examines the structure and function of the human body,
+    spanning from submicroscopic molecules to the most visible aspects of the human body. The course introduces the anatomy
+    (body structure) and physiology (body function) of our various body systems in their resting and ready states. In the
+    second course of the sequence (BIOS 10500), the body will be re-examined in its active, dynamic state.
+  core_tags:
+  - biological_sciences
+  prereq_text: This course MUST be followed by BIOS 10500 to satisfy the general education requirement in biological sciences.
+    Completion of only BIOS 10501 will count as a topics course. NO BIOLOGICAL SCIENCES MAJORS, except by petition.
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: BIOS 10501. Systems of the Human Body. 100 Units.
+  needs_review: true
+- code: BIOS 10602
+  title: 'Computing the Living World: Quantitative Approaches to Biology I'
+  units: 100
+  description: Have you ever wondered what your DNA can reveal about you? Can your genome help predict your risk for certain
+    diseases? These questions lie at the heart of Bioinformatics-the science of extracting meaningful information from biological
+    data. In this course, you will discover how computational tools and quantitative methods are transforming modern biology,
+    medicine, and biotechnology. Beginning with the molecular foundations of life, you will explore how DNA, RNA, and proteins
+    store, transmit, and process biological information. You will then develop practical programming and data-analysis skills
+    such as dynamic programming to align two biological sequences in order to identify genes, compare genomes, reconstruct
+    evolutionary relationships, and uncover biological insights hidden in DNA sequences. Using the University's High-Performance
+    Computing (HPC) resources, you will analyze real genomic datasets similar to those used in leading research laboratories
+    and biotechnology companies. For the class final project, you will investigate the genome of a real individual, identify
+    genetic variants associated with disease risk, and learn how large-scale biological data are processed and interpreted.
+    Along the way, you will gain valuable computational skills by implementing bioinformatics algorithms, developing data-analysis
+    workflows, and applying quantitative approaches to solve biological problems.
+  core_tags:
+  - biological_sciences
+  prereq_text: MATH 13300/15300/16300 or equivalent placement. NO BIOLOGICAL SCIENCES MAJORS OR NON-BIOLOGY PRE-MED STUDENTS,
+    except by petition. This course MUST be followed by the second course in the sequence.
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: 'BIOS 10602. Computing the Living World: Quantitative Approaches to Biology I. 100 Units.'
+  needs_review: true
+- code: BIOS 10603
+  title: 'Computing the Living World: Quantitative Approaches to Biology II'
+  units: 100
+  description: How do drugs recognize and bind to their targets in the body? What determines whether a protein functions correctly-or
+    contributes to disease? Answering these questions requires looking beyond static pictures of molecules and exploring how
+    they move, interact, and change over time. As the molecular machines that power life, proteins enable cells to communicate,
+    catalyze chemical reactions, fight infections, and carry out nearly every biological process. In this course, you will
+    explore how proteins function at the atomic level, how protein structure determines biological function, and how protein
+    structural changes can contribute to health and disease. You will gain hands-on experience with the computational tools,
+    such as VMD and AlphaFold, used by modern biologists to visualize, model, and predict protein behavior. A central focus
+    of the course is Molecular Dynamics (MD) simulation, a cutting-edge technique that allows researchers to observe proteins
+    and other biomolecules in motion with atomic resolution, earning it the name "computational microscope". Using the University's
+    High-Performance Computing (HPC) resources, you will build, visualize, and simulate molecular systems similar to those
+    studied in modern pharmaceutical and biomedical research for drug discovery and development. As your final project, you
+    will select a protein of interest, construct its molecular model, and investigate its structural dynamics using MD simulations.
+  core_tags:
+  - biological_sciences
+  prereq_text: BIOS 10602 or consent of instructor. NO BIOLOGICAL SCIENCES MAJORS OR NON-BIOLOGY PRE-MED STUDENTS, except
+    by petition.
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: 'BIOS 10603. Computing the Living World: Quantitative Approaches to Biology II. 100 Units.'
+  needs_review: true
+- code: BIOS 11125
+  title: Life Through a Genomic Lens
+  units: 100
+  description: The implications of the double helical structure of DNA triggered a revolution in cell biology. More recently,
+    the technology to sequence vast stretches of DNA has offered new vistas in fields ranging from human origins to the study
+    of biodiversity. This course considers a set of these issues, including the impact of a DNA perspective on the legal system,
+    on medicine, and on conservation biology.
+  core_tags:
+  - biological_sciences
+  prereq_text: BIOS 10130 or BIOS 10140. NO BIOLOGICAL SCIENCES MAJORS OR NON-BIOLOGY PRE-MED STUDENTS, except by petition.
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: BIOS 11125. Life Through a Genomic Lens. 100 Units.
+  needs_review: true
+- code: BIOS 11136
+  title: Introduction to Complex Trait Genetics
+  units: 100
+  description: The goal of the course is to provide a basic understanding of how genetics affect complex diseases, like asthma
+    and depression. We will cover differences between complex disorders and Mendelian disorders, like Huntington's. We will
+    summarize how geneticists use big data and machine learning to learn about the biology of complex diseases. We will also
+    cover genetic predictions for complex traits, including their potential value for disease prevention and their potential
+    peril for traits like education attainment. Students will read news articles and accessible excerpts from the literature,
+    and will learn how to interpret genetics results in popular media and to understand precision treatment.
+  core_tags:
+  - biological_sciences
+  prereq_text: BIOS 10130 or BIOS 10140; NO BIOLOGICAL SCIENCES MAJORS OR NON-BIOLOGY PRE-MEDS, except by petition.
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: BIOS 11136. Introduction to Complex Trait Genetics. 100 Units.
+  needs_review: true
+- code: BIOS 11140
+  title: Biotechnology for the 21st Century
+  units: 100
+  description: This course is designed to provide a stimulating introduction to the world of biotechnology. Starting with
+    an overview of the basic concepts of molecular biology and genetics that serve as a foundation for biotechnology, the
+    course will segue into the various applied fields of biotechnology. Topics will include microbial biotechnology, agricultural
+    biotechnology, biofuels, cloning, bioremediation, medical biotechnology, DNA fingerprinting and forensics. The goal of
+    this course is to provide students with an appreciation of important biotechnology breakthroughs and the associated bioethics
+    issues.
+  core_tags:
+  - biological_sciences
+  prereq_text: BIOS 10130 or BIOS 10140. NO BIOLOGICAL SCIENCES MAJORS OR NON-BIOLOGY PRE-MED STUDENTS, except by petition.
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: BIOS 11140. Biotechnology for the 21st Century. 100 Units.
+  needs_review: true
+- code: BIOS 11142
+  title: 'Forensic Biology: "Who done it?" - DNA tells the story'
+  units: 100
+  description: This course is designed to introduce the field of forensic biology to those with an introductory biology background.
+    Starting with a brief overview of relevant basic concepts of molecular biology, genetics, and inheritance patterns, the
+    course will explore the crucial role played by individuals' unique DNA in precisely solving mysteries of missing people
+    and crimes. This course will combine theoretical knowledge with hands-on experimentation to provide a comprehensive understanding
+    of forensic biology with a focus on DNA analysis. In this course, we will also cover adjacent topics such as identity-by-descent
+    and the use of non-human DNA in Forensics, and also expand on the legal and ethical implications surrounding this form
+    of investigation. Upon completion, students will gain a comprehensive understanding of DNA analysis in forensic investigations,
+    including the limitations in current practice. They will be empowered to contribute to the enhancement of criminal justice
+    and public safety policies and guidelines.
+  core_tags:
+  - biological_sciences
+  prereq_text: BIOS 10130 or 10140. NO BIOLOGICAL SCIENCES MAJORS AND NO NON-BIOLOGY PRE-MEDS, except by petition.
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: 'BIOS 11142. Forensic Biology: "Who done it?" - DNA tells the story. 100 Units.'
+  needs_review: true
+- code: BIOS 11143
+  title: 'Small Molecule, Big Targets: Fundamentals of Structure-based Drug Design'
+  units: 100
+  description: This course introduces undergraduate students to the chemical basis of drugs and principles of structure- based
+    drug design, with a focus on how drugs interact with biological targets at the molecular level. Students will engage with
+    primary literature case studies and immersive technologies involving virtual and mixed reality (VR/MR) to explore the
+    process of rational drug design. The course emphasizes how protein structure informs drug discovery and the strategies
+    used to optimize ligand binding and therapeutic efficacy. Students will gain hands-on experience to visualize how small
+    molecules bind to target proteins, evaluate their potential as drug candidates, and experiment with ways to improve them.
+    Through collaborative learning and interactive tools, students will connect theory to practice and develop a deeper understanding
+    of the molecular logic driving modern drug discovery.
+  core_tags:
+  - biological_sciences
+  prereq_text: BIOS 10130 Principles of Biology, or BIOS 10140 Inquiry-based Exploration of Biology and an introductory chemistry
+    course.
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: 'BIOS 11143. Small Molecule, Big Targets: Fundamentals of Structure-based Drug Design. 100 Units.'
+  needs_review: true
+- code: BIOS 11144
+  title: The Genetic Basis for Human Disorders
+  units: 100
+  description: Our genes determine what we look like, how our cells function, and how we survive in the world around us. If
+    genes mutate, the consequences can range from treatable symptoms to full body disorders and potentially a premature death.
+    In this course, we will explore the foundations of inheritance and gene expression, while also examining the consequences
+    of mutations that disrupt protein location, structure, and function. We will also discuss the question of why harmful
+    alleles still exist in human gene pools by examining the foundational principles of evolution, selection, and population
+    genetics using case studies of well characterized genetic disorders. Throughout the course, students will encounter a
+    range of genetic disorders and will learn how they occur, what therapies currently exist, and how advancing biotechnological
+    capabilities will shape treatments of the future. Lastly, we will end the course with a jigsaw discussion regarding the
+    bioethical implications of genetic technologies, and it's use on human populations.
+  core_tags:
+  - biological_sciences
+  prereq_text: BIOS 10130 or BIOS 10140; NO BIOLOGICAL SCIENCES MAJORS AND NO NON-BIOLOGY PRE-MEDS, except by petition.
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: BIOS 11144. The Genetic Basis for Human Disorders. 100 Units.
+  needs_review: true
+- code: BIOS 12115
+  title: Stress Response of Cardiac and Neuronal Systems
+  units: 100
+  description: The course will discuss basic concepts involved in the functioning of cardiac and neuronal systems, followed
+    by various-types of patho-physiologic stresses experienced by the heart and brain, and how these organ systems adapt to
+    stress conditions by turning on "emergency response" mechanisms at the molecular, cellular, tissue and organ levels. We
+    will also discuss current strategies and drugs designed to treat mal-adaptive changes taking place in these organ systems
+    under stress conditions. Instructors, who are actively engaged in basic and translational research aimed to understand
+    molecular basis of cardiac and neuronal diseases, will take this course beyond the knowledge of standard textbook content.
+  core_tags:
+  - biological_sciences
+  prereq_text: BIOS 10130 or BIOS 10140. NO BIOLOGICAL SCIENCES MAJORS OR NON-BIOLOGY PRE-MED STUDENTS, except by petition.
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: BIOS 12115. Stress Response of Cardiac and Neuronal Systems. 100 Units.
+  needs_review: true
+- code: BIOS 12121
+  title: 'Life at the Edge: Human Adaptation to Extreme Environments'
+  units: 100
+  description: This course explores the human physiological responses to environmental stressors. Topics include acute responses
+    and chronic acclimatization to extreme environments such as heat, cold, high altitude, and high pressure, and the mechanisms
+    that maintain function under these conditions. Students will analyze human populations that have adapted over generations
+    to environmental extremes, alongside comparisons with adaptive strategies in other species. We will also consider the
+    limits of human physiological flexibility, especially in the context of ongoing global environmental change. Students
+    will formulate and evaluate research questions related to how humanity can survive and thrive in extreme environments.
+  core_tags:
+  - biological_sciences
+  prereq_text: BIOS 10130 or BIOS 10140. NO BIOLOGICAL SCIENCES MAJORS OR NON-BIOLOGY PRE-MED STUDENTS, except by petition.
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: 'BIOS 12121. Life at the Edge: Human Adaptation to Extreme Environments. 100 Units.'
+  needs_review: true
+- code: BIOS 12124
+  title: Diet and Inflammation in Health and Disease
+  units: 100
+  description: The course will cover three physiological systems, from their optimal functioning to the pathophysiological
+    causes and consequences of human disease. The critical role of insulin in maintaining blood glucose, the role of the thyroid
+    gland in controlling systemic physiology and the importance of the bacterial composition in the gastrointestinal tract
+    be detailed. The roles of diet and the immune system in disease progression and treatment will be integrated throughout
+    the course.
+  core_tags:
+  - biological_sciences
+  prereq_text: 'PQ: BIOS 10130 or 10140. NO BIOLOGICAL SCIENCES MAJORS AND NO NON-BIOLOGY PRE-MEDS, except by petition.'
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: BIOS 12124. Diet and Inflammation in Health and Disease. 100 Units.
+  needs_review: true
+- code: BIOS 13111
+  title: Natural History of North American Deserts
+  units: 100
+  description: This lecture course focuses on the ecological communities of the Southwest, primarily on the four subdivisions
+    of the North American Desert, the Chihuahuan, Sonoran, Mohave, and Great Basin Deserts. Lecture topics include climate
+    change and the impact on the flora and fauna of the region; adaptations to arid landscapes; evolutionary, ecological,
+    and conservation issues in the arid Southwest, especially relating to isolated mountain ranges; human impacts on the biota,
+    land, and water; and how geological and climatic forces shape deserts.
+  core_tags:
+  - biological_sciences
+  prereq_text: BIOS 10130 or BIOS 10140. NO BIOLOGICAL SCIENCES MAJORS OR NON-BIOLOGY PRE-MED STUDENTS, except by petition.
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: BIOS 13111. Natural History of North American Deserts. 100 Units.
+  needs_review: true
+- code: BIOS 13112
+  title: Natural History of North American Deserts; Field School
+  units: 100
+  description: This lecture/lab course is the same course as BIOS 13111, but includes a lab section preparatory to a three-week
+    field trip at end of Spring Quarter, specific dates to be announced. Our goal in the lab is to prepare proposals for research
+    projects to conduct in the field portion of this course. Field conditions are rugged. Travel is by fifteen-passenger van.
+    Lodging during most of this course is tent camping on developed campsites.
+  core_tags:
+  - biological_sciences
+  prereq_text: Consent of instructor. NO BIOLOGICAL SCIENCES MAJORS OR NON-BIOLOGY PRE-MED STUDENTS, except by petition.
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: BIOS 13112. Natural History of North American Deserts; Field School. 100 Units.
+  needs_review: true
+- code: BIOS 13123
+  title: Biological Evolution
+  units: 100
+  description: 'This course is an introduction to evolutionary processes and patterns in present-day organisms and in the
+    fossil record and how they are shaped by biological and physical forces. Topics emphasize evolutionary principles. They
+    include DNA and the genetic code, the genetics of populations, the origins of species, and evolution above the species
+    level. We also discuss major events in the history of life, such as the origin of complex cells, invasion of land, and
+    mass extinction. This course is part of the College Course Cluster program: Climate Change, Culture and Society. (L)'
+  notes: No Biological Sciences majors except by petition to the BSCD Senior Advisers. Due to significant overlap of course
+    content, students may register for only one of PHSC 11000, BIOS 12117, or GEOS 13900/BIOS 13123. Students using this course
+    for credit in the GEOS or ENSC major register for GEOS 27300; additional work, including a term paper, will be required.
+  core_tags:
+  - biological_sciences
+  crosslists:
+  - GEOS 13900
+  prereq:
+    any:
+    - BIOS 10130
+    - BIOS 10140
+  prereq_text: BIOS 10130 or BIOS 10140
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: BIOS 13123. Biological Evolution. 100 Units.
+- code: BIOS 13128
+  title: Plant-Animal Interactions
+  units: 100
+  description: In this course we investigate the ecological interactions between plants and animals, and their evolution.
+    Through readings and discussion we explore herbivory and mutualisms (pollination, seed dispersal). How do plants defend
+    themselves against herbivores? How have plants and their seed dispersers, pollinators, and predators co-evolved?
+  core_tags:
+  - biological_sciences
+  prereq_text: BIOS 10130 or BIOS 10140. NO BIOLOGICAL SCIENCES MAJORS OR NON-BIOLOGY PRE-MED STUDENTS, except by petition.
+  terms_offered:
+  - AU
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: BIOS 13128. Plant-Animal Interactions. 100 Units.
+  needs_review: true
+- code: BIOS 13132
+  title: Ecology in the Anthropocene
+  units: 100
+  description: This course emphasizes basic scientific understanding of ecological principles that relate most closely to
+    the ways humans interact with their environments. It includes lectures on the main environmental pressures, notably human
+    population growth, disease, pollution, climate change, habitat destruction, and harvesting. We emphasize the ongoing impacts
+    on the natural world, particularly causes of population regulation and extinction and how they might feedback on to humans.
+    Discussion required.
+  core_tags:
+  - biological_sciences
+  crosslists:
+  - CEGU 13132
+  prereq_text: BIOS 10130 or BIOS 10140. NO BIOLOGICAL SCIENCES MAJORS OR NON-BIOLOGY PRE-MED STUDENTS, except by petition.
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: BIOS 13132. Ecology in the Anthropocene. 100 Units.
+  needs_review: true
+- code: BIOS 13134
+  title: 'It''s Not Easy Being Green: An Introduction to Plant Biology'
+  units: 100
+  description: During this course students will obtain a broad tour of plant biology as we explore the evolution, reproduction,
+    physiology, genetics, and ecology of plants. We will also explore the importance of plants to human society. Emphasis
+    will also be placed on understanding scientific research - from experimental design to data analysis and future implications.
+    The course will feature a selection of readings from diverse perspectives about plants, their biology, and their cultural
+    significance. This course will encourage students to use their strengths and interests to explore the biology and significance
+    of plants and will allow flexibility to explore student questions and curiosities.
+  core_tags:
+  - biological_sciences
+  prereq_text: BIOS 10130 or BIOS 10140. NO BIOLOGICAL SCIENCES MAJORS OR NON-BIOLOGY PRE-MED STUDENTS, except by petition.
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: 'BIOS 13134. It''s Not Easy Being Green: An Introduction to Plant Biology. 100 Units.'
+  needs_review: true
+- code: BIOS 13135
+  title: Marine Ecology and Experimental Design
+  units: 100
+  description: The ocean is home to many ecosystems ranging from the deep ocean to shallow coasts. You may not realize it,
+    but the ocean affects everyone living on this planet (including you!) either directly (i.e. resource consumption) or indirectly
+    (i.e. climate regulation). This course will explore how species interactions and the physical environment shape these
+    marine ecosystems, with a focus on the coastal ocean. We will learn the fundamentals of marine ecology through readings
+    and discussion of primary literature, with a focus on how experimental design was used to come to these conclusions. In
+    the second half of this course, we will explore human impacts on the ocean and the foundations of experimental design
+    and how we can design experiments to answer questions about marine ecosystems. Furthermore, good experimental design can
+    inform conservation and restoration of marine ecosystems. You will design an experiment of your own to either understand
+    a fundamental ecological phenomenon OR inform conservation in an ecosystem of your choosing. At the end of this course
+    not only will you have an understanding of the foundational principles of Marine Ecology, but you will be able to read
+    and discuss primary literature, write in a scientific writing style, and design experiments to explore fundamental questions
+    in Marine Ecology.
+  core_tags:
+  - biological_sciences
+  prereq_text: 'PQ: BIOS 10130 or BIOS 10140; NO BIOLOGICAL SCIENCES MAJORS, NEUROSCIENCE MAJORS, OR NON-SCIENCE PRE-MEDS,
+    except by petition.'
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: BIOS 13135. Marine Ecology and Experimental Design. 100 Units.
+  needs_review: true
+- code: BIOS 13140
+  title: The Public and Private Lives of Insects
+  units: 100
+  description: This course examines the ecology and evolution of insects, from their early evolution over 350 million years
+    ago to their adaptations that allow them to exploit nearly every habitat on earth and become the most diverse animal group
+    on the planet. We explore the basic biology of insects that have allowed them to become the largest group of animals on
+    the planet, making up approximately 1.5 million of the 2 million described species.
+  core_tags:
+  - biological_sciences
+  prereq_text: BIOS 10130 or BIOS 10140. NO BIOLOGICAL SCIENCES MAJORS OR NON-BIOLOGY PRE-MED STUDENTS, except by petition.
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: BIOS 13140. The Public and Private Lives of Insects. 100 Units.
+  needs_review: true
+- code: BIOS 13142
+  title: 'From Fossils to Fermi''s Paradox: Origin and Evolution of Intelligent Life'
+  units: 100
+  description: 'The course approaches Fermi''s question, "Are we alone in the universe?," in the light of recent evidence
+    primarily from three fields: the history and evolution of life on Earth (paleontology), the meaning and evolution of complex
+    signaling and intelligence (cognitive science), and the distribution, composition and conditions on planets and exoplanets
+    (astronomy). We also review the history and parameters governing extrasolar detection and signaling. The aim of the course
+    is to assess the interplay between convergence and contingency in evolution, the selective advantage of intelligence,
+    and the existence and nature of life elsewhere in the universe - in order to better understand the meaning of human existence.'
+  core_tags:
+  - biological_sciences
+  crosslists:
+  - BPRO 28800
+  - PSYC 28810
+  prereq_text: 'PQ: Third or fourth-year standing. This course does not meet the requirements of the Biological Sciences major.
+    Prerequisite(s) for BIOS 13142 only: BIOS 10130 or BIOS 10140. For BIOS 13142: NO BIOLOGICAL SCIENCES MAJORS OR NON-BIOLOGY
+    PRE-MED STUDENTS, except by petition.'
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: 'BIOS 13142. From Fossils to Fermi''s Paradox: Origin and Evolution of Intelligent Life. 100 Units.'
+  needs_review: true
+- code: BIOS 13143
+  title: Why Sex? Biological Oddities and the Evolutionary Battle of the Sexes
+  units: 100
+  description: This course explores why sexual reproduction exists despite its high evolutionary costs. We will investigate
+    the fundamental biological and selective pressures that shape a vast range of reproductive strategies. Using the lens
+    of animal behavior, we will uncover a variety of bizarre sexual displays, mating rituals, sexual conflict, and anatomical
+    diversity, and discuss the costs and benefits of interpreting behavior from a human perspective. This course encourages
+    students to engage their curiosity about the wild realities of the natural world and examine the evolution of these behaviors.
+    From sex-changing fish to fatal courtship displays, lectures, discussions, and analysis of primary scientific literature
+    highlight how natural and sexual selection drive unexpected physiological and behavioral adaptations.
+  core_tags:
+  - biological_sciences
+  prereq_text: BIOS10130. NO BIOLOGICAL SCIENCES MAJORS AND NO NON-BIOLOGY PRE-MEDS, except by petition.
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: BIOS 13143. Why Sex? Biological Oddities and the Evolutionary Battle of the Sexes. 100 Units.
+  needs_review: true
+- code: BIOS 14112
+  title: 'Workings of the Human Brain: From Brain to Behavior'
+  units: 100
+  description: How do humans see, smell, hear, feel, think, and learn? This course examines how the brain generates behavior.
+    Topics covered include the organization of the nervous system, the mechanisms by which the brain translates external stimuli
+    into electrical and chemical signals to initiate or modify behavior, and the neurological bases of learning, memory, sleep,
+    cognition, drug addiction, and neurological conditions. Each week, we will begin with a review of the microscopic workings
+    of the cell and basic neuroanatomy and functional physiology and continue to a more macroscopic study of the senses, behavior,
+    higher order mental processes, and psychological disorders. The goal of the course is to provide students with a basic
+    understanding of how fundamental brain processes contribute to cognitive states and basic human behavior, as well as encourage
+    further study in the "brain and behavioral sciences."
+  core_tags:
+  - biological_sciences
+  prereq_text: BIOS 10130 or BIOS 10140. NO BIOLOGICAL SCIENCES MAJORS, NEUROSCIENCE MAJORS, OR NON-BIOLOGY PRE-MED STUDENTS,
+    except by petition.
+  terms_offered:
+  - AU
+  - SU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: 'BIOS 14112. Workings of the Human Brain: From Brain to Behavior. 100 Units.'
+  needs_review: true
+- code: BIOS 14117
+  title: The Science and Art of Vision
+  units: 100
+  description: Why does a work of art evoke certain perceptual sensations or emotions? To what degree are these experiences
+    shared or unique between individuals? This course will explore how scientific inquiry has contributed to our understanding
+    of visual system function and our perception of the visual arts. We will evaluate hypotheses about the evolution of human
+    vision and the impact of genetic and structural anomalies on perception. We will investigate how mechanisms of visual
+    information processing influence the perception of art and how artists can exploit techniques that interface with the
+    visual system to create striking impressions. The goal of this course is to enhance student appreciation for both the
+    neuroanatomical and subjective bases for our experience of the visual arts.
+  core_tags:
+  - biological_sciences
+  prereq_text: BIOS 10130 or BIOS 10140. NO BIOLOGICAL SCIENCES MAJORS, NEUROSCIENCE MAJORS, OR NON-BIOLOGY PRE-MED STUDENTS,
+    except by petition.
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: BIOS 14117. The Science and Art of Vision. 100 Units.
+  needs_review: true
+- code: BIOS 14118
+  title: 'Mechanisms of Memory: How the Brain Stores Information'
+  units: 100
+  description: Our memories greatly shape who we are. Whether it is our memories of past experiences, facts and information,
+    or how to play an instrument, our memories influence how we interact and think about the world around us. In this course,
+    we will investigate the processes through which the brain supports our ability to learn and remember. We will examine
+    the brain regions involved in the different types of memory and study the dynamic cellular mechanisms that take place
+    during learning. The goal of this class is to provide students with a basic understanding of how fundamental neurobiological
+    mechanisms contribute to the complex behaviors of learning and memory, as well as to foster appreciation and engagement
+    with neuroscience and other biological sciences.
+  core_tags:
+  - biological_sciences
+  prereq_text: BIOS 10130 or BIOS 10140; NO BIOLOGICAL SCIENCES MAJORS, NEUROSCIENCE MAJORS, AND NO NON-BIOLOGY PRE-MEDS,
+    except by petition.
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: 'BIOS 14118. Mechanisms of Memory: How the Brain Stores Information. 100 Units.'
+  needs_review: true
+- code: BIOS 15115
+  title: 'Cancer Biology: How Good Cells Go Bad'
+  units: 100
+  description: This lecture/discussion course examines the multi-step process by which normal cells become malignant cancer
+    cells. Topics include how defects in the regulation of proliferation, differentiation, and apoptosis can occur in cancer
+    cells, as well as how cancer cells can acquire the ability to attract blood vessels (angiogenesis) and to invade other
+    organ systems (metastasis). We emphasize the study of signal transduction pathways and how they are altered in cancer
+    cells. The concept of genes that cause cancer (oncogenes) and genes that deter cancer (tumor suppressor genes) is discussed.
+    New disease treatments that target specific molecular defects within cancer cells are reviewed.
+  core_tags:
+  - biological_sciences
+  prereq_text: BIOS 10130 or BIOS 10140. NO BIOLOGICAL SCIENCES MAJORS OR NON-BIOLOGY PRE-MED STUDENTS, except by petition.
+  terms_offered:
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: 'BIOS 15115. Cancer Biology: How Good Cells Go Bad. 100 Units.'
+  needs_review: true
+- code: BIOS 15126
+  title: Biology and Epidemiology of Cancer
+  units: 100
+  description: This course focuses on an introduction to cancer providing a biological perspective on how cancer arises and
+    further progresses as a disease. The course will additionally focus on the ways in which genetics and environmental factors
+    contribute to specific types of cancer. A brief analysis of the epidemiology of some cancers will be discussed in addition
+    to providing an overview of the traditional and emerging cancer therapeutics and a perspective on the psychological and
+    societal impacts of cancer and how this continues to evolve.
+  notes: NO BIOLOGICAL SCIENCES MAJORS AND NO NON-BIOLOGY PRE-MEDS, except by petition.
+  core_tags:
+  - biological_sciences
+  prereq:
+    any:
+    - BIOS 10130
+    - BIOS 10140
+  prereq_text: BIOS 10130 or BIOS 10140.
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: BIOS 15126. Biology and Epidemiology of Cancer. 100 Units.
+- code: BIOS 15127
+  title: Plants, Pathogens, and People
+  units: 100
+  description: Students will explore the major plant disease causing pathogens and how scientists and farmers are working
+    to protect our food supply. Students will explore the biology of the major groups of disease-causing microorganisms (bacteria,
+    fungi, oomycetes, viruses, and nematodes). We will also learn how plants are protected from infection - including protection
+    from plant immunity, genetic improvement, and disease management practices. Additionally, we will discuss how plant pathogens
+    have and continue to shape society - from the Irish Potato Famine to modern day disease epidemics. Emphasis will be placed
+    on understanding scientific research in the context of plant biology - from experimental design to data analysis. Students
+    will apply their knowledge and critical thinking skills through case studies and analysis of new research findings. This
+    course will encourage students to use their strengths and interests to explore plant pathology and will allow flexibility
+    to explore student questions and curiosities.
+  core_tags:
+  - biological_sciences
+  prereq_text: BIOS 10130 or BIOS 10140. NO BIOLOGICAL SCIENCES MAJORS OR NON-BIOLOGY PRE-MED STUDENTS, except by petition.
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: BIOS 15127. Plants, Pathogens, and People. 100 Units.
+  needs_review: true
+- code: BIOS 15128
+  title: 'Outbreak: Emerging and Evolving Viruses'
+  units: 100
+  description: Viruses are everywhere! There are viruses that infect all living organisms from bacteria to humans. While life
+    and viruses have coexisted for billions of years, there are a number of viruses that can wreak havoc on their hosts by
+    causing disease. From a human perspective, viral pathogens impact us both directly by causing human disease and indirectly
+    by causing disease in organisms that are important to us on social, ecological, and economic levels. In recent decades,
+    we have seen viruses emerge or reemerge to have significant impacts on health and the economy, both locally and globally.
+    The COVID-19 pandemic, the global spread of mpox, recurring outbreaks of avian influenza (H5N1), and the resurgence of
+    diseases such as dengue in expanding geographic regions underscore the continuing threat posed by both newly emerging
+    and reemerging viruses. This class will focus on basic concepts of virology with a focus on emerging viruses. Beyond understanding
+    the basics of a viral "life cycle", we will address questions such as how do new viruses emerge? How do viruses evolve
+    and change over time? How does human activity impact the emergence of new viruses? How can we mitigate the impacts of
+    these disease-causing emerging viruses? We will address these questions by examining viral outbreaks of the past, as well
+    as contemporary ones.
+  core_tags:
+  - biological_sciences
+  prereq_text: BIOS 10130 or BIOS 10140; NO BIOLOGICAL SCIENCES MAJORS AND NO NON-BIOLOGY PRE-MEDS, except by petition.
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: 'BIOS 15128. Outbreak: Emerging and Evolving Viruses. 100 Units.'
+  needs_review: true
+- code: BIOS 20151
+  title: Introduction to Quantitative Modeling in Biology
+  units: 100
+  description: The goal for this course is to give future biologists the quantitative tools to fully participate in modern
+    biological research. These include descriptive statistics, linear regression, stochastic independence and hypothesis testing,
+    Markov models and stationary probability distributions, solutions of linear differential equations, equilibria and stability
+    analysis of nonlinear differential equations. The ideas are applied to different areas of biology, e.g. molecular evolution,
+    allometry, epidemiology, and biochemistry, and implemented by students in computer assignments using the R computational
+    platform.
+  notes: This course is required to partially fulfill the general education requirement in biology for Biological Sciences
+    majors in all tracks except for students in the Advanced Biology sequence. This course cannot be used as a Topics course
+    for the general education requirement for non-Biological Sciences majors.
+  core_tags:
+  - biological_sciences
+  prereq_text: Two quarters of calculus of any sequence (MATH 13200 or 15200 or 16200). First-year Biology Major standing
+    only.
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: BIOS 20151. Introduction to Quantitative Modeling in Biology. 100 Units.
+  needs_review: true
+- code: BIOS 20153
+  title: Fundamentals of Ecology and Evolutionary Biology
+  units: 100
+  description: This course surveys the basic principles of ecology and evolutionary biology to lay the foundation for further
+    study in all fields of biology. Broad ecological concepts, such as population growth, disease dynamics, and species interactions,
+    will be explored through a combination of published data, simulations, and mathematical models. The emphasis is placed
+    on "ecological thinking". Essential topics in the modern study of evolutionary biology will be covered with a focus on
+    both theory and empirical examples. Examples of topics include history of evolutionary thought, evidence for evolution,
+    mechanisms of microevolution, phylogenetics, molecular evolution, and speciation.
+  core_tags:
+  - biological_sciences
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: BIOS 20153. Fundamentals of Ecology and Evolutionary Biology. 100 Units.
+- code: BIOS 20170
+  title: Microbial and Human Cell Biology
+  units: 100
+  description: This course is the entry point into an integrated biology sequence designed to prepare non-biology majors for
+    application to schools in the health professions. We explore topics in human cell biology within the context of evolutionary
+    biology, chemistry, microbiology, and medicine. We pay special attention to the influence of prokaryotes on the history
+    of life and to the ecological interactions between humans and their microbiota, which have major implications for human
+    health and disease. Students read and discuss papers from the scientific literature, attend discussions and gain experience
+    with microbiological basic microscopy techniques in lab.
+  core_tags:
+  - biological_sciences
+  prereq_text: This sequence is open only to students who are not planning to major in Biological Sciences or Biological Chemistry
+    and cannot be applied to either of these majors. It is recommended that students start the sequence in their first or
+    second year.
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: BIOS 20170. Microbial and Human Cell Biology. 100 Units.
+  needs_review: true
+- code: BIOS 20171
+  title: Human Genetics and Developmental Biology
+  units: 100
+  description: This course covers the fundamentals of genetics, with an emphasis on human traits and diseases. Topics include
+    Mendelian genetics, simple and complex traits, genetic diseases, the human genome, and testing for human traits and diseases.
+    After establishing a foundation in genetics, we will discuss mechanisms underlying differentiation and development in
+    humans. We will focus on events that lead to gastrulation and the establishment of the body plan (how humans develop from
+    an un-patterned egg into a recognizable human form). Other topics may include limb development and stem cell biology.
+  core_tags:
+  - biological_sciences
+  prereq_text: Not open to students who have not completed BIOS 20170. Must be taken concurrently with BIOS 20172.
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: BIOS 20171. Human Genetics and Developmental Biology. 100 Units.
+  needs_review: true
+- code: BIOS 27710
+  title: Ecology - Marine Biological Laboratory
+  units: 100
+  description: This course examines the structure and functioning of terrestrial and aquatic ecosystems including the application
+    of basic principles of community and ecosystem ecology. The course also examines contemporary environmental problems such
+    as the impacts of global and local environmental change on community composition and food webs within forest, grassland,
+    marsh and nearshore coastal ecosystems on Cape Cod. This course examines the structure and functioning of terrestrial
+    and aquatic ecosystems including the application of basic principles of community and ecosystem ecology. The course also
+    examines contemporary environmental problems such as the impacts of global and local environmental change on community
+    composition and food webs within forest, grassland, marsh and nearshore coastal ecosystems on Cape Cod.
+  notes: E.
+  core_tags:
+  - biological_sciences
+  crosslists:
+  - ENSC 24100
+  prereq_text: Consent only. Admission by application to the Semester in Environmental Science program at the Marine Biological
+    Laboratory in Woods Hole, MA; concurrent registration in BIOS 27711 and BIOS 27712 along with one of BIOS 27713, BIOS
+    27714 or BIOS 27715.
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: BIOS 27710. Ecology - Marine Biological Laboratory. 100 Units.
+  needs_review: true
+- code: BIOS 27711
+  title: "Biogeochemical Analysis in Terrestrial and Aquatic Ecosystems \x96 Marine Biological Laboratory"
+  units: 100
+  description: This course examines the interface of biological processes with chemical processes in ecological systems. Course
+    content emphasizes aquatic chemistry and the role of microbes in the cycling of nitrogen, carbon, and other elements.
+    Effects of global changes on chemical cycling are emphasized.
+  notes: E.
+  core_tags:
+  - biological_sciences
+  crosslists:
+  - ENSC 23820
+  prereq_text: Consent only. Admission by application to the Semester in Environmental Science program at the Marine Biological
+    Laboratory in Woods Hole, MA; concurrent registration in BIOS 27710 and BIOS 27712 along with one of BIOS 27713, BIOS
+    27714 or BIOS 27715.
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: "BIOS 27711. Biogeochemical Analysis in Terrestrial and Aquatic Ecosystems \x96 Marine Biological Laboratory. 100\
+      \ Units."
+  needs_review: true
+- code: BIOS 27712
+  title: Independent Undergraduate Research in Environmental Sciences Marine Biological Laboratory
+  units: 100
+  description: This course is the culmination of the Semester in Environmental Science at the Marine Biological Laboratory.
+    An independent research project, on a topic in aquatic or terrestrial ecosystem ecology, is required. Students will participate
+    in a seminar for scientific communication as well as submit a final paper on their project.
+  notes: E.
+  core_tags:
+  - biological_sciences
+  crosslists:
+  - ENSC 29800
+  prereq_text: Consent only. Admission by application to the Semester in Environmental Science program at the Marine Biological
+    Laboratory in Woods Hole, MA; concurrent registration in BIOS 27710 and BIOS 27711 along with one of BIOS 27713 or BIOS
+    27714.
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: BIOS 27712. Independent Undergraduate Research in Environmental Sciences Marine Biological Laboratory. 100 Units.
+  needs_review: true
+- code: BIOS 27713
+  title: "Quantitative Environmental Analyses \x96 Marine Biological Laboratory"
+  units: 100
+  description: This course emphasizes the application of quantitative methods to answering ecological questions. Students
+    apply mathematical modeling approaches to simulating biological and chemical phenomena in terrestrial and marine ecosystems.
+  notes: E.
+  core_tags:
+  - biological_sciences
+  crosslists:
+  - ENSC 28100
+  prereq_text: Consent Only. Admission by application to the Semester in Environmental Science program at the Marine Biological
+    Laboratory in Woods Hole, MA; concurrent registration in BIOS 27710, BIOS 27711 and BIOS 27712.
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: "BIOS 27713. Quantitative Environmental Analyses \x96 Marine Biological Laboratory. 100 Units."
+  needs_review: true
+- code: BIOS 27714
+  title: Methods in Microbial Ecology - Marine Biological Laboratory
+  units: 100
+  description: This course explores the biology of microbes found in the environment, including relationships with the physical,
+    chemical, and biotic elements of their environment. Emphasis is placed on understanding the science underlying the various
+    methodologies used in the study of these organisms and systems. In the laboratory, students will work with the latest
+    techniques to measure microbial biomass, activity, extracellular enzymes, and biogeochemical processes. Students are also
+    introduced to molecular methods for assessing microbial genomic diversity.
+  notes: E.
+  core_tags:
+  - biological_sciences
+  crosslists:
+  - ENSC 24200
+  prereq_text: Consent only. Admission by application to the Semester in Environmental Science program at the Marine Biological
+    Laboratory in Woods Hole, MA; concurrent registration in BIOS 27710, BIOS 27711 and BIOS 27712.
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: BIOS 27714. Methods in Microbial Ecology - Marine Biological Laboratory. 100 Units.
+  needs_review: true
+- code: BIOS 27715
+  title: "Roles of Animals in Ecosystems \x96 Marine Biological Laboratory"
+  units: 100
+  description: This course addresses the question, How do animals, including man, affect the structure and function of ecosystems.
+    The course takes an interdisciplinary approach focused on the interactions of animal diversity, migration patterns, population
+    dynamics, and behavior with biogeochemical cycles, productivity, and transport of materials across ecosystems. This course
+    is an elective option within the Semester in Environmental Science program at the Marine Biological Laboratory in Woods
+    Hole, MA.
+  notes: E.
+  core_tags:
+  - biological_sciences
+  crosslists:
+  - ENSC 24300
+  prereq_text: Consent only. Admission by application to the Semester in Environmental Science program at the Marine Biological
+    Laboratory in Woods Hole, MA; concurrent registration in BIOS 27710, BIOS 27711, and BIOS 27712.
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: "BIOS 27715. Roles of Animals in Ecosystems \x96 Marine Biological Laboratory. 100 Units."
+  needs_review: true
+- code: BIOS 27716
+  title: Methods and Concepts in Oceanography- at Marine Biological Laboratory
+  units: 100
+  description: This immersive course provides students with a thorough introduction to the core methodologies and concepts
+    in oceanographic research. Over a 10-week period, with 3 hours of class each week, students will explore the dynamic systems
+    that shape our oceans and the cutting-edge techniques used to study them. The course combines engaging lectures, hands-on
+    laboratory work, and field work aboard a coastal research vessel to offer a comprehensive introduction to biological oceanography,
+    physical oceanography, biogeochemistry, marine ecology, and the ever-changing nature of our oceans. Students will gain
+    practical experience in key laboratory, field, and ship-board oceanographic techniques, including microscopy, molecular
+    methods like PCR and sequencing, ocean sampling methods such as water column profiling using CTD casts and Niskin bottle
+    grabs, and sediment grabs. Additionally, they will delve into the physical processes that drive ocean circulation, major
+    oceanographic features, the role of primary and secondary production and the microbial loop in marine ecosystems, and
+    the impact of climate change and human activities on ocean health. Throughout the course, students will actively participate
+    in discussions, lab work, and field activities. They will be evaluated based on their engagement, performance in practical
+    sessions, quizzes, and a final project report that synthesizes their learning and research findings.
+  core_tags:
+  - biological_sciences
+  crosslists:
+  - ENSC 25100
+  prereq_text: Consent only. Admission by application to the Semester in Environmental Science program at the Marine Biological
+    Laboratory in Woods Hole, MA; concurrent registration in BIOS 27710, BIOS 27711 and BIOS 27712.
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: BIOS 27716. Methods and Concepts in Oceanography- at Marine Biological Laboratory. 100 Units.
+  needs_review: true
+- code: BIOS 27717
+  title: Marine Resource Use and Conservation- at Marine Biological Laboratory
+  units: 100
+  description: Students will learn about coastal and marine resource use and examine threats to ecosystem biodiversity and
+    conservation exploring examples in the Cape Cod region and discussing global case studies. The course will review various
+    methods and uses of aquaculture and mariculture for promoting the blue economy, their potential consequences, but also
+    potential to mitigate climate change and nutrient pollution. We will also review the role of restoration in promoting
+    ecosystem recovery and conservation. Field trips will include visits to local shellfish and finfish hatcheries, ongoing
+    restoration projects, and conservation organizations. The course is organized into focused two- to four-day modules that
+    include lectures, discussions of papers, field trips, and field and lab activities.
+  core_tags:
+  - biological_sciences
+  crosslists:
+  - ENSC 24450
+  prereq_text: Consent only. Admission by application to the Semester in Environmental Science program at the Marine Biological
+    Laboratory in Woods Hole, MA
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: BIOS 27717. Marine Resource Use and Conservation- at Marine Biological Laboratory. 100 Units.
+  needs_review: true
+- code: BIOS 27720
+  title: Microbiomes Across Environments
+  units: 100
+  description: This course provides a comprehensive introduction to the theory and techniques of microbiome science, an emerging
+    field that bridges disciplines, merging microbiology with genomics, ecology, population and evolutionary biology, phylogenetics,
+    ecosystem science, and biogeochemistry, and has broad applications in medicine, agriculture, and ecosystem health. Through
+    a combination of faculty and guest lectures and student-led discussion of primary literature we will explore the vast
+    biochemical and metabolic diversity of the microbial world and its relationships with multicellular life. The major component
+    of the course is an independent research project investigating the microbiomes of marine organisms collected by the students
+    or resident in the MBL's Marine Resources Center, or of a salt marsh ecosystem in Woods Hole. Students develop their own
+    hypotheses and sampling strategies, carry our sampling, extract DNA, and perform PCR for sequencing. The last third of
+    the course is devoted to data analysis, where students learn to use the Unix-based bioinformatic tools necessary to find
+    patterns in the hundreds of thousands of DNA sequences their project produced, a skill broadly applicable to any discipline
+    in modern biology.
+  core_tags:
+  - biological_sciences
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: BIOS 27720. Microbiomes Across Environments. 100 Units.
+- code: BIOS 27723
+  title: 'Biodiversity and Genomics: Exploring the Marine Animal Diversity of Woods Hole Using Molecular Tools'
+  units: 100
+  description: In this course, student will have the opportunity to explore the large diversity of marine animal species in
+    Woods Hole, Massachusetts and its surroundings. We will combine fieldwork with genomic and bioinformatic approaches to
+    study different aspects of the evolution, ecology, taxonomy, physiology, and biogeography of marine animals in this unique
+    location. Student will integrate knowledge and analytical tools from different biological disciplines to develop short
+    research projects. During the three weeks of the course, student will have access to the Marine Biological Laboratory's
+    collection of living marine animals, participate in ongoing research projects at MBL, and contribute data that will advance
+    our understanding of marine biodiversity.
+  notes: This course will be given at Marine Biological Laboratories, Woods Hole, Massachusetts. E.
+  core_tags:
+  - biological_sciences
+  terms_offered:
+  - SU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: 'BIOS 27723. Biodiversity and Genomics: Exploring the Marine Animal Diversity of Woods Hole Using Molecular Tools.
+      100 Units.'
+- code: BIOS 27724
+  title: Introduction to Imaging for Biological Research
+  units: 100
+  description: Many breakthroughs in science have been made possible by revolutionary advances in our ability to visualize
+    biological processes, and recent progress in microscopy has led to important breakthroughs in understanding life at the
+    molecular, cellular, and organismal level. In this course, we will introduce the students to basic techniques in microscopy,
+    starting with an opportunity for students to build their own simple microscopes, and then proceeding all the way to using
+    state-of-the-art confocal, light sheet, and electron microscopes. Students will explore the challenges of sample preparation,
+    of imaging processes in living cells, and in the computational analysis of imaging data. Throughout the course, students
+    will be able to design their own experiments, and undertake a student-designed research project.
+  core_tags:
+  - biological_sciences
+  crosslists:
+  - NSCI 21515
+  prereq_text: Second-year standing or greater (or by consent) and acceptance into the Spring Quarter Program at MBL.
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: BIOS 27724. Introduction to Imaging for Biological Research. 100 Units.
+  needs_review: true
+- code: BIOS 27725
+  title: Biogeography and Distribution of Species
+  units: 100
+  description: This course will investigate themes found in the geographic distribution of species and communities. We will
+    ask questions such as 'how does climate change from the poles to the equator and how does that impact the distribution
+    and coexistence of species?' In lab we will focus on local habitat types and local species in the region surrounding Chicago
+    (e.g., grasslands, woodland, aquatic habitats such as ponds/streams). We will examine various patterns in the distribution
+    and abundance of the flora/fauna in local habitats over the course of 3 weeks through a combination of in class lectures
+    and laboratory sessions, combined with field studies. Surveys will be made of local habitats for biogeographic comparisons
+    of patterns of abundance with a focus on vegetation, rodents and aquatic and terrestrial insects.
+  core_tags:
+  - biological_sciences
+  terms_offered:
+  - SU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: BIOS 27725. Biogeography and Distribution of Species. 100 Units.
+- code: BIOS 27726
+  title: 'Marine Ecosystems: From Microbiomes, to Conservation, Climate & Beyond'
+  units: 100
+  description: This course is designed for rising 2nd years with interests in microbiology, the environment, and society.
+    More specifically, the course is designed for students considering a science major, as well as non-majors, who are looking
+    for broad exposure to geosciences, environmental and climate science, microbiology, molecular biology, and the intersection
+    between society and science. Students will study coastal marine habitats, connectivity to ocean and climate, dynamics
+    of microbial community structure, and marine conservation alongside gaining experience on laboratory microbiome science
+    and environmental field work. Students will gain firsthand experience with the types of microbes that that influence climate
+    and that impact health through laboratory experiments on culturing and analyzing microbes in 'pristine' and highly impacted
+    coastal ecosystems. Methods to be learned include plating, epifluorescence microscopy, flow cytometry, DNA extraction,
+    and sequencing. Lectures will cover marine microbiology, CO2 sequestration (natural and engineered), geochemistry, coastal
+    and open ocean habitat structure, and links to climate and the climate crisis. We will also address equity issues in marine
+    conservation and the climate crisis. While all field work will be coastal, students will also learn about the open ocean
+    due to the key linkages of water masses as well as climate feedback.
+  core_tags:
+  - biological_sciences
+  crosslists:
+  - ENSC 24600
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: 'BIOS 27726. Marine Ecosystems: From Microbiomes, to Conservation, Climate & Beyond. 100 Units.'
+- code: BIOS 27727
+  title: Light and Color in the Ocean
+  units: 100
+  description: Spectacular optical adaptations shape marine life, from sunlit shallows to the deep sea. We will explore how
+    ocean creatures manipulate light-becoming transparent, ultra-black, iridescent, vividly colored, or bioluminescent-through
+    the lens of physics, photosynthesis, and visual systems. With morning lectures, afternoon hands-on work, local outings,
+    and a final research project, students will learn the physics and biology of light in the ocean. We encourage students
+    to develop publishable original research projects using the fantastic resources of the MBL.
+  core_tags:
+  - biological_sciences
+  prereq_text: This course will be given at Marine Biological Laboratories, Woods Hole, Massachusetts. E.
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: BIOS 27727. Light and Color in the Ocean. 100 Units.
+  needs_review: true
+- code: BIOS 27728
+  title: 'The Meaning of Life: Experimenting with the History of Biology in Woods Hole'
+  units: 100
+  description: This course, taught on-site at the Marine Biological Laboratory (MBL) in Woods Hole Massachusetts, examines
+    early twentieth century biology through hands-on recreations of classic experiments. Course undertakings include working
+    with organisms like sea urchins, starfish, hydras, slipper snails, and plankton; fieldwork in local beaches, ponds, and
+    marshes; laboratory experimentation using early twentieth century equipment; and close readings of historical sources
+    in early twentieth-century experimental biology. By the end of this course, students will have gained experiences collecting,
+    identifying, caring for, and working with classic invertebrate model organisms; they will be able to identify and explain
+    key concepts and techniques in biology between 1900 and today; and they will be able to parse historical sources and recreate
+    the knowledge-making strategies that shaped early twentieth century biology.
+  core_tags:
+  - biological_sciences
+  crosslists:
+  - CEGU 27728
+  prereq_text: This course can be counted as a biology topics course or as an upper-level elective for biology majors.
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: 'BIOS 27728. The Meaning of Life: Experimenting with the History of Biology in Woods Hole. 100 Units.'
+  needs_review: true
+- code: BIOS 27750
+  title: 'Stem Cells and Regeneration: from aquatic research organisms to mammals'
+  units: 100
+  description: This course will focus on contemporary stem cell biology and regeneration with emphasis on molecular mechanisms
+    and applications. The course will cover the history of stem cell discoveries through the latest advances, including genome-wide
+    profiling, targeted gene editing, and other techniques used in stem cell and regeneration research. A portion of the course
+    will consist of modules where specific stem cell types will be discussed together with relevant diseases they could impact
+    (i.e. stem cells and neurodegeneration). A focus of the course will be around how discoveries in aquatic research organisms
+    have driven the progress in regeneration biology. In this classroom and lab based course, students will have the opportunity
+    to work on an independent research project under the supervision of a Resident Faculty at MBL. The lab portion of the
+    course will introduce and provide hands-on experience on experimental approaches and techniques used in cell biology,
+    development, and regeneration research. There will be a focus on microscopy (brightfield, fluorescence, high-resolution
+    microscopy) and use of open source software to analyze images. There will be an introduction into the use of stains, antibodies,
+    and genetically-encoded fluorescent markers to analyze cellular structures in aquatic organisms that include axolotls,
+    Nematostella, worms, cephalopods and zebrafish. In addition, this course will provide hands-on experience through labs.
+  core_tags:
+  - biological_sciences
+  prereq_text: Second-year standing or greater (or by consent) and acceptance into the Spring Quarter Program at MBL.
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: 'BIOS 27750. Stem Cells and Regeneration: from aquatic research organisms to mammals. 100 Units.'
+  needs_review: true
+- code: BIOS 27752
+  title: 'Dynamic Camouflage: Behavior, Visual Perception and Neural Skin Patterning in Cephalopods'
+  units: 100
+  description: This course takes an integrative approach to understanding a neurally controlled system of dynamic defense
+    against visual predators. Camouflage is a widespread form of defense throughout the animal kingdom in every known habitat
+    - land or sea. In the oceans, cephalopods (cuttlefish, octopus, squid) have evolved a sophisticated sensorimotor system
+    called Rapid Adaptive Coloration, which can instantaneously change their total body appearance within a fraction of a
+    second to range from highly camouflaged to startlingly conspicuous for a wide range of behaviors. The forms and functions
+    of this dynamic system will be teased apart in integrative fashion in a top-down approach from ecology to organismal biology
+    to organs, tissues and cells. The course touches on neural anatomy, sensation, visual perception (including psychophysics)
+    and animal behavior. There are also applied biology aspects of this system that will be presented as well.
+  notes: E.
+  core_tags:
+  - biological_sciences
+  crosslists:
+  - NSCI 21530
+  prereq_text: Second-year standing or greater (or by consent) and acceptance into the Spring Quarter Program at MBL.
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: 'BIOS 27752. Dynamic Camouflage: Behavior, Visual Perception and Neural Skin Patterning in Cephalopods. 100 Units.'
+  needs_review: true
+- code: BIOS 27753
+  title: Fundamentals of Synapses
+  units: 100
+  description: In this course, students will learn about the fundamentals of synapses, from molecular analysis to structure
+    and function. Marine and aquatic models have historically provided a unique opportunity to investigate synaptic function
+    due to the large size of their neurons, including the synaptic connections. Today, these synapse models are used to study
+    basic principles of neuron-to-neuron communication (synaptic transmission), as well as disease mechanisms. In addition
+    to lectures and discussions of key literature, this course will feature hands-on laboratory-based exercises in molecular
+    genetics, imaging and physiology of synapses, as well as independent "discovery" projects to explore new topics in synapse
+    biology.
+  core_tags:
+  - biological_sciences
+  crosslists:
+  - NSCI 21510
+  prereq_text: Second-year standing or greater (or by consent) and acceptance into the Spring Quarter Program at MBL.
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: BIOS 27753. Fundamentals of Synapses. 100 Units.
+  needs_review: true
+- code: BIOS 27760
+  title: An Introduction to Parasitology
+  units: 100
+  description: This course introduces the diversity of parasitic organisms, both protozoan and metazoan, and explores the
+    life cycles, morphology, genomics, pathology, immunology, epidemiology, and treatment and control of major parasite groups.
+    The focus will be on aquatic species, including those that cause disease in humans and livestock. The course will involve
+    lectures, a journal club and lab work including carrying out a research project. The lab work and research project will
+    include working on parasitic flatworms; in particular investigating the molecular and cellular biology of a tropical species,
+    Schistosoma mansoni, that is medically important. Here, in this research-led institute, you will contribute novel data
+    and information to ongoing research at MBL that will advance our understanding of parasites. The lab portion will introduce
+    the morphological and molecular techniques that form part of the toolkit used by parasitologists to understand the biology
+    of these organisms, an essential step in the search and development of novel control strategies and therapeutics.
+  notes: Offered at The Marine Biological Laboratory in Woods Hole, MA.
+  core_tags:
+  - biological_sciences
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: BIOS 27760. An Introduction to Parasitology. 100 Units.
+- code: BIOS 27761
+  title: Embryology
+  units: 100
+  description: How do animals make eggs, and how to eggs make animals? How will a changing climate affect these processes?
+    The most diverse group of animals in our oceans is the invertebrates. In this course, students will learn broad concepts
+    in animal reproduction and development, from a biomedical, evolutionary, and climate perspective. Topics will include
+    oogenesis, meiosis, fertilization, early development, and germ line specification, covered through morning lectures and
+    journal club discussions of research papers. We will approach these topics through a cell biological and gene regulatory
+    lens. In the lab, we will primarily work with the bat star Patiria miniata, but also with local sea urchin species that
+    we will collect locally from Vineyard Sound (weather and spawning season permitting). Students will learn essential cell
+    biological and embryological techniques including gamete and embryo/larval culture, staining, microinjection, live imaging,
+    and cutting-edge approaches in CRISPR-Cas9 gene editing. Students will conduct independent embryology projects focusing
+    on marine invertebrate reproduction and embryogenesis.
+  core_tags:
+  - biological_sciences
+  prereq_text: Second-year standing or greater (or by consent) and acceptance into the Spring Semester in Biological Discovery
+    at MBL.
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: BIOS 27761. Embryology. 100 Units.
+  needs_review: true
+- code: BIOS 27810
+  title: Epidemiology and Population Health
+  units: 100
+  notes: Cross-listed with STAT 22810 (its catalog block lists BIOS 27810 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from STAT 22810.
+  crosslists:
+  - STAT 22810
+  prereq_text: STAT 22000 or other introductory statistics highly desirable. For BIOS students-completion of the first three
+    quarters of a Biological Sciences Fundamentals sequence.
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/statistics/
+    quote: 'Equivalent Course(s): BIOS 27810, HLTH 20910, PBHS 30910, PPHA 36410'
+  needs_review: true
+- code: BIOS 28102
+  title: 'Science Communication: Producing a Science Video Story'
+  units: 100
+  notes: Cross-listed with PHSC 28102 (its catalog block lists BIOS 28102 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from PHSC 28102.
+  crosslists:
+  - PHSC 28102
+  prereq:
+    any:
+    - standing: third-year
+    - standing: fourth-year
+  prereq_text: Three quarters of a Biological Sciences Fundamentals sequence. Third- or fourth-year standing. This course
+    does not satisfy the general education requirement in the physical sciences.
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: 'Equivalent Course(s): BIOS 28102, SCPD 11200'
+  needs_review: true
+- code: BIOS 29103
+  title: 'Science Communication: Building a Science Exhibit'
+  units: 100
+  notes: Cross-listed with PHSC 29103 (its catalog block lists BIOS 29103 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from PHSC 29103.
+  crosslists:
+  - PHSC 29103
+  prereq:
+    any:
+    - standing: third-year
+    - standing: fourth-year
+  prereq_text: Third- or fourth-year standing.
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: 'Equivalent Course(s): BIOS 29103'

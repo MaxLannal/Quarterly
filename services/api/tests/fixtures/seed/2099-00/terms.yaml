@@ -1,0 +1,5 @@
+# FAKE FIXTURE for loader tests. Not real catalog data.
+terms:
+  - {id: 2099-AU}
+  - {id: 2100-WI}
+  - {id: 2100-SP}

@@ -1,0 +1,675 @@
+# Generated from the 2026-2027 UChicago College Catalog (fetched 2026-11-12) by hand-checked scripts;
+# every source.quote is copied verbatim (whitespace collapsed) from source.url. See data/seed/REVIEW.md.
+courses:
+- code: ARTH 10100
+  title: Introduction to Art
+  units: 100
+  description: This course develops skills in perception, comprehension, and evaluation of various art objects and the built
+    environment. It encourages close analysis of visual materials, exploring the range of questions and methods appropriate
+    to works of art and buildings, in their historical, theoretical, and social dimensions. Most importantly, the course emphasizes
+    articulate writing and salient argumentation about visual and other aesthetic phenomena. Three coherent units, on Monument/Site,
+    Image/Medium, and Object/Museum, explore these issues across cultures and periods. Examples draw on original objects in
+    campus collections and sites on campus.
+  core_tags:
+  - arts
+  prereq_text: 'Students must attend first class to confirm enrollment. This course meets the general education requirement
+    in the arts. Fulfills the following categories in the ARTH major and minor: European and American, pre-modern (pre-1800)'
+  terms_offered:
+  - AU
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/arthistory/
+    quote: ARTH 10100. Introduction to Art. 100 Units.
+  needs_review: true
+- code: ARTH 14004
+  title: Colonial Art of Latin America
+  units: 100
+  description: 'This core class introduces students to the art and material culture of colonial Latin America, from the time
+    of the Spanish invasion until the independence movements of the 19th century. We will examine how visual and material
+    culture mediated and intervened in: the hybridization of indigenous, Black, and European cultures and religions; the negotiation
+    of territorial and economic power; and the construction of race and ethnicity in the colonial world. Spectacular objects
+    from this time -- indigenous maps, lush paintings made of feathers, and ceramics imported from as far as Manila -- will
+    constitute our case studies. Through a mixture of lectures and discussion, students will develop skills in analytical
+    reading and writing, close reading of visual materials, and in logical and effective argumentation.'
+  core_tags:
+  - arts
+  prereq_text: 'This course meets the general education requirement in the arts. This course fulfills the following requirements
+    in the ARTH major and minor: European and American, pre-modern (pre-1800), Latin American'
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/arthistory/
+    quote: ARTH 14004. Colonial Art of Latin America. 100 Units.
+  needs_review: true
+- code: ARTH 14006
+  title: Introduction to Byzantine Art
+  units: 100
+  description: In this course, we will explore works of art and architecture as primary sources on the civilization of Byzantium.
+    Through the close investigation of artifacts of different media and techniques, students will gain insight into the artistic
+    production of the Byzantine Empire from its beginnings in the fourth century C.E. to the Ottoman conquest in 1453. We
+    will employ different methodological approaches and scholarly resources that are relevant for the fruitful investigation
+    of artifacts in their respective cultural setting. In order to fully assess the pivotal importance of the visual arts
+    in Byzantine culture, we will address a wide array of topics, including art and ritual, patronage, the interrelation of
+    art and text, the classical heritage, art and theology, icons and Iconoclasm (etc.).
+  core_tags:
+  - arts
+  crosslists:
+  - RLST 28308
+  - MDVL 14006
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/arthistory/
+    quote: ARTH 14006. Introduction to Byzantine Art. 100 Units.
+- code: ARTH 14402
+  title: Introduction to the Arts of the Italian Renaissance
+  units: 100
+  description: 'This course will cover the major themes and works of the Italian Renaissance, including painting, sculpture,
+    decorative arts, and architecture. We will consider stylistic development of the arts from the period of roughly 1300
+    (late Medieval/pre-Renaissance predecessors) to 1560. Throughout the course we will interrogate the concept of "Renaissance"
+    as a unifying term and examine its relationship to the Medieval in terms of both continuity and change. A major focus
+    of the course will be the functions of different media in this time period, and we will consider patronage, multiple viewerships,
+    and access. We will explore how, for whom, and why works were created, and interrogate the relevance of the category ''fine
+    arts'' as it is commonly understood to the Renaissance. Additional themes will be: artistic practice, especially collaboration
+    and competition; regional styles; the relationship of art in this period to the intellectual, political, and spiritual
+    climate(s) of the time."'
+  core_tags:
+  - arts
+  terms_offered:
+  - SU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/arthistory/
+    quote: ARTH 14402. Introduction to the Arts of the Italian Renaissance. 100 Units.
+- code: ARTH 14413
+  title: Global Pop
+  units: 100
+  description: When you hear the words "Pop Art," what comes to mind? Soup cans, comic book panels, portraits of Marilyn Monroe,
+    enormous paper clips? These are some of the most iconic examples of Pop Art made in the United States. Since the 1960s,
+    artists around the world have also explored art's relationship to mass media, consumerism, and representation. This course
+    will examine the work of artists outside of the Euro-American canon who have employed Pop Art strategies. We will cover
+    a wide geographic and temporal expanse, with a special focus on Latin America, and including as well art from East Asia,
+    Africa, and the Middle East.
+  core_tags:
+  - arts
+  prereq_text: 'This course fulfills the following requirements in the ARTH major and minor: European and American post-1800'
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/arthistory/
+    quote: ARTH 14413. Global Pop. 100 Units.
+  needs_review: true
+- code: ARTH 15520
+  title: Impressionism
+  units: 100
+  description: The avant-garde movement of mid-19th century French painters painting modern life, the city and the landscape
+    in the open air and its full chromatic spectrum has been one of the artistic success stories of the past two centuries,
+    visible around the world from umbrellas and credit cards to interactive experiences; yet at the time of their emergence,
+    critics derided their corpse-like colors and lack of interest in traditional art values like drawing from the nude. Who
+    were the precursors, protagonists, and inheritors of this revolutionary way of seeing? Was Impressionism very Parisian,
+    or an international phenomenon? Did it make a particular place for women artists? Did it strive to be true to nature,
+    an "innocent eye" as Claude Monet once put it, or did it replace the objective perspectival rendering of the world, newly
+    given over to black and white photography, with a subjective phantasmagoria of one person's unrepeatable experience? How
+    did the Impressionists survive in business, and did they have a political or social vision? And do should we care about
+    them today?
+  core_tags:
+  - arts
+  prereq_text: 'This course meets the general education requirement in the arts. This course fulfills the following requirements
+    in the ARTH major and minor: European and American post-1800'
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/arthistory/
+    quote: ARTH 15520. Impressionism. 100 Units.
+  needs_review: true
+- code: ARTH 15631
+  title: Intro South Asian Art and Architecture I
+  units: 100
+  description: This core class introduces students to the visual arts of early South Asia (Paleolithic period to circa first
+    millennium CE). During this time period, South Asia gave birth to three major world religions-Hinduism, Jainism, and Buddhism.
+    Christianity and Islam too made it to South Asia and the arts of these religious traditions flourished in various pockets
+    of the Indian subcontinent. In the class, we will look at paintings, buildings, and other objects that continue to beguile
+    researchers, such as the paintings of Bhimbetka Caves (ca. 10,000 BCE); the enigmatic seals from Indus Valley (ca. 2000
+    BCE), and the high polish of Mauryan sculptures. The latter-half of the course is devoted to specific studies on "masterpieces"
+    of early Indian art, such as the Buddhist stupas at Sanchi (ca. third to first cent. BCE), the extraordinary rock-cut
+    temples of Ajanta and Ellora (fifth to thirteenth centuries), and the sizeable and distinctive temple complex of Bodh
+    Gaya, Khajuraho, Mamallapuram, and Brihadeshwara (seventh to eleventh centuries). The course will explore many themes
+    in the study of early South Asian art; some prominent ones are the role of politics, nature, and religion in shaping artistic
+    practices. Conversely, we will also look at how artistic practices impacted civic institutions and religious organizations,
+    while exploring what art can reveal about how natural resources were viewed, extracted, and preserved in early South Asia.
+  core_tags:
+  - arts
+  crosslists:
+  - ARCH 15631
+  prereq_text: 'This course fulfills the following requirements in the ARTH major and minor: Asian, premodern (pre-1800)'
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/arthistory/
+    quote: ARTH 15631. Intro South Asian Art and Architecture I. 100 Units.
+  needs_review: true
+- code: ARTH 15636
+  title: Modern Korean Art
+  units: 100
+  description: This course introduces students to key histories, artworks, and theoretical discourses surrounding modern Korean
+    art. Covering the period from the late 19th to mid-20th century, the course explores historical junctures-late Joseon,
+    the Korean Empire (1897-1910), the colonial period (1910-1945), and the Korean War (1950-1953)-as critical moments during
+    which the concepts of modernity and "modern art" (geundae misul) were imported and contested. Beyond providing a basic
+    understanding of modern Korean art history, the course engages with broader art-historical inquiries, particularly how
+    modernity and modernism can be articulated within a global framework. Readings encompass art historical texts as well
+    as theories on global modernisms, theories of imperialism, and decoloniality. Discussion sections will emphasize the close
+    reading of texts and visual materials, including drawings, paintings (oil and ink), photography, sculpture, and architecture.
+  notes: 'This course fulfills the following requirements in the ARTH major and minor: Asian, modern (1800-present)'
+  core_tags:
+  - arts
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/arthistory/
+    quote: ARTH 15636. Modern Korean Art. 100 Units.
+- code: ARTH 15780
+  title: Western Modern Art from the Enlightenment until Today
+  units: 100
+  description: 'This course teaches skills of looking at and understanding visual art with a focus on modern art made in Europe
+    and North America from the 18th through the 21st century. Students will learn about movements such as Impressionism, Surrealism,
+    and Pop; artists including Pablo Picasso, Jackson Pollock, and Jenny Holzer; and issues central to the relationship between
+    art and modernity: definitions of the self and identity, the emergences of the metropolis and the art market, the "real"
+    and the invention of photography, meanings of abstraction and non-traditional materials, the political ambitions of the
+    avant-garde, consumption and media. Discussion sections center around original artworks in the Smart Museum of Art and
+    the University''s Public Art and Special Collections.'
+  core_tags:
+  - arts
+  prereq_text: '•This course meets the general education requirement in the arts. This course fulfills the following requirements
+    in the ARTH major and minor: European and American post-1800. •Discussion groups will meet as arranged on Thursdays and
+    Fridays.'
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/arthistory/
+    quote: ARTH 15780. Western Modern Art from the Enlightenment until Today. 100 Units.
+  needs_review: true
+- code: ARTH 15800
+  title: Contemporary Art
+  units: 100
+  description: This course will consider the practice and theory of visual art in the late twentieth and early twenty-first
+    centuries. Among the subjects that will drive our narrative will be the rise of postmodernism, pop art, the aesthetics
+    of the social movements of the 1960s, institutional critique, the relationship between reproductive media and Feminism,
+    the concept of spectacle, conceptual art, the appearance of a global art industry after 1989, the connections between
+    art school and art-making, "relational aesthetics," the fate of art in the age of the Internet, the art of the post-studio
+    moment, and what happens to art when it engages with *everything*.
+  core_tags:
+  - arts
+  crosslists:
+  - ARTV 20006
+  - MADD 10006
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/arthistory/
+    quote: ARTH 15800. Contemporary Art. 100 Units.
+- code: ARTH 16100
+  title: 'Art of the East: China'
+  units: 100
+  description: This course is an introduction to the arts of China focusing on the bronze vessels of the Shang and Zhou dynasties,
+    the Chinese appropriation of the Buddha image, and the evolution of landscape and figure painting traditions. This course
+    considers objects in contexts (from the archaeological sites from which they were unearthed to the material culture that
+    surrounded them) to reconstruct the functions and the meanings of objects, and to better understand Chinese culture through
+    the objects it produced.
+  core_tags:
+  - arts
+  crosslists:
+  - EALC 16100
+  prereq_text: 'Students must attend first class to confirm enrollment. This course meets the general education requirement
+    in the arts. This course fulfills the following requirements in the ARTH major and minor: Asian, modern (post-1800), Asian,
+    premodern (pre-1800)'
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/arthistory/
+    quote: 'ARTH 16100. Art of the East: China. 100 Units.'
+  needs_review: true
+- code: ARTH 16107
+  title: 'Moving Objects, Dispersed Cultures: Case Studies from China and the Middle East'
+  units: 100
+  description: In this course, we will delve into "big problems" created by the movement, relocation, or displacement of objects
+    that are assigned special cultural, artistic, and historical values in new contexts. We will follow the movement of artifacts
+    across both geographical and disciplinary boundaries, challenging established notions of cultural heritage and art. We
+    often study and read ancient texts as primary sources, but we don't always pause to consider that those texts were written
+    on physical objects like pieces of wood, leaves, or animal skin. Similarly, we're familiar with the display of ancient
+    artwork inside museums or galleries, but have we wondered about the journey of individual objects to those new locations?
+    How do objects move from their original place to modern collections? How do they become art? And how do they become historical
+    sources? Guided by an art historian and a social historian, this course presents different ways to look at "objects that
+    move", both as sources about past societies and as mirrors for contemporary ones. Through studying examples from the history
+    of China and the Middle East, we will reconsider concepts such as cultural heritage, national patrimony, or even art that
+    have been taken for granted. We will learn about the different histories of the dispersal of cultural heritages in those
+    two regions, from nation-building and colonial projects in the twentieth century to the illicit trade in antiquities and
+    the creation of digital replicas today.
+  core_tags:
+  - arts
+  crosslists:
+  - BPRO 27100
+  - EALC 16107
+  - EALC 36107
+  - NEHC 36107
+  - ARTH 36107
+  - RLST 26107
+  - NEHC 16107
+  prereq_text: 'PQ: Third or fourth-year standing.'
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/arthistory/
+    quote: 'ARTH 16107. Moving Objects, Dispersed Cultures: Case Studies from China and the Middle East. 100 Units.'
+  needs_review: true
+- code: ARTH 16800
+  title: Arts of Japan
+  units: 100
+  description: This course surveys the arts of the Japanese archipelago through the study of selected major sites and artifacts.
+    We will consider objects in their original contexts and in the course of transmission and reinterpretation across space
+    and time. How did Japanese visual culture develop in the interaction with objects and ideas from China, Korea, and the
+    West? Prehistoric artifacts, the Buddhist temple, imperial court culture, the narrative handscroll, the tea ceremony,
+    folding screens, and woodblock prints are among the topics covered.
+  core_tags:
+  - arts
+  crosslists:
+  - EALC 16806
+  prereq_text: 'Students must attend first class to confirm enrollment. This course meets the general education requirement
+    in the arts. This course fulfills the following requirements in the ARTH major and minor: Asian, premodern (pre-1800)'
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/arthistory/
+    quote: ARTH 16800. Arts of Japan. 100 Units.
+  needs_review: true
+- code: ARTH 17201
+  title: 'Art in the Age of Computation: From Cybernetics to AI'
+  units: 100
+  description: This course explores how artists have engaged with computation-not only as a technology, but as a way of thinking
+    about systems, information, thought, and perception-from the mid-twentieth century to the present. We consider how cybernetics
+    and systems thinking helped reconfigure the work of art and visual perception; collectives that sought to institutionalize
+    collaborations between artists and engineers; art in the age of nuclear energy, space exploration, and global telecommunications;
+    as well as contemporary creative and critical responses to AI. Students will engage in close study of key artworks through
+    lectures, discussions, and visits to local art collections. Discussions and short assignments will help students to situate
+    artworks within broader historical, technological, and aesthetic contexts.
+  core_tags:
+  - arts
+  prereq_text: 'This course fulfills the following requirements in the ARTH major and minor: European and American post-1800'
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/arthistory/
+    quote: 'ARTH 17201. Art in the Age of Computation: From Cybernetics to AI. 100 Units.'
+  needs_review: true
+- code: ARTH 17213
+  title: Portraits
+  units: 100
+  description: 'In this course we will investigate the rising, diffusion, function, and theoretical complexity of portraiture
+    in Italian art from the early Renaissance through the XVIII century. We will analyse the concepts of likeness in its multiple
+    nuances, from physical resemblance to psychological interiority, to understand how identity was constructed, codified,
+    and performed through the visual arts. Approaching painted and sculpted portraits as sophisticated rhetorical devices,
+    we will examine the tension between idealization and realism, and the role of portraiture in courtly politics, gender
+    relations, and memorialization. We will observe the meaning of clothing, the presence of jewels, weapons, tools and other
+    objects, the use of light, and the characteristics of the background in order to understand intention and function of
+    portraits. Our analysis will include artists'' self-portraits: from the hidden portraits of the Quattrocento (where the
+    artist appears as a bystander in religious narratives) to the psychological self-studies of the sixteenth century and
+    beyond, we will consider how the status of the artist changed over time from mechanical craftsman to celebrated intellectual.
+    Students will engage with primary sources (including Vasari, Castiglione, Aretino, as well as letters by artists such
+    as Titian and Bernini) alongside modern critical theories regarding self-presentation. We will visit museums and the special
+    collections at the Regenstein and the Newberry libraries.'
+  core_tags:
+  - arts
+  prereq_text: 'This course fulfills the following requirements in the ARTH major and minor: European and American pre-1800'
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/arthistory/
+    quote: ARTH 17213. Portraits. 100 Units.
+  needs_review: true
+- code: ARTH 17214
+  title: 'Seeing Ghosts: Visualizing the Unseen in East Asian Art'
+  units: 100
+  description: This course interrogates the persistent presence of ghosts, spirits, demons, and souls in East Asian art from
+    the premodern period to the present, asking what it means to give visual form to the invisible. This paradox will anchor
+    our exploration of how images of ghosts and other spectral subjects both reflect and shape the societies that produce
+    them. That is, on one hand, we will explore how images of the supernatural and otherworldly have been embedded in lived
+    experience through rituals, festivals, performances, and domestic worship. But we will also examine the range of worldly,
+    historical, and social meanings that the spectral has acquired in East Asian visual culture. Through close attention to
+    individual works in diverse artistic forms and genres across China, Japan, and Korea-including paintings, funerary art,
+    ritual objects, prints, photography, and film-students will reflect on how the destabilizing power of "seeing ghosts"
+    unsettles dominant accounts of gender, politics, environment, and community, subverts social hierarchies and established
+    orders of perception, and challenges the boundaries between the real and the imaginary, the human and non-human, bringing
+    overlooked dimensions of major artworks into view.
+  core_tags:
+  - arts
+  prereq_text: 'This course meets the general education requirement in the arts. This course fulfills the following requirements
+    in the ARTH major and minor: Asian, premodern (pre-1800), Asian, modern (post-1800)'
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/arthistory/
+    quote: 'ARTH 17214. Seeing Ghosts: Visualizing the Unseen in East Asian Art. 100 Units.'
+  needs_review: true
+- code: ARTH 17313
+  title: The Medieval Art of Illusion
+  units: 100
+  description: 'This course explores the creation, description, and depiction of spaces and surfaces designed to confuse or
+    trick the eye in medieval Europe. Whereas traditional art historical narratives credit Renaissance artists with the rediscovery
+    of methods for crafting pictorial illusions, medieval art and ars (craft) bears witness to a diverse and sustained fascination
+    with illusionism. Its manifestations range from the simulation of virtual space to the confection of misleading surfaces
+    that concealed the true nature of their substrates. In addition to unpacking illusionism as a descriptor or technique,
+    topics to be explored include: the relationship between real and simulated architecture; the imitation of precious materials
+    in paint, glass, etc.; attitudes towards cosmetics and other "improving" bodily adornment; the danger of visual confusion
+    in a medieval salvation economy. Throughout, we will interrogate the tendency to treat illusionism as a desirable zenith
+    of artistic achievement.'
+  core_tags:
+  - arts
+  prereq_text: 'This course meets the general education requirement in the arts.This course fulfills the following requirements
+    in the ARTH major and minor: European and American, pre-modern (pre-1800)'
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/arthistory/
+    quote: ARTH 17313. The Medieval Art of Illusion. 100 Units.
+  needs_review: true
+- code: ARTH 17415
+  title: 'Conceptualism: A Global Approach to Art since 1960'
+  units: 100
+  description: This course offers an introduction to conceptual approaches to artmaking as they emerged between the 1960s
+    and 1990s across diverse sociopolitical and art historical contexts. We will study topics such as the turn to language,
+    data and systems; the shift away from traditional objects of art toward ephemeral acts and their documentation; critiques
+    of artistic institutions; strategies for creating alternative networks; and political interventions. The constellation
+    of practices that we will explore developed in artistic centers throughout North America and Europe, Latin America, East
+    Asia, the Soviet Bloc, and Africa, often independently of each other. Looking to an increasingly interconnected but unequal
+    world, this course approaches these many conceptualisms as shaped by differing experiences of global processes, including
+    technological development, the expansion of mass media, decolonization, dictatorship, exile, and diaspora. Designed for
+    students new to art history, this course focuses on developing skills for analyzing a wide range of artistic media beyond
+    painting and sculpture.
+  core_tags:
+  - arts
+  prereq_text: 'This course meets the general education requirement in the arts. This course fulfills the following requirements
+    in the ARTH major and minor: European and American, modern (post-1800), Latin American'
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/arthistory/
+    quote: 'ARTH 17415. Conceptualism: A Global Approach to Art since 1960. 100 Units.'
+  needs_review: true
+- code: ARTH 17512
+  title: Modern Architecture in Algeria, France, French Algeria, and Algerian France
+  units: 100
+  description: This course invites students to consider the intertwined architectural histories of France and Algeria in the
+    colonial and postcolonial eras. From colonial designs in French Algeria to counterhegemonic spaces of Algerian communities
+    in postcolonial France, students will examine how architecture engages with fraught historical episodes and contested
+    cultural landscapes. Case studies include Paris as a Eurocentric paradigm for the modern city, dialectics of construction
+    and destruction in Algiers under colonial rule, and urban multiplicity in Marseille. Protagonists include Le Corbusier,
+    arguably the most canonical architect of the 20th century, and underexamined figures like Abderrahmane Bouchama, who declared
+    being the sole Muslim Algerian architect at the independence. By the end of the quarter, students will have gained substantial
+    knowledge of the history of these two countries, their architecture, and the historiographical stakes of connective architectural
+    history.
+  core_tags:
+  - arts
+  crosslists:
+  - ARCH 17512
+  prereq_text: 'Fulfills the following categories in the ARTH major and minor: African, European and American, modern (post-1800)
+    and is an Art in Context Seminar'
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/arthistory/
+    quote: ARTH 17512. Modern Architecture in Algeria, France, French Algeria, and Algerian France. 100 Units.
+  needs_review: true
+- code: ARTH 17551
+  title: 'Beyond the Vitruvian Man: Architecture and the Body in the Italian Renaissance'
+  units: 100
+  description: With its ideal proportions inscribed in perfect geometry, the Vitruvian Man long served as the iconic model
+    of early modern architecture, inspiring Renaissance designers to reimagine buildings and cities in pursuit of its ideal
+    form. Yet this abstract male figure, often framed as a symbol of human dignity, conceals the vital multiplicity essential
+    to both human and urban life and obscures the diverse experiences of early modern populations. This course challenges
+    students to consider how the human body-both as a cultural construct and a site of lived experience-shaped the design
+    and reception of early modern architecture. While the Vitruvian Man serves as our point of departure, we will move beyond
+    its idealised geometry to explore how sensory experience and embodied practice animated and reconfigured Renaissance architectural
+    space, paying particular attention to urban inhabitants who negotiated, reshaped, and at times overturned the harmonious
+    projections of architects and designers. Students will engage with canonical architects such as Michelangelo, Alberti,
+    and Leonardo alongside ordinary inhabitants-including artisans, women, Jewish communities, and travellers-who deployed
+    their eyes, ears, hands, mouths, and feet to rewrite the meaning of urban space and inscribe their own presence in the
+    fabric of Renaissance cities. With their support, we will also explore the potential for historical urban experience to
+    inform, unsettle, or inspire the way we imagine cities today.
+  core_tags:
+  - arts
+  crosslists:
+  - HIST 12204
+  prereq_text: 'This course is an art in context core course. This course fulfills the following requirements in the ARTH
+    major and minor: European and American pre-1800'
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/arthistory/
+    quote: 'ARTH 17551. Beyond the Vitruvian Man: Architecture and the Body in the Italian Renaissance. 100 Units.'
+  needs_review: true
+- code: ARTH 17602
+  title: Contemporary Art Beyond Korea
+  units: 100
+  description: This course surveys key histories and theoretical discourses of contemporary art, with a particular focus on
+    Korea, both North and South. Beginning at the end of the Korean War (1950-1953), the course reexamines the notion of the
+    "postwar" from Korean and broader Asian perspectives, extending the conversation to art produced in the present day. The
+    parallel postwar histories-industrialization, authoritarianism, democratization movements, and globalization across East
+    and Southeast Asia-necessitate an interregional and global approach. Korea, from the aftermath of the Korean War onwards,
+    has served as a significant testing ground within these interconnected historical trajectories. While centering discussions
+    on artworks and discourses from Korea, the course will also engage with artistic practices from other regions, including
+    but not limited to Japan, China, Taiwan, Europe, the United States, Malaysia, Singapore, Indonesia, Vietnam, and the Philippines.
+    This course may include a self-directed visit to the MCA and the Art Institute, as well as participation in selected artist
+    talks.
+  notes: 'This course fulfills the following requirements in the ARTH major and minor: Asian, modern (1800-present)'
+  core_tags:
+  - arts
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/arthistory/
+    quote: ARTH 17602. Contemporary Art Beyond Korea. 100 Units.
+- code: ARTH 17712
+  title: Cold War Cultures
+  units: 100
+  description: As the world emerged from the wreckage of the Second World War, the cultural sphere became a battlefield where
+    countries jostled for power over the hearts and minds of the public. This class considers the entanglements between art
+    and ideology during the Cold War. In the mid twentieth century, an unprecedented expansion of the mass media, a boom of
+    international events and exhibitions, and new forms of artmaking made images and culture a flash point for political debate.
+    We will examine how specific artistic styles attained ideological associations, how international governments employed
+    art exhibitions to negotiate soft power, and how artists challenged the binary ideological divides of the Cold War. We
+    will also consider solidarity movements and artistic responses to active conflicts in the Global South. Case studies will
+    be drawn from a wide geographic range, including the United States and Europe, the USSR, Latin America, and West Africa.
+    This is a seminar style core class in which students will be expected to lead class discussions, conduct original research,
+    and share their writing with their peers.
+  core_tags:
+  - arts
+  prereq_text: 'This course meets the general education requirement in the arts. This course fulfills the following requirements
+    in the ARTH major and minor: European and American, modern (post-1800), Latin American, Theory and Historiography'
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/arthistory/
+    quote: ARTH 17712. Cold War Cultures. 100 Units.
+  needs_review: true
+- code: ARTH 17722
+  title: 'Making Together: Crafts and Workshop Cultures in Early Modern East Asia'
+  units: 100
+  description: 'This course introduces students to the diverse crafts and workshop cultures of Early Modern China, Japan,
+    and Korea (roughly 14th to 19th centuries) through techniques of production and reproduction such as ceramics, enamels,
+    prints, and painting, with attention to collaborative and serial production. We will examine case studies grounded in
+    specific historical contexts, from Qing imperial kiln to the Joseon Bunwon kilns, from "Suzhou pian" (commercial workshop
+    forgeries) to the studios of the Kano school. Through these cases, students are encouraged to think together with the
+    craftspeople, exploring different systems of artisanal knowledge and their social, cultural, and political significance.
+    While the course is largely structured around medium/material, weekly discussions will be guided by a set of common questions
+    and themes: How are the works made, and how does understanding the making process impact our perception of the works themselves?
+    Why did certain workshop models emerge or persist-what did the production mode make possible or foreclose? How are artisanal
+    knowledge and skills acquired and transmitted, both locally and globally? How did the market, gift economies, or diplomatic
+    exchanges affect workshop organization and art production? Students are encouraged to bring their own art- and craft-making
+    experience into class discussions. As we read about the history of crafts and workshop cultures, we will also consider
+    how these histories were written and why.'
+  core_tags:
+  - arts
+  prereq_text: 'This course meets the general education requirement in the arts. Fulfilled requirements: Asian, premodern
+    (pre-1800), modern (post-1800)'
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/arthistory/
+    quote: 'ARTH 17722. Making Together: Crafts and Workshop Cultures in Early Modern East Asia. 100 Units.'
+  needs_review: true
+- code: ARTH 17761
+  title: 'Introduction to Modern Architecture: Modernity and Its Other'
+  units: 100
+  description: 'This course invites students to reflect on the idea of modernity in architecture as it developed from the
+    15th century to the late 20th century. Its aims are twofold: first, to introduce students to selected architectural episodes
+    across time and space; second, to demonstrate that modernity is a concept deeply charged with power dynamics. Historically,
+    the idea of modernity has defined its margins by systematically portraying certain people, cultures, and places as deficient
+    in the modern mind, techniques, or aesthetics. In this respect, modernity and its antonyms are inseparable, like two sides
+    of the same coin. Over the quarter, we will examine exclusionary visions of modernity, challenge their claims to universality,
+    and amplify the voices of those who proposed alternative models for modernity in architecture.'
+  core_tags:
+  - arts
+  crosslists:
+  - CEGU 27761
+  - ARCH 17761
+  prereq_text: 'Fulfills the following requirements in the ARTH major and minor: African, Asian, modern (post-1800), European
+    and American, modern (post-1800), Latin American, Theory and Historiography'
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/arthistory/
+    quote: 'ARTH 17761. Introduction to Modern Architecture: Modernity and Its Other. 100 Units.'
+  needs_review: true
+- code: ARTH 17781
+  title: Women in 20th-Century Architecture
+  units: 100
+  description: From the Renaissance to the present day, architecture has been a blatantly male-centric field. This course
+    invites students to consider women who overcame systemic barriers to become figures of agency in 20th-century architecture.
+    We will examine the lives and works of women who have managed to attend architecture schools, despite historical gender-based
+    exclusion or restriction on enrollment, as well as those who found impactful ways to play architectural roles without
+    academic training. We will pay particular attention to how these protagonists add necessary complexity to the modernist
+    canon. The course will start with a first module on positionality (women as architects, women as clients, and women as
+    residents) followed by a second module with a biographical scope (Minnette De Silva, Eileen Gray, bell hooks, and Sibyl
+    Moholy-Nagy).
+  notes: 'This course fulfills the Art In Context Core Requirement: European and American, modern (post-1800), Theory and
+    Historiography'
+  core_tags:
+  - arts
+  crosslists:
+  - ARCH 17781
+  - GNSE 20145
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/arthistory/
+    quote: ARTH 17781. Women in 20th-Century Architecture. 100 Units.
+- code: ARTH 17904
+  title: 'Chinatown, the Japanese Garden, the Period Room: Diasporic Architecture from East Asia'
+  units: 100
+  description: The built environment serves as a powerful connection to its time, place, and cultural origins. This course
+    examines East Asian architecture and landscapes that have transcended their native contexts, as well as East Asian-style
+    buildings designed for cultural others. From the bustling streets of Chinatown to the serene Japanese gardens and the
+    meticulously curated period rooms showcasing East Asia's arts and cultures, the course explores a wide range of architectural
+    forms, urban designs, and landscapes spanning two centuries. These structures are studied not as static artifacts but
+    as dynamic platforms for social events, cultural debates, and political opportunities, shaped by historical and ongoing
+    negotiations between their home and host contexts. Central to the course is the concept of diaspora, through which we
+    investigate how the experience of living outside one's home country-sometimes in foreign or even unwelcoming environments-can
+    be understood through the lens of the built environment. In this framework, architecture becomes a reflection of the dynamic
+    experiences of immigration, racialization, cultural exchange, and confrontation. It is also subject to processes of representation,
+    appropriation, modification, and reinvention. Through immersive field trips in the Chicago metropolitan area, students
+    will critically analyze the formal language, spatial experiences, cultural symbolism, and social dynamics embedded in
+    East Asian-style architecture and landscapes.
+  core_tags:
+  - arts
+  crosslists:
+  - CHST 17904
+  - ARCH 17904
+  - RDIN 17904
+  prereq_text: 'Fulfills the following categories in the ARTH major and minor: Asian, modern (post-1800), European and American,
+    modern (post-1800). This course is an Art in Context seminar'
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/arthistory/
+    quote: 'ARTH 17904. Chinatown, the Japanese Garden, the Period Room: Diasporic Architecture from East Asia. 100 Units.'
+  needs_review: true
+- code: ARTH 18160
+  title: Islamic Arts of the Book
+  units: 100
+  description: This course is an introduction to the Islamic art of the book, with a particular focus on Arabic and Persian
+    manuscripts spanning the 11th to 17th centuries and beyond. By paying attention to the relationships between calligraphy,
+    illumination, and painting through the lens of manuscript materiality and bookmaking technologies we will explore key
+    histories, artworks, and discourses surrounding Islamic manuscripts, from Qur'ans to lavishly illustrated historical,
+    scientific, and literary texts. While attending to issues of style, image-text relationships, and the transmission of
+    knowledge in a roughly chronological framework, the course also engages with broader questions about materiality and the
+    socio-economic conditions of manuscripts including economies of manuscript production and circulation, and systems of
+    patronage. The course emphasizes close looking and in-depth study of manuscripts from the ISAC, the Hanna Holborn Gray
+    Special Collections, and the Art Institute of Chicago. Sessions will also include workshops at the Seldon Institute in
+    Hyde Park. Visits to local collections will supplement classroom discussions and assigned readings.
+  core_tags:
+  - arts
+  prereq_text: 'This course is an Art in Context core. This course fulfills the following requirements in the ARTH major and
+    minor: Asian pre-1800, Asian post-1800'
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/arthistory/
+    quote: ARTH 18160. Islamic Arts of the Book. 100 Units.
+  needs_review: true
+- code: ARTH 18704
+  title: Contemporary Art Beyond Korea
+  units: 100
+  description: This course surveys key histories and theoretical discourses of contemporary art with a focus on Korea, both
+    North and South. Beginning at the end of the Korean War (1950-1953), the course reexamines the notion of the "postwar"
+    from Korean and broader Asian perspectives, extending the conversation to art produced in the present day. The parallel
+    postwar histories-industrialization, authoritarianism, democratization movements, and globalization across East and Southeast
+    Asia-necessitate an interregional and global approach. Korea, from the aftermath of the Korean War onwards, has served
+    as a testing ground within these interconnected historical trajectories. While centering discussions on artworks and discourses
+    from Korea, the course will also engage with artistic practices from other regions, including but not limited to Japan,
+    China, Taiwan, Europe, the United States, Malaysia, Singapore, Indonesia, Vietnam, and the Philippines. This course may
+    include a self-directed visit to the MCA and the Art Institute, along with participation in selected artist talks.
+  notes: 'This course fulfills the following requirements in the ARTH major and minor: Asian post-1800'
+  core_tags:
+  - arts
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/arthistory/
+    quote: ARTH 18704. Contemporary Art Beyond Korea. 100 Units.
+- code: ARTH 24193
+  title: Water Water Everywhere?
+  units: 100
+  description: 'This interdisciplinary course explores aesthetics, environmental racism, and a human rights approach to the
+    Commons to inform our perspective on the politics and aesthetics of water from the local to the global. The course will
+    look at issues of scarcity and abundance through the lenses of art and human rights. The course will incorporate guest
+    speakers, including artist Iñigo Manglano-Ovalle and environmental and water rights experts and advocates. Students will
+    consider works by artists such as Pope L, Mel Chin, Allan Kaprow, LaToya Ruby Frazier, and Fazal Sheikh, to understand
+    how art can confront the 21st century''s environmental challenges. A diverse set of texts will include relevant human
+    rights instruments, the documentary film "Whose Water" (Kate Levy 2024); Lewis Hyde, "Common as Air: Revolution, Art,
+    and Ownership"; and Emily Eliza Scott & Kristen Swenson, ''Contemporary Art and the Politics of Land Art'' from "Critical
+    Landscapes: Art, Space, and Politics." The course will include site visits to nearby natural areas, such as the Big Marsh
+    wetlands, the "Toxic Donut" near Altgeld Gardens, and Lake Michigan. This course is an extension of a collaborative project
+    at the Gray Center for Arts and Inquiry with human rights lawyer Susan Gzesh, artist Iñigo Manglano-Ovalle, and curator
+    Abigail Winograd.'
+  crosslists:
+  - BPRO 24193
+  - SOSC 21005
+  - CHST 24193
+  - CEGU 24193
+  - HMRT 24193
+  prereq_text: Third- or fourth-year standing
+  terms_offered:
+  - AU
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/arthistory/
+    quote: ARTH 24193. Water Water Everywhere?
+  needs_review: true
+- code: ARTH 36107
+  title: 'Moving Objects, Dispersed Cultures: Case Studies from China and the Middle East'
+  units: 100
+  notes: Cross-listed with ARTH 16107 (its catalog block lists ARTH 36107 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from ARTH 16107.
+  crosslists:
+  - ARTH 16107
+  prereq_text: 'PQ: Third or fourth-year standing.'
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/arthistory/
+    quote: 'Equivalent Course(s): BPRO 27100, EALC 16107, EALC 36107, NEHC 36107, ARTH 36107, RLST 26107, NEHC 16107'
+  needs_review: true

@@ -1,0 +1,105 @@
+# Generated from the 2026-2027 UChicago College Catalog (fetched 2026-11-12) by hand-checked scripts;
+# every source.quote is copied verbatim (whitespace collapsed) from source.url. See data/seed/REVIEW.md.
+catalog_year: 2026-27
+total_units: 4200
+units_by_enrollment: 3800
+full_time_min_units: 300
+full_time_max_units: 400
+overload_units: 500
+overload_reasons:
+- id: joint-degree-admission
+  label: All 500 units needed for a joint-degree program admission requirement
+  year: 3
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/gradingandacademicstatus/
+    quote: All 500 units are necessary for fulfillment of a joint-degree program admission requirement (third-year students
+      only)
+- id: graduation-need
+  label: All 500 units needed to graduate
+  year: 4
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/gradingandacademicstatus/
+    quote: All 500 units are necessary for fulfillment of degree requirements for purposes of graduation (fourth-year students
+      only)
+- id: reading-research-y3
+  label: Includes a Reading and Research or B.A. thesis/colloquium course (third year)
+  year: 3
+  course_selector:
+    list: overload-reading-research-thesis
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/gradingandacademicstatus/
+    quote: One or more of the courses includes a Reading and Research or B.A. Thesis/Colloquium course (third- and fourth-year
+      students only)
+- id: reading-research-y4
+  label: Includes a Reading and Research or B.A. thesis/colloquium course (fourth year)
+  year: 4
+  course_selector:
+    list: overload-reading-research-thesis
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/gradingandacademicstatus/
+    quote: One or more of the courses includes a Reading and Research or B.A. Thesis/Colloquium course (third- and fourth-year
+      students only)
+- id: language-200-unit
+  label: One of the courses is a 200-unit language course (any year)
+  min_course_units: 200
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/gradingandacademicstatus/
+    quote: One of the courses is a 200-unit language course (students in any year)
+core_program_id: core
+language_node: core/language
+core_complete_by: Y2-SP
+civ_abroad_year: 3
+residency_min_fraction: 0.5
+residency_min_units: 1800
+transfer_counts_by_enrollment: true
+max_quarters: 12
+sources:
+  total_units:
+    url: http://collegecatalog.uchicago.edu/thecollege/degreerequirements/
+    quote: A total of 4200 units of credit (i.e., 42 100-unit quarter courses).
+  units_by_enrollment:
+    url: http://collegecatalog.uchicago.edu/thecollege/degreerequirements/
+    quote: For students matriculating in Autumn 2017 or later, of the 4200 units, 3800 units of credit must be earned by course
+      enrollment.
+  full_time_min_units:
+    url: http://collegecatalog.uchicago.edu/thecollege/gradingandacademicstatus/
+    quote: A full-time course load is enrollment in three or four courses (i.e., 300 or 400 units) per quarter; the tuition
+      is the same in either case.
+  full_time_max_units:
+    url: http://collegecatalog.uchicago.edu/thecollege/gradingandacademicstatus/
+    quote: A full-time course load is enrollment in three or four courses (i.e., 300 or 400 units) per quarter; the tuition
+      is the same in either case.
+  overload_units:
+    url: http://collegecatalog.uchicago.edu/thecollege/gradingandacademicstatus/
+    quote: In certain exceptional circumstances, students can seek approval to enroll in up to 500 units as a course overload
+      during a given quarter.
+  core_complete_by:
+    url: http://collegecatalog.uchicago.edu/thecollege/thecore/
+    quote: Meant to lay the groundwork for higher level study at the College, the general education requirements are a quintessential
+      element of the University of Chicago experience and should be completed by the end of the second year.
+  civ_abroad_year:
+    url: https://college.uchicago.edu/sites/default/files/documents/CoreRequirements.pdf
+    quote: Core requirements must be completed in the first and second years; Civilization Studies abroad may be taken in
+      the third year.
+  residency_min_fraction:
+    url: http://collegecatalog.uchicago.edu/thecollege/degreerequirements/
+    quote: Additionally, at least half of the requirements for any majors or minors must be completed in residence.
+  residency_min_units:
+    # Richard's decision (OPEN_QUESTIONS Q6, 2026-11-14), quoted verbatim; find the catalog sentence before deployment.
+    url: docs/OPEN_QUESTIONS.md#answers-to-the-questions-from-the-steps-1-5-run-richard-2026-11-14
+    quote: Transfer student need to meet the 1800 credit residency requirement, meaning that they have to minimally take 1800
+      credits at Uchicago.
+  transfer_counts_by_enrollment:
+    url: docs/OPEN_QUESTIONS.md#answers-to-the-questions-from-the-steps-1-5-run-richard-2026-11-14
+    quote: Transfer credits count towards the 3800 credit requirement
+  max_quarters:
+    url: http://collegecatalog.uchicago.edu/thecollege/gradingandacademicstatus/
+    quote: Students in the College are permitted to enroll in a total of 12 quarters (i.e., four years if taken consecutively)
+      to complete their degree requirements, with the exception of transfer students who are granted a prorated number of
+      quarters based on the total units of transfer credit they were awarded upon admission.
+needs_review:
+- core_complete_by
+- residency_min_units
+- transfer_counts_by_enrollment
+- civ_abroad_year
+- overload_reasons

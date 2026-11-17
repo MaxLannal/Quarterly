@@ -1,0 +1,123 @@
+# Generated from the 2026-2027 UChicago College Catalog (fetched 2026-11-12) by hand-checked scripts;
+# every source.quote is copied verbatim (whitespace collapsed) from source.url. See data/seed/REVIEW.md.
+id: cmsc-bxms-3
+catalog_year: 2026-27
+name: 'Computer Science Bx/MS, Option 3: Professionally Oriented Non-Computer Science Majors'
+type: bxms
+degree: MS
+department: Computer Science
+status: review
+sources:
+- url: http://collegecatalog.uchicago.edu/thecollege/jointdegreecomsci/
+  quote: Option 3 is designed for students who are not computer science majors and wish to combine a professionally oriented
+    MS in computer science with their undergraduate major.
+rules:
+  id: cmsc-bxms-3
+  label: Computer Science Bx/MS, Option 3 (professional, non-CS majors)
+  group:
+    all: true
+    children:
+    - id: discrete
+      label: Discrete Mathematics
+      slot:
+        any_of:
+        - CMSC 27100
+        - CMSC 27130
+        - CMSC 37115
+        - MPCS 50103
+      constraints:
+        min_grade: C+
+        no_pass_fail: true
+      source:
+        url: http://collegecatalog.uchicago.edu/thecollege/jointdegreecomsci/
+        quote: Discrete Mathematics (CMSC 27100, CMSC 27130, CMSC 37115, or MPCS 50103)
+    - id: algorithms
+      label: Algorithms
+      slot:
+        any_of:
+        - CMSC 27200
+        - CMSC 27230
+        - CMSC 37000
+        - MPCS 55001
+      constraints:
+        min_grade: C+
+        no_pass_fail: true
+      source:
+        url: http://collegecatalog.uchicago.edu/thecollege/jointdegreecomsci/
+        quote: Algorithms (CMSC 27200, CMSC 27230, CMSC 37000, or MPCS 55001)
+    - id: core-systems
+      label: Three Core Systems courses
+      select:
+        count: 3
+        from:
+          list: cmsc-systems
+      constraints:
+        min_grade: C+
+        no_pass_fail: true
+      source:
+        url: http://collegecatalog.uchicago.edu/thecollege/jointdegreecomsci/
+        quote: In Option 3, any MPCS Core Systems course can be counted as a Core Systems course in the Bx/MS program.
+      needs_review: true
+    - id: electives
+      label: Four electives
+      select:
+        count: 4
+        from:
+          union:
+          - subject: CMSC
+            number_range:
+            - 20000
+            - 29999
+            exclude:
+            - CMSC 29700
+            - CMSC 29900
+          - subject: CMSC
+            number_range:
+            - 30000
+            - 39999
+          - subject: MPCS
+          - subject: TTIC
+      constraints:
+        min_grade: C+
+        no_pass_fail: true
+      source:
+        url: http://collegecatalog.uchicago.edu/thecollege/jointdegreecomsci/
+        quote: Students in this option are allowed to take electives from the department’s CMSC 20000-level, CMSC 30000-level,
+          and MPCS 50000-level offerings or selected TTIC offerings (see Allowed Courses below for more details).
+      needs_review: true
+  constraints:
+    max_from:
+    - selector:
+        subject: CMSC
+        number_range:
+        - 20000
+        - 29999
+      n: 2
+      as_enrolled: true
+      source:
+        url: http://collegecatalog.uchicago.edu/thecollege/jointdegreecomsci/
+        quote: "In all options, at most two courses can be drawn from the 20000-level offerings."
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/jointdegreecomsci/
+    quote: 'The nine courses required for the MS degree under Option 3 are as follows: Discrete Mathematics (CMSC 27100, CMSC
+      27130, CMSC 37115, or MPCS 50103) or Core Programming (see Allowed Courses below); Algorithms (CMSC 27200, CMSC 27230,
+      CMSC 37000, or MPCS 55001); three Core Systems courses (see Allowed Courses below); and four electives.'
+  needs_review: true
+policy:
+  share:
+  - with: type:major
+    max: 2
+    source:
+      url: http://collegecatalog.uchicago.edu/thecollege/jointdegreecomsci/
+      quote: "In all options, at most two courses can be counted toward both a student’s Bx and MS degrees."
+  timing:
+    apply_by: Y3-WI
+    source:
+      url: http://collegecatalog.uchicago.edu/thecollege/jointdegreecomsci/
+      quote: 'This program has two admissions cycles: one in January/February to apply to the Autumn Quarter start, and one
+        in June to apply to the Winter Quarter start.'
+  excludes:
+  - cmsc-b?
+  excludes_source:
+    url: http://collegecatalog.uchicago.edu/thecollege/jointdegreecomsci/
+    quote: "Option 3 is designed for students who are not computer science majors and wish to combine a professionally oriented MS in computer science with their undergraduate major."

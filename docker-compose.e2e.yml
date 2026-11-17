@@ -1,0 +1,20 @@
+# End-to-end override for `make e2e-stack` (journeys A-D in apps/web/e2e-stack/):
+#   docker compose -f docker-compose.yml -f docker-compose.e2e.yml up -d --build --wait
+# Development settings only. LLM_FAKE=e2e answers every agent request from the request itself
+# (services/api/api/agents/e2e_llm.py), so nothing ever reaches a model provider.
+x-e2e-env: &e2e-env
+  ENVIRONMENT: development
+  LLM_FAKE: e2e
+  LLM_LIVE: "false"
+  # Sign-up codes are printed to the API log; the tests read them from `docker compose logs api`.
+  EMAIL_BACKEND: console
+  # Every seeded program version is still in review.
+  SHOW_UNPUBLISHED_PROGRAMS: "true"
+  # The stack is served over plain http on localhost.
+  SESSION_COOKIE_SECURE: "false"
+
+services:
+  api:
+    environment: *e2e-env
+  worker:
+    environment: *e2e-env

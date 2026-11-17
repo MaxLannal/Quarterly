@@ -1,0 +1,222 @@
+# Generated from the 2026-2027 UChicago College Catalog (fetched 2026-11-12) by hand-checked scripts;
+# every source.quote is copied verbatim (whitespace collapsed) from source.url. See data/seed/REVIEW.md.
+courses:
+- code: CMST 14400
+  title: Film and the Moving Image
+  units: 100
+  description: This course seeks to develop skills in perception, comprehension, and interpretation when dealing with film
+    and other moving image media. It encourages the close analysis of audiovisual forms, their materials and formal attributes,
+    and explores the range of questions and methods appropriate to the explication of a given film or moving image text. It
+    also examines the intellectual structures basic to the systematic study and understanding of moving images. Most importantly,
+    the course aims to foster in students the ability to translate this understanding into verbal expression, both oral and
+    written. Texts and films are drawn from the history of narrative, experimental, animated, and documentary or non-fiction
+    cinema. Screenings are a mandatory course component.
+  notes: Attendance in first class is mandatory to confirm enrollment. Open only to non-CMS majors; may not count towards
+    CMS major requirements. For non-majors, any CMST 14400 through 14599 course meets the general education requirement in
+    the arts.
+  core_tags:
+  - arts
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/cinemamediastudies/
+    quote: CMST 14400. Film and the Moving Image. 100 Units.
+- code: CMST 14503
+  title: Cinema in Theory and Practice
+  units: 100
+  description: This course looks at film theory through the lens of film practice. Readings, screenings, and exercises focus
+    on fundamental cinematic parameters and their complex practical uses. We look at several masterpieces of French cinema
+    to compare film theory to film practice, read testimonies from filmmakers, and develop sophisticated skills of film appreciation,
+    critique, and analysis.
+  core_tags:
+  - arts
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/cinemamediastudies/
+    quote: CMST 14503. Cinema in Theory and Practice. 100 Units.
+- code: CMST 14505
+  title: Visual Style in Still and Moving Images
+  units: 100
+  description: The aim of this course is first to introduce students to the world of French-language animation and comics
+    (BD or bandes dessinées) by providing a historical overview of both forms. In addition, the course provides an alternative
+    genealogy of cinema by exploring how common techniques and elements of style have emerged through ongoing processes of
+    adaptation, coproduction, and intercommunication between still and moving images, between comics and animation. Screenings
+    will highlight animated films inspired by popular BD as well as films directed by "bédéistes" who have moved into the
+    world of animation production. The final unit will consider how French comics and animation in recent years have repurposed
+    Japanese manga and anime techniques and styles, rather swiftly and resourcefully. This course will only be offered through
+    the Study Abroad program in Paris.
+  core_tags:
+  - arts
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/cinemamediastudies/
+    quote: CMST 14505. Visual Style in Still and Moving Images. 100 Units.
+- code: CMST 14514
+  title: Chicago Film Cultures
+  units: 100
+  description: This Arts Core course examines the rich and vibrant cultures surrounding cinema in Chicago, from depictions
+    of the city on screen, to film production from the silent era to the present day, to moviegoing culture from movie palaces
+    to microcinemas. Students will study past and current film cultures in Chicago by examining particular films, events,
+    venues, and critics. Topics covered will include the cinematic image of Chicago, film exhibition, audience and fan culture
+    studies (with attention to Chicago's particular demographic contours), and contemporary television and digital media production
+    in the city.
+  core_tags:
+  - arts
+  crosslists:
+  - CHST 14514
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/cinemamediastudies/
+    quote: CMST 14514. Chicago Film Cultures. 100 Units.
+- code: CMST 14534
+  title: French and Francophone Cinema
+  units: 100
+  description: 'This class is a survey of French and Francophone Cinema from the first years of cinema to the contemporary
+    moment. In it, we will focus on three distinct moments: the idea of a "poetic" cinema in the 1920s that saw a heightened
+    emphasis experiences unique to cinema; the rise of the "nouvelle vague" (New Wave) in the 1960s and the growth of cinephilia
+    and art cinema; and the emergence of a "banlieue" or "beur" cinema of the 1990s and 2000s that focused on immigrant communities
+    surrounding Paris. Our discussions will engage the formal developments of French and Francophone cinema, the history of
+    film culture, and the historical discourse of national cinema that negotiates the politics of immigration, urbanization,
+    and globalization.'
+  core_tags:
+  - arts
+  prereq_text: Offered specifically as part of CMS Study Abroad in Paris program.
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/cinemamediastudies/
+    quote: CMST 14534. French and Francophone Cinema. 100 Units.
+  needs_review: true
+- code: CMST 14552
+  title: Buñuel in Paris
+  units: 100
+  description: TBD.
+  core_tags:
+  - arts
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/cinemamediastudies/
+    quote: CMST 14552. Buñuel in Paris. 100 Units.
+- code: CMST 14555
+  title: Film and Experiment
+  units: 100
+  description: TBD.
+  core_tags:
+  - arts
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/cinemamediastudies/
+    quote: CMST 14555. Film and Experiment. 100 Units.
+- code: CMST 14565
+  title: 'Special Topics: The Films of Alfred Hitchcock'
+  units: 100
+  description: This course focuses on the films of Alfred Hitchcock, one of the greatest filmmakers of the 20th century. We
+    study both his films and a variety of approaches to them. We investigate the enduring power of his movies; his contributions
+    to genre and popular cinema; his storytelling techniques; his stylistic command; his approach to romance, suspense, and
+    action; his status as a master and auteur; and his remarkable control over the audience's thoughts and feelings.
+  notes: Not offered in 2024-25.
+  core_tags:
+  - arts
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/cinemamediastudies/
+    quote: 'CMST 14565. Special Topics: The Films of Alfred Hitchcock. 100 Units.'
+- code: CMST 14570
+  title: 'Special Topics: Animation Theory'
+  units: 100
+  description: Due to the ubiquity and pervasiveness of animation in contemporary media ecologies, recent years have seen
+    a surge of interest in animation theory. But animation theory presents a vast and turbulent domain of inquiry, because
+    animation may be narrowly defined as a set of objects or techniques or broadly conceptualized to embrace questions about
+    life and death, about more-than-human animals, artificial life, and animism, for instance. This topics course has two
+    aims. The first aim is to provide an overview of the key problematics of and approaches to animation theory in a global
+    and historical perspective. The second aim is to develop tools for doing animation theory in a more localized manner.
+    To this end, course will highlight theories of character and characterization with an emphasis on how the inherent tension
+    between individual and type in animation affects our understanding race and racism.
+  notes: Not offered in 2023-24.
+  core_tags:
+  - arts
+  crosslists:
+  - MADD 14570
+  - EALC 14570
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/cinemamediastudies/
+    quote: 'CMST 14570. Special Topics: Animation Theory. 100 Units.'
+- code: CMST 14572
+  title: Origins of Modern Visual Culture
+  units: 100
+  description: TBD.
+  core_tags:
+  - arts
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/cinemamediastudies/
+    quote: CMST 14572. Origins of Modern Visual Culture. 100 Units.
+- code: CMST 14578
+  title: Media Technologies
+  units: 100
+  description: This class is only offered through the Study Abroad Program in Paris. This course offers tools for understanding
+    and theorizing media by attending to technology. Students will learn to think about the materiality of media, asking how
+    media technologies-such as television, the mp3 format, or a mobile phone app-influence the contents or meanings they transmit,
+    as well as the ways in which discourses and practices shape the nature of media and its technical infrastructures. What
+    forms have culture and knowledge taken as the emergence of new media has reconfigured lived experience, social life, and
+    power relations? We will consider the ways in which technology extends beyond the realm of machinery-how practices, regulations,
+    beliefs and environments become part of the systematic deployment of media from content moderation to the cooling of servers.
+    Examples of media discussed in class will include student-curated collections of social media content, videogames and
+    television by French creators, and even infrastructural systems, including a failed project to create an automated train
+    system in Paris.
+  notes: Not offered in 2024-2025. For nonmajors, any CMST 14400 through 14599 course meets the general education requirement
+    in the arts. This class is only offered through the Study Abroad Program in Paris.
+  core_tags:
+  - arts
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/cinemamediastudies/
+    quote: CMST 14578. Media Technologies. 100 Units.
+- code: CMST 14580
+  title: 'Special Topics: Uncanny'
+  units: 100
+  description: TBD
+  notes: Not offered in 2024-25.
+  core_tags:
+  - arts
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/cinemamediastudies/
+    quote: 'CMST 14580. Special Topics: Uncanny. 100 Units.'
+- code: CMST 14582
+  title: 'Special Topics: Sports Documentary'
+  units: 100
+  description: TBD.
+  core_tags:
+  - arts
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/cinemamediastudies/
+    quote: 'CMST 14582. Special Topics: Sports Documentary. 100 Units.'
+- code: CMST 14589
+  title: Digital Filmmaking
+  units: 100
+  description: This course is designed to introduce students to digital filmmaking through (1) formal study and artistic analysis
+    of film work, (2) technical training in camera, sound, and editing software, and (3) individual and group exercises including
+    an original final project. Students will explore fiction, documentary, and experimental approaches to filmmaking while
+    learning how cinematic techniques like framing, composition, lighting, sound, and editing shape meaning. Students will
+    work both individually and in small groups that reflect the collaborative nature of film production. Overall, through
+    a combination of lectures, screenings, trainings, and projects, students will gain a solid foundation in the digital filmmaking
+    process and the creative possibilities of moving images and sound.
+  core_tags:
+  - arts
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/cinemamediastudies/
+    quote: CMST 14589. Digital Filmmaking. 100 Units.

@@ -1,0 +1,52 @@
+# Golden plan (prompt 05). Course facts: data/seed/2026-27; rules: data/seed/REVIEW.md.
+id: core-pass-03
+description: Two arts courses; non-calculus math MATH 11200 + DATA 11800; CHEM 11100-11200; BIOS 10602-10603
+program: core
+expect: pass
+checks:
+- V01
+- V02
+- V03
+- V07
+- V08
+- V12
+plan:
+  catalog_year: 2026-27
+  entry_term: 2026-AU
+  programs:
+  - program_id: core
+  items:
+  - course: HUMA 11000
+    term: 2026-AU
+  - course: MATH 11200
+    term: 2026-AU
+  - course: WRIT 10100
+    term: 2026-AU
+  - course: CHEM 11100
+    term: 2026-AU
+  - course: HUMA 11100
+    term: 2027-WI
+  - course: DATA 11800
+    term: 2027-WI
+  - course: BIOS 10602
+    term: 2027-WI
+  - course: CHEM 11200
+    term: 2027-WI
+  - course: ARTV 10100
+    term: 2027-SP
+  - course: MUSI 10100
+    term: 2027-SP
+  - course: BIOS 10603
+    term: 2027-SP
+  - course: SOSC 12400
+    term: 2027-AU
+  - course: HIST 13100
+    term: 2027-AU
+  - course: SOSC 12500
+    term: 2028-WI
+  - course: HIST 13200
+    term: 2028-WI
+  - course: SOSC 12600
+    term: 2028-SP
+  - course: SPAN 10300
+    term: 2028-SP

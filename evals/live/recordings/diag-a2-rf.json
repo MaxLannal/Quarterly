@@ -1,0 +1,56 @@
+[
+ {
+  "request": {
+   "model": "claude-sonnet-5-5",
+   "system": "Answer briefly with the submit_answer tool.",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Say hi."
+    }
+   ],
+   "tools": [
+    "submit_answer"
+   ],
+   "max_tokens": 200,
+   "effort": "low"
+  },
+  "response": {
+   "content": [
+    {
+     "text": "Hi.",
+     "type": "text"
+    },
+    {
+     "id": "toolu_01DcCnXtfzUEjmP5i4FeWaCw",
+     "input": {
+      "text": "Hi!"
+     },
+     "name": "submit_answer",
+     "type": "tool_use",
+     "caller": {
+      "type": "direct"
+     }
+    }
+   ],
+   "tool_calls": [
+    {
+     "name": "submit_answer",
+     "input": {
+      "text": "Hi!"
+     },
+     "id": "toolu_01DcCnXtfzUEjmP5i4FeWaCw"
+    }
+   ],
+   "text": "Hi.",
+   "usage": {
+    "input_tokens": 392,
+    "output_tokens": 57,
+    "cache_read_tokens": 0,
+    "cache_write_tokens": 0
+   },
+   "stop_reason": "tool_use",
+   "model": "claude-sonnet-5-5"
+  }
+ }
+]

@@ -1,0 +1,96 @@
+{
+  "$defs": {
+    "Selector": {
+      "additionalProperties": false,
+      "description": "Which catalog courses a node may draw from.\n\nA course matches when it is not in `exclude` (by cross-list group) and every criterion that\nis set holds: `codes` (any listed code, by cross-list group), `subject`, `number_range`\n(inclusive, on the 5-digit number), `tags` (has any), `list` (member of the named\n`course_list`, sublists included), `union` (matches at least one sub-selector).\n\nA course's tag set is `tags` plus `\"core:\" + t` for each of its `core_tags`, so\n`tags: [\"core:arts\"]` matches a course whose `core_tags` contains `arts`.",
+      "properties": {
+        "codes": {
+          "items": {
+            "examples": [
+              "CMSC 14100"
+            ],
+            "pattern": "^[A-Z]{2,5} \\d{5}$",
+            "type": "string"
+          },
+          "title": "Codes",
+          "type": "array"
+        },
+        "exclude": {
+          "items": {
+            "examples": [
+              "CMSC 14100"
+            ],
+            "pattern": "^[A-Z]{2,5} \\d{5}$",
+            "type": "string"
+          },
+          "title": "Exclude",
+          "type": "array"
+        },
+        "list": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "List"
+        },
+        "number_range": {
+          "anyOf": [
+            {
+              "maxItems": 2,
+              "minItems": 2,
+              "prefixItems": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "integer"
+                }
+              ],
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Number Range"
+        },
+        "subject": {
+          "anyOf": [
+            {
+              "pattern": "^[A-Z]{2,5}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Subject"
+        },
+        "tags": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Tags",
+          "type": "array"
+        },
+        "union": {
+          "items": {
+            "$ref": "#/$defs/Selector"
+          },
+          "title": "Union",
+          "type": "array"
+        }
+      },
+      "title": "Selector",
+      "type": "object"
+    }
+  },
+  "$ref": "#/$defs/Selector"
+}

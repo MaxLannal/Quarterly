@@ -1,0 +1,8 @@
+catalog_year: "2099-00"
+total_units: 800
+full_time_min_units: 100
+full_time_max_units: 300
+sources:
+  total_units: {url: "https://example.invalid/fake-catalog", quote: "FAKE FIXTURE - not a real course"}
+  full_time_min_units: {url: "https://example.invalid/fake-catalog", quote: "FAKE FIXTURE - not a real course"}
+  full_time_max_units: {url: "https://example.invalid/fake-catalog", quote: "FAKE FIXTURE - not a real course"}

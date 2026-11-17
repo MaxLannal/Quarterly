@@ -1,0 +1,154 @@
+# Generated from the 2026-2027 UChicago College Catalog (fetched 2026-11-12) by hand-checked scripts;
+# every source.quote is copied verbatim (whitespace collapsed) from source.url. See data/seed/REVIEW.md.
+id: cmsc-bxms-1
+catalog_year: 2026-27
+name: 'Computer Science Bx/MS, Option 1: Research-Oriented Computer Science Majors'
+type: bxms
+degree: MS
+department: Computer Science
+status: review
+sources:
+- url: http://collegecatalog.uchicago.edu/thecollege/jointdegreecomsci/
+  quote: Option 1 is designed for computer science majors who are actively engaged in research with a Computer Science faculty
+    member and would like to continue that research in their fourth year with the goal of producing a research-oriented MS
+    paper.
+rules:
+  id: cmsc-bxms-1
+  label: Computer Science Bx/MS, Option 1 (research-oriented, CS majors)
+  group:
+    all: true
+    children:
+    - id: discrete
+      label: Discrete Mathematics
+      slot:
+        any_of:
+        - CMSC 27100
+        - CMSC 27130
+        - CMSC 37115
+      constraints:
+        min_grade: C+
+        no_pass_fail: true
+      source:
+        url: http://collegecatalog.uchicago.edu/thecollege/jointdegreecomsci/
+        quote: Discrete Mathematics (CMSC 27100, CMSC 27130, or CMSC 37115)
+    - id: algorithms
+      label: Algorithms
+      slot:
+        any_of:
+        - CMSC 27200
+        - CMSC 27230
+        - CMSC 37000
+      constraints:
+        min_grade: C+
+        no_pass_fail: true
+      source:
+        url: http://collegecatalog.uchicago.edu/thecollege/jointdegreecomsci/
+        quote: Algorithms (CMSC 27200, CMSC 27230, or CMSC 37000)
+    - id: core-systems
+      label: One Core Systems course
+      select:
+        count: 1
+        from:
+          list: cmsc-systems
+      constraints:
+        min_grade: C+
+        no_pass_fail: true
+      source:
+        url: http://collegecatalog.uchicago.edu/thecollege/jointdegreecomsci/
+        quote: In all options, courses that can be counted as Core Systems courses in the computer science major or the PhD
+          program can be counted as Core Systems courses in the Bx/MS program.
+      needs_review: true
+    - id: ml
+      label: Machine Learning
+      slot:
+        any_of:
+        - CMSC 25300
+        - CMSC 35300
+        - CMSC 25400
+        - CMSC 35400
+        - TTIC 31020
+      constraints:
+        min_grade: C+
+        no_pass_fail: true
+      source:
+        url: http://collegecatalog.uchicago.edu/thecollege/jointdegreecomsci/
+        quote: Machine Learning (CMSC 25300, CMSC 35300, CMSC 25400, CMSC 35400, or TTIC 31020)
+    - id: reading-research
+      label: Two Reading and Research courses
+      select:
+        count: 2
+        from:
+          subject: CMSC
+          number_range:
+          - 30000
+          - 39999
+      constraints:
+        min_grade: C+
+        no_pass_fail: true
+      source:
+        url: http://collegecatalog.uchicago.edu/thecollege/jointdegreecomsci/
+        quote: two Reading and Research courses (no more than one per quarter)
+      needs_review: true
+    - id: electives
+      label: Three electives
+      select:
+        count: 3
+        from:
+          union:
+          - subject: CMSC
+            number_range:
+            - 20000
+            - 29999
+            exclude:
+            - CMSC 29700
+            - CMSC 29900
+          - subject: CMSC
+            number_range:
+            - 30000
+            - 39999
+          - subject: TTIC
+      constraints:
+        min_grade: C+
+        no_pass_fail: true
+      source:
+        url: http://collegecatalog.uchicago.edu/thecollege/jointdegreecomsci/
+        quote: Option 1 students are expected to take their electives from the Computer Science Department’s CMSC 30000-level
+          offerings and selected TTIC (Toyota Technological Institute at Chicago) offerings.
+      needs_review: true
+  constraints:
+    max_from:
+    - selector:
+        subject: CMSC
+        number_range:
+        - 20000
+        - 29999
+      n: 2
+      as_enrolled: true
+      source:
+        url: http://collegecatalog.uchicago.edu/thecollege/jointdegreecomsci/
+        quote: "In all options, at most two courses can be drawn from the 20000-level offerings."
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/jointdegreecomsci/
+    quote: 'The nine courses required for the MS degree under Option 1 are as follows: Discrete Mathematics (CMSC 27100, CMSC
+      27130, or CMSC 37115); Algorithms (CMSC 27200, CMSC 27230, or CMSC 37000); one Core Systems course (see Allowed Courses
+      below); Machine Learning (CMSC 25300, CMSC 35300, CMSC 25400, CMSC 35400, or TTIC 31020); two Reading and Research courses
+      (no more than one per quarter); and three electives.'
+  needs_review: true
+policy:
+  share:
+  - with: type:major
+    max: 2
+    source:
+      url: http://collegecatalog.uchicago.edu/thecollege/jointdegreecomsci/
+      quote: "In all options, at most two courses can be counted toward both a student’s Bx and MS degrees."
+  timing:
+    apply_by: Y3-WI
+    source:
+      url: http://collegecatalog.uchicago.edu/thecollege/jointdegreecomsci/
+      quote: 'This program has two admissions cycles: one in January/February to apply to the Autumn Quarter start, and one
+        in June to apply to the Winter Quarter start.'
+  requires:
+  - cmsc-b?
+  requires_source:
+    url: http://collegecatalog.uchicago.edu/thecollege/jointdegreecomsci/
+    quote: "Option 1 is designed for computer science majors who are actively engaged in research with a Computer Science faculty member and would like to continue that research in their fourth year with the goal of producing a research-oriented MS paper."

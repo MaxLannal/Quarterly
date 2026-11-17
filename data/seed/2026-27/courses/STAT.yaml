@@ -1,0 +1,1622 @@
+# Generated from the 2026-2027 UChicago College Catalog (fetched 2026-11-12) by hand-checked scripts;
+# every source.quote is copied verbatim (whitespace collapsed) from source.url. See data/seed/REVIEW.md.
+courses:
+- code: STAT 10001
+  title: Collaborative Learning in Statistics 20000
+  units: 0
+  description: This is an optional, limited enrollment workshop for students concurrently enrolled in STAT 20000 Elementary
+    Statistics. Undergraduate Team Leaders guide small groups of students in weekly workshops. The workshops focus on the
+    analysis of problem sets designed to augment and complement the Elementary Statistics material. Instead of tutoring or
+    lecturing, Team Leaders coach students as they work collaboratively in small groups on the assigned problems by referencing
+    class lectures and assigned reading materials. The workshops do not repeat but extend the substantive discussions and
+    lectures of the Elementary Statistics course. Additionally, these workshops aim to develop communication skills, cooperative
+    attitudes, and promote a teamwork environment. Because the benefits of collaborative learning can only be gained through
+    consistent effort and attendance, this zero-credit course is graded P/F based on the student's level of participation
+    and attendance.
+  prereq_text: 'Corequisite: Concurrent enrollment in STAT 20000'
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/statistics/
+    quote: STAT 10001. Collaborative Learning in Statistics 20000. 000 Units.
+  needs_review: true
+- code: STAT 10118
+  title: Pathways in Data Science
+  units: 100
+  description: Learn how to glean insights and meaning from complex sets of data in this overview of a field with growing
+    importance in business, government, and scientific research. Students will learn to use the transformational tools of
+    data science and see how researchers are applying them in the service of social good. Working with faculty from the Department
+    of Statistics, students will study how data is collected and stored and then how it is explored, visualized, and communicated.
+    Using Python, students will learn techniques for classification, prediction, inference, and regression. Then, together
+    with researchers from the University of Chicago Urban Labs, students will explore how these tools and methods can be used
+    to inform social policy in multiple domains including poverty, health, and social mobility. Throughout the course, visiting
+    guest lecturers will broaden students' perspectives by sharing how data science is used in their diverse fields, ranging
+    from business applications to biology.
+  terms_offered:
+  - SU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/statistics/
+    quote: STAT 10118. Pathways in Data Science. 100 Units.
+- code: STAT 11800
+  title: Introduction to Data Science I
+  units: 100
+  description: Data science provides tools for gaining insight into specific problems using data, through computation, statistics
+    and visualization. This course introduces students to all aspects of a data analysis process, from posing questions, designing
+    data collection strategies, management+storing and processing of data, exploratory tools and visualization, statistical
+    inference, prediction, interpretation and communication of results. Simple techniques for data analysis are used to illustrate
+    both effective and fallacious uses of data science tools. Although this course is designed to be at the level of mathematical
+    sciences courses in the Core, with little background required, we expect the students to develop computational skills
+    that will allow them to analyze data. Computation will be done using Python and Jupyter Notebook.
+  crosslists:
+  - DATA 11800
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/statistics/
+    quote: STAT 11800. Introduction to Data Science I. 100 Units.
+- code: STAT 11900
+  title: Introduction to Data Science II
+  units: 100
+  description: This course is the second quarter of a two-quarter systematic introduction to the foundations of data science,
+    as well as to practical considerations in data analysis. A broad background on probability and statistical methodology
+    will be provided. More advanced topics on data privacy and ethics, reproducibility in science, data encryption, and basic
+    machine learning will be introduced. We will explore these concepts with real-world problems from different domains.
+  crosslists:
+  - DATA 11900
+  prereq:
+    any:
+    - DATA 11800
+    - consent: instructor
+  prereq_text: DATA 11800 or consent of instructor.
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/statistics/
+    quote: STAT 11900. Introduction to Data Science II. 100 Units.
+- code: STAT 12001
+  title: Collaborative Learning in Statistics 22000
+  units: 0
+  description: This is an optional, limited enrollment workshop for students concurrently enrolled in STAT 22000 Statistical
+    Methods and Applications. Undergraduate Team Leaders guide small groups of students in weekly workshops. The workshops
+    focus on the analysis of problem sets designed to augment and complement the course material. Instead of tutoring or lecturing,
+    Team Leaders coach students as they work collaboratively in small groups on the assigned problems by referencing class
+    lectures and assigned reading materials. The workshops do not repeat but extend the substantive discussions and lectures
+    of the course. Additionally, these workshops aim to develop communication skills, cooperative attitudes, and promote a
+    teamwork environment. Because the benefits of collaborative learning can only be gained through consistent effort and
+    attendance, this zero-credit course is graded P/F based on the student's level of participation and attendance.
+  prereq_text: Concurrent enrollment in STAT 22000.
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/statistics/
+    quote: STAT 12001. Collaborative Learning in Statistics 22000. 000 Units.
+  needs_review: true
+- code: STAT 12500
+  title: Quant Methods/Envir Science
+  units: 100
+  description: TBD
+  crosslists:
+  - NTSC 12500
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/statistics/
+    quote: STAT 12500. Quant Methods/Envir Science. 100 Units.
+- code: STAT 13820
+  title: Data Science in Quantitative Finance and Risk Management
+  units: 100
+  description: Have you started or are about to start your investment journey? Do you want to know more about terms like "recession"
+    and "volatility," and how they might affect your own bank account? Are you interested in mathematics and its application
+    to human emotions? This course introduces the leading statistical models and methods which financial data researchers
+    use to understand ever-evolving markets and build insightful financial strategies, such as machine learning, risk calculation,
+    and portfolio management . At first, students will learn about the theoretical and applied foundations of regression and
+    classification designs for predicting market patterns. Next, students will gain exposure to proprietary metrics such as
+    Value-at-Risk(VaR) used to evaluate returns/losses of both single and multi-asset portfolios. Lastly, they will experiment
+    with portfolio allocation tactics by visualizing risk-to-reward graphs under various buying and selling conditions. These
+    techniques can be applied to the U.S. and foreign asset classes, including equities, commodities, and cryptocurrencies.
+    Students will experience how professionals in quantitative trading, hedge funds, and risk analytics collaborate to pitch
+    asset strategies to their clients, and form research teams to play a stock market game using the skills they learned throughout
+    the course with the objective of maximizing the teams' portfolio returns. All implementations will be done using Python.
+  crosslists:
+  - DATA 13820
+  terms_offered:
+  - SU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/statistics/
+    quote: STAT 13820. Data Science in Quantitative Finance and Risk Management. 100 Units.
+- code: STAT 20000
+  title: Elementary Statistics
+  units: 100
+  description: This course introduces statistical concepts and methods for the collection, presentation, analysis, and interpretation
+    of data. Elements of sampling, simple techniques for analysis of means, proportions, and linear association are used to
+    illustrate both effective and fallacious uses of statistics.
+  core_tags:
+  - mathematical_sciences
+  mutually_exclusive:
+  - STAT 20010
+  - STAT 22000
+  prereq_text: Master's students must be in Statistics, Computational and Applied Mathematics, Data Science, Mathematics,
+    or Financial Mathematics, or have consent of instructor.
+  terms_offered:
+  - AU
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/statistics/
+    quote: STAT 20000. Elementary Statistics. 100 Units.
+- code: STAT 20010
+  title: Elementary Statistics Through Case Study
+  units: 100
+  description: 'This course uses a single real-world case study to introduce statistical concepts throughout the quarter.
+    Topics include methods for the collection, presentation, analysis, and interpretation of data, including elements of sampling,
+    simple techniques for analysis of means, proportions, and linear association. The case study examines the development
+    of the water contamination crisis in Flint, Michigan, from its beginnings in 2014 to present day conditions. Students
+    will use statistical techniques learned in the course to probe critical facets of the story including: the demographics
+    and history of Flint; the evidence for (and uncertainty about) the existence of contamination; statistical mistakes that
+    allowed officials to initially deny the problem; and predictions for future health effects due to the contamination. Throughout
+    the course, students will practice critically examining claims made in the media and in scientific publications. At the
+    end of the quarter, students are asked to use their statistical skills to propose and defend a set of interventions to
+    benefit the children of Flint.'
+  core_tags:
+  - mathematical_sciences
+  mutually_exclusive:
+  - STAT 22000
+  prereq_text: Master's students must be in Statistics, Computational and Applied Mathematics, Data Science, Mathematics,
+    or Financial Mathematics, or have consent of instructor.
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/statistics/
+    quote: STAT 20010. Elementary Statistics Through Case Study. 100 Units.
+- code: STAT 22000
+  title: Statistical Methods and Applications
+  units: 100
+  description: This course introduces statistical techniques and methods of data analysis including the use of statistical
+    software. Examples are drawn from the biological, physical, and social sciences. Students are required to apply the techniques
+    discussed to data drawn from actual research. Topics include data description, graphical techniques, exploratory data
+    analyses, random variation and sampling, basic probability, random variables and expected values, confidence intervals,
+    and significance tests for one- and two-sample problems for means and proportions and linear regression.
+  core_tags:
+  - mathematical_sciences
+  mutually_exclusive:
+  - STAT 23400
+  prereq:
+    any:
+    - MATH 13100
+    - MATH 15100
+    - MATH 15200
+    - MATH 15300
+    - MATH 16100
+    - MATH 16110
+    - MATH 15910
+    - MATH 18300
+    - MATH 19520
+    - MATH 19620
+    - MATH 20250
+    - MATH 20300
+    - MATH 20310
+  prereq_text: MATH 13100 or 15100 or 15200 or 15300 or 16100 or 16110 or 15910 or 18300 or 19520 or 19620 or 20250 or 20300
+    or 20310. Master's students must be in Statistics, Computational and Applied Mathematics, Data Science, Mathematics, or
+    Financial Mathematics, or have consent of instructor.
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/statistics/
+    quote: STAT 22000. Statistical Methods and Applications. 100 Units.
+- code: STAT 22200
+  title: Linear Models and Experimental Design
+  units: 100
+  description: This course covers principles and techniques for the analysis of experimental data and the planning of the
+    statistical aspects of experiments. Topics include linear models; analysis of variance; randomization, blocking, and factorial
+    designs; confounding; and incorporation of covariate information.
+  prereq:
+    all:
+    - any:
+      - course: STAT 22000
+        min_grade: C+
+      - course: STAT 23400
+        min_grade: C+
+      - all:
+        - course: STAT 11800
+          min_grade: C+
+        - course: STAT 11900
+          min_grade: C+
+      - course: ECON 11010
+        min_grade: C+
+      - course: BUSN 41000
+        min_grade: C+
+      - STAT 22200
+      - STAT 22600
+      - STAT 24500
+      - STAT 24510
+      - PBHS 32100
+    - any:
+      - MATH 13200
+      - MATH 15200
+      - MATH 15300
+      - MATH 16200
+      - MATH 16210
+      - MATH 15910
+      - MATH 18300
+      - MATH 19520
+      - MATH 19620
+      - MATH 20250
+      - MATH 20300
+      - MATH 20310
+  prereq_text: '[STAT 22000 or 23400 or (STAT 11800 & 11900) or ECON 11010 or BUSN 41000 grade at least C+, or STAT 22400
+    or 22600 or 24500 or 24510 or PBHS 32100, or APStat credit STAT 22000] & [2 qtrs of calculus (MATH 13200 or 15200 or 15300
+    or 16200 or 16210 or 15910 or 18300 or 19520 or 19620 or 20250 or 20300 or 20310)]. Master''s students must be in Statistics,
+    Computational and Applied Mathematics, Data Science, Mathematics, or Financial Mathematics, or have consent of instructor.'
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/statistics/
+    quote: STAT 22200. Linear Models and Experimental Design. 100 Units.
+  needs_review: true
+- code: STAT 22400
+  title: Applied Regression Analysis
+  units: 100
+  description: 'This course introduces the methods and applications of fitting and interpreting multiple regression models.
+    The primary emphasis is on the method of least squares and its many varieties. Topics include the examination of residuals,
+    the transformation of data, strategies and criteria for the selection of a regression equation, the use of dummy variables,
+    tests of fit, nonlinear models, biases due to excluded variables and measurement error, and the use and interpretation
+    of computer package regression programs. The techniques discussed are illustrated by many real examples involving data
+    from both the natural and social sciences. Matrix notation is introduced as needed. Prerequisite: PBHS 32100. Equivalent
+    Course(s): PBHS 32400'
+  crosslists:
+  - PBHS 32400
+  prereq:
+    all:
+    - any:
+      - course: STAT 22000
+        min_grade: C+
+      - course: STAT 23400
+        min_grade: C+
+      - all:
+        - course: STAT 11800
+          min_grade: C+
+        - course: STAT 11900
+          min_grade: C+
+      - course: ECON 11010
+        min_grade: C+
+      - course: BUSN 41000
+        min_grade: C+
+      - STAT 22200
+      - STAT 22600
+      - STAT 24500
+      - STAT 24510
+      - PBHS 32100
+    - any:
+      - MATH 13200
+      - MATH 15200
+      - MATH 15300
+      - MATH 16200
+      - MATH 16210
+      - MATH 15910
+      - MATH 18300
+      - MATH 19520
+      - MATH 19620
+      - MATH 20250
+      - MATH 20300
+      - MATH 20310
+  prereq_text: '[STAT 22000 or 23400 or (STAT 11800 & 11900) or ECON 11010 or BUSN 41000 with a grade of at least C+, or STAT
+    22200 or 22600 or 24500 or 24510 or PBHS 32100, or AP Statistics credit for STAT 22000], and [MATH 13200/15200/15300/16200/16210/15910/18300/19520/19620/20250/20300
+    or 20310]. Master''s students must be in Statistics, Computational and Applied Mathematics, Data Science, Mathematics,
+    or Financial Mathematics, or have consent of instructor.'
+  terms_offered:
+  - AU
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/statistics/
+    quote: STAT 22400. Applied Regression Analysis. 100 Units.
+  needs_review: true
+- code: STAT 22401
+  title: Regression Analysis for Health and Social Research
+  units: 100
+  description: This course is an introduction to the methods and applications of fitting and interpreting multiple regression
+    models. The main emphasis is on the method of least squares. Topics include the examination of residuals, the transformation
+    of data, strategies and criteria for the selection of a regression equation, the use of dummy variables, tests of fit.
+    Stata computer package will be used extensively, but previous familiarity with Stata is not assumed. The techniques discussed
+    will be illustrated by real examples involving health and social science data.
+  crosslists:
+  - PBHS 32410
+  prereq_text: PBHS 32100 or STAT 22000 or equivalent
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/statistics/
+    quote: STAT 22401. Regression Analysis for Health and Social Research. 100 Units.
+  needs_review: true
+- code: STAT 22600
+  title: Analysis of Categorical Data
+  units: 100
+  description: This course covers statistical methods for the analysis of qualitative and counted data. Topics include description
+    and inference for binomial and multinomial data using proportions and odds ratios; multi-way contingency tables; generalized
+    linear models for discrete data; logistic regression for binary responses; multi-category logit models for nominal and
+    ordinal responses; loglinear models for counted data; and inference for matched-pairs and correlated data. Applications
+    and interpretations of statistical models are emphasized.
+  crosslists:
+  - PBHS 32600
+  prereq:
+    all:
+    - any:
+      - course: STAT 22000
+        min_grade: C+
+      - course: STAT 23400
+        min_grade: C+
+      - all:
+        - course: STAT 11800
+          min_grade: C+
+        - course: STAT 11900
+          min_grade: C+
+      - course: ECON 11010
+        min_grade: C+
+      - course: BUSN 41000
+        min_grade: C+
+      - STAT 22200
+      - STAT 22600
+      - STAT 24500
+      - STAT 24510
+      - PBHS 32100
+    - any:
+      - MATH 13200
+      - MATH 15200
+      - MATH 15300
+      - MATH 16200
+      - MATH 16210
+      - MATH 15910
+      - MATH 18300
+      - MATH 19520
+      - MATH 19620
+      - MATH 20250
+      - MATH 20300
+      - MATH 20310
+  prereq_text: '[STAT 22000 or 23400 or (STAT 11800 & 11900) or ECON 11010 or BUSN 41000 grade at least C+, or STAT 22400
+    or 22600 or 24500 or 24510 or PBHS 32100, or APStat credit STAT 22000] & [2 qtrs of calculus (MATH 13200 or 15200 or 15300
+    or 16200 or 16210 or 15910 or 18300 or 19520 or 19620 or 20250 or 20300 or 20310)]. Master''s students must be in Statistics,
+    Computational and Applied Mathematics, Data Science, Mathematics, or Financial Mathematics, or have consent of instructor.'
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/statistics/
+    quote: STAT 22600. Analysis of Categorical Data. 100 Units.
+  needs_review: true
+- code: STAT 22700
+  title: Biostatistical Methods
+  units: 100
+  description: This course is designed to provide students with tools for analyzing categorical, count, and time-to-event
+    data frequently encountered in medicine, public health, and related biological and social sciences. This course emphasizes
+    application of the methodology rather than statistical theory (e.g., recognition of the appropriate methods; interpretation
+    and presentation of results). Methods covered include contingency table analysis, Kaplan-Meier survival analysis, Cox
+    proportional-hazards survival analysis, logistic regression, and Poisson regression.
+  crosslists:
+  - PBHS 32700
+  prereq_text: PBHS 32400 or PBHS 32410 or STAT 22400 or STAT 24500 or equivalent.
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/statistics/
+    quote: STAT 22700. Biostatistical Methods. 100 Units.
+  needs_review: true
+- code: STAT 22810
+  title: Epidemiology and Population Health
+  units: 100
+  description: Epidemiology is the basic science of public health. It is the study of how diseases are distributed across
+    populations and how one designs population-based studies to learn about disease causes, with the object of identifying
+    preventive strategies. Epidemiology is a quantitative field and draws on biostatistical methods. Historically, epidemiology's
+    roots were in the investigation of infectious disease outbreaks and epidemics. Since the mid-twentieth century, the scope
+    of epidemiologic investigations has expanded to a fuller range non-infectious diseases and health problems. This course
+    will introduce classic studies, study designs and analytic methods, with a focus on global health problems.
+  crosslists:
+  - BIOS 27810
+  - HLTH 20910
+  - PBHS 30910
+  - PPHA 36410
+  prereq_text: STAT 22000 or other introductory statistics highly desirable. For BIOS students-completion of the first three
+    quarters of a Biological Sciences Fundamentals sequence.
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/statistics/
+    quote: STAT 22810. Epidemiology and Population Health. 100 Units.
+  needs_review: true
+- code: STAT 23400
+  title: Statistical Models and Methods
+  units: 100
+  description: This course is recommended for students throughout the natural and social sciences who want a broad background
+    in statistical methodology and exposure to probability models and the statistical concepts underlying the methodology.
+    Probability is developed for the purpose of modeling outcomes of random phenomena. Random variables and their expectations
+    are studied including means and variances of linear combinations and an introduction to conditional expectation. Binomial,
+    Poisson, normal, and other standard probability distributions are considered. Some probability models are studied mathematically,
+    and others are studied via computer simulation. Sampling distributions and related statistical methods are explored mathematically,
+    studied via simulation, and illustrated on data. Methods include, but are not limited to, inference for means and proportions
+    for one- and two-sample problems, two-way tables, correlation, and simple linear regression. Graphical and numerical data
+    description are used for exploration, communication of results, and comparing mathematical consequences of probability
+    models and data. Mathematics employed is to the level of single-variable differential and integral calculus and sequences
+    and series.
+  prereq:
+    any:
+    - MATH 13300
+    - MATH 15300
+    - MATH 16200
+    - MATH 16210
+    - MATH 15910
+    - MATH 18300
+    - MATH 19520
+    - MATH 19620
+    - MATH 20250
+    - MATH 20300
+    - MATH 20310
+  prereq_text: MATH 13300 or 15300 or 16200 or 16210 or 15910 or 18300 or 19520 or 19620 or 20250 or 20300 or 20310. Master's
+    students must be in Statistics, Computational and Applied Mathematics, Data Science, Mathematics, or Financial Mathematics,
+    or have consent of instructor.
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/statistics/
+    quote: STAT 23400. Statistical Models and Methods. 100 Units.
+- code: STAT 24300
+  title: Numerical Linear Algebra
+  units: 100
+  description: This course is devoted to the basic theory of linear algebra and its significant applications in scientific
+    computing. The objective is to introduce students to the tools needed to state, analyze, and solve multivariate problems.
+    Students should leave the course ready to use linear algebra in future courses in algorithms, scientific computing, mathematical
+    modeling, signal processing, multivariate statistics, data analysis, as well as the physical and social sciences. Topics
+    include Gaussian elimination, vector spaces, linear transformations and associated fundamental subspaces, orthogonality
+    and projections, eigenvectors and eigenvalues, diagonalization of real symmetric and complex Hermitian matrices, the spectral
+    theorem, and matrix decompositions (QR, and Singular Value Decompositions). Systematic methods applicable in high dimensions
+    and techniques commonly used in scientific computing are emphasized. Students enrolled in the graduate level STAT 30750
+    will have additional work in assignments, exams, and projects including applications of matrix algebra in statistics and
+    numerical computations implemented in Matlab or R. Some programming exercises will appear as optional work for students
+    enrolled in the undergraduate level STAT 24300.
+  prereq:
+    any:
+    - MATH 16300
+    - MATH 16310
+    - MATH 18300
+    - MATH 19620
+    - MATH 20300
+    - MATH 20310
+    - MATH 20320
+  prereq_text: MATH 16300 or MATH 16310 or MATH 18300 or MATH 19620 or MATH 20300 or MATH 20310 or MATH 20320. Or graduate
+    student in Statistics or Financial Mathematics. Master's students must be in Statistics, Computational and Applied Mathematics,
+    Data Science, Mathematics, or Financial Mathematics, or have consent of instructor.
+  terms_offered:
+  - AU
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/statistics/
+    quote: STAT 24300. Numerical Linear Algebra. 100 Units.
+- code: STAT 24310
+  title: 'Numerical Linear Algebra: An Introduction to Computation'
+  units: 100
+  description: Computation is an essential topic across the physical and social sciences, in statistics, data science, and
+    machine learning. Numerical linear algebra is the essential language of computation. Through a series of hands-on applications,
+    students will implement and evaluate the essential algorithms used to solve linear systems and least squares problems,
+    perform regression, orthogonalize bases, decompose signals via the FFT and related transforms, and perform matrix factorizations.
+    We will focus on the computational complexity and stability of each algorithm, as well as its practical uses. Example
+    applications include iterative optimizers used to solve large systems arising in engineering, spectral embedding methods
+    for dimension reduction (PCA, MDS, and diffusion maps), and linear methods for classification and clustering. Examples
+    will be presented as interactive coding notebooks available through a web browser. Prior coding experience is strongly
+    encouraged, though students looking for an introduction to Jupyter notebooks and Python are welcome to enroll.
+  crosslists:
+  - CAAM 24310
+  prereq_text: STAT 24300 or an equivalent introductory linear algebra class. Coding experience in Python, Matlab, R, or Julia
+    is strongly recommended. Master's students must be in Statistics, Computational and Applied Mathematics, Data Science,
+    Mathematics, or Financial Mathematics, or have consent of instructor.
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/statistics/
+    quote: 'STAT 24310. Numerical Linear Algebra: An Introduction to Computation. 100 Units.'
+  needs_review: true
+- code: STAT 24320
+  title: Applications in Numerical Linear Algebra
+  units: 100
+  description: This course delves into the practical applications of methods in numerical linear algebra. Students will see
+    how material first introduced in STAT 24300 can be applied to problems in data analysis, dynamical systems, and statistics.
+    Topics will include projection and orthogonality for optimization in linear systems; spectral methods for discrete time
+    dynamical systems and sampling algorithms including Markov Chain Monte Carlo; and matrix decompositions such as QR and
+    SVD for dimensionality reduction techniques including PCA and others. For each topic, students will have multiple opportunities
+    to apply the methods to real data sets. While this course will not emphasize programming, some familiarity with Python
+    or Julia is encouraged.
+  prereq_text: STAT 24300 or an equivalent introductory linear algebra class. Coding experience in Python, Matlab, R, or Julia
+    is recommended. Master's students must be in Statistics, Computational and Applied Mathematics, Data Science, Mathematics,
+    or Financial Mathematics, or have consent of instructor.
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/statistics/
+    quote: STAT 24320. Applications in Numerical Linear Algebra. 100 Units.
+  needs_review: true
+- code: STAT 24400
+  title: Statistical Theory and Methods I
+  units: 100
+  description: This course is the first quarter of a two-quarter systematic introduction to the principles and techniques
+    of statistics, as well as to practical considerations in the analysis of data, with emphasis on the analysis of experimental
+    data. This course covers tools from probability and the elements of statistical theory. Topics include the definitions
+    of probability and random variables, binomial and other discrete probability distributions, normal and other continuous
+    probability distributions, joint probability distributions and the transformation of random variables, principles of inference
+    (including Bayesian inference), maximum likelihood estimation, hypothesis testing and confidence intervals, likelihood
+    ratio tests, multinomial distributions, and chi-square tests. Examples are drawn from the social, physical, and biological
+    sciences. The coverage of topics in probability is limited and brief, so students who have taken a course in probability
+    find reinforcement rather than redundancy. Students who have already taken STAT 25100 have the option to take STAT 24410
+    (if offered) instead of STAT 24400.
+  prereq:
+    any:
+    - course: MATH 18400
+      min_grade: B
+    - course: MATH 19520
+      min_grade: B
+    - course: MATH 20000
+      min_grade: B
+    - course: MATH 16300
+      min_grade: C+
+    - course: MATH 16310
+      min_grade: C+
+    - course: MATH 20250
+      min_grade: C+
+    - course: MATH 20300
+      min_grade: C+
+    - course: MATH 20310
+      min_grade: C+
+    - course: MATH 20700
+      min_grade: C+
+    - all:
+      - course: MATH 15250
+        min_grade: B
+      - course: MATH 15300
+        min_grade: B
+    - consent: instructor
+  prereq_text: MATH 18400/19520/20000 w/ B or better, or MATH 16300/16310/20250 or MATH 20300 or 20310 or 20700 w/ C+ or better,
+    or (MATH 15250 and MATH 15300, both w/ B or better) or enrolled in MATH 16300/16310/18400/19520/20000/20250/20300/20310/20700
+    during preregistration. Or instructor consent. Master's students must be in Statistics, Computational and Applied Mathematics,
+    Data Science, Mathematics, or Financial Mathematics, or have consent of instructor.
+  terms_offered:
+  - AU
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/statistics/
+    quote: STAT 24400. Statistical Theory and Methods I. 100 Units.
+  needs_review: true
+- code: STAT 24410
+  title: Statistical Theory and Methods Ia
+  units: 100
+  description: This course is the first quarter of a two-quarter sequence providing a principled development of statistical
+    methods, including practical considerations in applying these methods to the analysis of data. The course begins with
+    a brief review of probability and some elementary stochastic processes, such as Poisson processes, that are relevant to
+    statistical applications. The bulk of the quarter covers principles of statistical inference from both frequentist and
+    Bayesian points of view. Specific topics include maximum likelihood estimation, posterior distributions, confidence and
+    credible intervals, principles of hypothesis testing, likelihood ratio tests, multinomial distributions, and chi-square
+    tests. Additional topics may include diagnostic plots, bootstrapping, a critical comparison of Bayesian and frequentist
+    inference, and the role of conditioning in statistical inference. Examples are drawn from the social, physical, and biological
+    sciences. The statistical software package R will be used to analyze datasets from these fields and instruction in the
+    use of R is part of the course.
+  crosslists:
+  - STAT 30030
+  prereq:
+    all:
+    - any:
+      - STAT 25100
+      - STAT 25150
+      - MATH 23500
+    - any:
+      - program: stat-*
+      - consent: instructor
+  prereq_text: STAT 25100 or STAT 25150 or MATH 23500. This course is only open to graduate students in Statistics, Applied
+    Mathematics, and Financial Mathematics, and to undergraduate Statistics majors, or by consent of instructor. Master's
+    students must be in Statistics, Computational and Applied Mathematics, Data Science, Mathematics, or Financial Mathematics,
+    or have consent of instructor.
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/statistics/
+    quote: STAT 24410. Statistical Theory and Methods Ia. 100 Units.
+  needs_review: true
+- code: STAT 24500
+  title: Statistical Theory and Methods II
+  units: 100
+  description: This course is the second quarter of a two-quarter systematic introduction to the principles and techniques
+    of statistics, as well as to practical considerations in the analysis of data, with emphasis on the analysis of experimental
+    data. This course continues from either STAT 24400 or STAT 24410 and covers statistical methodology, including the analysis
+    of variance, regression, correlation, and some multivariate analysis. Some principles of data analysis are introduced,
+    and an attempt is made to present the analysis of variance and regression in a unified framework. Statistical software
+    is used.
+  prereq:
+    all:
+    - any:
+      - MATH 18600
+      - MATH 19620
+      - MATH 20250
+      - MATH 20700
+      - STAT 24300
+    - any:
+      - STAT 24400
+      - STAT 24410
+  prereq_text: Linear algebra (MATH 18600 or 19620 or 20250 or MATH 20700 or STAT 24300 or equivalent) and (STAT 24400 or
+    STAT 24410). Master's students must be in Statistics, Computational and Applied Mathematics, Data Science, Mathematics,
+    or Financial Mathematics, or have consent of instructor.
+  terms_offered:
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/statistics/
+    quote: STAT 24500. Statistical Theory and Methods II. 100 Units.
+  needs_review: true
+- code: STAT 24510
+  title: Statistical Theory and Methods IIa
+  units: 100
+  description: This course is a continuation of STAT 24410. The focus is on theory and practice of linear models, including
+    the analysis of variance, regression, correlation, and some multivariate analysis. Additional topics may include bootstrapping
+    for regression models, nonparametric regression, and regression models with correlated errors.
+  crosslists:
+  - STAT 30040
+  prereq:
+    all:
+    - STAT 24410
+    - any:
+      - MATH 18600
+      - MATH 19620
+      - MATH 20250
+      - MATH 20700
+      - STAT 24300
+    - any:
+      - program: stat-*
+      - consent: instructor
+  prereq_text: STAT 24410 and linear algebra (MATH 18600 or 19620 or 20250 or 20700 or STAT 24300 or equivalent). This course
+    is only open to graduate students in Statistics, Applied Mathematics, and Financial Mathematics, and to undergraduate
+    Statistics majors, or by consent of instructor. Master's students must be in Statistics, Computational and Applied Mathematics,
+    Data Science, Mathematics, or Financial Mathematics, or have consent of instructor.
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/statistics/
+    quote: STAT 24510. Statistical Theory and Methods IIa. 100 Units.
+  needs_review: true
+- code: STAT 24620
+  title: 'Multivariate Statistical Analysis: Applications and Techniques'
+  units: 100
+  description: This course focuses on applications and techniques for analysis of multivariate and high dimensional data.
+    Beginning subjects cover common multivariate techniques and dimension reduction, including principal component analysis,
+    factor model, canonical correlation, multi-dimensional scaling, discriminant analysis, clustering, and correspondence
+    analysis (if time permits). Further topics on statistical learning for high dimensional data and complex structures include
+    penalized regression models (LASSO, ridge, elastic net), sparse PCA, independent component analysis, Gaussian mixture
+    model, Expectation-Maximization methods, and random forest. Theoretical derivations will be presented with emphasis on
+    motivations, applications, and hands-on data analysis.
+  crosslists:
+  - STAT 32950
+  - FINM 34700
+  prereq:
+    all:
+    - any:
+      - STAT 24300
+      - MATH 20250
+    - any:
+      - STAT 24500
+      - STAT 24510
+  prereq_text: (STAT 24300 or MATH 20250) and (STAT 24500 or STAT 24510). Graduate students in Statistics or Financial Mathematics
+    can enroll without prerequisites. Master's students must be in Statistics, Computational and Applied Mathematics, Data
+    Science, Mathematics, or Financial Mathematics, or have consent of instructor.
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/statistics/
+    quote: 'STAT 24620. Multivariate Statistical Analysis: Applications and Techniques. 100 Units.'
+- code: STAT 24630
+  title: Causal Inference Methods and Case Studies
+  units: 100
+  description: In many applications of statistics, a large proportion of the questions of interest are about causality rather
+    than questions of description or association. Would booster shots reduce the chance of getting infected by the new variant
+    of COVID-19? How does a new tax policy affect the economic activity? Can a universal health insurance program improve
+    people's health? In this class, we will introduce some basic concepts and methods in causal inference and discuss examples
+    from various disciplines. The course plans to cover the potential outcome framework, randomize experiments, randomization
+    and model-based inference, matching, sensitivity analysis, and instrumental variables. Examples include the evaluation
+    of job training programs, educational voucher schemes, clinical trials and observational data of medical treatments, smoking,
+    the influenza vaccination study, and more.
+  prereq_text: (STAT 23400 + (STAT 25100 or STAT 25150)) or (STAT 24400 or STAT 24410). Master's students must be in Statistics,
+    Computational and Applied Mathematics, Data Science, Mathematics, or Financial Mathematics, or have consent of instructor.
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/statistics/
+    quote: STAT 24630. Causal Inference Methods and Case Studies. 100 Units.
+  needs_review: true
+- code: STAT 25100
+  title: Introduction to Mathematical Probability
+  units: 100
+  description: This course covers fundamentals and axioms; combinatorial probability; conditional probability and independence;
+    binomial, Poisson, and normal distributions; the law of large numbers and the central limit theorem; and random variables
+    and generating functions.
+  prereq:
+    any:
+    - MATH 16300
+    - MATH 16310
+    - MATH 20300
+    - MATH 20310
+    - MATH 20700
+    - course: MATH 18400
+      min_grade: B-
+    - all:
+      - course: MATH 15250
+        min_grade: B-
+      - course: MATH 15300
+        min_grade: B-
+    - consent: instructor
+  prereq_text: ((MATH 16300 or MATH 16310 or MATH 20300 or MATH 20310 or MATH 20700), with no grade requirement), or ((MATH
+    18400 or (MATH 15250 and 15300)) with (either a minimum grade of B-, or a Statistics major, or currently enrolled in prerequisite
+    course during preregistration)). Or instructor consent. Master's students must be in Statistics, Computational and Applied
+    Mathematics, Data Science, Mathematics, or Financial Mathematics, or have consent of instructor.
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/statistics/
+    quote: STAT 25100. Introduction to Mathematical Probability. 100 Units.
+  needs_review: true
+- code: STAT 25150
+  title: Introduction to Mathematical Probability-A
+  units: 100
+  description: This course covers combinatorics; basic notions of probability and conditional probability; independence; expectation,
+    variance, and covariance; discrete and continuous random variables, including distributions such as binomial, normal,
+    multinomial, geometric, hypergeometric, negative binomial, and Poisson; Gambler's Ruin; generating functions and applications
+    to branching processes; the (Weak) Law of Large Numbers and its application to approximation by polynomials, i.e., the
+    Weierstrass Approximation Theorem; random walk, including proof of recurrence in one and two dimensions and transience
+    in three dimensions; characteristic functions and the Central Limit Theorem.
+  prereq:
+    any:
+    - course: MATH 16300
+      min_grade: A-
+    - course: MATH 16310
+      min_grade: A-
+    - course: MATH 20500
+      min_grade: A-
+    - course: MATH 20510
+      min_grade: A-
+    - MATH 20900
+    - consent: instructor
+  prereq_text: (MATH 16300 or MATH 16310 or MATH 20500 or MATH 20510, with a minimum grade of A-), or (MATH 20900 with no
+    grade requirement), or consent of instructor. Master's students must be in Statistics, Computational and Applied Mathematics,
+    Data Science, Mathematics, or Financial Mathematics, or have consent of instructor.
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/statistics/
+    quote: STAT 25150. Introduction to Mathematical Probability-A. 100 Units.
+- code: STAT 25211
+  title: Introduction to Random Matrices
+  units: 100
+  description: The course is an introduction to the random matrix theory. We will study the asymptotic properties of various
+    random matrix models (Wigner matrices, Gaussian ensembles, etc.). We will also discuss some applications to statistics
+    and neural networks.
+  prereq:
+    any:
+    - all:
+      - any:
+        - STAT 25100
+        - STAT 25150
+        - MATH 23500
+      - any:
+        - MATH 18600
+        - MATH 19620
+        - STAT 24300
+        - MATH 20250
+        - MATH 20700
+    - consent: instructor
+  prereq_text: (STAT 25100 or STAT 25150 or MATH 23500) and (MATH 18600 or MATH 19620 or STAT 24300 or MATH 20250 or MATH
+    20700), or consent of instructor. Master's students must be in Statistics, Computational and Applied Mathematics, Data
+    Science, Mathematics, or Financial Mathematics, or have consent of instructor.
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/statistics/
+    quote: STAT 25211. Introduction to Random Matrices. 100 Units.
+- code: STAT 25250
+  title: Fundamentals of Probability in Statistical Inference
+  units: 100
+  description: This course provides the necessary probabilistic foundation for tackling statistical problems and explores
+    how these concepts can be applied to real-world data. Beginning with an introduction to probability and statistical inference,
+    the course develops a framework for understanding convergence of probability measures, including convergence in distribution,
+    probability, and almost sure convergence. We examine the Law of Large Numbers and the Central Limit Theorem, emphasizing
+    their importance in statistical inference and real-world applications. Markov Chains are introduced with a focus on their
+    recurrence, transience, and ergodicity, along with their applications in sampling techniques like Markov Chain Monte Carlo
+    and simulated annealing. Methods for parameter estimation are explored in depth. The efficiency and asymptotic properties
+    of estimators are discussed using tools such as the Cramer-Rao bound. Hypothesis testing methods, including Wald tests,
+    t-tests, and goodness-of-fit tests, are studied in detail, with particular emphasis on their asymptotic consistency and
+    power analysis. Bayesian approaches, such as prior and posterior distributions, Bayesian confidence regions, and the Bernstein-von
+    Mises Theorem, are also covered. The course concludes with problems in regression methods, including linear models, least-squares
+    estimation, inference, and a brief exploration of high-dimensional linear regression.
+  prereq:
+    all:
+    - STAT 25100
+    - STAT 24400
+  prereq_text: STAT 25100 and STAT 24400. Master's students must be in Statistics, Computational and Applied Mathematics,
+    Data Science, Mathematics, or Financial Mathematics, or have consent of instructor.
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/statistics/
+    quote: STAT 25250. Fundamentals of Probability in Statistical Inference. 100 Units.
+- code: STAT 25300
+  title: Introduction to Probability Models
+  units: 100
+  description: This course introduces stochastic processes as models for a variety of phenomena in the physical and biological
+    sciences. Following a brief review of basic concepts in probability, we introduce stochastic processes that are popular
+    in applications in sciences (e.g., discrete time Markov chain, the Poisson process, continuous time Markov process, renewal
+    process and Brownian motion).
+  crosslists:
+  - STAT 31700
+  prereq:
+    any:
+    - STAT 24400
+    - STAT 24410
+    - STAT 25100
+    - STAT 25150
+  prereq_text: STAT 24400 or STAT 24410 or STAT 25100 or STAT 25150. Master's students must be in Statistics, Computational
+    and Applied Mathematics, Data Science, Mathematics, or Financial Mathematics, or have consent of instructor.
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/statistics/
+    quote: STAT 25300. Introduction to Probability Models. 100 Units.
+- code: STAT 26100
+  title: Time Dependent Data
+  units: 100
+  description: This course considers the modeling and analysis of data that are ordered in time. The main focus is on quantitative
+    observations taken at evenly spaced intervals and includes both time-domain and spectral approaches.
+  crosslists:
+  - STAT 33600
+  prereq:
+    any:
+    - course: STAT 24500
+      min_grade: B-
+    - course: STAT 24510
+      min_grade: C+
+    - all:
+      - course: STAT 22400
+        min_grade: B-
+      - any:
+        - MATH 16300
+        - MATH 16310
+        - MATH 18400
+        - MATH 19520
+        - MATH 20000
+        - MATH 20500
+        - MATH 20510
+        - MATH 20800
+  prereq_text: STAT 24500 w/B- or better or STAT 24510 w/C+ or better is required; alternatively STAT 22400 w/B- or better
+    and exposure to multivariate calculus (MATH 16300 or MATH 16310 or MATH 18400 or MATH 19520 or MATH 20000 or MATH 20500
+    or MATH 20510 or MATH 20800). Graduate students in Statistics or Financial Mathematics can enroll without prerequisites.
+    Some previous exposure to Fourier series is helpful but not required. Master's students must be in Statistics, Computational
+    and Applied Mathematics, Data Science, Mathematics, or Financial Mathematics, or have consent of instructor.
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/statistics/
+    quote: STAT 26100. Time Dependent Data. 100 Units.
+- code: STAT 26300
+  title: Introduction to Statistical Genetics
+  units: 100
+  description: As a result of technological advances over the past few decades, there is a tremendous wealth of genetic data
+    currently being collected. These data have the potential to shed light on the genetic factors influencing traits and diseases,
+    as well as on questions of ancestry and population history. The aim of this course is to develop a thorough understanding
+    of probabilistic models and statistical theory and methods underlying analysis of genetic data, focusing on problems in
+    complex trait mapping, with some coverage of population genetics. Although the case studies are all in the area of statistical
+    genetics, the statistical inference topics, which will include likelihood-based inference, linear mixed models, and restricted
+    maximum likelihood, among others, are widely applicable to other areas. No biological background is needed, but a strong
+    foundation in linear algebra, as well as probability and statistics at the level of STAT 24400-STAT 24500 or higher is
+    assumed.
+  crosslists:
+  - STAT 35490
+  prereq:
+    any:
+    - STAT 24500
+    - STAT 24510
+    - STAT 30200
+    - consent: instructor
+  prereq_text: STAT 24500 or 24510 or 30200 or consent of instructor. Master's students must be in Statistics, Computational
+    and Applied Mathematics, Data Science, Mathematics, or Financial Mathematics, or have consent of instructor.
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/statistics/
+    quote: STAT 26300. Introduction to Statistical Genetics. 100 Units.
+- code: STAT 26700
+  title: History of Statistics
+  units: 100
+  description: This course covers topics in the history of statistics, from the eleventh century to the middle of the twentieth
+    century. We focus on the period from 1650 to 1950, with an emphasis on the mathematical developments in the theory of
+    probability and how they came to be used in the sciences. Our goals are both to quantify uncertainty in observational
+    data and to develop a conceptual framework for scientific theories. This course includes broad views of the development
+    of the subject and closer looks at specific people and investigations, including reanalyses of historical data.
+  crosslists:
+  - HIPS 25600
+  - CHSS 32900
+  - STAT 36700
+  prereq_text: Prior statistics course
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/statistics/
+    quote: STAT 26700. History of Statistics. 100 Units.
+  needs_review: true
+- code: STAT 27400
+  title: Nonparametric Inference
+  units: 100
+  description: Nonparametric inference is about developing statistical methods and models that make weak assumptions. A typical
+    nonparametric approach estimates a nonlinear function from an infinite dimensional space rather than a linear model from
+    a finite dimensional space. This course gives an introduction to nonparametric inference, with a focus on density estimation,
+    regression, confidence sets, orthogonal functions, random processes, and kernels. The course treats nonparametric methodology
+    and its use, together with theory that explains the statistical properties of the methods.
+  crosslists:
+  - DATA 27400
+  - STAT 37400
+  - DATA 37400
+  prereq_text: STAT 24400 or STAT 24410 w/B- or better is required; alternatively STAT 22400 w/B+ or better and exposure to
+    multivariate calculus (MATH 16300 or MATH 16310 or MATH 18400 or MATH 19520 or MATH 20000 or MATH 20500 or MATH 20510
+    or MATH 20800) and linear algebra (MATH 18600 or 19620 or 20250 or 20700 or STAT 24300 or equivalent). Master's students
+    in Statistics can enroll without prerequisites. Master's students must be in Statistics, Computational and Applied Mathematics,
+    Data Science, Mathematics, or Financial Mathematics, or have consent of instructor.
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/statistics/
+    quote: STAT 27400. Nonparametric Inference. 100 Units.
+  needs_review: true
+- code: STAT 27410
+  title: Introduction to Bayesian Data Analysis
+  units: 100
+  description: In recent years, Bayes and empirical Bayes (EB) methods have continued to increase in popularity and impact.
+    These methods, combining information from similar and independent experiments and yield improved estimation of both individual
+    and shared model characteristics, have been widely applied in many fields such as biomedical science, public health, epidemiology,
+    education, social science, ecomnomics, psychology, agriculture and engineering. In this course, we will introduce Bayes
+    and EB methods, as well as the necessary tools needed to evaluate their performances comparing with the frequentist methods.
+    For computation, we will introduce Markov chain Monte Carlo methods such as the Gibbs sampler algorithm. We will use R
+    and RStan to implement these methods and solve real world problems. Students in this class are required to do final projects
+    in small groups. During the last week of the quarter, each group will have the opportunity to present the final project
+    to the class. Final reports based on the group projects will be due by the end of the exam week. Due to the attention
+    required from the instructor to supervise the final projects, the class size will be capped at the enrollment limit.
+  prereq:
+    all:
+    - any:
+      - STAT 23400
+      - STAT 24400
+      - STAT 24410
+    - any:
+      - STAT 22400
+      - STAT 22600
+      - STAT 24500
+      - STAT 24510
+  prereq_text: (STAT 23400 or 24400 or 24410) and (STAT 22400 or 22600 or 24500 or 24510). Master's students must be in Statistics,
+    Computational and Applied Mathematics, Data Science, Mathematics, or Financial Mathematics, or have consent of instructor.
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/statistics/
+    quote: STAT 27410. Introduction to Bayesian Data Analysis. 100 Units.
+- code: STAT 27420
+  title: Introduction to Causality with Machine Learning
+  units: 100
+  description: This course is an introduction to causal inference. We'll cover the core ideas of causal inference and what
+    distinguishes it from traditional observational modeling. This includes an introduction to some foundational ideas---structural
+    equation models, causal directed acyclic graphs, and then do calculus. The course has a particular emphasis on the estimation
+    of causal effects using machine learning methods.
+  crosslists:
+  - DATA 27420
+  prereq_text: '[STAT 24500 or STAT 24510 or STAT 27725] with a grade of B or higher or consent of instructor. Master''s students
+    must be in Statistics, Computational and Applied Mathematics, Data Science, Mathematics, or Financial Mathematics, or
+    have consent of instructor.'
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/statistics/
+    quote: STAT 27420. Introduction to Causality with Machine Learning. 100 Units.
+  needs_review: true
+- code: STAT 27700
+  title: Mathematical Foundations of Machine Learning
+  units: 100
+  description: This course is an introduction to the mathematical foundations of machine learning that focuses on matrix methods
+    and features real-world applications ranging from classification and clustering to denoising and data analysis. Mathematical
+    topics covered include linear equations, regression, regularization, the singular value decomposition, and iterative algorithms.
+    Machine learning topics include classification and regression, support vector machines, kernel methods, clustering, matrix
+    completion, neural networks, and deep learning. Students are expected to have taken calculus and have exposure to numerical
+    computing (e.g. Matlab, Python, Julia, R).
+  notes: Undergraduate students are not allowed to enroll in CMSC 35300.
+  crosslists:
+  - CMSC 25300
+  - CMSC 35300
+  prereq:
+    any:
+    - CMSC 11900
+    - CMSC 12200
+    - CMSC 14100
+    - CMSC 15200
+    - CMSC 16200
+  prereq_text: CMSC 11900 or CMSC 12200 or CMSC 14100 or CMSC 15200 or CMSC 16200
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/statistics/
+    quote: STAT 27700. Mathematical Foundations of Machine Learning. 100 Units.
+- code: STAT 27725
+  title: Machine Learning
+  units: 100
+  description: 'This course introduces the foundations of machine learning and provides a systematic view of a range of machine
+    learning algorithms. Topics covered include two parts: (1) a gentle introduction of machine learning: generalization and
+    model selection, regression and classification, kernels, neural networks, clustering and dimensionality reduction; (2)
+    a statistical perspective of machine learning, where we will dive into several probabilistic supervised and unsupervised
+    models, including logistic regression, Gaussian mixture models, and generative adversarial networks.'
+  crosslists:
+  - CMSC 25400
+  prereq:
+    any:
+    - CMSC 25300
+    - CMSC 31150
+    - CMSC 35300
+    - CMSC 37810
+    - STAT 24300
+    - STAT 24500
+    - all:
+      - any:
+        - MATH 18600
+        - MATH 20250
+      - any:
+        - CMSC 12100
+        - CMSC 14100
+        - CMSC 15100
+        - CMSC 16100
+      - any:
+        - STAT 25100
+        - STAT 25150
+  prereq_text: CMSC 25300 or CMSC 31150 or CMSC 35300 or CMSC 37810 or STAT 24300 or STAT 24500 or ((MATH 18600 or MATH 20250)
+    and (CMSC 12100 or CMSC 14100 or CMSC 15100 or CMSC 16100) and (STAT 25100 or STAT 25150))
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/statistics/
+    quote: STAT 27725. Machine Learning. 100 Units.
+- code: STAT 27750
+  title: Further Topics in Machine Learning
+  units: 100
+  description: This is an intermediate-to-advanced course in machine learning. You should have taken at least one course in
+    machine learning before and be familiar with both theoretical foundations---(empirical) risk minimization and friends---as
+    well as having some practical experience fitting machine learning models to data. The intended material covered by the
+    course is boosting, (fine-tuning of) neural networks, model evaluation, and domain shifts.
+  prereq_text: STAT 24500 or STAT 24510 or [STAT 27725 with a grade of B or higher]. Master's students must be in Statistics,
+    Computational and Applied Mathematics, Data Science, Mathematics, or Financial Mathematics, or have consent of instructor.
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/statistics/
+    quote: STAT 27750. Further Topics in Machine Learning. 100 Units.
+  needs_review: true
+- code: STAT 27751
+  title: Trustworthy Machine Learning
+  units: 100
+  description: Machine learning systems are routinely used in safety critical situations in the real world. However, they
+    often dramatically fail! This course covers foundational and practical concerns in building machine learning systems that
+    can be trusted. Topics include foundational issues---when do systems generalize, and why, essential results in fairness
+    and domain shifts, and evaluations beyond standard test/train splits. This is an intermediate level course in machine
+    learning; students should have at least one previous course in machine learning.
+  crosslists:
+  - STAT 37787
+  - DATA 27751
+  prereq:
+    any:
+    - STAT 27700
+    - STAT 37710
+    - consent: instructor
+  prereq_text: STAT 27700 or STAT 37710 or consent of instructor.
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/statistics/
+    quote: STAT 27751. Trustworthy Machine Learning. 100 Units.
+- code: STAT 27815
+  title: Practical R Programming
+  units: 100
+  description: This course covers a practical set of skills vital to modern statistics and data science in handling messy,
+    real-world data. Throughout the course, students will practice reproducible research with version control and literate
+    programming. They will think algorithmically with base R objects, control flow, functions, and iteration. Students will
+    also be introduced to a variety of tidyverse data wrangling methods to import, clean, transform, join, and summarize their
+    data. Finally, students will visualize and explore data using the grammar of graphics framework. Additional introductory
+    topics may be discussed. No programming experience is required, although some will be helpful. Credit may not be earned
+    for both STAT 27815 and STAT 37815.
+  prereq:
+    any:
+    - STAT 22000
+    - STAT 22200
+    - STAT 22400
+    - STAT 22600
+    - STAT 23400
+    - STAT 24410
+    - STAT 24500
+    - STAT 24510
+    - STAT 34300
+    - consent: instructor
+  prereq_text: STAT 22000 or 22200 or 22400 or 22600 or 23400 or 24410 or 24500 or 24510 or 34300 or consent of instructor.
+    Master's students must be in Statistics, Computational and Applied Mathematics, Data Science, Mathematics, or Financial
+    Mathematics, or have consent of instructor.
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/statistics/
+    quote: STAT 27815. Practical R Programming. 100 Units.
+- code: STAT 27850
+  title: Multiple Testing, Modern Inference, and Replicability
+  units: 100
+  description: This course examines the problems of multiple testing and statistical inference from a modern point of view.
+    High-dimensional data is now common in many applications across the biological, physical, and social sciences. With this
+    increased capacity to generate and analyze data, classical statistical methods may no longer ensure the reliability or
+    replicability of scientific discoveries. We will examine a range of modern methods that provide statistical inference
+    tools in the context of modern large-scale data analysis. The course will have weekly assignments as well as a final project,
+    both of which will include both theoretical and computational components.
+  crosslists:
+  - STAT 30850
+  prereq_text: STAT 24400 or STAT 24410. Familiarity with regression and with coding in R are recommended. Master's students
+    must be in Statistics, Computational and Applied Mathematics, Data Science, Mathematics, or Financial Mathematics, or
+    have consent of instructor.
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/statistics/
+    quote: STAT 27850. Multiple Testing, Modern Inference, and Replicability. 100 Units.
+  needs_review: true
+- code: STAT 27855
+  title: Hypothesis Testing with Empirical Bayes Methodology
+  units: 100
+  description: Large scale data sets regularly produced in fields such as biology, social sciences, and neuroscience bring
+    new challenges, like controlling the amount of false positives when testing many hypotheses, as well as the opportunity
+    to leverage information across the entire dataset toward making individual inferences. In this course, we will study theoretical
+    foundations and practical aspects of hypothesis testing in a Bayesian framework. We will focus attention on the local
+    false discovery rate (lfdr), which represents the probability that the null hypothesis is true given the data, and learn
+    several methods for estimating this quantity. Decision theory provides a formal connection between quantities of interest
+    in a Bayesian framework to population parameters in a strictly frequentist model, where the truth status of each null
+    hypothesis is fixed and unknown. We may also discuss methodology for estimating the null distribution, and methods for
+    finite-sample lfdr control if time permits. Homework assignments will have theoretical and computational components.
+  prereq:
+    any:
+    - STAT 24400
+    - STAT 24410
+    - consent: instructor
+  prereq_text: STAT 24400 or STAT 24410 or consent of instructor. Master's students must be in Statistics, Computational and
+    Applied Mathematics, Data Science, Mathematics, or Financial Mathematics, or have consent of instructor.
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/statistics/
+    quote: STAT 27855. Hypothesis Testing with Empirical Bayes Methodology. 100 Units.
+- code: STAT 28000
+  title: Optimization
+  units: 100
+  description: This is an introductory course on optimization that will cover the rudiments of unconstrained and constrained
+    optimization of a real-valued multivariate function. The focus is on the settings where this function is, respectively,
+    linear, quadratic, convex, or differentiable. Time permitting, topics such as nonsmooth, integer, vector, and dynamic
+    optimization may be briefly addressed. Materials will include basic duality theory, optimality conditions, and intractability
+    results, as well as algorithms and applications.
+  crosslists:
+  - CAAM 28000
+  prereq:
+    all:
+    - any:
+      - MATH 20500
+      - MATH 20510
+      - MATH 20520
+      - MATH 20800
+    - any:
+      - STAT 24300
+      - MATH 20250
+      - MATH 20700
+  prereq_text: (MATH 20500 or MATH 20510 or MATH 20520 or MATH 20800) and (STAT 24300 or MATH 20250 or MATH 20700). Master's
+    students must be in Statistics, Computational and Applied Mathematics, Data Science, Mathematics, or Financial Mathematics,
+    or have consent of instructor.
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/statistics/
+    quote: STAT 28000. Optimization. 100 Units.
+- code: STAT 28200
+  title: Dynamical Systems with Applications
+  units: 100
+  description: This course is concerned with the analysis of nonlinear dynamical systems arising in the context of mathematical
+    modeling. The focus is on qualitative analysis of solutions as trajectories in phase space, including the role of invariant
+    manifolds as organizers of behavior. Local and global bifurcations, which occur as system parameters change, will be highlighted,
+    along with other dimension reduction methods that arise when there is a natural time-scale separation. Concepts of bi-stability,
+    spontaneous oscillations, and chaotic dynamics will be explored through investigation of conceptual mathematical models
+    arising in the physical and biological sciences.
+  crosslists:
+  - CAAM 31405
+  - STAT 31405
+  - CAAM 28200
+  prereq_text: MATH 27300 or (Multivariable calculus (MATH 18400 or 19520 or 20000 or 20400 or 20410 or PHYS 22100 or equivalent),
+    AND linear algebra, including eigenvalues & eigenvectors (MATH 18600 or 19620 or 20250 or 20700 or STAT 24300)). Previous
+    knowledge of elementary differential equations is helpful but not required. Master's students must be in Statistics, Computational
+    and Applied Mathematics, Data Science, Mathematics, or Financial Mathematics, or have consent of instructor.
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/statistics/
+    quote: STAT 28200. Dynamical Systems with Applications. 100 Units.
+  needs_review: true
+- code: STAT 29700
+  title: Undergraduate Research
+  units: 100
+  description: This course consists of reading and research in an area of statistics or probability under the guidance of
+    a faculty member in the Department of Statistics.
+  prereq_text: Consent of faculty adviser and Departmental Adviser for Majors
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/statistics/
+    quote: STAT 29700. Undergraduate Research. 100 Units.
+  needs_review: true
+- code: STAT 29900
+  title: Bachelor's Paper
+  units: 100
+  description: This course consists of reading and research in an area of statistics or probability under the guidance of
+    a faculty member in the Department of Statistics, leading to a bachelor's paper. A good draft of the paper must be submitted
+    by the first day of exam period.
+  prereq_text: Consent of faculty adviser and Departmental Adviser for Majors
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/statistics/
+    quote: STAT 29900. Bachelor's Paper. 100 Units.
+  needs_review: true
+- code: STAT 30030
+  title: Statistical Theory and Methods Ia
+  units: 100
+  notes: Cross-listed with STAT 24410 (its catalog block lists STAT 30030 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from STAT 24410.
+  crosslists:
+  - STAT 24410
+  prereq:
+    all:
+    - any:
+      - STAT 25100
+      - STAT 25150
+      - MATH 23500
+    - any:
+      - program: stat-*
+      - consent: instructor
+  prereq_text: STAT 25100 or STAT 25150 or MATH 23500. This course is only open to graduate students in Statistics, Applied
+    Mathematics, and Financial Mathematics, and to undergraduate Statistics majors, or by consent of instructor. Master's
+    students must be in Statistics, Computational and Applied Mathematics, Data Science, Mathematics, or Financial Mathematics,
+    or have consent of instructor.
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/statistics/
+    quote: 'Equivalent Course(s): STAT 30030'
+  needs_review: true
+- code: STAT 30040
+  title: Statistical Theory and Methods IIa
+  units: 100
+  notes: Cross-listed with STAT 24510 (its catalog block lists STAT 30040 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from STAT 24510.
+  crosslists:
+  - STAT 24510
+  prereq:
+    all:
+    - STAT 24410
+    - any:
+      - MATH 18600
+      - MATH 19620
+      - MATH 20250
+      - MATH 20700
+      - STAT 24300
+    - any:
+      - program: stat-*
+      - consent: instructor
+  prereq_text: STAT 24410 and linear algebra (MATH 18600 or 19620 or 20250 or 20700 or STAT 24300 or equivalent). This course
+    is only open to graduate students in Statistics, Applied Mathematics, and Financial Mathematics, and to undergraduate
+    Statistics majors, or by consent of instructor. Master's students must be in Statistics, Computational and Applied Mathematics,
+    Data Science, Mathematics, or Financial Mathematics, or have consent of instructor.
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/statistics/
+    quote: 'Equivalent Course(s): STAT 30040'
+  needs_review: true
+- code: STAT 30850
+  title: Multiple Testing, Modern Inference, and Replicability
+  units: 100
+  notes: Cross-listed with STAT 27850 (its catalog block lists STAT 30850 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from STAT 27850.
+  crosslists:
+  - STAT 27850
+  prereq_text: STAT 24400 or STAT 24410. Familiarity with regression and with coding in R are recommended. Master's students
+    must be in Statistics, Computational and Applied Mathematics, Data Science, Mathematics, or Financial Mathematics, or
+    have consent of instructor.
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/statistics/
+    quote: 'Equivalent Course(s): STAT 30850'
+  needs_review: true
+- code: STAT 30900
+  title: 'Mathematical Computation I: Matrix Computation Course'
+  units: 100
+  notes: Cross-listed with CMSC 37810 (its catalog block lists STAT 30900 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from CMSC 37810.
+  crosslists:
+  - CMSC 37810
+  prereq_text: Linear algebra (STAT 24300 or equivalent) and some previous experience with statistics. Master's students must
+    be in Statistics, Computational and Applied Mathematics, Data Science, Mathematics, or Financial Mathematics, or have
+    consent of instructor.
+  terms_offered:
+  - AU
+  source:
+    url: http://graduateannouncements.uchicago.edu/graduate/departmentofcomputerscience/
+    quote: 'Equivalent Course(s): STAT 30900, CAAM 30900'
+  needs_review: true
+- code: STAT 31015
+  title: 'Mathematical Computation IIA: Convex Optimization'
+  units: 100
+  notes: Cross-listed with CMSC 35470 (its catalog block lists STAT 31015 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from CMSC 35470.
+  crosslists:
+  - CMSC 35470
+  prereq:
+    any:
+    - STAT 30900
+    - STAT 31430
+    - consent: instructor
+  prereq_text: STAT 30900 or STAT 31430 or consent of instructor.
+  terms_offered:
+  - SP
+  source:
+    url: http://graduateannouncements.uchicago.edu/graduate/departmentofcomputerscience/
+    quote: 'Equivalent Course(s): BUSN 36903, CAAM 31015, STAT 31015, TTIC 31070'
+- code: STAT 31100
+  title: 'Mathematical Computation III: Numerical Methods for PDE''s'
+  units: 100
+  notes: Cross-listed with CMSC 37812 (its catalog block lists STAT 31100 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from CMSC 37812.
+  crosslists:
+  - CMSC 37812
+  prereq_text: Some prior exposure to differential equations and linear algebra
+  source:
+    url: http://graduateannouncements.uchicago.edu/graduate/departmentofcomputerscience/
+    quote: 'Equivalent Course(s): STAT 31100, CAAM 31100, MATH 38309'
+  needs_review: true
+- code: STAT 31140
+  title: 'Computational Imaging: Theory and Methods'
+  units: 100
+  notes: Cross-listed with CMSC 31140 (its catalog block lists STAT 31140 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from CMSC 31140.
+  crosslists:
+  - CMSC 31140
+  source:
+    url: http://graduateannouncements.uchicago.edu/graduate/departmentofcomputerscience/
+    quote: 'Equivalent Course(s): CAAM 31140, STAT 31140'
+- code: STAT 31405
+  title: Dynamical Systems with Applications
+  units: 100
+  notes: Cross-listed with STAT 28200 (its catalog block lists STAT 31405 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from STAT 28200.
+  crosslists:
+  - STAT 28200
+  prereq_text: MATH 27300 or (Multivariable calculus (MATH 18400 or 19520 or 20000 or 20400 or 20410 or PHYS 22100 or equivalent),
+    AND linear algebra, including eigenvalues & eigenvectors (MATH 18600 or 19620 or 20250 or 20700 or STAT 24300)). Previous
+    knowledge of elementary differential equations is helpful but not required. Master's students must be in Statistics, Computational
+    and Applied Mathematics, Data Science, Mathematics, or Financial Mathematics, or have consent of instructor.
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/statistics/
+    quote: 'Equivalent Course(s): CAAM 31405, STAT 31405, CAAM 28200'
+  needs_review: true
+- code: STAT 31700
+  title: Introduction to Probability Models
+  units: 100
+  notes: Cross-listed with STAT 25300 (its catalog block lists STAT 31700 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from STAT 25300.
+  crosslists:
+  - STAT 25300
+  prereq:
+    any:
+    - STAT 24400
+    - STAT 24410
+    - STAT 25100
+    - STAT 25150
+  prereq_text: STAT 24400 or STAT 24410 or STAT 25100 or STAT 25150. Master's students must be in Statistics, Computational
+    and Applied Mathematics, Data Science, Mathematics, or Financial Mathematics, or have consent of instructor.
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/statistics/
+    quote: 'Equivalent Course(s): STAT 31700'
+- code: STAT 32950
+  title: 'Multivariate Statistical Analysis: Applications and Techniques'
+  units: 100
+  notes: Cross-listed with STAT 24620 (its catalog block lists STAT 32950 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from STAT 24620.
+  crosslists:
+  - STAT 24620
+  prereq:
+    all:
+    - any:
+      - STAT 24300
+      - MATH 20250
+    - any:
+      - STAT 24500
+      - STAT 24510
+  prereq_text: (STAT 24300 or MATH 20250) and (STAT 24500 or STAT 24510). Graduate students in Statistics or Financial Mathematics
+    can enroll without prerequisites. Master's students must be in Statistics, Computational and Applied Mathematics, Data
+    Science, Mathematics, or Financial Mathematics, or have consent of instructor.
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/statistics/
+    quote: 'Equivalent Course(s): STAT 32950, FINM 34700'
+- code: STAT 33600
+  title: Time Dependent Data
+  units: 100
+  notes: Cross-listed with STAT 26100 (its catalog block lists STAT 33600 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from STAT 26100.
+  crosslists:
+  - STAT 26100
+  prereq:
+    any:
+    - course: STAT 24500
+      min_grade: B-
+    - course: STAT 24510
+      min_grade: C+
+    - all:
+      - course: STAT 22400
+        min_grade: B-
+      - any:
+        - MATH 16300
+        - MATH 16310
+        - MATH 18400
+        - MATH 19520
+        - MATH 20000
+        - MATH 20500
+        - MATH 20510
+        - MATH 20800
+  prereq_text: STAT 24500 w/B- or better or STAT 24510 w/C+ or better is required; alternatively STAT 22400 w/B- or better
+    and exposure to multivariate calculus (MATH 16300 or MATH 16310 or MATH 18400 or MATH 19520 or MATH 20000 or MATH 20500
+    or MATH 20510 or MATH 20800). Graduate students in Statistics or Financial Mathematics can enroll without prerequisites.
+    Some previous exposure to Fourier series is helpful but not required. Master's students must be in Statistics, Computational
+    and Applied Mathematics, Data Science, Mathematics, or Financial Mathematics, or have consent of instructor.
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/statistics/
+    quote: 'Equivalent Course(s): STAT 33600'
+- code: STAT 35490
+  title: Introduction to Statistical Genetics
+  units: 100
+  notes: Cross-listed with STAT 26300 (its catalog block lists STAT 35490 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from STAT 26300.
+  crosslists:
+  - STAT 26300
+  prereq:
+    any:
+    - STAT 24500
+    - STAT 24510
+    - STAT 30200
+    - consent: instructor
+  prereq_text: STAT 24500 or 24510 or 30200 or consent of instructor. Master's students must be in Statistics, Computational
+    and Applied Mathematics, Data Science, Mathematics, or Financial Mathematics, or have consent of instructor.
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/statistics/
+    quote: 'Equivalent Course(s): STAT 35490'
+- code: STAT 36700
+  title: History of Statistics
+  units: 100
+  notes: Cross-listed with STAT 26700 (its catalog block lists STAT 36700 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from STAT 26700.
+  crosslists:
+  - STAT 26700
+  prereq_text: Prior statistics course
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/statistics/
+    quote: 'Equivalent Course(s): HIPS 25600, CHSS 32900, STAT 36700'
+  needs_review: true
+- code: STAT 37400
+  title: Nonparametric Inference
+  units: 100
+  notes: Cross-listed with DATA 27400 (its catalog block lists STAT 37400 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from DATA 27400.
+  crosslists:
+  - DATA 27400
+  prereq_text: STAT 24400 or STAT 24410 w/B- or better is required; alternatively STAT 22400 w/B+ or better and exposure to
+    multivariate calculus (MATH 16300 or MATH 16310 or MATH 18400 or MATH 19520 or MATH 20000 or MATH 20500 or MATH 20510
+    or MATH 20800) and linear algebra (MATH 18600 or 19620 or 20250 or 20700 or STAT 24300 or equivalent). Master's students
+    in Statistics can enroll without prerequisites. Master's students must be in Statistics, Computational and Applied Mathematics,
+    Data Science, Mathematics, or Financial Mathematics, or have consent of instructor.
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/datascience/
+    quote: 'Equivalent Course(s): STAT 27400, STAT 37400, DATA 37400'
+  needs_review: true
+- code: STAT 37601
+  title: Machine Learning and Large-Scale Data Analysis
+  units: 100
+  description: This course is an introduction to machine learning and the analysis of large data sets using distributed computation
+    and storage infrastructure. Basic machine learning methodology and relevant statistical theory will be presented in lectures.
+    Homework exercises will give students hands-on experience with the methods on different types of data. Methods include
+    algorithms for clustering, binary classification, and hierarchical Bayesian modeling. Data types include images, archives
+    of scientific articles, online ad clickthrough logs, and public records of the City of Chicago. Programming will be based
+    on Python and R, but previous exposure to these languages is not assumed.
+  notes: The prerequisites are under review and may change.
+  crosslists:
+  - CMSC 25025
+  prereq:
+    all:
+    - any:
+      - CMSC 25300
+      - CMSC 35300
+      - STAT 27700
+      - TTIC 31020
+    - any:
+      - STAT 24400
+      - STAT 24410
+      - STAT 24500
+      - STAT 24510
+  prereq_text: '[CMSC 25300 or CMSC 35300 or STAT 27700 or TTIC 31020] and [STAT 24400 or STAT 24410 or STAT 24500 or STAT
+    24510]'
+  terms_offered:
+  - SP
+  source:
+    url: http://graduateannouncements.uchicago.edu/graduate/departmentofstatistics/
+    quote: STAT 37601. Machine Learning and Large-Scale Data Analysis. 100 Units.
+- code: STAT 37710
+  title: Machine Learning
+  units: 100
+  notes: Cross-listed with CMSC 35400 (its catalog block lists STAT 37710 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from CMSC 35400.
+  crosslists:
+  - CMSC 35400
+  prereq:
+    any:
+    - any:
+      - CMSC 35300
+      - STAT 27700
+      - STAT 31430
+      - STAT 30900
+      - STAT 24300
+      - STAT 24500
+      - STAT 24510
+    - consent: instructor
+  prereq_text: 'Must be a PhD or MS student in Statistics, Computer Science, or Computational and Applied Mathematics, and
+    has taken any one of: CMSC 35300/STAT 27700, STAT 31430, STAT 30900, STAT 24300, STAT 24500, or STAT 24510. Or consent
+    of the instructor.'
+  source:
+    url: http://graduateannouncements.uchicago.edu/graduate/departmentofcomputerscience/
+    quote: 'Equivalent Course(s): STAT 37710, CAAM 37710'
+  needs_review: true
+- code: STAT 37787
+  title: Trustworthy Machine Learning
+  units: 100
+  notes: Cross-listed with DATA 27751 (its catalog block lists STAT 37787 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from DATA 27751.
+  crosslists:
+  - DATA 27751
+  prereq:
+    any:
+    - STAT 27700
+    - STAT 37710
+    - consent: instructor
+  prereq_text: STAT 27700 or STAT 37710 or consent of instructor.
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/datascience/
+    quote: 'Equivalent Course(s): STAT 37787, STAT 27751'
+- code: STAT 37788
+  title: Machine Learning on Graphs, Groups and Manifolds
+  units: 100
+  notes: Cross-listed with CMSC 35430 (its catalog block lists STAT 37788 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from CMSC 35430.
+  crosslists:
+  - CMSC 35430
+  source:
+    url: http://graduateannouncements.uchicago.edu/graduate/departmentofcomputerscience/
+    quote: 'Equivalent Course(s): CAAM 37788, STAT 37788'
+- code: STAT 37794
+  title: Special Topics in Machine Learning
+  units: 100
+  notes: Cross-listed with CMSC 35490 (its catalog block lists STAT 37794 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from CMSC 35490.
+  crosslists:
+  - CMSC 35490
+  prereq_text: Students should be familiar with a numerical programming language like Python, Julia, R, or Matlab and the
+    content of CMSC 35400. Students should also have familiarity with the contents of MATH 27300 and MATH 27500 or similar.
+  terms_offered:
+  - AU
+  source:
+    url: http://graduateannouncements.uchicago.edu/graduate/departmentofcomputerscience/
+    quote: 'Equivalent Course(s): CAAM 37794, STAT 37794, MATH 37794'
+  needs_review: true
+- code: STAT 37799
+  title: 'Topics in Machine Learning: Machine Learning and Inverse Problems'
+  units: 100
+  notes: Cross-listed with CMSC 37799 (its catalog block lists STAT 37799 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from CMSC 37799.
+  crosslists:
+  - CMSC 37799
+  prereq:
+    any:
+    - STAT 37710
+    - CAAM 37710
+    - CMSC 35400
+    - consent: instructor
+  prereq_text: STAT 37710/CAAM 37710/CMSC 35400 or consent of instructor.
+  source:
+    url: http://graduateannouncements.uchicago.edu/graduate/departmentofcomputerscience/
+    quote: 'Equivalent Course(s): STAT 37799, CAAM 37799'

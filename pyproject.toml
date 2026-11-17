@@ -1,0 +1,88 @@
+[project]
+name = "quarterly"
+version = "0.1.0"
+description = "Quarterly (QuadPlan) workspace root: UChicago course planner + course forum"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "planner-core",
+    "llm-gateway",
+    "quarterly-api",
+    "quarterly-worker",
+    "quarterly-scraper",
+]
+
+[tool.uv]
+package = false
+
+[tool.uv.workspace]
+members = [
+    "packages/planner_core",
+    "packages/llm_gateway",
+    "services/api",
+    "services/worker",
+    "services/scraper",
+]
+
+[tool.uv.sources]
+planner-core = { workspace = true }
+llm-gateway = { workspace = true }
+quarterly-api = { workspace = true }
+quarterly-worker = { workspace = true }
+quarterly-scraper = { workspace = true }
+
+[dependency-groups]
+dev = [
+    "ruff>=0.8",
+    "mypy>=1.13",
+    "pytest>=8.3",
+    "pytest-cov>=6.0",
+    "hypothesis>=6.120",
+    "httpx>=0.28",
+    "fakeredis>=2.26",
+    "types-PyYAML>=6.0",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+extend-exclude = ["apps/web", "**/node_modules", "*.md", "tools/ascii-scene"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "N", "SIM", "RUF"]
+ignore = ["RUF012"]
+
+[tool.ruff.lint.per-file-ignores]
+"**/tests/**" = ["N802", "N806", "E501"]
+"services/api/api/migrations/**" = ["E501"]
+# Live-test harness: synthetic forum posts and report tables are long lines of data.
+"evals/live/**" = ["E501"]
+
+[tool.mypy]
+python_version = "3.12"
+plugins = ["pydantic.mypy"]
+warn_unused_ignores = true
+warn_redundant_casts = true
+ignore_missing_imports = false
+exclude = ["services/api/api/migrations/"]
+
+[[tool.mypy.overrides]]
+module = ["arq.*", "ortools.*"]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+addopts = "-q --import-mode=importlib"
+pythonpath = ["services/api/tests", "packages/planner_core/tests", "services/worker/tests"]
+testpaths = [
+    "packages/planner_core/tests",
+    "packages/llm_gateway/tests",
+    "services/api/tests",
+    "services/worker/tests",
+    "services/scraper/tests",
+]
+markers = ["db: needs a reachable PostgreSQL server (DATABASE_URL)"]
+
+[tool.coverage.run]
+branch = true
+
+[tool.coverage.report]
+exclude_lines = ["pragma: no cover", "if TYPE_CHECKING:", "raise NotImplementedError", "\\.\\.\\."]

@@ -1,0 +1,99 @@
+name: quarterly
+
+x-app-env: &app-env
+  DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-quarterly}:${POSTGRES_PASSWORD:-quarterly}@db:5432/${POSTGRES_DB:-quarterly}
+  REDIS_URL: redis://redis:6379/0
+  MINIO_ENDPOINT: minio:9000
+
+services:
+  db:
+    image: postgres:16
+    # API workers (WEB_CONCURRENCY, default 4) x up to 20 pooled connections (api.db.session).
+    # No row values in the server log: an error's DETAIL (e.g. "Key (email)=(...) already
+    # exists") and the failing statement are left out (CLAUDE.md: never log emails).
+    command:
+      - postgres
+      - -c
+      - max_connections=200
+      - -c
+      - log_error_verbosity=terse
+      - -c
+      - log_min_error_statement=panic
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-quarterly}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-quarterly}
+      POSTGRES_DB: ${POSTGRES_DB:-quarterly}
+    ports: ["127.0.0.1:5432:5432"]
+    volumes: [db-data:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 3s
+      timeout: 3s
+      retries: 30
+
+  redis:
+    image: redis:7
+    # Rate-limit counters (keyed IP hashes) must never reach disk: no RDB snapshots, no AOF.
+    command: ["redis-server", "--save", "", "--appendonly", "no"]
+    ports: ["127.0.0.1:6379:6379"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 3s
+      timeout: 3s
+      retries: 30
+
+  minio:
+    # MinIO no longer publishes community images on Docker Hub or quay.io; Chainguard's build,
+    # pinned by digest (docs/PROGRESS.md lists this).
+    image: cgr.dev/chainguard/minio@sha256:db3f583fa49121942168bd6383a773b2cde3384c9a99bf7193560b9a0f3a28fd
+    command: ["server", "/data", "--console-address", ":9001"]
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-quarterly}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-quarterly-dev-secret}
+    ports: ["127.0.0.1:9000:9000", "127.0.0.1:9001:9001"]
+    volumes: [minio-data:/data]
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 3s
+      timeout: 3s
+      retries: 30
+
+  api:
+    build: {context: ., dockerfile: services/api/Dockerfile}
+    env_file: [{path: .env, required: false}]
+    environment:
+      <<: *app-env
+      TRUSTED_PROXY_HOPS: "1"  # nginx in the web service sets X-Forwarded-For
+      RULES_CACHE_TTL_S: "${RULES_CACHE_TTL_S:-60}"  # catalog year kept in memory (prompt 12)
+      PAGE_CACHE_TTL_S: "${PAGE_CACHE_TTL_S:-5}"  # forum page header reused for 5 s
+    ports: ["127.0.0.1:8000:8000"]
+    depends_on:
+      db: {condition: service_healthy}
+      redis: {condition: service_healthy}
+
+  worker:
+    build: {context: ., dockerfile: services/worker/Dockerfile}
+    env_file: [{path: .env, required: false}]
+    environment: *app-env
+    depends_on:
+      redis: {condition: service_healthy}
+      db: {condition: service_healthy}
+
+  web:
+    build: {context: apps/web}
+    ports: ["127.0.0.1:5173:5173"]
+    depends_on:
+      api: {condition: service_healthy}
+
+  # Heavy image (Chromium); not part of `make up`. Start with `make scraper-up`.
+  scraper:
+    profiles: [scraper]
+    build: {context: ., dockerfile: services/scraper/Dockerfile}
+    env_file: [{path: .env, required: false}]
+    environment: *app-env
+    depends_on:
+      minio: {condition: service_healthy}
+
+volumes:
+  db-data:
+  minio-data:
