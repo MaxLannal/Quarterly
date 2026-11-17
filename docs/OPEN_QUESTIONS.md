@@ -1,5 +1,13 @@
 # Open questions and decisions
 
+> **Start here (updated 2026-11-16).** This file is the record of every question asked and how it was answered, grouped by the build step that raised it. Almost everything below is answered; the code cites items by id (for example P05-7), so search for an id when you meet one. Still open:
+>
+> - **Before launch** ("Deferred until before deployment" below): **DF-A1** replace the watermarked demo photo behind the homepage chapel, and Open-Meteo's free service is non-commercial only; **DF-S1** 44 summer-only courses not yet in the planner; the **"Later (by Richard)"** list (email to real users, placement field, Econ specializations, more study-abroad programs, Econ items, the full hand check of `data/seed/REVIEW.md`).
+> - **Tests:** **E2E-1** (drawer drag test retries a missed drag) and **E2E-2** (journey C's preference checks depend on the solver's time limit), at the end of the file.
+> - **"Work these answers create (not started)"** below was listed on 2026-11-14; some of it was built since. Check `docs/PROGRESS.md` and the code before starting an item.
+>
+> New questions go at the end of the matching section, in plain language with a suggested answer (see `CLAUDE.md`, "Working with the owner").
+
 Each question below has Richard's answer underneath it (answered 2026-11-14), or the default that stands when no answer was given. Nothing here is a guessed catalog fact.
 
 New questions in this file are written in plain language, each with a suggested answer or a few options (Richard's preference, 2026-11-14).

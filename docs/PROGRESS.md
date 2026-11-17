@@ -1,5 +1,11 @@
 # Progress
 
+> **Current state (2026-11-16).** Every prompt (00-13) has been run (the schedule scraper stays switched off until the University allows scraping); the owner's FEEDBACK items are all resolved (index at the top of "Done" in `docs/FEEDBACK.md`). The latest work, at the end of this file: the design pass with Impeccable (D1-D11, `docs/DESIGN-REVIEW.md`), TRNC 10100 transfer credit, and the advisor's cut-off replies (output limit 800 to 4000; a cut-off reply now stops the run). The project moved from `quadplan-kit/` to the repository root for GitHub.
+>
+> `make check` and `make e2e` pass (journey C's preference check is flaky, OPEN_QUESTIONS E2E-2). AI features run only with `LLM_LIVE=true`. Open decisions: the "Start here" block of `docs/OPEN_QUESTIONS.md`. Suggested next steps: "Later" in `docs/FEEDBACK.md`.
+>
+> The log below is chronological, one section per prompt or goal.
+
 ## Prompt 00 · Bootstrap — done (2026-11-12)
 
 **What exists**

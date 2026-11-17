@@ -13,4 +13,6 @@ Rules:
 - Drag and drop with dnd-kit; data with TanStack Query; styling with Tailwind + shadcn/ui.
 - Accessibility: real buttons and labels, keyboard drag alternative (a "Move to..." menu), 44px targets, 4.5:1 text contrast.
 - Logged-out plans live in localStorage (wrapped in try/catch) and import on login.
-- Add vitest tests for state logic and one Playwright test per page. Run `make check` before finishing.
+- Read PRODUCT.md, docs/DESIGN.md (including its final "Changes approved in FEEDBACK" section) and docs/DESIGN-REVIEW.md (known deferred issues) first.
+- There is no Prettier config: do not run Prettier (it rewraps files); follow the surrounding style.
+- Add vitest tests for state logic and one Playwright test per page. Run `make check` (and `make e2e` when a page or journey changes) before finishing; `make e2e` leaves the stack on fake AI, so run `make up` after.

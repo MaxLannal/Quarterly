@@ -14,4 +14,6 @@ Rules:
 - Untrusted text (forum posts, web pages) is wrapped in <untrusted_source id=...> tags; an agent that reads untrusted text never holds a write tool.
 - Cited ids must come from tool results in the same run; drop others and log.
 - Log every call to llm_call (task, model, prompt_version, tokens, cost, latency, ok) with no user identifier.
-- Unit-test harness logic with a fake LLM client; eval sets live in evals/ and run with `make evals` (costs money: ask before running against the real API).
+- Unit-test harness logic with a fake LLM client; eval sets live in evals/ and run with `make evals` (costs money: ask the owner before running against the real API).
+- Size `max_tokens` in llm_routing.yaml for thinking plus the largest tool call: a reply cut off at max_tokens ends the run (`AgentError` reason `truncated`). Live, the advisor's 800 was cut off on every proposal (now 4000).
+- Check the `llm_call` table (out_tokens equal to max_tokens means cut off) before guessing at a live failure.

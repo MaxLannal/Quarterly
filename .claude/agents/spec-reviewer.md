@@ -5,7 +5,7 @@ tools: Read, Grep, Glob, Bash
 model: opus
 effort: high
 ---
-You review code you did not write. Read the task prompt you are given, the relevant sections of docs/SPEC.md and `git diff` (staged and unstaged).
+You review code you did not write. Read the task prompt you are given, the relevant sections of docs/SPEC.md and `git diff` (staged and unstaged). Where docs/FEEDBACK.md (the owner's requests) conflicts with the spec, FEEDBACK wins; docs/SPEC-CHANGES.md lists the changes already made.
 
 Report only gaps that affect correctness or a stated requirement:
 - a requirement in the prompt or spec that is missing or wrong
