@@ -24,6 +24,42 @@ Write down anything you notice: something broken, something confusing, or someth
 
 ## New
 
+## In progress
+
+## Later
+
+### Follow-ups noticed while working (suggested by Claude, 2026-11-16; not yet asked for)
+- TRNC 10100's course page still offers "Add to plan" (the course API does not send tags yet); the plan check warns if it is added to a quarter.
+- Design review deferrals (`docs/DESIGN-REVIEW.md`): PL-4 merge the planner's panel buttons into one control; AD-2 advisor as a side panel on desktop; CS-3 department and Core lists in course search; FO-4 naming of untitled reviews; PL-6 an explanation of "Difficulty"; A-4 the 401 on the logged-out session check.
+- Journey C's preference check (major courses mostly in years 2-3) sometimes fails because the generator stops at its time limit (`docs/OPEN_QUESTIONS.md` E2E-2).
+- Before launch: replace the watermarked demo photo behind the homepage chapel; Open-Meteo is free for non-commercial use only (`docs/OPEN_QUESTIONS.md` DF-A1).
+
+## Done
+
+Every item below is finished. Newest first; each keeps Richard's original text, with the resolution under it.
+
+| Item | Date | Fixed in |
+|---|---|---|
+| Minor design changes | 2026-11-16 | 6584a4a, 9e045fc, 60e867c, 75dfd83 ... |
+| Minor issues | 2026-11-16 | 784bdb1, b44c09a |
+| ASCII Scene | 2026-11-16 | 25e36f5 |
+| Color strip before the course cade | 2026-11-16 | 86c961d |
+| Course Search and Programs GUI | 2026-11-16 | 0abe529 |
+| Select Course to map when Start Planning | 2026-11-16 | 4ab3360 |
+| Check Summer Catalog | 2026-11-16 | 3254069 |
+| Allow Summer Sequences | 2026-11-16 | f546d06 |
+| Viewing and Editing Test, Placement and Transfer Credits | 2026-11-16 | 8385842 |
+| Concatnating Error Messages | 2026-11-16 | 49cb235 |
+| A more compact interface | 2026-11-16 | 8385842 |
+| minor issues | 2026-11-16 | 49cb235 |
+| Generate Plan Faliure | 2026-11-14 | 6ef392c |
+| Locations of Summer Quarter | 2026-11-14 | 8faf56b |
+| Number of Years | 2026-11-14 | 8faf56b |
+| Planner GUI | 2026-11-14 | 8faf56b |
+| Text | 2026-11-14 | 8faf56b |
+| GUI Polishing | 2026-11-14 | 8faf56b |
+| "End suspension" button for admins | 2026-11-14 | 6c07395 |
+
 ### Minor design changes
 For every changes below, consult the installed plugin impeccable: https://github.com/pbakaus/impeccable
 
@@ -54,12 +90,6 @@ For every changes below, consult the installed plugin impeccable: https://github
 
 Do a full runthrough with \impeccable to improve all UI and UX workflow components. Critique every part of the website and make improvements. **[D11 `critique` + `audit`, then `polish`; `harden` and `adapt` on the planner and forum; findings in docs/DESIGN-REVIEW.md]**
 - D11 Resolved in db55ef4: every area was critiqued (three isolated design reviewers) and audited (detector, axe at 1440 and 390, overflow, target sizes); 62 findings with priorities are in `docs/DESIGN-REVIEW.md`. All 8 P1s and 49 of the P2/P3s are fixed (commits 9eeebf7 to db55ef4), PL-4 in part; 5 are deferred with a reason (none needs a decision now). Polish on every area, harden and adapt on the planner and forum. Screenshots: `docs/screenshots/before/` and `docs/screenshots/after/` (55 each).
-
-## In progress
-
-## Later
-
-## Done
 
 ### Minor issues
 - TRNC 10100 is currently not in the catalog. It is transfer general credit and every transfer student will receive some of them. They do not count as a course for any specific programs but students can use it to meet credit requirements. Add this to the catalog.
