@@ -83,6 +83,8 @@ KEEP_PLAN = MAX_PREFERENCE + 1  # keeping the student's own course costs nothing
 POOL_SPARE = 6
 SEQUENCES_KEPT = 4
 FREE_ELECTIVES = 40
+#: Course tag for credit you receive but never enrol in (e.g. TRNC 10100, transfer credit).
+CREDIT_ONLY = "credit_only"
 PREREQ_DEPTH = 3
 MAX_POOL = 450
 #: Preference taken off courses that need the instructor's consent.
@@ -203,7 +205,9 @@ class _Builder:
     def pool(self, programs: list[Compiled]) -> dict[str, int]:
         """Catalog courses worth considering, with their preference."""
         idx, fixed_keys = self.idx, set(self.fixed.taken)
-        codes = [c.code for c in self.catalog.courses]
+        # A credit-only course (TRNC 10100, transfer general credit; FEEDBACK 2026-11-16) is
+        # received as a credit, never enrolled in: no candidate for any quarter.
+        codes = [c.code for c in self.catalog.courses if CREDIT_ONLY not in c.tags]
         prefs = preferences(idx, codes, self.options.interests, self.options.preferences)
         for code in codes:  # avoid courses that need the instructor's consent when possible
             req = idx.requisite(code)

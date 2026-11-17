@@ -23,7 +23,7 @@ from collections.abc import Iterator
 from dataclasses import dataclass, field
 
 from llm_gateway.api import AgentError, AgentSpec, Budget, Message, SubmitTool, run_agent
-from planner_core.generator import generate, open_terms
+from planner_core.generator import CREDIT_ONLY, generate, open_terms
 from planner_core.goalcompile import term_label
 from planner_core.hashing import plan_hash
 from planner_core.index import Index, PlanFacts
@@ -113,7 +113,9 @@ def choice_nodes(
             codes = [
                 c.code
                 for c in catalog.courses
-                if c.code not in planned and idx.matches(unit.selector, c.code)
+                if c.code not in planned
+                and CREDIT_ONLY not in c.tags  # received, never enrolled in (TRNC 10100)
+                and idx.matches(unit.selector, c.code)
             ]
             if len(codes) < 2:
                 continue

@@ -528,3 +528,24 @@ def test_horizon_and_open_terms() -> None:
     )
     assert "2101-SU" not in gen.open_terms(p, GenerateOptions())
     assert Source.model_validate(SRC)
+
+
+def test_never_places_a_credit_only_course() -> None:
+    """TRNC 10100, transfer general credit (Richard, FEEDBACK 2026-11-16), is received, never
+    enrolled in: a course tagged `credit_only` is no candidate, even when it is repeatable, has
+    no offering data and matches the student's interest (so it would rank first as an elective)."""
+    credit = Course(code="TRF 10100", title="Transfer general credit", repeatable=True)
+    tagged = credit.model_copy(update={"tags": ["credit_only"]})
+
+    def with_course(c: Course) -> Catalog:
+        cat = catalog()
+        return cat.model_copy(update={"courses": [*cat.courses, c]})
+
+    def uses(result: Any) -> bool:
+        return any(i.course == "TRF 10100" for v in result.variants for i in v.plan.items)
+
+    # Control: untagged, the course is attractive enough to be placed.
+    assert uses(run(plan(), cat=with_course(credit), interests=["transfer"], variants=3))
+    # Tagged credit_only: never placed.
+    result = run(plan(), cat=with_course(tagged), interests=["transfer"], variants=3)
+    assert result.variants and not uses(result)

@@ -209,7 +209,7 @@ A form, never a free-text prompt, so every input maps to a typed parameter.
 4. **Interests:** tags ("ML", "philosophy of mind", "Chinese") used to pick electives.
 5. **Variants:** 1–3.
 
-Then a progress view streams the agent's steps ("Loading requirements → Choosing electives → Solving → Verifying → Writing rationale"). The result shows each variant as a diff against the current plan, its verifier badge, metrics (average hours, hardest quarter) and a one-line rationale per quarter. Buttons: **Apply**, **Apply selected quarters**, **Discard**.
+Then a progress view streams the agent's steps ("Loading requirements → Choosing electives → Solving → Verifying → Writing rationale"). The result shows each variant as a diff against the current plan, its verifier badge, metrics (average hours, hardest quarter) and a one-line rationale per quarter. Buttons: **Apply**, **See changes** (with **Choose quarters to apply** inside it), **Discard**. Above them, a line says which quarters Apply changes, and an option that still has errors says so.
 
 ### Advisor chat (right rail)
 
@@ -254,7 +254,7 @@ The model has nine groups of tables; the catalog, schedule and program groups ar
 | Table | Key fields | Notes |
 | --- | --- | --- |
 | `catalog_year` | `id` ("2026-27"), `published_at` | Students follow the year of their entry term by default |
-| `course` | `id`, `subject`, `number`, `title`, `units` (default 100), `description`, `catalog_year`, `core_tags[]`, `repeatable`, `source_id` | `code` = `subject + " " + number` |
+| `course` | `id`, `subject`, `number`, `title`, `units` (default 100), `description`, `catalog_year`, `core_tags[]`, `tags[]`, `repeatable`, `source_id` | `code` = `subject + " " + number`. The tag `credit_only` marks credit a student receives but never enrols in (TRNC 10100, transfer general credit): a credit can map to it, and its units count toward the degree total, but the plan generator never places it in a quarter and never offers it as an elective choice |
 | `crosslist_group` | `group_id`, `course_id` | Cross-listed codes count as one course |
 | `course_relation` | `course_a`, `course_b`, `kind` (`equivalent`, `mutually_exclusive`, `replaces`) | For example, credit for only one of two intro sequences |
 | `requisite` | `course_id`, `catalog_year`, `prereq` (JSONB, DSL), `coreq` (JSONB), `restrictions` (JSONB), `raw_text` | `raw_text` is the catalog sentence the rule came from |
