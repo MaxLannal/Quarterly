@@ -624,3 +624,9 @@ Four items and half of the fifth resolved; TRNC 10100 is in progress (below).
 - **Deferred:** A-4 (401 on the logged-out session check is API behaviour), PL-4 rest (merge the panel buttons: Richard's F4 toolbar), PL-6 (a glossary for "Difficulty"), AD-2 (advisor as a desktop side panel: F4), CS-3 (choice lists need data the page does not load), FO-4 (how untitled reviews are named).
 - Note: Prettier is not configured for this repo; earlier runs of it this session rewrapped some touched files (HomePage, Footer, TopNav and others) to 80 columns. Lint and types pass; no behaviour changed.
 
+## TRNC 10100 finished (2026-11-16, 18:45-)
+- TRNC 10100 "Transfer General Credit" is back in the 2026-27 catalog (from b44c09a), tagged `credit_only` (784bdb1).
+- Cause of the earlier journey failures, found by running journey A's generation inside the API: TRNC has no offering data and is repeatable, so the generator treated it as a free elective for any quarter and sometimes placed it in a variant. That put transfer credit into planned quarters and slowed solves (journeys A and C failed; B is already close to its 4 s limit).
+- Fix: `planner_core.generator` skips `credit_only` courses as candidates, and the API's elective-choice step skips them too. Test: `test_never_places_a_credit_only_course` (control: untagged it is placed). Journeys A-D pass with TRNC in the catalog; four in-app runs of journey A's plan never place it.
+- Possible follow-up: the course page's "Add to plan" still shows for TRNC (the course API sends no tags); a student who adds it to a quarter gets a "not on the schedule" warning from the plan check.
+

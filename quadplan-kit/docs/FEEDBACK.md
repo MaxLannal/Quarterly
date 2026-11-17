@@ -57,15 +57,15 @@ Do a full runthrough with \impeccable to improve all UI and UX workflow componen
 
 ## In progress
 
-### Minor issues
-- TRNC 10100 is currently not in the catalog. It is transfer general credit and every transfer student will receive some of them. They do not count as a course for any specific programs but students can use it to meet credit requirements. Add this to the catalog.
-- Expanded menu on Planner will move behind the course cards, it needs to be in front
-- In progress: TRNC 10100 was added in b44c09a and taken out again in the next commit. With it in the catalog, the plan generator ran out of time in the end-to-end journeys A, B and C. Leaving it out of the generator's candidates (a "credit only" tag) fixed C but not A and B, and the time ran out before I found why. What is left: find why the generator slows down; add the course back (the entry is in b44c09a: 100 units, can be received many times, counts for no program or the Core, only toward total units); then run the journeys again. Found at 15:05: called directly on the real catalog (Core + CS major, math placement), the generator is just as fast with TRNC as without it (0.9 s and 1.0 s, two plans each), so TRNC may not be the cause. Next step: run the journeys without TRNC; if they still fail, the slowdown is elsewhere and TRNC can go back in.
-- Resolved in b44c09a: a course card's open menu now sits in front of the cards below it (the card is lifted while its menu is open). e2e test (failed before the fix) and screenshot `fb1116-card-menu-in-front.png`.
-
 ## Later
 
 ## Done
+
+### Minor issues
+- TRNC 10100 is currently not in the catalog. It is transfer general credit and every transfer student will receive some of them. They do not count as a course for any specific programs but students can use it to meet credit requirements. Add this to the catalog.
+- Expanded menu on Planner will move behind the course cards, it needs to be in front
+- Resolved in 784bdb1: TRNC 10100 "Transfer General Credit" is in the catalog (100 units, can be received many times, counts for no program or the Core). Choose it under "Counts as course" for a transfer credit; its units count toward the degree total. It is tagged "credit only", so the plan generator never puts it in a quarter. Why it failed before: with no offering data and being repeatable, the generator treated it as a free elective for any quarter (it was seen placing it in a plan), which put transfer credit into planned quarters and slowed some solves. Proof: a generator test (placed without the tag, never with it), the seed tests, and journeys A-D passing with TRNC in the catalog.
+- Resolved in b44c09a: a course card's open menu now sits in front of the cards below it (the card is lifted while its menu is open). e2e test (failed before the fix) and screenshot `fb1116-card-menu-in-front.png`.
 
 ### ASCII Scene
 - Date 2026-11-16
