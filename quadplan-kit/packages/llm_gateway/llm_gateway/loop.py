@@ -189,6 +189,11 @@ def run_loop[T: BaseModel](
         )
         if turn.stop_reason == "refusal":
             raise AgentError("refusal", f"{spec.task}: the model declined")
+        if turn.stop_reason == "max_tokens":
+            # A tool call cut off by the output limit arrives with partial or empty input; running
+            # it only makes the model try again and be cut off again (live, 2026-11-16).
+            logger.warning("%s: reply cut off at max_tokens", spec.task)
+            raise AgentError("truncated", f"{spec.task}: the reply hit max_tokens")
         if tokens > budget.tokens:
             raise AgentError("budget_tokens", f"{spec.task} used {tokens} tokens")
         messages.append({"role": "assistant", "content": turn.content})

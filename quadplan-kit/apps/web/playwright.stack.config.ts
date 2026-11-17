@@ -7,7 +7,8 @@ import { defineConfig, devices } from "@playwright/test";
 export default defineConfig({
   testDir: "./e2e-stack",
   globalSetup: "./e2e-stack/global-setup.ts",
-  // One database for every test: run them one at a time.
+  globalTeardown: "./e2e-stack/global-teardown.ts",
+    // One database for every test: run them one at a time.
   workers: 1,
   fullyParallel: false,
   retries: 0,

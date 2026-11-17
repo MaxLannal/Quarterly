@@ -73,7 +73,8 @@ tasks:
   a2_advisor_chat:
     model: claude-sonnet-5-5
     effort: low
-    max_tokens: 800             # prompt 13: chat answer 800
+    max_tokens: 4000            # was 800 (prompt 13: chat answer 800); live, thinking plus a
+                                # proposal's tool call hit 800 every time and was cut off (2026-11-16)
     thinking: between_tools
     refusal_fallback: true
     fallback: {provider: openrouter, model: anthropic/claude-sonnet-5.5}

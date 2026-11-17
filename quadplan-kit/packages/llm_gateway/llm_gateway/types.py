@@ -27,6 +27,7 @@ FailureReason = Literal[
     "budget_tool_calls",
     "budget_tokens",
     "budget_seconds",
+    "truncated",  # the reply hit max_tokens: its tool calls may be cut off, so none runs
 ]
 
 

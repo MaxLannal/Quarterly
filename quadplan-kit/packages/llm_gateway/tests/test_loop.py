@@ -307,3 +307,24 @@ def test_the_repository_routing_file_has_prices_for_every_model() -> None:
     for name, route in routing.tasks.items():
         assert route.model in routing.prices, name
         assert route.fallback is not None and route.fallback.model in routing.prices, name
+
+
+def test_a_response_cut_off_at_max_tokens_runs_no_tools() -> None:
+    """Live, the advisor's replies stopped at max_tokens part-way through a tool call: the tool
+    arrived with input {}, failed, and the model tried again nine times (2026-11-16). A cut-off
+    turn now ends the run at once: no tool runs, no further model calls."""
+    ran: list[dict[str, Any]] = []
+
+    def count(args: dict[str, Any]) -> ToolOutput:
+        ran.append(args)
+        return ToolOutput("{}")
+
+    s = spec()
+    s.tools.append(Tool("propose", "p", {"type": "object"}, count))
+    fake = FakeLLM(
+        script={"t": [FakeTurn(calls=(ToolCall("propose", {}),), stop_reason="max_tokens")]}
+    )
+    with pytest.raises(AgentError) as err:
+        fake.run_agent(s)
+    assert err.value.reason == "truncated"
+    assert ran == [] and len(fake.calls) == 1
