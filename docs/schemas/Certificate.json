@@ -1,0 +1,180 @@
+{
+  "$defs": {
+    "Assignment": {
+      "additionalProperties": false,
+      "properties": {
+        "courses": {
+          "items": {
+            "examples": [
+              "CMSC 14100"
+            ],
+            "pattern": "^[A-Z]{2,5} \\d{5}$",
+            "type": "string"
+          },
+          "title": "Courses",
+          "type": "array"
+        },
+        "node": {
+          "title": "Node",
+          "type": "string"
+        }
+      },
+      "required": [
+        "node",
+        "courses"
+      ],
+      "title": "Assignment",
+      "type": "object"
+    },
+    "GoalResult": {
+      "additionalProperties": false,
+      "properties": {
+        "goal": {
+          "title": "Goal",
+          "type": "string"
+        },
+        "limit": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Limit"
+        },
+        "pass": {
+          "title": "Pass",
+          "type": "boolean"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Value"
+        }
+      },
+      "required": [
+        "goal",
+        "pass"
+      ],
+      "title": "GoalResult",
+      "type": "object"
+    },
+    "LoadEntry": {
+      "additionalProperties": false,
+      "properties": {
+        "term": {
+          "examples": [
+            "2026-AU"
+          ],
+          "pattern": "^\\d{4}-(AU|WI|SP|SU)$",
+          "title": "Term",
+          "type": "string"
+        },
+        "units": {
+          "title": "Units",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "term",
+        "units"
+      ],
+      "title": "LoadEntry",
+      "type": "object"
+    },
+    "PrereqWitness": {
+      "additionalProperties": false,
+      "description": "`by` entries: `\"CODE@TERM\"` (a plan item), `\"credit:CODE\"`, `\"placement:VALUE\"`,\n`\"standing:VALUE\"`, `\"program:ID\"` or `\"consent:VALUE\"`.",
+      "properties": {
+        "by": {
+          "items": {
+            "type": "string"
+          },
+          "title": "By",
+          "type": "array"
+        },
+        "course": {
+          "examples": [
+            "CMSC 14100"
+          ],
+          "pattern": "^[A-Z]{2,5} \\d{5}$",
+          "title": "Course",
+          "type": "string"
+        },
+        "term": {
+          "examples": [
+            "2026-AU"
+          ],
+          "pattern": "^\\d{4}-(AU|WI|SP|SU)$",
+          "title": "Term",
+          "type": "string"
+        }
+      },
+      "required": [
+        "course",
+        "term",
+        "by"
+      ],
+      "title": "PrereqWitness",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "assignments": {
+      "items": {
+        "$ref": "#/$defs/Assignment"
+      },
+      "title": "Assignments",
+      "type": "array"
+    },
+    "goals": {
+      "items": {
+        "$ref": "#/$defs/GoalResult"
+      },
+      "title": "Goals",
+      "type": "array"
+    },
+    "loads": {
+      "items": {
+        "$ref": "#/$defs/LoadEntry"
+      },
+      "title": "Loads",
+      "type": "array"
+    },
+    "plan_hash": {
+      "title": "Plan Hash",
+      "type": "string"
+    },
+    "prereq_witnesses": {
+      "items": {
+        "$ref": "#/$defs/PrereqWitness"
+      },
+      "title": "Prereq Witnesses",
+      "type": "array"
+    },
+    "rules": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "title": "Rules",
+      "type": "object"
+    }
+  },
+  "required": [
+    "plan_hash",
+    "rules"
+  ],
+  "title": "Certificate",
+  "type": "object"
+}

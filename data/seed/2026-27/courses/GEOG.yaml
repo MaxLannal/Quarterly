@@ -1,0 +1,27 @@
+# Generated from the 2026-2027 UChicago College Catalog (fetched 2026-11-12) by hand-checked scripts;
+# every source.quote is copied verbatim (whitespace collapsed) from source.url. See data/seed/REVIEW.md.
+courses:
+- code: GEOG 24200
+  title: 'Urban Design Studio: Reconstructing Chicago''s Lost Neighborhoods Using Machine Learning'
+  units: 100
+  notes: Cross-listed with SOSC 26002 (its catalog block lists GEOG 24200 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from SOSC 26002.
+  crosslists:
+  - SOSC 26002
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: 'Equivalent Course(s): PBPL 26002, PPHA 36002, GEOG 24200, CHST 26002'
+- code: GEOG 26200
+  title: History of City Planning
+  units: 100
+  notes: Cross-listed with SOSC 26004 (its catalog block lists GEOG 26200 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from SOSC 26004.
+  crosslists:
+  - SOSC 26004
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: 'Equivalent Course(s): PBPL 26004, GEOG 26200, SOSC 36004'

@@ -1,0 +1,106 @@
+# Generated from the 2026-2027 UChicago College Catalog (fetched 2026-11-12) by hand-checked scripts;
+# every source.quote is copied verbatim (whitespace collapsed) from source.url. See data/seed/REVIEW.md.
+courses:
+- code: HMRT 10100
+  title: Human Rights in World Civilizations I
+  units: 100
+  description: The first quarter begins with a set of conceptual problems and optics designed to introduce students to the
+    critical study of human rights, opening up questions of the universal, human dignity, and the political along with the
+    practices of witness and testimony. It is followed by two thematic clusters. "Anti-Slavery, Humanitarianism, and Rights"
+    focuses on the late eighteenth and early nineteenth centuries to historicize notions of dignity, sympathy, and witness.
+    "Declarations as a Human Rights Genre" examines revolutionary eighteenth-century rights declarations in France, the United
+    States, and Haiti against the aspirations of the 1948 UN Universal Declaration of Human Rights.
+  core_tags:
+  - civilization
+  crosslists:
+  - SOSC 24900
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: HMRT 10100. Human Rights in World Civilizations I. 100 Units.
+- code: HMRT 10200
+  title: Human Rights in World Civilizations II
+  units: 100
+  description: Four thematic clusters structure the second quarter. "Migration, Minorities, and Refugees" examines minority
+    rights, the evolution of legal norms around refugees, and human trafficking. "Late Twentieth Century Human Rights Talk"
+    explores the contestations between rights claims in the political-civil and socio-economic spheres, calls for sexual rights,
+    and cultural representations of human rights abuses. "Global Justice" considers forms of international criminal law, transitional
+    justice, and distributive justice. "Indigenous Rights as Human Rights" takes up the relatively new domain of the rights
+    of indigenous peoples and how they relate to contemporary human rights practice.
+  core_tags:
+  - civilization
+  crosslists:
+  - SOSC 24901
+  prereq: SOSC 24900
+  prereq_text: SOSC 24900
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: HMRT 10200. Human Rights in World Civilizations II. 100 Units.
+- code: HMRT 21001
+  title: 'Human Rights: Contemporary Issues'
+  units: 100
+  notes: Cross-listed with SOSC 21001 (its catalog block lists HMRT 21001 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from SOSC 21001.
+  crosslists:
+  - SOSC 21001
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: 'Equivalent Course(s): LACS 21001, DEMS 21001, LLSO 21001, HIST 29304, CHST 21001, HMRT 21001'
+- code: HMRT 24193
+  title: Water Water Everywhere?
+  units: 100
+  notes: Cross-listed with SOSC 21005 (its catalog block lists HMRT 24193 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from SOSC 21005.
+  crosslists:
+  - SOSC 21005
+  prereq_text: Third- or fourth-year standing
+  terms_offered:
+  - AU
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: 'Equivalent Course(s): BPRO 24193, CHST 24193, CEGU 24193, ARTH 24193, HMRT 24193'
+  needs_review: true
+- code: HMRT 24501
+  title: Human Rights in Mexico
+  units: 100
+  notes: Cross-listed with SOSC 24505 (its catalog block lists HMRT 24501 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from SOSC 24505.
+  crosslists:
+  - SOSC 24505
+  prereq_text: A reading knowledge of Spanish and at least one course on Latin American history or culture are required.
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: 'Equivalent Course(s): HMRT 34501, LACS 24501, LACS 34501, HMRT 24501, HIST 39408, HIST 29408'
+  needs_review: true
+- code: HMRT 26813
+  title: The Rights of Immigrants and Refugees in Practice
+  units: 100
+  notes: Cross-listed with SOSC 24506 (its catalog block lists HMRT 26813 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from SOSC 24506.
+  crosslists:
+  - SOSC 24506
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: 'Equivalent Course(s): GLST 24506, CHST 24506, INRE 34506, HMRT 26813, LLSO 24506'
+- code: HMRT 34501
+  title: Human Rights in Mexico
+  units: 100
+  notes: Cross-listed with SOSC 24505 (its catalog block lists HMRT 34501 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from SOSC 24505.
+  crosslists:
+  - SOSC 24505
+  prereq_text: A reading knowledge of Spanish and at least one course on Latin American history or culture are required.
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: 'Equivalent Course(s): HMRT 34501, LACS 24501, LACS 34501, HMRT 24501, HIST 39408, HIST 29408'
+  needs_review: true

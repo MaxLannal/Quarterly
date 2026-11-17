@@ -1,0 +1,113 @@
+# Generated from the 2026-2027 UChicago College Catalog (fetched 2026-11-12) by hand-checked scripts;
+# every source.quote is copied verbatim (whitespace collapsed) from source.url. See data/seed/REVIEW.md.
+courses:
+- code: MDVL 10101
+  title: Introduction to African Civilization I
+  units: 100
+  notes: Cross-listed with HIST 10101 (its catalog block lists MDVL 10101 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from HIST 10101.
+  crosslists:
+  - HIST 10101
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): SOSC 20101, MDVL 10101, ANTH 20701'
+- code: MDVL 12000
+  title: 'Jewish Civilization I: Ancient Beginnings to Medieval Period'
+  units: 100
+  notes: Cross-listed with JWSC 12000 (its catalog block lists MDVL 12000 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from JWSC 12000.
+  crosslists:
+  - JWSC 12000
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): MDVL 12000, HIST 11701, NEHC 22010, RLST 22010'
+- code: MDVL 14006
+  title: Introduction to Byzantine Art
+  units: 100
+  notes: Cross-listed with ARTH 14006 (its catalog block lists MDVL 14006 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from ARTH 14006.
+  crosslists:
+  - ARTH 14006
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/arthistory/
+    quote: 'Equivalent Course(s): RLST 28308, MDVL 14006'
+- code: MDVL 16900
+  title: 'Ancient Mediterranean World III: Late Antiquity'
+  units: 100
+  notes: Cross-listed with HIST 16900 (its catalog block lists MDVL 16900 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from HIST 16900.
+  crosslists:
+  - HIST 16900
+  prereq_text: This sequence meets the general education requirement in civilization studies.
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): CLCV 20900, RLST 20690, MDVL 16900, SOSC 27910'
+  needs_review: true
+- code: MDVL 20012
+  title: 'Ancient Empires II: The Ottoman Empire'
+  units: 100
+  notes: Cross-listed with NEHC 20012 (its catalog block lists MDVL 20012 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from NEHC 20012.
+  crosslists:
+  - NEHC 20012
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): MDVL 20012, HIST 15603, SOSC 20012, CLCV 25800'
+- code: MDVL 20100
+  title: Introduction to the Civilizations of South Asia I
+  units: 100
+  notes: Cross-listed with SALC 20100 (its catalog block lists MDVL 20100 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from SALC 20100.
+  crosslists:
+  - SALC 20100
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): SALC 30100, HIST 10800, SOSC 23000, MDVL 20100, ANTH 24101'
+- code: MDVL 20601
+  title: Islamic Thought and Literature I
+  units: 100
+  notes: Cross-listed with NEHC 20601 (its catalog block lists MDVL 20601 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from NEHC 20601.
+  crosslists:
+  - NEHC 20601
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): RLST 20401, SOSC 22000, MDVL 20601, HIST 25610'
+- code: MDVL 20602
+  title: Islamic Thought and Literature II
+  units: 100
+  notes: Cross-listed with NEHC 20602 (its catalog block lists MDVL 20602 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from NEHC 20602.
+  crosslists:
+  - NEHC 20602
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): MDVL 20602, SOSC 22100, RLST 20402, HIST 25615'
+- code: MDVL 20603
+  title: Islamic Thought & Lit III - The Experience of Being Colonized
+  units: 100
+  notes: Cross-listed with NEHC 20603 (its catalog block lists MDVL 20603 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from NEHC 20603.
+  crosslists:
+  - NEHC 20603
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): RLST 20403, MDVL 20603, HIST 25616, SOSC 22200'

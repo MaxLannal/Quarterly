@@ -1,0 +1,45 @@
+# Generated from the 2026-2027 UChicago College Catalog (fetched 2026-11-12) by hand-checked scripts;
+# every source.quote is copied verbatim (whitespace collapsed) from source.url. See data/seed/REVIEW.md.
+courses:
+- code: HLTH 18100
+  title: Topics in Behavioral and Social Sciences Relevant to Medicine
+  units: 100
+  notes: Cross-listed with SOSC 18100 (its catalog block lists HLTH 18100 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from SOSC 18100.
+  crosslists:
+  - SOSC 18100
+  prereq_text: There are no prerequisites for this course.
+  terms_offered:
+  - AU
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: 'Equivalent Course(s): HLTH 18100'
+  needs_review: true
+- code: HLTH 20910
+  title: Epidemiology and Population Health
+  units: 100
+  notes: Cross-listed with STAT 22810 (its catalog block lists HLTH 20910 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from STAT 22810.
+  crosslists:
+  - STAT 22810
+  prereq_text: STAT 22000 or other introductory statistics highly desirable. For BIOS students-completion of the first three
+    quarters of a Biological Sciences Fundamentals sequence.
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/statistics/
+    quote: 'Equivalent Course(s): BIOS 27810, HLTH 20910, PBHS 30910, PPHA 36410'
+  needs_review: true
+- code: HLTH 25207
+  title: 'Mindfulness: Experience and Media'
+  units: 100
+  notes: Cross-listed with HUMA 25207 (its catalog block lists HLTH 25207 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from HUMA 25207.
+  crosslists:
+  - HUMA 25207
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/humanities/
+    quote: 'Equivalent Course(s): HLTH 25207, MADD 14207, HIPS 25207, TAPS 20507'

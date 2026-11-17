@@ -1,0 +1,135 @@
+# Generated from the 2026-2027 UChicago College Catalog (fetched 2026-11-12) by hand-checked scripts;
+# every source.quote is copied verbatim (whitespace collapsed) from source.url. See data/seed/REVIEW.md.
+courses:
+- code: LING 20002
+  title: Cognitive Models
+  units: 100
+  notes: Cross-listed with DATA 20002 (its catalog block lists LING 20002 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from DATA 20002.
+  crosslists:
+  - DATA 20002
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/datascience/
+    quote: 'Equivalent Course(s): PSYC 22002, LING 20002, LING 30002, COGS 20002'
+- code: LING 20100
+  title: Intro To Linguistics-1
+  units: 100
+  notes: Cross-listed with SOSC 21700 (its catalog block lists LING 20100 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from SOSC 21700.
+  crosslists:
+  - SOSC 21700
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: 'Equivalent Course(s): ANTH 27001, ANTH 37001, LING 20100, LING 30100'
+- code: LING 20200
+  title: Intro To Linguistics-2
+  units: 100
+  notes: Cross-listed with SOSC 21800 (its catalog block lists LING 20200 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from SOSC 21800.
+  crosslists:
+  - SOSC 21800
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: 'Equivalent Course(s): ANTH 37002, LING 30200, ANTH 27002, LING 20200'
+- code: LING 20300
+  title: Introduction To Linguistics-3
+  units: 100
+  notes: Cross-listed with SOSC 21900 (its catalog block lists LING 20300 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from SOSC 21900.
+  crosslists:
+  - SOSC 21900
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: 'Equivalent Course(s): LING 20300, ANTH 27003, LING 30300, ANTH 37003'
+- code: LING 22500
+  title: Quantitative Research Methods in Linguistics
+  units: 100
+  notes: Cross-listed with DATA 20027 (its catalog block lists LING 22500 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from DATA 20027.
+  crosslists:
+  - DATA 20027
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/datascience/
+    quote: 'Equivalent Course(s): LING 22500, LING 32500, COGS 20027'
+- code: LING 28610
+  title: Undergraduate Computational Linguistics
+  units: 100
+  notes: Cross-listed with CMSC 25610 (its catalog block lists LING 28610 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from CMSC 25610.
+  crosslists:
+  - CMSC 25610
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/computerscience/
+    quote: 'Equivalent Course(s): LING 28610'
+- code: LING 30002
+  title: Cognitive Models
+  units: 100
+  notes: Cross-listed with DATA 20002 (its catalog block lists LING 30002 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from DATA 20002.
+  crosslists:
+  - DATA 20002
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/datascience/
+    quote: 'Equivalent Course(s): PSYC 22002, LING 20002, LING 30002, COGS 20002'
+- code: LING 30100
+  title: Intro To Linguistics-1
+  units: 100
+  notes: Cross-listed with SOSC 21700 (its catalog block lists LING 30100 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from SOSC 21700.
+  crosslists:
+  - SOSC 21700
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: 'Equivalent Course(s): ANTH 27001, ANTH 37001, LING 20100, LING 30100'
+- code: LING 30200
+  title: Intro To Linguistics-2
+  units: 100
+  notes: Cross-listed with SOSC 21800 (its catalog block lists LING 30200 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from SOSC 21800.
+  crosslists:
+  - SOSC 21800
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: 'Equivalent Course(s): ANTH 37002, LING 30200, ANTH 27002, LING 20200'
+- code: LING 30300
+  title: Introduction To Linguistics-3
+  units: 100
+  notes: Cross-listed with SOSC 21900 (its catalog block lists LING 30300 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from SOSC 21900.
+  crosslists:
+  - SOSC 21900
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: 'Equivalent Course(s): LING 20300, ANTH 27003, LING 30300, ANTH 37003'
+- code: LING 32500
+  title: Quantitative Research Methods in Linguistics
+  units: 100
+  notes: Cross-listed with DATA 20027 (its catalog block lists LING 32500 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from DATA 20027.
+  crosslists:
+  - DATA 20027
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/datascience/
+    quote: 'Equivalent Course(s): LING 22500, LING 32500, COGS 20027'
+- code: LING 38600
+  title: Graduate Computational Linguistics
+  units: 100
+  notes: Cross-listed with CMSC 35050 (its catalog block lists LING 38600 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from CMSC 35050.
+  crosslists:
+  - CMSC 35050
+  prereq_text: CMSC 12200, 15200 or 16200, or by consent
+  terms_offered:
+  - SP
+  source:
+    url: http://graduateannouncements.uchicago.edu/graduate/departmentofcomputerscience/
+    quote: 'Equivalent Course(s): LING 38600'
+  needs_review: true

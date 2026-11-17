@@ -1,0 +1,1658 @@
+# Generated from the 2026-2027 UChicago College Catalog (fetched 2026-11-12) by hand-checked scripts;
+# every source.quote is copied verbatim (whitespace collapsed) from source.url. See data/seed/REVIEW.md.
+courses:
+- code: MATH 10500
+  title: Fundamental Mathematics I
+  units: 100
+  description: Students who place into this course must take it in their first year in the College. Must be taken for a quality
+    grade. MATH 10500 will count only as one elective. This course does NOT meet the Core requirement in the mathematical
+    sciences. This course covers basic precalculus topics with an emphasis on their use in Calculus. It is concerned with
+    elements of algebra, coordinate geometry, and elementary functions, including trigonometric, and exponential functions.
+  notes: Recommended for students who need MATH 13100-13200 in their degree programs but who did not place into MATH 13100
+    originally. Such students should plan to take MATH 10500-13100-13200 in their first year.
+  prereq:
+    placement: MATH 10500
+  prereq_text: Performance on the mathematics placement test
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 10500. Fundamental Mathematics I. 100 Units.
+  needs_review: true
+- code: MATH 11200
+  title: Studies In Mathematics I
+  units: 100
+  description: MATH 11200 AND 11300 cover the basic conceptual foundations of mathematics by examining the ideas of number
+    and symmetry. MATH 11200 addresses number theory, including a study of the rules of arithmetic, integral domains, primes
+    and divisibility, congruences, and modular arithmetic. These courses emphasize the understanding of ideas and the ability
+    to express them through rigorous mathematical arguments. While students may take MATH 11300 without having taken MATH
+    11200, it is recommended that MATH 11200 be taken first. Either course in this sequence meets the general education requirement
+    in mathematical sciences. These courses are at the level of difficulty of the MATH 13100-13200-13300 calculus sequence.
+  core_tags:
+  - mathematical_sciences
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 11200. Studies In Mathematics I. 100 Units.
+- code: MATH 11300
+  title: Studies In Mathematics-2
+  units: 100
+  description: MATH 11200 AND 11300 cover the basic conceptual foundations of mathematics by examining the ideas of number
+    and symmetry. MATH 11200 addresses number theory, including a study of the rules of arithmetic, integral domains, primes
+    and divisibility, congruences, and modular arithmetic. These courses emphasize the understanding of ideas and the ability
+    to express them through rigorous mathematical arguments. While students may take MATH 11300 without having taken MATH
+    11200, it is recommended that MATH 11200 be taken first. Either course in this sequence meets the general education requirement
+    in mathematical sciences. These courses are at the level of difficulty of the MATH 13100-13200-13300 calculus sequence.
+  core_tags:
+  - mathematical_sciences
+  prereq_text: MATH 11200 recommended
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 11300. Studies In Mathematics-2. 100 Units.
+- code: MATH 13100
+  title: Elem Functions and Calculus I
+  units: 100
+  description: MATH 13100 gives a careful treatment of limits, the continuity and differentiability of algebraic functions,
+    and applications of the derivative.
+  core_tags:
+  - mathematical_sciences
+  prereq:
+    any:
+    - MATH 10500
+    - placement: MATH 13100
+  prereq_text: MATH 10500 or adequate performance on the mathematics placement test
+  terms_offered:
+  - AU
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 13100. Elem Functions and Calculus I. 100 Units.
+- code: MATH 13200
+  title: Elem Functions and Calculus II
+  units: 100
+  description: Topics examined in MATH 13200 include applications of differentiation; exponential, logarithmic, and trigonometric
+    functions; the definite integral and the Fundamental Theorem of Calculus, and applications of the integral.
+  core_tags:
+  - mathematical_sciences
+  prereq: MATH 13100
+  prereq_text: MATH 13100
+  terms_offered:
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 13200. Elem Functions and Calculus II. 100 Units.
+- code: MATH 13300
+  title: Elementary Functions and Calculus III
+  units: 100
+  description: In MATH 13300, subjects include more applications of the definite integral, improper integrals, and an introduction
+    to infinite sequences and series and Taylor expansions. MATH 13300 also includes an introduction to multivariable calculus,
+    such as functions of several real variables and integration of functions of several variables.
+  prereq: MATH 13200
+  prereq_text: MATH 13200
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 13300. Elementary Functions and Calculus III. 100 Units.
+- code: MATH 15100
+  title: Calculus I
+  units: 100
+  description: This is the first course in the regular calculus sequence in the department. Students entering this sequence
+    are to have mastered appropriate precalculus material and, in many cases, have had some previous experience with calculus
+    in high school or elsewhere. MATH 15100 undertakes a careful treatment of limits, the differentiation of algebraic and
+    transcendental functions, applications of differentiation, and the Mean Value Theorem. All Autumn Quarter offerings of
+    MATH 15100 begin with a rigorous treatment of limits and limit proofs. Students may not take the first two quarters of
+    this sequence for P/F grading. MATH 15100-15200 meets the general education requirement in mathematical sciences.
+  core_tags:
+  - mathematical_sciences
+  prereq:
+    placement: MATH 15100
+  prereq_text: Placement based on the mathematics placement test(s) or appropiate AP score or IB score
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 15100. Calculus I. 100 Units.
+  needs_review: true
+- code: MATH 15200
+  title: Calculus II
+  units: 100
+  description: This is the second course in the regular calculus sequence in the department. Students entering this sequence
+    are to have mastered appropriate precalculus material and, in many cases, have had some previous experience with calculus
+    in high school or elsewhere. MATH 15200 covers integration, techniques of integration, applications of the integral, and
+    transcendental functions. All Autumn Quarter offerings of MATH 15200 begin with a rigorous treatment of limits and limit
+    proofs. Students may not take the first two quarters of this sequence for P/F grading. MATH 15100-15200 meets the general
+    education requirement in mathematical sciences.
+  core_tags:
+  - mathematical_sciences
+  prereq:
+    any:
+    - MATH 15100
+    - placement: MATH 15200
+  prereq_text: MATH 15100; or placement based on the mathematics placement test(s) or appropriate AP score or IB score
+  terms_offered:
+  - AU
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 15200. Calculus II. 100 Units.
+  needs_review: true
+- code: MATH 15250
+  title: Mathematical Methods for Economic Analysis
+  units: 100
+  description: This is a course in mathematical techniques covers the basic topics of multivariable differential calculus
+    including vectors and vector functions, partial derivatives, gradients, total derivative, and Lagrange multipliers. It
+    also covers an introduction to optimization, including linear programming, the simplex method, the duality theorem, and
+    the Kuhn-Tucker theorem. The tools and techniques covered in this course build the foundation for the Elements of Economic
+    Analysis sequence offered by the Griffin Department of Economics.
+  prereq:
+    any:
+    - MATH 15200
+    - MATH 13300
+    - placement: MATH 15250
+  prereq_text: MATH 15200 or MATH 13300 or placement
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 15250. Mathematical Methods for Economic Analysis. 100 Units.
+- code: MATH 15300
+  title: Calculus III
+  units: 100
+  description: This is the third course in the regular calculus sequence in the department. MATH 15300 covers an introduction
+    to infinite sequences and series and Taylor expansions, indeterminate forms and improper integration, and an introduction
+    to multivariable integral calculus including functions of several real variables, double and triple integrals, integration
+    of polar functions, change of variables, and applications of integration. All Autumn Quarter offerings of MATH 15300 begin
+    with a rigorous treatment of limits and limit proofs.
+  prereq:
+    any:
+    - MATH 15200
+    - placement: MATH 15300
+  prereq_text: MATH 15200; or placement based on the mathematics placement test(s)
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 15300. Calculus III. 100 Units.
+- code: MATH 15910
+  title: Introduction to Proofs in Analysis
+  units: 100
+  description: This course is intended for students who are making the transition from MATH 13300 or 15300 to MATH 20250 and
+    MATH 20300, or for students who need more preparation in learning to read and write proofs. This course covers the fundamentals
+    of theoretical mathematics and prepares students for upper-level mathematics courses beginning with MATH 20250 and MATH
+    20300. Topics include the axioms for the real numbers, completeness and the least upper bound property, the topology of
+    the real line, and sequences and series of real and complex numbers. Students who are majoring or minoring in mathematics
+    may not use both MATH 15910 and MATH 16300 to meet program requirements.
+  prereq:
+    any:
+    - MATH 15300
+    - MATH 13300
+    - MATH 18300
+    - placement: MATH 15910
+  prereq_text: MATH 15300 or MATH 13300 or MATH 18300 or superior performance on the mathematics placement test(s)
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 15910. Introduction to Proofs in Analysis. 100 Units.
+- code: MATH 16100
+  title: Honors Calculus I
+  units: 100
+  description: MATH 16100 emphasizes the theoretical aspects of one-variable analysis and, in particular, the consequences
+    of completeness in the real number system. Topics include a rigorous treatment of the real numbers and the least upper
+    bound property, limits, continuity, uniform continuity, and differentiation.
+  core_tags:
+  - mathematical_sciences
+  prereq:
+    placement: MATH 16100
+  prereq_text: Invitation only based on superior performance on the mathematics placement test(s) or appropriate AP score
+    or IB score
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 16100. Honors Calculus I. 100 Units.
+  needs_review: true
+- code: MATH 16110
+  title: Honors Calculus I (IBL)
+  units: 100
+  description: MATH 16110 gives a rigorous axiomatic treatment of the continuum and its topological properties.
+  core_tags:
+  - mathematical_sciences
+  prereq:
+    placement: MATH 16110
+  prereq_text: Invitation only based on superior performance on the mathematics placement test(s) or appropriate AP score
+    or IB score
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 16110. Honors Calculus I (IBL)
+  needs_review: true
+- code: MATH 16200
+  title: Honors Calculus II
+  units: 100
+  description: MATH 16200 covers integration, the Fundamental Theorem of Calculus, transcendental functions, and other topics.
+  core_tags:
+  - mathematical_sciences
+  prereq: MATH 16100
+  prereq_text: MATH 16100
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 16200. Honors Calculus II. 100 Units.
+- code: MATH 16210
+  title: Honors Calculus II (IBL)
+  units: 100
+  description: MATH 16210 puts an arithmetic structure on the continuum, and constructs the real numbers via Dedekind cuts.
+    There follows a rigorous treatment of limits, continuity, differentiability, integrability, and the Fundamental Theorem
+    of Calculus.
+  core_tags:
+  - mathematical_sciences
+  prereq: MATH 16110
+  prereq_text: MATH 16110
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 16210. Honors Calculus II (IBL)
+- code: MATH 16300
+  title: Honors Calculus III
+  units: 100
+  description: MATH 16300 covers sequences and series, power series, and Taylor series. It also includes an introduction to
+    multivariable calculus, such as functions of several real variables, partial derivatives, gradients, and the total derivative,
+    and integration of functions of several variables.
+  prereq: MATH 16200
+  prereq_text: MATH 16200
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 16300. Honors Calculus III. 100 Units.
+- code: MATH 16310
+  title: Honors Calculus III (IBL)
+  units: 100
+  description: MATH 16310 continues the rigorous treatment of single-variable Calculus with a discussion of infinite series.
+    There follows an introduction to the main ideas of multivariable Calculus, including functions of several real variables,
+    partial derivatives, gradients, the total derivative, and integration of functions of several variables.
+  prereq: MATH 16210
+  prereq_text: MATH 16210
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 16310. Honors Calculus III (IBL)
+- code: MATH 17500
+  title: Basic Number Theory
+  units: 100
+  description: This course covers basic properties of the integers following from the division algorithm, primes and their
+    distribution, and congruences. Additional topics include existence of primitive roots, arithmetic functions, quadratic
+    reciprocity, and transcendental numbers. The subject is developed in a leisurely fashion, with many explicit examples.
+  prereq:
+    any:
+    - MATH 16300
+    - MATH 16310
+    - MATH 15910
+    - MATH 15900
+    - MATH 19900
+  prereq_text: MATH 16300 or MATH 16310 or MATH 15910 or MATH 15900 or MATH 19900
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 17500. Basic Number Theory. 100 Units.
+- code: MATH 17600
+  title: Basic Geometry
+  units: 100
+  description: This course covers advanced topics in geometry, including Euclidean geometry, spherical geometry, and hyperbolic
+    geometry. We emphasize rigorous development from axiomatic systems, including the approach of Hilbert. Additional topics
+    include lattice point geometry, projective geometry, and symmetry.
+  prereq:
+    any:
+    - MATH 16300
+    - MATH 16310
+    - MATH 15910
+    - MATH 15900
+    - MATH 19900
+  prereq_text: MATH 16300 or MATH 16310 or MATH 15910 or MATH 15900 or MATH 19900
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 17600. Basic Geometry. 100 Units.
+- code: MATH 18300
+  title: Mathematical Methods in the Physical Sciences I
+  units: 100
+  description: 'This is the first in a sequence of mathematics courses for physical sciences majors. The first part of the
+    course covers infinite sums: convergence of infinite sequences and series, Maclaurin and Taylor series, complex numbers
+    and Euler''s formula. The second part covers elementary linear algebra: linear equations, vectors and matrices, dot products,
+    cross products and determinants, applications to 3D geometry, eigenvectors and diagonalization.'
+  prereq:
+    any:
+    - MATH 15200
+    - MATH 13300
+    - MATH 16200
+    - MATH 16210
+    - placement: MATH 18300
+  prereq_text: MATH 15200 or MATH 13300 or MATH 16200 or MATH 16210 or placement
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 18300. Mathematical Methods in the Physical Sciences I. 100 Units.
+- code: MATH 18400
+  title: Mathematical Methods in the Physical Sciences II
+  units: 100
+  description: 'This is the second in a sequence of mathematics courses for physical sciences majors. It covers multivariable
+    calculus: functions of more than one variable, parameterized curves and vector fields, partial derivatives and vector
+    derivatives (div/grad/curl), double and triple integrals, line and surface integrals, and the fundamental theorems of
+    vector calculus in two and three dimensions (Green/Gauss/Stokes).'
+  prereq:
+    any:
+    - MATH 18300
+    - all:
+      - any:
+        - MATH 15300
+        - MATH 13300
+        - MATH 16300
+        - MATH 16310
+      - any:
+        - MATH 19620
+        - MATH 20250
+        - STAT 24300
+  prereq_text: MATH 18300 or ((MATH 15300 or MATH 13300 or MATH 16300 or MATH 16310) and (MATH 19620 or MATH 20250 or STAT
+    24300))
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 18400. Mathematical Methods in the Physical Sciences II. 100 Units.
+- code: MATH 18500
+  title: Mathematical Methods in the Physical Sciences III
+  units: 100
+  description: 'This is the third in a sequence of mathematics courses for physical sciences majors. It covers differential
+    equations: first and second order ODE, systems of ODE, damped oscillators and resonance, Fourier series and Fourier transforms,
+    Laplace transforms, and solutions of the heat and wave equations.'
+  prereq:
+    any:
+    - MATH 18300
+    - all:
+      - any:
+        - MATH 15300
+        - MATH 13300
+        - MATH 16300
+        - MATH 16310
+      - any:
+        - MATH 19620
+        - MATH 20250
+        - STAT 24300
+  prereq_text: MATH 18300 or ((MATH 15300 or MATH 13300 or MATH 16300 or MATH 16310) and (MATH 19620 or MATH 20250 or STAT
+    24300))
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 18500. Mathematical Methods in the Physical Sciences III. 100 Units.
+- code: MATH 18600
+  title: Mathematics of Quantum Mechanics
+  units: 100
+  description: 'This course covers the mathematical foundations of quantum mechanics, including abstract linear algebra (vector
+    spaces, bases, linear operators, inner products and orthogonality) and partial differential equations (with an emphasis
+    on techniques relevant to solving Schrödinger''s equation: series solutions of second order ODE, orthogonal functions,
+    eigenfunctions and Sturm-Liouville theory, separation of variables).'
+  prereq:
+    all:
+    - MATH 18400
+    - MATH 18500
+  prereq_text: MATH 18400 and MATH 18500
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 18600. Mathematics of Quantum Mechanics. 100 Units.
+- code: MATH 19620
+  title: Linear Algebra
+  units: 100
+  description: This course takes a concrete approach to the basic topics of linear algebra. Topics include vector geometry,
+    systems of linear equations, vector spaces, matrices and determinants, and eigenvalue problems.
+  notes: 'Recommended sequence for ECON majors: MATH 19620, STAT 23400, ECON 210x0 in consecutive quarters.'
+  prereq:
+    any:
+    - MATH 13300
+    - MATH 15200
+    - MATH 16200
+    - MATH 16210
+    - placement: MATH 19620
+  prereq_text: MATH 13300 or MATH 15200 or MATH 16200 or MATH 16210 or placement
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 19620. Linear Algebra. 100 Units.
+- code: MATH 20250
+  title: Abstract Linear Algebra
+  units: 100
+  description: This is a theoretical course in linear algebra intended for students taking higher level mathematics courses.
+    Topics include vector spaces and linear transformations, matrices and the algebra of matrices, determinants and their
+    properties, the geometry of R^n and C^n, bases, coordinates and change of basis, eigenvalues, eigenvectors, characteristic
+    polynomial, diagonalization, special forms including QR factorization and Singular Value Decomposition, and applications.
+  prereq:
+    any:
+    - MATH 16300
+    - MATH 16310
+    - MATH 15910
+    - MATH 15900
+    - MATH 19900
+  prereq_text: MATH 16300 or MATH 16310 or MATH 15910 or MATH 15900 or MATH 19900
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 20250. Abstract Linear Algebra. 100 Units.
+- code: MATH 20300
+  title: Analysis in Rn I
+  units: 100
+  description: MATH 20300 covers the construction of the real numbers, the topology of R^n including the Bolzano-Weierstrass
+    and Heine-Borel theorems, and a detailed treatment of abstract metric spaces, including convergence and completeness,
+    compact sets, continuous mappings, and more.
+  prereq:
+    any:
+    - MATH 16300
+    - MATH 16310
+    - MATH 15910
+    - MATH 15900
+    - MATH 19900
+  prereq_text: MATH 16300 or MATH 16310 or MATH 15910 or MATH 15900 or MATH 19900
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 20300. Analysis in Rn I. 100 Units.
+- code: MATH 20310
+  title: Analysis in Rn I (accelerated)
+  units: 100
+  description: This is an accelerated version of MATH 20300.
+  prereq:
+    any:
+    - course: MATH 16300
+      min_grade: B+
+    - course: MATH 16310
+      min_grade: B+
+    - course: MATH 15910
+      min_grade: B+
+    - course: MATH 15900
+      min_grade: B+
+    - MATH 19900
+  prereq_text: MATH 16300 or MATH 16310 or MATH 15910 or MATH 15900 or MATH 19900. Students should have received a grade of
+    B+ or better in MATH 16300, 16310, 15900, or 15910 in order to be properly prepared for the accelerated Analysis sequence.
+  terms_offered:
+  - AU
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 20310. Analysis in Rn I (accelerated)
+  needs_review: true
+- code: MATH 20320
+  title: Analysis in Rn I (IBL)
+  units: 100
+  description: This is an Inquiry-Based Learning (IBL) version of Math 20300.
+  prereq:
+    any:
+    - MATH 16300
+    - MATH 16310
+    - MATH 15910
+  prereq_text: MATH 16300 or MATH 16310 or MATH 15910
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 20320. Analysis in Rn I (IBL)
+- code: MATH 20400
+  title: Analysis in Rn II
+  units: 100
+  description: MATH 20400 covers differentiation in R^n including partial derivatives, gradients, the total derivative, the
+    Chain Rule, optimization problems, vector-valued functions, and the Inverse and Implicit Function Theorems.
+  prereq:
+    all:
+    - any:
+      - MATH 20700
+      - MATH 20300
+      - MATH 20310
+      - MATH 20320
+    - any:
+      - MATH 20250
+      - STAT 24300
+  prereq_text: (MATH 20700 or MATH 20300 or MATH 20310 or MATH 20320) AND (MATH 20250 or STAT 24300)
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 20400. Analysis in Rn II. 100 Units.
+- code: MATH 20410
+  title: Analysis in Rn II (accelerated)
+  units: 100
+  description: This is an accelerated version of MATH 20400.
+  prereq:
+    all:
+    - any:
+      - MATH 20700
+      - MATH 20310
+      - MATH 20320
+    - any:
+      - MATH 20250
+      - STAT 24300
+  prereq_text: (MATH 20700 or MATH 20310 or MATH 20320) AND (MATH 20250 or STAT 24300)
+  terms_offered:
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 20410. Analysis in Rn II (accelerated)
+- code: MATH 20420
+  title: Analysis in Rn II (IBL)
+  units: 100
+  description: This is an Inquiry-Based Learning (IBL) version of MATH 20400.
+  prereq:
+    all:
+    - any:
+      - MATH 20700
+      - MATH 20320
+    - any:
+      - MATH 20250
+      - STAT 24300
+  prereq_text: (MATH 20700 or MATH 20320) AND (MATH 20250 or STAT 24300)
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 20420. Analysis in Rn II (IBL)
+- code: MATH 20500
+  title: Analysis in Rn III
+  units: 100
+  description: MATH 20500 covers integration in R^n including Fubini's Theorem and iterated integration, line and surface
+    integrals, differential forms, and the theorems of Green, Gauss, and Stokes
+  prereq:
+    any:
+    - MATH 20400
+    - MATH 20410
+    - MATH 20800
+  prereq_text: MATH 20400 or MATH 20410 or MATH 20800
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 20500. Analysis in Rn III. 100 Units.
+- code: MATH 20510
+  title: Analysis in Rn III (accelerated)
+  units: 100
+  description: This is an accelerated version of MATH 20500.
+  prereq:
+    any:
+    - MATH 20800
+    - MATH 20410
+  prereq_text: MATH 20800 or MATH 20410
+  terms_offered:
+  - AU
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 20510. Analysis in Rn III (accelerated)
+- code: MATH 20520
+  title: Analysis in Rn III (IBL)
+  units: 100
+  description: This is an Inquiry-Based Learning (IBL) version of MATH 20500.
+  prereq: MATH 20420
+  prereq_text: MATH 20420
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 20520. Analysis in Rn III (IBL)
+- code: MATH 20700
+  title: Honors Analysis in Rn I
+  units: 100
+  description: This is the first course in a highly theoretical sequence in analysis, and is intended for the most able students.
+    Topics include the real number system, metric spaces, basic functional analysis, and the Lebesgue integral.
+  prereq:
+    placement: MATH 20700
+  prereq_text: Invitation only
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 20700. Honors Analysis in Rn I. 100 Units.
+  needs_review: true
+- code: MATH 20800
+  title: Honors Analysis in Rn II
+  units: 100
+  description: This is the second course in a highly theoretical sequence in analysis. Topics include the real number system,
+    metric spaces, basic functional analysis, and the Lebesgue integral.
+  prereq:
+    all:
+    - MATH 20700
+    - MATH 20250
+  prereq_text: MATH 20700 and MATH 20250
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 20800. Honors Analysis in Rn II. 100 Units.
+- code: MATH 20900
+  title: Honors Analysis in Rn III
+  units: 100
+  description: This is the third course in a highly theoretical sequence in analysis. Topics include the real number system,
+    metric spaces, basic functional analysis, and the Lebesgue integral.
+  prereq: MATH 20800
+  prereq_text: MATH 20800
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 20900. Honors Analysis in Rn III. 100 Units.
+- code: MATH 21100
+  title: Basic Numerical Analysis
+  units: 100
+  description: This course covers direct and iterative methods of solution of linear algebraic equations and eigenvalue problems.
+    Topics include numerical differentiation and quadrature for functions of a single variable, approximation by polynomials
+    and piece-wise polynomial functions, approximate solution of ordinary differential equations, and solution of nonlinear
+    equations.
+  prereq:
+    any:
+    - MATH 18400
+    - MATH 20000
+    - MATH 20250
+    - MATH 20400
+    - MATH 20410
+    - MATH 20420
+  prereq_text: MATH 18400 or 20000 or 20250 or 20400 or 20410 or 20420
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 21100. Basic Numerical Analysis. 100 Units.
+- code: MATH 21200
+  title: Advanced Numerical Analysis
+  units: 100
+  description: This course covers topics similar to those of Math 21100 but at a more rigorous level. The emphasis is on proving
+    all of the results. Previous knowledge of numerical analysis is not required. The course makes extensive use of the material
+    developed in the analysis sequence (ending in Math 20500 or Math 20900) and provides an introduction to other areas of
+    analysis such as functional analysis and operator theory.
+  prereq:
+    any:
+    - MATH 20500
+    - MATH 20510
+    - MATH 20520
+    - MATH 20900
+  prereq_text: MATH 20500 or 20510 or 20520 or 20900
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 21200. Advanced Numerical Analysis. 100 Units.
+- code: MATH 23500
+  title: Markov Chains, Martingales, and Brownian Motion
+  units: 100
+  description: 'This course discusses three of the most important types of stochastic processes: Markov chains (in both discrete
+    and continuous time), martingales (the mathematical model of "fair games"), and Brownian motion (random continuous motion).
+    Applications will include random walk, queueing theory, and branching processes, and may also include other areas such
+    as optimal stopping or stochastic integration.'
+  prereq:
+    any:
+    - STAT 25100
+    - STAT 25150
+    - STAT 24400
+    - MATH 20500
+    - MATH 20510
+    - MATH 20520
+    - MATH 20900
+  prereq_text: STAT 25100 or STAT 25150 or STAT 24400 or MATH 20500 or MATH 20510 or MATH 20520 or MATH 20900
+  terms_offered:
+  - AU
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 23500. Markov Chains, Martingales, and Brownian Motion. 100 Units.
+- code: MATH 23700
+  title: Introduction to Modelling
+  units: 100
+  description: This class focuses on applications of mathematics to disciplines such as biology, chemistry, economics, engineering,
+    and physics. The particular collection of areas discussed may vary from year to year. The emphasis is on the modeling
+    process which includes observing real-world phenomena, constructing mathematical models, analyzing the mathematical model,
+    using these results to shed light on the phenomena, and then revisiting the phenomena to see how the model might be modified
+    for improvements.
+  prereq:
+    any:
+    - MATH 20500
+    - MATH 20510
+    - MATH 20520
+    - MATH 20900
+    - all:
+      - MATH 18300
+      - MATH 18400
+      - MATH 18500
+      - MATH 18600
+  prereq_text: MATH 20500 or MATH 20510 or MATH 20520 or MATH 20900 or MATH 18300-18400-18500-18600
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 23700. Introduction to Modelling. 100 Units.
+- code: MATH 23900
+  title: Topics in Analysis
+  units: 100
+  description: 'This course introduces undergraduate students who have already completed the standard analysis sequence to
+    more advanced topics in analysis. Topics will vary. Possible topics include, among many others: Fourier series and Fourier
+    transforms, wavelets, uncertainty principle; Hausdorff measure and dimension, fractal geometry; harmonic functions and
+    their properties, Brownian motion; geometry of Banach spaces; descriptive set theory.'
+  prereq:
+    any:
+    - MATH 20900
+    - consent: instructor
+  prereq_text: MATH 20900 or Consent
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 23900. Topics in Analysis. 100 Units.
+  needs_review: true
+- code: MATH 24200
+  title: Algebraic Number Theory
+  units: 100
+  description: The goal of this course is to develop the foundational results of algebraic number theory. Core topics include
+    the arithmetic of number fields, prime decomposition and unique factorization of ideals in rings of integers, Dirichlet's
+    unit theorem, and the finiteness of the ideal class group.
+  prereq:
+    any:
+    - MATH 25500
+    - MATH 25800
+  prereq_text: MATH 25500 or 25800
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 24200. Algebraic Number Theory. 100 Units.
+- code: MATH 24400
+  title: Introduction to Algebraic Geometry
+  units: 100
+  description: 'This is a first course in algebraic geometry. Topics include: affine and projective varieties; coordinate
+    rings; the Zariski topology; Nullstellensatz; Hilbert basis Theorem; the dictionary between algebraic geometry and commutative
+    algebra; rational functions and morphisms; smoothness; theory of dimension; Other possible topics might include: the classification
+    of plane cubics; elliptic curves; 27 lines on a cubic surface; introduction to the theory of curves (degree, divisors,
+    Bezout''s Theorem, etc.). Besides the formal prerequisites, MATH 27000 and MATH 26200 are strongly recommended as preparation.'
+  prereq:
+    all:
+    - any:
+      - MATH 20500
+      - MATH 20510
+      - MATH 20520
+      - MATH 20900
+    - any:
+      - MATH 25500
+      - MATH 25800
+  prereq_text: (MATH 20500 or MATH 20510 or MATH 20520 or MATH 20900) and (MATH 25500 or MATH 25800)
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 24400. Introduction to Algebraic Geometry. 100 Units.
+- code: MATH 25400
+  title: Basic Algebra I
+  units: 100
+  description: This course covers groups, subgroups, permutation groups, group actions, and the Sylow theorems.
+  prereq: MATH 20250
+  prereq_text: MATH 20250
+  terms_offered:
+  - AU
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 25400. Basic Algebra I. 100 Units.
+- code: MATH 25500
+  title: Basic Algebra II
+  units: 100
+  description: This course covers rings and ideals, PIDs, Euclidean domains, UFDs, fields and field extensions, modules and
+    canonical forms of matrices, quadratic forms, and multilinear algebra.
+  prereq:
+    any:
+    - MATH 25400
+    - MATH 25700
+  prereq_text: MATH 25400 or MATH 25700
+  terms_offered:
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 25500. Basic Algebra II. 100 Units.
+- code: MATH 25700
+  title: Honors Basic Algebra I
+  units: 100
+  description: Topics in MATH 25700 include the theory of finite groups, up through and including the proofs of the Sylow
+    Theorems.
+  prereq: MATH 20250
+  prereq_text: MATH 20250; no entering student may begin this sequence in their first term.
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 25700. Honors Basic Algebra I. 100 Units.
+  needs_review: true
+- code: MATH 25800
+  title: Honors Basic Algebra II
+  units: 100
+  description: Topics in MATH 25800 include commutative and noncommutative ring theory, modules, and field extensions.
+  prereq: MATH 25700
+  prereq_text: MATH 25700
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 25800. Honors Basic Algebra II. 100 Units.
+- code: MATH 25900
+  title: Honors Basic Algebra III
+  units: 100
+  description: Topics in this course include basic field theory, the structure of p-adic fields, and Galois theory.
+  prereq: MATH 25800
+  prereq_text: MATH 25800
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 25900. Honors Basic Algebra III. 100 Units.
+- code: MATH 26200
+  title: Point-Set Topology
+  units: 100
+  description: After an introduction to abstract topology and some fundamental constructions and concepts (product topologies,
+    order topologies, compactness, connectivity, separation axioms) in this course some of the core theorems of the subject
+    are proved, including Tychonoff's theorem, the Tietze extension lemma, and the Urysohn metrization theorem. As time allows,
+    more advanced topics will be discussed, such as the Alexandroff-Hausdorff theorem, the Hahn-Mazurkiewicz theorem, function
+    spaces and Arzela-Ascoli.
+  prereq:
+    all:
+    - any:
+      - MATH 20300
+      - MATH 20310
+      - MATH 20320
+      - MATH 20700
+    - any:
+      - concurrent: MATH 25400
+      - concurrent: MATH 25700
+  prereq_text: (MATH 20300 or 20310 or 20320 or 20700) and (MATH 25400 or 25700). MATH 25400/25700 may be taken concurrently.
+  terms_offered:
+  - AU
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 26200. Point-Set Topology. 100 Units.
+- code: MATH 26300
+  title: Introduction to Algebraic Topology
+  units: 100
+  description: This course is about the use of algebraic methods in topology and is focused on homotopy theory. Topics include
+    the fundamental group, degree of maps, and homology. Applications include the fundamental theorem of algebra, the Brouwer
+    fixed point theorem, the Borsuk-Ulam theorem, and dimension. If there is time, we will also introduce higher homotopy
+    and cohomology.
+  prereq: MATH 26200
+  prereq_text: MATH 26200
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 26300. Introduction to Algebraic Topology. 100 Units.
+- code: MATH 26500
+  title: Introduction to Riemannian Geometry
+  units: 100
+  description: The course begins with the study of curves and surfaces in three-dimensional space. After a basic introduction,
+    the relationship between the intrinsic and extrinsic geometry of curves and surfaces is discussed, including the second
+    fundamental form and curvature, geodesics and parallel transport, Gauss's Theorema Egregium and the Gauss-Codazzi equations,
+    culminating in the Gauss-Bonnet Theorem and some applications.
+  prereq:
+    any:
+    - MATH 20500
+    - MATH 20510
+    - MATH 20520
+    - MATH 20900
+  prereq_text: MATH 20500 or 20510 or 20520 or 20900
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 26500. Introduction to Riemannian Geometry. 100 Units.
+- code: MATH 26700
+  title: Introduction to Representation Theory of Finite Groups
+  units: 100
+  description: 'This course is an introduction to the representation theory of finite and compact groups. The basic topics
+    covered include irreducible representations, Schur''s Lemma, character theory, induced representations and Frobenius Reciprocity.
+    Additional topics may include special topics in, and applications of, representation theory, such as: Burnside''s p^aq^b
+    theorem, random walks on groups (applications of Fourier analysis on finite groups), representations of symmetric groups
+    and Young tableaux, and representation theory of compact groups, concentrating on SU(2).'
+  prereq:
+    any:
+    - MATH 25800
+    - MATH 25500
+  prereq_text: MATH 25800 or 25500
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 26700. Introduction to Representation Theory of Finite Groups. 100 Units.
+- code: MATH 27000
+  title: Basic Complex Variables
+  units: 100
+  description: Topics include complex numbers, elementary functions of a complex variable, complex integration, power series,
+    residues, conformal mapping, the Fundamental Theorem of Algebra, applications of the residue theorem to the evaluation
+    of various integrals and series, analysis of isolated singularities, and Laurent series.
+  prereq:
+    any:
+    - MATH 20500
+    - MATH 20510
+    - MATH 20520
+    - MATH 20900
+  prereq_text: MATH 20500 or 20510 or 20520 or 20900
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 27000. Basic Complex Variables. 100 Units.
+- code: MATH 27100
+  title: Measure and Integration
+  units: 100
+  description: In this course, we construct Lebesgue measure, measurable sets, and functions. Topics include the Lebesgue
+    integral, convergence theorems, the relationship between Lebesgue and Riemann integrals, the Lp spaces, completeness,
+    and duality. Time permitting, we explore other related topics, such as examples of measures other than Lebesgue measure.
+  prereq:
+    any:
+    - MATH 20500
+    - MATH 20510
+    - MATH 20520
+  prereq_text: MATH 20500 or MATH 20510 or MATH 20520
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 27100. Measure and Integration. 100 Units.
+- code: MATH 27200
+  title: Basic Functional Analysis
+  units: 100
+  description: 'We review metric spaces and define normed spaces and inner product spaces. Topics include Banach spaces, bounded
+    linear operators, and the three basic principles of functional analysis: the closed graph theorem, the open mapping theorem
+    and the uniform boundedness principle. We examine duality and weak topologies, weak and weak-star compactness, Hilbert
+    spaces, orthogonal expansions, and compact operators. Time permitting, we cover the spectral theorem and applications.'
+  prereq:
+    any:
+    - MATH 27100
+    - MATH 20900
+  prereq_text: MATH 27100 or MATH 20900
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 27200. Basic Functional Analysis. 100 Units.
+- code: MATH 27300
+  title: Basic Theory of Ordinary Differential Equations
+  units: 100
+  description: This course is an introduction to the theory of ordinary differential equations in Euclidean space. Topics
+    include first-order equations of one variable, separation of variables, solving higher order systems via reduction of
+    order, linear constant coefficient ordinary differential equations, real Jordan normal form and the matrix exponential,
+    variation of parameters, gradient and Hamiltonian vector fields, existence and uniqueness of solutions for Lipschitz vector
+    fields, local analysis near equilibria, stability of solutions, comparison methods.
+  prereq:
+    any:
+    - MATH 20500
+    - MATH 20510
+    - MATH 20520
+    - MATH 20900
+  prereq_text: MATH 20500 or MATH 20510 or MATH 20520 or MATH 20900
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 27300. Basic Theory of Ordinary Differential Equations. 100 Units.
+- code: MATH 27400
+  title: Introduction to Differentiable Manifolds and Integration on Manifolds
+  units: 100
+  description: 'Topics include manifolds and smooth maps, Sard''s theorem, transversality and intersection theory, vector
+    fields, and the classical theorems: Lefschetz fixed-point theorem, Poincaré-Hopf theorem, Hopf degree theorem. Other topics
+    include integration on manifolds, Stokes Theorem, and de Rham cohomology.'
+  prereq:
+    all:
+    - MATH 26200
+    - any:
+      - MATH 20500
+      - MATH 20510
+      - MATH 20520
+      - MATH 20900
+  prereq_text: MATH 26200 and (MATH 20500 or MATH 20510 or MATH 20520 or MATH 20900)
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 27400. Introduction to Differentiable Manifolds and Integration on Manifolds. 100 Units.
+- code: MATH 27500
+  title: Basic Theory of Partial Differential Equations
+  units: 100
+  description: 'This course covers the analysis of the four fundamental partial differential equations: the transport equation,
+    Laplace equation, heat equation, and wave equation. Some explicit formulas are given, but the emphasis is on proving theorems
+    about the solutions of the equations. Topics include Fourier series, energy methods, maximum principle, Liouville theorems,
+    the method of characteristics, and various a priori estimates.'
+  prereq:
+    all:
+    - MATH 27000
+    - MATH 27300
+  prereq_text: MATH 27000 and MATH 27300
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 27500. Basic Theory of Partial Differential Equations. 100 Units.
+- code: MATH 27600
+  title: Dynamical Systems
+  units: 100
+  description: This course gives an introduction to concepts and examples in the study of dynamical systems. The key notions
+    of recurrence, classification, stability, entropy and chaos will be introduced and illustrated through model examples.
+    A variety of areas of dynamics will be covered, and may include topological dynamics, symbolic dynamics, ergodic theory,
+    and smooth dynamics.
+  prereq:
+    any:
+    - MATH 20900
+    - MATH 27100
+  prereq_text: MATH 20900 OR MATH 27100
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 27600. Dynamical Systems. 100 Units.
+- code: MATH 27700
+  title: Mathematical Logic I
+  units: 100
+  description: This course introduces mathematical logic. Topics include ordinals and cardinals, propositional and predicate
+    logic, and the syntactic notion of proof versus the semantic notion of truth (e.g., soundness, completeness). We also
+    discuss the Gödel completeness theorem, the compactness theorem, and applications of compactness to algebraic problems.
+  crosslists:
+  - CMSC 27700
+  prereq:
+    all:
+    - any:
+      - MATH 20300
+      - MATH 20310
+      - MATH 20320
+      - MATH 20700
+    - any:
+      - MATH 25400
+      - MATH 25700
+  prereq_text: (MATH 20300 or MATH 20310 or MATH 20320 or MATH 20700) and (MATH 25400 or 25700). Algebra may be taken concurrently
+    with department consent.
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 27700. Mathematical Logic I. 100 Units.
+  needs_review: true
+- code: MATH 27800
+  title: Mathematical Logic II
+  units: 100
+  description: Topics include axiomatic set theory, decidability and undecidability in number theory, Peano arithmetic, Turing
+    computability, unsolvable problems, Gödel's incompleteness theorems, and quantifier elimination.
+  crosslists:
+  - CMSC 27800
+  prereq: MATH 27700
+  prereq_text: MATH 27700 or equivalent
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 27800. Mathematical Logic II. 100 Units.
+  needs_review: true
+- code: MATH 28000
+  title: Introduction to Formal Languages
+  units: 100
+  description: This course is a basic introduction to computability theory and formal languages. Topics include automata theory,
+    regular languages, context-free languages, and Turing machines.
+  crosslists:
+  - CMSC 28000
+  prereq:
+    any:
+    - CMSC 27100
+    - CMSC 27130
+    - CMSC 37110
+    - MATH 15900
+    - MATH 15910
+    - MATH 16300
+    - MATH 16310
+    - MATH 19900
+    - MATH 25500
+    - LING 21010
+  prereq_text: CMSC 27100 or CMSC 27130 or CMSC 37110 or MATH 15900 or MATH 15910 or MATH 16300 or MATH 16310 or MATH 19900
+    or MATH 25500 or LING 21010
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 28000. Introduction to Formal Languages. 100 Units.
+- code: MATH 28100
+  title: Introduction to Complexity Theory
+  units: 100
+  description: 'Computability: Turing machines, Universal Turing machines and the Church-Turing thesis. Undecidability. Reducibilities.
+    Complexity--the study of the amount of resources -- time, space, communication, randomness, etc -- needed in computations:
+    Time and space complexity classes, nondeterministic and probabilistic computations. Complete problems. Lower bounds, and
+    the big open problems: P vs NP, space vs. time, etc. Communication Complexity.'
+  crosslists:
+  - CMSC 28100
+  prereq:
+    any:
+    - CMSC 27200
+    - CMSC 27230
+    - CMSC 37000
+    - MATH 15900
+    - MATH 15910
+    - MATH 16300
+    - MATH 16310
+    - MATH 19900
+    - MATH 25500
+  prereq_text: CMSC 27200 or CMSC 27230 or CMSC 37000, or MATH 15900 or MATH 15910 or MATH 16300 or MATH 16310 or MATH 19900
+    or MATH 25500; experience with mathematical proofs.
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 28100. Introduction to Complexity Theory. 100 Units.
+  needs_review: true
+- code: MATH 28130
+  title: Honors Discrete Mathematics
+  units: 100
+  description: We emphasize mathematical discovery and rigorous proof, which are illustrated on a refreshing variety of accessible
+    and useful topics. Basic counting is a recurring theme. Further topics include proof by induction; number theory, congruences,
+    and Fermat's little theorem; relations; factorials, binomial coefficients and advanced counting; combinatorial probability;
+    random variables, expected value, and variance; graph theory and trees. Time permitting, material on recurrences, asymptotic
+    equality, rates of growth and Markov chains may be included as well. The honors version of Discrete Mathematics covers
+    topics at a deeper level.
+  crosslists:
+  - CMSC 27130
+  prereq:
+    any:
+    - any:
+      - CMSC 14200
+      - CMSC 15200
+      - CMSC 16200
+      - CMSC 12200
+    - any:
+      - MATH 15910
+      - MATH 16300
+      - MATH 16310
+      - MATH 19900
+      - MATH 20300
+      - MATH 20310
+      - MATH 20400
+      - MATH 20410
+      - MATH 20700
+      - MATH 25400
+      - MATH 25500
+      - MATH 25700
+  prereq_text: (CMSC 14200 or CMSC 15200 or CMSC 16200 or CMSC 12200) or (MATH 15910 or MATH 16300 or MATH 16310 or MATH 19900
+    or MATH 20300 or MATH 20310 or MATH 20400 or MATH 20410 or MATH 20700 or MATH 25400 or MATH 25500 or MATH 25700)
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 28130. Honors Discrete Mathematics. 100 Units.
+- code: MATH 28230
+  title: Honors Theory of Algorithms
+  units: 100
+  description: This course covers design and analysis of efficient algorithms, with emphasis on ideas rather than on implementation.
+    Algorithmic questions include sorting and searching, discrete optimization, algorithmic graph theory, algorithmic number
+    theory, and cryptography. Design techniques include divide-and-conquer methods, dynamic programming, greedy algorithms,
+    and graph search, as well as the design of efficient data structures. Methods of algorithm analysis include asymptotic
+    notation, evaluation of recurrent inequalities, the concepts of polynomial-time algorithms, and NP-completeness. The honors
+    version of Theory of Algorithms covers topics at a deeper level.
+  crosslists:
+  - CMSC 27230
+  prereq:
+    any:
+    - CMSC 27100
+    - CMSC 27130
+    - CMSC 37110
+    - consent: instructor
+  prereq_text: CMSC 27100 or CMSC 27130 or CMSC 37110 or consent of the instructor.
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 28230. Honors Theory of Algorithms. 100 Units.
+- code: MATH 28330
+  title: Honors Introduction to Complexity Theory
+  units: 100
+  description: Computability topics are discussed (e.g., the s-m-n theorem and the recursion theorem, resource-bounded computation).
+    This course introduces complexity theory. Relationships between space and time, determinism and non-determinism, NP-completeness,
+    and the P versus NP question are investigated.
+  crosslists:
+  - CMSC 28130
+  prereq:
+    any:
+    - CMSC 27100
+    - CMSC 27130
+    - MATH 15900
+    - MATH 19900
+    - MATH 25500
+  prereq_text: CMSC 27100 or CMSC 27130, or MATH 15900 or MATH 19900 or MATH 25500; experience with mathematical proofs.
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 28330. Honors Introduction to Complexity Theory. 100 Units.
+  needs_review: true
+- code: MATH 28410
+  title: Honors Combinatorics
+  units: 100
+  description: Methods of enumeration, construction, and proof of existence of discrete structures are discussed in conjunction
+    with the basic concepts of probability theory over a finite sample space. Enumeration techniques are applied to the calculation
+    of probabilities, and, conversely, probabilistic arguments are used in the analysis of combinatorial structures. Other
+    topics include basic counting, linear recurrences, generating functions, Latin squares, finite projective planes, graph
+    theory, Ramsey theory, coloring graphs and set systems, random variables, independence, expected value, standard deviation,
+    and Chebyshev's and Chernoff's inequalities.
+  notes: This course is offered in alternate years.
+  crosslists:
+  - CMSC 27410
+  prereq:
+    any:
+    - MATH 19900
+    - MATH 15900
+    - MATH 25400
+    - MATH 25700
+    - CMSC 27100
+    - CMSC 27130
+    - CMSC 37110
+  prereq_text: MATH 19900 or MATH 15900 or MATH 25400 or MATH 25700, or CMSC 27100 or CMSC 27130 or CMSC 37110. Experience
+    with mathematical proofs.
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 28410. Honors Combinatorics. 100 Units.
+  needs_review: true
+- code: MATH 28530
+  title: Honors Graph Theory
+  units: 100
+  description: This course covers the basics of the theory of finite graphs. Topics include shortest paths, spanning trees,
+    counting techniques, matchings, Hamiltonian cycles, chromatic number, extremal graph theory, Turan's theorem, planarity,
+    Menger's theorem, the max-flow/min-cut theorem, Ramsey theory, directed graphs, strongly connected components, directly
+    acyclic graphs, and tournaments. Techniques studied include the probabilistic method, but no prior knowledge of probability
+    theory is assumed. If time permits, at the end of the course we shall also discuss applications of linear algebra. For
+    that section, familiarity with the basics of linear algebra will be assumed.
+  crosslists:
+  - CMSC 27530
+  prereq:
+    any:
+    - CMSC 27100
+    - CMSC 27130
+    - CMSC 37110
+    - MATH 20400
+    - MATH 20800
+  prereq_text: CMSC 27100, CMSC 27130, or CMSC 37110, or MATH 20400 or MATH 20800.
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 28530. Honors Graph Theory. 100 Units.
+- code: MATH 29533
+  title: 'Dynamical Systems: the Mathematics of Billiards'
+  units: 100
+  description: We will begin by introducing the subject of billiards in polygons, using billiards then as a motivation to
+    study some basic notions in the field of dynamical systems. We will then apply these ideas to billiards. We will then
+    introduce a special class of rational angled billiards and show how they lead to the subject of translation surfaces.
+    We then will study properties of translation surfaces and study families of them which are called moduli spaces.
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: 'MATH 29533. Dynamical Systems: the Mathematics of Billiards. 100 Units.'
+- code: MATH 29700
+  title: Proseminar in Mathematics
+  units: 100
+  description: Consent of instructor. Students are required to submit the signed College Reading and Research Course Form
+    to the Co-Director of Undergraduate Studies. Must be taken for a quality grade.
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/mathematics/
+    quote: MATH 29700. Proseminar in Mathematics. 100 Units.
+- code: MATH 30200
+  title: Computability Theory I
+  units: 100
+  notes: Cross-listed with CMSC 38000 (its catalog block lists MATH 30200 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from CMSC 38000.
+  crosslists:
+  - CMSC 38000
+  prereq_text: Consent of department counselor. MATH 25500 or consent of instructor.
+  terms_offered:
+  - SP
+  source:
+    url: http://graduateannouncements.uchicago.edu/graduate/departmentofcomputerscience/
+    quote: 'Equivalent Course(s): MATH 30200'
+  needs_review: true
+- code: MATH 30300
+  title: Computability Theory II
+  units: 100
+  notes: Cross-listed with CMSC 38100 (its catalog block lists MATH 30300 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from CMSC 38100.
+  crosslists:
+  - CMSC 38100
+  prereq_text: Consent of department counselor. MATH 25500 or consent of instructor.
+  terms_offered:
+  - SP
+  source:
+    url: http://graduateannouncements.uchicago.edu/graduate/departmentofcomputerscience/
+    quote: 'Equivalent Course(s): MATH 30300'
+  needs_review: true
+- code: MATH 30500
+  title: Computability and Complexity Theory
+  units: 100
+  notes: Cross-listed with CMSC 38500 (its catalog block lists MATH 30500 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from CMSC 38500.
+  crosslists:
+  - CMSC 38500
+  prereq_text: Consent of department counselor and instructor
+  source:
+    url: http://graduateannouncements.uchicago.edu/graduate/departmentofcomputerscience/
+    quote: 'Equivalent Course(s): TTIC 31060, MATH 30500'
+  needs_review: true
+- code: MATH 31200
+  title: Analysis I
+  units: 100
+  description: 'Topics include: Lebesgue integration, Lp spaces and Banach spaces, differentiation theory, Hilbert spaces
+    and Fourier series, Fourier transform, probability spaces and random variables, strong law of large numbers, central limit
+    theorem, conditional expectation and martingales, Brownian motion.'
+  prereq:
+    all:
+    - MATH 26200
+    - MATH 27000
+    - MATH 27200
+    - MATH 27400
+    - consent: director of undergraduate studies
+  prereq_text: MATH 26200, 27000, 27200, and 27400; and consent of director or co-director of undergraduate studies
+  terms_offered:
+  - AU
+  source:
+    url: http://graduateannouncements.uchicago.edu/graduate/departmentofmathematics/
+    quote: MATH 31200. Analysis I. 100 Units.
+- code: MATH 31300
+  title: Analysis II
+  units: 100
+  description: 'Topics include: Hilbert spaces, projections, bounded and compact operators, spectral theorem for compact selfadjoint
+    operators, unbounded selfadjoint operators, Cayley transform, Banach spaces, Schauder bases, Hahn-Banach theorem and its
+    geometric meaning, uniform boundedness principle, open mapping theorem, Frechet spaces, applications to elliptic partial
+    differential equations, Fredholm alternative.'
+  prereq: MATH 31200
+  prereq_text: MATH 31200
+  terms_offered:
+  - WI
+  source:
+    url: http://graduateannouncements.uchicago.edu/graduate/departmentofmathematics/
+    quote: MATH 31300. Analysis II. 100 Units.
+- code: MATH 31400
+  title: Analysis III
+  units: 100
+  description: 'Topics include: Basic complex analysis, Cauchy theorem in the homological formulation, residues, meromorphic
+    functions, Mittag-Leffler theorem, Gamma and Zeta functions, analytic continuation, mondromy theorem, the concept of a
+    Riemann surface, meromorphic differentials, divisors, Riemann-Roch theorem, compact Riemann surfaces, uniformization theorem,
+    Green functions, hyperbolic surfaces, covering spaces, quotients.'
+  prereq: MATH 31300
+  prereq_text: MATH 31300
+  terms_offered:
+  - SP
+  source:
+    url: http://graduateannouncements.uchicago.edu/graduate/departmentofmathematics/
+    quote: MATH 31400. Analysis III. 100 Units.
+- code: MATH 31700
+  title: Topology and Geometry I
+  units: 100
+  description: 'Topics include: Fundamental group, covering space theory and Van Kampen''s theorem (with a discussion of free
+    and amalgamated products of groups), homology theory (singular, simplicial, cellular), cohomology theory, Mayer-Vietoris,
+    cup products, Poincare Duality, Lefschetz fixed-point theorem, some homological algebra (including the Kunneth and universal
+    coefficient theorems), higher homotopy groups, Whitehead''s theorem, exact sequence of a fibration, obstruction theory,
+    Hurewicz isomorphism theorem.'
+  prereq:
+    all:
+    - MATH 26200
+    - MATH 27000
+    - MATH 27200
+    - MATH 27400
+    - consent: director of undergraduate studies
+  prereq_text: MATH 26200, 27000, 27200, and 27400; and consent of director or co-director of undergraduate studies
+  terms_offered:
+  - AU
+  source:
+    url: http://graduateannouncements.uchicago.edu/graduate/departmentofmathematics/
+    quote: MATH 31700. Topology and Geometry I. 100 Units.
+- code: MATH 31800
+  title: Topology and Geometry II
+  units: 100
+  description: 'Topics include: Definition of manifolds, tangent and cotangent bundles, vector bundles. Inverse and implicit
+    function theorems. Sard''s theorem and the Whitney embedding theorem. Degree of maps. Vector fields and flows, transversality,
+    and intersection theory. Frobenius'' theorem, differential forms and the associated formalism of pullback, wedge product,
+    integration, etc. Cohomology via differential forms, and the de Rham theorem. Further topics may include: compact Lie
+    groups and their representations, Morse theory, cobordism, and differentiable structures on the sphere.'
+  prereq: MATH 31700
+  prereq_text: MATH 31700
+  terms_offered:
+  - WI
+  source:
+    url: http://graduateannouncements.uchicago.edu/graduate/departmentofmathematics/
+    quote: MATH 31800. Topology and Geometry II. 100 Units.
+- code: MATH 31900
+  title: Topology and Geometry III
+  units: 100
+  description: 'Topics include: Riemannian metrics, connections and curvature on vector bundles, the Levi-Civita connection,
+    and the multiple interpretations of curvature. Geodesics and the associated variational formalism (formulas for the 1st
+    and 2nd variation of length), the exponential map, completeness, and the influence of curvature on the topological structure
+    of a manifold (positive versus negative curvature). Lie groups. The Chern-Weil description of characteristic classes,
+    the Gauss-Bonnet theorem, and possibly the Hodge Theorem.'
+  prereq: MATH 31800
+  prereq_text: MATH 31800
+  terms_offered:
+  - WI
+  source:
+    url: http://graduateannouncements.uchicago.edu/graduate/departmentofmathematics/
+    quote: MATH 31900. Topology and Geometry III. 100 Units.
+- code: MATH 32500
+  title: Algebra I
+  units: 100
+  description: 'Topics include: Representation theory of finite groups, including symmetric groups and finite groups of Lie
+    type; group rings; Schur functors; induced representations and Frobenius reciprocity; representation theory of Lie groups
+    and Lie algebras, highest weight theory, Schur-Weyl duality; applications of representation theory in various parts of
+    mathematics.'
+  prereq:
+    all:
+    - MATH 25700
+    - MATH 25800
+    - MATH 25900
+    - consent: director of undergraduate studies
+  prereq_text: MATH 25700-25800-25900, and consent of director or co-director of undergraduate studies
+  terms_offered:
+  - AU
+  source:
+    url: http://graduateannouncements.uchicago.edu/graduate/departmentofmathematics/
+    quote: MATH 32500. Algebra I. 100 Units.
+- code: MATH 32600
+  title: Algebra II
+  units: 100
+  description: 'This course will explain the dictionary between commutative algebra and algebraic geometry. Topics will include
+    the following. Commutative ring theory; Noetherian property; Hilbert Basis Theorem; localization and local rings; etc.
+    Algebraic geometry: affine and projective varieties, ring of regular functions, local rings at points, function fields,
+    dimension theory, curves, higher-dimensional varieties.'
+  prereq: MATH 32500
+  prereq_text: MATH 32500
+  terms_offered:
+  - WI
+  source:
+    url: http://graduateannouncements.uchicago.edu/graduate/departmentofmathematics/
+    quote: MATH 32600. Algebra II. 100 Units.
+- code: MATH 32700
+  title: Algebra III
+  units: 100
+  description: 'According to the inclinations of the instructor, this course may cover: algebraic number theory; homological
+    algebra; further topics in algebraic geometry and/or representation theory.'
+  prereq: MATH 32600
+  prereq_text: MATH 32600
+  terms_offered:
+  - SP
+  source:
+    url: http://graduateannouncements.uchicago.edu/graduate/departmentofmathematics/
+    quote: MATH 32700. Algebra III. 100 Units.
+- code: MATH 37500
+  title: Algorithms in Finite Groups
+  units: 100
+  notes: Cross-listed with CMSC 36500 (its catalog block lists MATH 37500 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from CMSC 36500.
+  crosslists:
+  - CMSC 36500
+  prereq_text: Consent of department counselor. Linear algebra, finite fields, and a first course in group theory (Jordan-Holder
+    and Sylow theorems) required; prior knowledge of algorithms not required
+  source:
+    url: http://graduateannouncements.uchicago.edu/graduate/departmentofcomputerscience/
+    quote: 'Equivalent Course(s): MATH 37500'
+  needs_review: true
+- code: MATH 37794
+  title: Special Topics in Machine Learning
+  units: 100
+  notes: Cross-listed with CMSC 35490 (its catalog block lists MATH 37794 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from CMSC 35490.
+  crosslists:
+  - CMSC 35490
+  prereq_text: Students should be familiar with a numerical programming language like Python, Julia, R, or Matlab and the
+    content of CMSC 35400. Students should also have familiarity with the contents of MATH 27300 and MATH 27500 or similar.
+  terms_offered:
+  - AU
+  source:
+    url: http://graduateannouncements.uchicago.edu/graduate/departmentofcomputerscience/
+    quote: 'Equivalent Course(s): CAAM 37794, STAT 37794, MATH 37794'
+  needs_review: true
+- code: MATH 38300
+  title: Numerical Solutions to Partial Differential Equations
+  units: 100
+  notes: Cross-listed with CMSC 38300 (its catalog block lists MATH 38300 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from CMSC 38300.
+  crosslists:
+  - CMSC 38300
+  prereq_text: Consent of department counselor and instructor
+  source:
+    url: http://graduateannouncements.uchicago.edu/graduate/departmentofcomputerscience/
+    quote: 'Equivalent Course(s): MATH 38300'
+  needs_review: true
+- code: MATH 38309
+  title: 'Mathematical Computation III: Numerical Methods for PDE''s'
+  units: 100
+  notes: Cross-listed with CMSC 37812 (its catalog block lists MATH 38309 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from CMSC 37812.
+  crosslists:
+  - CMSC 37812
+  prereq_text: Some prior exposure to differential equations and linear algebra
+  source:
+    url: http://graduateannouncements.uchicago.edu/graduate/departmentofcomputerscience/
+    quote: 'Equivalent Course(s): STAT 31100, CAAM 31100, MATH 38309'
+  needs_review: true
+- code: MATH 38405
+  title: Arithmetic Combinatorics
+  units: 100
+  notes: Cross-listed with CMSC 38405 (its catalog block lists MATH 38405 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from CMSC 38405.
+  crosslists:
+  - CMSC 38405
+  terms_offered:
+  - SP
+  source:
+    url: http://graduateannouncements.uchicago.edu/graduate/departmentofcomputerscience/
+    quote: 'Equivalent Course(s): MATH 38405'
+- code: MATH 38410
+  title: Quantum Computing
+  units: 100
+  notes: Cross-listed with CMSC 38410 (its catalog block lists MATH 38410 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from CMSC 38410.
+  crosslists:
+  - CMSC 38410
+  prereq_text: Consent of department counselor. Basic knowledge of computational complexity and linear algebra required; knowledge
+    of quantum mechanics not required
+  source:
+    url: http://graduateannouncements.uchicago.edu/graduate/departmentofcomputerscience/
+    quote: 'Equivalent Course(s): MATH 38410'
+  needs_review: true
+- code: MATH 38420
+  title: Mathematics of Quantum Computing
+  units: 100
+  notes: Cross-listed with CMSC 38420 (its catalog block lists MATH 38420 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from CMSC 38420.
+  crosslists:
+  - CMSC 38420
+  source:
+    url: http://graduateannouncements.uchicago.edu/graduate/departmentofcomputerscience/
+    quote: 'Equivalent Course(s): MATH 38420'
+- code: MATH 38502
+  title: Topics in Combinatorics and Logic
+  units: 100
+  notes: Cross-listed with CMSC 38502 (its catalog block lists MATH 38502 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from CMSC 38502.
+  crosslists:
+  - CMSC 38502
+  prereq_text: None
+  terms_offered:
+  - WI
+  source:
+    url: http://graduateannouncements.uchicago.edu/graduate/departmentofcomputerscience/
+    quote: 'Equivalent Course(s): MATH 38502'
+  needs_review: true
+- code: MATH 38703
+  title: Complexity Theory B
+  units: 100
+  notes: Cross-listed with CMSC 38700 (its catalog block lists MATH 38703 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from CMSC 38700.
+  crosslists:
+  - CMSC 38700
+  prereq_text: Consent of department counselor and instructor
+  source:
+    url: http://graduateannouncements.uchicago.edu/graduate/departmentofcomputerscience/
+    quote: 'Equivalent Course(s): MATH 38703'
+  needs_review: true
+- code: MATH 38800
+  title: Complexity Theory
+  units: 100
+  notes: Cross-listed with CMSC 38800 (its catalog block lists MATH 38800 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from CMSC 38800.
+  crosslists:
+  - CMSC 38800
+  prereq_text: None, but some familiarity with the book "Computational Complexity" by Arora and Barak might be helpful.
+  source:
+    url: http://graduateannouncements.uchicago.edu/graduate/departmentofcomputerscience/
+    quote: 'Equivalent Course(s): MATH 38800'
+  needs_review: true
+- code: MATH 38815
+  title: Geometric Complexity
+  units: 100
+  notes: Cross-listed with CMSC 38815 (its catalog block lists MATH 38815 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from CMSC 38815.
+  crosslists:
+  - CMSC 38815
+  prereq_text: Consent of department counselor and instructor
+  source:
+    url: http://graduateannouncements.uchicago.edu/graduate/departmentofcomputerscience/
+    quote: 'Equivalent Course(s): MATH 38815'
+  needs_review: true
+- code: MATH 38900
+  title: Geometry, Complexity and Algorithms
+  units: 100
+  notes: Cross-listed with CMSC 39020 (its catalog block lists MATH 38900 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from CMSC 39020.
+  crosslists:
+  - CMSC 39020
+  source:
+    url: http://graduateannouncements.uchicago.edu/graduate/departmentofcomputerscience/
+    quote: 'Equivalent Course(s): MATH 38900'
+- code: MATH 39600
+  title: Topics in Theoretical Computer Science
+  units: 100
+  notes: Cross-listed with CMSC 39600 (its catalog block lists MATH 39600 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from CMSC 39600.
+  crosslists:
+  - CMSC 39600
+  source:
+    url: http://graduateannouncements.uchicago.edu/graduate/departmentofcomputerscience/
+    quote: 'Equivalent Course(s): MATH 39600'

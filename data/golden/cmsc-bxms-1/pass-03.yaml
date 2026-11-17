@@ -1,0 +1,77 @@
+# Golden plan (prompt 05). Course facts: data/seed/2026-27; rules: data/seed/REVIEW.md.
+id: cmsc-bxms-1-pass-03
+description: Option 1 with different CMSC 3xxxx electives (CMSC 35800, 35900, 33251)
+program: cmsc-bxms-1
+expect: pass
+checks:
+- V01
+- V02
+- V03
+- V07
+- V08
+- V12
+plan:
+  catalog_year: 2026-27
+  entry_term: 2026-AU
+  programs:
+  - program_id: cmsc-bs
+  - program_id: cmsc-bxms-1
+  placements:
+  - MATH 15100
+  items:
+  - course: MATH 15100
+    term: 2026-AU
+  - course: CMSC 14100
+    term: 2026-AU
+  - course: PHYS 13100
+    term: 2026-AU
+  - course: MATH 15200
+    term: 2027-WI
+  - course: CMSC 14200
+    term: 2027-WI
+  - course: PHYS 13200
+    term: 2027-WI
+  - course: CMSC 14300
+    term: 2027-SP
+  - course: CMSC 27100
+    term: 2027-SP
+  - course: CMSC 14400
+    term: 2027-AU
+  - course: CMSC 27200
+    term: 2027-AU
+  - course: CMSC 25300
+    term: 2027-AU
+  - course: CMSC 23000
+    term: 2028-WI
+  - course: CMSC 28000
+    term: 2028-WI
+  - course: CMSC 21800
+    term: 2028-WI
+  - course: CMSC 23900
+    term: 2028-SP
+  - course: CMSC 25400
+    term: 2028-SP
+  - course: CMSC 22100
+    term: 2028-SP
+  - course: CMSC 23500
+    term: 2028-AU
+  - course: CMSC 20300
+    term: 2028-AU
+  - course: CMSC 37115
+    term: 2028-AU
+  - course: CMSC 37000
+    term: 2028-AU
+  - course: CMSC 23320
+    term: 2029-WI
+  - course: TTIC 31020
+    term: 2029-WI
+  - course: CMSC 33100
+    term: 2029-SP
+  - course: CMSC 33300
+    term: 2029-AU
+  - course: CMSC 35800
+    term: 2030-WI
+  - course: CMSC 35900
+    term: 2030-WI
+  - course: CMSC 33251
+    term: 2030-SP

@@ -1,0 +1,802 @@
+# Generated from the 2026-2027 UChicago College Catalog (fetched 2026-11-12) by hand-checked scripts;
+# every source.quote is copied verbatim (whitespace collapsed) from source.url. See data/seed/REVIEW.md.
+courses:
+- code: HIST 10101
+  title: Introduction to African Civilization I
+  units: 100
+  description: 'Part one considers literary, oral, linguistic, and material sources to investigate African societies and states
+    from the early Iron Age through the emergence of the Atlantic World. Case studies include: the empires of Ghana and Mali,
+    the Swahili Coast, Great Zimbabwe, Nok of Nigeria, and medieval Ethiopia. We also consider religious and spiritual transformation,
+    including Islam in Africa, as well as the origins and effects of European contact, and the emergence of the transatlantic
+    trade in enslaved human beings. Students examine these times and places through primary sources (such as cultural artifacts,
+    visual representations, myths, and memoirs) which illuminate African perspectives on these different places and times.
+    Assignments: oral presentations, document analyses, essays, and team projects.'
+  core_tags:
+  - civilization
+  crosslists:
+  - SOSC 20101
+  - MDVL 10101
+  - ANTH 20701
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: HIST 10101. Introduction to African Civilization I. 100 Units.
+- code: HIST 10102
+  title: Introduction to African Civilization II
+  units: 100
+  description: This course examines the transformations of African societies in the long nineteenth century. At the beginning
+    of the era, European economic and political presence was mainly coastal, but by the end, nearly the entire continent was
+    colonized. This course examines how and why this process occurred, highlighting the struggles of African societies to
+    manage internal reforms and external political, military, and economic pressures. Students examine these processes through
+    various primary sources (such as visual and material sources, cultural artifacts, and personal accounts) that highlight
+    African perspectives on these processes.
+  core_tags:
+  - civilization
+  crosslists:
+  - SOSC 20202
+  - ANTH 20702
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: HIST 10102. Introduction to African Civilization II. 100 Units.
+- code: HIST 10103
+  title: Introduction to African Civilization III
+  units: 100
+  description: African Civilization III examines Africa and the African diaspora in the modern era. Topics may include the
+    end of colonialism and decolonization, the legacies of slavery and its racial logics, identity and cultural expression,
+    theories of personhood, gender and sexuality, migration, governance, and language. Readings vary widely, including primary
+    sources by African and diasporic authors, social theory, and works of art and literature - written, spoken, and performed.
+  notes: Taking these courses in sequence is recommended but not required.
+  core_tags:
+  - civilization
+  crosslists:
+  - ANTH 20703
+  - SOSC 20203
+  prereq_text: This sequence meets the general education requirement in civilization studies.
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: HIST 10103. Introduction to African Civilization III. 100 Units.
+  needs_review: true
+- code: HIST 10800
+  title: Introduction to the Civilizations of South Asia I
+  units: 100
+  notes: Cross-listed with SALC 20100 (its catalog block lists HIST 10800 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from SALC 20100.
+  crosslists:
+  - SALC 20100
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): SALC 30100, HIST 10800, SOSC 23000, MDVL 20100, ANTH 24101'
+- code: HIST 10900
+  title: Introduction to the Civilizations of South Asia II
+  units: 100
+  notes: Cross-listed with SALC 20200 (its catalog block lists HIST 10900 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from SALC 20200.
+  crosslists:
+  - SALC 20200
+  prereq_text: SALC 20100,ANTH 24101,HIST 10800,SASC 20000,SOSC 23000
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): SOSC 23100, SALC 30200, HIST 10900, ANTH 24102'
+  needs_review: true
+- code: HIST 11701
+  title: 'Jewish Civilization I: Ancient Beginnings to Medieval Period'
+  units: 100
+  notes: Cross-listed with JWSC 12000 (its catalog block lists HIST 11701 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from JWSC 12000.
+  crosslists:
+  - JWSC 12000
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): MDVL 12000, HIST 11701, NEHC 22010, RLST 22010'
+- code: HIST 11702
+  title: 'Jewish Civilization II: Early Modern Period to 21st Century'
+  units: 100
+  notes: Cross-listed with JWSC 12001 (its catalog block lists HIST 11702 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from JWSC 12001.
+  crosslists:
+  - JWSC 12001
+  terms_offered:
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): RLST 22011, HIST 11702, NEHC 22011'
+- code: HIST 12204
+  title: 'Beyond the Vitruvian Man: Architecture and the Body in the Italian Renaissance'
+  units: 100
+  notes: Cross-listed with ARTH 17551 (its catalog block lists HIST 12204 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from ARTH 17551.
+  crosslists:
+  - ARTH 17551
+  prereq_text: 'This course is an art in context core course. This course fulfills the following requirements in the ARTH
+    major and minor: European and American pre-1800'
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/arthistory/
+    quote: 'Equivalent Course(s): HIST 12204'
+  needs_review: true
+- code: HIST 12700
+  title: Music and Euro-American Cultures
+  units: 100
+  notes: Cross-listed with MUSI 12100 (its catalog block lists HIST 12700 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from MUSI 12100.
+  crosslists:
+  - MUSI 12100
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): SOSC 21100, HIST 12700'
+- code: HIST 12800
+  title: Music and Euro-American Cultures II (1810-present)
+  units: 100
+  notes: Cross-listed with MUSI 12200 (its catalog block lists HIST 12800 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from MUSI 12200.
+  crosslists:
+  - MUSI 12200
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): HIST 12800, SOSC 21200'
+- code: HIST 13100
+  title: Western Civilization I
+  units: 100
+  description: This term introduces students to debates about the nature of Western Civilization. It then traces the emergence
+    of the state, of commerce, and the rise of monotheism and Christianity. Students will explore the nature of the Greek
+    polis, the development of the Mediterranean economy, the development of the Roman republic and the establishment of the
+    Empire. The term concludes with a discussion of the Christianization of the Roman Empire and the Empire's division with
+    the shift of the capital to Constantinople. Readings may include selections from Homer, Thucydides, Euripides, Cicero,
+    Augustine, the New Testament Gospels, Tacitus and Vergil.
+  core_tags:
+  - civilization
+  crosslists:
+  - SOSC 28110
+  prereq_text: These courses must be taken in sequence.
+  terms_offered:
+  - AU
+  - SU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: HIST 13100. Western Civilization I. 100 Units.
+  needs_review: true
+- code: HIST 13200
+  title: Western Civilization II
+  units: 100
+  description: This term continues the discussion of themes of state formation, commercial development, Christianity and empire
+    introduced in the first term. This term begins with a discussion of the collapse of the Mediterranean unity that had been
+    fostered by the Roman Empire. It concludes with the crisis of the seventeenth century. It thus begins with a moment of
+    retreat and ends with the expansion of Europeans into regions beyond the Mediterranean. Readings this term may include
+    selections from Bede, Thomas Aquinas, Dante, Machiavelli, Bernal Diaz, John Locke, and William Shakespeare.
+  core_tags:
+  - civilization
+  crosslists:
+  - SOSC 28210
+  prereq_text: These courses must be taken in sequence.
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: HIST 13200. Western Civilization II. 100 Units.
+  needs_review: true
+- code: HIST 13300
+  title: Western Civilization III
+  units: 100
+  description: This term continues the development of the themes of state formation, commercial development, religious pluralism,
+    and the expansion of empire that were introduced in the first two terms. It commences with the emergence of early Enlightenment
+    ideas and concludes with the European Union. This term will discuss the age of revolutions, the industrial revolution,
+    the development of liberal and socialist ideas, and the two world wars. Readings may include selections from Bernard Mandeville,
+    Jean-Jacques Rousseau, Karl Marx, Adam Smith, John Stuart Mill, Adolf Hitler, Rosa Luxemburg, Vlademir Lenin, and John
+    Maynard Keynes.
+  core_tags:
+  - civilization
+  crosslists:
+  - SOSC 28310
+  prereq_text: These courses must be taken in sequence.
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: HIST 13300. Western Civilization III. 100 Units.
+  needs_review: true
+- code: HIST 13500
+  title: America In World Civilization I
+  units: 100
+  description: America in World Civilization I examines foundational texts and moments in American culture, society, and politics,
+    from early European incursions into the New World through the early republic of the United States, roughly 1500-1800.
+    We will examine encounters between Native Americans and representatives of imperial powers (Spain, France, and England)
+    as well as the rise of African slavery in North America before 1700. We will consider the development of Anglo-American
+    society and government in the eighteenth century, focusing especially on the causes and consequences of the American Revolution.
+  core_tags:
+  - civilization
+  crosslists:
+  - SOSC 28500
+  - AMER 13500
+  prereq_text: Two consecutive quarters of the sequence meet the College’s general education requirement in civilization studies.
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: HIST 13500. America In World Civilization I. 100 Units.
+  needs_review: true
+- code: HIST 13600
+  title: America in World Civilization II
+  units: 100
+  description: The nineteenth-century quarter of America in World Civilization explores the confrontation of democracy with
+    inequality. This course focuses on themes and problems that include empire and indigenous-US relations; slavery, antislavery,
+    the Civil War, and emancipation; reform and revivalism; women's rights; and the development of industrial capitalism,
+    consumer culture, and urbanism.
+  core_tags:
+  - civilization
+  crosslists:
+  - AMER 13600
+  - SOSC 28600
+  prereq_text: Two consecutive quarters of the sequence meet the College’s general education requirement in civilization studies.
+  terms_offered:
+  - WI
+  - SU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: HIST 13600. America in World Civilization II. 100 Units.
+  needs_review: true
+- code: HIST 13700
+  title: America in World Civilization III
+  units: 100
+  description: The third quarter America in World Civilization focuses on multiple definitions of Americanism in a period
+    characterized by empire, transnational formations, and America's role in the world. We explore the construction of social
+    order in a multicultural society; culture in the shadow of war; the politics of race, ethnicity, and gender; the rise
+    and fall of new social movements on the left and the right; the emergence of the carceral state and militarization of
+    civil space; and the role of climate change and the apocalyptic in shaping imagined futures.
+  core_tags:
+  - civilization
+  crosslists:
+  - AMER 13700
+  - SOSC 28700
+  prereq_text: Two consecutive quarters of the sequence meet the College’s general education requirement in civilization studies.
+  terms_offered:
+  - SP
+  - SU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: HIST 13700. America in World Civilization III. 100 Units.
+  needs_review: true
+- code: HIST 13900
+  title: 'Russia and Eurasia: Empires, Societies, Cultures I (formerly Introduction to Russian Civilization)'
+  units: 100
+  description: 'The first quarter spans the centuries between early medieval Rus'', which furnished modern Ukraine, Russia,
+    and Belarus with a story of origins, to the intellectual, social, and national mobilization in the mid-19th century. Major
+    themes include: the influence of Byzantine, Mongol-Tataric, and Western cultures; medieval principalities, city-states,
+    and the rise of the centralized state, its oversized role in Russian and regional social and economic development, its
+    hyper-modernizing schemes and its periodic collapse; cross-cultural interactions in the steppe and the Baltic and Black
+    Seas littorals; Russia''s wars and the emergence of the Russian empire; varieties of resistance, from peasant uprisings
+    and flight to religious dissent to aristocratic opposition, and the emergence of the repressive machinery of the state;
+    forces of change and continuity in political, intellectual, and cultural life.'
+  notes: Taking these courses in sequence is recommended but not required. When taken with HIST 14000, HIST 13900 meets the
+    two-quarter general education requirement in Civilization Studies.
+  core_tags:
+  - civilization
+  crosslists:
+  - REES 26011
+  - SOSC 24000
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'HIST 13900. Russia and Eurasia: Empires, Societies, Cultures I (formerly Introduction to Russian Civilization)'
+- code: HIST 14000
+  title: 'Russia and Eurasia: Empires, Societies, Cultures II (formerly Introduction to Russian Civilization)'
+  units: 100
+  description: The second quarter focuses on nearly two centuries of upheaval, from the radical movements of the late 19th
+    century to the birth, life, and death of the Soviet Union and the emergence of post-Soviet states. Our topics include
+    Russian imperialism, colonial conquests, and the reconstitution of the Russian empire as the Soviet Union; systems of
+    social and political legitimization; political violence, the evolution of the repressive machinery, and the enduring problem
+    of the rule of law; religious, national, and sexual minorities, practices of everyday life, social order and disorder;
+    resistance, dissent, and liberation movements; creativity, experimentation, and self-expression under censorship.
+  notes: Taking these courses in sequence is recommended but not required. When taken with HIST 13900, HIST 14000 meets the
+    two-quarter general education requirement in Civilization Studies.
+  core_tags:
+  - civilization
+  crosslists:
+  - SOSC 24100
+  - REES 26012
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'HIST 14000. Russia and Eurasia: Empires, Societies, Cultures II (formerly Introduction to Russian Civilization)'
+- code: HIST 14100
+  title: 'Russia and Eurasia: Empires, Societies, Cultures III, Russia and the West, 18th to 21st centuries'
+  units: 100
+  description: 'The third quarter is thematic, rather than chronological, and offers an in-depth or comparative exploration
+    of special topics. Topics vary from year to year. There are few problems as enduring and central to Russian history as
+    the question of the West-Russia''s most passionate romance and most bitter letdown. In this course we will read and think
+    about Russia from the eighteenth to the twenty-first centuries through the lens of this obsession. We will study the products
+    of Russian interactions with the West: constitutional projects, paintings, scientific and economic thought, the Westernizer-Slavophile
+    controversy, and revolutions. We will consider the presence of European communities in Russia: German and British migrants
+    who filled important niches in state service, trade, and scholarship; Italian sculptors and architects who designed some
+    of Russia''s most famous monuments; French expatriates in the wake of the French Revolution; Communist workers and intellectuals,
+    refugees from Nazi Germany; and Western journalists who, in the late Soviet decades, trafficked illicit ideas, texts,
+    and artworks. In the end, we will follow émigré Russians to Europe and the United States and return to present-day Russia
+    to examine the anti-Western turn in its political and cultural discourse.'
+  notes: When taken with HIST 13900 and HIST 14000, HIST 14100 meets the three-quarter general education requirement in Humanities,
+    Civilization Studies, and the Arts. HIST 14100 does not meet the two-quarter Civilization Studies requirement and cannot
+    be combined with HIST 13900 or HIST 14000 for Civilization Studies credit.
+  core_tags:
+  - civilization
+  crosslists:
+  - SOSC 24200
+  - REES 26015
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'HIST 14100. Russia and Eurasia: Empires, Societies, Cultures III, Russia and the West, 18th to 21st centuries.
+      100 Units.'
+- code: HIST 15411
+  title: East Asian Civilization I, Ancient Period-1600
+  units: 100
+  description: This course examines the politics, society, and culture of East Asia from ancient times until c. 1600. Our
+    focus will be on examining key historical moments and intellectual, social, and cultural trends with an emphasis on viewing
+    the region as a whole. Students will read and discuss culturally significant texts and be introduced to various approaches
+    to analyzing them. This will include discussions of differences in how we approach textual and non-textual evidence (such
+    as archaeological artifacts and reconstructed climate data), and especially the challenges of recovering other meanings
+    from texts that were written and/or later used to legitimate particular regimes, or to project current practices back
+    into the distant past so that they seem to be manifestations of a society's defining traditions.
+  core_tags:
+  - civilization
+  crosslists:
+  - SOSC 25411
+  - EALC 15411
+  prereq_text: HIST 15411-15412-15413 meets the general education requirement in civilization studies via three civilization
+    courses. HIST 15411-15412, HIST 15411-15413, or HIST 15412-15413 meets the general education requirement in civilization
+    studies via two civilization courses.
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: HIST 15411. East Asian Civilization I, Ancient Period-1600. 100 Units.
+  needs_review: true
+- code: HIST 15412
+  title: East Asian Civilization II, 1600-1895
+  units: 100
+  description: Second quarter of East Asian civilization sequence covering what are now China, Japan, and Korea from roughly
+    1600-1895. Major themes include demographic and economic change, plus the social and cultural effects of widespread but
+    uneven commercialization; state formation, rebellion, and political change; migration, urbanization, and territorial expansion;
+    changes in family and gender roles; changes in the "natural" environment, particularly as related to agricultural expansion;
+    changes in religion, ideology, and relationships between "elite" and "popular" culture; and increasingly consequential
+    encounters with Western Europeans, Russians, and Americans, especially in the 19th century. The course aims to treat East
+    Asia as a single, interacting region, rather than as three (or more) sharply separated proto-nations; however, it will
+    also call attention to the enormous diversity both among and within China, Japan, and Korea, treating those differences
+    as constantly evolving, and as something to be explained rather than assumed.
+  core_tags:
+  - civilization
+  crosslists:
+  - EALC 15412
+  - SOSC 25412
+  prereq_text: HIST 15411-15412-15413 meets the general education requirement in civilization studies via three civilization
+    courses. HIST 15411-15412, HIST 15411-15413, or HIST 15412-15413 meets the general education requirement in civilization
+    studies via two civilization courses.
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: HIST 15412. East Asian Civilization II, 1600-1895. 100 Units.
+  needs_review: true
+- code: HIST 15413
+  title: East Asian Civilization III, 1895-Present
+  units: 100
+  description: The third quarter of the East Asian civilization sequence covers the emerging nation-states of China, Korea,
+    and Japan in the context of Western and Japanese imperialism and the rise of an interconnected global economy. Our themes
+    include industrialization and urbanization, state strengthening and nation-building, the rise of social movements and
+    mass politics, the impact of Japanese colonialism on the homeland and the colonies, East Asia in the context of US-Soviet
+    rivalry, and the return of the region to the center of the global economy in the postwar years. Similar to the first and
+    second quarters, we will look at East Asia as an integrated region, connected by trade and cultural exchange even when
+    divided into opposing blocs during the Cold War. As much as possible, we will look beyond nation-states and their policies
+    to explore the underlying trends shared by the three East Asian nations, such as mass culture, imperialism, and the impact
+    of the cold war.
+  core_tags:
+  - civilization
+  crosslists:
+  - SOSC 25413
+  - EALC 15413
+  prereq_text: HIST 15411-15412-15413 meets the general education requirement in civilization studies via three civilization
+    courses. HIST 15411-15412, HIST 15411-15413, or HIST 15412-15413 meets the general education requirement in civilization
+    studies via two civilization courses.
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: HIST 15413. East Asian Civilization III, 1895-Present. 100 Units.
+  needs_review: true
+- code: HIST 15602
+  title: 'Ancient Empires I: The Hittite Empire'
+  units: 100
+  notes: Cross-listed with NEHC 20011 (its catalog block lists HIST 15602 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from NEHC 20011.
+  crosslists:
+  - NEHC 20011
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): SOSC 20011, HIST 15602, CLCV 25700'
+- code: HIST 15603
+  title: 'Ancient Empires II: The Ottoman Empire'
+  units: 100
+  notes: Cross-listed with NEHC 20012 (its catalog block lists HIST 15603 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from NEHC 20012.
+  crosslists:
+  - NEHC 20012
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): MDVL 20012, HIST 15603, SOSC 20012, CLCV 25800'
+- code: HIST 15604
+  title: Ancient Empires III :The Egyptian Empire of the New Kingdom
+  units: 100
+  notes: Cross-listed with NEHC 20013 (its catalog block lists HIST 15604 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from NEHC 20013.
+  crosslists:
+  - NEHC 20013
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): HIST 15604, SOSC 20013, CLCV 25900'
+- code: HIST 16101
+  title: Introduction to Latin American Civilization I
+  units: 100
+  notes: Cross-listed with LACS 16100 (its catalog block lists HIST 16101 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from LACS 16100.
+  crosslists:
+  - LACS 16100
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): RDIN 16100, HIST 16101, SOSC 26100, ANTH 23101'
+- code: HIST 16102
+  title: Introduction to Latin American Civilization II
+  units: 100
+  notes: Cross-listed with LACS 16200 (its catalog block lists HIST 16102 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from LACS 16200.
+  crosslists:
+  - LACS 16200
+  terms_offered:
+  - AU
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): HIST 16102, SOSC 26200, RDIN 16200, ANTH 23102'
+- code: HIST 16103
+  title: Introduction to Latin American Civilization III
+  units: 100
+  notes: Cross-listed with LACS 16300 (its catalog block lists HIST 16103 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from LACS 16300.
+  crosslists:
+  - LACS 16300
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): ANTH 23103, SOSC 26300, HIST 16103, RDIN 16300'
+- code: HIST 16700
+  title: 'Ancient Mediterranean World I: Greece'
+  units: 100
+  description: This course surveys the social, economic, and political history of Greece from prehistory to the Hellenistic
+    period. The main topics considered include the development of the institutions of the Greek city-state, the Persian Wars
+    and the rivalry of Athens and Sparta, the social and economic consequences of the Peloponnesian War, and the eclipse and
+    defeat of the city-states by the Macedonians.
+  core_tags:
+  - civilization
+  crosslists:
+  - SOSC 27710
+  - CLCV 20700
+  prereq_text: This sequence meets the general education requirement in civilization studies.
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'HIST 16700. Ancient Mediterranean World I: Greece. 100 Units.'
+  needs_review: true
+- code: HIST 16800
+  title: 'Ancient Mediterranean World II: Rome'
+  units: 100
+  description: Part II surveys the social, economic, and political history of Rome, from its prehistoric beginnings in the
+    twelfth century BCE to the end of the Severan dynasty in 235 CE. Throughout, the focus will be upon the dynamism and adaptability
+    of Roman society, as it moved from a monarchy to a republic to an empire. The course will also cover the questions of
+    social organization (free and unfree people, foreigners), gender relations, religion, and specific forms of the way of
+    life of the Romans. It will be based both on lectures and on discussions of textual or archaeological documents in smaller
+    discussion groups.
+  core_tags:
+  - civilization
+  crosslists:
+  - CLCV 20800
+  - SOSC 16800
+  prereq_text: This sequence meets the general education requirement in civilization studies.
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'HIST 16800. Ancient Mediterranean World II: Rome. 100 Units.'
+  needs_review: true
+- code: HIST 16900
+  title: 'Ancient Mediterranean World III: Late Antiquity'
+  units: 100
+  description: Part III examines late antiquity, a period of paradox. The later Roman emperors established the most intensive,
+    pervasive state structures of the ancient Mediterranean, yet yielded their northern and western territories to Goths,
+    Huns, Vandals, and, ultimately, their Middle Eastern core to the Arab Muslims. Imperial Christianity united the populations
+    of the Roman Mediterranean in the service of one God, but simultaneously divided them into competing sectarian factions.
+    A novel culture of Christian asceticism coexisted with the consolidation of an aristocratic ruling class notable for its
+    insatiable appetite for gold. The course will address these apparent contradictions while charting the profound transformations
+    of the cultures, societies, economies, and political orders of the Mediterranean from the conversion of Constantine to
+    the rise of Islam.
+  core_tags:
+  - civilization
+  crosslists:
+  - CLCV 20900
+  - RLST 20690
+  - MDVL 16900
+  - SOSC 27910
+  prereq_text: This sequence meets the general education requirement in civilization studies.
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'HIST 16900. Ancient Mediterranean World III: Late Antiquity. 100 Units.'
+  needs_review: true
+- code: HIST 17521
+  title: Energy in World Civilizations I
+  units: 100
+  description: This two-quarter course explores the historical roots of climate change and other global environmental problems
+    with a special attention to how energy use shapes human societies over time. Part I covers energy systems across the world
+    from prehistory to the end of the nineteenth century.
+  core_tags:
+  - civilization
+  crosslists:
+  - SOSC 27521
+  - CEGU 27521
+  - HIPS 17521
+  prereq_text: Parts I and II should be taken in sequence. This sequence meets the general education requirement in civilization
+    studies.
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: HIST 17521. Energy in World Civilizations I. 100 Units.
+  needs_review: true
+- code: HIST 17522
+  title: Energy in World Civilizations II
+  units: 100
+  description: This two-quarter course explores the historical roots of climate change and other global environmental problems
+    with a special attention to how energy use shapes human societies over time. Part II covers energy systems across the
+    world from the early twentieth century to the present, examining themes such as the uneven globalization of energy-intensive
+    lifestyles, the changing geopolitics of energy, and possible futures beyond fossil-fuel dependence.
+  core_tags:
+  - civilization
+  crosslists:
+  - ANTH 17522
+  - CEGU 27522
+  - HIPS 17522
+  - SOSC 27522
+  prereq_text: Parts I and II should be taken in sequence. This sequence meets the general education requirement in civilization
+    studies.
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: HIST 17522. Energy in World Civilizations II. 100 Units.
+  needs_review: true
+- code: HIST 18301
+  title: 'Colonizations I: Colonialism, Enslavement and Resistance in the Atlantic World'
+  units: 100
+  notes: Cross-listed with RDIN 24001 (its catalog block lists HIST 18301 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from RDIN 24001.
+  crosslists:
+  - RDIN 24001
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): LACS 24001, SOSC 24001, ANTH 24001, HIST 18301'
+- code: HIST 18302
+  title: 'Colonizations II: Imperial Expansion, Anti-Imperialism, and Nation in Asia'
+  units: 100
+  notes: Cross-listed with RDIN 24002 (its catalog block lists HIST 18302 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from RDIN 24002.
+  crosslists:
+  - RDIN 24002
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): SALC 24002, SOSC 24002, ANTH 24002, HIST 18302'
+- code: HIST 18303
+  title: 'Colonizations III: Decolonization, Revolution, Freedom'
+  units: 100
+  notes: Cross-listed with RDIN 24003 (its catalog block lists HIST 18303 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from RDIN 24003.
+  crosslists:
+  - RDIN 24003
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): SALC 20702, SOSC 24003, ANTH 24003, HIST 18303'
+- code: HIST 19906
+  title: 'Democracy Against Itself: From Antiquity to Modernity'
+  units: 100
+  notes: Cross-listed with SOSC 25316 (its catalog block lists HIST 19906 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from SOSC 25316.
+  crosslists:
+  - SOSC 25316
+  terms_offered:
+  - SU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: 'Equivalent Course(s): HIST 19906'
+- code: HIST 20405
+  title: 'Ancient Empires VI: The Assyrian Empire'
+  units: 100
+  notes: Cross-listed with NEHC 20016 (its catalog block lists HIST 20405 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from NEHC 20016.
+  crosslists:
+  - NEHC 20016
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): HIST 20405'
+- code: HIST 20406
+  title: 'Ancient Empires VII: Sumerians and Akkadians'
+  units: 100
+  notes: Cross-listed with NEHC 20017 (its catalog block lists HIST 20406 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from NEHC 20017.
+  crosslists:
+  - NEHC 20017
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): HIST 20406'
+- code: HIST 25602
+  title: 'Ancient Empires IV: the Achaemenid Empire'
+  units: 100
+  notes: Cross-listed with NEHC 20014 (its catalog block lists HIST 25602 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from NEHC 20014.
+  crosslists:
+  - NEHC 20014
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): CLCV 21722, HIST 25602'
+- code: HIST 25604
+  title: 'Ancient Empires VIII: Arabia and the Arabs - on the edge of empire (3000 BCE to the 7th century CE)'
+  units: 100
+  notes: Cross-listed with NEHC 20018 (its catalog block lists HIST 25604 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from NEHC 20018.
+  crosslists:
+  - NEHC 20018
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): HIST 25604'
+- code: HIST 25610
+  title: Islamic Thought and Literature I
+  units: 100
+  notes: Cross-listed with NEHC 20601 (its catalog block lists HIST 25610 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from NEHC 20601.
+  crosslists:
+  - NEHC 20601
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): RLST 20401, SOSC 22000, MDVL 20601, HIST 25610'
+- code: HIST 25615
+  title: Islamic Thought and Literature II
+  units: 100
+  notes: Cross-listed with NEHC 20602 (its catalog block lists HIST 25615 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from NEHC 20602.
+  crosslists:
+  - NEHC 20602
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): MDVL 20602, SOSC 22100, RLST 20402, HIST 25615'
+- code: HIST 25616
+  title: Islamic Thought & Lit III - The Experience of Being Colonized
+  units: 100
+  notes: Cross-listed with NEHC 20603 (its catalog block lists HIST 25616 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from NEHC 20603.
+  crosslists:
+  - NEHC 20603
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): RLST 20403, MDVL 20603, HIST 25616, SOSC 22200'
+- code: HIST 25706
+  title: 'Ancient Empires V: The Umayyad'
+  units: 100
+  notes: Cross-listed with NEHC 20015 (its catalog block lists HIST 25706 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from NEHC 20015.
+  crosslists:
+  - NEHC 20015
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): RLST 20315, HIST 25706'
+- code: HIST 29304
+  title: 'Human Rights: Contemporary Issues'
+  units: 100
+  notes: Cross-listed with SOSC 21001 (its catalog block lists HIST 29304 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from SOSC 21001.
+  crosslists:
+  - SOSC 21001
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: 'Equivalent Course(s): LACS 21001, DEMS 21001, LLSO 21001, HIST 29304, CHST 21001, HMRT 21001'
+- code: HIST 29408
+  title: Human Rights in Mexico
+  units: 100
+  notes: Cross-listed with SOSC 24505 (its catalog block lists HIST 29408 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from SOSC 24505.
+  crosslists:
+  - SOSC 24505
+  prereq_text: A reading knowledge of Spanish and at least one course on Latin American history or culture are required.
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: 'Equivalent Course(s): HMRT 34501, LACS 24501, LACS 34501, HMRT 24501, HIST 39408, HIST 29408'
+  needs_review: true
+- code: HIST 39408
+  title: Human Rights in Mexico
+  units: 100
+  notes: Cross-listed with SOSC 24505 (its catalog block lists HIST 39408 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from SOSC 24505.
+  crosslists:
+  - SOSC 24505
+  prereq_text: A reading knowledge of Spanish and at least one course on Latin American history or culture are required.
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: 'Equivalent Course(s): HMRT 34501, LACS 24501, LACS 34501, HMRT 24501, HIST 39408, HIST 29408'
+  needs_review: true
+- code: HIST 49307
+  title: Thinking like a Computational Social Scientist
+  units: 100
+  notes: Cross-listed with DATA 20602 (its catalog block lists HIST 49307 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from DATA 20602.
+  crosslists:
+  - DATA 20602
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/datascience/
+    quote: 'Equivalent Course(s): MACS 30267, SOCI 40267, MACS 20267, PSYC 38520, SOCI 20602, HIST 49307, PSYC 28520'

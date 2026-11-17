@@ -1,0 +1,12 @@
+id: test-bs-fail-01
+description: FAKE - TEST 10100 in the same term as its prerequisite
+program: test-bs
+expect: fail
+expected_codes: [V03]
+plan:
+  catalog_year: "2099-00"
+  entry_term: 2099-AU
+  programs: [{program_id: test-bs}]
+  items:
+    - {course: TEST 10000, term: 2099-AU}
+    - {course: TEST 10100, term: 2099-AU}

@@ -1,0 +1,153 @@
+# Generated from the 2026-2027 UChicago College Catalog (fetched 2026-11-12) by hand-checked scripts;
+# every source.quote is copied verbatim (whitespace collapsed) from source.url. See data/seed/REVIEW.md.
+courses:
+- code: TTIC 31010
+  title: Algorithms
+  units: 100
+  notes: Cross-listed with CMSC 37000 (its catalog block lists TTIC 31010 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from CMSC 37000.
+  crosslists:
+  - CMSC 37000
+  prereq_text: Assumes familiarity with proofs and formal reasoning, knowledge of basic graph notions (such as graphs, trees,
+    paths etc) and algorithms (such as BFS, DFS, Minimum Spanning Tree etc). Also assumes familiarity with asymptotic notation
+    and running time analysis of algorithms, as well as basic knowledge of the notion of NP-hardness.
+  terms_offered:
+  - AU
+  source:
+    url: http://graduateannouncements.uchicago.edu/graduate/departmentofcomputerscience/
+    quote: 'Equivalent Course(s): TTIC 31010'
+  needs_review: true
+- code: TTIC 31020
+  title: Introduction to Machine Learning
+  units: 100
+  notes: No College catalog course block; title from the Machine Learning Requirement table on the Computer Science page.
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/computerscience/
+    quote: TTIC 31020
+  needs_review: true
+- code: TTIC 31060
+  title: Computability and Complexity Theory
+  units: 100
+  notes: Cross-listed with CMSC 38500 (its catalog block lists TTIC 31060 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from CMSC 38500.
+  crosslists:
+  - CMSC 38500
+  prereq_text: Consent of department counselor and instructor
+  source:
+    url: http://graduateannouncements.uchicago.edu/graduate/departmentofcomputerscience/
+    quote: 'Equivalent Course(s): TTIC 31060, MATH 30500'
+  needs_review: true
+- code: TTIC 31070
+  title: 'Mathematical Computation IIA: Convex Optimization'
+  units: 100
+  notes: Cross-listed with CMSC 35470 (its catalog block lists TTIC 31070 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from CMSC 35470.
+  crosslists:
+  - CMSC 35470
+  prereq:
+    any:
+    - STAT 30900
+    - STAT 31430
+    - consent: instructor
+  prereq_text: STAT 30900 or STAT 31430 or consent of instructor.
+  terms_offered:
+  - SP
+  source:
+    url: http://graduateannouncements.uchicago.edu/graduate/departmentofcomputerscience/
+    quote: 'Equivalent Course(s): BUSN 36903, CAAM 31015, STAT 31015, TTIC 31070'
+- code: TTIC 31080
+  title: Approximation Algorithms
+  units: 100
+  notes: Cross-listed with CMSC 37503 (its catalog block lists TTIC 31080 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from CMSC 37503.
+  crosslists:
+  - CMSC 37503
+  terms_offered:
+  - AU
+  source:
+    url: http://graduateannouncements.uchicago.edu/graduate/departmentofcomputerscience/
+    quote: 'Equivalent Course(s): TTIC 31080'
+- code: TTIC 31100
+  title: Geometric Methods in Computer Science
+  units: 100
+  notes: Cross-listed with CMSC 39010 (its catalog block lists TTIC 31100 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from CMSC 39010.
+  crosslists:
+  - CMSC 39010
+  prereq_text: Undergraduate-level algorithms, linear algebra and probability classes; a good background in mathematical analysis/calculus.
+  terms_offered:
+  - SP
+  source:
+    url: http://graduateannouncements.uchicago.edu/graduate/departmentofcomputerscience/
+    quote: 'Equivalent Course(s): TTIC 31100'
+  needs_review: true
+- code: TTIC 31110
+  title: Speech Technologies
+  units: 100
+  notes: Cross-listed with CMSC 35110 (its catalog block lists TTIC 31110 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from CMSC 35110.
+  crosslists:
+  - CMSC 35110
+  prereq_text: 'Prerequisites: a good background in basic probability and introductory machine learning.'
+  terms_offered:
+  - SP
+  source:
+    url: http://graduateannouncements.uchicago.edu/graduate/departmentofcomputerscience/
+    quote: 'Equivalent Course(s): TTIC 31110'
+  needs_review: true
+- code: TTIC 31150
+  title: Mathematical Toolkit
+  units: 100
+  notes: Cross-listed with CMSC 31150 (its catalog block lists TTIC 31150 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from CMSC 31150.
+  crosslists:
+  - CMSC 31150
+  terms_offered:
+  - AU
+  source:
+    url: http://graduateannouncements.uchicago.edu/graduate/departmentofcomputerscience/
+    quote: 'Equivalent Course(s): TTIC 31150'
+- code: TTIC 31170
+  title: Planning, Learning, and Estimation for Robotics and Artificial Intelligence
+  units: 100
+  notes: Cross-listed with CMSC 31170 (its catalog block lists TTIC 31170 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from CMSC 31170.
+  crosslists:
+  - CMSC 31170
+  prereq_text: Basic familiarity with basic linear algebra; background in probability theory; basic programming experience
+  terms_offered:
+  - AU
+  source:
+    url: http://graduateannouncements.uchicago.edu/graduate/departmentofcomputerscience/
+    quote: 'Equivalent Course(s): TTIC 31170'
+  needs_review: true
+- code: TTIC 31200
+  title: Information and Coding Theory
+  units: 100
+  notes: Cross-listed with CMSC 37220 (its catalog block lists TTIC 31200 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from CMSC 37220.
+  crosslists:
+  - CMSC 37220
+  prereq_text: Discrete probability. Some knowledge of finite-field algebra is required for the part on error-correcting codes
+    but required basics are reviewed in class.
+  terms_offered:
+  - WI
+  source:
+    url: http://graduateannouncements.uchicago.edu/graduate/departmentofcomputerscience/
+    quote: 'Equivalent Course(s): TTIC 31200'
+  needs_review: true
+- code: TTIC 31230
+  title: Fundamentals of Deep Learning
+  units: 100
+  notes: Cross-listed with CMSC 31230 (its catalog block lists TTIC 31230 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from CMSC 31230.
+  crosslists:
+  - CMSC 31230
+  prereq_text: 'Prerequisites: linear algebra, vector calculus, familiarity with multivariate Gaussian probability distributions
+    and Markov processes.'
+  terms_offered:
+  - SP
+  source:
+    url: http://graduateannouncements.uchicago.edu/graduate/departmentofcomputerscience/
+    quote: 'Equivalent Course(s): TTIC 31230'
+  needs_review: true

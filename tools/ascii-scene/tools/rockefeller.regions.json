@@ -1,0 +1,60 @@
+{
+  "_note": "All coordinates are in pixels of the source photo. Re-measure these for a new photo (see README).",
+  "building_box": [
+    118,
+    0,
+    504,
+    400
+  ],
+  "building_solid_above_y": 300,
+  "ground_y": 392,
+  "path_min_x": 300,
+  "lawn_y": 440,
+  "stained_glass": [
+    [
+      212,
+      138,
+      282,
+      277
+    ]
+  ],
+  "warm_windows": [
+    [
+      438,
+      95,
+      468,
+      206
+    ],
+    [
+      372,
+      356,
+      405,
+      399
+    ],
+    [
+      190,
+      283,
+      258,
+      303
+    ]
+  ],
+  "lamps": [
+    [
+      15,
+      346
+    ],
+    [
+      148,
+      346
+    ],
+    [
+      473,
+      351
+    ],
+    [
+      751,
+      352
+    ]
+  ],
+  "focus_x": 0.42
+}

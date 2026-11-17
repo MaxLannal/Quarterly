@@ -1,0 +1,169 @@
+# Generated from the 2026-2027 UChicago College Catalog (fetched 2026-11-12) by hand-checked scripts;
+# every source.quote is copied verbatim (whitespace collapsed) from source.url. See data/seed/REVIEW.md.
+id: cmsc-ba
+catalog_year: 2026-27
+name: Computer Science (BA)
+type: major
+degree: BA
+department: Computer Science
+status: review
+sources:
+- url: http://collegecatalog.uchicago.edu/thecollege/computerscience/
+  quote: The computer science program offers BA and BS degrees.
+rules:
+  id: cmsc-ba
+  label: Computer Science BA
+  group:
+    all: true
+    children:
+    - id: gened-math
+      label: 'General education: two-quarter calculus sequence'
+      select:
+        count: 2
+        from:
+          list: calc-two-quarter-sequences
+      constraints:
+        same_sequence: true
+        no_pass_fail: true
+      source:
+        url: http://collegecatalog.uchicago.edu/thecollege/computerscience/
+        quote: Both the BA and BS in computer science require the general education requirement in the mathematical sciences
+          to be fulfilled by an approved two-quarter Calculus Sequence.
+    - id: gened-phys
+      label: 'General education: physical sciences sequence'
+      select:
+        count: 2
+        from:
+          list: core-phys-sequences
+      constraints:
+        same_sequence: true
+        no_pass_fail: true
+      source:
+        url: http://collegecatalog.uchicago.edu/thecollege/computerscience/
+        quote: To earn a BA in computer science, any sequence or pair of courses approved by the Physical Sciences Collegiate
+          Division may be used to complete the general education requirement in the physical sciences.
+    - id: intro
+      label: Introductory Sequence
+      group:
+        all: true
+        children:
+        - id: '1'
+          slot:
+            any_of:
+            - CMSC 14100
+          constraints:
+            min_grade: C-
+            no_pass_fail: true
+          source:
+            url: http://collegecatalog.uchicago.edu/thecollege/computerscience/
+            quote: CMSC 14100
+        - id: '2'
+          slot:
+            any_of:
+            - CMSC 14200
+          constraints:
+            min_grade: C-
+            no_pass_fail: true
+          source:
+            url: http://collegecatalog.uchicago.edu/thecollege/computerscience/
+            quote: CMSC 14200
+        - id: '3'
+          slot:
+            any_of:
+            - CMSC 14300
+          constraints:
+            min_grade: C-
+            no_pass_fail: true
+          source:
+            url: http://collegecatalog.uchicago.edu/thecollege/computerscience/
+            quote: CMSC 14300
+        - id: '4'
+          slot:
+            any_of:
+            - CMSC 14400
+          constraints:
+            min_grade: C-
+            no_pass_fail: true
+          source:
+            url: http://collegecatalog.uchicago.edu/thecollege/computerscience/
+            quote: CMSC 14400
+      source:
+        url: http://collegecatalog.uchicago.edu/thecollege/computerscience/
+        quote: 'Students who major in computer science (either BA or BS) must complete the introductory sequence:'
+      needs_review: true
+    - id: theory
+      label: Theory Requirement (A and B)
+      group:
+        all: true
+        children:
+        - id: theory-a
+          label: Theory Area A
+          slot:
+            any_of:
+            - CMSC 27100
+            - CMSC 27130
+          constraints:
+            min_grade: C-
+            no_pass_fail: true
+          source:
+            url: http://collegecatalog.uchicago.edu/thecollege/computerscience/
+            quote: Area A
+          needs_review: true
+        - id: theory-b
+          label: Theory Area B
+          slot:
+            any_of:
+            - CMSC 27200
+            - CMSC 27230
+          constraints:
+            min_grade: C-
+            no_pass_fail: true
+          source:
+            url: http://collegecatalog.uchicago.edu/thecollege/computerscience/
+            quote: Area B
+      source:
+        url: http://collegecatalog.uchicago.edu/thecollege/computerscience/
+        quote: BA students must choose two courses from the following (one course each from areas A and B). BS students must
+          choose three courses from the following (one course each from areas A, B, and C).
+    - id: electives
+      label: Eight CMSC electives numbered 20000 or above
+      select:
+        count: 8
+        from:
+          subject: CMSC
+          number_range:
+          - 20000
+          - 29999
+      constraints:
+        min_grade: C-
+        no_pass_fail: true
+        max_from:
+        - selector:
+            codes:
+            - CMSC 29700
+          n: 1
+          source:
+            url: http://collegecatalog.uchicago.edu/thecollege/computerscience/
+            quote: "Students may enroll in CMSC 29700 Reading and Research in Computer Science and CMSC 29900 Bachelor's Thesis for multiple quarters, but only one of each may be counted as a major elective."
+        - selector:
+            codes:
+            - CMSC 29900
+          n: 1
+          source:
+            url: http://collegecatalog.uchicago.edu/thecollege/computerscience/
+            quote: "Students may enroll in CMSC 29700 Reading and Research in Computer Science and CMSC 29900 Bachelor's Thesis for multiple quarters, but only one of each may be counted as a major elective."
+        - selector:
+            codes:
+            - CMSC 22200
+            - CMSC 22240
+          n: 1
+          source:
+            url: http://collegecatalog.uchicago.edu/thecollege/computerscience/
+            quote: "Students may take either CMSC 22200 or CMSC 22240 for major or minor requirements, but not both."
+      source:
+        url: http://collegecatalog.uchicago.edu/thecollege/computerscience/
+        quote: Eight electives, spanning at least five curriculum areas, numbered CMSC 20000 or above §
+      needs_review: true
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/computerscience/
+    quote: BA students take at least 14 computer science courses as described below.

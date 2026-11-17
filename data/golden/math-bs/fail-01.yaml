@@ -1,0 +1,65 @@
+# Golden plan (prompt 05). Course facts: data/seed/2026-27; rules: data/seed/REVIEW.md.
+id: math-bs-fail-01
+description: Basic algebra mixes sequences (MATH 25400 then MATH 25800) (MATH 25800's prerequisite MATH 25700 is missing too,
+  so V03 also appears.)
+program: math-bs
+expect: fail
+expected_codes:
+- V07
+checks:
+- V01
+- V02
+- V03
+- V07
+- V08
+- V12
+plan:
+  catalog_year: 2026-27
+  entry_term: 2026-AU
+  programs:
+  - program_id: math-bs
+  placements:
+  - MATH 16100
+  items:
+  - course: MATH 16100
+    term: 2026-AU
+  - course: CHEM 11100
+    term: 2026-AU
+  - course: CMSC 14100
+    term: 2026-AU
+  - course: PHYS 13100
+    term: 2026-AU
+  - course: MATH 16200
+    term: 2027-WI
+  - course: CHEM 11200
+    term: 2027-WI
+  - course: CMSC 14200
+    term: 2027-WI
+  - course: PHYS 13200
+    term: 2027-WI
+  - course: MATH 16300
+    term: 2027-SP
+  - course: CHEM 11300
+    term: 2027-SP
+  - course: MATH 20250
+    term: 2027-AU
+  - course: MATH 20300
+    term: 2027-AU
+  - course: MATH 20400
+    term: 2028-WI
+  - course: MATH 25400
+    term: 2028-WI
+  - course: MATH 20500
+    term: 2028-SP
+  - course: MATH 25800
+    term: 2028-SP
+  - course: MATH 27000
+    term: 2028-AU
+  - course: MATH 26200
+    term: 2028-AU
+  - course: STAT 23400
+    term: 2029-WI
+  - course: STAT 24400
+    term: 2029-WI
+  - course: STAT 24500
+    term: 2029-SP

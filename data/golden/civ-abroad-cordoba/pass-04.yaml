@@ -1,0 +1,31 @@
+# Golden plan (prompt 05). Course facts: data/seed/2026-27; rules: data/seed/REVIEW.md.
+id: civ-abroad-cordoba-pass-04
+description: Program alongside first-year Core courses
+program: civ-abroad-cordoba
+expect: pass
+checks:
+- V01
+- V02
+- V03
+- V07
+- V12
+plan:
+  catalog_year: 2026-27
+  entry_term: 2026-AU
+  programs:
+  - program_id: civ-abroad-cordoba
+  items:
+  - course: HUMA 11000
+    term: 2026-AU
+  - course: WRIT 10100
+    term: 2026-AU
+  - course: HUMA 11100
+    term: 2027-WI
+  - course: HUMA 11200
+    term: 2027-SP
+  - course: SOSC 19082
+    term: 2028-SP
+  - course: SOSC 19083
+    term: 2028-SP
+  - course: SOSC 19084
+    term: 2028-SP

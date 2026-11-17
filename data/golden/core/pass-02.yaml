@@ -1,0 +1,59 @@
+# Golden plan (prompt 05). Course facts: data/seed/2026-27; rules: data/seed/REVIEW.md.
+id: core-pass-02
+description: Two-quarter HUMA + three-quarter civ; MATH 11200 + PHSC 11600/11700/11800 + BIOS 10501/10500; Grey writing track
+  (HUMA 19100 twice, pass/fail); FREN 10300
+program: core
+expect: pass
+checks:
+- V01
+- V02
+- V03
+- V07
+- V08
+- V12
+plan:
+  catalog_year: 2026-27
+  entry_term: 2026-AU
+  programs:
+  - program_id: core
+  placements:
+  - MATH 15100
+  items:
+  - course: HUMA 11000
+    term: 2026-AU
+  - course: MATH 11200
+    term: 2026-AU
+  - course: HUMA 19100
+    term: 2026-AU
+    grading: pass_fail
+  - course: PHSC 11600
+    term: 2026-AU
+  - course: HUMA 11100
+    term: 2027-WI
+  - course: HUMA 19100
+    term: 2027-WI
+    grading: pass_fail
+  - course: BIOS 10501
+    term: 2027-WI
+  - course: PHSC 11700
+    term: 2027-WI
+  - course: ARTV 10100
+    term: 2027-SP
+  - course: BIOS 10500
+    term: 2027-SP
+  - course: SOSC 15100
+    term: 2027-AU
+  - course: HIST 13100
+    term: 2027-AU
+  - course: PHSC 11800
+    term: 2027-AU
+  - course: SOSC 15200
+    term: 2028-WI
+  - course: HIST 13200
+    term: 2028-WI
+  - course: SOSC 15300
+    term: 2028-SP
+  - course: HIST 13300
+    term: 2028-SP
+  - course: FREN 10300
+    term: 2028-SP

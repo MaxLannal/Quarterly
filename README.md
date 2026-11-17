@@ -1,95 +1,99 @@
-# Quarterly
+<h1 align="center">Quarterly</h1>
 
-A course-planning app for the University of Chicago College Catalog, with three parts:
+<p align="center"><strong>Plan four years at UChicago with plans a verifier proves, and read what students say about each course and instructor.</strong></p>
 
-- **Home:** a personal dashboard with this quarter's and next quarter's courses, a plan overview, checks to review, and your programs.
-- **Planner:** four years of Autumn, Winter, and Spring columns. Search any course and drag it into a quarter.
-- **Ask the catalog:** a chatbot whose answers are grounded in the catalog and cite the page they came from. Everything uses the Python standard library, so there's nothing to install.
+<p align="center">
+  <img src="docs/screenshots/readme/home.png" alt="The Quarterly home page: the Quarterly wordmark, a course search, Start planning and Browse reviews, beside an animated ASCII drawing of Rockefeller Chapel" width="900">
+</p>
+
+<p align="center"><em>A student project. Not affiliated with the University of Chicago, and not official advising.</em></p>
+
+## What Quarterly does
+
+Quarterly has two halves of equal weight that share one course database.
+
+- **Quarterly Planner** takes a student from "I don't know my first class" to a full, goal-aware four-year plan. An AI agent proposes plans; a deterministic verifier checks every requirement and prerequisite and issues a certificate. A plan is only called "Valid" when that certificate is accepted.
+- **Quarterly Forum** gives every course × instructor pair its own page with anonymous, Reddit-style threads and structured ratings. The ratings feed each course's workload and difficulty, which the planner uses.
+
+The rule behind it: **agents propose, code disposes.** AI drafts plans, summaries and changes; code decides what is true; a student's explicit action applies a change.
+
+| Planner | Generate a plan |
+|---|---|
+| ![The planner: a four-year grid with course cards, the plan's verdict beside its name, and requirement colours](docs/screenshots/readme/planner.png) | ![The Generate plan popup: two options, each with its verifier badge, hours and the quarters it changes](docs/screenshots/readme/generate.png) |
+| **Course page** | **Forum** |
+| ![A course page: student ratings, instructors, prerequisites, predicted quarters and the planner's estimates](docs/screenshots/readme/course.png) | ![A course × instructor forum page: ratings, an AI summary slot and reviews](docs/screenshots/readme/forum.png) |
+
+Every page at 1440 and 390 px wide is in [`docs/screenshots/after/`](docs/screenshots/after/) (the same pages before the latest design pass are in [`before/`](docs/screenshots/before/)). Screenshots use the app's mock data.
+
+## Status (November 2026)
+
+A working demo, used by its owner and a few testers; a public launch comes after the catalog hand check.
+
+- **Catalog:** 2026-27, about 1,270 courses and 11 programs (the Core; Computer Science BA, BS and three Bx/MS options; Mathematics BA and BS; Economics BA; two study-abroad civilization blocks) hand-copied from the College Catalog with verbatim source quotes, plus 152 Summer Session offerings.
+- **Built:** onboarding, the four-year planner with drag and drop, live verifier and certificate checker, plan generator (OR-Tools CP-SAT), "Ask Quarterly" advisor chat, course search, course and program pages, the course × instructor forum, anonymous accounts, curator console, the animated homepage chapel.
+- **AI:** off unless `LLM_LIVE=true` and a key are set (see below). Tests always use fake AI.
+- **Open work:** `docs/FEEDBACK.md` (requests and their status), `docs/OPEN_QUESTIONS.md` (decisions waiting for the owner), `docs/PROGRESS.md` (what was built and when).
 
 ## Quick start
 
-```
-python3 build_catalog.py                          # crawl the catalog into data/ (about 4 minutes; rerun to resume)
-export ANTHROPIC_API_KEY=your-key                 # Windows PowerShell: $env:ANTHROPIC_API_KEY="your-key"
-python3 catalog_server.py                         # then open http://localhost:8000
-```
+You need Docker Desktop, Python 3.12 with [`uv`](https://docs.astral.sh/uv/), and Node 22.
 
-Other commands:
-
-```
-python3 catalog_server.py --count-tokens          # exact token counts for your snapshot
-python3 catalog_server.py --ask "Which statistics courses are offered in Spring?"
+```bash
+make install               # Python packages (uv) and the web app's node modules
+make up                    # creates .env from .env.example, starts db, redis, minio, api, worker, web
+make migrate && make seed  # database schema, then the 2026-27 catalog from data/seed/
+make seed-forum-demo       # optional: fake instructors and forum pages for development
 ```
 
-Settings are environment variables: `ANTHROPIC_MODEL` (default `claude-sonnet-5-5`), `PORT` (default 8000), and `CACHE_TTL` (`1h` by default, or `5m` if questions arrive in quick bursts).
+Open <http://localhost:5173> (the API is on <http://localhost:8000>). `make down` stops the stack and keeps its data.
 
-## Why the whole catalog isn't pasted into the prompt
+**Turning the AI on.** In `.env`, set `ANTHROPIC_API_KEY` (and optionally `OPENROUTER_API_KEY` as the fallback) and `LLM_LIVE=true`, then `make up` again. Model choices, limits and prices live only in [`llm_routing.yaml`](llm_routing.yaml). Logged-out visitors get 3 plan generations a day per address (10 for an account), so a test run on the same machine shares that allowance; the end-to-end journeys clear the counters when they finish.
 
-A full crawl in November 2026 found 141 College catalog pages and about 6,500 unique courses, roughly 8.4 million characters. That's about three times the 1M-token context window of current Claude models. Even where a corpus does fit, accuracy drops as the context fills, so a targeted context answers better than a full one.
+## Development
 
-So each request carries a map of the whole catalog, and Claude fetches details on demand:
+| Command | What it does |
+|---|---|
+| `make check` | Lint (ruff, eslint), types (mypy, tsc), Python and web unit tests, golden plans. Must pass before any change is done. |
+| `make e2e` | Browser tests against mock data, then journeys A-D on the Docker stack with fake AI. **It switches the running stack to fake AI; run `make up` afterwards to get the real one back.** |
+| `make screenshots` | Every page at 1440 and 390 px into `docs/screenshots/` (`SCREENSHOTS_DIR=after` picks a subfolder). |
+| `make api-client` | Regenerates the OpenAPI document and the web app's TypeScript types after an API change. |
+| `make help` | Lists every target. |
 
-1. **Always in context, and cached.** The College-wide policy pages in full, every program page with its section headings, and an index of every course with its code, title, units, and usual terms. That's about 600,000 characters, an estimated 200,000 to 240,000 tokens. It's marked for prompt caching, so after the first question each hour it's read from cache at a small fraction of the normal input price.
-2. **Fetched with tools.** Claude calls `search_catalog` for full-text search, `get_courses` for full descriptions and prerequisites, and `get_program` for a program's requirements. The server runs these locally against `data/catalog.json`.
-3. **Cited.** Tool results go back to Claude as search result blocks with citations turned on, so the answer comes back with the exact catalog passages and page URLs behind each claim. The chat page shows them as numbered sources.
+CI (`.github/workflows/ci.yml`) runs `make install && make check` on every push and pull request.
 
-## Using an Anthropic-compatible gateway
+## Repository layout
 
-The server works with the Claude API directly or with a gateway that offers the Anthropic Messages format. Point it at the gateway with environment variables, then run the checker before starting the server:
+| Path | What it is |
+|---|---|
+| `apps/web/` | React + TypeScript (Vite, Tailwind v4, TanStack Query, dnd-kit). `e2e/` browser tests on mock data (MSW), `e2e-stack/` journeys on the real stack. |
+| `services/api/` | FastAPI app: routers, database models (SQLAlchemy, Alembic), the seed loader, agent orchestration. |
+| `services/worker/` | Arq background jobs: nightly course attributes, catalog ingestion, the schedule watch, chat purge and the hourly AI spend check. |
+| `services/scraper/` | Playwright scraper for the class schedule; `SCHEDULE_SCRAPER_ENABLED=false` until the University allows scraping. |
+| `packages/planner_core/` | The requirements DSL, verifier, certificate checker and CP-SAT plan generator. Pure Python: no database, web framework, HTTP or LLM client. |
+| `packages/llm_gateway/` | The only way code talks to a model: routing, budgets, provider fallback, fakes for tests. |
+| `data/seed/2026-27/` | Hand-checked catalog YAML with a source quote for every rule. `data/golden/` holds plans that must pass or fail. |
+| `prompts/` | Versioned prompts for the app's own agents. |
+| `evals/` | Agent evaluations and the recorded live test (`evals/live/`). |
+| `docs/` | Spec, design system, decisions, progress and review documents (map below). |
+| `tools/ascii-scene/` | The converter and docs behind the homepage chapel drawing (not deployed). |
+| `claude-code-prompts/` | The prompts the project was built from, in order (history; `docs/` is the current truth). |
 
-```
-export ANTHROPIC_BASE_URL=https://your-gateway.example   # no /v1 at the end
-export ANTHROPIC_API_KEY=your-gateway-key
-export ANTHROPIC_MODEL=claude-sonnet-5-5                  # use a model ID from the gateway's model list
-python3 check_provider.py
-```
+## Documentation map
 
-The checker sends six tiny requests and reports whether the gateway supports tool use, citable search results, prompt caching, and token counting. The chatbot needs tool use. If a gateway rejects citable search results or the 1-hour cache, the server switches automatically to tagged-text sources or the 5-minute cache, and answers still show numbered sources.
+| Document | Read it for |
+|---|---|
+| [`CLAUDE.md`](CLAUDE.md) | Start here if you are an AI coding agent: rules, commands and where everything is. |
+| [`docs/SPEC.md`](docs/SPEC.md) | The product and technical spec; [`docs/SPEC-CHANGES.md`](docs/SPEC-CHANGES.md) lists every change since. |
+| [`PRODUCT.md`](PRODUCT.md) | Users, purpose, positioning and product principles. |
+| [`docs/DESIGN.md`](docs/DESIGN.md) | The visual design system (colours, type, components, motion). |
+| [`docs/CONTRACTS.md`](docs/CONTRACTS.md) | API endpoints and the decisions behind them. |
+| [`docs/FEEDBACK.md`](docs/FEEDBACK.md) | The owner's requests and how each was resolved. |
+| [`docs/OPEN_QUESTIONS.md`](docs/OPEN_QUESTIONS.md) | Decisions waiting for the owner, and catalog readings deferred until before launch. |
+| [`docs/PROGRESS.md`](docs/PROGRESS.md) | What was built, step by step. |
+| [`docs/DESIGN-REVIEW.md`](docs/DESIGN-REVIEW.md) | The latest full design critique and audit, with every finding's status. |
+| [`docs/LIVE-TEST-REPORT.md`](docs/LIVE-TEST-REPORT.md) | The budgeted test of the AI agents against the real models. |
+| [`docs/DEPLOY.md`](docs/DEPLOY.md) | Deploying to a server, backups. |
 
-Requests through a gateway, including students' questions, pass through that company as well as the model provider, so read its privacy policy and terms before you use it with anything sensitive.
+## Privacy
 
-## Files
-
-- `build_catalog.py` crawls every College page in the catalog's sitemap, plus the pages linked from Programs of Study. It follows robots.txt, waits between requests, and backs off when the site is busy or drops connections. Each page is saved in `data/raw/` as it arrives, so if the site stops responding, running it again later fetches only the missing pages. Use `--refresh` to download everything again. It writes `data/catalog.json` (structured pages and courses, including prerequisite links), `data/catalog.md`, and `data/stats.json`.
-- `catalog_server.py` runs the search index, the agent loop, the Claude API calls, and the local web server.
-- `quarterly.html` is the app: dashboard, planner, and chat.
-- `check_provider.py` tests which features your API provider supports.
-
-## The planner
-
-- **Adding courses:** search by code, title, or topic, then drag a result into a quarter. You can also select a course and choose a quarter in the details panel, which works with a keyboard and on touch screens.
-- **Sequences:** dropping a multi-quarter sequence, such as a Core sequence, places each part in consecutive quarters.
-- **Credit and placement:** a lane above Year 1 for AP, IB, placement, or transfer credit, so those count as earlier than Year 1 in the checks.
-- **Checks:** using only catalog data, the planner flags a course placed in a quarter it isn't usually offered, a course with no listed prerequisite earlier in the plan, and a course placed twice. Prerequisite wording often includes "or" and instructor consent, so these are prompts to look closer, not verdicts.
-- **Check my plan with Claude:** sends the whole plan and your programs to the chatbot for a full review.
-- **Saving:** the plan and profile save automatically to `data/plan.json`. Export plan downloads a copy.
-
-## Checking that every course was captured
-
-After each run, `build_catalog.py` prints, and saves in `data/stats.json`:
-
-- how many pages were fetched and whether any are missing
-- how many course entries were on those pages and how many were parsed
-- how many unique courses that comes to, since some courses are listed on several pages
-- undergraduate course codes that appear only as prerequisites and have no entry anywhere, usually retired or renumbered courses
-
-Cross-listed codes don't get separate entries in the catalog. The server resolves them to the course's main entry, so a student can ask about any of a course's codes.
-
-## Keeping it current
-
-Run `build_catalog.py` again when a new catalog year is published. Requirements depend on the year a student entered, so if you need several years, crawl each one into its own data folder and add the year to the prompt.
-
-## Ready for Phase 2 (visual harness)
-
-Every `/api/chat` response already returns structured data a visual layer can draw:
-
-- `courses`: every course the answer looked up or cited
-- `prereq_graph`: prerequisite edges for those courses, parsed from the catalog (`data/catalog.json` has edges for every course)
-- `sources` and `segments`: answer text with citation numbers
-- `trace`: which tools ran, with their inputs
-
-A natural next step is a `show_visual` tool that Claude calls with a chart type and data, such as a prerequisite graph, requirement progress, or a four-year plan. The server would pass it through to the page, and the page would render it in a canvas next to the chat.
-
-## Notes
-
-This is a prototype built on public catalog pages. Check that your use fits the University's terms, and talk to the College or the Registrar about an official data feed before sharing it widely. Answers aren't official advising.
+Accounts are anonymous: forum posts show a different pseudonym on every page. An email address is stored only in the account record and never logged; no IP addresses are logged; user dates are day-level only. Nothing a visitor's browser loads comes from another site (fonts, icons, images and the homepage weather are served by Quarterly).

@@ -1,0 +1,4 @@
+course_lists:
+  - {name: fake-seqs, sublists: [fake-seq-a, fake-seq-b], source: {url: "https://example.invalid/fake-catalog", quote: "FAKE FIXTURE - not a real course"}}
+  - {name: fake-seq-a, courses: [TEST 10000, TEST 10100], source: {url: "https://example.invalid/fake-catalog", quote: "FAKE FIXTURE - not a real course"}}
+  - {name: fake-seq-b, courses: [TEST 20200, TEST 20300], source: {url: "https://example.invalid/fake-catalog", quote: "FAKE FIXTURE - not a real course"}}

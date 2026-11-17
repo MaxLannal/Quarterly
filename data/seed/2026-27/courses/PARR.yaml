@@ -1,0 +1,14 @@
+# Generated from the 2026-2027 UChicago College Catalog (fetched 2026-11-12) by hand-checked scripts;
+# every source.quote is copied verbatim (whitespace collapsed) from source.url. See data/seed/REVIEW.md.
+courses:
+- code: PARR 33260
+  title: Internet Censorship and Online Speech
+  units: 100
+  notes: Cross-listed with CMSC 23260 (its catalog block lists PARR 33260 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from CMSC 23260.
+  crosslists:
+  - CMSC 23260
+  prereq_text: None
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/computerscience/
+    quote: 'Equivalent Course(s): MADD 23620, PARR 33260, CMSC 33260'

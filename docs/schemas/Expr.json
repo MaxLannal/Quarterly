@@ -1,0 +1,97 @@
+{
+  "$defs": {
+    "Atom": {
+      "additionalProperties": false,
+      "description": "`course`: met by a course completed, credited or planned in a strictly earlier term (or\nthe same term when it is a Summer quarter). `concurrent`: same or earlier term.\n`placement`/`standing`: plan facts.\n`program`: enrolment restriction (glob on program ids, e.g. `cmsc-*`).\n`consent`: never blocks; always produces a warning.",
+      "properties": {
+        "kind": {
+          "enum": [
+            "course",
+            "concurrent",
+            "placement",
+            "standing",
+            "program",
+            "consent"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "min_grade": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Min Grade"
+        },
+        "value": {
+          "minLength": 1,
+          "title": "Value",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "value"
+      ],
+      "title": "Atom",
+      "type": "object"
+    },
+    "Expr": {
+      "additionalProperties": false,
+      "description": "Canonical form: `{op, n, children, atom}`. Shorthand accepted on input:\n`\"CMSC 14100\"`, `{course: X, min_grade: G}`, `{concurrent: X}`, `{placement: X}`,\n`{standing: X}`, `{program: X}`, `{consent: X}`, `{all: [...]}`, `{any: [...]}`,\n`{n_of: k, of: [...]}`.",
+      "properties": {
+        "atom": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Atom"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "children": {
+          "items": {
+            "$ref": "#/$defs/Expr"
+          },
+          "title": "Children",
+          "type": "array"
+        },
+        "n": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "N"
+        },
+        "op": {
+          "enum": [
+            "all",
+            "any",
+            "n_of",
+            "atom"
+          ],
+          "title": "Op",
+          "type": "string"
+        }
+      },
+      "required": [
+        "op"
+      ],
+      "title": "Expr",
+      "type": "object"
+    }
+  },
+  "$ref": "#/$defs/Expr"
+}

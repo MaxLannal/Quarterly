@@ -1,0 +1,1363 @@
+{
+  "$defs": {
+    "BxmsGoal": {
+      "additionalProperties": false,
+      "properties": {
+        "apply_by": {
+          "examples": [
+            "Y2-SP",
+            "2028-SP"
+          ],
+          "pattern": "^(\\d{4}|Y[1-6])-(AU|WI|SP|SU)$",
+          "title": "Apply By",
+          "type": "string"
+        },
+        "hard": {
+          "default": false,
+          "title": "Hard",
+          "type": "boolean"
+        },
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "program_id": {
+          "pattern": "^[a-z0-9][a-z0-9-]*$",
+          "title": "Program Id",
+          "type": "string"
+        },
+        "scope": {
+          "default": "career",
+          "enum": [
+            "career",
+            "term"
+          ],
+          "title": "Scope",
+          "type": "string"
+        },
+        "term": {
+          "anyOf": [
+            {
+              "examples": [
+                "2026-AU"
+              ],
+              "pattern": "^\\d{4}-(AU|WI|SP|SU)$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Term"
+        },
+        "type": {
+          "const": "bxms",
+          "default": "bxms",
+          "title": "Type",
+          "type": "string"
+        },
+        "weight": {
+          "default": 1.0,
+          "minimum": 0,
+          "title": "Weight",
+          "type": "number"
+        }
+      },
+      "required": [
+        "id",
+        "program_id",
+        "apply_by"
+      ],
+      "title": "BxmsGoal",
+      "type": "object"
+    },
+    "ChallengeGoal": {
+      "additionalProperties": false,
+      "properties": {
+        "hard": {
+          "default": false,
+          "title": "Hard",
+          "type": "boolean"
+        },
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "min_index": {
+          "title": "Min Index",
+          "type": "number"
+        },
+        "scope": {
+          "default": "career",
+          "enum": [
+            "career",
+            "term"
+          ],
+          "title": "Scope",
+          "type": "string"
+        },
+        "term": {
+          "anyOf": [
+            {
+              "examples": [
+                "2026-AU"
+              ],
+              "pattern": "^\\d{4}-(AU|WI|SP|SU)$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Term"
+        },
+        "type": {
+          "const": "challenge",
+          "default": "challenge",
+          "title": "Type",
+          "type": "string"
+        },
+        "weight": {
+          "default": 1.0,
+          "minimum": 0,
+          "title": "Weight",
+          "type": "number"
+        }
+      },
+      "required": [
+        "id",
+        "min_index"
+      ],
+      "title": "ChallengeGoal",
+      "type": "object"
+    },
+    "CourseLoadGoal": {
+      "additionalProperties": false,
+      "properties": {
+        "hard": {
+          "default": false,
+          "title": "Hard",
+          "type": "boolean"
+        },
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "max_courses": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Max Courses"
+        },
+        "min_courses": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Min Courses"
+        },
+        "scope": {
+          "default": "career",
+          "enum": [
+            "career",
+            "term"
+          ],
+          "title": "Scope",
+          "type": "string"
+        },
+        "term": {
+          "anyOf": [
+            {
+              "examples": [
+                "2026-AU"
+              ],
+              "pattern": "^\\d{4}-(AU|WI|SP|SU)$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Term"
+        },
+        "type": {
+          "const": "course_load",
+          "default": "course_load",
+          "title": "Type",
+          "type": "string"
+        },
+        "weight": {
+          "default": 1.0,
+          "minimum": 0,
+          "title": "Weight",
+          "type": "number"
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "title": "CourseLoadGoal",
+      "type": "object"
+    },
+    "Credit": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "enum": [
+            "AP",
+            "placement",
+            "transfer"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "label": {
+          "title": "Label",
+          "type": "string"
+        },
+        "maps_to": {
+          "anyOf": [
+            {
+              "examples": [
+                "CMSC 14100"
+              ],
+              "pattern": "^[A-Z]{2,5} \\d{5}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Maps To"
+        },
+        "units": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Units",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "kind",
+        "label"
+      ],
+      "title": "Credit",
+      "type": "object"
+    },
+    "DifficultyCapGoal": {
+      "additionalProperties": false,
+      "properties": {
+        "hard": {
+          "default": false,
+          "title": "Hard",
+          "type": "boolean"
+        },
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "max_index": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Max Index"
+        },
+        "max_very_hard": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Max Very Hard"
+        },
+        "scope": {
+          "default": "career",
+          "enum": [
+            "career",
+            "term"
+          ],
+          "title": "Scope",
+          "type": "string"
+        },
+        "term": {
+          "anyOf": [
+            {
+              "examples": [
+                "2026-AU"
+              ],
+              "pattern": "^\\d{4}-(AU|WI|SP|SU)$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Term"
+        },
+        "type": {
+          "const": "difficulty_cap",
+          "default": "difficulty_cap",
+          "title": "Type",
+          "type": "string"
+        },
+        "very_hard_threshold": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Very Hard Threshold"
+        },
+        "weight": {
+          "default": 1.0,
+          "minimum": 0,
+          "title": "Weight",
+          "type": "number"
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "title": "DifficultyCapGoal",
+      "type": "object"
+    },
+    "GraduateByGoal": {
+      "additionalProperties": false,
+      "properties": {
+        "by_term": {
+          "examples": [
+            "Y2-SP",
+            "2028-SP"
+          ],
+          "pattern": "^(\\d{4}|Y[1-6])-(AU|WI|SP|SU)$",
+          "title": "By Term",
+          "type": "string"
+        },
+        "hard": {
+          "default": false,
+          "title": "Hard",
+          "type": "boolean"
+        },
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "scope": {
+          "default": "career",
+          "enum": [
+            "career",
+            "term"
+          ],
+          "title": "Scope",
+          "type": "string"
+        },
+        "term": {
+          "anyOf": [
+            {
+              "examples": [
+                "2026-AU"
+              ],
+              "pattern": "^\\d{4}-(AU|WI|SP|SU)$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Term"
+        },
+        "type": {
+          "const": "graduate_by",
+          "default": "graduate_by",
+          "title": "Type",
+          "type": "string"
+        },
+        "weight": {
+          "default": 1.0,
+          "minimum": 0,
+          "title": "Weight",
+          "type": "number"
+        }
+      },
+      "required": [
+        "id",
+        "by_term"
+      ],
+      "title": "GraduateByGoal",
+      "type": "object"
+    },
+    "InterestGoal": {
+      "additionalProperties": false,
+      "properties": {
+        "hard": {
+          "default": false,
+          "title": "Hard",
+          "type": "boolean"
+        },
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "min_share": {
+          "anyOf": [
+            {
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Min Share"
+        },
+        "scope": {
+          "default": "career",
+          "enum": [
+            "career",
+            "term"
+          ],
+          "title": "Scope",
+          "type": "string"
+        },
+        "tags": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Tags",
+          "type": "array"
+        },
+        "term": {
+          "anyOf": [
+            {
+              "examples": [
+                "2026-AU"
+              ],
+              "pattern": "^\\d{4}-(AU|WI|SP|SU)$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Term"
+        },
+        "type": {
+          "const": "interest",
+          "default": "interest",
+          "title": "Type",
+          "type": "string"
+        },
+        "weight": {
+          "default": 1.0,
+          "minimum": 0,
+          "title": "Weight",
+          "type": "number"
+        }
+      },
+      "required": [
+        "id",
+        "tags"
+      ],
+      "title": "InterestGoal",
+      "type": "object"
+    },
+    "LanguageGoal": {
+      "additionalProperties": false,
+      "properties": {
+        "by_term": {
+          "examples": [
+            "Y2-SP",
+            "2028-SP"
+          ],
+          "pattern": "^(\\d{4}|Y[1-6])-(AU|WI|SP|SU)$",
+          "title": "By Term",
+          "type": "string"
+        },
+        "courses": {
+          "items": {
+            "examples": [
+              "CMSC 14100"
+            ],
+            "pattern": "^[A-Z]{2,5} \\d{5}$",
+            "type": "string"
+          },
+          "title": "Courses",
+          "type": "array"
+        },
+        "hard": {
+          "default": false,
+          "title": "Hard",
+          "type": "boolean"
+        },
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "language": {
+          "title": "Language",
+          "type": "string"
+        },
+        "level": {
+          "title": "Level",
+          "type": "string"
+        },
+        "list": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "List"
+        },
+        "scope": {
+          "default": "career",
+          "enum": [
+            "career",
+            "term"
+          ],
+          "title": "Scope",
+          "type": "string"
+        },
+        "term": {
+          "anyOf": [
+            {
+              "examples": [
+                "2026-AU"
+              ],
+              "pattern": "^\\d{4}-(AU|WI|SP|SU)$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Term"
+        },
+        "type": {
+          "const": "language",
+          "default": "language",
+          "title": "Type",
+          "type": "string"
+        },
+        "weight": {
+          "default": 1.0,
+          "minimum": 0,
+          "title": "Weight",
+          "type": "number"
+        }
+      },
+      "required": [
+        "id",
+        "language",
+        "level",
+        "by_term"
+      ],
+      "title": "LanguageGoal",
+      "type": "object"
+    },
+    "LightQuarterGoal": {
+      "additionalProperties": false,
+      "properties": {
+        "hard": {
+          "default": false,
+          "title": "Hard",
+          "type": "boolean"
+        },
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "max_courses": {
+          "minimum": 0,
+          "title": "Max Courses",
+          "type": "integer"
+        },
+        "scope": {
+          "const": "term",
+          "default": "term",
+          "title": "Scope",
+          "type": "string"
+        },
+        "term": {
+          "anyOf": [
+            {
+              "examples": [
+                "2026-AU"
+              ],
+              "pattern": "^\\d{4}-(AU|WI|SP|SU)$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Term"
+        },
+        "type": {
+          "const": "light_quarter",
+          "default": "light_quarter",
+          "title": "Type",
+          "type": "string"
+        },
+        "weight": {
+          "default": 1.0,
+          "minimum": 0,
+          "title": "Weight",
+          "type": "number"
+        }
+      },
+      "required": [
+        "id",
+        "max_courses"
+      ],
+      "title": "LightQuarterGoal",
+      "type": "object"
+    },
+    "PlanItem": {
+      "additionalProperties": false,
+      "description": "A course (or an unfilled requirement slot, `slot_ref` = node path) in a term.",
+      "properties": {
+        "course": {
+          "anyOf": [
+            {
+              "examples": [
+                "CMSC 14100"
+              ],
+              "pattern": "^[A-Z]{2,5} \\d{5}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Course"
+        },
+        "grade": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Grade"
+        },
+        "grading": {
+          "default": "letter",
+          "enum": [
+            "letter",
+            "pass_fail"
+          ],
+          "title": "Grading",
+          "type": "string"
+        },
+        "id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Id"
+        },
+        "locked": {
+          "default": false,
+          "title": "Locked",
+          "type": "boolean"
+        },
+        "slot_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Slot Ref"
+        },
+        "status": {
+          "default": "planned",
+          "enum": [
+            "planned",
+            "in_progress",
+            "completed",
+            "transfer",
+            "exam"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "term": {
+          "examples": [
+            "2026-AU"
+          ],
+          "pattern": "^\\d{4}-(AU|WI|SP|SU)$",
+          "title": "Term",
+          "type": "string"
+        },
+        "units": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Units"
+        }
+      },
+      "required": [
+        "term"
+      ],
+      "title": "PlanItem",
+      "type": "object"
+    },
+    "PlanProgram": {
+      "additionalProperties": false,
+      "properties": {
+        "options": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Options",
+          "type": "object"
+        },
+        "program_id": {
+          "pattern": "^[a-z0-9][a-z0-9-]*$",
+          "title": "Program Id",
+          "type": "string"
+        },
+        "version_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Version Id"
+        }
+      },
+      "required": [
+        "program_id"
+      ],
+      "title": "PlanProgram",
+      "type": "object"
+    },
+    "PlanState": {
+      "additionalProperties": false,
+      "properties": {
+        "catalog_year": {
+          "examples": [
+            "2026-27"
+          ],
+          "pattern": "^\\d{4}-\\d{2}$",
+          "title": "Catalog Year",
+          "type": "string"
+        },
+        "credits": {
+          "items": {
+            "$ref": "#/$defs/Credit"
+          },
+          "title": "Credits",
+          "type": "array"
+        },
+        "entry_term": {
+          "examples": [
+            "2026-AU"
+          ],
+          "pattern": "^\\d{4}-(AU|WI|SP|SU)$",
+          "title": "Entry Term",
+          "type": "string"
+        },
+        "entry_year_level": {
+          "default": 1,
+          "maximum": 4,
+          "minimum": 1,
+          "title": "Entry Year Level",
+          "type": "integer"
+        },
+        "goals": {
+          "items": {
+            "discriminator": {
+              "mapping": {
+                "bxms": "#/$defs/BxmsGoal",
+                "challenge": "#/$defs/ChallengeGoal",
+                "course_load": "#/$defs/CourseLoadGoal",
+                "difficulty_cap": "#/$defs/DifficultyCapGoal",
+                "graduate_by": "#/$defs/GraduateByGoal",
+                "interest": "#/$defs/InterestGoal",
+                "language": "#/$defs/LanguageGoal",
+                "light_quarter": "#/$defs/LightQuarterGoal",
+                "premed": "#/$defs/PremedGoal",
+                "protect_gpa": "#/$defs/ProtectGpaGoal",
+                "study_abroad": "#/$defs/StudyAbroadGoal",
+                "workload_hours": "#/$defs/WorkloadHoursGoal"
+              },
+              "propertyName": "type"
+            },
+            "oneOf": [
+              {
+                "$ref": "#/$defs/CourseLoadGoal"
+              },
+              {
+                "$ref": "#/$defs/WorkloadHoursGoal"
+              },
+              {
+                "$ref": "#/$defs/DifficultyCapGoal"
+              },
+              {
+                "$ref": "#/$defs/ChallengeGoal"
+              },
+              {
+                "$ref": "#/$defs/ProtectGpaGoal"
+              },
+              {
+                "$ref": "#/$defs/GraduateByGoal"
+              },
+              {
+                "$ref": "#/$defs/StudyAbroadGoal"
+              },
+              {
+                "$ref": "#/$defs/BxmsGoal"
+              },
+              {
+                "$ref": "#/$defs/PremedGoal"
+              },
+              {
+                "$ref": "#/$defs/InterestGoal"
+              },
+              {
+                "$ref": "#/$defs/LightQuarterGoal"
+              },
+              {
+                "$ref": "#/$defs/LanguageGoal"
+              }
+            ]
+          },
+          "title": "Goals",
+          "type": "array"
+        },
+        "graduation_term": {
+          "anyOf": [
+            {
+              "examples": [
+                "2026-AU"
+              ],
+              "pattern": "^\\d{4}-(AU|WI|SP|SU)$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Graduation Term"
+        },
+        "items": {
+          "items": {
+            "$ref": "#/$defs/PlanItem"
+          },
+          "title": "Items",
+          "type": "array"
+        },
+        "overload_reasons": {
+          "patternProperties": {
+            "^\\d{4}-(AU|WI|SP|SU)$": {
+              "pattern": "^[a-z0-9][a-z0-9-]*$",
+              "type": "string"
+            }
+          },
+          "propertyNames": {
+            "examples": [
+              "2026-AU"
+            ]
+          },
+          "title": "Overload Reasons",
+          "type": "object"
+        },
+        "placements": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Placements",
+          "type": "array"
+        },
+        "programs": {
+          "items": {
+            "$ref": "#/$defs/PlanProgram"
+          },
+          "title": "Programs",
+          "type": "array"
+        }
+      },
+      "required": [
+        "catalog_year",
+        "entry_term"
+      ],
+      "title": "PlanState",
+      "type": "object"
+    },
+    "PremedGoal": {
+      "additionalProperties": false,
+      "properties": {
+        "complete_by": {
+          "examples": [
+            "Y2-SP",
+            "2028-SP"
+          ],
+          "pattern": "^(\\d{4}|Y[1-6])-(AU|WI|SP|SU)$",
+          "title": "Complete By",
+          "type": "string"
+        },
+        "courses": {
+          "items": {
+            "examples": [
+              "CMSC 14100"
+            ],
+            "pattern": "^[A-Z]{2,5} \\d{5}$",
+            "type": "string"
+          },
+          "title": "Courses",
+          "type": "array"
+        },
+        "hard": {
+          "default": false,
+          "title": "Hard",
+          "type": "boolean"
+        },
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "list": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "List"
+        },
+        "scope": {
+          "default": "career",
+          "enum": [
+            "career",
+            "term"
+          ],
+          "title": "Scope",
+          "type": "string"
+        },
+        "term": {
+          "anyOf": [
+            {
+              "examples": [
+                "2026-AU"
+              ],
+              "pattern": "^\\d{4}-(AU|WI|SP|SU)$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Term"
+        },
+        "type": {
+          "const": "premed",
+          "default": "premed",
+          "title": "Type",
+          "type": "string"
+        },
+        "weight": {
+          "default": 1.0,
+          "minimum": 0,
+          "title": "Weight",
+          "type": "number"
+        }
+      },
+      "required": [
+        "id",
+        "complete_by"
+      ],
+      "title": "PremedGoal",
+      "type": "object"
+    },
+    "ProtectGpaGoal": {
+      "additionalProperties": false,
+      "properties": {
+        "hard": {
+          "default": false,
+          "title": "Hard",
+          "type": "boolean"
+        },
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "scope": {
+          "default": "career",
+          "enum": [
+            "career",
+            "term"
+          ],
+          "title": "Scope",
+          "type": "string"
+        },
+        "strictness_threshold": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Strictness Threshold"
+        },
+        "term": {
+          "anyOf": [
+            {
+              "examples": [
+                "2026-AU"
+              ],
+              "pattern": "^\\d{4}-(AU|WI|SP|SU)$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Term"
+        },
+        "type": {
+          "const": "protect_gpa",
+          "default": "protect_gpa",
+          "title": "Type",
+          "type": "string"
+        },
+        "weight": {
+          "default": 1.0,
+          "minimum": 0,
+          "title": "Weight",
+          "type": "number"
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "title": "ProtectGpaGoal",
+      "type": "object"
+    },
+    "StudyAbroadGoal": {
+      "additionalProperties": false,
+      "properties": {
+        "abroad_term": {
+          "examples": [
+            "Y2-SP",
+            "2028-SP"
+          ],
+          "pattern": "^(\\d{4}|Y[1-6])-(AU|WI|SP|SU)$",
+          "title": "Abroad Term",
+          "type": "string"
+        },
+        "hard": {
+          "default": false,
+          "title": "Hard",
+          "type": "boolean"
+        },
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "program_id": {
+          "pattern": "^[a-z0-9][a-z0-9-]*$",
+          "title": "Program Id",
+          "type": "string"
+        },
+        "scope": {
+          "default": "career",
+          "enum": [
+            "career",
+            "term"
+          ],
+          "title": "Scope",
+          "type": "string"
+        },
+        "term": {
+          "anyOf": [
+            {
+              "examples": [
+                "2026-AU"
+              ],
+              "pattern": "^\\d{4}-(AU|WI|SP|SU)$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Term"
+        },
+        "type": {
+          "const": "study_abroad",
+          "default": "study_abroad",
+          "title": "Type",
+          "type": "string"
+        },
+        "weight": {
+          "default": 1.0,
+          "minimum": 0,
+          "title": "Weight",
+          "type": "number"
+        }
+      },
+      "required": [
+        "id",
+        "program_id",
+        "abroad_term"
+      ],
+      "title": "StudyAbroadGoal",
+      "type": "object"
+    },
+    "WorkloadHoursGoal": {
+      "additionalProperties": false,
+      "properties": {
+        "aggregate": {
+          "default": "per_term",
+          "enum": [
+            "per_term",
+            "career_average"
+          ],
+          "title": "Aggregate",
+          "type": "string"
+        },
+        "hard": {
+          "default": false,
+          "title": "Hard",
+          "type": "boolean"
+        },
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "max_hours": {
+          "exclusiveMinimum": 0,
+          "title": "Max Hours",
+          "type": "number"
+        },
+        "scope": {
+          "default": "career",
+          "enum": [
+            "career",
+            "term"
+          ],
+          "title": "Scope",
+          "type": "string"
+        },
+        "strict": {
+          "default": false,
+          "title": "Strict",
+          "type": "boolean"
+        },
+        "term": {
+          "anyOf": [
+            {
+              "examples": [
+                "2026-AU"
+              ],
+              "pattern": "^\\d{4}-(AU|WI|SP|SU)$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Term"
+        },
+        "type": {
+          "const": "workload_hours",
+          "default": "workload_hours",
+          "title": "Type",
+          "type": "string"
+        },
+        "weight": {
+          "default": 1.0,
+          "minimum": 0,
+          "title": "Weight",
+          "type": "number"
+        }
+      },
+      "required": [
+        "id",
+        "max_hours"
+      ],
+      "title": "WorkloadHoursGoal",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "A hand-written plan with a known verdict. `expect: fail` names the issue codes expected\n(each must appear in the report); `expect: pass` means no errors and an accepted\ncertificate. The runner adds the College policy; the Core is checked only when the plan\nlists the core program. `checks` restricts which V-codes run (None = all).",
+  "properties": {
+    "checks": {
+      "anyOf": [
+        {
+          "items": {
+            "enum": [
+              "V01",
+              "V02",
+              "V03",
+              "V04",
+              "V05",
+              "V06",
+              "V07",
+              "V08",
+              "V09",
+              "V10",
+              "V11",
+              "V12"
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Checks"
+    },
+    "description": {
+      "title": "Description",
+      "type": "string"
+    },
+    "expect": {
+      "enum": [
+        "pass",
+        "fail"
+      ],
+      "title": "Expect",
+      "type": "string"
+    },
+    "expected_codes": {
+      "items": {
+        "enum": [
+          "V01",
+          "V02",
+          "V03",
+          "V04",
+          "V05",
+          "V06",
+          "V07",
+          "V08",
+          "V09",
+          "V10",
+          "V11",
+          "V12"
+        ],
+        "type": "string"
+      },
+      "title": "Expected Codes",
+      "type": "array"
+    },
+    "id": {
+      "title": "Id",
+      "type": "string"
+    },
+    "plan": {
+      "$ref": "#/$defs/PlanState"
+    },
+    "program": {
+      "pattern": "^[a-z0-9][a-z0-9-]*$",
+      "title": "Program",
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "description",
+    "program",
+    "expect",
+    "plan"
+  ],
+  "title": "GoldenPlan",
+  "type": "object"
+}

@@ -1,0 +1,1953 @@
+# Generated from the 2026-2027 UChicago College Catalog (fetched 2026-11-12) by hand-checked scripts;
+# every source.quote is copied verbatim (whitespace collapsed) from source.url. See data/seed/REVIEW.md.
+courses:
+- code: SOSC 02980
+  title: Practicum
+  units: 25
+  notes: Cross-listed with HUMA 02980 (its catalog block lists SOSC 02980 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from HUMA 02980.
+  crosslists:
+  - HUMA 02980
+  terms_offered:
+  - SU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/humanities/
+    quote: 'Equivalent Course(s): SOSC 02980'
+- code: SOSC 11400
+  title: Power, Identity, Resistance I
+  units: 100
+  description: 'The first quarter of this sequence opens with the theoretical basis of the modern, liberal state - social
+    contract theory. We consider how state power was legitimized by common consent and how principles of freedom and equality
+    were anchored in accounts of "the state of nature." We also think about who was party to this original contract and ask
+    whether the prosperity and protection of some was implicitly premised on the exclusion or exploitation of others. As we
+    examine the protections offered by the liberal state against excessive, arbitrary power, we interrogate the limits of
+    state power and ask at what point can we resist it? We trace these dialogues from the seventeenth century through the
+    beginning of the nineteenth century. Texts vary by year and have included: Hobbes, Locke, Rousseau, Burke, Constant, Paine,
+    Wollstonecraft, D. Walker, C.L.R. James'
+  core_tags:
+  - social_sciences
+  prereq_text: These courses must be taken in sequence. Students registered in this sequence must attend the first and second
+    class sessions or their registration will be dropped.
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: SOSC 11400. Power, Identity, Resistance I. 100 Units.
+  needs_review: true
+- code: SOSC 11500
+  title: Power, Identity, Resistance II
+  units: 100
+  description: 'The emergence of the liberal state that we examine in the Fall quarter accompanied the rise of commercial
+    society and industrial capitalism, so in the Winter quarter we turn to theories of political economy. Generally, we are
+    concerned with the relationship between labor and human nature, the organization of economic life, and the relationship
+    between the state and the economy. We pay particular attention to the depiction of society itself as a market and how
+    the capitalist mode of economic organization was linked both to new possibilities for human emancipation and new forms
+    of exploitation and subjection. But we also ask how distinct is the modern form of capitalism? And what do the organization
+    of labor and trade, and the distribution of resources outside of capitalism tell us about the ways power can operate in
+    relation to economy? Texts vary by year and have included: Smith, Marx, Durkheim, Mauss, Hayek, Kropotkin, Arendt, Friedman,
+    S. Mintz, E. Williams'
+  core_tags:
+  - social_sciences
+  prereq_text: SOSC 11400. These courses must be taken in sequence. Students registered in this sequence must attend the first
+    and second class sessions or their registration will be dropped.
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: SOSC 11500. Power, Identity, Resistance II. 100 Units.
+  needs_review: true
+- code: SOSC 11600
+  title: Power, Identity, Resistance III
+  units: 100
+  description: 'In the Spring, we bring the legacies of liberal theory, political economy, and their critique to bear on questions
+    and problems that emerged from the late 19th century to the present. We take up a new dimension of society by thinking
+    about its relationship to the self. How does morality rely on the inner discipline of individuals? How does individual
+    identity rely on recognition by others? This question especially arises in the resistance movements we encounter in the
+    histories of imperialism and totalitarianism. These widen the horizon on historical claims to liberty and equality along
+    lines of race and gender. Finally, from forms of social domination we move to the human domination of nature in which
+    students consider social-scientific approaches to the unstable boundaries between human and non-human worlds. Texts vary
+    by year and have included: Hegel, Tocqueville, Nietzsche, Freud, Fanon, DuBois, Arendt, M.L. King, Foucault, Beauvoir,
+    and C. Korsgaard'
+  core_tags:
+  - social_sciences
+  prereq_text: SOSC 11500. These courses must be taken in sequence. Students registered in this sequence must attend the first
+    and second class sessions or their registration will be dropped.
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: SOSC 11600. Power, Identity, Resistance III. 100 Units.
+  needs_review: true
+- code: SOSC 12400
+  title: Self, Culture, and Society I
+  units: 100
+  description: The social theories of Ibn Khaldun, Smith, Marx, and Weber, supplemented by historical and ethnographic works,
+    serve as points of departure for considering the characterizing features of the modern world. Particular emphasis is given
+    to socioeconomic structure, theories of historical change, possibilities for individual freedom, the meaning of work,
+    and globalization.
+  core_tags:
+  - social_sciences
+  prereq_text: These courses must be taken in sequence. Students registered in this sequence must attend the first and second
+    class sessions or their registration will be dropped.
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: SOSC 12400. Self, Culture, and Society I. 100 Units.
+  needs_review: true
+- code: SOSC 12500
+  title: Self, Culture, and Society II
+  units: 100
+  description: In Winter Quarter, students tackle questions about the construction of self and society. The works of Durkheim,
+    Freud, de Beauvoir, Fanon, and others inform investigation of symbolic representation, the strength of social forces,
+    the unconscious, culture, ethics and violence, sexuality, gender, and race.
+  core_tags:
+  - social_sciences
+  prereq_text: SOSC 12400. These courses must be taken in sequence. Students registered in this sequence must attend the first
+    and second class sessions or their registration will be dropped.
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: SOSC 12500. Self, Culture, and Society II. 100 Units.
+  needs_review: true
+- code: SOSC 12600
+  title: Self, Culture, and Society III
+  units: 100
+  description: In Spring Quarter, students consider contemporary issues and social science approaches to them. Beginning with
+    post-modern, post-colonial, and other critiques of sciences of self, culture, and society (as articulated by Kuhn, Foucault,
+    and Said), the course investigates how new theories arise and new problems are addressed, how new perspectives (more global,
+    more inclusive) test and challenge, and how social scientists change, renew, and improve their insights. The quarter focuses
+    on topics of contemporary concern, including the human impact on the environment, feminism outside the West, and the rise
+    of global cities.
+  core_tags:
+  - social_sciences
+  prereq_text: SOSC 12500. These courses must be taken in sequence. Students registered in this sequence must attend the first
+    and second class sessions or their registration will be dropped.
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: SOSC 12600. Self, Culture, and Society III. 100 Units.
+  needs_review: true
+- code: SOSC 13100
+  title: Social Science Inquiry I
+  units: 100
+  description: 'Autumn Quarter begins by asking under what conditions a claim about the social world is specified sharply
+    enough to be studied? Students learn to turn vague questions into answerable ones, to measure social concepts, and to
+    see why an observed correlation, between a minimum wage and employment, say, or an officer''s race and the use of force,
+    is not yet evidence of a causal effect. Building on research on causal inference from across the social sciences, the
+    quarter introduces the research designs researchers use to do better: randomized experiments and observational strategies
+    such as natural experiments, differences-in-differences, and regression discontinuity.'
+  core_tags:
+  - social_sciences
+  prereq_text: These courses must be taken in sequence. Students registered in this sequence must attend the first and second
+    class sessions or their registration will be dropped.
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: SOSC 13100. Social Science Inquiry I. 100 Units.
+  needs_review: true
+- code: SOSC 13110
+  title: 'Social Science Inquiry: Formal Theory I'
+  units: 100
+  description: 'Social Science Inquiry: Formal Theory I introduces students to deductive reasoning and teaches them primitives
+    of rational choice---players, strategies and preferences.'
+  core_tags:
+  - social_sciences
+  prereq_text: These courses must be taken in sequence. Students registered in this sequence must attend the first and second
+    class sessions or their registration will be dropped.
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: 'SOSC 13110. Social Science Inquiry: Formal Theory I. 100 Units.'
+  needs_review: true
+- code: SOSC 13200
+  title: Social Science Inquiry II
+  units: 100
+  description: 'Winter Quarter turns to statistical techniques to estimate models with data, as students learn to produce
+    and scrutinize quantitative evidence themselves. Working in statistical software languages such as R, they learn to describe
+    data and draw inferences: sampling, descriptive and inferential statistics, hypothesis testing, and estimation in the
+    potential-outcomes framework. The quarter is organized around the "credibility revolution" in the social sciences, the
+    movement toward research built on quality data, rigorous design, and transparent accounting for uncertainty. Throughout,
+    students gain practice in producing and interpreting estimates in social scientific contexts.'
+  core_tags:
+  - social_sciences
+  prereq_text: SOSC 13100. These courses must be taken in sequence. Students registered in this sequence must attend the first
+    and second class sessions or their registration will be dropped.
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: SOSC 13200. Social Science Inquiry II. 100 Units.
+  needs_review: true
+- code: SOSC 13210
+  title: 'Social Science Inquiry: Formal Theory II'
+  units: 100
+  description: 'Social Science Inquiry: Formal Theory II covers two basic equilibrium concepts: Nash, and Subgame Perfect
+    Nash.'
+  core_tags:
+  - social_sciences
+  prereq_text: SOSC 13110. These courses must be taken in sequence. Students registered in this sequence must attend the first
+    and second class sessions or their registration will be dropped.
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: 'SOSC 13210. Social Science Inquiry: Formal Theory II. 100 Units.'
+  needs_review: true
+- code: SOSC 13300
+  title: Social Science Inquiry III
+  units: 100
+  description: 'Spring Quarter asks students to use the inferential and computational skill developed in the first two quarters
+    to produce novel research. Each student designs and carries out an original quantitative project, moving from a puzzle
+    and a review of prior findings, to a research design, to analysis and robustness checks, to a finished paper and presentation.
+    Class sessions supply the craft each stage demands: posing a researchable question, choosing a credible design, interpreting
+    results without overclaiming, and communicating findings in written, visual, and oral form.'
+  core_tags:
+  - social_sciences
+  prereq_text: SOSC 13200. These courses must be taken in sequence. Students registered in this sequence must attend the first
+    and second class sessions or their registration will be dropped.
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: SOSC 13300. Social Science Inquiry III. 100 Units.
+  needs_review: true
+- code: SOSC 13310
+  title: 'Social Science Inquiry: Formal Theory III'
+  units: 100
+  description: 'Social Science Inquiry: Formal Theory III covers games of incomplete information, including Bayesian Nash
+    and Perfect Bayesian Nash equilibrium.'
+  core_tags:
+  - social_sciences
+  prereq_text: SOSC 13210. These courses must be taken in sequence. Students registered in this sequence must attend the first
+    and second class sessions or their registration will be dropped.
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: 'SOSC 13310. Social Science Inquiry: Formal Theory III. 100 Units.'
+  needs_review: true
+- code: SOSC 14100
+  title: Mind I
+  units: 100
+  description: The first quarter of Mind challenges the naïve impression that our subjective experience of reality is a veridical
+    reflection of the external world. By introducing a wide-range of phenomena that illustrate the constructive nature of
+    experience-- perceptual, conceptual, affective, social, and cultural-- the lectures and readings engage students in analyzing
+    the mind's role in the construction of our realities. In particular, we consider our subjective awareness of and introspective
+    access to the mental processes that shape reality for us and the bottom-up and top-down control of information processing
+    in generating that reality. During the second half of the quarter we examine the dynamic nature of mind-- how our constructed
+    realities emerge and change over time and role of nature and nurture in their development across a variety of time scales,
+    exploring processes that unfold over the course of milliseconds as well as those that unfold over millennia.
+  core_tags:
+  - social_sciences
+  prereq_text: These courses must be taken in sequence. Students registered in this sequence must attend the first and second
+    class sessions or their registration will be dropped.
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: SOSC 14100. Mind I. 100 Units.
+  needs_review: true
+- code: SOSC 14200
+  title: Mind II
+  units: 100
+  description: This quarter focuses on how we can explain the causes of mental phenomena that are at once manifest in biological
+    materials and determined by social and cultural forces. We examine theoretical explanations for a wide range of mental
+    and behavioral phenomena based on mechanisms that operate at different levels of scientific analysis, including genetic,
+    hormonal, neural, psychological, social, and cultural. The goal is to illustrate how explaining phenomena at different
+    levels of analysis not only provides a richer, more detailed understanding of mental states and processes but can constrain
+    causal models and lead to theoretical advances. Lectures cross-cut topics such as function and mechanism, reductionism
+    and emergence, dynamic processes, genetics and epigenetics, distributed vs. localized neural representation, neuroendocrine
+    systems, cognitive process models, modularity of processing, and socio-cultural interactions.
+  core_tags:
+  - social_sciences
+  prereq_text: SOSC 14100. These courses must be taken in sequence. Students registered in this sequence must attend the first
+    and second class sessions or their registration will be dropped.
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: SOSC 14200. Mind II. 100 Units.
+  needs_review: true
+- code: SOSC 14300
+  title: Mind III
+  units: 100
+  description: Spring quarter of Mind examines the highly context-dependent nature of psychological processes and how their
+    operation changes depending on the particular goals, decisions, and applications for which they are used. Context can
+    be viewed broadly to include the physical environment, other people, and the invisible forces of culture and society,
+    i.e., external sources of context. However, it is equally important to consider the internal psychological and biological
+    context of mental activity, e.g., the interactive effects of motivation, affect, attention and knowledge on a particular
+    process or phenomenon. Lectures address a variety of topics, including distraction and attentional control, environmental
+    effects on attention and mood, political attitudes, decision-making, mathematical knowledge, emotion, and language use.
+  core_tags:
+  - social_sciences
+  prereq_text: SOSC 14200. These courses must be taken in sequence. Students registered in this sequence must attend the first
+    and second class sessions or their registration will be dropped.
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: SOSC 14300. Mind III. 100 Units.
+  needs_review: true
+- code: SOSC 15100
+  title: Classics of Social and Political Thought I
+  units: 100
+  description: We will begin in the autumn quarter by investigating the nature and purpose of political life. Why do humans
+    form political communities? What qualifies someone for citizenship in them and who should rule? What roles do justice,
+    virtue, and law play in our political communities? Is it ever acceptable to violate the laws that govern us? We will examine
+    how these questions were answered by Plato, Aristotle, Thomas Aquinas, and Niccolò Machiavelli. In addition to studying
+    the substance of their political theories, we will analyze the principles and assumptions that animate them. We will pay
+    especially close attention to how these theorists' accounts of human nature informed their ideas about political life.
+  core_tags:
+  - social_sciences
+  prereq_text: These courses must be taken in sequence. Students registered in this sequence must attend the first and second
+    class sessions or their registration will be dropped.
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: SOSC 15100. Classics of Social and Political Thought I. 100 Units.
+  needs_review: true
+- code: SOSC 15200
+  title: Classics of Social and Political Thought II
+  units: 100
+  description: We will continue to explore theories about the nature and purpose of political life in the winter quarter,
+    but we will also focus upon the ways in which political communities are organized and ruled. For instance, what is the
+    basis of our political obligations and rights? Should people play a role in their own governance? If so, how should they
+    navigate conflicts between their individual interests and the common good? Furthermore, is it acceptable for certain individuals
+    or groups to have more political power and rights than others? And under what conditions can revolution or rebellion be
+    justified? As we take up these questions, we will also examine the meaning of concepts such as sovereignty, freedom, and
+    equality, as well as the relationship between politics and religion. Our readings will include texts by Thomas Hobbes,
+    John Locke, Jean-Jacques Rousseau, and Mary Wollstonecraft.
+  core_tags:
+  - social_sciences
+  prereq_text: SOSC 15100. These courses must be taken in sequence. Students registered in this sequence must attend the first
+    and second class sessions or their registration will be dropped.
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: SOSC 15200. Classics of Social and Political Thought II. 100 Units.
+  needs_review: true
+- code: SOSC 15300
+  title: Classics of Social and Political Thought III
+  units: 100
+  description: In the final quarter of the sequence, we will turn to texts by nineteenth- and twentieth-century writers who
+    developed criticisms of existing social and political conditions. They include Alexis de Tocqueville, Karl Marx, Friedrich
+    Nietzsche, W. E. B. Du Bois, and Simone de Beauvoir. These writers will invite us to explore the ways in which freedom
+    and domination appear and operate within liberal democracies and capitalist societies, as well as the requirements for
+    overcoming domination and realizing greater freedom. We will also examine the meaning of values such as equality, progress,
+    self-reliance, thrift, morality, and truth, and we will consider how these values shape human lives. Finally, throughout
+    the quarter we will use the assigned texts as resources for learning about the practice of social criticism. We will consider
+    how it can serve society, as well as how we might use the concepts and models of inquiry that we find in our texts to
+    analyze present social and political conditions.
+  core_tags:
+  - social_sciences
+  prereq_text: SOSC 15200. These courses must be taken in sequence. Students registered in this sequence must attend the first
+    and second class sessions or their registration will be dropped.
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: SOSC 15300. Classics of Social and Political Thought III. 100 Units.
+  needs_review: true
+- code: SOSC 16100
+  title: Global Society I
+  units: 100
+  description: 'The first quarter of Global Society addresses social thought from a global perspective by first considering
+    some classic works from the Western tradition and then reading major statements about society from the classical traditions
+    of others cultures including: Latin America, Islam, East Asia, and Africa. In Global Society, students read these statements
+    simultaneously as theoretical treatises, as empirical approaches, and as normative prescriptions for the social world.
+    This three-pronged approach enables us to disentangle differences in empirical perception from differences in values and
+    to assess how, in combination, these color our own inevitably particular judgments of world events. The course opens a
+    set of themes that will run through the entire sequence: individual-and-society, tradition-and-change, sources of social
+    values, difference and particularity. The pedagogical emphasis is on close reading, discussion, and analytic writing.
+    Possible readings include: Thomas More, J. J. Rousseau, D. F. Sarmiento, Ali Shariati, Raden Ayu Kartini, and Léopold
+    Sédar Senghor'
+  core_tags:
+  - social_sciences
+  prereq_text: These courses must be taken in sequence. Students registered in this sequence must attend the first and second
+    class sessions or their registration will be dropped.
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: SOSC 16100. Global Society I. 100 Units.
+  needs_review: true
+- code: SOSC 16200
+  title: Global Society II
+  units: 100
+  description: 'The second quarter of Global Society is built around the theme of population and is designed as a hybrid course
+    that brings together a) an intellectual history of population thought and census-taking and b) a practical introduction
+    to basic demographic tools and contemporary debates about population. Students will engage Malthus, his detractors, and
+    new incarnations of Malthusian thought in detail. Questions considered will include: What is a population? What is at
+    stake when we count? How many people can this earth support? What are the implications of population shifts for individual
+    life chances? For social values and patterns of difference? Students will learn how to construct basic period lifetables,
+    how to compare populations and sub-populations using basic standardization techniques, and how to analyze generations
+    and cohorts in context. At the same time, since population issues like reproduction, migration, and mortality are simultaneously
+    philosophical, political, and empirical matters, students will connect these practical and empirical analyses to political
+    and value debates about the causes and consequences of population change. Possible texts include: Graunt, Petty, Malthus,
+    Nehru, Wu Ta-k''un, and contemporary instantiations.'
+  core_tags:
+  - social_sciences
+  prereq_text: SOSC 16100. These courses must be taken in sequence. Students registered in this sequence must attend the first
+    and second class sessions or their registration will be dropped.
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: SOSC 16200. Global Society II. 100 Units.
+  needs_review: true
+- code: SOSC 16300
+  title: Global Society III
+  units: 100
+  description: 'This third part of the sequence marries themes that emerge from Global Social Thought and Population, with
+    an emphasis on social change and development during twentieth and twenty-first centuries. From the perspective of Global
+    Society, "change" and "development" encompass everything from micro-level changes in gender relations to macro-level shifts
+    in the global economy. With new theoretical and empirical tools from parts 1 & 2 of the sequence, students will engage
+    the empirical, the theoretical, and the normative aspects of defining and evaluating long-run and short-run social change.
+    Using global and comparative lenses, we examine forms of state repression, civil resistance, religious transformations,
+    technological and economic changes, and the effects of these large social patterns on individual persons. Students will
+    write about the relationship of individuals to broad forces of social change, connecting themes from the first and second
+    quarters. The sequence concludes with a set of writing workshops designed to guide students through the steps of producing
+    a capstone sequence paper. Using the skills and tools they''ve acquired throughout the sequence, students will analyze
+    the relationship of a particular cohort (anchored in a time, place) to social change, with a focus on the empirical, normative,
+    and theoretical stakes, their causes and consequences. Possible texts include: Geertz, DuBois, Srinivas, and contemporary
+    instantiations.'
+  core_tags:
+  - social_sciences
+  prereq_text: SOSC 16200. These courses must be taken in sequence. Students registered in this sequence must attend the first
+    and second class sessions or their registration will be dropped.
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: SOSC 16300. Global Society III. 100 Units.
+  needs_review: true
+- code: SOSC 16800
+  title: 'Ancient Mediterranean World II: Rome'
+  units: 100
+  notes: Cross-listed with HIST 16800 (its catalog block lists SOSC 16800 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from HIST 16800.
+  crosslists:
+  - HIST 16800
+  prereq_text: This sequence meets the general education requirement in civilization studies.
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): CLCV 20800, SOSC 16800'
+  needs_review: true
+- code: SOSC 17100
+  title: 'Religion: Cosmos, Conscience, and Community I'
+  units: 100
+  description: Religion has not merely enriched the human intellect already formed, but in fact has helped to form it." This
+    is how Émile Durkheim, a pioneer of modern sociology, justifies his assertion that the study of religion is crucial for
+    all social scientific inquiry. Taking its cue from Durkheim, this course explores how religious traditions around the
+    globe have organized social realities, provided narrative frameworks for everyday life, and theorized collective identities.
+    We will examine how religious traditions narrate the origin of the world and how religious myths and rituals structure
+    societies and prescribe roles for individuals. We will analyze how social forms of power influence, and are influenced
+    by, beliefs about divinities, the supernatural, and the nature of existence. Finally, we will compare modern critiques
+    of religion and discuss the persistence of religious thought to address the question of whether societies can survive
+    without religion. Readings include creation myths, the Daodejing, Genesis, Jean-Jacques Rousseau, Mary Douglas, Ibn Tufayl,
+    and Buddhist suttas.
+  core_tags:
+  - social_sciences
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: 'SOSC 17100. Religion: Cosmos, Conscience, and Community I. 100 Units.'
+- code: SOSC 17200
+  title: 'Religion: Cosmos, Conscience, and Community II'
+  units: 100
+  description: 'During the Fall quarter, we discussed how religious descriptions of the universe and our place in it are inscribed
+    in power relations that are fundamentally social in nature. Building on that, this course asks: How do societies conceptualize
+    the nature of suffering and evil? According to different religions, what can be done about suffering and evil on individual
+    and collective levels? How do individual practices like meditation and collective practices like war reflect different
+    diagnoses of what is wrong with the world? In this course, students compare scholarly efforts to theorize human finitude
+    with religious parables, poetry, and practices aimed at surviving or overcoming pain, anxiety, and even death. We pay
+    particular attention to the social dimension-is it true that "we''re all in this together" or is it true that "everybody
+    dies alone," and how do these beliefs reflect and sustain socio-political structures? Readings include Sigmund Freud,
+    the Book of Job, Plato, Zhuangzi, Friedrich Nietzsche, C.S. Lewis, and the Bhagavad Gita.'
+  core_tags:
+  - social_sciences
+  prereq: SOSC 17100
+  prereq_text: SOSC 17100
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: 'SOSC 17200. Religion: Cosmos, Conscience, and Community II. 100 Units.'
+- code: SOSC 17300
+  title: 'Religion: Cosmos, Conscience, and Community III'
+  units: 100
+  description: In the Fall quarter, we examined how religious myths and rituals presuppose, challenge, and support social
+    conditions and power relations. In the Winter, we discussed how these myths and accompanying rituals respond to the ways
+    human beings are flawed and finite-vulnerable to evil, alienation, and misfortune. The Spring quarter is devoted to themes
+    surrounding ideology, ethics, hope, and the future. What ideas and practices do religions propose as ways of remedying,
+    coping with, or adjusting to the facts of existence? Where do different groups find the motivation to make the world a
+    better place-is it because of religions and ideologies, or in spite of them? How do different religions address the moral
+    standing of the neighbor, the enemy, the community, and the environment? How is religion connected to social, economic,
+    and political power no-is it the "opiate of the masses," or the spark that ignites a revolution? Readings include Karl
+    Marx, John Locke, Hannah Arendt, Malcolm X, Dorothy Day, Ali Shariati, and Max Weber.
+  core_tags:
+  - social_sciences
+  prereq_text: SOSC 17100, SOSC 17200
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: 'SOSC 17300. Religion: Cosmos, Conscience, and Community III. 100 Units.'
+  needs_review: true
+- code: SOSC 18100
+  title: Topics in Behavioral and Social Sciences Relevant to Medicine
+  units: 100
+  description: This course will survey key topics in behavioral and social sciences relevant to training in and practice of
+    medicine. Among the topics addressed will be sensation and perception, cognition, social psychology, and the biological
+    bases of behavior, as well as communications theory, institutional organization, sociology of health choices and outcomes,
+    statistical reasoning, and research design. Grades will be based on a combination of exams and quizzes. There are no prerequisites
+    for this course. It will not count toward major or minor credit in any College program with the exception of the Health
+    and Society minor.
+  notes: This course is most appropriate for second- and third-year students, preparing for the MCAT.
+  crosslists:
+  - HLTH 18100
+  prereq_text: There are no prerequisites for this course.
+  terms_offered:
+  - AU
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: SOSC 18100. Topics in Behavioral and Social Sciences Relevant to Medicine. 100 Units.
+  needs_review: true
+- code: SOSC 18400
+  title: 'Democracy: Equality, Liberty, and the Dilemmas of Self-Government I'
+  units: 100
+  description: The first quarter of the Democracy sequence examines the establishment, maintenance, and demise of pre-modern
+    popular governments, specifically Athenian democracy, the Roman Republic, and the medieval/Renaissance Florentine commune.
+    Through close textual reading, conceptual and institutional analysis, and historical inquiry, students explore the stability,
+    security, and constitutional forms of such regimes, and the place of liberty, equality, and justice within them (relative
+    to other regime types such as monarchies and oligarchies). When engaging the question of how democracies decline and die,
+    students consider factors such as civic corruption, oligarchic encroachment, and imperial overreach. Students read and
+    discuss both primary texts from these regimes and social scientific analyses of them.
+  notes: These courses must be taken in sequence. Students registered in this sequence must attend the first and second class
+    sessions or their registration will be dropped.
+  core_tags:
+  - social_sciences
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: 'SOSC 18400. Democracy: Equality, Liberty, and the Dilemmas of Self-Government I. 100 Units.'
+- code: SOSC 18500
+  title: 'Democracy: Equality, Liberty, and the Dilemmas of Self-Government II'
+  units: 100
+  description: The second quarter of the Democracy sequence is devoted to the historical understanding of the emergence and
+    fragility of democracy, probing sources of change and continuity-revolutionary rupture, constitutional stabilization,
+    and counter-revolutionary reaction. The course has a number of overarching goals. First, students discover the diverse
+    advantages offered by varied modes of inquiry in the social sciences as practiced by historians, sociologists, political
+    scientists and economists, and theorists of all stripes. Second, students engage with texts to uncover multiple layers
+    of analysis. In addition to reading works of philosophy and theory that augment texts assigned in the first term, students
+    also examine political manifestos, constitutions, correspondence, speeches, essays, broadsides, and the like. Third, students
+    develop intellectual habits and skills that are essential to independent inquiry, moving beyond the debates of the seminar
+    room to pursue a guided encounter with library research.
+  notes: These courses must be taken in sequence. Students registered in this sequence must attend the first and second class
+    sessions or their registration will be dropped.
+  core_tags:
+  - social_sciences
+  prereq: SOSC 18400
+  prereq_text: SOSC 18400
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: 'SOSC 18500. Democracy: Equality, Liberty, and the Dilemmas of Self-Government II. 100 Units.'
+- code: SOSC 18600
+  title: 'Democracy: Equality, Liberty, and the Dilemmas of Self-Government III'
+  units: 100
+  description: The final quarter of the Democracy sequence grapples with the possibilities of, and challenges to, democratic
+    government in the twentieth and twenty-first centuries. Faced with the bleak panorama of contemporary democratic erosion
+    and breakdown, what can we learn from twentieth-century debates about democracy? When democracy has come under threat
+    before, what ideas have emerged, from its detractors and from its defenders? This course offers a window into those debates.
+    Students learn how political theorists, some of them also political participants, have responded to fascism, authoritarianism,
+    and racial oppression, from the inter-war years through the middle decades of the last century. At the end of the course,
+    students explore ideas about our current crises. Readings and written assignments sustain the concern for close textual
+    analysis and historical inquiry established earlier in the sequence, but also highlight systematic attention to the uses
+    of comparison, both over time and across nations.
+  notes: These courses must be taken in sequence. Students registered in this sequence must attend the first and second class
+    sessions or their registration will be dropped.
+  core_tags:
+  - social_sciences
+  prereq: SOSC 18500
+  prereq_text: SOSC 18500
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: 'SOSC 18600. Democracy: Equality, Liberty, and the Dilemmas of Self-Government III. 100 Units.'
+- code: SOSC 19073
+  title: Jewish Civilization in Vienna I
+  units: 100
+  description: 'Designed in relation to the following two segments of a three-part sequence, this course has two main goals:
+    1) to provide an introduction to Central European Jewish History from the mid-19th century to the present; and, 2) to
+    give you a sense of Jewish Vienna in the same time period. The course is chronological in organization, but each class
+    also focuses on a different theme - the place of politics, migration, culture, and commerce in the transformation of Jewish
+    life in Vienna and Central Europe more generally. Since the latter two segments focus on literature and thought, we will
+    focus here on social, political, and cultural history, with a particular emphasis on: migration and settlement patterns;
+    the built environment; Jews at-home and not-at-home (in all senses) in Vienna; and, commemorative practices. Taking advantage
+    of being in Vienna, this course makes full use of the city. Three class sessions will be held outside the classroom and
+    there will be two day-long field trips. You will also have an assignment that can, if you so choose, take you into the
+    city.'
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: SOSC 19073. Jewish Civilization in Vienna I. 100 Units.
+- code: SOSC 19074
+  title: Jewish Civilization in Vienna II
+  units: 100
+  description: In this section of the class we will focus on the role of Jewish thought in a city that represented both the
+    hope and possibility of modernity as a site of liberation for Jews and as a place of profound disappointment and despair
+    over the failure of that project. We will begin by considering the religious, often Hasidic roots, of the community of
+    Galician Jews who would make up Vienna's Jewish population. We will turn then to philosophy, political theory and psychoanalysis
+    as three discourses in which modern Jewish thinkers made their mark, reading Mendelsson, Freud, Herzl and Kelsen, and
+    then in the final section of the class will treat the reconstruction of Jewish memory in light of the destruction of European
+    Jewry in the Holocaust, pairing an examination of memory studies with the representation of Judaism and the Shoah in Viennese
+    museums and at its historical sites.
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: SOSC 19074. Jewish Civilization in Vienna II. 100 Units.
+- code: SOSC 19075
+  title: Jewish Civilization in Vienna III
+  units: 100
+  description: Building on the two previous units, this section focuses on the arts - especially literature - created by Jews
+    in East and Central Europe from the turn of the century, through the interwar period, and into the postwar period. We
+    will ask how Jewish poets, novelists, theater practitioners and visual artists responded to the social, political, and
+    intellectual developments you learned about in the previous two sections. We will think about the relation between the
+    urban centers (Vienna, Berlin, Warsaw, Odessa) and their peripheries, and about the journey to the city as a modernist
+    trope. We will pay close attention to the dynamics between the different languages in which Jews wrote - German, Yiddish,
+    Hebrew, Polish, Russian - asking how Jewish authors made language choices and what these choices meant. In addition to
+    rounding out your understanding of Jewish cultural history, the purpose of this unit is to think about how art and literature
+    slows us down, creating spaces for thinking and reflection. We will be circling back to some of the figures you've already
+    encountered and re-visit some of the sites you've already been to, trying see them in a new light, through the prism of
+    artistic practice. In accordance with that, you will have the option of submitting creative writing or other artistic
+    work for some of your assignments.
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: SOSC 19075. Jewish Civilization in Vienna III. 100 Units.
+- code: SOSC 19076
+  title: Migration, Decolonization, and Diaspora Civilization-I
+  units: 100
+  description: This sequence is designed to give students the historical context for understanding contemporary debates on
+    postcolonial immigration and multiculturalism as well conceptual frameworks for analyzing issues of race, otherness, and
+    the legacies of the colonial encounter-in France and elsewhere. We will explore the histories, definitions, and connotations
+    of "Frenchness," as well as consider how colonized peoples have helped to create those meanings. However, this course
+    will not simply treat the inhabitants of former French colonies as a window onto France. We will also investigate how
+    various colonized peoples directed, shaped and contributed to the worlds in which they lived, and how they actively made
+    and maintained relations with other peoples, such as the French. Those processes and interchanges, as we will learn, often
+    produced unintended consequences, with which both the inhabitants of France and the inhabitants of the former French empire
+    continue to grapple today. Our goal is for students to emerge from the class with a better understanding of the legacies
+    of French imperialism, and of the history and theories that animate contemporary debates on multicultural France. Students
+    will have an opportunity to learn about Paris beyond its standard hallmarks-the museums and sites that are the mainstay
+    of typical tourist guides-to explore the ways in which France's former empire and its peoples has made and remade the
+    city.
+  core_tags:
+  - civilization
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: SOSC 19076. Migration, Decolonization, and Diaspora Civilization-I. 100 Units.
+- code: SOSC 19077
+  title: Migration, Decolonization, and Diaspora Civilization-II
+  units: 100
+  description: This sequence is designed to give students the historical context for understanding contemporary debates on
+    postcolonial immigration and multiculturalism as well conceptual frameworks for analyzing issues of race, otherness, and
+    the legacies of the colonial encounter-in France and elsewhere. We will explore the histories, definitions, and connotations
+    of "Frenchness," as well as consider how colonized peoples have helped to create those meanings. However, this course
+    will not simply treat the inhabitants of former French colonies as a window onto France. We will also investigate how
+    various colonized peoples directed, shaped and contributed to the worlds in which they lived, and how they actively made
+    and maintained relations with other peoples, such as the French. Those processes and interchanges, as we will learn, often
+    produced unintended consequences, with which both the inhabitants of France and the inhabitants of the former French empire
+    continue to grapple today. Our goal is for students to emerge from the class with a better understanding of the legacies
+    of French imperialism, and of the history and theories that animate contemporary debates on multicultural France. Students
+    will have an opportunity to learn about Paris beyond its standard hallmarks-the museums and sites that are the mainstay
+    of typical tourist guides-to explore the ways in which France's former empire and its peoples has made and remade the
+    city.
+  core_tags:
+  - civilization
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: SOSC 19077. Migration, Decolonization, and Diaspora Civilization-II. 100 Units.
+- code: SOSC 19078
+  title: Migration, Decolonization, and Diaspora Civilization-III
+  units: 100
+  description: This sequence is designed to give students the historical context for understanding contemporary debates on
+    postcolonial immigration and multiculturalism as well conceptual frameworks for analyzing issues of race, otherness, and
+    the legacies of the colonial encounter-in France and elsewhere. We will explore the histories, definitions, and connotations
+    of "Frenchness," as well as consider how colonized peoples have helped to create those meanings. However, this course
+    will not simply treat the inhabitants of former French colonies as a window onto France. We will also investigate how
+    various colonized peoples directed, shaped and contributed to the worlds in which they lived, and how they actively made
+    and maintained relations with other peoples, such as the French. Those processes and interchanges, as we will learn, often
+    produced unintended consequences, with which both the inhabitants of France and the inhabitants of the former French empire
+    continue to grapple today. Our goal is for students to emerge from the class with a better understanding of the legacies
+    of French imperialism, and of the history and theories that animate contemporary debates on multicultural France. Students
+    will have an opportunity to learn about Paris beyond its standard hallmarks-the museums and sites that are the mainstay
+    of typical tourist guides-to explore the ways in which France's former empire and its peoples has made and remade the
+    city.
+  core_tags:
+  - civilization
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: SOSC 19078. Migration, Decolonization, and Diaspora Civilization-III. 100 Units.
+- code: SOSC 19082
+  title: 'Córdoba: Crossroads of Mediterranean Civilizations I'
+  units: 100
+  description: This course will focus on the cultural encounters that shaped southern Iberian in the proto- historic and Roman
+    periods, and on the role of religion as a node of negotiation of local and foreign identities. Through readings and archaeological
+    visits, the students will learn about the impact of the Phoenician culture, very present in the south since the ninth
+    century BCE, as well as of the local Iberian and Tartessic culture. In the third century BCE, southern Iberia was also
+    the scenario of the Second Punic War, when the Phoenicians from Carthage and the Romans fought for control of the western
+    Mediterranean trade routes, ultimately leading to the Roman invasion and colonization of Iberia. Cordoba was at the center
+    of these transformations, and became a full-fledged Roman city, which produced illustrious Roman writers and politicians;
+    and the city shows the legacy of Visigothic and early Christian culture too. The course will explore the continuities
+    and disruptions that accompanied these various phases of Andalusia's early history, with an emphasis on religious and
+    cultural identities and their material and literary expression.
+  core_tags:
+  - civilization
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: 'SOSC 19082. Córdoba: Crossroads of Mediterranean Civilizations I. 100 Units.'
+- code: SOSC 19083
+  title: 'Córdoba: Crossroads of Mediterranean Civilizations II'
+  units: 100
+  description: In this second part of the sequence, we will attend to Cordoba and Andalusia more broadly as a site of cultural
+    and religious mixture. We will begin in Muslim-ruled al-Andalus (c. 8th - 15th centuries CE), focusing on the historical
+    and cultural movements of people, ideas, and objects, and their visible aftermath in the architecture and lived culture
+    of Cordoba and Andalusia in general as well as in the cultural lives of people across the Mediterranean. Eventually, we
+    will move on to discuss the fraught nature of the contemporary movement of people across that same Mediterranean sea,
+    including refugees and labor migrants. By the end of our three weeks, you will have gained a deeper knowledge of this
+    period of Spanish and world history.
+  core_tags:
+  - civilization
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: 'SOSC 19083. Córdoba: Crossroads of Mediterranean Civilizations II. 100 Units.'
+- code: SOSC 19084
+  title: 'Córdoba: Crossroads of Mediterranean Civilizations III'
+  units: 100
+  description: This course is the final part of a three-quarter sequence that explores the history and culture of ancient,
+    medieval, early modern, and modern southern Europe from a cultural-historical perspective, with special attention to cultural
+    contact across linguistic and religious groups. This course explores the intended and unintended consequences of some
+    of those cultural encounters and the complex entanglements they created. It will focus on the making of new Spains-literally,
+    Nueva España in the Americas, but also the influences and impacts of post-colonial Latin American literature, art, film,
+    and music on the other side of the Atlantic. We will interrogate the dynamics of imperialism, conquest, and colonialism
+    and their enmeshment with both Spanish and Latin American lives, identities, and resistance, while also considering the
+    enduring legacies of those processes in the modern world.
+  core_tags:
+  - civilization
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: 'SOSC 19084. Córdoba: Crossroads of Mediterranean Civilizations III. 100 Units.'
+- code: SOSC 20004
+  title: 'Ancient Near Eastern Thought and Literature I: Mesopotamian Literature'
+  units: 100
+  description: This course gives an overview of the richness of Mesopotamian Literature (modern Iraq) written in the 3rd-1st
+    millennium BC. We will read myths and epics written on clay tablets in the Sumerian and Akkadian language in English translation
+    and discuss content and style, but also the religious, cultural and historic implications. Particular focus will be on
+    the development of stories over time, the historical context of the literature and mythological figures. The texts treated
+    cover not only the famous Epic of Gilgamesh, but also various legends of Sumerian and Akkadian kings, stories about Creation
+    and World Order, and destruction. The topics covered range from the quest for immortality, epic heroes and monsters, sexuality
+    and love.
+  notes: Taking these courses in sequence is not required. This sequence meets the general education requirement in civilization
+    studies.
+  crosslists:
+  - NEHC 20004
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: 'SOSC 20004. Ancient Near Eastern Thought and Literature I: Mesopotamian Literature. 100 Units.'
+- code: SOSC 20005
+  title: 'Ancient Near Eastern Thought & Literature II: Anatolian Lit'
+  units: 100
+  description: 'The goal of this class is to get an overview of Hittite literature, as "defined" by the Hittites themselves,
+    in the wider historical-cultural context of the Ancient Near East. Some of the most important questions we can ask ourselves
+    in reading ancient texts are: why were they written down, why were they kept, for whom were they intended, and what do
+    the answers to these questions (apart from the primary content of the texts themselves) tell us about - in our case -
+    Hittite society?'
+  notes: Taking these courses in sequence is not required. This sequence meets the general education requirement in civilization
+    studies.
+  crosslists:
+  - NEHC 20005
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: 'SOSC 20005. Ancient Near Eastern Thought & Literature II: Anatolian Lit. 100 Units.'
+- code: SOSC 20006
+  title: 'Ancient Near Eastern Thought & Literature III: Ancient Egyptian Literature'
+  units: 100
+  description: This course explores the rich body of literature surviving from ancient Egypt, covering texts spanning ca.
+    2500 BCE-100 CE. We will read texts in English translation from a variety of genres-from adventure tales, to love poetry,
+    to autobiographies and the Book of the Dead-asking throughout the quarter how the ancient Egyptians understood the concept
+    of literature, how translation affects our experiences of the texts, who the authors and audiences were, and how the texts
+    relate to their social, historical, and cultural contexts. We will also explore how literary conventions changed over
+    time and what they reveal about broader societal shifts in ancient Egypt.
+  crosslists:
+  - NEHC 20006
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: 'SOSC 20006. Ancient Near Eastern Thought & Literature III: Ancient Egyptian Literature. 100 Units.'
+- code: SOSC 20011
+  title: 'Ancient Empires I: The Hittite Empire'
+  units: 100
+  description: 'This course introduces students to the Hittite Empire of ancient Anatolia. In existence from roughly 1750-1200
+    BCE, and spanning across modern Turkey and beyond, the Hittite Empire is one of the oldest and largest empires of the
+    ancient world. We will be examining their history and their political and cultural accomplishments through analysis of
+    their written records - composed in Hittite, the world''s first recorded Indo-European language - and their archaeological
+    remains. In the process, we will also be examining the concept of "empire" itself: What is an empire, and how do anthropologists,
+    archaeologists, and historians study this unique kind of political formation?'
+  notes: Taking these courses in sequence is not required. This sequence meets the general education requirement in civilization
+    studies.
+  crosslists:
+  - NEHC 20011
+  - HIST 15602
+  - CLCV 25700
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: 'SOSC 20011. Ancient Empires I: The Hittite Empire. 100 Units.'
+- code: SOSC 20012
+  title: 'Ancient Empires II: The Ottoman Empire'
+  units: 100
+  description: The Ottomans ruled in Anatolia, the Middle East, South East Europe and North Africa for over six hundred years.
+    The objective of this course is to understand the society and culture of this bygone Empire whose legacy continues, in
+    one way or another, in some twenty-five contemporary successor states from the Balkans to the Arabian Peninsula. The course
+    is designed as an introduction to the Ottoman World with a focus on the cultural history of the Ottoman society. It explores
+    identities and mentalities, customs and rituals, status of minorities, mystical orders and religious establishments, literacy
+    and the use of the public sphere.
+  notes: Taking these courses in sequence is not required. This sequence meets the general education requirement in civilization
+    studies.
+  crosslists:
+  - MDVL 20012
+  - HIST 15603
+  - CLCV 25800
+  - NEHC 20012
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: 'SOSC 20012. Ancient Empires II: The Ottoman Empire. 100 Units.'
+- code: SOSC 20013
+  title: Ancient Empires III :The Egyptian Empire of the New Kingdom
+  units: 100
+  description: For most of the duration of the New Kingdom (1550-1069 BC), the ancient Egyptians were able to establish a
+    vast empire and becoming one of the key powers within the Near East. This course will investigate in detail the development
+    of Egyptian foreign policies and military expansion which affected parts of the Near East and Nubia. We will examine and
+    discuss topics such as ideology, imperial identity, political struggle and motivation for conquest and control of wider
+    regions surrounding the Egyptian state as well as the relationship with other powers and their perspective on Egyptian
+    rulers as for example described in the Amarna letters.
+  notes: Taking these courses in sequence is not required. This sequence meets the general education requirement in civilization
+    studies.
+  crosslists:
+  - HIST 15604
+  - NEHC 20013
+  - CLCV 25900
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: SOSC 20013. Ancient Empires III :The Egyptian Empire of the New Kingdom. 100 Units.
+- code: SOSC 20101
+  title: Introduction to African Civilization I
+  units: 100
+  description: 'Part one considers literary, oral, linguistic, and material sources to investigate African societies and states
+    from the early Iron Age through the emergence of the Atlantic World. Case studies include: the empires of Ghana and Mali,
+    the Swahili Coast, Great Zimbabwe, Nok of Nigeria, and medieval Ethiopia. We also consider religious and spiritual transformation,
+    including Islam in Africa, as well as the origins and effects of European contact, and the emergence of the transatlantic
+    trade in enslaved human beings. Students examine these times and places through primary sources (such as cultural artifacts,
+    visual representations, myths, and memoirs) which illuminate African perspectives on these different places and times.
+    Assignments: oral presentations, document analyses, essays, and team projects.'
+  crosslists:
+  - HIST 10101
+  - MDVL 10101
+  - ANTH 20701
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: SOSC 20101. Introduction to African Civilization I. 100 Units.
+- code: SOSC 20202
+  title: Introduction to African Civilization II
+  units: 100
+  description: This course examines the transformations of African societies in the long nineteenth century. At the beginning
+    of the era, European economic and political presence was mainly coastal, but by the end, nearly the entire continent was
+    colonized. This course examines how and why this process occurred, highlighting the struggles of African societies to
+    manage internal reforms and external political, military, and economic pressures. Students examine these processes through
+    various primary sources (such as visual and material sources, cultural artifacts, and personal accounts) that highlight
+    African perspectives on these processes.
+  crosslists:
+  - ANTH 20702
+  - HIST 10102
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: SOSC 20202. Introduction to African Civilization II. 100 Units.
+- code: SOSC 20203
+  title: Introduction to African Civilization III
+  units: 100
+  description: African Civilization III examines Africa and the African diaspora in the modern era. Topics may include the
+    end of colonialism and decolonization, the legacies of slavery and its racial logics, identity and cultural expression,
+    theories of personhood, gender and sexuality, migration, governance, and language. Readings vary widely, including primary
+    sources by African and diasporic authors, social theory, and works of art and literature - written, spoken, and performed.
+  notes: Taking these courses in sequence is recommended but not required.
+  crosslists:
+  - HIST 10103
+  - ANTH 20703
+  prereq_text: This sequence meets the general education requirement in civilization studies.
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: SOSC 20203. Introduction to African Civilization III. 100 Units.
+  needs_review: true
+- code: SOSC 20210
+  title: UX Research Foundations
+  units: 100
+  description: User Experience ("UX") is a professional field and practice that aims to understand the core needs of users
+    to positively impact the experience and successful adoption of a product. How we define "product" in UX has great variation
+    and can be physical, digital, or omnichannel-this makes the field of study highly nuanced, complex, and engaging. UX practitioners
+    are present in a variety of industries including Tech, Automotive, Healthcare, Travel, and CPG (consumer packaged goods).
+    UX Researchers specifically contribute to this field by deeply understanding and measuring user outcomes. We report both
+    findings and actionable insights for product, design, insights, engineering, marketing, and business stakeholders. To
+    do so successfully, many user research methodologies are leveraged (both qualitative and quantitative) and findings are
+    socialized in a way that makes product (rather than pedagogical) impact. This course aims to lay a theoretical and methodological
+    foundation for user experience research and reporting. The goal of this course is to equip students who are curious about
+    UXR with the basic foundation needed to enter the job market. Students will gain a deep theoretical and historical understanding
+    of the field of User Experience and its methods, learn basic design principles to help them communicate with colleagues
+    in an applied context, and produce a final project (and supplementary research materials) that can serve as a professional
+    portfolio piece/case study.
+  crosslists:
+  - MAPS 30210
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: SOSC 20210. UX Research Foundations. 100 Units.
+- code: SOSC 21001
+  title: 'Human Rights: Contemporary Issues'
+  units: 100
+  description: This course is being taught at a "watershed" moment in the history of human and civil rights in the U.S. The
+    U.S. government has largely abandoned the post-World War 2 alliances and institutions which compose the modern international
+    human rights regime - and changed the priorities of domestic rights-protection agencies. The course begins with a discussion
+    of the nature of rights and our expectations about their protection. We will examine the state of democracy in the U.S.
+    and the relationship between democracy, the rule of law, and human rights. We will follow this introduction with an overview
+    of the founding of the modern human rights regime in the post-World War 2 period. For case studies, we focus primarily
+    (but not exclusively) on the U.S. experience and place it in a global context. Students will have an opportunity to learn
+    about and from human rights "practitioners" from the arts, science, journalism, and law, as well as NGOs which protect
+    human rights. Learning about the reality of human rights "practice" today is a core element of this course. We will look
+    at the persistence of racism, torture, and police abuse. We will examine contemporary issues such as the rule of law,
+    the right to vote and to free & fair elections, the right to protest, the right to reproductive healthcare access, and
+    remedies against abuse by law enforcement. Cross-cutting themes of the course include the universalism of human rights,
+    impunity and accountability, notions of "exceptionalism
+  crosslists:
+  - LACS 21001
+  - DEMS 21001
+  - LLSO 21001
+  - HIST 29304
+  - CHST 21001
+  - HMRT 21001
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: 'SOSC 21001. Human Rights: Contemporary Issues. 100 Units.'
+- code: SOSC 21005
+  title: Water Water Everywhere?
+  units: 100
+  description: 'This interdisciplinary course explores aesthetics, environmental racism, and a human rights approach to the
+    Commons to inform our perspective on the politics and aesthetics of water from the local to the global. The course will
+    look at issues of scarcity and abundance through the lenses of art and human rights. The course will incorporate guest
+    speakers, including artist Iñigo Manglano-Ovalle and environmental and water rights experts and advocates. Students will
+    consider works by artists such as Pope L, Mel Chin, Allan Kaprow, LaToya Ruby Frazier, and Fazal Sheikh, to understand
+    how art can confront the 21st century''s environmental challenges. A diverse set of texts will include relevant human
+    rights instruments, the documentary film "Whose Water" (Kate Levy 2024); Lewis Hyde, "Common as Air: Revolution, Art,
+    and Ownership"; and Emily Eliza Scott & Kristen Swenson, ''Contemporary Art and the Politics of Land Art'' from "Critical
+    Landscapes: Art, Space, and Politics." The course will include site visits to nearby natural areas, such as the Big Marsh
+    wetlands, the "Toxic Donut" near Altgeld Gardens, and Lake Michigan. This course is an extension of a collaborative project
+    at the Gray Center for Arts and Inquiry with human rights lawyer Susan Gzesh, artist Iñigo Manglano-Ovalle, and curator
+    Abigail Winograd.'
+  crosslists:
+  - BPRO 24193
+  - CHST 24193
+  - CEGU 24193
+  - ARTH 24193
+  - HMRT 24193
+  prereq_text: Third- or fourth-year standing
+  terms_offered:
+  - AU
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: SOSC 21005. Water Water Everywhere?
+  needs_review: true
+- code: SOSC 21100
+  title: Music and Euro-American Cultures
+  units: 100
+  description: As part of the Social Sciences Civ core, this course looks at musics in different moments of Euro-American
+    history and the social contexts in which they originated, with some comparative views on other world traditions. It aims
+    to give students a better understanding of the social contexts of European music over this period; aids for the basic
+    sound structures of pieces from these different moments; and convincing writing in response to prompts based on source
+    readings or music pieces. Our first quarter (MUS 12100 etc.) spans roughly the period between Charlemagne's coronation
+    as Holy Roman Emperor (800 CE) and the dissolution of the Empire (1806) with the triumph of Napoleon across Western Europe.
+  crosslists:
+  - MUSI 12100
+  - HIST 12700
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: SOSC 21100. Music and Euro-American Cultures. 100 Units.
+- code: SOSC 21200
+  title: Music and Euro-American Cultures II (1810-present)
+  units: 100
+  description: As part of the Social Sciences Civ core, this course looks at musics in different moments of Euro-American
+    history and the social contexts in which they originated, with some comparative views on other world traditions. It aims
+    to give students a better understanding of the social contexts of European music over this period; aids for the basic
+    sound structures of pieces from these different moments; and convincing writing in response to prompts based on source
+    readings or music pieces. Our second quarter (MUS 12200 etc.) runs from the beginning of European Romanticism around 1800
+    to the turn of the 21st century.
+  notes: Prior music course or ability to read music not required. Students must confirm enrollment by attending one of the
+    first two sessions of class. This two-quarter sequence meets the general education requirement in civilization studies;
+    it does not meet the general education requirement in the arts. Please note that MUSI 12100-12200 will not be offered
+    on campus in 2024-25. The sequence will be offered in Vienna in Spring 2025 and 2027.
+  crosslists:
+  - HIST 12800
+  - MUSI 12200
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: SOSC 21200. Music and Euro-American Cultures II (1810-present)
+- code: SOSC 21300
+  title: Going to the Opera in Paris, 1650-1848
+  units: 100
+  description: This class studies the experience of opera-goers in Paris from the Sun King to the Second Republic. We read
+    libretti and other source documents on the premieres of operas. Our site visits include the Opera Garnier and one live
+    opera in the city. We will also read other articles about the historical context of our operatic repertory.
+  crosslists:
+  - MUSI 12300
+  prereq_text: Admission to the Paris Music Civilization sequence, and MUS 121-122.
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: SOSC 21300. Going to the Opera in Paris, 1650-1848. 100 Units.
+  needs_review: true
+- code: SOSC 21301
+  title: Music and Culture in Vienna c. 1900
+  units: 100
+  description: This course examines the centrality of music to Viennese culture in one of the moments of its greatest flowering
+    on the eve of World War I. We discuss readings in the city's flourishing intellectual life, and study both popular music
+    of the time as well as works by Mahler, Schoenberg and others. Students will report on source texts and their relation
+    to music.
+  crosslists:
+  - MUSI 12400
+  prereq_text: Admission to the Spring 2025 Vienna Civilization Program and MUS 121-122 in Vienna
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: SOSC 21301. Music and Culture in Vienna c. 1900. 100 Units.
+  needs_review: true
+- code: SOSC 21700
+  title: Intro To Linguistics-1
+  units: 100
+  description: TBD
+  crosslists:
+  - ANTH 27001
+  - ANTH 37001
+  - LING 20100
+  - LING 30100
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: SOSC 21700. Intro To Linguistics-1. 100 Units.
+- code: SOSC 21800
+  title: Intro To Linguistics-2
+  units: 100
+  description: TBD
+  crosslists:
+  - ANTH 37002
+  - LING 30200
+  - ANTH 27002
+  - LING 20200
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: SOSC 21800. Intro To Linguistics-2. 100 Units.
+- code: SOSC 21900
+  title: Introduction To Linguistics-3
+  units: 100
+  description: TBD
+  crosslists:
+  - LING 20300
+  - ANTH 27003
+  - LING 30300
+  - ANTH 37003
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: SOSC 21900. Introduction To Linguistics-3. 100 Units.
+- code: SOSC 22000
+  title: Islamic Thought and Literature I
+  units: 100
+  description: In the first quarter of Islamic Thought and Literature, students will explore the intellectual and cultural
+    history of the Islamic world in its various political and social contexts. Chronologically, the course begins with emergence
+    of Islam in the 7th century CE and continues through the Mongol conquests until the rise of the "gunpowder empires" circa
+    1500. Students will leave the course with a historical and geographical framework for understanding the history of the
+    Middle East and a familiarity with the major forms of premodern Islamic cultural production (e.g., history-writing, scriptural
+    exegesis, poetry, philosophy, jurisprudence, etc.). Students will also develop the skills and contextual knowledge necessary
+    for analyzing these sources in English translation; they will thus come to appreciate premodern Islamic cultural products
+    on their own terms while engaging in the collective work of historical interpretation. No prior background in the subject
+    is required. This sequence meets the general education requirement in civilization studies.
+  crosslists:
+  - NEHC 20601
+  - RLST 20401
+  - MDVL 20601
+  - HIST 25610
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: SOSC 22000. Islamic Thought and Literature I. 100 Units.
+- code: SOSC 22100
+  title: Islamic Thought and Literature II
+  units: 100
+  description: In the second quarter of Islamic Thought and Literature, students will explore the Islamic world in its various
+    political, social, and intellectual aspects. Chronologically, the course begins with the consolidation of the "gunpowder
+    empires" in the 16th Century and continues into the modern era. Students will leave the course with a historical and geographical
+    framework for understanding the history of the Middle East and a familiarity with the major debates such as state reform
+    efforts, Islamic modernism, and nationalism; new genres (e.g., the novel); and new modes of communication, such as journals
+    and newspapers. No prior background in the subject is required.Participation in the first quarter of the sequence is assumedThis
+    sequence meets the general education requirement in civilization studies.
+  notes: Taking these courses in sequence is recommended but not required. This sequence meets the general education requirement
+    in civilization studies.
+  crosslists:
+  - MDVL 20602
+  - RLST 20402
+  - HIST 25615
+  - NEHC 20602
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: SOSC 22100. Islamic Thought and Literature II. 100 Units.
+- code: SOSC 22200
+  title: Islamic Thought & Lit III - The Experience of Being Colonized
+  units: 100
+  description: This course explores the multilayered nature of colonialism in the modern Middle East-military, institutional,
+    ideological, educational, and economic-and surveys the different ways in which it was experienced by different Middle
+    Easterners. The sources discussed range from historical accounts and autobiographies to novels, short stories, movies,
+    and visual art. Through these sources, we consider questions such as, Is there something distinctive about Western colonialism?
+    Is the distinction between colonialism and postcolonialism meaningful? Is colonialism a form of globalization (or vice
+    versa)?
+  crosslists:
+  - RLST 20403
+  - NEHC 20603
+  - MDVL 20603
+  - HIST 25616
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: SOSC 22200. Islamic Thought & Lit III - The Experience of Being Colonized. 100 Units.
+- code: SOSC 23000
+  title: Introduction to the Civilizations of South Asia I
+  units: 100
+  description: The first quarter focuses on Islam in South Asia, Hindu-Muslim interaction, Mughal political and literary traditions,
+    and South Asia's early encounters with Europe.
+  crosslists:
+  - SALC 30100
+  - HIST 10800
+  - MDVL 20100
+  - SALC 20100
+  - ANTH 24101
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: SOSC 23000. Introduction to the Civilizations of South Asia I. 100 Units.
+- code: SOSC 23100
+  title: Introduction to the Civilizations of South Asia II
+  units: 100
+  description: The second quarter analyzes the colonial period (i.e., reform movements, the rise of nationalism, communalism,
+    caste, and other identity movements) up to the independence and partition of India.
+  crosslists:
+  - SALC 30200
+  - SALC 20200
+  - HIST 10900
+  - ANTH 24102
+  prereq_text: SALC 20100,ANTH 24101,HIST 10800,SASC 20000,SOSC 23000
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: SOSC 23100. Introduction to the Civilizations of South Asia II. 100 Units.
+  needs_review: true
+- code: SOSC 24000
+  title: 'Russia and Eurasia: Empires, Societies, Cultures I (formerly Introduction to Russian Civilization)'
+  units: 100
+  description: 'The first quarter spans the centuries between early medieval Rus'', which furnished modern Ukraine, Russia,
+    and Belarus with a story of origins, to the intellectual, social, and national mobilization in the mid-19th century. Major
+    themes include: the influence of Byzantine, Mongol-Tataric, and Western cultures; medieval principalities, city-states,
+    and the rise of the centralized state, its oversized role in Russian and regional social and economic development, its
+    hyper-modernizing schemes and its periodic collapse; cross-cultural interactions in the steppe and the Baltic and Black
+    Seas littorals; Russia''s wars and the emergence of the Russian empire; varieties of resistance, from peasant uprisings
+    and flight to religious dissent to aristocratic opposition, and the emergence of the repressive machinery of the state;
+    forces of change and continuity in political, intellectual, and cultural life.'
+  notes: Taking these courses in sequence is recommended but not required. When taken with HIST 14000, HIST 13900 meets the
+    two-quarter general education requirement in Civilization Studies.
+  crosslists:
+  - REES 26011
+  - HIST 13900
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: 'SOSC 24000. Russia and Eurasia: Empires, Societies, Cultures I (formerly Introduction to Russian Civilization)'
+- code: SOSC 24001
+  title: 'Colonizations I: Colonialism, Enslavement and Resistance in the Atlantic World'
+  units: 100
+  description: This quarter examines the making of the Atlantic world in the aftermath of European colonial expansion. Focusing
+    on the Caribbean, North and South America, and western Africa, we cover the dynamics of invasion, representation of otherness,
+    enslavement, colonial economies and societies, as well as resistance and revolution.
+  notes: This sequence meets the general education requirement in civilization studies. This course is offered every year.
+    These courses can be taken in any sequence.
+  crosslists:
+  - LACS 24001
+  - ANTH 24001
+  - HIST 18301
+  - RDIN 24001
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: 'SOSC 24001. Colonizations I: Colonialism, Enslavement and Resistance in the Atlantic World. 100 Units.'
+- code: SOSC 24002
+  title: 'Colonizations II: Imperial Expansion, Anti-Imperialism, and Nation in Asia'
+  units: 100
+  description: This quarter addresses the histories of modern European and Japanese colonialism in Asia and their interconnection
+    within the Pacific and Indian Ocean worlds. Themes examined include the logics and dynamics of imperial expansion and
+    rule; Orientalist discourses; uprisings and anti-imperial movements; the rise of nationalisms; and paths to decolonization
+    in the region.
+  crosslists:
+  - SALC 24002
+  - ANTH 24002
+  - RDIN 24002
+  - HIST 18302
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: 'SOSC 24002. Colonizations II: Imperial Expansion, Anti-Imperialism, and Nation in Asia. 100 Units.'
+- code: SOSC 24003
+  title: 'Colonizations III: Decolonization, Revolution, Freedom'
+  units: 100
+  description: The third quarter of the Colonizations sequence considers the processes and consequences of decolonization
+    both in newly independent nations and former colonial powers. Through an engagement with postcolonial studies, we explore
+    the problematics of freedom and sovereignty; anti-colonial movements, thinking and struggles; nation-making and nationalism;
+    and the enduring legacies of colonialism.
+  crosslists:
+  - SALC 20702
+  - RDIN 24003
+  - ANTH 24003
+  - HIST 18303
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: 'SOSC 24003. Colonizations III: Decolonization, Revolution, Freedom. 100 Units.'
+- code: SOSC 24100
+  title: 'Russia and Eurasia: Empires, Societies, Cultures II (formerly Introduction to Russian Civilization)'
+  units: 100
+  description: The second quarter focuses on nearly two centuries of upheaval, from the radical movements of the late 19th
+    century to the birth, life, and death of the Soviet Union and the emergence of post-Soviet states. Our topics include
+    Russian imperialism, colonial conquests, and the reconstitution of the Russian empire as the Soviet Union; systems of
+    social and political legitimization; political violence, the evolution of the repressive machinery, and the enduring problem
+    of the rule of law; religious, national, and sexual minorities, practices of everyday life, social order and disorder;
+    resistance, dissent, and liberation movements; creativity, experimentation, and self-expression under censorship.
+  notes: Taking these courses in sequence is recommended but not required. When taken with HIST 13900, HIST 14000 meets the
+    two-quarter general education requirement in Civilization Studies.
+  crosslists:
+  - HIST 14000
+  - REES 26012
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: 'SOSC 24100. Russia and Eurasia: Empires, Societies, Cultures II (formerly Introduction to Russian Civilization)'
+- code: SOSC 24200
+  title: 'Russia and Eurasia: Empires, Societies, Cultures III, Russia and the West, 18th to 21st centuries'
+  units: 100
+  description: 'The third quarter is thematic, rather than chronological, and offers an in-depth or comparative exploration
+    of special topics. Topics vary from year to year. There are few problems as enduring and central to Russian history as
+    the question of the West-Russia''s most passionate romance and most bitter letdown. In this course we will read and think
+    about Russia from the eighteenth to the twenty-first centuries through the lens of this obsession. We will study the products
+    of Russian interactions with the West: constitutional projects, paintings, scientific and economic thought, the Westernizer-Slavophile
+    controversy, and revolutions. We will consider the presence of European communities in Russia: German and British migrants
+    who filled important niches in state service, trade, and scholarship; Italian sculptors and architects who designed some
+    of Russia''s most famous monuments; French expatriates in the wake of the French Revolution; Communist workers and intellectuals,
+    refugees from Nazi Germany; and Western journalists who, in the late Soviet decades, trafficked illicit ideas, texts,
+    and artworks. In the end, we will follow émigré Russians to Europe and the United States and return to present-day Russia
+    to examine the anti-Western turn in its political and cultural discourse.'
+  notes: When taken with HIST 13900 and HIST 14000, HIST 14100 meets the three-quarter general education requirement in Humanities,
+    Civilization Studies, and the Arts. HIST 14100 does not meet the two-quarter Civilization Studies requirement and cannot
+    be combined with HIST 13900 or HIST 14000 for Civilization Studies credit.
+  crosslists:
+  - REES 26015
+  - HIST 14100
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: 'SOSC 24200. Russia and Eurasia: Empires, Societies, Cultures III, Russia and the West, 18th to 21st centuries.
+      100 Units.'
+- code: SOSC 24505
+  title: Human Rights in Mexico
+  units: 100
+  description: This course is intended to give the student a foundation in understanding human rights as both concept and
+    reality in contemporary Mexico. Subject matter includes an overview of key periods in Mexican history in which concepts
+    of individual and group rights, the relationship between citizens and the state, and the powers of the Church and the
+    state were subject to change. This historical review will form the foundation for understanding human rights issues in
+    contemporary Mexico. The course will also examine modern social movements which frame their demands as human rights.
+  crosslists:
+  - HMRT 34501
+  - LACS 24501
+  - LACS 34501
+  - HMRT 24501
+  - HIST 39408
+  - HIST 29408
+  prereq_text: A reading knowledge of Spanish and at least one course on Latin American history or culture are required.
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: SOSC 24505. Human Rights in Mexico. 100 Units.
+  needs_review: true
+- code: SOSC 24506
+  title: The Rights of Immigrants and Refugees in Practice
+  units: 100
+  description: This course employs an interdisciplinary approach to examine the work of social justice advocacy for and by
+    non-citizens in the U.S. including asylum seekers, immigrant workers, women as migrants, migrant children, and the undocumented.
+    Our readings will place selected case studies in their local, national, and international context. We will draw on sources
+    from law, history, sociology, political science, and the arts. Texts, films, and guest speakers will address the history
+    of immigrants' rights advocacy in the Chicago and the U.S., with selected global examples. Topics will include the rights
+    of asylum seekers, the problems of migrant workers (guest-workers and the undocumented), women and children as migrants,
+    and the impact of the global pandemic on migration in general. The case studies will illuminate the role of immigrants
+    as leaders and the relationship between impacted communities and the state. We will meet with journalists, elected officials,
+    organizers, academics, artists, lawyers, and immigrant community leaders to discuss distinct approaches to migrants' rights
+    advocacy.
+  crosslists:
+  - GLST 24506
+  - CHST 24506
+  - INRE 34506
+  - HMRT 26813
+  - LLSO 24506
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: SOSC 24506. The Rights of Immigrants and Refugees in Practice. 100 Units.
+- code: SOSC 24900
+  title: Human Rights in World Civilizations I
+  units: 100
+  notes: Cross-listed with HMRT 10100 (its catalog block lists SOSC 24900 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from HMRT 10100.
+  crosslists:
+  - HMRT 10100
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): SOSC 24900'
+- code: SOSC 24901
+  title: Human Rights in World Civilizations II
+  units: 100
+  notes: Cross-listed with HMRT 10200 (its catalog block lists SOSC 24901 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from HMRT 10200.
+  crosslists:
+  - HMRT 10200
+  prereq: SOSC 24900
+  prereq_text: SOSC 24900
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): SOSC 24901'
+- code: SOSC 25131
+  title: Evolution in Thought, Art, and Culture
+  units: 100
+  description: Evolution, as it is understood by biologists and other scientists, refers to the process of generational change
+    in the inherited characteristics of life forms. But it is also a powerful idea with ongoing significance for debates about
+    human nature and the human relationship to nonhuman life and technology. Since its development in the nineteenth century,
+    the idea of evolution has motivated countless writers, scientists, philosophers, and artists to imagine and advocate for
+    diverse visions of the future of human life on earth and beyond. Through materials as diverse as Darwin's own account
+    of his formulation of the theory of evolution to science fiction films like Gattaca, we will consider a variety of engagements
+    with evolutionary thought ranging from the construction of political utopias to programs in genetic manipulation and biohacking
+    to efforts at preserving the past and future of endangered species. In so doing, we will analyze the history of evolutionary
+    speculation, consider the ethical values associated with the various scientific, social, and cultural projects it has
+    inspired, and develop the critical skills needed to tackle questions raised by developments in science and technology.
+  terms_offered:
+  - SU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: SOSC 25131. Evolution in Thought, Art, and Culture. 100 Units.
+- code: SOSC 25132
+  title: The Theory and Politics of Capitalism
+  units: 100
+  description: 'It is impossible to graduate from college without repeatedly encountering the term "capitalism." But what
+    is it, actually? Is it primarily a political or an economic system? What is the difference and why does it matter? Why
+    are economics and politics taught in different departments at modern universities and why is a major in economics so popular?
+    This course will equip students with the basic conceptual tools to think about these questions. We will try to understand
+    the history and theory of capitalism by reading selections from six of the most important theorists of modern economic
+    life: Adam Smith, Karl Marx, Friedrich List, William Stanley Jevons, John Maynard Keynes, and Friedrich Hayek.'
+  terms_offered:
+  - SU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: SOSC 25132. The Theory and Politics of Capitalism. 100 Units.
+- code: SOSC 25313
+  title: 'Beyond Human: Geniuses, Superheroes and A.I'
+  units: 100
+  description: 'This interdisciplinary course will explore what it means to be human by spotlighting cases that push the limits
+    of human cognition. We will study sociological and psychological works that deal with topics ranging from gifted individuals,
+    superhuman abilities, and technological wonders. As we do so, we will bring into conversation the real and the imagined-moving
+    from social experiments to works of fiction and media productions. Questions we will tackle throughout the course include:
+    Why do we look at geniuses with both awe and anxiety? What can superhero movies tell us about morality? Can we trust the
+    machines that we built? Together, we will discuss how different cultural understandings and social contexts shape the
+    answers we give to these questions.'
+  terms_offered:
+  - SU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: 'SOSC 25313. Beyond Human: Geniuses, Superheroes and A.I. 100 Units.'
+- code: SOSC 25314
+  title: 'The Rise and Persistence of "The Top 1%": The Sociology of Economic Advantage'
+  units: 100
+  description: In many parts of the world, socioeconomic inequality has been on the rise for several decades. Within these
+    countries, the wealth, resources, and power of "the Top 1%" seems to be reaching unparalleled levels. Who comprises this
+    "elite"? How does an individual attain this status? How do they perform and reproduce their status in society? What role
+    can (and should) the members of such an elite play in society? How might all of this be changing in the 21st century?
+    This course explores these questions by turning our sociological lenses on those who are advantaged in structures of equality,
+    and how they acquire, claim, and amass power and resources. Throughout the course, students will learn how to critically
+    read social theory, draw on sociological concepts to debate real world dilemmas, and form their own nuanced and informed
+    opinions.
+  terms_offered:
+  - SU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: 'SOSC 25314. The Rise and Persistence of "The Top 1%": The Sociology of Economic Advantage. 100 Units.'
+- code: SOSC 25315
+  title: The Possibility of Freedom
+  units: 100
+  description: Since the eighteenth century, freedom has served as one of the primary ends toward which political life is
+    directed, and perhaps as a result freedom has come to be understood largely in political terms. In this course we will
+    question this association of freedom and politics, both with an eye toward expanding the possible avenues through which
+    freedom can be understood and enjoyed while also identifying the conditions under which freedom can be meaningfully lived
+    in the political realm. We will begin the course by engaging with classic thinkers like Jean-Jacques Rousseau and Alexis
+    de Tocqueville. We will then move to a consideration of twentieth- and twenty-first century thinkers who have grappled
+    with the question of freedom, including Hannah Arendt, Albert Camus, Simone Weil, Jacques Ellul, E.F. Schumacher, Wendell
+    Berry, Alan Moore, and James C. Scott.
+  terms_offered:
+  - SU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: SOSC 25315. The Possibility of Freedom. 100 Units.
+- code: SOSC 25316
+  title: 'Democracy Against Itself: From Antiquity to Modernity'
+  units: 100
+  description: How can we make sense of the global democratic crisis that dominates today's headlines? What do the historical
+    and political transformations of democracy, from its ancient beginnings to its modern forms, reveal about our current
+    moment? Across the United States, Europe, Asia, and the Middle East, democratic institutions seem increasingly fragile,
+    with widespread discontent impacting public life. Whereas the ancients related to democracy in more direct terms, its
+    modern trajectory has been marked by paradoxes obscuring our understanding of democratic ideals. This course traces the
+    history of democracy from its origins in classical antiquity to its transformations with the rise of modern society. Starting
+    with Ancient Greece, we examine the ideals and shortcoming of Athenian democracy through Aristotle's Politics, Thucydides'
+    account of the Peloponnesian War, and Aristophanes' comic critiques. We will then focus on the emergence of bourgeois
+    democracy in the age of revolutions, with close readings of the American Declaration of Independence, Alexis de Tocqueville's
+    Democracy in America, and key texts of the French Revolution to parse out the potential of democracy rooted in the ideals
+    of equality and liberty. Finally, the course considers the rise and crisis of capitalist democracy, through the failed
+    revolutions of 1848 and the emergence of mass society in the twentieth century to mark the problematic rise of nationalism
+    and authoritarian democracy."
+  crosslists:
+  - HIST 19906
+  terms_offered:
+  - SU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: 'SOSC 25316. Democracy Against Itself: From Antiquity to Modernity. 100 Units.'
+- code: SOSC 25411
+  title: East Asian Civilization I, Ancient Period-1600
+  units: 100
+  description: This course examines the politics, society, and culture of East Asia from ancient times until c. 1600. Our
+    focus will be on examining key historical moments and intellectual, social, and cultural trends with an emphasis on viewing
+    the region as a whole. Students will read and discuss culturally significant texts and be introduced to various approaches
+    to analyzing them. This will include discussions of differences in how we approach textual and non-textual evidence (such
+    as archaeological artifacts and reconstructed climate data), and especially the challenges of recovering other meanings
+    from texts that were written and/or later used to legitimate particular regimes, or to project current practices back
+    into the distant past so that they seem to be manifestations of a society's defining traditions.
+  crosslists:
+  - EALC 15411
+  - HIST 15411
+  prereq_text: HIST 15411-15412-15413 meets the general education requirement in civilization studies via three civilization
+    courses. HIST 15411-15412, HIST 15411-15413, or HIST 15412-15413 meets the general education requirement in civilization
+    studies via two civilization courses.
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: SOSC 25411. East Asian Civilization I, Ancient Period-1600. 100 Units.
+  needs_review: true
+- code: SOSC 25412
+  title: East Asian Civilization II, 1600-1895
+  units: 100
+  description: Second quarter of East Asian civilization sequence covering what are now China, Japan, and Korea from roughly
+    1600-1895. Major themes include demographic and economic change, plus the social and cultural effects of widespread but
+    uneven commercialization; state formation, rebellion, and political change; migration, urbanization, and territorial expansion;
+    changes in family and gender roles; changes in the "natural" environment, particularly as related to agricultural expansion;
+    changes in religion, ideology, and relationships between "elite" and "popular" culture; and increasingly consequential
+    encounters with Western Europeans, Russians, and Americans, especially in the 19th century. The course aims to treat East
+    Asia as a single, interacting region, rather than as three (or more) sharply separated proto-nations; however, it will
+    also call attention to the enormous diversity both among and within China, Japan, and Korea, treating those differences
+    as constantly evolving, and as something to be explained rather than assumed.
+  crosslists:
+  - EALC 15412
+  - HIST 15412
+  prereq_text: HIST 15411-15412-15413 meets the general education requirement in civilization studies via three civilization
+    courses. HIST 15411-15412, HIST 15411-15413, or HIST 15412-15413 meets the general education requirement in civilization
+    studies via two civilization courses.
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: SOSC 25412. East Asian Civilization II, 1600-1895. 100 Units.
+  needs_review: true
+- code: SOSC 25413
+  title: East Asian Civilization III, 1895-Present
+  units: 100
+  description: The third quarter of the East Asian civilization sequence covers the emerging nation-states of China, Korea,
+    and Japan in the context of Western and Japanese imperialism and the rise of an interconnected global economy. Our themes
+    include industrialization and urbanization, state strengthening and nation-building, the rise of social movements and
+    mass politics, the impact of Japanese colonialism on the homeland and the colonies, East Asia in the context of US-Soviet
+    rivalry, and the return of the region to the center of the global economy in the postwar years. Similar to the first and
+    second quarters, we will look at East Asia as an integrated region, connected by trade and cultural exchange even when
+    divided into opposing blocs during the Cold War. As much as possible, we will look beyond nation-states and their policies
+    to explore the underlying trends shared by the three East Asian nations, such as mass culture, imperialism, and the impact
+    of the cold war.
+  crosslists:
+  - EALC 15413
+  - HIST 15413
+  prereq_text: HIST 15411-15412-15413 meets the general education requirement in civilization studies via three civilization
+    courses. HIST 15411-15412, HIST 15411-15413, or HIST 15412-15413 meets the general education requirement in civilization
+    studies via two civilization courses.
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: SOSC 25413. East Asian Civilization III, 1895-Present. 100 Units.
+  needs_review: true
+- code: SOSC 25500
+  title: 'PIR: Contemporary and Research Applications'
+  units: 100
+  description: In this seminar, students will design and carry out their own research project based on readings and themes
+    from PIR. They will explore other relevant literature, including secondary scholarship, and develop a question to examine
+    through ethnographic, archival, library and/or media-based research. The final product can be a research paper, a Canvas-based
+    web page presentation, or other form. In addition to providing some exposure to qualitative research methods and the use
+    of secondary literature, the course will also introduce students to research resources and projects on campus and beyond
+    through field trips and guest speakers.
+  crosslists:
+  - SOCI 20288
+  prereq_text: SOSC 11400, SOSC 11500, SOSC 11600
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: 'SOSC 25500. PIR: Contemporary and Research Applications. 100 Units.'
+  needs_review: true
+- code: SOSC 26002
+  title: 'Urban Design Studio: Reconstructing Chicago''s Lost Neighborhoods Using Machine Learning'
+  units: 100
+  description: This course offers a hands-on learning experience in which students will digitally recreate the "lost neighborhoods"
+    of Chicago using machine learning techniques. Students will be guided through the process of turning historical Sanborn
+    maps into 3D models of historic urban neighborhoods. The creation of these historic urban models will be contextualized
+    through archival research at the Chicago History Museum, as well as readings and lectures designed to advance student
+    understanding of urban development within the historical context of U.S. cities in the 20th century, and Chicago specifically.
+    Programming experience is helpful, but not required.
+  crosslists:
+  - PBPL 26002
+  - PPHA 36002
+  - GEOG 24200
+  - CHST 26002
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: 'SOSC 26002. Urban Design Studio: Reconstructing Chicago''s Lost Neighborhoods Using Machine Learning. 100 Units.'
+- code: SOSC 26004
+  title: History of City Planning
+  units: 100
+  description: 'This lecture-based course provides a broad survey of the history of city planning. It focuses on the normative:
+    the endeavor to control and design the physical fabric of cities. What are the different ways cities have been envisioned
+    and planned and to what effect? What are the competing theories of good city design that underlie city plans, and how
+    do these plans interrelate to the social, political, cultural, and economic forces shaping cities? The course explores
+    city planning''s successes and failures, its tangible effect on urban pattern and form, and the extent to which city planning
+    ideals have changed over time. Though the emphasis is on city planning''s history, current debates about city planning
+    within the context of the history of the profession will also be engaged. Emphasis will be on U.S. and European city planning
+    experience, although global practices will also be surveyed.'
+  crosslists:
+  - PBPL 26004
+  - GEOG 26200
+  - SOSC 36004
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: SOSC 26004. History of City Planning. 100 Units.
+- code: SOSC 26009
+  title: Introductory Statistical Methods
+  units: 100
+  description: This course introduces and applies fundamental statistical concepts, principles, and procedures to the analysis
+    of data in social and behavioral sciences. Students will learn computation, interpretation, and application of commonly
+    used descriptive, correlational, and inferential statistical procedures as they relate to social and behavioral research.
+    The course will integrate the use of Stata as a tool for these techniques. This course is equivalent to SOSC 20004/30004
+    (Statistical Methods of Research I), CHDV 20101/30101 (Applied Statistics in Human Development Research), PSYCH 20100
+    (Psychological Statistics), and other introductory level applied statistics courses.
+  crosslists:
+  - SOSC 36009
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: SOSC 26009. Introductory Statistical Methods. 100 Units.
+- code: SOSC 26021
+  title: Sense & Sensibility & Science
+  units: 100
+  description: In Sense & Sensibility & Science, you will learn how to better incorporate into your thinking and decision
+    making the problem-solving techniques of science at its best. Many insights and conceptual tools from scientific thinking
+    are of great utility for solving problems in your own day-to-day life. Yet, as individuals, as groups, as whole societies
+    we fail to take full advantage of these methods. The focus in this course is on the errors humans tend to make, and the
+    approaches scientific methodology has developed (and continues to develop) to minimize those errors. The course includes
+    a discussion of the nature of science, what makes science such an effective way of knowing, how both non-scientific thinking
+    and scientific thinking can go awry, and how we can reason more clearly and successfully as individuals, as members of
+    groups, and as citizens of a democracy. This undergraduate course is simultaneously taught at UC Berkeley, Harvard and
+    UChicago in spring. UChicago's course, premiered in 2024, built on a decade of experience developing and teaching the
+    popular course at Berkeley and Harvard's adoption of its own version in 2021.
+  crosslists:
+  - SCPD 26021
+  - PBPL 26021
+  - BPRO 26021
+  - DIGS 26021
+  - HIPS 26021
+  prereq_text: 'PQ: Third or fourth-year standing.'
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: SOSC 26021. Sense & Sensibility & Science. 100 Units.
+  needs_review: true
+- code: SOSC 26100
+  title: Introduction to Latin American Civilization I
+  units: 100
+  description: Autumn Quarter examines the origins of native civilizations in Latin America, with a focus on the political,
+    social, and cultural dimensions of the major pre-Columbian civilizations (the Maya, the Inca, and the Aztecs); the causes
+    and consequences of the Spanish and Portuguese conquests; and the establishment of colonial societies and economies in
+    the 16th century.
+  notes: 'Fulfills the following requirements in the ARTH major and minor: Latin American'
+  crosslists:
+  - RDIN 16100
+  - LACS 16100
+  - HIST 16101
+  - ANTH 23101
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: SOSC 26100. Introduction to Latin American Civilization I. 100 Units.
+- code: SOSC 26200
+  title: Introduction to Latin American Civilization II
+  units: 100
+  description: Winter Quarter addresses the evolution of colonial societies, the wars of independence, and the emergence of
+    Latin American nation-states in the changing international context of the nineteenth century.
+  crosslists:
+  - HIST 16102
+  - LACS 16200
+  - RDIN 16200
+  - ANTH 23102
+  terms_offered:
+  - AU
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: SOSC 26200. Introduction to Latin American Civilization II. 100 Units.
+- code: SOSC 26300
+  title: Introduction to Latin American Civilization III
+  units: 100
+  description: Spring Quarter focuses on the twentieth century, with emphasis on how Latin American peoples and nations have
+    grappled with the challenges of development, inequality, imperialism, revolution, authoritarianism, racial difference,
+    migration, urbanization, citizenship, violence, and the environment.
+  crosslists:
+  - ANTH 23103
+  - LACS 16300
+  - HIST 16103
+  - RDIN 16300
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: SOSC 26300. Introduction to Latin American Civilization III. 100 Units.
+- code: SOSC 27521
+  title: Energy in World Civilizations I
+  units: 100
+  description: This two-quarter course explores the historical roots of climate change and other global environmental problems
+    with a special attention to how energy use shapes human societies over time. Part I covers energy systems across the world
+    from prehistory to the end of the nineteenth century.
+  crosslists:
+  - CEGU 27521
+  - HIPS 17521
+  - HIST 17521
+  prereq_text: Parts I and II should be taken in sequence. This sequence meets the general education requirement in civilization
+    studies.
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: SOSC 27521. Energy in World Civilizations I. 100 Units.
+  needs_review: true
+- code: SOSC 27522
+  title: Energy in World Civilizations II
+  units: 100
+  description: This two-quarter course explores the historical roots of climate change and other global environmental problems
+    with a special attention to how energy use shapes human societies over time. Part II covers energy systems across the
+    world from the early twentieth century to the present, examining themes such as the uneven globalization of energy-intensive
+    lifestyles, the changing geopolitics of energy, and possible futures beyond fossil-fuel dependence.
+  crosslists:
+  - HIST 17522
+  - ANTH 17522
+  - CEGU 27522
+  - HIPS 17522
+  prereq_text: Parts I and II should be taken in sequence. This sequence meets the general education requirement in civilization
+    studies.
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: SOSC 27522. Energy in World Civilizations II. 100 Units.
+  needs_review: true
+- code: SOSC 27710
+  title: 'Ancient Mediterranean World I: Greece'
+  units: 100
+  description: This course surveys the social, economic, and political history of Greece from prehistory to the Hellenistic
+    period. The main topics considered include the development of the institutions of the Greek city-state, the Persian Wars
+    and the rivalry of Athens and Sparta, the social and economic consequences of the Peloponnesian War, and the eclipse and
+    defeat of the city-states by the Macedonians.
+  crosslists:
+  - CLCV 20700
+  - HIST 16700
+  prereq_text: This sequence meets the general education requirement in civilization studies.
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: 'SOSC 27710. Ancient Mediterranean World I: Greece. 100 Units.'
+  needs_review: true
+- code: SOSC 27910
+  title: 'Ancient Mediterranean World III: Late Antiquity'
+  units: 100
+  description: Part III examines late antiquity, a period of paradox. The later Roman emperors established the most intensive,
+    pervasive state structures of the ancient Mediterranean, yet yielded their northern and western territories to Goths,
+    Huns, Vandals, and, ultimately, their Middle Eastern core to the Arab Muslims. Imperial Christianity united the populations
+    of the Roman Mediterranean in the service of one God, but simultaneously divided them into competing sectarian factions.
+    A novel culture of Christian asceticism coexisted with the consolidation of an aristocratic ruling class notable for its
+    insatiable appetite for gold. The course will address these apparent contradictions while charting the profound transformations
+    of the cultures, societies, economies, and political orders of the Mediterranean from the conversion of Constantine to
+    the rise of Islam.
+  crosslists:
+  - CLCV 20900
+  - HIST 16900
+  - RLST 20690
+  - MDVL 16900
+  prereq_text: This sequence meets the general education requirement in civilization studies.
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: 'SOSC 27910. Ancient Mediterranean World III: Late Antiquity. 100 Units.'
+  needs_review: true
+- code: SOSC 28110
+  title: Western Civilization I
+  units: 100
+  description: This term introduces students to debates about the nature of Western Civilization. It then traces the emergence
+    of the state, of commerce, and the rise of monotheism and Christianity. Students will explore the nature of the Greek
+    polis, the development of the Mediterranean economy, the development of the Roman republic and the establishment of the
+    Empire. The term concludes with a discussion of the Christianization of the Roman Empire and the Empire's division with
+    the shift of the capital to Constantinople. Readings may include selections from Homer, Thucydides, Euripides, Cicero,
+    Augustine, the New Testament Gospels, Tacitus and Vergil.
+  crosslists:
+  - HIST 13100
+  prereq_text: These courses must be taken in sequence.
+  terms_offered:
+  - AU
+  - SU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: SOSC 28110. Western Civilization I. 100 Units.
+  needs_review: true
+- code: SOSC 28210
+  title: Western Civilization II
+  units: 100
+  description: This term continues the discussion of themes of state formation, commercial development, Christianity and empire
+    introduced in the first term. This term begins with a discussion of the collapse of the Mediterranean unity that had been
+    fostered by the Roman Empire. It concludes with the crisis of the seventeenth century. It thus begins with a moment of
+    retreat and ends with the expansion of Europeans into regions beyond the Mediterranean. Readings this term may include
+    selections from Bede, Thomas Aquinas, Dante, Machiavelli, Bernal Diaz, John Locke, and William Shakespeare.
+  crosslists:
+  - HIST 13200
+  prereq_text: These courses must be taken in sequence.
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: SOSC 28210. Western Civilization II. 100 Units.
+  needs_review: true
+- code: SOSC 28310
+  title: Western Civilization III
+  units: 100
+  description: This term continues the development of the themes of state formation, commercial development, religious pluralism,
+    and the expansion of empire that were introduced in the first two terms. It commences with the emergence of early Enlightenment
+    ideas and concludes with the European Union. This term will discuss the age of revolutions, the industrial revolution,
+    the development of liberal and socialist ideas, and the two world wars. Readings may include selections from Bernard Mandeville,
+    Jean-Jacques Rousseau, Karl Marx, Adam Smith, John Stuart Mill, Adolf Hitler, Rosa Luxemburg, Vlademir Lenin, and John
+    Maynard Keynes.
+  crosslists:
+  - HIST 13300
+  prereq_text: These courses must be taken in sequence.
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: SOSC 28310. Western Civilization III. 100 Units.
+  needs_review: true
+- code: SOSC 28500
+  title: America In World Civilization I
+  units: 100
+  description: America in World Civilization I examines foundational texts and moments in American culture, society, and politics,
+    from early European incursions into the New World through the early republic of the United States, roughly 1500-1800.
+    We will examine encounters between Native Americans and representatives of imperial powers (Spain, France, and England)
+    as well as the rise of African slavery in North America before 1700. We will consider the development of Anglo-American
+    society and government in the eighteenth century, focusing especially on the causes and consequences of the American Revolution.
+  crosslists:
+  - AMER 13500
+  - HIST 13500
+  prereq_text: Two consecutive quarters of the sequence meet the College’s general education requirement in civilization studies.
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: SOSC 28500. America In World Civilization I. 100 Units.
+  needs_review: true
+- code: SOSC 28600
+  title: America in World Civilization II
+  units: 100
+  description: The nineteenth-century quarter of America in World Civilization explores the confrontation of democracy with
+    inequality. This course focuses on themes and problems that include empire and indigenous-US relations; slavery, antislavery,
+    the Civil War, and emancipation; reform and revivalism; women's rights; and the development of industrial capitalism,
+    consumer culture, and urbanism.
+  crosslists:
+  - AMER 13600
+  - HIST 13600
+  prereq_text: Two consecutive quarters of the sequence meet the College’s general education requirement in civilization studies.
+  terms_offered:
+  - WI
+  - SU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: SOSC 28600. America in World Civilization II. 100 Units.
+  needs_review: true
+- code: SOSC 28700
+  title: America in World Civilization III
+  units: 100
+  description: The third quarter America in World Civilization focuses on multiple definitions of Americanism in a period
+    characterized by empire, transnational formations, and America's role in the world. We explore the construction of social
+    order in a multicultural society; culture in the shadow of war; the politics of race, ethnicity, and gender; the rise
+    and fall of new social movements on the left and the right; the emergence of the carceral state and militarization of
+    civil space; and the role of climate change and the apocalyptic in shaping imagined futures.
+  crosslists:
+  - HIST 13700
+  - AMER 13700
+  prereq_text: Two consecutive quarters of the sequence meet the College’s general education requirement in civilization studies.
+  terms_offered:
+  - SP
+  - SU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: SOSC 28700. America in World Civilization III. 100 Units.
+  needs_review: true
+- code: SOSC 29700
+  title: 'Rdgs: Social Sciences'
+  units: 100
+  description: TBD
+  notes: Students are required to submit the College Reading and Research Course Form.
+  prereq_text: Consent of instructor and senior adviser
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: 'SOSC 29700. Rdgs: Social Sciences. 100 Units.'
+  needs_review: true
+- code: SOSC 36004
+  title: History of City Planning
+  units: 100
+  notes: Cross-listed with SOSC 26004 (its catalog block lists SOSC 36004 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from SOSC 26004.
+  crosslists:
+  - SOSC 26004
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: 'Equivalent Course(s): PBPL 26004, GEOG 26200, SOSC 36004'
+- code: SOSC 36009
+  title: Introductory Statistical Methods
+  units: 100
+  notes: Cross-listed with SOSC 26009 (its catalog block lists SOSC 36009 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from SOSC 26009.
+  crosslists:
+  - SOSC 26009
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: 'Equivalent Course(s): SOSC 36009'

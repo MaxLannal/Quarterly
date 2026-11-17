@@ -1,0 +1,126 @@
+# Generated from the 2026-2027 UChicago College Catalog (fetched 2026-11-12) by hand-checked scripts;
+# every source.quote is copied verbatim (whitespace collapsed) from source.url. See data/seed/REVIEW.md.
+courses:
+- code: RLST 20315
+  title: 'Ancient Empires V: The Umayyad'
+  units: 100
+  notes: Cross-listed with NEHC 20015 (its catalog block lists RLST 20315 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from NEHC 20015.
+  crosslists:
+  - NEHC 20015
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): RLST 20315, HIST 25706'
+- code: RLST 20401
+  title: Islamic Thought and Literature I
+  units: 100
+  notes: Cross-listed with NEHC 20601 (its catalog block lists RLST 20401 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from NEHC 20601.
+  crosslists:
+  - NEHC 20601
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): RLST 20401, SOSC 22000, MDVL 20601, HIST 25610'
+- code: RLST 20402
+  title: Islamic Thought and Literature II
+  units: 100
+  notes: Cross-listed with NEHC 20602 (its catalog block lists RLST 20402 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from NEHC 20602.
+  crosslists:
+  - NEHC 20602
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): MDVL 20602, SOSC 22100, RLST 20402, HIST 25615'
+- code: RLST 20403
+  title: Islamic Thought & Lit III - The Experience of Being Colonized
+  units: 100
+  notes: Cross-listed with NEHC 20603 (its catalog block lists RLST 20403 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from NEHC 20603.
+  crosslists:
+  - NEHC 20603
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): RLST 20403, MDVL 20603, HIST 25616, SOSC 22200'
+- code: RLST 20690
+  title: 'Ancient Mediterranean World III: Late Antiquity'
+  units: 100
+  notes: Cross-listed with HIST 16900 (its catalog block lists RLST 20690 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from HIST 16900.
+  crosslists:
+  - HIST 16900
+  prereq_text: This sequence meets the general education requirement in civilization studies.
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): CLCV 20900, RLST 20690, MDVL 16900, SOSC 27910'
+  needs_review: true
+- code: RLST 22010
+  title: 'Jewish Civilization I: Ancient Beginnings to Medieval Period'
+  units: 100
+  notes: Cross-listed with JWSC 12000 (its catalog block lists RLST 22010 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from JWSC 12000.
+  crosslists:
+  - JWSC 12000
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): MDVL 12000, HIST 11701, NEHC 22010, RLST 22010'
+- code: RLST 22011
+  title: 'Jewish Civilization II: Early Modern Period to 21st Century'
+  units: 100
+  notes: Cross-listed with JWSC 12001 (its catalog block lists RLST 22011 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from JWSC 12001.
+  crosslists:
+  - JWSC 12001
+  terms_offered:
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): RLST 22011, HIST 11702, NEHC 22011'
+- code: RLST 26107
+  title: 'Moving Objects, Dispersed Cultures: Case Studies from China and the Middle East'
+  units: 100
+  notes: Cross-listed with ARTH 16107 (its catalog block lists RLST 26107 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from ARTH 16107.
+  crosslists:
+  - ARTH 16107
+  prereq_text: 'PQ: Third or fourth-year standing.'
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/arthistory/
+    quote: 'Equivalent Course(s): BPRO 27100, EALC 16107, EALC 36107, NEHC 36107, ARTH 36107, RLST 26107, NEHC 16107'
+  needs_review: true
+- code: RLST 28204
+  title: Dostoevsky
+  units: 100
+  notes: Cross-listed with HUMA 24800 (its catalog block lists RLST 28204 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from HUMA 24800.
+  crosslists:
+  - HUMA 24800
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/humanities/
+    quote: 'Equivalent Course(s): RLST 28204, FNDL 24612, RLIT 39501, REES 30013, REES 20013'
+- code: RLST 28308
+  title: Introduction to Byzantine Art
+  units: 100
+  notes: Cross-listed with ARTH 14006 (its catalog block lists RLST 28308 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from ARTH 14006.
+  crosslists:
+  - ARTH 14006
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/arthistory/
+    quote: 'Equivalent Course(s): RLST 28308, MDVL 14006'

@@ -1,0 +1,587 @@
+# Generated from the 2026-2027 UChicago College Catalog (fetched 2026-11-12) by hand-checked scripts;
+# every source.quote is copied verbatim (whitespace collapsed) from source.url. See data/seed/REVIEW.md.
+courses:
+- code: ECMA 30750
+  title: The Theory of Market Design
+  units: 100
+  description: This course will provide an introduction to social choice, two-sided matching, house allocation, school choice,
+    and the recent theoretical developments in kidney exchange. We will develop formal, mathematical language to evaluate
+    and compare different mechanisms including deferred acceptance, top trading cycles, the probabilistic serial mechanism
+    and others. Our approach will be axiomatic; we will explore the tradeoff between the efficiency, incentive compatibility
+    and fairness in the design of mechanisms. This course will be proof-based, so is appropriate for advanced students acquainted
+    with formal mathematical reasoning.
+  prereq:
+    all:
+    - any:
+      - ECON 20100
+      - ECON 20110
+    - any:
+      - MATH 20300
+      - MATH 20310
+      - MATH 20700
+  prereq_text: ECON 20100/20110 and MATH 20300/20310/20700
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECMA 30750. The Theory of Market Design. 100 Units.
+- code: ECMA 30770
+  title: Decision and Strategy
+  units: 100
+  description: This course provides a formal introduction to game theory with applications in economics. We will study models
+    of how individuals make decisions, and how those decisions are shaped by strategic concerns and uncertainty about the
+    world. The topics will include the theory of individual choice, games of complete and incomplete information, and equilibrium
+    concepts such as Nash equilibrium. The applications will include oligopoly, auctions, and bargaining. The course is appropriate
+    for advanced undergraduates who are interested in a rigorous mathematical approach to understanding human behavior.
+  crosslists:
+  - ECON 20770
+  prereq_text: 'Prerequsites for Undergraduates: ECON 20100/ECON 20110 and MATH 20300/MATH 20310/MATH 20700, or consent of
+    instructor'
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECMA 30770. Decision and Strategy. 100 Units.
+  needs_review: true
+- code: ECMA 30780
+  title: Decision and Strategy II
+  units: 100
+  description: We continue the formal introduction to decision theory and game theory begun in ECMA 30780, with a specific
+    focus on models of incomplete information. Topics covered include subjective expected utility, Bayesian games, contract
+    theory, and mechanism design. Among the applications we will consider are auctions, collusion, entry deterrence, and strategic
+    communication. The course is appropriate for advanced undergraduates who are interested in a rigorous mathematical approach
+    to decision making in strategic situations.
+  crosslists:
+  - ECON 20780
+  prereq:
+    any:
+    - ECON 20770
+    - ECMA 30770
+    - consent: instructor
+  prereq_text: ECON 20770/ECMA 30770 or consent of instructor
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECMA 30780. Decision and Strategy II. 100 Units.
+- code: ECMA 30800
+  title: Theory of Auctions
+  units: 100
+  description: In part, this course covers the analysis of the standard auction formats (i.e., Dutch, English, sealed-bid)
+    and describes conditions under which they are revenue maximizing. We introduce both independent private-value models and
+    interdependent-value models with affiliated signals. Multi-unit auctions are also analyzed with an emphasis on Vickrey's
+    auction and its extension to the interdependent-value setting.
+  prereq:
+    all:
+    - any:
+      - ECON 20100
+      - ECON 20110
+    - any:
+      - MATH 20300
+      - MATH 20310
+      - MATH 20700
+    - any:
+      - STAT 23400
+      - STAT 24400
+      - STAT 24410
+  prereq_text: 'PQ for Undergraduates: ECON 20100 (or Econ 20110), and MATH 20300 (or Math 20310 or Math 20700), and STAT
+    23400, 24400 or STAT 24410'
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECMA 30800. Theory of Auctions. 100 Units.
+- code: ECMA 31000
+  title: Introduction to Empirical Analysis
+  units: 100
+  description: 'This course introduces students to the key tools of econometric analysis: Probability theory, including probability
+    spaces, random variables, distributions and conditional expectation; Asymptotic theory, including convergence in probability,
+    convergence in distribution, continuous mapping theorems, laws of large numbers, central limit theorems and the delta
+    method; Estimation and inference, including finite sample and asymptotic statistical properties of estimators, confidence
+    intervals and hypothesis testing; Applications to linear models, including properties of ordinary least squares, maximum
+    likelihood and instrumental variables estimators; Non-linear models. Assignments will include both theoretical questions
+    and problems involving data. Necessary tools from linear algebra and statistics will be reviewed as needed.'
+  prereq:
+    any:
+    - ECON 21030
+    - ECON 21110
+    - ECON 21130
+  prereq_text: 'PQs for Undergraduates: Econ 21030 or Econ 21110 or Econ 21130'
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECMA 31000. Introduction to Empirical Analysis. 100 Units.
+- code: ECMA 31100
+  title: Introduction to Empirical Analysis II
+  units: 100
+  description: 'This course is an introduction to applied econometrics and builds on tools studied in ECMA 31000. Topics include:
+    Selection on observables, instrumental variables, time series, panel data, discrete choice models, regression discontinuity,
+    nonparametric regression, quantile regression.'
+  prereq_text: 'Prerequisite for Undergraduates: Econ 21030 or Econ 21110 or Econ 21130 or ECMA 31000 or ECMA 31130. Undergraduates
+    who have taken Econ 21020 are encouraged to obtain instructor consent for enrollment.'
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECMA 31100. Introduction to Empirical Analysis II. 100 Units.
+  needs_review: true
+- code: ECMA 31130
+  title: Topics in Microeconometrics
+  units: 100
+  description: This course focuses on micro-econometric methods that have applications to a wide range of economic questions.
+    We study identification, estimation, and inference in both parametric and non-parametric models and consider aspects such
+    as consistency, bias and variance of estimators. We discuss how repeated measurements can help with problems related to
+    unobserved heterogeneity and measurement error, and how they can be applied to panel and network data. Topics include
+    duration models, regressions with a large number of covariates, non-parametric regressions, and dynamic discrete choice
+    models. Applications include labor questions such as labor supply, wage inequality decompositions and matching between
+    workers and firms. Students will be expected to solve programming assignment in R.
+  prereq:
+    any:
+    - ECON 21020
+    - ECON 21030
+  prereq_text: 'Prerequisites for Undergraduates: ECON 21020 OR ECON 21030'
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECMA 31130. Topics in Microeconometrics. 100 Units.
+- code: ECMA 31140
+  title: Perspectives on Computational Modeling for Economics
+  units: 100
+  description: In this course students will learn several computational methodologies and tools to solve, simulate, and analyze
+    models that are the backbone of current macroeconomic analysis. While learning the relevant computational methods is the
+    main objective, the theoretical economic aspects of the model will be stressed and the students will be required to apply
+    their economic knowledge and skills to interpret and analyze the results. We will examine non-stochastic and stochastic
+    general equilibrium models, both under local and global approximations. The main part of the course will deal with representative
+    agent models, but a significant part will be devoted to introducing students to the solution of heterogeneous agent models
+    as well.
+  notes: MACSS students have priority.
+  crosslists:
+  - MACS 10150
+  - MACS 30150
+  prereq:
+    all:
+    - any:
+      - ECON 20200
+      - ECON 20210
+    - any:
+      - MATH 19620
+      - STAT 24300
+      - MATH 20250
+    - any:
+      - STAT 23400
+      - STAT 24400
+      - STAT 24410
+  prereq_text: 'PQ for undergraduates: Econ 20200/20210 and MATH 19620/Stat 24300/Math 20250 and Stat 23400/Stat 24400/Stat
+    24410.'
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECMA 31140. Perspectives on Computational Modeling for Economics. 100 Units.
+- code: ECMA 31210
+  title: Time Series Analysis for Macroeconomics and Finance
+  units: 100
+  description: This course will cover various methods and their applications in time series analysis and emphasize empirical
+    exercises by students. The structure of the course starts with theoretical foundations drawing from standard textbooks
+    of Hayashi (2000) and Hamilton (1994) and covers applications to answer important questions in macro and finance. The
+    topics include time series OLS with applications in the Fama interest rate regression and Hansen's study of foreign exchange
+    markets, GMM with the Fama-French model of equity returns, and state-space models with applications to GDP nowcasting.
+    Familiarity with matrix algebra and elementary econometrics is required.
+  notes: This course may count as a data science course for the data science specialization in the same set of options as
+    ECON 21300, ECMA 31320, ECMA 31330, ECMA 31340, ECMA 31350 or ECMA 38010.
+  prereq:
+    all:
+    - any:
+      - ECON 20200
+      - ECON 20210
+    - any:
+      - ECON 21020
+      - ECON 21030
+  prereq_text: 'Prerequisites for Undergraduates: ECON 20200/20210 and ECON 21020/21030'
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECMA 31210. Time Series Analysis for Macroeconomics and Finance. 100 Units.
+- code: ECMA 31316
+  title: Econometric Applications II
+  units: 100
+  notes: Cross-listed with ECON 21316 (its catalog block lists ECMA 31316 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from ECON 21316.
+  crosslists:
+  - ECON 21316
+  prereq_text: ECON 21315 or consent of instructor (if they have taken ECMA 31320)
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: 'Equivalent Course(s): ECMA 31316'
+  needs_review: true
+- code: ECMA 31320
+  title: Applications of Econometric and Data Science Methods
+  units: 100
+  description: This course builds on the theoretical foundations set in Econ 21030 and explores further topics pertinent to
+    modern economic applications. While the course content may change from year to year according to student and instructor
+    interests, some potential topics are panel data methods, treatment effects/causal inference, discrete choice/limited dependent
+    variable models, demand estimation, and topics in economic applications of supervised and unsupervised learning algorithms.
+    The course will involve analytically and computationally intensive assignments and a significant empirical project component.
+  prereq_text: CMSC 12300/14200/15200/16200 and ECON 21020 (ECON 21030 Honors Econometrics preferred) or consent of instructor
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECMA 31320. Applications of Econometric and Data Science Methods. 100 Units.
+  needs_review: true
+- code: ECMA 31330
+  title: Econometrics and Machine Learning
+  units: 100
+  description: This course reviews a number of modern methods from econometrics, statistics and machine learning, and presents
+    applications to economic problems. Examples of methods covered are simulation-based techniques, regularization via coefficient
+    and matrix penalization, and regression and classification methods such as trees, forests and neural networks. Applications
+    include economic models of network formation, and dimension reduction for structural economic models. The course involves
+    programming and work with data. Beyond econometric background such as Econ 21030, students should have a solid background
+    in computation.
+  prereq_text: CMSC 12300/14200/15200/16200 and ECON 21020 (ECON 21030 Honors Econometrics preferred)
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECMA 31330. Econometrics and Machine Learning. 100 Units.
+  needs_review: true
+- code: ECMA 31340
+  title: Big Data Tools in Economics
+  units: 100
+  description: The goal of the class is to learn how to apply microeconomic concepts to large and complex datasets. We will
+    first revisit notions such as identification, inference and latent heterogeneity in classical contexts. We will then study
+    potential concerns in the presence of a large number of parameters in order to understand over-fitting. Throughout the
+    class, emphasis will be put on project-driven computational exercises involving large datasets. We will learn how to efficiently
+    process and visualize such data using state of the art tools in python. Topics will include fitting models using Tensor-Flow
+    and neural nets, creating event studies using pandas, solving large-scale SVDs, etc.
+  prereq:
+    all:
+    - any:
+      - ECON 20100
+      - ECON 20110
+    - any:
+      - ECON 21020
+      - ECON 21030
+  prereq_text: PQs for Undergraduates:ECON 20100/20110 and ECON 21020/21030
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECMA 31340. Big Data Tools in Economics. 100 Units.
+- code: ECMA 31350
+  title: Machine Learning for Economists
+  units: 100
+  description: This course reviews modern machine learning techniques and their applications in economics. The course covers
+    some of the classical techniques, including lasso, regression trees, random forests, principal components analysis, and
+    neural networks, as well as cutting-edge double machine learning methods. Applications include economic models of network
+    formation, program evaluation, demand estimation, and asset pricing. The course involves programming and working with
+    data. Students are expected to have a solid background in statistics, econometrics, and computation.
+  prereq_text: 'For Undergraduates: CMSC 12300//14200/15200/16200 and ECON 21020 (ECON 21030 Honors Econometrics preferred)'
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECMA 31350. Machine Learning for Economists. 100 Units.
+  needs_review: true
+- code: ECMA 31360
+  title: Causal Inference
+  units: 100
+  description: This course reviews modern causal inference techniques and their applications in business and economics. The
+    course covers the treatment-control comparison estimator, regression adjustment, matching (on covariates and propensity
+    score), difference in differences (canonical and with staggered treatment), panel data methods, regression discontinuity
+    design (sharp and fuzzy), instrumental variables and local average treatment effect (LATE) estimator. At different points
+    during the course, we mention how machine learning (ML) techniques have recently been used to enrich the classical methods.
+    The course involves programming (R language) and working with data. Students are expected to have a solid background in
+    statistics (working knowledge of R and familiarity with RStudio) and econometrics.
+  prereq:
+    any:
+    - ECON 21020
+    - ECON 21030
+  prereq_text: ECON 21020/21030
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECMA 31360. Causal Inference. 100 Units.
+- code: ECMA 31380
+  title: Causal Machine Learning
+  units: 100
+  description: By the end of this course students should understand the recent research and methods in statistical inference
+    after machine learning. Chiefly, this course focuses on causal inference, but other topics are covered as well. The course
+    aims for a theoretical understanding and as well as ready-to-deploy tools. Students will be introduced to the theoretical
+    underpinnings of this material, which includes studying topics in nonparametric estimation, two-step and semiparametric
+    inference theory, including the special case of double/debiased machine learning. Methods discussed include neural networks,
+    random forests, and LASSO estimation.
+  notes: This course may count toward the Data Science course requirement of the Economics Data Science Specialization.
+  prereq:
+    any:
+    - ECON 21020
+    - ECON 21030
+  prereq_text: 'PQ for Undergraduates: ECON 21020/21030'
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECMA 31380. Causal Machine Learning. 100 Units.
+- code: ECMA 33050
+  title: Artificial Intelligence, Innovation, and Growth
+  units: 100
+  notes: Cross-listed with DATA 20620 (its catalog block lists ECMA 33050 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from DATA 20620.
+  crosslists:
+  - DATA 20620
+  prereq:
+    all:
+    - any:
+      - MATH 13200
+      - MATH 15200
+      - MATH 16200
+      - MATH 15910
+      - MATH 20250
+      - MATH 20300
+    - any:
+      - ECON 11010
+      - STAT 22000
+      - STAT 23400
+      - STAT 24400
+      - SOCI 20004
+      - SOCI 20602
+      - SOCI 20596
+  prereq_text: '[MATH 13200 or MATH 15200 or MATH 16200 or MATH 15910 or MATH 20250 or MATH 20300] and [ECON 11010 or STAT
+    22000 or STAT 23400 or STAT 24400 or SOCI 20004 or SOCI 20602 or SOCI 20596]'
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/datascience/
+    quote: 'Equivalent Course(s): SOCI 20620, ECMA 33050, ECON 23050, SOCI 30620, MACS 23050, MACS 33050'
+- code: ECMA 33220
+  title: Introduction to Advanced Macroeconomic Analysis
+  units: 100
+  description: This course introduces students to advanced methods for macroeconomic analysis. In the first part, we discuss
+    time series methods such as impulse response analysis, vector autoregression, co-integration, shock identification, and
+    business cycle detrending. In the second part, we examine and analyze a simple, yet powerful stochastic dynamic real business
+    cycle model. In that context, the students will learn about dynamic programming, rational expectations, intertemporal
+    optimization, asset pricing, the Frisch elasticity of labor supply, log-linearization, and computational tools to solve
+    for the recursive law of motion of dynamic stochastic general equilibrium models. Finally, we touch upon some further
+    models, such as the overlapping generations model and/or the continuous-time neoclassical growth model. The course is
+    useful for students interested to deepen their knowledge in macroeconomics, in order to read, understand, and replicate
+    some of the recent research in the field; as preparation for careers involving macroeconomic analysis, time series analysis,
+    or asset pricing; or as preparation for graduate school. Decent knowledge of linear algebra and calculus is required.
+    All advanced material will be taught in class.
+  prereq:
+    all:
+    - any:
+      - ECON 20200
+      - ECON 20210
+    - any:
+      - ECON 21020
+      - ECON 21030
+  prereq_text: ECON 20200 (or ECON 20210) and ECON 21020 (or ECON 21030)
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECMA 33220. Introduction to Advanced Macroeconomic Analysis. 100 Units.
+- code: ECMA 33221
+  title: Introduction to Advanced Macroeconomic Analysis II
+  units: 100
+  description: This course introduces concepts and tools for advanced macroeconomics. It builds on ECMA 33220. We discuss
+    the decision of consumption and investment over time, monetary economics, fiscal policy, asset pricing, and international
+    economics. We introduce numerical methods to solve problems in economics and finance such as methods to solve nonlinear
+    equations and to generate random numbers. These methods are useful when we solve economic models through value-function
+    iterations, quadratic linearization, and other methods. Some topics discussed are the welfare cost of inflation, portfolio
+    allocation, the yield curve and economic activity, optimal taxation, and financial markets and monetary policy. As ECMA
+    33220, this course is useful for students interested in increasing their knowledge in macroeconomics for careers involving
+    macroeconomic analysis and as preparation for graduate school. Knowledge of calculus and linear algebra is expected.
+  prereq:
+    all:
+    - any:
+      - ECON 20200
+      - ECON 20210
+    - any:
+      - ECON 21020
+      - ECON 21030
+  prereq_text: 'For Undergraduates: ECON 20200/20210 and ECON 21020/21030'
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECMA 33221. Introduction to Advanced Macroeconomic Analysis II. 100 Units.
+- code: ECMA 33230
+  title: Macroeconomic Crises
+  units: 100
+  description: This course introduces students to economic theories of "crises" or particular periods of rapid (negative)
+    changes in real and financial variables that are distinct from long-run growth and regular business cycles. In particular,
+    we will cover the origin of various types of financial crises, i.e. speculative bubbles, bank runs, credit crunches, and
+    sovereign debt crises and defaults. Time permitting, we will also study currency crises and speculative attacks. Throughout,
+    our focus will be on the implications for fiscal and monetary policy.
+  prereq:
+    all:
+    - ECON 23950
+    - any:
+      - ECON 21020
+      - ECON 21030
+  prereq_text: ECON 23950 and ECON 21020 (or ECON 21030)
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECMA 33230. Macroeconomic Crises. 100 Units.
+- code: ECMA 33330
+  title: Introduction to Dynamic Economic Modeling
+  units: 100
+  description: This course provides an introduction to dynamic economic models, with applications to macroeconomics, labor
+    economics, financial economics, and other subfields of economics. The core methodology will be consistent over time, but
+    the applications will vary from year to year. The course will analyze decentralized equilibrium and social planner's problems
+    in dynamic environments. It will focus on developing techniques for analyzing such models graphically, analytically, and
+    computationally. Students should be familiar with constrained optimization (e.g. Lagrangians), linear algebra, and difference
+    equations, as well as microeconomics, macroeconomics, and econometrics at an intermediate level.
+  prereq:
+    all:
+    - any:
+      - ECON 20200
+      - ECON 20210
+    - any:
+      - ECON 21020
+      - ECON 21030
+  prereq_text: ECON 20200 (or ECON 20210) and ECON 21020 (or ECON 21030)
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECMA 33330. Introduction to Dynamic Economic Modeling. 100 Units.
+- code: ECMA 33603
+  title: Introduction to Macroeconomics and Financial Frictions
+  units: 100
+  description: This course studies the behavior of consumers, investors, and firms when they face frictions to take their
+    decisions. These frictions can be in the form of costs to change portfolios, to change prices, or to find another investor
+    to trade. Frictions also appear in the form of borrowing costs, the possibility of default, or the need to use money to
+    carry on transactions. We show how taking into account these frictions change predictions about the economy. Borrowing
+    constraints, for example, affect interest rates, and the need to rebalance portfolios changes predictions on optimal taxation.
+    We discuss models, techniques and papers that show the relevance of frictions for economic analysis.
+  prereq:
+    all:
+    - any:
+      - ECON 20200
+      - ECON 20210
+    - any:
+      - ECON 21020
+      - ECON 21030
+  prereq_text: 'PQ for Undergraduates: ECON 20200/20210 and ECON 21020/21030'
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECMA 33603. Introduction to Macroeconomics and Financial Frictions. 100 Units.
+- code: ECMA 33620
+  title: Introduction to Heterogeneous Agent Macroeconomics
+  units: 100
+  description: This class is an introduction to macroeconomics with heterogeneous households. We will study consumption-savings
+    problems, income dynamics, wealth inequality in partial and general equilibrium, and the effects of fiscal and monetary
+    policy in the presence of household inequality. The class will make use of theoretical analysis, empirical analysis and
+    computational methods. Material will be presented in both discrete and continuous time. Students will analyze micro-level
+    data on wealth, income and consumption, and will learn how to write code to solve heterogeneous agent models on a computer.
+    Familiarity with a statisical package such as R or Stata, and a programming language such as Matlab, Python, Julia, Fortran
+    or C is highly recommended.
+  prereq:
+    all:
+    - any:
+      - ECON 20200
+      - ECON 20210
+    - any:
+      - ECON 21020
+      - ECON 21030
+  prereq_text: 'Undergraduates: PQ: ECON 20200/20210 and ECON 21020/21030'
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECMA 33620. Introduction to Heterogeneous Agent Macroeconomics. 100 Units.
+- code: ECMA 34150
+  title: Origins, Persistence, and Consequences of Inequality
+  units: 100
+  description: 'The continued rise of economic inequality in the U.S. has spurred heated debate among economists and policymakers
+    over the past several years. This course aims to provide students with a comprehensive understanding of social science
+    perspectives on inequality, including its causes, persistence, and effects. It also introduces students to different frameworks
+    for discussing inequality and how societal forces contribute to increasing inequality. Additionally, the course helps
+    students connect broader societal trends with specific government policies. By covering key vocabulary, concepts, theories,
+    and debates related to economic inequality, the course lays a solid foundation for further studies in economics. Upon
+    completion of the course, students should possess a deeper understanding of the facts about inequality and social mobility,
+    as well as a grasp of the complexity of the problem and challenges inherent in addressing these issues through governmental
+    policies. Specifically, students are anticipated to be able to: - Articulate economic terminology and methods for measuring
+    inequality, - Perform calculations to assess and illustrate income/wealth inequality, and economic mobility, - Analyze
+    the root causes, mechanisms, and consequences of economic inequality, - Demonstrate a nuanced comprehension of the policy
+    and political ramifications associated with inequality.'
+  prereq:
+    any:
+    - ECON 21020
+    - ECON 21030
+  prereq_text: 'PQ for Undergraduates: ECON 21020/21030'
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECMA 34150. Origins, Persistence, and Consequences of Inequality. 100 Units.
+- code: ECMA 35050
+  title: Information and Financial Markets
+  units: 100
+  description: 'This course studies the information economics that underlies modern financial markets and trading. Whether
+    one is into designing new financial marketplaces (for example: fintech, crypto) or creating new trading strategies (for
+    example: high-frequency, active management) or managing complex investment portfolios (for example: hedge funds, pension
+    funds), tools from the economics of information asymmetry play an essential role. We take a deep dive into the technical
+    tools that are commonly used and explore applications that help us place the techniques in context. Topics covered include:
+    Lotteries, Measures of risk aversion, Orders of stochastic dominance, vNM and Savage utilities, Information structures,
+    Blackwell ordering, Bayesian inference, Common knowledge and belief hierarchies, Agreement and No-trade theorems, Grossman-Stiglitz
+    type paradoxes, Role of noise in markets, Kyle and Golsten-Milgrom models of trading and PIN models, along with Dealer,
+    limit-order, automated-market-making and batch-auction market structures.'
+  prereq:
+    all:
+    - any:
+      - ECON 20200
+      - ECON 20210
+    - any:
+      - STAT 23400
+      - STAT 24400
+      - STAT 24410
+  prereq_text: 'PQ for Undergraduates: ECON 20200/20210 and STAT 23400/24400/24410'
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECMA 35050. Information and Financial Markets. 100 Units.
+- code: ECMA 35550
+  title: The Practicalities of Running Randomized Control Trials
+  units: 100
+  description: This course is designed for those who plan to run a randomized control trial. It provides practical advice
+    about the trade-offs researchers face when selecting topics to study, the type of randomization technique to use, the
+    content of a survey instruments, analytical techniques and much more. How do you choose the right minimum detectable effect
+    size for estimating the sample size needed to run a high quality RCT? How do you quantify difficult to measure outcomes
+    such as women's empowerment or ensure people are providing truthful answers when you are asking questions on sensitive
+    topics like sexual health? When should you tie your hands by pre-committing to your analysis plan in advance, and when
+    is a pre-analysis plan not a good idea? This course will draw on lots of examples from RCTs around the world, most (though
+    not all) from a development context. Alongside field tips, it will also cover the concepts and theory behind the tradeoffs
+    researchers face running RCTs. The course is designed for PhD students but given its practical nature is open to and accessible
+    to masters students who plan to work on RCTs.
+  crosslists:
+  - ECON 35550
+  - PPHA 35561
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECMA 35550. The Practicalities of Running Randomized Control Trials. 100 Units.
+- code: ECMA 38010
+  title: Empirical Industrial Organization
+  units: 100
+  description: This course will provide an introduction to state-of-the-art methodologies in Empirical Industrial Organization.
+    We will use real-life data to learn about consumers and firms. We will cover demand and preference estimation, production
+    function estimation, empirical models of market entry, and auctions. We will also discuss applications including prediction,
+    policy analysis, and price optimization. Students will learn about theory, estimation, optimization, and practical considerations.
+    Students will apply what they learn using R.
+  prereq:
+    all:
+    - any:
+      - ECON 20100
+      - ECON 20110
+    - any:
+      - ECON 21020
+      - ECON 21030
+  prereq_text: 'Prerequisites for Undergraduates: ECON 20100/20110 and ECON 21020/21030'
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: ECMA 38010. Empirical Industrial Organization. 100 Units.

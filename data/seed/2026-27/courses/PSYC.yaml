@@ -1,0 +1,65 @@
+# Generated from the 2026-2027 UChicago College Catalog (fetched 2026-11-12) by hand-checked scripts;
+# every source.quote is copied verbatim (whitespace collapsed) from source.url. See data/seed/REVIEW.md.
+courses:
+- code: PSYC 22002
+  title: Cognitive Models
+  units: 100
+  notes: Cross-listed with DATA 20002 (its catalog block lists PSYC 22002 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from DATA 20002.
+  crosslists:
+  - DATA 20002
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/datascience/
+    quote: 'Equivalent Course(s): PSYC 22002, LING 20002, LING 30002, COGS 20002'
+- code: PSYC 25700
+  title: The Psychology of Negotiation
+  units: 100
+  notes: Cross-listed with ECON 11710 (its catalog block lists PSYC 25700 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from ECON 11710.
+  crosslists:
+  - ECON 11710
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/economics/
+    quote: 'Equivalent Course(s): PSYC 25700'
+- code: PSYC 28520
+  title: Thinking like a Computational Social Scientist
+  units: 100
+  notes: Cross-listed with DATA 20602 (its catalog block lists PSYC 28520 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from DATA 20602.
+  crosslists:
+  - DATA 20602
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/datascience/
+    quote: 'Equivalent Course(s): MACS 30267, SOCI 40267, MACS 20267, PSYC 38520, SOCI 20602, HIST 49307, PSYC 28520'
+- code: PSYC 28810
+  title: 'From Fossils to Fermi''s Paradox: Origin and Evolution of Intelligent Life'
+  units: 100
+  notes: Cross-listed with BIOS 13142 (its catalog block lists PSYC 28810 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from BIOS 13142.
+  crosslists:
+  - BIOS 13142
+  prereq_text: 'PQ: Third or fourth-year standing. This course does not meet the requirements of the Biological Sciences major.
+    Prerequisite(s) for BIOS 13142 only: BIOS 10130 or BIOS 10140. For BIOS 13142: NO BIOLOGICAL SCIENCES MAJORS OR NON-BIOLOGY
+    PRE-MED STUDENTS, except by petition.'
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/biologicalsciencescore/
+    quote: 'Equivalent Course(s): BPRO 28800, PSYC 28810'
+  needs_review: true
+- code: PSYC 38520
+  title: Thinking like a Computational Social Scientist
+  units: 100
+  notes: Cross-listed with DATA 20602 (its catalog block lists PSYC 38520 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from DATA 20602.
+  crosslists:
+  - DATA 20602
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/datascience/
+    quote: 'Equivalent Course(s): MACS 30267, SOCI 40267, MACS 20267, PSYC 38520, SOCI 20602, HIST 49307, PSYC 28520'

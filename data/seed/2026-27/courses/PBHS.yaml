@@ -1,0 +1,149 @@
+# Generated from the 2026-2027 UChicago College Catalog (fetched 2026-11-12) by hand-checked scripts;
+# every source.quote is copied verbatim (whitespace collapsed) from source.url. See data/seed/REVIEW.md.
+courses:
+- code: PBHS 30910
+  title: Epidemiology and Population Health
+  units: 100
+  notes: Cross-listed with STAT 22810 (its catalog block lists PBHS 30910 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from STAT 22810.
+  crosslists:
+  - STAT 22810
+  prereq_text: STAT 22000 or other introductory statistics highly desirable. For BIOS students-completion of the first three
+    quarters of a Biological Sciences Fundamentals sequence.
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/statistics/
+    quote: 'Equivalent Course(s): BIOS 27810, HLTH 20910, PBHS 30910, PPHA 36410'
+  needs_review: true
+- code: PBHS 32400
+  title: Applied Regression Analysis
+  units: 100
+  notes: Cross-listed with STAT 22400 (its catalog block lists PBHS 32400 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from STAT 22400.
+  crosslists:
+  - STAT 22400
+  prereq:
+    all:
+    - any:
+      - course: STAT 22000
+        min_grade: C+
+      - course: STAT 23400
+        min_grade: C+
+      - all:
+        - course: STAT 11800
+          min_grade: C+
+        - course: STAT 11900
+          min_grade: C+
+      - course: ECON 11010
+        min_grade: C+
+      - course: BUSN 41000
+        min_grade: C+
+      - STAT 22200
+      - STAT 22600
+      - STAT 24500
+      - STAT 24510
+      - PBHS 32100
+    - any:
+      - MATH 13200
+      - MATH 15200
+      - MATH 15300
+      - MATH 16200
+      - MATH 16210
+      - MATH 15910
+      - MATH 18300
+      - MATH 19520
+      - MATH 19620
+      - MATH 20250
+      - MATH 20300
+      - MATH 20310
+  prereq_text: '[STAT 22000 or 23400 or (STAT 11800 & 11900) or ECON 11010 or BUSN 41000 with a grade of at least C+, or STAT
+    22200 or 22600 or 24500 or 24510 or PBHS 32100, or AP Statistics credit for STAT 22000], and [MATH 13200/15200/15300/16200/16210/15910/18300/19520/19620/20250/20300
+    or 20310]. Master''s students must be in Statistics, Computational and Applied Mathematics, Data Science, Mathematics,
+    or Financial Mathematics, or have consent of instructor.'
+  terms_offered:
+  - AU
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/statistics/
+    quote: 'Equivalent Course(s): PBHS 32400'
+  needs_review: true
+- code: PBHS 32410
+  title: Regression Analysis for Health and Social Research
+  units: 100
+  notes: Cross-listed with STAT 22401 (its catalog block lists PBHS 32410 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from STAT 22401.
+  crosslists:
+  - STAT 22401
+  prereq_text: PBHS 32100 or STAT 22000 or equivalent
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/statistics/
+    quote: 'Equivalent Course(s): PBHS 32410'
+  needs_review: true
+- code: PBHS 32600
+  title: Analysis of Categorical Data
+  units: 100
+  notes: Cross-listed with STAT 22600 (its catalog block lists PBHS 32600 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from STAT 22600.
+  crosslists:
+  - STAT 22600
+  prereq:
+    all:
+    - any:
+      - course: STAT 22000
+        min_grade: C+
+      - course: STAT 23400
+        min_grade: C+
+      - all:
+        - course: STAT 11800
+          min_grade: C+
+        - course: STAT 11900
+          min_grade: C+
+      - course: ECON 11010
+        min_grade: C+
+      - course: BUSN 41000
+        min_grade: C+
+      - STAT 22200
+      - STAT 22600
+      - STAT 24500
+      - STAT 24510
+      - PBHS 32100
+    - any:
+      - MATH 13200
+      - MATH 15200
+      - MATH 15300
+      - MATH 16200
+      - MATH 16210
+      - MATH 15910
+      - MATH 18300
+      - MATH 19520
+      - MATH 19620
+      - MATH 20250
+      - MATH 20300
+      - MATH 20310
+  prereq_text: '[STAT 22000 or 23400 or (STAT 11800 & 11900) or ECON 11010 or BUSN 41000 grade at least C+, or STAT 22400
+    or 22600 or 24500 or 24510 or PBHS 32100, or APStat credit STAT 22000] & [2 qtrs of calculus (MATH 13200 or 15200 or 15300
+    or 16200 or 16210 or 15910 or 18300 or 19520 or 19620 or 20250 or 20300 or 20310)]. Master''s students must be in Statistics,
+    Computational and Applied Mathematics, Data Science, Mathematics, or Financial Mathematics, or have consent of instructor.'
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/statistics/
+    quote: 'Equivalent Course(s): PBHS 32600'
+  needs_review: true
+- code: PBHS 32700
+  title: Biostatistical Methods
+  units: 100
+  notes: Cross-listed with STAT 22700 (its catalog block lists PBHS 32700 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from STAT 22700.
+  crosslists:
+  - STAT 22700
+  prereq_text: PBHS 32400 or PBHS 32410 or STAT 22400 or STAT 24500 or equivalent.
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/statistics/
+    quote: 'Equivalent Course(s): PBHS 32700'
+  needs_review: true

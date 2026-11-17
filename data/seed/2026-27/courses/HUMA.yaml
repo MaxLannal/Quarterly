@@ -1,0 +1,708 @@
+# Generated from the 2026-2027 UChicago College Catalog (fetched 2026-11-12) by hand-checked scripts;
+# every source.quote is copied verbatim (whitespace collapsed) from source.url. See data/seed/REVIEW.md.
+courses:
+- code: HUMA 02980
+  title: Practicum
+  units: 25
+  description: This course is for students who secure a summer internship. For details, visit careeradvancement.uchicago.edu/jobs-internships-research/internships-for-credit.
+    Students write a short paper (two to three pages) and give an oral presentation reflecting on their internship experience.
+  notes: Must be taken for P/F grading; students who fail to complete the course requirements will receive an F on their transcript
+    (no W will be granted). Students receive 025 units of credit at completion of course. Course meets once in Spring Quarter
+    and once in Autumn Quarter. Course fee $150; students in need of financial aid should contact Jay Ellison at 702.8609.
+  crosslists:
+  - SOSC 02980
+  terms_offered:
+  - SU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/humanities/
+    quote: HUMA 02980. Practicum. 25 Units.
+- code: HUMA 10001
+  title: 'Undergraduate Research: What, Why, and How'
+  units: 0
+  description: Faculty-mentored research experiences can complement and deepen academic work done in the classroom, nurture
+    mentoring relationships, and prepare students for national and international fellowships, graduate study, and diverse
+    careers-but where do you start? This course introduces the basics of undergraduate research. We will discover what the
+    practice of research entails in different fields, discuss why undergraduates might choose to get involved in research,
+    and practice foundational skills and literacies that are essential for any undergraduate researcher. Presenters include
+    staff from the College Center for Research and Fellowships (CCRF) and the University Library, as well as current undergraduate
+    researchers and faculty members. Topics include navigating the library's vast array of physical and digital resources;
+    working with archives and special collections; managing, analyzing, and sharing data; ethical conduct of research; writing
+    research proposals; and sharing your research. We will also think together about the role research experiences might play
+    in your UChicago education and how to decide whether research is right for you. Together we will demystify the world of
+    research, understand how research experiences can align with broader academic and vocational goals, and take practical
+    steps to prepare for involvement in research. Requirements include attendance at each session and completion of brief
+    weekly exercises. This series is designed to complement our Spring Quarter sequence, which provides the opportunity to
+    reflect deeply and holistically on the purpose and structure of your UChicago education and its components, including
+    research.
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/humanities/
+    quote: 'HUMA 10001. Undergraduate Research: What, Why, and How. 000 Units.'
+- code: HUMA 11000
+  title: Readings in World Literature I
+  units: 100
+  description: The theme for the Autumn Quarter of Readings in World Literature is "The Epic". Beginning with the oldest extant
+    literary text known to mankind, The Epic of Gilgamesh, and moving on to India's national epic The Mahabharata as well
+    as The Odyssey, we study epic texts that are central to the literary and cultural traditions of various regions and peoples
+    of the world. As an introduction to the study of the Humanities, this course will help you develop your skills in textual
+    analysis, independent critical thinking, and expository writing. As a course on literature, it will pay particular attention
+    to issues such as narrative structure, verse form, performativity and poetic devices, but also to the question of how
+    literature might matter for our lives here and now. As a course that aims to address world literatures, this class will
+    focus on ways in which texts from different cultural backgrounds articulate the cultural values, existential anxieties,
+    and power structures of the societies that produced them.
+  notes: These courses must be taken in sequence. Students registered in this sequence must attend the first and second class
+    sessions or their registration will be dropped.
+  core_tags:
+  - humanities
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/humanities/
+    quote: HUMA 11000. Readings in World Literature I. 100 Units.
+- code: HUMA 11100
+  title: Readings in World Literature II
+  units: 100
+  description: The theme for the Winter Quarter of Readings in World Literature is "Autobiography/ Writing the Self." This
+    course examines the nature of autobiographical writing from a wide range of cultural and historical contexts, including
+    texts such as Augustine's Confessions, Sei Shonagon's The Pillow Book, Vladimir Nabokov's Speak Memory, Wole Soyinka's
+    Aké and Alison Bechdel's graphic memoir Fun Home. While last quarter focused on the genre of the epic-texts that imagine
+    and even create a people's sense of a shared past and a shared culture-this quarter will focus on how individuals imagine
+    their own, particular lives. We will explore, among other issues, how the self is constructed through reading and writing,
+    the relationship between memory and identity, the claims of authenticity or truth, the oscillation between interior and
+    exterior life, and the peculiarities of individual voice.
+  notes: These courses must be taken in sequence.
+  core_tags:
+  - humanities
+  prereq: HUMA 11000
+  prereq_text: HUMA 11000
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/humanities/
+    quote: HUMA 11100. Readings in World Literature II. 100 Units.
+- code: HUMA 11200
+  title: Readings in World Literature III
+  units: 100
+  description: 'Students wishing to take the third quarter of the Readings in World Literature sequence will be able to choose
+    from a selection of different topics that varies slightly from year to year, such as "Gender and Literature," "Crime Fiction
+    and Murder Mysteries," "Reading the Middle Ages: Europe and Asia," "Colonial Fictions: Novel of Exoticisms, Adventure,
+    and East and West", "Masterpieces of Poetry," "The Nobel Prize in Literature," or "Fictions of the Modern City".'
+  notes: These courses must be taken in sequence.
+  core_tags:
+  - humanities
+  prereq: HUMA 11100
+  prereq_text: HUMA 11100
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/humanities/
+    quote: HUMA 11200. Readings in World Literature III. 100 Units.
+- code: HUMA 11500
+  title: Philosophical Perspectives I
+  units: 100
+  description: In Autumn Quarter, we examine fundamental ethical issues--about virtue, the good life, and the role of the
+    individual in society--in the works of ancient Greek writers as well as 20th-century writers in conversation with them.
+    Texts are drawn from Plato, Aristotle, the Greek tragedians, Martin Luther King and others.
+  notes: These courses must be taken in sequence. Students registered in this sequence must attend the first and second class
+    sessions or their registration will be dropped.
+  core_tags:
+  - humanities
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/humanities/
+    quote: HUMA 11500. Philosophical Perspectives I. 100 Units.
+- code: HUMA 11600
+  title: Philosophical Perspectives II
+  units: 100
+  description: Winter Quarter explores metaphysical and epistemological questions as they confronted participants and spectators
+    of the 'scientific revolution'. Problems of skepticism, self-understanding and the social status of knowledge are at the
+    fore. Authors tend to include Descartes, Newton, Voltaire, and Mary Shelley, among others.
+  notes: These courses must be taken in sequence.
+  core_tags:
+  - humanities
+  prereq: HUMA 11500
+  prereq_text: HUMA 11500
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/humanities/
+    quote: HUMA 11600. Philosophical Perspectives II. 100 Units.
+- code: HUMA 11700
+  title: Philosophical Perspectives III
+  units: 100
+  description: In Spring Quarter we explore the constitution of agency and personal morality from the vantage point of Enlightenment
+    and post-Enlightenment philosophy and novels. Authors include Hume, Kant, Nietzsche and Jane Austen.
+  notes: These courses must be taken in sequence.
+  core_tags:
+  - humanities
+  prereq: HUMA 11600
+  prereq_text: HUMA 11600
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/humanities/
+    quote: HUMA 11700. Philosophical Perspectives III. 100 Units.
+- code: HUMA 12050
+  title: 'Greece and Rome: Texts, Traditions, Transformations I'
+  units: 100
+  description: In the Autumn quarter of the sequence, we will examine the epic tradition as it is received - and transformed
+    - in Homer, Vergil, and Milton. Each poem explores the relationship between war and social order, the breakdown and possibility
+    of restoration in the wake of disruption. Each poem also transforms the terms set in the prior readings without leaving
+    their framework entirely behind. We will ask how the hero or paradigmatic individual lives, loves, suffers, and recovers
+    (or not) in relation to others and how the craft of poetry participates in shaping a world for the contemporary audience
+    as well as for the readership of posterity.
+  notes: These courses must be taken in sequence. Students registered in this sequence must attend the first and second class
+    sessions or their registration will be dropped.
+  core_tags:
+  - humanities
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/humanities/
+    quote: 'HUMA 12050. Greece and Rome: Texts, Traditions, Transformations I. 100 Units.'
+- code: HUMA 12150
+  title: 'Greece and Rome: Texts, Traditions, Transformations II'
+  units: 100
+  description: The Winter Quarter focuses on how tragedy and history confront familial, social, and external conflict in different
+    genres. Readings cover Aeschylus' "Oresteia," selections from the histories of Herodotus, Livy, and Tacitus, tragedies
+    by Seneca, and several of Shakespeare's history plays.
+  notes: These courses must be taken in sequence.
+  core_tags:
+  - humanities
+  prereq: HUMA 12050
+  prereq_text: HUMA 12050
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/humanities/
+    quote: 'HUMA 12150. Greece and Rome: Texts, Traditions, Transformations II. 100 Units.'
+- code: HUMA 12250
+  title: 'Greece and Rome: Texts, Traditions, Transformations III'
+  units: 100
+  description: Spring Quarter alternates between comedy as a vehicle for negotiating social norms and the subject of love
+    in philosophical and literary perspectives. In comedy years, social integration is treated with a lighter touch than in
+    Autumn and Winter Quarters, through the texts of Aristophanes, Plautus, and Shakespeare. In the alternate years, love
+    is explored through the philosophical texts of Plato's Symposium and Lucretius' The Way Things Are, as well as works of
+    Shakespeare and Shelley's Frankenstein.
+  notes: These courses must be taken in sequence.
+  core_tags:
+  - humanities
+  prereq: HUMA 12150
+  prereq_text: HUMA 12150
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/humanities/
+    quote: 'HUMA 12250. Greece and Rome: Texts, Traditions, Transformations III. 100 Units.'
+- code: HUMA 12300
+  title: Human Being and Citizen I
+  units: 100
+  description: The autumn quarter explores the ways that ancient literary, philosophical, and religious texts (from the Greek,
+    Mesopotamian, and Abrahamic traditions) conceive of, express ideals about, and articulate tensions in conceptions of human
+    and divine law and justice, affective life, human striving, and the human being as such. Texts include the Epic of Gilgamesh,
+    Homer's Iliad, the book of Genesis, dialogues of Plato, and Sophocles' Antigone.
+  notes: These courses must be taken in sequence. Students registered in this sequence must attend the first and second class
+    sessions or their registration will be dropped.
+  core_tags:
+  - humanities
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/humanities/
+    quote: HUMA 12300. Human Being and Citizen I. 100 Units.
+- code: HUMA 12400
+  title: Human Being and Citizen II
+  units: 100
+  description: In the winter quarter, we examine conceptions of the human good in connection with practices of the self as
+    they pertain to virtue, the social order, spiritual beliefs and practices, and community. We ask what constitutes human
+    flourishing and explore relations and tensions between individual self-formation and the social and political good. Texts
+    include Aristotle's Nicomachean Ethics, Augustine's Confessions, and Dante's Inferno.
+  notes: These courses must be taken in sequence.
+  core_tags:
+  - humanities
+  prereq: HUMA 12300
+  prereq_text: HUMA 12300
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/humanities/
+    quote: HUMA 12400. Human Being and Citizen II. 100 Units.
+- code: HUMA 12500
+  title: Human Being and Citizen III
+  units: 100
+  description: The spring quarter addresses matters of community, law, freedom, morality, and ideology in a (broadly speaking)
+    modern idiom of citizenship, with its attendant idea of the human being as a rights-bearing subject. We ask what (whether
+    culture, religion, reason itself) might ground our moral judgments, and what the limits and freedoms are of thinking the
+    human being as a subject accorded rights through instruments of philosophical or political law. Resourced by our autumn
+    and winter texts, we consider the impact of thinking about race, ethnicity, and gender through a modern lens and how these
+    considerations both challenge and draw on the past. Texts include Shakespeare's The Tempest, Kant's Groundwork of the
+    Metaphysics of Morals, and Baldwin's No Name in the Street.
+  notes: These courses must be taken in sequence.
+  core_tags:
+  - humanities
+  prereq: HUMA 12400
+  prereq_text: HUMA 12400
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/humanities/
+    quote: HUMA 12500. Human Being and Citizen III. 100 Units.
+- code: HUMA 13500
+  title: Introduction to the Humanities I
+  units: 100
+  description: In the Autumn Quarter, we read two of Plato's Dialogues, the Declaration of Independence, selections from Thucydides'
+    History of the Peloponnesian War, and a Shakespeare play.
+  notes: These courses must be taken in sequence. Students registered in this sequence must attend the first and second class
+    sessions or their registration will be dropped.
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/humanities/
+    quote: HUMA 13500. Introduction to the Humanities I. 100 Units.
+- code: HUMA 13600
+  title: Introduction to the Humanities II
+  units: 100
+  description: In the Winter Quarter, we read Descartes' Meditations, Conrad's Heart of Darkness, further selections from
+    Thucydides' History, Woolf's The Waves, and Nietzsche's Beyond Good and Evil.
+  notes: These courses must be taken in sequence.
+  prereq: HUMA 13500
+  prereq_text: HUMA 13500
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/humanities/
+    quote: HUMA 13600. Introduction to the Humanities II. 100 Units.
+- code: HUMA 13700
+  title: Introduction to the Humanities III
+  units: 100
+  description: In the Spring Quarter, we read Plato's Phaedrus with Derrida's "Pharmakon," Harriet Jacobs's Incidents in the
+    Life of a Slave Girl, still more selections from Thucydides' History, an experimental feminist essay, and a graphic novel,
+    perhaps Alison Bechdel's Fun Home or Chris Ware's Building Stories.
+  notes: These courses must be taken in sequence.
+  prereq: HUMA 13600
+  prereq_text: HUMA 13600
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/humanities/
+    quote: HUMA 13700. Introduction to the Humanities III. 100 Units.
+- code: HUMA 14000
+  title: 'Reading Cultures: Collection, Travel, Exchange I'
+  units: 100
+  description: The Autumn Quarter of Reading Cultures is devoted to the analysis of "collection" as a form of cultural activity.
+    Reading texts such as Ovid's Metamorphoses, The Arabian Nights, and Zora Neale Hurston's Mules and Men that offer collections
+    of stories in lieu of a single tale, we consider the extent to which culture comes into being through the accumulation,
+    assemblage and transmission of narratives. In other words, students in this quarter learn how to think about narrative
+    and storytelling in terms of the production, organization and control of culture. Who gets to collect and to tell the
+    stories of a culture, we ask, and what difference does their identity make to cultural representation?
+  notes: These courses must be taken in sequence. Students registered in this sequence must attend the first and second class
+    sessions or their registration will be dropped.
+  core_tags:
+  - humanities
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/humanities/
+    quote: 'HUMA 14000. Reading Cultures: Collection, Travel, Exchange I. 100 Units.'
+- code: HUMA 14100
+  title: 'Reading Cultures: Collection, Travel, Exchange II'
+  units: 100
+  description: The Winter Quarter of Reading Cultures considers the centrality of movement, migration and travel to the study
+    of culture. Turning to texts such as Harriet Jacobs's Incidents in the Life of a Slave Girl, Jamaica Kincaid's A Small
+    Place and Tomás Rivera's And the Earth Did Not Devour Him, we ask how cultures have retained their coherence, historically,
+    under conditions of migration, diaspora and violent or enforced movement. We also consider the ways that cultures themselves
+    travel and change, and analyze the ways that language and narrative function as mediums of cultural movement and transmission.
+  notes: These courses must be taken in sequence.
+  core_tags:
+  - humanities
+  prereq: HUMA 14000
+  prereq_text: HUMA 14000
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/humanities/
+    quote: 'HUMA 14100. Reading Cultures: Collection, Travel, Exchange II. 100 Units.'
+- code: HUMA 14200
+  title: 'Reading Cultures: Collection, Travel, Exchange III'
+  units: 100
+  description: The Spring Quarter of Reading Cultures focuses on exchange as a fundamental cultural activity. Here, we consider
+    literary texts such as Xiao Hong's "Hands," Richard Wright's Native Son and Honoré de Balzac's Le Père Goriot, as well
+    as theoretical texts by Karl Marx and Marcel Mauss that raise questions about the cultural function of exchange. Thus
+    in this quarter, students study the ways in which literary works from different cultural traditions have offered unique
+    critiques of and pointed responses to the prevailing economic systems of their times.
+  notes: These courses must be taken in sequence.
+  core_tags:
+  - humanities
+  prereq: HUMA 14100
+  prereq_text: HUMA 14100
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/humanities/
+    quote: 'HUMA 14200. Reading Cultures: Collection, Travel, Exchange III. 100 Units.'
+- code: HUMA 16000
+  title: 'Media Aesthetics: Image, Text, Sound I'
+  units: 100
+  description: Autumn Quarter focuses on images, imitation, and seeing. Images may seem to simply reflect the real, but they
+    just as often distort or distance viewers from it. We explore the strangeness of images through Diego Velasquez's Las
+    Meninas, Plato's Republic, Hitchcock's Vertigo, and Toni Morrison's The Bluest Eye.
+  notes: These courses must be taken in sequence. Students registered in this sequence must attend the first and second class
+    sessions or their registration will be dropped.
+  core_tags:
+  - humanities
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/humanities/
+    quote: 'HUMA 16000. Media Aesthetics: Image, Text, Sound I. 100 Units.'
+- code: HUMA 16100
+  title: 'Media Aesthetics: Image, Text, Sound II'
+  units: 100
+  description: Winter Quarter focuses on writing, reading, and signs. Language is an extraordinarily flexible medium for representing
+    events and experiences-but it also raises distinctive challenges of interpretation, decoding, and translation. We examine
+    some of these challenges through Plato's Phaedrus, Shakespeare's The Tempest, Akira Kurosawa's Rashomon, and Alison Bechdel's
+    Fun Home.
+  notes: These courses must be taken in sequence.
+  core_tags:
+  - humanities
+  prereq: HUMA 16000
+  prereq_text: HUMA 16000
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/humanities/
+    quote: 'HUMA 16100. Media Aesthetics: Image, Text, Sound II. 100 Units.'
+- code: HUMA 16200
+  title: 'Media Aesthetics: Image, Text, Sound III'
+  units: 100
+  description: Spring Quarter focuses on sound, music, and listening. How do sounds or noises become meaningful? Why are music
+    and voice so effective at expressing desire, suffering, or even overwhelming the intellect? We explore these and other
+    questions through William Blake's Songs of Innocence and Experience, W.E.B. Du Bois's The Souls of Black Folk, Nietzsche's
+    The Birth of Tragedy, contemporary albums, and sound art.
+  notes: These courses must be taken in sequence. For the option of taking the third quarter of Media Aesthetics as the general
+    education requirement in the arts, see MAAD 26210.
+  core_tags:
+  - humanities
+  prereq: HUMA 16100
+  prereq_text: HUMA 16100
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/humanities/
+    quote: 'HUMA 16200. Media Aesthetics: Image, Text, Sound III. 100 Units.'
+- code: HUMA 16300
+  title: 'Understanding Digital Media: An Introduction to Contemporary Media Aesthetics'
+  units: 100
+  description: 'This course offers an introduction to the aesthetics and theory of digital media. We explore how the digital
+    revolution has transformed media aesthetics across film, television, online environments and the arts. Through a blend
+    of philosophical, political, and aesthetic inquiry, we investigate how the digital society redefines what it means to
+    be human, how we interact socially, and how we conceptualize reality itself. Our exploration is guided by several questions:
+    Is reality a simulation? Can humans be "upgraded" through merger with digital technology? Are algorithms and A.I. ushering
+    in a post-human social reality? We will also address the political dimensions of these shifts, specifically how computational
+    power has fueled "cybernetic capitalism" and the rise of the "control society". We engage with these concepts through
+    a diverse range of media, including film (Inception, The Matrix, Ex Machina, Edge of Tomorrow, Everything Everywhere All
+    at Once), television (Black Mirror, The Rehearsal), digital media examples and A.I., video games, and the arts. Along
+    the way we discuss media theory and cybernetic theory (e.g. Katherine Hayles, Niklas Luhmann) in pursuit of our themes
+    and questions. No prior background is required - only curiosity about our digital world and its future. HUMA 16300 can
+    qualify for a third Humanities general education requirement if the student completed HUMA 16000 and HUMA 16100. HUMA
+    16300 may also be taken as an independent elective.'
+  crosslists:
+  - MADD 10630
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/humanities/
+    quote: 'HUMA 16300. Understanding Digital Media: An Introduction to Contemporary Media Aesthetics. 100 Units.'
+- code: HUMA 17000
+  title: Language and the Human I
+  units: 100
+  description: 'The Autumn Quarter of this sequence explores the role of language in articulating, maintaining, and subverting
+    power relations in society. Some of the questions we discuss include: How does language support structures of power and
+    privilege? How does language shape our assumptions and beliefs? How does language motivate us to act or keep us from acting?
+    Is language a basic human right? How does language influence the ways we think about race, gender, sexual orientation,
+    and species? How do we use language to perceive or shape the identity of others? Typical texts used include George Bernard
+    Shaw''s Pygmalion, Shakespeare''s The Tempest, and Margaret Atwood''s The Handmaid''s Tale.'
+  notes: These courses must be taken in sequence. Students registered in this sequence must attend the first and second class
+    sessions or their registration will be dropped.
+  core_tags:
+  - humanities
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/humanities/
+    quote: HUMA 17000. Language and the Human I. 100 Units.
+- code: HUMA 17100
+  title: Language and the Human II
+  units: 100
+  description: The Winter Quarter of this sequence examines the relations between language and identity. Some of the issue
+    we will explore include language ideologies and hierarchies, vernacular languages and literatures, linguistic nationalism,
+    language in the education system, and the involvement of language in constructing identities around race, gender, sexuality,
+    nationality, religion and culture. Readings include Patanjali, Dante Alighieri, Lu Xun, Zora Neale Hurston, Antonio Gramsci,
+    Richard Rodriguez, Junot Díaz, and Sumathi Ramaswamy.
+  notes: These courses must be taken in sequence.
+  core_tags:
+  - humanities
+  prereq: HUMA 17000
+  prereq_text: HUMA 17000
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/humanities/
+    quote: HUMA 17100. Language and the Human II. 100 Units.
+- code: HUMA 17200
+  title: Language and the Human III
+  units: 100
+  description: 'The Spring Quarter of this sequence examines the many interrelationships between language and thought. We
+    will explore this theme through readings from a wide range of fields, including philosophy, neuroscience, anthropology,
+    linguistics, literature and animal cognition. Some of the questions we discuss include: Does language shape your thought,
+    or vice versa? Is thought even possible without language? Are you the same person across different languages that you
+    speak? Do animals use language to think and communicate? How does language acquisition in children change their capacity
+    to think? Does learning languages make us smarter? What kind of thought does translation involve? Does body language "count"
+    as language? These readings will help us address the questions above, while providing an overview of some of the most
+    fascinating problems surrounding our notions of language today.'
+  notes: These courses must be taken in sequence.
+  core_tags:
+  - humanities
+  prereq: HUMA 17100
+  prereq_text: HUMA 17100
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/humanities/
+    quote: HUMA 17200. Language and the Human III. 100 Units.
+- code: HUMA 18000
+  title: Poetry and the Human I
+  units: 100
+  description: In Autumn (form/formation/transformation), we closely analyze poetry to understand its distinctive qualities,
+    looking at questions of form and rhythm, translation and adaptation, and experimentation with genre. We also explore argumentation,
+    criticism, and the role of poetry in mapping creation through practices of language, image, and sound.
+  notes: These courses must be taken in sequence
+  core_tags:
+  - humanities
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/humanities/
+    quote: HUMA 18000. Poetry and the Human I. 100 Units.
+- code: HUMA 18100
+  title: Poetry and the Human II
+  units: 100
+  description: In Winter (crisis/performance/politics), we turn to questions of social rupture, breakdown, and reformation
+    as we consider the ways that poetry revolts, reflects, and rebuilds in political crises. We will also look at poetry in
+    performance, and performance as poetry, to consider how poetry is practiced in non-textual media such as spoken word,
+    film, visual arts, and dance.
+  notes: These courses must be taken in sequence
+  core_tags:
+  - humanities
+  prereq: HUMA 18000
+  prereq_text: HUMA 18000
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/humanities/
+    quote: HUMA 18100. Poetry and the Human II. 100 Units.
+- code: HUMA 18200
+  title: Poetry and the Human III
+  units: 100
+  description: 'In the Spring Quarter Humanities course offers two options: The first one, Myths and Ecologies, looks at how
+    humans tell stories through the poetry of the world: from ancient myths reconfigured by voices feminist, queer, and indigenous,
+    to ecologies that draw on the history and geography of the earth, to imaginings of a world without boundaries, and finally
+    to explorations of how our pasts and futures merge in the poetic word. Students will be asked to formulate a research
+    project over the course of the quarter that handles one of these themes. The second one, Poetry in Public, combines some
+    of the Myths and Ecologies curriculum with a study of poetry and the body, in the public world, and as a social good.
+    How can we as agents in society use poetry to make the world better? How can we bring our practice into the lives of others?
+    How does poetry help treat the body and mind, and how does it connect the body and mind to the world that surrounds them?
+    In this quarter, we invite students to take their knowledge and practice of poetry into the world by volunteering to help
+    young patients at the Comer Children''s Hospital to write their own poetry, and by working together to understand the
+    experience of poetry as a social good. Writing assignments are focused on journalistic and exploratory forms, and based
+    on ongoing work in a reading journal. There is one final essay due at the end of the quarter. Students must apply to register
+    for this course by the end of autumn quarter.'
+  notes: These courses must be taken in sequence. For the option of taking the third quarter of Poetry and the Human to meet
+    the general education requirement in the arts, see CRWR 18200.
+  core_tags:
+  - humanities
+  prereq: HUMA 18100
+  prereq_text: HUMA 18100
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/humanities/
+    quote: HUMA 18200. Poetry and the Human III. 100 Units.
+- code: HUMA 19100
+  title: Humanities Writing Seminars
+  units: 0
+  description: 'These seminars introduce students to the analysis and practice of expert academic writing. Experts must meet
+    many familiar standards for successful writing: clear style, logical organization, and persuasive argument. But because
+    they work with specialized knowledge, experts also face particular writing difficulties: they must be clear about complexities
+    and specific about abstractions; they must use uncomplicated organization for very complicated ideas; they must create
+    straightforward logic for intricate arguments; they must be concise but not incomplete, direct but not simplistic; they
+    must clarify the obscure but not repeat the obvious; and they must anticipate the demands of aggressively skeptical readers.
+    The seminars do not repeat or extend the substantive discussion of the Humanities class; they use the discussions and
+    assignments from those classes as a tool for the advanced study of writing. We study various methods not only for the
+    construction of sophisticated and well-structured arguments but also for understanding the complications and limits of
+    those arguments. These seminars also address issues of readership and communication within expert communities. As students
+    present papers in the seminars, we can use the reactions of the audience to introduce the techniques experts can use to
+    transform a text from one that serves the writer to one that serves the readers.'
+  notes: These seminars are available only in combination with either a two- or a three-quarter general education sequence
+    in the Humanities.
+  core_tags:
+  - writing
+  repeatable: true
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/humanities/
+    quote: HUMA 19100. Humanities Writing Seminars. 000 Units.
+  needs_review: true
+- code: HUMA 20710
+  title: 'At the Piano I: Keyboard Studies for Non-Music Majors'
+  units: 100
+  description: Keyboard Studies for Non-Music Majors
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/humanities/
+    quote: 'HUMA 20710. At the Piano I: Keyboard Studies for Non-Music Majors. 100 Units.'
+- code: HUMA 20711
+  title: 'At the Piano II: Keyboard Studies for Non-Music Majors'
+  units: 100
+  description: Keyboard Studies for Non-Music Majors
+  prereq:
+    any:
+    - HUMA 20710
+    - consent: instructor
+  prereq_text: HUMA 20710 or consent of instructor
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/humanities/
+    quote: 'HUMA 20711. At the Piano II: Keyboard Studies for Non-Music Majors. 100 Units.'
+- code: HUMA 20712
+  title: 'At the Piano III: Keyboard Studies for Non-Music Majors'
+  units: 100
+  description: Keyboard Studies for non-Music majors
+  prereq:
+    any:
+    - HUMA 20711
+    - consent: instructor
+  prereq_text: HUMA 20711 or consent of instructor.
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/humanities/
+    quote: 'HUMA 20712. At the Piano III: Keyboard Studies for Non-Music Majors. 100 Units.'
+- code: HUMA 20713
+  title: 'At the Piano IV: Keyboard Studies for Non-Music Majors'
+  units: 100
+  description: Keyboard Studies for non-Music majors
+  prereq:
+    any:
+    - HUMA 20712
+    - consent: instructor
+  prereq_text: HUMA 20712 or consent of instructor.
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/humanities/
+    quote: 'HUMA 20713. At the Piano IV: Keyboard Studies for Non-Music Majors. 100 Units.'
+- code: HUMA 24800
+  title: Dostoevsky
+  units: 100
+  description: 'Dostoevsky was an inveterate risk-taker, not only at the baccarat tables of the Grand Casino in Baden-Baden,
+    but in his personal life, his political activities, and his artistic endeavors. This course is intended to investigate
+    his two greatest wagers: on the presence of the divine in the world and on the power of artistic form to convey and articulate
+    this presence. Dostoevsky''s wager on form is evident even in his early, relatively conventional texts, like The Double.
+    It intensifies after his decade-long sojourn in Siberia, exploding in works like The Notes from Underground, which one-and-a-half
+    centuries later remains an aesthetic and philosophical provocation of immense power. The majority of the course will focus
+    on Dostoevsky''s later novels. In Crime and Punishment Dostoevsky adapts suspense strategies to create a metaphysical
+    thriller, while in The Demons he pairs a study of nihilism with the deformation of the novel as a genre. Through close
+    readings of these works we will trace how Dostoevsky''s formal experimentation created new ways of exploring realms of
+    existence that traditionally belonged to philosophy and theology. The results were never comfortable or comforting; we
+    will focus on interpreting Dostoevsky''s metaphysical provocations.'
+  crosslists:
+  - RLST 28204
+  - FNDL 24612
+  - RLIT 39501
+  - REES 30013
+  - REES 20013
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/humanities/
+    quote: HUMA 24800. Dostoevsky. 100 Units.
+- code: HUMA 25207
+  title: 'Mindfulness: Experience and Media'
+  units: 100
+  description: How do we experience media (of all kinds) with (or without) awareness? Methods of mindfulness offer principles
+    and practices of awareness focusing on mind, body, and embodied mind. Mindfulness (a flexible, moment-to-moment, non-judging
+    awareness) is an individual experience and at the same time, practices of mindfulness can be a mode of public health intervention.
+    Mindfulness involves social epistemologies of how we know (or don't know) collectively, as we interact with immediate
+    sensory experience as well as with mediated communication technologies generating various sorts of virtual realities (from
+    books to VR). In addition to readings and discussions, this course teaches embodied practices of attention and awareness
+    through the curriculum of Mindfulness-Based Stress Reduction.
+  crosslists:
+  - HLTH 25207
+  - MADD 14207
+  - HIPS 25207
+  - TAPS 20507
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/humanities/
+    quote: 'HUMA 25207. Mindfulness: Experience and Media. 100 Units.'
+- code: HUMA 25208
+  title: 'Seeing Anew: Human Transformation and the Senses in Art, Film, Music, and Literature'
+  units: 100
+  description: 'This course explores the ways in which writers, musicians, and other artists renew and reframe the way that
+    we see the world. Through readings, viewings, and other experiences, we will consider how the arts speak to our senses
+    and imagination, the relationship between the senses and reality, and how works of art might help us imagine a transformed
+    world. We will devote most of our time to discussions of works on the individual senses: vision through experimental cinema
+    and poetry from the Romantic and modern eras; hearing through soundscapes-especially those of the South Side of Chicago-and
+    the Afrofuturist music of Sun Ra; touch through art spaces and recent advances in human-computer interaction; and smell
+    and taste through gastronomic writing and explorations of the urban agriculture of the South Side. The course will also
+    feature guest lectures by local artists, musicians, and scholars, as well as field trips to local sites such as museums,
+    galleries, and music venues. Students will be expected to contribute regularly to class discussions, keep a log of their
+    responses to readings, artworks, and field trips, and create their own critical or creative project that responds to the
+    themes explored in the course.'
+  terms_offered:
+  - SU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/humanities/
+    quote: 'HUMA 25208. Seeing Anew: Human Transformation and the Senses in Art, Film, Music, and Literature. 100 Units.'
+- code: HUMA 28400
+  title: Comparative Fairy Tales
+  units: 100
+  description: How do we account for the allure of fairy tales? For some, fairy tales count as sacred tales meant to enchant
+    rather than edify. For others, they are cautionary tales, replete with obvious moral lessons. For the purposes of the
+    course, we will assume that these critics are correct in their contention that fairy tales contain essential underlying
+    meanings. We will conduct our own readings of fairy tales from the German Brothers Grimm, the Norwegians, Asbjørnsen and
+    Moe and the Dane, Hans Christian Andersen, relying on our own critical skills as well as selected secondary readings.
+  crosslists:
+  - NORW 28500
+  - GRMN 28500
+  - CMLT 21600
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/humanities/
+    quote: HUMA 28400. Comparative Fairy Tales. 100 Units.
+- code: HUMA 29700
+  title: Reading Course
+  units: 100
+  description: An instructor within Humanities agrees to supervise the course and then determines the kind and amount of work
+    to be done. Students must receive a quality grade. Students may not petition to receive credit for more than two HUMA
+    29700 courses. Students may register for this course using the College Reading and Research Form, available in the College
+    Advising offices. This form must be signed by the instructor and the Director of Undergraduate Studies and then submitted
+    to the Office of the Registrar.
+  prereq:
+    all:
+    - consent: instructor
+    - consent: senior adviser
+  prereq_text: Consent of instructor and senior adviser.
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/humanities/
+    quote: HUMA 29700. Reading Course. 100 Units.

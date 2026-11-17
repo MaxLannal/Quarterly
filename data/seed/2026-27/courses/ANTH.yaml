@@ -1,0 +1,221 @@
+# Generated from the 2026-2027 UChicago College Catalog (fetched 2026-11-12) by hand-checked scripts;
+# every source.quote is copied verbatim (whitespace collapsed) from source.url. See data/seed/REVIEW.md.
+courses:
+- code: ANTH 17522
+  title: Energy in World Civilizations II
+  units: 100
+  notes: Cross-listed with HIST 17522 (its catalog block lists ANTH 17522 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from HIST 17522.
+  crosslists:
+  - HIST 17522
+  prereq_text: Parts I and II should be taken in sequence. This sequence meets the general education requirement in civilization
+    studies.
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): ANTH 17522, CEGU 27522, HIPS 17522, SOSC 27522'
+  needs_review: true
+- code: ANTH 20701
+  title: Introduction to African Civilization I
+  units: 100
+  notes: Cross-listed with HIST 10101 (its catalog block lists ANTH 20701 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from HIST 10101.
+  crosslists:
+  - HIST 10101
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): SOSC 20101, MDVL 10101, ANTH 20701'
+- code: ANTH 20702
+  title: Introduction to African Civilization II
+  units: 100
+  notes: Cross-listed with HIST 10102 (its catalog block lists ANTH 20702 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from HIST 10102.
+  crosslists:
+  - HIST 10102
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): SOSC 20202, ANTH 20702'
+- code: ANTH 20703
+  title: Introduction to African Civilization III
+  units: 100
+  notes: Cross-listed with HIST 10103 (its catalog block lists ANTH 20703 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from HIST 10103.
+  crosslists:
+  - HIST 10103
+  prereq_text: This sequence meets the general education requirement in civilization studies.
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): ANTH 20703, SOSC 20203'
+  needs_review: true
+- code: ANTH 23101
+  title: Introduction to Latin American Civilization I
+  units: 100
+  notes: Cross-listed with LACS 16100 (its catalog block lists ANTH 23101 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from LACS 16100.
+  crosslists:
+  - LACS 16100
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): RDIN 16100, HIST 16101, SOSC 26100, ANTH 23101'
+- code: ANTH 23102
+  title: Introduction to Latin American Civilization II
+  units: 100
+  notes: Cross-listed with LACS 16200 (its catalog block lists ANTH 23102 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from LACS 16200.
+  crosslists:
+  - LACS 16200
+  terms_offered:
+  - AU
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): HIST 16102, SOSC 26200, RDIN 16200, ANTH 23102'
+- code: ANTH 23103
+  title: Introduction to Latin American Civilization III
+  units: 100
+  notes: Cross-listed with LACS 16300 (its catalog block lists ANTH 23103 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from LACS 16300.
+  crosslists:
+  - LACS 16300
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): ANTH 23103, SOSC 26300, HIST 16103, RDIN 16300'
+- code: ANTH 24001
+  title: 'Colonizations I: Colonialism, Enslavement and Resistance in the Atlantic World'
+  units: 100
+  notes: Cross-listed with RDIN 24001 (its catalog block lists ANTH 24001 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from RDIN 24001.
+  crosslists:
+  - RDIN 24001
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): LACS 24001, SOSC 24001, ANTH 24001, HIST 18301'
+- code: ANTH 24002
+  title: 'Colonizations II: Imperial Expansion, Anti-Imperialism, and Nation in Asia'
+  units: 100
+  notes: Cross-listed with RDIN 24002 (its catalog block lists ANTH 24002 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from RDIN 24002.
+  crosslists:
+  - RDIN 24002
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): SALC 24002, SOSC 24002, ANTH 24002, HIST 18302'
+- code: ANTH 24003
+  title: 'Colonizations III: Decolonization, Revolution, Freedom'
+  units: 100
+  notes: Cross-listed with RDIN 24003 (its catalog block lists ANTH 24003 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from RDIN 24003.
+  crosslists:
+  - RDIN 24003
+  terms_offered:
+  - AU
+  - WI
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): SALC 20702, SOSC 24003, ANTH 24003, HIST 18303'
+- code: ANTH 24101
+  title: Introduction to the Civilizations of South Asia I
+  units: 100
+  notes: Cross-listed with SALC 20100 (its catalog block lists ANTH 24101 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from SALC 20100.
+  crosslists:
+  - SALC 20100
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): SALC 30100, HIST 10800, SOSC 23000, MDVL 20100, ANTH 24101'
+- code: ANTH 24102
+  title: Introduction to the Civilizations of South Asia II
+  units: 100
+  notes: Cross-listed with SALC 20200 (its catalog block lists ANTH 24102 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from SALC 20200.
+  crosslists:
+  - SALC 20200
+  prereq_text: SALC 20100,ANTH 24101,HIST 10800,SASC 20000,SOSC 23000
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/civilizationstudies/
+    quote: 'Equivalent Course(s): SOSC 23100, SALC 30200, HIST 10900, ANTH 24102'
+  needs_review: true
+- code: ANTH 27001
+  title: Intro To Linguistics-1
+  units: 100
+  notes: Cross-listed with SOSC 21700 (its catalog block lists ANTH 27001 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from SOSC 21700.
+  crosslists:
+  - SOSC 21700
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: 'Equivalent Course(s): ANTH 27001, ANTH 37001, LING 20100, LING 30100'
+- code: ANTH 27002
+  title: Intro To Linguistics-2
+  units: 100
+  notes: Cross-listed with SOSC 21800 (its catalog block lists ANTH 27002 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from SOSC 21800.
+  crosslists:
+  - SOSC 21800
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: 'Equivalent Course(s): ANTH 37002, LING 30200, ANTH 27002, LING 20200'
+- code: ANTH 27003
+  title: Introduction To Linguistics-3
+  units: 100
+  notes: Cross-listed with SOSC 21900 (its catalog block lists ANTH 27003 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from SOSC 21900.
+  crosslists:
+  - SOSC 21900
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: 'Equivalent Course(s): LING 20300, ANTH 27003, LING 30300, ANTH 37003'
+- code: ANTH 37001
+  title: Intro To Linguistics-1
+  units: 100
+  notes: Cross-listed with SOSC 21700 (its catalog block lists ANTH 37001 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from SOSC 21700.
+  crosslists:
+  - SOSC 21700
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: 'Equivalent Course(s): ANTH 27001, ANTH 37001, LING 20100, LING 30100'
+- code: ANTH 37002
+  title: Intro To Linguistics-2
+  units: 100
+  notes: Cross-listed with SOSC 21800 (its catalog block lists ANTH 37002 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from SOSC 21800.
+  crosslists:
+  - SOSC 21800
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: 'Equivalent Course(s): ANTH 37002, LING 30200, ANTH 27002, LING 20200'
+- code: ANTH 37003
+  title: Introduction To Linguistics-3
+  units: 100
+  notes: Cross-listed with SOSC 21900 (its catalog block lists ANTH 37003 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from SOSC 21900.
+  crosslists:
+  - SOSC 21900
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/socialsciences/
+    quote: 'Equivalent Course(s): LING 20300, ANTH 27003, LING 30300, ANTH 37003'

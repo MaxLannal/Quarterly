@@ -1,0 +1,265 @@
+# Generated from the 2026-2027 UChicago College Catalog (fetched 2026-11-12) by hand-checked scripts;
+# every source.quote is copied verbatim (whitespace collapsed) from source.url. See data/seed/REVIEW.md.
+courses:
+- code: CHEM 10100
+  title: Introductory General Chemistry I
+  units: 100
+  description: 'This three-quarter sequence is a systematic introduction to chemistry for beginning students in chemistry
+    or for those whose exposure to the subject has been moderate. We cover atomic and molecular theories, chemical periodicity,
+    chemical reactivity and bonding, chemical equilibria, acid-base equilibria, solubility equilibria, phase equilibria, thermodynamics,
+    electrochemistry, kinetics, quantum mechanics, and nuclear chemistry. Examples are drawn from chemical, biological, and
+    materials systems. The laboratory portion includes an introduction to quantitative measurements, investigation of the
+    properties of the important elements and their compounds, and experiments associated with the common ions and their separation
+    and identification. Apart from one discussion session per week and a laboratory component, special emphasis on scientific
+    problem-solving skills is made through two additional structured learning sessions per week devoted to quantitative reasoning.
+    Attendance at discussion, structured learning, and laboratory sessions is mandatory. FOR THE THIRD (SPRING) QUARTER OF
+    THE SEQUENCE, STUDENTS WILL ENROLL IN CHEM 11300. Prerequisite(s): Enrollment limited to first-year students Note(s):
+    Enrollment by placement only. The first two courses in this sequence meet the general education requirement in the physical
+    sciences.'
+  notes: Enrollment by placement only. The first two courses in this sequence meet the general education requirement in the
+    physical sciences. THE DEADLINE FOR LAB SECTION SWAP OR JOINING THE CLASS IS FRIDAY AT 5:00 PM, THE FIRST WEEK OF THE
+    QUARTER. An average grade of C or higher in the General Chemistry sequence, CHEM 10100-CHEM 10200-CHEM 11300 or CHEM 11100-11200-11300
+    Comprehensive General Chemistry I-II-III or CHEM 12100-12200-12300 Honors General Chemistry I-II-III, is a prerequisite
+    for enrollment in Organic Chemistry.
+  core_tags:
+  - physical_sciences
+  prereq_text: Enrollment limited to first-year students
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/chemistry/
+    quote: CHEM 10100. Introductory General Chemistry I. 100 Units.
+  needs_review: true
+- code: CHEM 10200
+  title: Introductory General Chemistry II
+  units: 100
+  description: 'This three-quarter sequence is a systematic introduction to chemistry for beginning students in chemistry
+    or for those whose exposure to the subject has been moderate. We cover atomic and molecular theories, chemical periodicity,
+    chemical reactivity and bonding, chemical equilibria, acid-base equilibria, solubility equilibria, phase equilibria, thermodynamics,
+    electrochemistry, kinetics, quantum mechanics, and nuclear chemistry. Examples are drawn from chemical, biological, and
+    materials systems. The laboratory portion includes an introduction to quantitative measurements, investigation of the
+    properties of the important elements and their compounds, and experiments associated with the common ions and their separation
+    and identification. Apart from one discussion session per week and a laboratory component, special emphasis on scientific
+    problem-solving skills is made through two additional structured learning sessions per week devoted to quantitative reasoning.
+    Attendance at discussion, structured learning, and laboratory sessions is mandatory. FOR THE THIRD (SPRING) QUARTER OF
+    THE SEQUENCE, STUDENTS WILL ENROLL IN CHEM 11300. Prerequisite(s): Enrollment limited to first-year students Note(s):
+    Enrollment by placement only. The first two courses in this sequence meet the general education requirement in the physical
+    sciences.'
+  notes: Enrollment by placement only. The first two courses in this sequence meet the general education requirement in the
+    physical sciences. THE DEADLINE FOR LAB SECTION SWAP OR JOINING THE CLASS IS FRIDAY AT 5:00 PM, THE FIRST WEEK OF THE
+    QUARTER. An average grade of C or higher in the General Chemistry sequence, CHEM 10100-CHEM 10200-CHEM 11300 or CHEM 11100-11200-11300
+    Comprehensive General Chemistry I-II-III or CHEM 12100-12200-12300 Honors General Chemistry I-II-III, is a prerequisite
+    for enrollment in Organic Chemistry.
+  core_tags:
+  - physical_sciences
+  prereq_text: Enrollment limited to first-year students
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/chemistry/
+    quote: CHEM 10200. Introductory General Chemistry II. 100 Units.
+  needs_review: true
+- code: CHEM 11100
+  title: Comprehensive General Chemistry I
+  units: 100
+  description: 'Enrollment by placement only. The first two courses in this sequence meet the general education requirement
+    in the physical sciences. This three-quarter sequence is a comprehensive survey of modern descriptive, inorganic, and
+    physical chemistry for students with a good secondary school exposure to general chemistry. We cover atomic and molecular
+    theories, chemical periodicity, chemical reactivity and bonding, chemical equilibria, acid-base equilibria, solubility
+    equilibria, phase equilibria, thermodynamics, electrochemistry, kinetics, quantum mechanics, and nuclear chemistry. Examples
+    are drawn from chemical, biological, and materials systems. The laboratory portion includes an introduction to quantitative
+    measurements, investigation of the properties of the important elements and their compounds, and experiments associated
+    with the common ions and their separation and identification. Attendance at one discussion session per week and laboratory
+    sessions is required. Prerequisite(s): Good performance on the mathematics/calculus and chemistry placement tests Note(s):
+    Enrollment by placement only. The first two courses in this sequence meet the general education requirement in the physical
+    sciences.'
+  notes: Enrollment by placement only. The first two courses in this sequence meet the general education requirement in the
+    physical sciences. THE DEADLINE FOR LAB SECTION SWAP OR JOINING THE CLASS IS FRIDAY AT 5:00 PM, THE FIRST WEEK OF THE
+    QUARTER. An average grade of C or higher in the General Chemistry sequence, CHEM 10100-CHEM 10200-CHEM 11300 or CHEM 11100-11200-11300
+    Comprehensive General Chemistry I-II-III or CHEM 12100-12200-12300 Honors General Chemistry I-II-III, is a prerequisite
+    for enrollment in Organic Chemistry.
+  core_tags:
+  - physical_sciences
+  prereq_text: Good performance on the mathematics/calculus and chemistry placement tests
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/chemistry/
+    quote: CHEM 11100. Comprehensive General Chemistry I. 100 Units.
+  needs_review: true
+- code: CHEM 11200
+  title: Comprehensive General Chemistry II
+  units: 100
+  description: Enrollment by placement only. The first two courses in this sequence meet the general education requirement
+    in the physical sciences. This three-quarter sequence is a comprehensive survey of modern descriptive, inorganic, and
+    physical chemistry for students with a good secondary school exposure to general chemistry. We cover atomic and molecular
+    theories, chemical periodicity, chemical reactivity and bonding, chemical equilibria, acid-base equilibria, solubility
+    equilibria, phase equilibria, thermodynamics, electrochemistry, kinetics, quantum mechanics, and nuclear chemistry. Examples
+    are drawn from chemical, biological, and materials systems. The laboratory portion includes an introduction to quantitative
+    measurements, investigation of the properties of the important elements and their compounds, and experiments associated
+    with the common ions and their separation and identification. Attendance at one discussion session per week and laboratory
+    sessions is required.
+  notes: Enrollment by placement only. The first two courses in this sequence meet the general education requirement in the
+    physical sciences. THE DEADLINE FOR LAB SECTION SWAP OR JOINING THE CLASS IS FRIDAY AT 5:00 PM, THE FIRST WEEK OF THE
+    QUARTER. An average grade of C or higher in the General Chemistry sequence, CHEM 10100-CHEM 10200-CHEM 11300 or CHEM 11100-11200-11300
+    Comprehensive General Chemistry I-II-III or CHEM 12100-12200-12300 Honors General Chemistry I-II-III, is a prerequisite
+    for enrollment in Organic Chemistry.
+  core_tags:
+  - physical_sciences
+  prereq_text: Good performance on the mathematics/calculus and chemistry placement tests
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/chemistry/
+    quote: CHEM 11200. Comprehensive General Chemistry II. 100 Units.
+  needs_review: true
+- code: CHEM 11300
+  title: Comprehensive General Chemistry III
+  units: 100
+  description: The first two courses in this sequence meet the general education requirement in the physical sciences. This
+    three-quarter sequence is a comprehensive survey of modern descriptive, inorganic, and physical chemistry for students
+    with a good secondary school exposure to general chemistry. We cover atomic and molecular theories, chemical periodicity,
+    chemical reactivity and bonding, chemical equilibria, acid-base equilibria, solubility equilibria, phase equilibria, thermodynamics,
+    electrochemistry, kinetics, quantum mechanics, and nuclear chemistry. Examples are drawn from chemical, biological, and
+    materials systems. The laboratory portion includes an introduction to quantitative measurements, investigation of the
+    properties of the important elements and their compounds, and experiments associated with the common ions and their separation
+    and identification. Attendance at one discussion session per week and laboratory sessions is required.
+  notes: Enrollment by placement only. The first two courses in this sequence meet the general education requirement in the
+    physical sciences. THE DEADLINE FOR LAB SECTION SWAP OR JOINING THE CLASS IS FRIDAY AT 5:00 PM, THE FIRST WEEK OF THE
+    QUARTER. An average grade of C or higher in the General Chemistry sequence, CHEM 10100-CHEM 10200-CHEM 11300 or CHEM 11100-11200-11300
+    Comprehensive General Chemistry I-II-III or CHEM 12100-12200-12300 Honors General Chemistry I-II-III, is a prerequisite
+    for enrollment in Organic Chemistry.
+  prereq_text: Good performance on the mathematics/calculus and chemistry placement tests
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/chemistry/
+    quote: CHEM 11300. Comprehensive General Chemistry III. 100 Units.
+  needs_review: true
+- code: CHEM 12100
+  title: Honors General Chemistry I
+  units: 100
+  description: Enrollment by placement only. The first two courses in this sequence meet the general education requirement
+    in the physical sciences. The subject matter and general program of this sequence is similar to that of the Comprehensive
+    General Chemistry sequence. However, this accelerated course on the subject matter is designed for students deemed well
+    prepared for a thorough and systematic study of chemistry. Introductory materials covered in the Comprehensive General
+    Chemistry sequence are not part of the curriculum for this sequence; instead, special topics are included in each quarter
+    to provide an in-depth examination of various subjects of current interest in chemistry. Please note that individual sections
+    in the Honors (120's) General Chemistry sequence may vary in some content and foci based on the instructor in a given
+    quarter. If you are curious about specific content please reach out to the instructor. Attendance at one discussion session
+    per week and laboratory sessions is required.
+  notes: Enrollment by placement only. The first two courses in this sequence meet the general education requirement in the
+    physical sciences. THE DEADLINE FOR LAB SECTION SWAP OR JOINING THE CLASS IS FRIDAY AT 5:00 PM, THE FIRST WEEK OF THE
+    QUARTER. An average grade of C or higher in the General Chemistry sequence, CHEM 10100-CHEM 10200-CHEM 11300 or CHEM 11100-11200-11300
+    Comprehensive General Chemistry I-II-III or CHEM 12100-12200-12300 Honors General Chemistry I-II-III, is a prerequisite
+    for enrollment in Organic Chemistry.
+  core_tags:
+  - physical_sciences
+  prereq_text: Good performance on the mathematics/calculus and chemistry placement tests
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/chemistry/
+    quote: CHEM 12100. Honors General Chemistry I. 100 Units.
+  needs_review: true
+- code: CHEM 12200
+  title: Honors General Chemistry II
+  units: 100
+  description: Enrollment by placement only. The first two courses in this sequence meet the general education requirement
+    in the physical sciences. The subject matter and general program of this sequence is similar to that of the Comprehensive
+    General Chemistry sequence. However, this accelerated course on the subject matter is designed for students deemed well
+    prepared for a thorough and systematic study of chemistry. Introductory materials covered in the Comprehensive General
+    Chemistry sequence are not part of the curriculum for this sequence; instead, special topics are included in each quarter
+    to provide an in-depth examination of various subjects of current interest in chemistry. Please note that individual sections
+    in the Honors (120's) General Chemistry sequence may vary in some content and foci based on the instructor in a given
+    quarter. If you are curious about specific content please reach out to the instructor. Attendance at one discussion session
+    per week and laboratory sessions is required.
+  notes: Enrollment by placement only. The first two courses in this sequence meet the general education requirement in the
+    physical sciences. THE DEADLINE FOR LAB SECTION SWAP OR JOINING THE CLASS IS FRIDAY AT 5:00 PM, THE FIRST WEEK OF THE
+    QUARTER. An average grade of C or higher in the General Chemistry sequence, CHEM 10100-CHEM 10200-CHEM 11300 or CHEM 11100-11200-11300
+    Comprehensive General Chemistry I-II-III or CHEM 12100-12200-12300 Honors General Chemistry I-II-III, is a prerequisite
+    for enrollment in Organic Chemistry.
+  core_tags:
+  - physical_sciences
+  prereq_text: Good performance on the mathematics/calculus and chemistry placement tests
+  terms_offered:
+  - WI
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/chemistry/
+    quote: CHEM 12200. Honors General Chemistry II. 100 Units.
+  needs_review: true
+- code: CHEM 12400
+  title: The Chemistry of Big Problems
+  units: 100
+  notes: Cross-listed with PHSC 12400 (its catalog block lists CHEM 12400 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from PHSC 12400.
+  crosslists:
+  - PHSC 12400
+  prereq_text: Some previous background in Chemistry is recommended.
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: 'Equivalent Course(s): CHEM 12400'
+- code: CHEM 12500
+  title: Molecular Mechanisms of Human Disease
+  units: 100
+  notes: Cross-listed with PHSC 12500 (its catalog block lists CHEM 12500 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from PHSC 12500.
+  crosslists:
+  - PHSC 12500
+  prereq_text: Some previous background in Chemistry recommended
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: 'Equivalent Course(s): CHEM 12500'
+- code: CHEM 12600
+  title: The Chemistry of Food and Cooking
+  units: 100
+  notes: Cross-listed with PHSC 12200 (its catalog block lists CHEM 12600 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from PHSC 12200.
+  crosslists:
+  - PHSC 12200
+  prereq_text: Some previous background in Chemistry is recommended
+  terms_offered:
+  - SP
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: 'Equivalent Course(s): CHEM 12600'
+- code: CHEM 12900
+  title: The Chemistry of Artists' Materials
+  units: 100
+  description: The goal of this course is to understand the fundamentals of molecular structure as applied to dyes, pigments,
+    and other materials used in art and crafts. Students will gain general scientific literacy skills and engage with fundamental
+    laboratory techniques in an inherently interdisciplinary way. The first part of the course will delve into molecular structure
+    of organic dyes and inorganic pigments as well as principles behind how visible light interacts with these compounds to
+    produce the colors we see. The fundamental set of techniques used to probe and explore these processes is called spectroscopy;
+    these techniques will play a large role in the laboratory component. Throughout the rest of the course, a number of case
+    studies of these principles will be investigated, including natural v. synthetic dyes and historical dye extraction processes,
+    conservation and restoration of fine art, pigments and materials used in pottery, and the chemistry of stained glass.
+    Additional topics will be driven by student interest. Course assignments will include readings, class discussions, homework
+    sets, lab reports, and a final written pape
+  notes: PHSC 12200 The Chemistry of Food and Cooking PHSC 12400 The Chemistry of Big Problems, and PHSC 12500 Molecular Mechanisms
+    of Human Disease. Students who have credit for CHEM 10100, 11100, or 12100 by either taking the course or by AP credit
+    (for CHEM 11100) and do not wish to take CHEM 10200, 11200, or 12200 may complete the general education requirement with
+    any of the PHSC courses offered by the Department of Chemistry.
+  crosslists:
+  - PHSC 12900
+  terms_offered:
+  - AU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/chemistry/
+    quote: CHEM 12900. The Chemistry of Artists' Materials. 100 Units.
+- code: CHEM 13000
+  title: 'Exploring the Organic Chemistry of Medicinal Plants: From Field to Laboratory'
+  units: 100
+  notes: Cross-listed with PHSC 13000 (its catalog block lists CHEM 13000 under Equivalent Course(s)); no separate block was
+    fetched, so title, units, prerequisites and terms are copied from PHSC 13000.
+  crosslists:
+  - PHSC 13000
+  terms_offered:
+  - SU
+  source:
+    url: http://collegecatalog.uchicago.edu/thecollege/physicalsciences/
+    quote: 'Equivalent Course(s): CHEM 13000'
