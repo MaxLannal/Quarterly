@@ -636,3 +636,14 @@ Four items and half of the fifth resolved; TRNC 10100 is in progress (below).
 - Fix: `planner_core.generator` skips `credit_only` courses as candidates, and the API's elective-choice step skips them too. Test: `test_never_places_a_credit_only_course` (control: untagged it is placed). Journeys A-D pass with TRNC in the catalog; four in-app runs of journey A's plan never place it.
 - Possible follow-up: the course page's "Add to plan" still shows for TRNC (the course API sends no tags); a student who adds it to a quarter gets a "not on the schedule" warning from the plan check.
 
+
+## Full course catalog from the original crawl (2026-11-16, 22:30-)
+- **Gap:** the hand-checked seed had 1,274 of the catalog's courses; the original crawl (the prototype's `data/`, fetched 2026-11-08, never committed) has 6,472 entries plus their cross-listed codes. 43 subjects had no courses at all.
+- **Import:** `scripts/import_crawl_courses.py` adds only the codes the seed lacks, into one file, `data/seed/2026-27/courses/zz_crawl_import.yaml` (10,027 courses: 5,297 catalog entries and 4,730 cross-listed codes). The 85 hand-checked files are untouched.
+  - Every `source.quote` was found verbatim (whitespace collapsed) on the saved page it cites; none had to be skipped. Cross-listed codes quote the page's "Equivalent Course(s)" line, as the seed does.
+  - Every added course is `needs_review: true`. Prerequisites stay text (`prereq_text`); no structured `prereq` rules were written, so the plan check's prerequisite warnings cover only the hand-checked courses.
+  - `terms_offered` is set only when "Terms Offered" is a plain list of quarters and does not say "not offered" this year (8,185 of 10,027).
+  - Left out: 208 sequence headers (`ANTH 20701-20702-20703`); their parts are entries of their own.
+- **Loader fix:** `seed.loader._upsert` sent all rows in one statement, past Postgres's 65,535-parameter limit at about 5,000 courses. It now inserts in batches (`MAX_PARAMS`).
+- **Checks:** seed loads 11,301 courses, 2,699 cross-list groups, 4,012 requisite texts, 27,513 offering patterns. No crawl code is missing from the database. Deterministic generation (core + cmsc-bs) gives two valid plans in about 1 s. `api.cli golden`: PASS=115. ruff clean on the changed files.
+- **Not run:** `make check` and `make e2e` (journeys A-D use the generator's 4 s limit, which a larger catalog could affect).

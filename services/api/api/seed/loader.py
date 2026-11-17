@@ -12,18 +12,23 @@ from planner_core.terms import parse_term
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.orm import Session
 
+#: Postgres accepts at most 65535 bind parameters per statement; stay well below it.
+MAX_PARAMS = 30000
+
 
 def _upsert(session: Session, table: Any, rows: list[dict[str, Any]], keys: list[str]) -> None:
     if not rows:
         return
-    stmt = insert(table).values(rows)
-    update = {c: stmt.excluded[c] for c in rows[0] if c not in keys}
-    stmt = (
-        stmt.on_conflict_do_update(index_elements=keys, set_=update)
-        if update
-        else stmt.on_conflict_do_nothing()
-    )
-    session.execute(stmt)
+    batch = max(1, MAX_PARAMS // len(rows[0]))
+    for start in range(0, len(rows), batch):
+        stmt = insert(table).values(rows[start : start + batch])
+        update = {c: stmt.excluded[c] for c in rows[0] if c not in keys}
+        stmt = (
+            stmt.on_conflict_do_update(index_elements=keys, set_=update)
+            if update
+            else stmt.on_conflict_do_nothing()
+        )
+        session.execute(stmt)
 
 
 def upsert_bundle(session: Session, bundle: SeedBundle) -> dict[str, int]:
