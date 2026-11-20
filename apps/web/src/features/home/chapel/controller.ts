@@ -343,7 +343,7 @@ export class ChapelController {
     let ground = Math.min(h - 10, f.oy + f.h * Math.min(0.995, chapel.y1 + 0.012));
     if (!side) ground = Math.min(ground, uiTop);
     // on a phone the lamps stand above the controls, a little shorter so the switch stays clear
-    const height = Math.max(140, Math.min(h * 0.52, 470, side ? ground - 30 : ground * 0.68));
+    const height = Math.max(120, Math.min(h * 0.36, 290, side ? ground - 30 : ground * 0.55));
     const clampX = (x: number) => Math.max(w * 0.07, Math.min(w * 0.93, x));
     let left = clampX(f.ox + f.w * (chapel.x0 - 0.035));
     if (side) left = Math.max(left, uiRight);

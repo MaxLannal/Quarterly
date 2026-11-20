@@ -187,19 +187,21 @@ float lampOne(vec2 c, float lx, float gy, float H, out float glass) {
   float dx = abs(c.x - lx);
   float y = gy - c.y;
   float iron = 0.0;
-  if (y > 0.0 && y < H * 0.08 && dx < H * (0.095 - y / H * 0.5)) iron = 1.0;
-  if (y > 0.0 && y < H * 0.77 && dx < H * 0.033) iron = 1.0;
-  if (abs(y - H * 0.6) < H * 0.016 && dx < H * 0.058) iron = 1.0;
-  if (abs(y - H * 0.765) < H * 0.016 && dx < H * 0.088) iron = 1.0;
+  // about two letters wide at any size: thinner than that and the post falls apart into dots
+  float post = max(H * 0.032, 10.0);
+  if (y > 0.0 && y < H * 0.07 && dx < post * 2.6 - y * 0.25) iron = 1.0;
+  if (y > 0.0 && y < H * 0.77 && dx < post) iron = 1.0;
+  if (abs(y - H * 0.6) < H * 0.013 && dx < post * 1.9) iron = 1.0;
+  if (abs(y - H * 0.765) < H * 0.013 && dx < post * 3.0) iron = 1.0;
   float ly = (y - H * 0.778) / (H * 0.15);
-  if (ly >= 0.0 && ly <= 1.0 && dx < H * (0.064 + 0.026 * ly)) {
+  if (ly >= 0.0 && ly <= 1.0 && dx < post * (1.9 + 0.6 * ly)) {
     glass = 1.0;
     // the lantern's frame: a mullion down the middle
-    if (dx < H * 0.008) { glass = 0.0; iron = 1.0; }
+    if (dx < H * 0.005) { glass = 0.0; iron = 1.0; }
   }
   float cy = (y - H * 0.928) / (H * 0.075);
-  if (cy >= 0.0 && cy <= 1.0 && dx < H * 0.11 * (1.0 - cy)) iron = 1.0;
-  if (abs(y - H * 1.02) < H * 0.016 && dx < H * 0.016) iron = 1.0;
+  if (cy >= 0.0 && cy <= 1.0 && dx < post * 3.0 * (1.0 - cy)) iron = 1.0;
+  if (abs(y - H * 1.02) < H * 0.012 && dx < H * 0.011) iron = 1.0;
   return iron;
 }
 
@@ -211,7 +213,7 @@ float snowfall(vec2 c, float t) {
   for (int layer = 0; layer < 3; layer++) {
     float fl = float(layer);
     float cell = 30.0 + fl * 20.0;
-    float size = 5.5 + fl * 2.8;
+    float size = 3.0 + fl * 1.4;
     float col = floor(c.x / cell);
     float r = hash(vec2(col, fl * 7.13 + 1.0));
     float r2 = hash(vec2(col * 1.7 + 3.0, fl + 3.1));
@@ -322,32 +324,34 @@ void main() {
     // a disc of pale letters is the moon; the stone is moonlit, the trees frosted, the lawn and
     // paths under snow; the great window glows warm.
     float hy = clamp(c.y / max(1.0, uView.y), 0.0, 1.0);
-    vec3 skyCol = mix(vec3(0.02, 0.03, 0.11), vec3(0.13, 0.12, 0.32), smoothstep(0.0, 0.9, hy));
+    vec3 skyCol = mix(vec3(0.015, 0.02, 0.08), vec3(0.08, 0.075, 0.22), smoothstep(0.0, 0.9, hy));
     float md = length(c - uMoon.xy) / max(1.0, uMoon.z);
     float moon = 1.0 - smoothstep(0.9, 1.0, md);
     float halo = exp(-pow(max(0.0, md - 1.0) * 1.3, 2.0)) * (1.0 - moon);
-    skyCol = mix(skyCol, vec3(0.5, 0.53, 0.82), halo * 0.75);
-    skyCol = mix(skyCol, vec3(1.0, 0.95, 0.78), moon);
+    skyCol = mix(skyCol, vec3(0.42, 0.45, 0.78), halo * 0.75);
+    skyCol = mix(skyCol, vec3(0.93, 0.72, 0.3), moon);
     float h1 = hash(aPos.xy * 0.731);
     float star = step(0.972, h1) * (1.0 - moon) * (1.0 - halo)
       * (0.65 + 0.35 * sin(uTime * (0.9 + h1 * 2.6) + h1 * 60.0) * uMotion);
-    skyCol = mix(skyCol, vec3(1.0, 0.93, 0.72), clamp(star, 0.0, 1.0));
+    skyCol = mix(skyCol, vec3(0.95, 0.74, 0.32), clamp(star, 0.0, 1.0));
     vec3 trees = mix(vec3(0.08, 0.11, 0.24), vec3(0.3, 0.36, 0.6), tone);
     vec3 snow = mix(vec3(0.78, 0.84, 0.96), vec3(0.95, 0.97, 1.0), clamp(tone + 0.2, 0.0, 1.0));
-    vec3 nc = mix(trees, nightStoneRamp(tone * 0.88), aLook.y);
+    // the stone by moonlight: a solid blue, deep in shadow and lavender where the moon falls, so
+    // the chapel reads as a building on the page by its colour (the type keeps its size)
+    vec3 nc = mix(trees, nightStoneRamp(mix(0.0, 0.55, tone)), aLook.y);
     // under snow: the lawn and the paths, and everything in front of the chapel's ground line
     float ground = smoothstep(uLamps.z - 24.0, uLamps.z + 16.0, c.y) * step(1.0, uLamps.w);
     float snowy = max(aRelief.w, ground) * (1.0 - aLook.y);
     nc = mix(nc, snow, snowy);
     nc = mix(nc, skyCol, sky);
-    nc = mix(nc, vec3(1.0, 0.72, 0.34), clamp(aLook.z * 1.4, 0.0, 0.9));
+    nc = mix(nc, vec3(0.98, 0.66, 0.28), clamp(aLook.z * 1.1, 0.0, 0.6));
     // the lamps' light: an amber halo round each lantern and an orange pool on the snow below
     float flicker = 0.93 + 0.07 * sin(uTime * 9.0) * sin(uTime * 2.3 + 1.0) * uMotion;
     float light = 0.0;
     float pool = 0.0;
     for (int i = 0; i < 2; i++) {
       float lx = i == 0 ? uLamps.x : uLamps.y;
-      vec2 q = (c - vec2(lx, uLamps.z - uLamps.w * 0.85)) / (uLamps.w * 0.42);
+      vec2 q = (c - vec2(lx, uLamps.z - uLamps.w * 0.85)) / (uLamps.w * 0.3);
       light += exp(-dot(q, q));
       vec2 p2 = (c - vec2(lx, uLamps.z)) / vec2(uLamps.w * 0.75, uLamps.w * 0.2);
       pool += exp(-dot(p2, p2));
@@ -357,11 +361,11 @@ void main() {
     nc = mix(nc, vec3(1.0, 0.62, 0.24), light * 0.8);
     nc = mix(nc, vec3(1.0, 0.6, 0.28), pool * mix(0.45, 0.92, snowy));
     col = mix(col, nc, uNight);
-    // the sky's letters fill in at night (bigger and nearly opaque), so the sky reads dark
-    alpha = mix(alpha, max(alpha, 0.97 * fade), uNight * sky);
+    // the sky's letters fill in at night (nearly opaque), so the sky reads dark
+    // a dim navy sky (under half opaque) so the solid blue chapel stands out from it, as by day;
+    // the moon and the stars are fully drawn
+    alpha = mix(alpha, max(alpha, mix(0.4, 0.97, max(moon, star)) * fade), uNight * sky);
     alpha = mix(alpha, max(alpha, light * 0.9 * fade), uNight * (1.0 - sky));
-    // overlapping letters make a dark field; the moon and the stars stay crisp
-    scale *= 1.0 + 0.7 * uNight * sky * (1.0 - max(moon, star));
   }
   if (lampAny > 0.0) {
     // cast iron: near black by day; at night dark, catching the lantern's light near the top
@@ -372,19 +376,17 @@ void main() {
     col = mix(col, ironCol, iron);
     col = mix(col, glassCol, glass);
     alpha = mix(alpha, 0.98 * fade, lampAny);
-    // the lamp's letters overlap into a solid silhouette
-    scale *= 1.0 + 0.45 * lampAny;
   }
   if (uNight > 0.001) {
-    // snowflakes: bright letters that drift down through the sky, lifted a little so they glow
-    // over their neighbours; near a lamp they catch its orange light
+    // snowflakes: small bright letters drifting down through the sky (barely lifted, so the type
+    // keeps its size); near a lamp they catch its orange light
     float flake = snowfall(c, uTime) * uNight * (1.0 - clear);
     vec2 qa = (c - vec2(uLamps.x, uLamps.z - uLamps.w * 0.85)) / (uLamps.w * 0.6);
     vec2 qb = (c - vec2(uLamps.y, uLamps.z - uLamps.w * 0.85)) / (uLamps.w * 0.6);
     float warm = clamp(exp(-dot(qa, qa)) + exp(-dot(qb, qb)), 0.0, 1.0);
     col = mix(col, mix(vec3(0.97, 0.98, 1.0), vec3(1.0, 0.8, 0.5), warm), flake);
     alpha = mix(alpha, 0.98, flake * fade);
-    lift = max(lift, flake * 0.45);
+    lift = max(lift, flake * 0.05);
   }
   col = mix(col, uHoverColor, hov);
   alpha = mix(alpha, 1.0, clamp(max(lift * 1.4, hov), 0.0, 1.0) * e);

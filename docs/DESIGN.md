@@ -650,9 +650,10 @@ Richard: where it conflicts with the sections above, this section describes what
   keeps to two rows. (A dark "glass and flowing red" theme was tried and withdrawn the same day.)
 - **Day and night on the homepage** (Max, 2026-11-20): a Day / Night switch at the top right of the
   hero (remembered on the device). Everything is painted in the chapel's course titles by the shader,
-  with no separate layers: two street lamps flank the chapel by day and night (iron letters, a gold
-  lantern by day); at night the sky's titles grow dense and deep blue with a few twinkling star
-  letters and a moon of pale letters, snow falls as bright lifted letters, the stone is moonlit, the
-  lawn and paths are under snow, and the lanterns glow orange, warming the snow and the letters
-  around them. Reduced motion: a still night (no falling snow, no twinkle).
+  with no separate layers and no enlarged type: two slim street lamps (about two letters wide)
+  flank the chapel by day and night (iron letters, a gold lantern by day); at night the sky's titles
+  turn a dim navy with a few twinkling gold star letters and a moon of gold letters, small snowflakes
+  drift down as bright letters, the stone is a deep moonlit blue, the lawn and paths are under snow,
+  and the lanterns glow orange, warming the snow and the letters near them. Reduced motion: a still
+  night (no falling snow, no twinkle).
 
