@@ -204,7 +204,7 @@ function DashboardBody({ profile }: { profile: Profile }) {
       <PageContainer className="flex flex-col gap-6 pt-8 sm:gap-8 sm:pt-10">
         <div className="grid gap-6 lg:grid-cols-12">
           <div className="lg:col-span-8">
-            <GuideCard profile={profile} onOpen={openGuide} onDraftRoutes={draftRoutes} />
+            <GuideCard profile={profile} onOpen={openGuide} onDraftRoutes={draftRoutes} paused={open} />
           </div>
           <div className="lg:col-span-4">
             <IdentityCard profile={profile} />

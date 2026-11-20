@@ -57,15 +57,15 @@ export function useFeed(who: string, tab: FeedTab, categories: string, enabled =
 }
 
 /** The AI curator's notes and headline for one page of items (deterministic when the AI is off). */
-export function useFeedNotes(who: string, tab: FeedTab, categories: string, ids: string[], enabled = true) {
-  return useQuery({
+export function feedNotesQuery(who: string, tab: FeedTab, categories: string, ids: string[]) {
+  return {
     queryKey: feedKeys.notes(who, tab, categories, ids),
-    queryFn: async () =>
+    queryFn: async (): Promise<FeedNotes> =>
       unwrap(await api.POST("/agents/feed-notes", { body: { item_ids: ids, tab, categories } })),
-    enabled: enabled && ids.length > 0,
+    enabled: ids.length > 0,
     staleTime: 60 * 60_000,
     retry: false,
-  });
+  };
 }
 
 /** Save the focus categories to the profile (the dashboard's PATCH /me/profile). */

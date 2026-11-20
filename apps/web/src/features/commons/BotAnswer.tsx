@@ -115,7 +115,7 @@ export function BotAnswerCard({
   return (
     <section
       aria-labelledby={`bot-${thread.id}`}
-      className="relative overflow-hidden rounded-xl border border-hairline bg-surface-card py-5 pl-6 pr-5 sm:py-6 sm:pl-8 sm:pr-7"
+      className="relative overflow-clip rounded-xl border border-hairline bg-surface-card py-5 pl-6 pr-5 sm:py-6 sm:pl-8 sm:pr-7"
     >
       <span aria-hidden="true" className="absolute inset-y-0 left-0 w-1 bg-primary" />
       <span aria-hidden="true" className="pointer-events-none absolute -right-16 -top-20 size-56 rounded-pill bg-primary/5 blur-2xl" />
@@ -140,9 +140,9 @@ export function BotAnswerCard({
           </div>
         )}
         {!run && !reply && <BotSteps steps={[]} />}
+        {regenerating && run && <BotSteps steps={run.steps} />}
         {reply && (
-          <div className={cn("flex flex-col gap-4", regenerating ? "opacity-50" : "animate-rise")}>
-            {regenerating && run && <BotSteps steps={run.steps} />}
+          <div className={cn("flex flex-col gap-4", regenerating ? "pointer-events-none opacity-40" : "animate-rise")} aria-busy={regenerating || undefined}>
             <Body html={reply.body_html} />
             <CitationChips citations={reply.citations} />
             <div className="flex flex-wrap items-center gap-x-3 gap-y-2 border-t border-hairline pt-3">
@@ -201,7 +201,7 @@ export function AcceptedMark() {
 /** A bot reply inside the tree (summoned with @quarterly), or its live run. */
 export function BotReplyInline({ reply, steps, busy, error }: { reply?: Reply; steps?: BotStep[]; busy?: boolean; error?: string }) {
   return (
-    <div className="relative overflow-hidden rounded-lg border border-hairline bg-canvas-soft py-3 pl-5 pr-4">
+    <div className="relative overflow-clip rounded-lg border border-hairline bg-canvas-soft py-3 pl-5 pr-4">
       <span aria-hidden="true" className="absolute inset-y-0 left-0 w-[3px] bg-primary" />
       <div className="flex flex-col gap-3">
         <Header compact day={reply?.created_day} edited={reply?.edited_day} />

@@ -18,7 +18,8 @@ Topics, in this order (one question at a time):
 2. `interests`: what pulls at them, across STEM, the humanities, the social sciences, the arts.
 3. `humanities`: every student takes Humanities in the Core. Do they want it just to pass, a
    balance, to enjoy specific topics, or to go deep? If they want to enjoy or go deep, ask which
-   topics specifically (Greek tragedy, film, philosophy of mind, poetry...).
+   topics specifically (Greek tragedy, film, philosophy of mind, poetry...). Humanities topics in
+   the profile do not answer the goal: until `humanities_goal` is known, this topic is open.
 4. `research`: questions or areas they would like to work on with a professor.
 5. `career`: plans after the College; a direction is enough.
 6. `future`: fields they want to head toward (for example quantum computing). Make vague

@@ -87,7 +87,7 @@ function Related({ thread }: { thread: ThreadDetail }) {
             <li key={t.id}>
               <Link to={threadPath(t.id)} className="flex min-h-11 items-center justify-between gap-3 rounded-xs py-1 text-body-sm text-ink hover:text-primary">
                 <span className="min-w-0">{t.title}</span>
-                <span className="shrink-0 text-caption text-muted">{t.answer_count}</span>
+                <span className="shrink-0 text-caption text-muted">{plural(t.answer_count, "answer")}</span>
               </Link>
             </li>
           ))}

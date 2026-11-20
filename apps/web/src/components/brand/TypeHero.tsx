@@ -84,7 +84,7 @@ export function TypeHero({
       {/* The veil keeps the text readable where the titles run under it. */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(90deg,var(--color-canvas)_0%,color-mix(in_srgb,var(--color-canvas)_88%,transparent)_38%,transparent_62%)] max-[899px]:bg-[linear-gradient(180deg,color-mix(in_srgb,var(--color-canvas)_30%,transparent)_0%,color-mix(in_srgb,var(--color-canvas)_92%,transparent)_55%,var(--color-canvas)_100%)]"
+        className="pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(90deg,var(--color-canvas)_0%,color-mix(in_srgb,var(--color-canvas)_88%,transparent)_38%,transparent_62%)] max-[899px]:bg-[linear-gradient(180deg,color-mix(in_srgb,var(--color-canvas)_10%,transparent)_0px,color-mix(in_srgb,var(--color-canvas)_82%,transparent)_140px,color-mix(in_srgb,var(--color-canvas)_96%,transparent)_190px,var(--color-canvas)_100%)]"
       />
       <div
         className={cn(

@@ -1,5 +1,7 @@
-import { render } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { render, screen } from "@testing-library/react";
+import { afterEach, describe, expect, it } from "vitest";
+import { resetCommonsMock } from "@/mocks/commons";
+import { renderRoute } from "@/test-utils";
 import { MarkdownPreview, parseBlocks, parseInline, safeHref } from "./markdown";
 import { applyFormat, applyMention, dayWords, findMention, searchTerms, summonsBot, toTag } from "./text";
 
@@ -127,5 +129,32 @@ describe("helpers", () => {
     expect(dayWords("2026-11-19", today)).toBe("yesterday");
     expect(dayWords("2026-11-10", today)).toBe("last week");
     expect(dayWords("2026-09-01", today)).toBe("2 months ago");
+  });
+});
+
+describe("Commons pages (mock API)", () => {
+  afterEach(() => resetCommonsMock());
+
+  it("lists questions to logged-out readers", async () => {
+    renderRoute("/forum");
+    const title = await screen.findByText(/is TEST 10000 fine without background/);
+    expect(title.closest("a")).toHaveAttribute("href", "/forum/t/1");
+    expect(screen.getByText("Hot").closest("[role=tab]")).toHaveAttribute("aria-selected", "true");
+    expect(screen.getAllByText("AI answered").length).toBeGreaterThan(0);
+  });
+
+  it("shows a thread with the AI's answer, its sources and the reply tree", async () => {
+    renderRoute("/forum/t/1");
+    expect((await screen.findByText(/is TEST 10000 fine/, { selector: "h1" })).tagName).toBe("H1");
+    expect(await screen.findByText("Fake AI answer: TEST 10000 has no prerequisite.")).toBeInTheDocument();
+    expect(screen.getAllByText(/Written by an AI and can be wrong/).length).toBeGreaterThan(0);
+    expect(screen.getByText("TEST 10000 · Fake Introduction I").closest("a")).toHaveAttribute("href", "/courses/TEST%2010000");
+    expect(screen.getByText("Fake nested reply.")).toBeInTheDocument();
+    expect(screen.getByText(/Log in to answer/)).toBeInTheDocument();
+  });
+
+  it("starts the bot on a pending question and shows its answer", async () => {
+    renderRoute("/forum/t/2");
+    expect(await screen.findByText(/Fake AI answer about FAKE 11000/)).toBeInTheDocument();
   });
 });

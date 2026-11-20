@@ -58,7 +58,8 @@ logger = logging.getLogger("api.agents")
 
 TASK = "a7_routes"
 PROMPT = "a7_routes"
-BUDGET = Budget(tool_calls=18, tokens=400_000, seconds=150)
+#: Drafting reads many courses (the model calls several tools at once): room for ~40 reads.
+BUDGET = Budget(tool_calls=40, tokens=500_000, seconds=170)
 TOOLS = ("list_programs", "get_program", "search_courses", "get_course")
 #: A drafted route needs at least this many real courses (else one repair turn).
 MIN_COURSES = 5
@@ -367,7 +368,7 @@ class RoutesRun:
                 else:
                     result = item
         except AgentError as exc:
-            logger.info("%s: no routes (%s)", TASK, exc.reason)
+            logger.warning("%s: no routes, assembled by rules (%s)", TASK, exc.reason)
         finally:
             self._save_log()
         if result is None:

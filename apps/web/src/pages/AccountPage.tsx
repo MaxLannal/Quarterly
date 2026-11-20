@@ -4,7 +4,7 @@ import { PageContainer, PageHeader } from "@/components/layout/page";
 import { Button } from "@/components/ui/button";
 import { Avatar } from "@/components/ui/card";
 import { api, attempt, type AccountOut } from "@/features/auth/api";
-import { signedOut, useSession } from "@/features/auth/session";
+import { forgetPersonalDevice, signedOut, useSession } from "@/features/auth/session";
 import { FormError, linkClass, Notice, PASSWORD_HINT, passwordProblem, TextField } from "@/features/auth/ui";
 
 function ChangePassword() {
@@ -152,6 +152,7 @@ function DeleteAccount() {
       setError(result.message);
       return;
     }
+    forgetPersonalDevice();
     signedOut();
     navigate("/");
   }
@@ -234,6 +235,7 @@ export default function AccountPage() {
     setBusy(true);
     await attempt(() => api.POST("/auth/logout"));
     setBusy(false);
+    forgetPersonalDevice();
     signedOut();
     navigate("/login");
   }

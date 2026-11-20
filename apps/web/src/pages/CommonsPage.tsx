@@ -213,7 +213,7 @@ export default function CommonsPage() {
       </TypeHero>
 
       <div className="mx-auto w-full max-w-content px-4 pb-24 sm:px-6 lg:px-8">
-        <div className="sticky top-0 z-20 -mx-4 border-b border-hairline bg-canvas/95 px-4 pb-3 pt-3 backdrop-blur supports-[backdrop-filter]:bg-canvas/85 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+        <div className="z-20 -mx-4 border-b sm:sticky sm:top-0 border-hairline bg-canvas/95 px-4 pb-3 pt-3 backdrop-blur supports-[backdrop-filter]:bg-canvas/85 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
           <div className="flex flex-col gap-3">
             <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
               <div role="tablist" aria-label="Sort questions" className="-mx-1 flex max-w-full gap-0.5 overflow-x-auto px-1 [scrollbar-width:none]">

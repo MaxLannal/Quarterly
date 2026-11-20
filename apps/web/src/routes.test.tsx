@@ -2,7 +2,7 @@ import { screen, waitFor } from "@testing-library/react";
 import { renderRoute } from "./test-utils";
 
 const CASES: [string, string][] = [
-  ["/", "Quarterly"],
+  ["/", "The Best of UChicago, within your reach."],
   ["/plan", "Planner"],
   ["/onboarding", "Planner setup"],
   ["/courses", "Course search"],

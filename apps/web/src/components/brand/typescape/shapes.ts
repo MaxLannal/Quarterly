@@ -115,6 +115,15 @@ function river(x: number, y: number, f: Frame): Sample {
 
 /** A cloister arcade: masonry of titles, pointed openings that glow like voices. */
 function arcade(x: number, y: number, f: Frame): Sample {
+  // On wide screens the cloister stands on the right, clear of the page title on the left.
+  const start = f.w >= 900 ? f.w * 0.5 : 0;
+  const fade = start ? clamp01((x - start) / 140) : 1;
+  if (fade <= 0) return { a: 0, tone: 0 };
+  const s = arcadeAt(x, y, f);
+  return { a: s.a * fade, tone: s.tone };
+}
+
+function arcadeAt(x: number, y: number, f: Frame): Sample {
   const n = Math.max(3, Math.round(f.w / 230));
   const bay = f.w / n;
   const i = Math.floor(x / bay);

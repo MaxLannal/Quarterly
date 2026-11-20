@@ -1,4 +1,4 @@
-import { forwardRef, useEffect, useId, useImperativeHandle, useRef, useState, type CSSProperties, type ReactNode } from "react";
+import { forwardRef, useEffect, useId, useImperativeHandle, useRef, useState, type ReactNode } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Dialog } from "@/components/ui/dialog";
@@ -7,6 +7,7 @@ import { Input, Textarea } from "@/components/ui/input";
 import { Menu } from "@/components/ui/menu";
 import { Badge, Notice } from "@/components/ui/misc";
 import { newLocalId, today, upsertPlan } from "@/features/planner/localPlans";
+import { termLabel } from "@/features/planner/terms";
 import { cn } from "@/lib/utils";
 import { errorText, streamRoutes, useRouteActions, useRoutes, type Profile, type ProgramRef, type Route, type RouteCourse, type RouteIn, type StepEvent } from "./api";
 import { byYear, courseHref, KIND_LABELS, programHref, ROLE_LABELS, routePlanState } from "./logic";
@@ -178,8 +179,8 @@ export const RoutesSection = forwardRef<RoutesHandle, { profile: Profile }>(func
             </div>
           </div>
           <ul className="grid gap-4 lg:grid-cols-3">
-            {drafts.map((d, i) => (
-              <li key={d.key} className="dash-rise min-w-0" style={{ "--delay": `${i * 80}ms` } as CSSProperties}>
+            {drafts.map((d) => (
+              <li key={d.key} className="min-w-0">
                 <RouteCard
                   route={d.route}
                   programs={d.programs}
@@ -428,9 +429,9 @@ function SavedRoute({ route, profile, comparing, onCompare }: { route: Route; pr
       <Dialog open={planning} onClose={() => setPlanning(false)} title="Open this route in the planner" description="Quarterly makes a new plan from it in this browser; your other plans stay as they are.">
         <ul className="mb-4 flex list-disc flex-col gap-1.5 pl-5 text-body-sm text-body">
           <li>
-            {placed} course{placed === 1 ? "" : "s"} placed by year and quarter, starting {plan.state.entry_term.replace("-AU", "")} (from your class year{profile.class_year ? "" : ", not set yet, so Autumn 2026"}).
+            {placed} course{placed === 1 ? "" : "s"} placed by year and quarter, starting {termLabel(plan.state.entry_term)} (from your class year{profile.class_year ? "" : ", not set yet"}).
           </li>
-          {route.courses.some((c) => !c.quarter) && <li>Courses without a usual quarter go to the lightest quarter of their year.</li>}
+          {route.courses.some((c) => !c.quarter) && <li>Courses without a set quarter go to the lightest quarter of their year in which they are usually offered.</li>}
           {route.program_ids.length > 0 && <li>Programs: {route.programs.map((p) => p.name).join(", ")}.</li>}
           {plan.skipped.length > 0 && <li>Not placed (a summer after the last year): {plan.skipped.join(", ")}.</li>}
           <li>Milestones, notes and fit scores stay here on your dashboard. The planner checks every rule and prerequisite.</li>
@@ -569,7 +570,7 @@ function Timeline({ courses, compact }: { courses: RouteCourse[]; compact: boole
             {list.length === 0 ? (
               <p className="pt-1 text-caption text-muted-soft">Open</p>
             ) : (
-              <ul className={cn("flex min-w-0 flex-wrap gap-1.5", !compact && "flex-col")}>
+              <ul className={cn("flex min-w-0 gap-1.5", compact ? "flex-wrap" : "flex-col")}>
                 {list.map((c) => (
                   <li key={c.code} className="min-w-0">
                     <CourseChip course={c} compact={compact} />
@@ -585,7 +586,8 @@ function Timeline({ courses, compact }: { courses: RouteCourse[]; compact: boole
 }
 
 function CourseChip({ course, compact }: { course: RouteCourse; compact: boolean }) {
-  const quarter = course.quarter ? QUARTER_NAMES[course.quarter] : "Any quarter";
+  const usual = (course.offered ?? []).map((q) => QUARTER_NAMES[q]);
+  const quarter = course.quarter ? QUARTER_NAMES[course.quarter] : usual.length && usual.length < 3 ? `usually ${usual.join(", ")}` : "Any quarter";
   return (
     <Link
       to={courseHref(course.code)}

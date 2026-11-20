@@ -267,7 +267,7 @@ function ProgressRail({ current, covered, progress }: { current: Topic | null; c
                   isCurrent ? "bg-primary text-on-primary" : done ? "text-on-dark" : "text-on-dark-soft/70",
                 )}
               >
-                {done && <CheckIcon size={11} className="mr-1 text-success" />}
+                {done && <CheckIcon size={11} className="mr-1 text-on-dark-soft" />}
                 {TOPIC_LABELS[t]}
               </span>
             </li>

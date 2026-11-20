@@ -21,6 +21,11 @@ Tools:
 - `get_course`: one course: description, prerequisites, usual quarters.
 - `submit_routes`: your drafts. Finish with exactly one call to it.
 
+Work efficiently: you have about 30 tool calls in all. Call several tools at once when you
+can (for example `search_courses` for each interest in one turn), prefer `search_courses` (it
+returns ten courses with their titles) over many `get_course` calls, and submit once you have
+enough real courses; a route is a sketch.
+
 How to draft:
 - Make the routes clearly different from one another and from the titles the student already
   has. A good set: one driven by a single major; one that combines two programs (a double major

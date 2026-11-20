@@ -96,7 +96,7 @@ export function DashCard({
 export function AskGuide({ children, onAsk }: { children: ReactNode; onAsk: () => void }) {
   return (
     <div className="flex flex-wrap items-center gap-3 rounded-xl border border-dashed border-hairline-strong bg-canvas-soft px-4 py-3">
-      <p className="min-w-0 flex-1 text-body-sm text-body">{children}</p>
+      <p className="min-w-0 flex-1 basis-[15rem] text-body-sm text-body">{children}</p>
       <button
         type="button"
         onClick={onAsk}

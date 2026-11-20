@@ -28,6 +28,12 @@
           "account": {
             "$ref": "#/components/schemas/AccountOut"
           },
+          "commons": {
+            "additionalProperties": true,
+            "default": {},
+            "title": "Commons",
+            "type": "object"
+          },
           "plans": {
             "default": [],
             "items": {
@@ -35,6 +41,12 @@
             },
             "title": "Plans",
             "type": "array"
+          },
+          "profile": {
+            "additionalProperties": true,
+            "default": {},
+            "title": "Profile",
+            "type": "object"
           }
         },
         "required": [
@@ -9469,6 +9481,20 @@
             "maxLength": 240,
             "title": "Note",
             "type": "string"
+          },
+          "offered": {
+            "default": [],
+            "items": {
+              "enum": [
+                "AU",
+                "WI",
+                "SP",
+                "SU"
+              ],
+              "type": "string"
+            },
+            "title": "Offered",
+            "type": "array"
           },
           "quarter": {
             "anyOf": [

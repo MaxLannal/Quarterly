@@ -1343,10 +1343,24 @@ export interface components {
         AccountExport: {
             account: components["schemas"]["AccountOut"];
             /**
+             * Commons
+             * @default {}
+             */
+            commons: {
+                [key: string]: unknown;
+            };
+            /**
              * Plans
              * @default []
              */
             plans: components["schemas"]["PlanOut"][];
+            /**
+             * Profile
+             * @default {}
+             */
+            profile: {
+                [key: string]: unknown;
+            };
         };
         /** AccountOut */
         AccountOut: {
@@ -4962,6 +4976,11 @@ export interface components {
              * @default
              */
             note: string;
+            /**
+             * Offered
+             * @default []
+             */
+            offered: ("AU" | "WI" | "SP" | "SU")[];
             /** Quarter */
             quarter?: ("AU" | "WI" | "SP" | "SU") | null;
             /**

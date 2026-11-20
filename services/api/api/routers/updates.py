@@ -378,14 +378,11 @@ def collect(db: Session, account: m.Account, profile: m.StudentProfile) -> list[
 
 
 def profile_of(db: Session, account: m.Account) -> m.StudentProfile:
-    """The account's profile row, created (empty) the first time it is needed."""
-    profile = db.get(m.StudentProfile, account.id)
-    if profile is None:
-        profile = m.StudentProfile(account_id=account.id)
-        db.add(profile)
-        db.flush()
-        db.refresh(profile)
-    return profile
+    """The account's profile row, created (empty) the first time it is needed; safe when the
+    dashboard creates it at the same moment (`ensure_profile` ignores the conflict)."""
+    from api.profile_data import ensure_profile
+
+    return ensure_profile(db, account.id)
 
 
 # ------------------------------------------------------------------------------ digest

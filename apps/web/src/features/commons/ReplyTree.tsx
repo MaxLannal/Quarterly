@@ -58,7 +58,7 @@ function Avatar({ handle }: { handle: string }) {
   let h = 0;
   for (const ch of handle) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
   return (
-    <span aria-hidden="true" className={cn("inline-flex size-8 shrink-0 items-center justify-center rounded-pill text-[12px] font-semibold", AVATAR_TONES[h % AVATAR_TONES.length])}>
+    <span aria-hidden="true" className={cn("inline-flex size-7 shrink-0 items-center justify-center rounded-pill text-[11px] font-semibold sm:size-8 sm:text-[12px]", AVATAR_TONES[h % AVATAR_TONES.length])}>
       {initials || "·"}
     </span>
   );
@@ -97,16 +97,12 @@ function ReplyItem({ reply, ctx }: { reply: Reply; ctx: TreeContext }) {
 
   return (
     <li id={`reply-${reply.id}`} className="relative scroll-mt-24">
-      <div className={cn("flex gap-3 rounded-lg transition-colors duration-700", ctx.highlight === reply.id && "bg-primary-wash/70 ring-2 ring-primary/30")}>
-        <div className="flex shrink-0 flex-col items-center pt-1">
-          {bot ? (
-            <span aria-hidden="true" className="inline-flex size-8 items-center justify-center rounded-pill bg-primary text-[11px] font-semibold text-on-primary">
-              AI
-            </span>
-          ) : visible ? (
+      <div className={cn("flex gap-2 rounded-lg transition-colors duration-700 sm:gap-3", ctx.highlight === reply.id && "bg-primary-wash/70 ring-2 ring-primary/30")}>
+        <div className={cn("flex shrink-0 flex-col items-center pt-1", bot && "hidden")}>
+          {visible ? (
             <Avatar handle={reply.handle} />
           ) : (
-            <span aria-hidden="true" className="inline-flex size-8 items-center justify-center rounded-pill border border-dashed border-hairline-strong" />
+            <span aria-hidden="true" className="inline-flex size-7 items-center justify-center rounded-pill border border-dashed border-hairline-strong sm:size-8" />
           )}
           {reply.children.length > 0 && !collapsed && (
             <button
@@ -115,7 +111,7 @@ function ReplyItem({ reply, ctx }: { reply: Reply; ctx: TreeContext }) {
               aria-label={`Collapse the ${plural(descendants, "reply", "replies")} under ${who}`}
               aria-expanded="true"
               aria-controls={childrenId}
-              className="group mt-1 flex w-11 flex-1 justify-center"
+              className="group mt-1 flex w-7 flex-1 justify-center sm:w-11"
             >
               <span className="w-px bg-hairline-strong transition-colors group-hover:w-0.5 group-hover:bg-primary" />
             </button>

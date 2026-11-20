@@ -301,7 +301,10 @@ class Context:
     def covered(self, patch: ProfilePatch | None = None) -> list[Topic]:
         """Main topics with an answer: filled in the profile (or in `patch`), marked covered
         earlier, or answered in this conversation."""
-        done: set[str] = {SECTION_OF[k] for k, v in sections_filled(self.row).items() if v}
+        filled = sections_filled(self.row)
+        # The humanities count only once the goal is known (just to pass, or to enjoy what?).
+        filled["humanities"] = self.row.humanities_goal is not None
+        done: set[str] = {SECTION_OF[k] for k, v in filled.items() if v}
         done |= set(memory_of(self.row).covered)
         answered: Topic | None = None
         for turn in self.history:
@@ -317,7 +320,6 @@ class Context:
                 "class_year": "class_year",
                 "interests": "interests",
                 "humanities_goal": "humanities",
-                "humanities_topics": "humanities",
                 "research_areas": "research",
                 "career_plans": "career",
                 "career_paths": "career",
@@ -1138,7 +1140,7 @@ class InterviewRun:
                 else:
                     result = item
         except AgentError as exc:
-            logger.info("%s: no turn (%s)", TASK, exc.reason)
+            logger.warning("%s: no turn, the rules answered (%s)", TASK, exc.reason)
         finally:
             self._save_log()
         if result is not None:

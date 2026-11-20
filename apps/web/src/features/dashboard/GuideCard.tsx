@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useId, useState, type CSSProperties } from "react";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
@@ -7,10 +7,15 @@ import { isDraftChip } from "./GuideOverlay";
 import { courseHref, filledTopics } from "./logic";
 import { GuideMark } from "./parts";
 
-/** The welcome-back greeting (the server caches it per profile; the page asks once a day). */
+/** What the greeting depends on: it is asked again only when the portrait changed. */
+function fingerprint(p: Profile): string {
+  return JSON.stringify([p.class_year, p.interests, p.research_areas, p.humanities_goal, p.humanities_topics, p.career_paths, p.future_domains, p.workload, p.constraints, p.portrait.headline]);
+}
+
+/** The welcome-back greeting (the server caches it per profile for a few hours). */
 function useWelcome(profile: Profile, enabled: boolean) {
   return useQuery({
-    queryKey: ["me", "welcome", profile.username, profile.updated_day],
+    queryKey: ["me", "welcome", profile.username, fingerprint(profile)],
     queryFn: async ({ signal }) => {
       let turn: TurnEvent | null = null;
       for await (const event of streamInterview({ mode: "welcome_back", history: [] }, signal)) {
@@ -22,6 +27,8 @@ function useWelcome(profile: Profile, enabled: boolean) {
     enabled,
     staleTime: Infinity,
     retry: false,
+    // The last greeting stays while a new one is on its way.
+    placeholderData: keepPreviousData,
   });
 }
 
@@ -34,13 +41,16 @@ export function GuideCard({
   profile,
   onOpen,
   onDraftRoutes,
+  paused = false,
 }: {
   profile: Profile;
   onOpen: (options?: { seed?: TurnEvent | null; message?: string }) => void;
   onDraftRoutes: () => void;
+  /** While the immersive guide is open the greeting waits (each kept fact changes the profile). */
+  paused?: boolean;
 }) {
   const known = filledTopics(profile).length > 0 || profile.interview.turns.length > 0;
-  const welcome = useWelcome(profile, known);
+  const welcome = useWelcome(profile, known && !paused);
   const inputId = useId();
   const [draft, setDraft] = useState("");
   const turn = welcome.data ?? null;
@@ -73,7 +83,7 @@ export function GuideCard({
         </div>
       ) : (
         <div className="mt-4 flex flex-col gap-5">
-          {welcome.isLoading ? (
+          {welcome.isLoading || (paused && !turn) ? (
             <div aria-hidden="true" className="flex flex-col gap-2">
               <div className="h-7 w-11/12 rounded-md bg-on-dark/10" />
               <div className="h-7 w-3/4 rounded-md bg-on-dark/10" />

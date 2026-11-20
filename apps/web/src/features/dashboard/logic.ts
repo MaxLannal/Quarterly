@@ -241,8 +241,8 @@ export function entryTermFor(classYear: number | null | undefined): string {
 /**
  * A local plan state from a route: the catalog year Quarterly holds, the entry term from the
  * class year, the route's programs, and each course in its year and quarter (a course without
- * a quarter goes to the lightest of that year's Autumn, Winter and Spring). Returns the state and
- * the courses that could not be placed.
+ * a quarter goes to the lightest of that year's quarters it is usually offered in). Returns the
+ * state and the courses that could not be placed.
  */
 export function routePlanState(route: Pick<Route, "courses" | "program_ids">, classYear: number | null | undefined): { state: PlanState; skipped: string[] } {
   const entry = entryTermFor(classYear);
@@ -263,7 +263,9 @@ export function routePlanState(route: Pick<Route, "courses" | "program_ids">, cl
       } else if (course.quarter) {
         term = termAt(entry, course.year, course.quarter);
       } else {
-        const options = (["AU", "WI", "SP"] as const).map((q) => termAt(entry, course.year, q));
+        // The lightest of the quarters it is usually offered in (any of the three if unknown).
+        const usual = (course.offered ?? []).filter((q): q is "AU" | "WI" | "SP" => q !== "SU");
+        const options = (usual.length ? usual : (["AU", "WI", "SP"] as const)).map((q) => termAt(entry, course.year, q));
         term = options.reduce((best, t) => ((load.get(t) ?? 0) < (load.get(best) ?? 0) ? t : best), options[0] as string);
       }
     } catch {

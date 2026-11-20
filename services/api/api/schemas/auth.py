@@ -3,7 +3,7 @@ argon2id password; Redis sessions with a CSRF token."""
 
 import datetime as dt
 import uuid
-from typing import Literal
+from typing import Any, Literal
 
 from pydantic import BaseModel, Field
 
@@ -72,6 +72,10 @@ class PasswordChange(BaseModel):
 class AccountExport(BaseModel):
     account: AccountOut
     plans: list[PlanOut] = []
+    #: The dashboard: profile (without the email, which `account` covers) and routes.
+    profile: dict[str, Any] = {}
+    #: The Commons: the account's questions, replies, votes and reports.
+    commons: dict[str, Any] = {}
 
 
 class AccountDelete(BaseModel):

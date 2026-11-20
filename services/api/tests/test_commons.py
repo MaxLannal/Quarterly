@@ -514,3 +514,24 @@ def test_forget_commons_delete(c: CommonsEnv) -> None:
             sa.select(m.CommonsReply.id).where(m.CommonsReply.author_ref.in_(list(refs)))
         )
         assert list(left) == []
+
+
+def test_demo_refuses_outside_development_and_is_idempotent(
+    c: CommonsEnv, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from api.commons import demo
+    from api.config import get_settings
+
+    with c.env.db() as db:
+        monkeypatch.setattr(get_settings(), "environment", "test")
+        with pytest.raises(demo.DemoRefusedError):
+            demo.seed(db)
+        monkeypatch.setattr(get_settings(), "environment", "development")
+        added = demo.seed(db)
+        assert added >= 1 and demo.seed(db) == 0  # only the questions on seeded courses
+        refs = set(db.scalars(sa.select(m.CommonsThread.author_ref)))
+        assert all(ref and len(ref) == 64 for ref in refs)
+    listing = c.anon().get("/commons/threads?sort=new").json()
+    assert listing["total"] == added and all(t["bot_state"] == "pending" for t in listing["items"])
+    with c.env.db() as db:
+        assert demo.remove(db) == added

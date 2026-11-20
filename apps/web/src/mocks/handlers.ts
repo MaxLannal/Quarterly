@@ -19,10 +19,10 @@ import {
   summary,
 } from "./data";
 import { agentHandlers, generateVariants } from "./agents";
-import { askHandlers } from "./ask";
-import { commonsHandlers } from "./commons";
+import { askHandlers, resetAskMock } from "./ask";
+import { commonsHandlers, resetCommonsMock } from "./commons";
 import { feedHandlers } from "./feed";
-import { profileHandlers } from "./profile";
+import { profileHandlers, resetProfileMock } from "./profile";
 import { forumHandlers, resetForumMock } from "./forum";
 import { resetReviewMock, reviewHandlers } from "./review";
 import { mockVerify } from "./verify";
@@ -116,6 +116,9 @@ export function resetMockState() {
   setLoggedIn(false);
   resetForumMock();
   resetReviewMock();
+  resetAskMock();
+  resetCommonsMock();
+  resetProfileMock();
 }
 
 // ------------------------------------------------------------------------------------------
@@ -324,6 +327,8 @@ export const handlers = [
       ? json<S["AccountExport"]>({
           account: MOCK_ACCOUNT,
           plans: [...plans.values()],
+          profile: {},
+          commons: {},
         })
       : unauthorized(),
   ),

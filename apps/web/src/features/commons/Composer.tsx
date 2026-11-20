@@ -143,6 +143,36 @@ function diff(before: string, after: string): { start: number; end: number; inse
   return { start, end: endB, insert: after.slice(start, endA) };
 }
 
+const MIRRORED = [
+  "boxSizing", "width", "paddingTop", "paddingRight", "paddingBottom", "paddingLeft", "borderTopWidth",
+  "borderRightWidth", "borderBottomWidth", "borderLeftWidth", "fontFamily", "fontSize", "fontWeight",
+  "fontStyle", "letterSpacing", "lineHeight", "textTransform", "wordSpacing", "tabSize",
+] as const;
+
+/** The caret's position inside a textarea (a hidden mirror element with the same text). */
+function caretPoint(el: HTMLTextAreaElement, index: number): { top: number; left: number; height: number } | null {
+  if (typeof window === "undefined" || !el.offsetParent) return null;
+  const style = window.getComputedStyle(el);
+  const mirror = document.createElement("div");
+  for (const key of MIRRORED) mirror.style[key] = style[key];
+  mirror.style.position = "absolute";
+  mirror.style.visibility = "hidden";
+  mirror.style.whiteSpace = "pre-wrap";
+  mirror.style.overflowWrap = "break-word";
+  mirror.style.top = "0";
+  mirror.style.left = "-9999px";
+  mirror.textContent = el.value.slice(0, index);
+  const marker = document.createElement("span");
+  marker.textContent = el.value.slice(index, index + 1) || ".";
+  mirror.appendChild(marker);
+  document.body.appendChild(mirror);
+  const top = marker.offsetTop - el.scrollTop + el.offsetTop;
+  const left = marker.offsetLeft - el.scrollLeft + el.offsetLeft;
+  const height = parseFloat(style.lineHeight) || marker.offsetHeight || 24;
+  mirror.remove();
+  return { top, left, height };
+}
+
 export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Composer(
   {
     label,
@@ -281,12 +311,30 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
     [value, caret, tab],
   );
   const matches = useCourseMatches(mention?.query ?? "", 6);
-  const options = mention ? (matches.data?.items ?? []).filter((c) => c.code.replace(" ", "").startsWith(mention.query.replace(" ", ""))) : [];
+  const options = mention
+    ? (matches.data?.items ?? [])
+        .filter((c) => c.code.replace(" ", "").startsWith(mention.query.replace(" ", "")))
+        .sort((x, y) => x.code.localeCompare(y.code))
+    : [];
   const listOpen = !!mention && options.length > 0 && dismissedAt !== mention.start;
   const listId = `${base}-courses`;
   const optionId = (i: number) => `${base}-course-${i}`;
 
   useEffect(() => setActive(0), [mention?.query]);
+
+  // Where the caret is in the field, so the course list opens right under it.
+  const [caretBox, setCaretBox] = useState<{ top: number; left: number } | null>(null);
+  useLayoutEffect(() => {
+    const el = area.current;
+    if (!el || !mention) {
+      setCaretBox(null);
+      return;
+    }
+    const at = caretPoint(el, mention.start);
+    if (!at) return setCaretBox(null);
+    const width = Math.min(352, el.clientWidth - 16);
+    setCaretBox({ top: at.top + at.height + 4, left: Math.max(8, Math.min(at.left, el.clientWidth - width - 8)) });
+  }, [mention, value]);
 
   function insertCourse(code: string) {
     if (!mention) return;
@@ -484,7 +532,13 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
             </div>
           )}
           {listOpen && mention && (
-            <div className="border-t border-hairline bg-canvas-soft">
+            <div
+              style={caretBox ? { top: caretBox.top, left: caretBox.left } : undefined}
+              className={cn(
+                "z-30 w-[min(22rem,calc(100%-1rem))] overflow-hidden rounded-lg border border-hairline bg-surface-card shadow-overlay",
+                caretBox ? "absolute" : "relative mx-2 mb-2",
+              )}
+            >
               <p className="px-4 pt-2 text-caption-uppercase uppercase text-muted">Courses matching “{mention.query}”</p>
               <ul id={listId} role="listbox" aria-label="Matching courses" className="flex flex-col py-1">
                 {options.map((c, i) => (

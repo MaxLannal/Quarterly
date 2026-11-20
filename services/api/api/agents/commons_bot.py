@@ -329,7 +329,12 @@ class BotHarness:
         )
         replies = [r for r in replies if r.id != self.run.reply_to]
         if replies:
-            lines += ["", "Replies so far:"]
+            lines += [
+                "",
+                "Replies so far (context only: answer the question above, not these replies):"
+                if self.run.reply_to is None
+                else "Replies so far:",
+            ]
             for r in replies:
                 who = (
                     "the asker"

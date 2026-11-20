@@ -256,6 +256,9 @@ class RouteCourse(BaseModel):
     quarter: Quarter | None = None
     role: CourseRole = "elective"
     note: str = Field(default="", max_length=240)
+    #: The quarters the course is usually offered in (AU, WI, SP), filled by the server from
+    #: the catalog's offering patterns (whatever is sent is replaced).
+    offered: list[Quarter] = []
 
     @field_validator("note", mode="before")
     @classmethod

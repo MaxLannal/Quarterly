@@ -57,6 +57,8 @@ def test_unknown_codes_and_programs_are_dropped_and_titles_come_from_the_catalog
     out = create(env, headers)
     assert [c["code"] for c in out["courses"]] == ["PHYS 13100", "HUMA 12050"]
     assert out["courses"][0]["title"] == "Mechanics"
+    # The usual quarters come from the catalog's offering patterns (what was sent is replaced).
+    assert out["courses"][0]["offered"] == ["AU"] and out["courses"][1]["offered"] == ["AU"]
     assert out["program_ids"] == ["phys-bs"]
     assert out["programs"] == [{"id": "phys-bs", "name": "Physics (BS)"}]
     assert out["status"] == "open" and out["origin"] == "ai" and out["position"] == 0

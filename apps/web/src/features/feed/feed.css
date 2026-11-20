@@ -1,0 +1,160 @@
+/* The Feed's motion (index.css stops every animation under prefers-reduced-motion, and the
+   components render the moving layers only when motion is allowed). Transforms and opacity only. */
+
+/* -- cards arrive -------------------------------------------------------------------------- */
+.feed-card {
+  animation: feed-card-in 420ms var(--ease-out) both;
+}
+@keyframes feed-card-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* -- the headline, word by word: each word rises and settles ------------------------------ */
+.feed-headline-word {
+  display: inline-block;
+  animation: feed-word-rise 560ms var(--ease-out) both;
+  animation-delay: calc(var(--i, 0) * 70ms);
+}
+@keyframes feed-word-rise {
+  0% {
+    opacity: 0;
+    transform: translateY(0.55em) rotate(2deg);
+  }
+  65% {
+    opacity: 1;
+    transform: translateY(-0.06em);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* -- the ticker of course titles ----------------------------------------------------------- */
+.feed-ticker-track {
+  animation: feed-marquee var(--duration, 120s) linear infinite;
+}
+.feed-ticker:hover .feed-ticker-track,
+.feed-ticker:focus-within .feed-ticker-track,
+.feed-ticker[data-paused="true"] .feed-ticker-track {
+  animation-play-state: paused;
+}
+@keyframes feed-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* -- background words drifting upward ------------------------------------------------------ */
+.feed-float-word {
+  position: absolute;
+  bottom: -12vh;
+  white-space: nowrap;
+  will-change: transform;
+  animation: feed-drift var(--duration, 30s) linear infinite;
+  animation-delay: var(--delay, 0s);
+}
+@keyframes feed-drift {
+  0% {
+    transform: translate3d(0, 0, 0);
+    opacity: 0;
+  }
+  10% {
+    opacity: var(--alpha, 0.3);
+  }
+  50% {
+    transform: translate3d(var(--sway, 16px), -62vh, 0);
+  }
+  88% {
+    opacity: var(--alpha, 0.3);
+  }
+  100% {
+    transform: translate3d(0, -128vh, 0);
+    opacity: 0;
+  }
+}
+
+/* -- a card's keywords lift off on hover or focus, then come back ------------------------- */
+.feed-burst-word {
+  position: absolute;
+  left: var(--x, 50%);
+  top: var(--y, 50%);
+  pointer-events: none;
+  white-space: nowrap;
+  opacity: 0;
+  animation: feed-burst 1900ms var(--ease-out) both;
+  animation-delay: calc(var(--i, 0) * 45ms);
+}
+@keyframes feed-burst {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.7);
+  }
+  18% {
+    opacity: 1;
+  }
+  55% {
+    opacity: 1;
+    transform: translate(calc(-50% + var(--dx, 0px)), calc(-50% + var(--dy, -40px))) rotate(var(--rot, 0deg))
+      scale(1.05);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.85);
+  }
+}
+
+/* -- word clouds bob gently (paused when the card is off screen) -------------------------- */
+.feed-bob {
+  display: inline-block;
+  animation: feed-bob var(--duration, 5s) ease-in-out infinite alternate;
+  animation-delay: var(--delay, 0s);
+}
+[data-paused="true"] .feed-bob {
+  animation-play-state: paused;
+}
+@keyframes feed-bob {
+  from {
+    transform: translateY(-3px) rotate(-0.6deg);
+  }
+  to {
+    transform: translateY(4px) rotate(0.6deg);
+  }
+}
+
+/* -- the art panel breathes a little on hover ---------------------------------------------- */
+.feed-art {
+  transition: transform 600ms var(--ease-out);
+}
+.feed-spotlight:hover .feed-art,
+.feed-spotlight:focus-within .feed-art {
+  transform: scale(1.035);
+}
+
+/* -- the undo toast ------------------------------------------------------------------------ */
+.feed-toast {
+  animation: feed-card-in 220ms var(--ease-out) both;
+}
+
+/* -- skeleton shimmer ---------------------------------------------------------------------- */
+.feed-skeleton {
+  animation: feed-pulse 1.4s ease-in-out infinite alternate;
+}
+@keyframes feed-pulse {
+  from {
+    opacity: 0.55;
+  }
+  to {
+    opacity: 1;
+  }
+}

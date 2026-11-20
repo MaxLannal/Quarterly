@@ -834,11 +834,10 @@ def accept(
 
 def follow(db: Session, account: m.Account, thread_id: int, on: bool) -> CommonsFollowOut:
     _visible_thread(db, thread_id)
-    profile = db.get(m.StudentProfile, account.id)
-    if profile is None:
-        profile = m.StudentProfile(account_id=account.id)
-        db.add(profile)
-        db.flush()
+    from api.profile_data import ensure_profile
+
+    # Safe when the dashboard or the companion creates the row at the same moment.
+    profile = ensure_profile(db, account.id)
     follows = dict(profile.follows or {})
     threads = [int(t) for t in follows.get("threads", []) if isinstance(t, int)]
     if on and thread_id not in threads:

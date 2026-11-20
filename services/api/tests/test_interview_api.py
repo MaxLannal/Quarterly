@@ -324,3 +324,21 @@ def test_grounding_rules() -> None:
     assert not iv.grounded("Opera", said)
     assert not iv.grounded("AI", "I said nothing about it")
     assert iv.grounded("AI", "AI and society")
+
+
+def test_the_rule_guide_revisits_a_topic_on_request(env: Env) -> None:
+    headers = login(env)
+    env.client.patch(
+        "/me/profile", json={"class_year": 2029, "interests": ["Physics"]}, headers=headers
+    )
+    t = ask(env, headers, "reply", "Can we talk about research?")
+    assert t["topic"] == "research" and t["text"].startswith("Of course.")
+    wrap = [{"role": "guide", "text": "Here's your portrait.", "topic": "wrapup"}]
+    t = ask(env, headers, "reply", "Change something", wrap)
+    assert t["topic"] == "wrapup" and "My interests" in t["quick_replies"]
+    t = ask(env, headers, "reply", "My interests", wrap)
+    assert t["topic"] == "interests"
+    # An ordinary answer that mentions research is still an answer, not a request.
+    talk = [{"role": "guide", "text": "What pulls at you?", "topic": "interests"}]
+    t = ask(env, headers, "reply", "research on quantum stuff and film", talk)
+    assert t["proposed"]["interests"] == ["Physics", "Research on quantum stuff", "Film"]
