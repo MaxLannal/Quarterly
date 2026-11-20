@@ -1098,7 +1098,7 @@ def describe_items(
             )
         elif kind == "program":
             row = db.get(m.Program, key)
-            if row is not None:
+            if row is not None and _program_visible(db, row.id):
                 out.append(
                     Described(
                         id=item_id,
@@ -1204,3 +1204,20 @@ def default_headline(described: Sequence[Described]) -> str:
         if len(line) <= 90:
             return line
     return _cap(f"Today's river: {topics[0]}", 90)
+
+
+def _program_visible(db: Session, program_id: str) -> bool:
+    """A program the feed may describe: one with a published version, or any program when
+    unpublished programs are shown (`show_unpublished_programs`)."""
+    from api.config import get_settings
+
+    shown = get_settings().show_unpublished_programs
+    statuses = catalog_repo.ALL_STATUSES if shown else catalog_repo.PUBLISHED
+    return (
+        db.scalar(
+            sa.select(m.ProgramVersion.id)
+            .where(m.ProgramVersion.program_id == program_id, m.ProgramVersion.status.in_(statuses))
+            .limit(1)
+        )
+        is not None
+    )

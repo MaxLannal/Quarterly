@@ -7,8 +7,10 @@ import { CloseIcon, MenuIcon, SearchIcon } from "@/components/ui/icons";
 import { useSession } from "@/lib/session";
 import { cn } from "@/lib/utils";
 
-/** Pages with their own course search box; the bar hides its copy there (D11 H-1, CS-1). */
-const PAGE_HAS_SEARCH = new Set(["/", "/courses"]);
+/** Pages with their own course search box; the bar hides its copy there (D11 H-1, CS-1). The
+ * homepage's bar asks questions instead (docs/BEST-OF-UCHICAGO-PLAN.md), so the top bar's course
+ * search shows there too, on wide screens only: on a phone the chapel keeps the first screen. */
+const PAGE_HAS_SEARCH = new Set(["/courses"]);
 const AUTH_PAGES = new Set(["/login", "/signup"]);
 
 /** A forum page or thread: /courses/:code/i/:instructor[/t/:id]. */
@@ -181,7 +183,12 @@ export function TopNav() {
         </nav>
         {/* D11 H-1/CS-1: home and course search have their own search box; one is enough. */}
         {!PAGE_HAS_SEARCH.has(location.pathname) && (
-          <div className="order-1 w-full pb-3 md:order-none md:ml-auto md:w-auto md:max-w-[17rem] md:flex-1 md:pb-0">
+          <div
+            className={cn(
+              "order-1 w-full pb-3 md:order-none md:ml-auto md:w-auto md:max-w-[17rem] md:flex-1 md:pb-0",
+              location.pathname === "/" && "max-md:hidden",
+            )}
+          >
             <SearchBox />
           </div>
         )}

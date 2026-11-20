@@ -367,7 +367,10 @@ def patch_route(db: Session, row: m.Pathway, patch: RoutePatch) -> None:
     if "status" in sent and patch.status is not None and patch.status != row.status:
         if patch.status == "chosen":
             # One chosen route per account (index uq_pathway_one_chosen): the others go back
-            # to open first, in the same transaction.
+            # to open first, in the same transaction. Locking the account's routes first makes
+            # two "choose" clicks at once wait for each other instead of failing on the index.
+            mine = sa.select(m.Pathway.id).where(m.Pathway.account_id == row.account_id)
+            db.execute(mine.with_for_update())
             db.execute(
                 sa.update(m.Pathway)
                 .where(

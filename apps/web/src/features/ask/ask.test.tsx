@@ -1,4 +1,4 @@
-import { render, screen, within } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it } from "vitest";
@@ -128,7 +128,8 @@ describe("the Ask page", () => {
     const guide = within(article).getByRole("link", { name: /The Core curriculum/ });
     expect(guide).toHaveAttribute("rel", "noopener noreferrer");
     expect(screen.getByRole("heading", { level: 1, name: "What should I take first?" })).toBeInTheDocument();
-    expect(loadConversations(ASK_KEY)[0]?.turns).toHaveLength(2);
+    // Saved once the stream ends; under a loaded test run that can land a moment after the render.
+    await waitFor(() => expect(loadConversations(ASK_KEY)[0]?.turns).toHaveLength(2));
 
     await userEvent.click(within(article).getByRole("button", { name: /What comes after TEST 10100/ }));
     expect(await screen.findAllByText(answerLine)).toHaveLength(2);

@@ -57,14 +57,15 @@ export default function HomePage() {
             </span>
           </h1>
           <AskBar />
-          <div className="-mt-1 flex flex-wrap items-center gap-2" aria-label="Try a question">
+          {/* On a phone the bar's typed-out placeholder shows the examples; the chapel keeps the room. */}
+          <div className="-mt-1 hidden flex-wrap items-center gap-2 sm:flex" aria-label="Try a question">
             <span className="text-caption text-muted">Try</span>
             {TRY.map((t) => (
               <button
                 key={t}
                 type="button"
                 onClick={() => navigate(`/ask?q=${encodeURIComponent(t)}`)}
-                className="min-h-9 rounded-pill border border-hairline bg-canvas/85 px-3 text-caption text-body backdrop-blur-[2px] transition-colors hover:border-primary hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary pointer-coarse:min-h-11"
+                className="min-h-11 rounded-pill border border-hairline bg-canvas/85 px-3 text-caption text-body backdrop-blur-[2px] transition-colors hover:border-primary hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
               >
                 {t}
               </button>

@@ -24,7 +24,7 @@ from typing import Annotated, Any
 from urllib.parse import quote
 
 import sqlalchemy as sa
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from llm_gateway.api import LLM, LLMUnavailableError, Message, get_llm
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
@@ -32,6 +32,7 @@ from sqlalchemy.orm import Session
 from api.agents.campus_tools import keywords
 from api.agents.prompts import load_prompt
 from api.agents.tools import untrusted
+from api.auth.ratelimit import DAY, Limit, account_subject
 from api.auth.sessions import current_account
 from api.auth.store import Store, get_store
 from api.db import models as m
@@ -417,6 +418,10 @@ def template_digest(items: list[UpdateItem]) -> str:
     return f"{listed.capitalize()} since your last visit. Start with “{first.title}”."
 
 
+#: Model-written digests per account per day (cache hits are free); beyond it the template answers.
+DIGEST_PER_ACCOUNT = Limit("updates-digest:account", 40, DAY)
+
+
 def ai_digest(llm: LLM, store: Store, account: m.Account, items: list[UpdateItem]) -> str | None:
     key_src = json.dumps(
         [str(account.id), [(i.kind, i.id, i.is_new) for i in items]], separators=(",", ":")
@@ -425,6 +430,10 @@ def ai_digest(llm: LLM, store: Store, account: m.Account, items: list[UpdateItem
     cached = store.get(key)
     if cached:
         return cached
+    try:
+        DIGEST_PER_ACCOUNT.hit(store, account_subject(account.id))
+    except HTTPException:
+        return None  # over the daily limit: the template sentence answers
     lines = []
     for i in items[:15]:
         head = f"- {i.kind}{' (new)' if i.is_new else ''}, {i.reason}"

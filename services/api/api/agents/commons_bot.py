@@ -78,11 +78,11 @@ BOT_TOOLS: tuple[str, ...] = (
     "compare_courses",
     "get_program",
     "list_programs",
-    "get_forum_summary",
-    "get_forum_posts",
     "search_commons",
     "campus_guide",
 )
+# No forum tools: the answer is stored as a public reply (CC-1), and forum reviews are for
+# logged-in readers only, so the bot never reads them, whoever triggered the run.
 BOT_BUDGET = Budget(tool_calls=10, tokens=120_000, seconds=60)
 #: The lock outlives the longest run (the budget's 60 s plus storing).
 LOCK_TTL_S = 120
@@ -175,6 +175,30 @@ class BotRun:
     log: RunLog = field(default_factory=RunLog)
 
 
+_MD_LINK = re.compile(r"\[([^\]\n]{1,200})\]\(\s*<?([^)\s>]+)>?(?:\s+\"[^\"]*\")?\s*\)")
+_AUTOLINK = re.compile(r"<((?:https?|mailto):[^>\s]+)>", re.IGNORECASE)
+_TRUSTED = re.compile(r"^https://([a-z0-9-]+\.)*uchicago\.edu(/|$)", re.IGNORECASE)
+
+
+def _trusted_href(href: str) -> bool:
+    return (href.startswith("/") and not href.startswith("//")) or bool(_TRUSTED.match(href))
+
+
+def safe_answer(text: str) -> str:
+    """The bot's answer as stored: links only to this site or to https uchicago.edu pages (the
+    same rule as the Ask page), others reduced to their text, so a question cannot plant a link
+    in a public AI answer; emails and phone numbers scrubbed like students' posts."""
+    from api.forum.scrub import scrub
+
+    def link(mt: re.Match[str]) -> str:
+        return mt.group(0) if _trusted_href(mt.group(2)) else mt.group(1)
+
+    def autolink(mt: re.Match[str]) -> str:
+        return mt.group(0) if _trusted_href(mt.group(1)) else mt.group(1)
+
+    return scrub(_AUTOLINK.sub(autolink, _MD_LINK.sub(link, text)))
+
+
 def _bot_reply(db: Session, thread_id: int, parent_id: int | None) -> m.CommonsReply | None:
     parent = (
         m.CommonsReply.parent_id.is_(None)
@@ -244,6 +268,13 @@ def prepare(
         return base
     if store.incr(lock_key(thread.id), LOCK_TTL_S) > 1:
         base.mode = "busy"
+        return base
+    # Another run may have stored its answer between the check above and the lock: look again.
+    again = _bot_reply(db, thread.id, body.reply_to)
+    if again is not None and not base.regenerate:
+        store.delete(lock_key(thread.id))
+        base.existing_id = again.id
+        base.mode = "replay"
         return base
     try:
         if viewer.account is not None:
@@ -396,9 +427,7 @@ class BotHarness:
     def _agent(
         self, thread: m.CommonsThread
     ) -> Iterator[CommonsStepEvent | tuple[str, list[CommonsCitation]]]:
-        tools = CampusTools(
-            self.db, account=self.viewer.account, show_unpublished=self.run.show_unpublished
-        )
+        tools = CampusTools(self.db, account=None, show_unpublished=self.run.show_unpublished)
         prompt = load_prompt(PROMPT)
         spec = AgentSpec(
             task=TASK,
@@ -510,6 +539,7 @@ class BotHarness:
     def store(
         self, thread: m.CommonsThread, text: str, citations: list[CommonsCitation]
     ) -> m.CommonsReply:
+        text = safe_answer(text)
         cites = [c.model_dump(exclude_none=True) for c in citations]
         reply: m.CommonsReply | None = None
         if self.run.regenerate and self.run.existing_id is not None:

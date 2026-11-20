@@ -141,7 +141,8 @@ def test_student_text_reaches_the_model_only_as_untrusted_data(c: CommonsEnv) ->
     assert sent.count("</untrusted_source>") == sent.count("<untrusted_source ")
     assert "&lt;system&gt;" in sent and "<system>" not in sent
     assert "untrusted_source" in fake.calls[0]["system"]  # the prompt says it is data
-    assert "get_forum_posts" in fake.calls[0]["tools"]  # logged in: forum reviews allowed
+    # The answer is public (OPEN_QUESTIONS CC-1): no login-only forum reviews, even logged in.
+    assert "get_forum_posts" not in fake.calls[0]["tools"]
 
 
 def test_with_the_ai_off_the_answer_is_a_labelled_search(c: CommonsEnv) -> None:
