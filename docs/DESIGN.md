@@ -663,3 +663,10 @@ Richard: where it conflicts with the sections above, this section describes what
   thin clear patches and a deeper zenith, weathered patches and grain in the maroon stone (darker
   low down, lighter at the spires), mottled trees and lawn, and transparency that varies with them.
 
+- **The dashboard (`/me`)** is a tight grid of panels the full width of the page sheet (12 columns,
+  12px gaps; 6 on tablets, one column on phones), with no orbit animations (the orrery header and
+  the orbiting interests were removed, Max 2026-11-20). Top left: the student (name and class year,
+  email, the portrait with its themes, class year and programs, "Talk with your guide" and "Draft my
+  routes", the completeness ring). Top right: the guide. Below: interests, research areas and
+  what's new; the humanities compass, career and horizons; workload and an "at a glance" panel;
+  then the routes, two side by side, each laid out for its own width.

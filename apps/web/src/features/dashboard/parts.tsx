@@ -42,7 +42,8 @@ export function SaveStatus({ state, className }: { state: SaveState; className?:
   );
 }
 
-/** A dashboard card: a serif title, an optional kicker and status, generous padding. */
+/** A dashboard panel: compact, full height (panels in a row line up), a small kicker and a bold
+ * title, an optional status and actions. The dashboard is a tight grid of these. */
 export function DashCard({
   id,
   kicker,
@@ -68,17 +69,17 @@ export function DashCard({
       id={id}
       aria-labelledby={headingId}
       className={cn(
-        "relative min-w-0 scroll-mt-24 rounded-xxl border p-5 sm:p-7",
+        "relative flex h-full min-w-0 scroll-mt-24 flex-col rounded-[22px] border p-4 sm:p-5",
         tone === "paper" && "border-hairline bg-surface-card",
         tone === "soft" && "border-hairline bg-canvas-soft",
         tone === "ink" && "border-transparent bg-surface-dark text-on-dark",
         className,
       )}
     >
-      <div className="mb-4 flex flex-wrap items-start justify-between gap-x-3 gap-y-1">
+      <div className="mb-3 flex flex-wrap items-start justify-between gap-x-3 gap-y-1">
         <div className="min-w-0">
-          {kicker && <p className={cn("mb-1 text-caption-uppercase uppercase", tone === "ink" ? "text-on-dark-soft" : "text-primary")}>{kicker}</p>}
-          <h2 id={headingId} className={cn("font-display text-display-sm", tone === "ink" ? "text-on-dark" : "text-ink")}>
+          {kicker && <p className={cn("mb-0.5 text-[12px] font-bold uppercase tracking-[0.08em]", tone === "ink" ? "text-on-dark-soft" : "text-primary")}>{kicker}</p>}
+          <h2 id={headingId} className={cn("font-display text-[21px] font-bold leading-tight tracking-[-0.02em]", tone === "ink" ? "text-on-dark" : "text-ink")}>
             {title}
           </h2>
         </div>
@@ -95,7 +96,7 @@ export function DashCard({
 /** An empty section's invitation to the guide. */
 export function AskGuide({ children, onAsk }: { children: ReactNode; onAsk: () => void }) {
   return (
-    <div className="flex flex-wrap items-center gap-3 rounded-xl border border-dashed border-hairline-strong bg-canvas-soft px-4 py-3">
+    <div className="flex flex-wrap items-center gap-2 rounded-[16px] border border-dashed border-hairline-strong bg-canvas-soft px-3 py-2">
       <p className="min-w-0 flex-1 basis-[15rem] text-body-sm text-body">{children}</p>
       <button
         type="button"

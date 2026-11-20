@@ -24,10 +24,10 @@ export function PortraitHeader({ profile, onAsk }: { profile: Profile; onAsk: As
   if (!headline && !summary) {
     return (
       <div className="flex flex-col gap-2">
-        <p className="font-display text-display-sm text-ink sm:text-display-md">
+        <p className="font-display text-[22px] font-bold leading-tight tracking-[-0.02em] text-ink">
           Your portrait is still <em className="text-primary">a sketch</em>.
         </p>
-        <p className="max-w-reading text-body-md text-body">
+        <p className="text-body-sm text-body">
           Talk with your guide for a few minutes. At the end it writes a short portrait of you; keep it, and it stays here.
         </p>
         <div>
@@ -39,15 +39,15 @@ export function PortraitHeader({ profile, onAsk }: { profile: Profile; onAsk: As
     );
   }
   return (
-    <figure className="flex flex-col gap-3">
-      <blockquote className="font-display text-[32px] font-extrabold leading-[1.08] tracking-[-1px] text-ink sm:text-[44px]">
+    <figure className="flex flex-col gap-2">
+      <blockquote className="font-display text-[22px] font-bold leading-[1.15] tracking-[-0.5px] text-ink sm:text-[24px]">
         <span aria-hidden="true" className="text-primary">“</span>
         {headline}
         <span aria-hidden="true" className="text-primary">”</span>
       </blockquote>
-      {summary && <p className="max-w-reading text-body-md text-body">{summary}</p>}
+      {summary && <p className="text-body-sm text-body">{summary}</p>}
       {themes.length > 0 && (
-        <ul className="flex flex-wrap gap-2" aria-label="Themes">
+        <ul className="flex flex-wrap gap-1.5" aria-label="Themes">
           {themes.map((t) => (
             <li key={t} className="rounded-pill bg-primary-wash px-3 py-1 text-caption font-medium text-primary">
               {t}
@@ -119,7 +119,7 @@ export function HumanitiesCard({ profile, onAsk }: { profile: Profile; onAsk: As
       }
       status={<SaveStatus state={goalSaver.state.kind !== "idle" ? goalSaver.state : topics.state} />}
     >
-      <div className="grid gap-6 md:grid-cols-[200px_minmax(0,1fr)] md:items-center">
+      <div className="grid gap-4 md:grid-cols-[140px_minmax(0,1fr)] md:items-start">
         <Compass goal={goal ?? null} />
         <div className="flex min-w-0 flex-col gap-4">
           <fieldset>
@@ -254,15 +254,15 @@ export function HorizonsCard({ profile, onAsk }: { profile: Profile; onAsk: Ask 
       }
       status={<SaveStatus state={s.state} />}
     >
-      <div className="flex flex-col gap-5">
+      <div className="flex flex-col gap-3">
         {profile.future_domains.length === 0 ? (
           <AskGuide onAsk={() => onAsk("future")}>Which fields do you want to head toward? Quantum computing, climate, AI and society…</AskGuide>
         ) : (
-          <ul className="grid grid-cols-1 gap-3 min-[480px]:grid-cols-2 lg:grid-cols-4">
+          <ul className="grid grid-cols-1 gap-1.5">
             {profile.future_domains.map((d, i) => (
-              <li key={d} className="dash-rise group relative flex items-center gap-4 rounded-xl border border-hairline bg-surface-card p-3 lg:flex-col lg:items-start" style={{ ["--delay" as string]: `${i * 60}ms` }}>
-                <HorizonGlyph word={d} size={84} />
-                <p className="min-w-0 flex-1 pr-8 font-display text-title-md leading-snug text-ink">{d}</p>
+              <li key={d} className="dash-rise group relative flex items-center gap-3 rounded-[14px] border border-hairline bg-canvas-soft py-1.5 pl-1.5 pr-10" style={{ ["--delay" as string]: `${i * 60}ms` }}>
+                <HorizonGlyph word={d} size={40} />
+                <p className="min-w-0 flex-1 text-body-sm font-semibold leading-snug text-ink">{d}</p>
                 <button
                   type="button"
                   aria-label={`Remove ${d}`}

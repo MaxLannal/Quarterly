@@ -13,7 +13,7 @@ function openCompanion() {
 /** What's new for this student on the forum (GET /me/updates, owned by the Ask work stream). */
 export function WhatsNew() {
   const q = useDashboardUpdates(true);
-  const items = q.data?.items.slice(0, 5) ?? [];
+  const items = q.data?.items.slice(0, 3) ?? [];
   return (
     <DashCard kicker="Since you were here" title="What's new" className="h-full">
       {q.isLoading ? (

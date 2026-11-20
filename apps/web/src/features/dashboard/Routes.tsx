@@ -123,20 +123,19 @@ export const RoutesSection = forwardRef<RoutesHandle, { profile: Profile }>(func
   );
 
   return (
-    <section ref={sectionRef} id="routes" aria-labelledby={`${focusId}-title`} className="scroll-mt-20">
-      <div className="mb-6 flex flex-col gap-3 border-t border-hairline-strong pt-10 sm:pt-14">
-        <p className="flex items-center gap-2 text-caption-uppercase uppercase text-primary">
-          <span aria-hidden="true" className="inline-block h-px w-6 bg-primary" /> Four years, several ways
-        </p>
-        <h2 id={`${focusId}-title`} className="font-display text-[38px] font-extrabold leading-[1.04] tracking-[-1.4px] text-ink sm:text-[56px]">
-          Your <em className="italic text-primary">routes</em>
-        </h2>
-        <p className="max-w-reading text-body-md text-body" role="status">
-          {routes.isLoading ? "Loading your routes…" : stateLine}
-        </p>
-      </div>
+    <section ref={sectionRef} id="routes" aria-labelledby={`${focusId}-title`} className="scroll-mt-20 rounded-[22px] border border-hairline bg-surface-card p-4 sm:p-5">
+      <div className="mb-4 grid gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)] lg:items-end">
+        <div className="flex flex-col gap-1">
+          <p className="text-[12px] font-bold uppercase tracking-[0.08em] text-primary">Four years, several ways</p>
+          <h2 id={`${focusId}-title`} className="font-display text-[28px] font-extrabold leading-[1.05] tracking-[-0.8px] text-ink sm:text-[32px]">
+            Your <em className="italic text-primary">routes</em>
+          </h2>
+          <p className="text-body-sm text-body" role="status">
+            {routes.isLoading ? "Loading your routes…" : stateLine}
+          </p>
+        </div>
 
-      <div className="mb-8 flex flex-col gap-3 rounded-xxl border border-hairline bg-canvas-soft p-4 sm:flex-row sm:items-end sm:p-5">
+      <div className="flex flex-col gap-2 rounded-[16px] border border-hairline bg-canvas-soft p-3 sm:flex-row sm:items-end">
         <div className="flex min-w-0 flex-1 flex-col gap-1.5">
           <label htmlFor={focusId} className="text-caption-uppercase uppercase text-muted">
             Anything in particular? (optional)
@@ -152,6 +151,7 @@ export const RoutesSection = forwardRef<RoutesHandle, { profile: Profile }>(func
           </Button>
         )}
       </div>
+      </div>
 
       {drafting && <DraftTrace steps={steps} />}
       {problem && (
@@ -161,7 +161,7 @@ export const RoutesSection = forwardRef<RoutesHandle, { profile: Profile }>(func
       )}
 
       {drafts.length > 0 && (
-        <div className="mb-12 flex flex-col gap-4" aria-label="Drafts" role="region">
+        <div className="mb-5 flex flex-col gap-3" aria-label="Drafts" role="region">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <h3 className="font-display text-display-sm text-ink">Drafts</h3>
@@ -178,7 +178,7 @@ export const RoutesSection = forwardRef<RoutesHandle, { profile: Profile }>(func
               </Button>
             </div>
           </div>
-          <ul className="grid gap-4 lg:grid-cols-3">
+          <ul className="grid gap-3 lg:grid-cols-3">
             {drafts.map((d) => (
               <li key={d.key} className="min-w-0">
                 <RouteCard
@@ -209,7 +209,7 @@ export const RoutesSection = forwardRef<RoutesHandle, { profile: Profile }>(func
       ) : active.length === 0 && drafts.length === 0 && !drafting ? (
         <EmptyRoutes onDraft={() => void draft()} profile={profile} />
       ) : (
-        <ul className="flex flex-col gap-6">
+        <ul className="grid gap-3 xl:grid-cols-2">
           {active.map((r) => (
             <li key={r.id}>
               <SavedRoute
@@ -236,7 +236,7 @@ export const RoutesSection = forwardRef<RoutesHandle, { profile: Profile }>(func
       )}
 
       {archived.length > 0 && (
-        <details className="group mt-10 rounded-xxl border border-hairline bg-canvas-soft p-4 sm:p-5">
+        <details className="group mt-4 rounded-[16px] border border-hairline bg-canvas-soft p-3 sm:p-4">
           <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-2 text-title-sm text-ink">
             Archived routes ({archived.length})
             <span aria-hidden="true" className="text-muted transition-transform group-open:rotate-180">⌄</span>
@@ -496,7 +496,8 @@ function RouteCard({
   return (
     <article
       className={cn(
-        "flex h-full min-w-0 flex-col gap-4 rounded-xxl border bg-surface-card p-5 sm:p-6",
+        // a container: the timeline and the side column follow the card's own width
+        "@container flex h-full min-w-0 flex-col gap-3 rounded-[18px] border bg-surface-card p-4",
         chosen ? "border-primary shadow-[0_0_0_3px_var(--color-primary-wash)]" : "border-hairline",
         archived && "opacity-80",
       )}
@@ -533,7 +534,7 @@ function RouteCard({
       </div>
       <Timeline courses={route.courses} compact={compact} />
       {!compact && <RoleLegend courses={route.courses} />}
-      <div className={cn("grid gap-5", !compact && "md:grid-cols-[minmax(0,1fr)_260px]")}>
+      <div className={cn("grid gap-4", !compact && "@2xl:grid-cols-[minmax(0,1fr)_240px]")}>
         {route.milestones.length > 0 && (
           <div>
             <p className="mb-2 text-caption-uppercase uppercase text-muted">Milestones</p>
@@ -561,11 +562,11 @@ function Timeline({ courses, compact }: { courses: RouteCourse[]; compact: boole
   const years = byYear(courses);
   if (courses.length === 0) return <p className="text-body-sm text-muted">No courses in this route.</p>;
   return (
-    <div className={cn("grid gap-3", compact ? "grid-cols-1" : "grid-cols-1 sm:grid-cols-2 xl:grid-cols-4")}>
+    <div className={cn("grid gap-2", compact ? "grid-cols-1" : "grid-cols-1 @md:grid-cols-2 @3xl:grid-cols-4")}>
       {[1, 2, 3, 4].map((y) => {
         const list = years.get(y) ?? [];
         return (
-          <div key={y} className={cn("min-w-0 rounded-xl bg-canvas-soft p-3", compact && "flex items-start gap-3 p-2.5")}>
+          <div key={y} className={cn("min-w-0 rounded-[14px] bg-canvas-soft p-2.5", compact && "flex items-start gap-3 p-2.5")}>
             <p className={cn("text-caption-uppercase uppercase text-muted", compact ? "w-14 shrink-0 pt-1.5" : "mb-2")}>Year {y}</p>
             {list.length === 0 ? (
               <p className="pt-1 text-caption text-muted-soft">Open</p>

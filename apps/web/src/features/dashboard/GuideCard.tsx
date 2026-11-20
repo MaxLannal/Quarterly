@@ -62,7 +62,7 @@ export function GuideCard({
   }
 
   return (
-    <section aria-labelledby={`${inputId}-title`} className="relative isolate h-full overflow-hidden rounded-xxl bg-surface-dark p-6 text-on-dark sm:p-8">
+    <section aria-labelledby={`${inputId}-title`} className="relative isolate h-full overflow-hidden rounded-[22px] bg-surface-dark p-4 text-on-dark sm:p-5">
       <div aria-hidden="true" className="orb -right-24 -top-24 size-72" style={{ "--orb-color": "var(--color-primary)" } as CSSProperties} />
       <div className="flex items-center gap-2">
         <GuideMark size={16} className={cn("text-primary", welcome.isFetching && "dash-thinking")} />
@@ -71,8 +71,8 @@ export function GuideCard({
         </h2>
       </div>
       {!known ? (
-        <div className="mt-4 flex flex-col gap-5">
-          <p className="font-serif text-[26px] font-light leading-[1.2] text-on-dark sm:text-[32px]">
+        <div className="mt-3 flex flex-col gap-4">
+          <p className="font-serif text-[21px] font-light leading-[1.25] text-on-dark sm:text-[23px]">
             Hi, I'm your guide. Give me ten minutes, one question at a time, and I'll draw a portrait of what you want from <em className="italic text-[color:var(--color-on-inverse-soft)]">UChicago</em>.
           </p>
           <div className="flex flex-wrap gap-2">
@@ -82,16 +82,16 @@ export function GuideCard({
           </div>
         </div>
       ) : (
-        <div className="mt-4 flex flex-col gap-5">
+        <div className="mt-3 flex flex-col gap-3">
           {welcome.isLoading || (paused && !turn) ? (
             <div aria-hidden="true" className="flex flex-col gap-2">
               <div className="h-7 w-11/12 rounded-md bg-on-dark/10" />
               <div className="h-7 w-3/4 rounded-md bg-on-dark/10" />
             </div>
           ) : turn ? (
-            <p className="font-serif text-[22px] font-light leading-[1.3] text-on-dark sm:text-[26px]">{turn.text}</p>
+            <p className="dash-guide-text max-h-[13.5rem] overflow-y-auto pr-1 font-serif text-[19px] font-light leading-[1.35] text-on-dark sm:text-[20px]">{turn.text}</p>
           ) : (
-            <p className="font-serif text-[22px] font-light leading-[1.3] text-on-dark sm:text-[26px]">Welcome back. Want to pick up where we left off, or draft a few routes?</p>
+            <p className="font-serif text-[19px] font-light leading-[1.35] text-on-dark sm:text-[21px]">Welcome back. Want to pick up where we left off, or draft a few routes?</p>
           )}
           {turn && turn.courses.length > 0 && (
             <ul className="flex flex-wrap gap-2">
