@@ -654,6 +654,9 @@ Richard: where it conflicts with the sections above, this section describes what
   flank the chapel by day and night (iron letters, a gold lantern by day); at night the sky's titles
   turn a dim navy with a few twinkling gold star letters and a moon of gold letters, small snowflakes
   drift down as bright letters, the stone is a deep moonlit blue, the lawn and paths are under snow,
-  and the lanterns glow orange, warming the snow and the letters near them. Reduced motion: a still
-  night (no falling snow, no twinkle).
+  and the lanterns glow orange, warming the snow and the letters near them. Texture comes from the
+  letters' own colour and transparency: drifting night clouds (darker, denser banks; thin clear
+  patches where the stars show; lavender edges near the moon), a darker zenith, moonlit and shadowed
+  carving on the side facing the moon, weathered patches in the stone, mottled trees, and snow
+  drifts. Reduced motion: a still night (no falling snow, no twinkle, the clouds stay put).
 

@@ -333,15 +333,46 @@ void main() {
     float h1 = hash(aPos.xy * 0.731);
     float star = step(0.972, h1) * (1.0 - moon) * (1.0 - halo)
       * (0.65 + 0.35 * sin(uTime * (0.9 + h1 * 2.6) + h1 * 60.0) * uMotion);
+    // Night clouds, drifting slowly: banks of thicker, darker sky and thin clear patches, their
+    // edges lit lavender where the moon is near. All of it is the letters' own colour and
+    // transparency, so the sky has texture without anything drawn behind the type.
+    vec2 drift = vec2(uTime * 5.0, uTime * 0.8) * uMotion;
+    float bank = fbm((c - drift) / vec2(460.0, 230.0));
+    float wisp = fbm((c - drift * 1.7 + vec2(310.0, -140.0)) / vec2(170.0, 90.0));
+    float mott = clamp(bank * 0.72 + wisp * 0.38 - 0.05, 0.0, 1.0);
+    float thick = smoothstep(0.4, 0.62, mott);
+    float edge = smoothstep(0.3, 0.46, mott) * (1.0 - smoothstep(0.5, 0.64, mott));
+    float nearMoon = exp(-pow(length(c - uMoon.xy) / max(1.0, uMoon.z * 8.0), 2.0));
+    skyCol *= mix(1.45, 0.62, thick);
+    skyCol = mix(skyCol, vec3(0.36, 0.36, 0.66), edge * (0.25 + 0.75 * nearMoon) * 0.8);
+    // how opaque the sky's letters are: deep at the zenith and in the cloud banks, thin in the
+    // clear patches and low over the horizon
+    float skyA = 0.1 + 0.68 * thick + 0.16 * (1.0 - hy) + 0.12 * edge * nearMoon;
+    // stars show through the clear patches only
+    star *= 1.0 - thick * 0.85;
     skyCol = mix(skyCol, vec3(0.95, 0.74, 0.32), clamp(star, 0.0, 1.0));
-    vec3 trees = mix(vec3(0.08, 0.11, 0.24), vec3(0.3, 0.36, 0.6), tone);
+    float leaf = fbm(c / 46.0 + vec2(5.0, 9.0));
+    vec3 trees = mix(vec3(0.06, 0.09, 0.2), vec3(0.32, 0.38, 0.62), clamp(tone + (leaf - 0.5) * 0.5, 0.0, 1.0));
     vec3 snow = mix(vec3(0.78, 0.84, 0.96), vec3(0.95, 0.97, 1.0), clamp(tone + 0.2, 0.0, 1.0));
     // the stone by moonlight: a solid blue, deep in shadow and lavender where the moon falls, so
     // the chapel reads as a building on the page by its colour (the type keeps its size)
-    vec3 nc = mix(trees, nightStoneRamp(mix(0.0, 0.55, tone)), aLook.y);
+    // Moonlight comes from the moon's side: carved faces turned to it are lighter, the others
+    // fall away into shadow; the stone is weathered (patches a little lighter or darker), darker
+    // low down where the snow-light does not reach, and the spires' tops catch the moon.
+    float side = uMoon.x > c.x ? 1.0 : -1.0;
+    vec3 Lm = normalize(vec3(side * 0.75, -0.55, 0.5));
+    float moonFace = (dot(n, Lm) - Lm.z) * aRelief.z;
+    float weather = fbm(c / 70.0 + vec2(17.0, 3.0));
+    float grain = noise(c / 9.0);
+    float topLight = 1.0 - smoothstep(0.15, 0.55, hy);
+    float stone = mix(0.0, 0.55, tone) + moonFace * 0.45 + (weather - 0.5) * 0.34
+      + (grain - 0.5) * 0.1 + topLight * 0.12 - smoothstep(0.62, 0.92, hy) * 0.1;
+    vec3 nc = mix(trees, nightStoneRamp(clamp(stone, 0.0, 1.0)), aLook.y);
     // under snow: the lawn and the paths, and everything in front of the chapel's ground line
     float ground = smoothstep(uLamps.z - 24.0, uLamps.z + 16.0, c.y) * step(1.0, uLamps.w);
     float snowy = max(aRelief.w, ground) * (1.0 - aLook.y);
+    float drifts = fbm(c / vec2(120.0, 40.0) + vec2(2.0, 11.0));
+    snow *= mix(0.9, 1.04, drifts);
     nc = mix(nc, snow, snowy);
     nc = mix(nc, skyCol, sky);
     nc = mix(nc, vec3(0.98, 0.66, 0.28), clamp(aLook.z * 1.1, 0.0, 0.6));
@@ -364,7 +395,11 @@ void main() {
     // the sky's letters fill in at night (nearly opaque), so the sky reads dark
     // a dim navy sky (under half opaque) so the solid blue chapel stands out from it, as by day;
     // the moon and the stars are fully drawn
-    alpha = mix(alpha, max(alpha, mix(0.4, 0.97, max(moon, star)) * fade), uNight * sky);
+    alpha = mix(alpha, max(alpha, mix(skyA, 0.97, max(moon, star)) * fade), uNight * sky);
+    // the stone, the trees and the snow vary in transparency too: weathered patches thinner,
+    // shadowed carving denser, drifts of snow brighter and thinner in the hollows
+    float texA = mix(mix(0.7, 1.08, weather) + clamp(-moonFace, 0.0, 1.0) * 0.25, mix(0.72, 1.0, drifts), snowy);
+    alpha = min(1.0, alpha * mix(1.0, texA, uNight * (1.0 - sky)));
     alpha = mix(alpha, max(alpha, light * 0.9 * fade), uNight * (1.0 - sky));
   }
   if (lampAny > 0.0) {
