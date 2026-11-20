@@ -648,3 +648,11 @@ Richard: where it conflicts with the sections above, this section describes what
   frame and sticky at the top: ink serif wordmark, 18px links, the current page a soft rose wash (not
   solid red), a quiet filled search pill. On a phone the account shows as its avatar only, so the bar
   keeps to two rows. (A dark "glass and flowing red" theme was tried and withdrawn the same day.)
+- **Day and night on the homepage** (Max, 2026-11-20): a Day / Night switch at the top right of the
+  hero (remembered on the device). Everything is painted in the chapel's course titles by the shader,
+  with no separate layers: two street lamps flank the chapel by day and night (iron letters, a gold
+  lantern by day); at night the sky's titles grow dense and deep blue with a few twinkling star
+  letters and a moon of pale letters, snow falls as bright lifted letters, the stone is moonlit, the
+  lawn and paths are under snow, and the lanterns glow orange, warming the snow and the letters
+  around them. Reduced motion: a still night (no falling snow, no twinkle).
+

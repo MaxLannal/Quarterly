@@ -83,3 +83,16 @@ test("sign-in follows the reference card: big title, pill fields, a password tha
   const radius = await password.evaluate((el) => getComputedStyle(el).borderTopLeftRadius);
   expect(radius).toBe("26px");
 });
+
+test("the homepage can be day or a snowy night, and remembers the choice", async ({ page }) => {
+  await page.goto("/");
+  const hero = page.locator("section[data-scene]");
+  await expect(hero).toHaveAttribute("data-scene", "day");
+  await page.getByRole("radio", { name: "Night" }).click();
+  await expect(page.getByRole("radio", { name: "Night" })).toHaveAttribute("aria-checked", "true");
+  await expect(hero).toHaveAttribute("data-scene", "night");
+  await page.reload();
+  await expect(page.locator("section[data-scene]")).toHaveAttribute("data-scene", "night");
+  await page.getByRole("radio", { name: "Day" }).click();
+  await expect(page.locator("section[data-scene]")).toHaveAttribute("data-scene", "day");
+});

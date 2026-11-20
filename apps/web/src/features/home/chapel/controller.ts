@@ -83,6 +83,13 @@ export class ChapelController {
   private hoverWord = -1;
   private trailBuf = new Float32Array(TRAIL * 4);
 
+  // the night scene (HomePage's Day / Night switch), the two street lamps and the moon, all
+  // painted in the letters by the shader
+  private night = 0;
+  private nightTarget = 0;
+  private lamps: [number, number, number, number] = [-1e4, -1e4, -1e4, 0];
+  private moon: [number, number, number] = [-1e4, -1e4, 1];
+
   constructor(el: ChapelElements, onOpen: (code: string) => void, reducedMotion: boolean) {
     this.el = el;
     this.onOpen = onOpen;
@@ -298,6 +305,7 @@ export class ChapelController {
     this.uiRight = uiRight;
     const set = layoutGlyphs({ width: w, height: h, data, field, metrics, placement, uiRight });
     this.set = set;
+    this.placeLamps(set, data.chapel, w, h);
     this.el.canvas.dataset.glyphs = String(set.count);
     this.el.canvas.dataset.placement = set.placement;
     const dpr = Math.min(2, window.devicePixelRatio || 1);
@@ -313,6 +321,35 @@ export class ChapelController {
       canvasFallback(this.el.canvas, set, w, h, dpr, this.clear);
     }
     this.setHover(-1);
+  }
+
+  /** Day (false) or the snowy night scene (true); the light changes over about two seconds. */
+  setNight(on: boolean): void {
+    this.nightTarget = on ? 1 : 0;
+    if (this.still || this.fallback) {
+      this.night = this.nightTarget;
+      this.render();
+    } else this.kick();
+  }
+
+  /** Two lamps flank the chapel on its ground line (kept on screen on a phone); the moon sits in
+   * the open sky, clear of the Day / Night switch. */
+  private placeLamps(set: GlyphSet, chapel: { x0: number; x1: number; y0: number; y1: number }, w: number, h: number) {
+    const f = set.frame;
+    const side = set.placement === "side";
+    // the controls fade the letters behind them: the lamps stand clear of that area
+    const uiRight = this.clear[2] + 70;
+    const uiTop = this.clear[1] - 40;
+    let ground = Math.min(h - 10, f.oy + f.h * Math.min(0.995, chapel.y1 + 0.012));
+    if (!side) ground = Math.min(ground, uiTop);
+    // on a phone the lamps stand above the controls, a little shorter so the switch stays clear
+    const height = Math.max(140, Math.min(h * 0.52, 470, side ? ground - 30 : ground * 0.68));
+    const clampX = (x: number) => Math.max(w * 0.07, Math.min(w * 0.93, x));
+    let left = clampX(f.ox + f.w * (chapel.x0 - 0.035));
+    if (side) left = Math.max(left, uiRight);
+    this.lamps = [left, clampX(f.ox + f.w * (chapel.x1 + 0.035)), ground, height];
+    const r = Math.max(26, Math.min(58, Math.min(w, h) * 0.055));
+    this.moon = set.placement === "side" ? [w * 0.86, h * 0.2, r] : [w * 0.2, h * 0.12, r];
   }
 
   /** restart the frame loop after it stopped for being idle or hidden */
@@ -370,6 +407,7 @@ export class ChapelController {
     this.cam.x = ease(this.cam.x, tx, 3, dt);
     this.cam.y = ease(this.cam.y, ty, 3, dt);
     this.lens = ease(this.lens, p.inside ? 1 : 0, p.inside ? 9 : 5, dt);
+    this.night = ease(this.night, this.nightTarget, 1.6, dt);
     if (this.lens < 0.02) this.lensAt = { x: p.x, y: p.y };
     else this.lensAt = { x: ease(this.lensAt.x, p.x, 16, dt), y: ease(this.lensAt.y, p.y, 16, dt) };
     for (const t of this.trail) t.age += dt;
@@ -398,6 +436,9 @@ export class ChapelController {
       hover: this.hoverWord,
       clear: this.clear,
       motion,
+      night: motion ? this.night : this.nightTarget,
+      lamps: this.lamps,
+      moon: this.moon,
     };
     this.renderer.draw(state);
   }

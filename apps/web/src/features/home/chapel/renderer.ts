@@ -6,7 +6,7 @@
  * WebGL2 is missing.
  */
 import type { GlyphSet, Metrics } from "./layout";
-import { MAROON, NEUTRAL, STILL_SUN, WEIGHTS } from "./palette";
+import { MAROON, NEUTRAL, NIGHT_STONE, STILL_SUN, WEIGHTS } from "./palette";
 
 /** Inter (already the page's body font, one variable file for every weight, so no extra
  * download): at 7px its even strokes hold far more colour than a serif's hairlines. Letters come
@@ -128,7 +128,7 @@ layout(location=1) in vec4 aPos;    // x, baseline y, font size, depth
 layout(location=2) in vec4 aLook;   // tone, maroon, glass, alpha
 layout(location=3) in vec4 aUV;
 layout(location=4) in vec4 aMeta;   // quad width (em), course index, delay (s), advance (em)
-layout(location=5) in vec4 aRelief; // slope of the carving (gx, gy), how much it shades, -
+layout(location=5) in vec4 aRelief; // slope of the carving (gx, gy), how much it shades, snowy
 
 uniform vec2 uView;
 uniform vec2 uCam;
@@ -144,12 +144,16 @@ uniform float uFeather;
 uniform int uPass;                  // 0 shadow, 1 letters, 2 lifted letters on top
 uniform vec3 uCell;                 // pad, ascent, cell height (em)
 uniform float uMotion;              // 0 under reduced motion: no movement and no changing light
+uniform float uNight;               // 0 day .. 1 the snowy night scene
+uniform vec4 uLamps;                // the two street lamps: x of each, the ground (y), height (px)
+uniform vec3 uMoon;                 // the moon at night: x, y, radius (px)
 
 out vec2 vUV;
 out vec4 vColor;
 
 ${rampGlsl("maroonRamp", MAROON)}
 ${rampGlsl("neutralRamp", NEUTRAL)}
+${rampGlsl("nightStoneRamp", NIGHT_STONE)}
 
 float hash(vec2 p) {
   p = fract(p * vec2(123.34, 456.21));
@@ -174,6 +178,54 @@ float fbm(vec2 p) {
 }
 
 void hide() { gl_Position = vec4(2.0, 2.0, 2.0, 1.0); vColor = vec4(0.0); vUV = vec2(0.0); }
+
+// A street lamp drawn in letters: an iron post, collar and base, a glass lantern and its cap.
+// Returns how much of it is iron; \`glass\` says how much is the lantern's glass.
+float lampOne(vec2 c, float lx, float gy, float H, out float glass) {
+  glass = 0.0;
+  if (H < 1.0) return 0.0;
+  float dx = abs(c.x - lx);
+  float y = gy - c.y;
+  float iron = 0.0;
+  if (y > 0.0 && y < H * 0.08 && dx < H * (0.095 - y / H * 0.5)) iron = 1.0;
+  if (y > 0.0 && y < H * 0.77 && dx < H * 0.033) iron = 1.0;
+  if (abs(y - H * 0.6) < H * 0.016 && dx < H * 0.058) iron = 1.0;
+  if (abs(y - H * 0.765) < H * 0.016 && dx < H * 0.088) iron = 1.0;
+  float ly = (y - H * 0.778) / (H * 0.15);
+  if (ly >= 0.0 && ly <= 1.0 && dx < H * (0.064 + 0.026 * ly)) {
+    glass = 1.0;
+    // the lantern's frame: a mullion down the middle
+    if (dx < H * 0.008) { glass = 0.0; iron = 1.0; }
+  }
+  float cy = (y - H * 0.928) / (H * 0.075);
+  if (cy >= 0.0 && cy <= 1.0 && dx < H * 0.11 * (1.0 - cy)) iron = 1.0;
+  if (abs(y - H * 1.02) < H * 0.016 && dx < H * 0.016) iron = 1.0;
+  return iron;
+}
+
+// Snow falling, as a brightness at point c: three depths of flakes in columns, each flake
+// drifting down at its own pace and swaying a little.
+float snowfall(vec2 c, float t) {
+  float s = 0.0;
+  float period = uView.y + 80.0;
+  for (int layer = 0; layer < 3; layer++) {
+    float fl = float(layer);
+    float cell = 30.0 + fl * 20.0;
+    float size = 5.5 + fl * 2.8;
+    float col = floor(c.x / cell);
+    float r = hash(vec2(col, fl * 7.13 + 1.0));
+    float r2 = hash(vec2(col * 1.7 + 3.0, fl + 3.1));
+    float speed = (16.0 + fl * 14.0) * (0.75 + 0.5 * r2);
+    for (int k = 0; k < 2; k++) {
+      float ph = fract(r + float(k) * 0.5);
+      float fy = mod(t * speed + ph * period, period) - 40.0;
+      float fx = (col + 0.5 + (r2 - 0.5) * 0.6) * cell + sin(t * 0.55 + r * 6.28 + float(k) * 2.0) * (5.0 + fl * 3.0);
+      vec2 d = (c - vec2(fx, fy)) / size;
+      s = max(s, exp(-dot(d, d)));
+    }
+  }
+  return s;
+}
 
 void main() {
   float size = aPos.z;
@@ -257,6 +309,83 @@ void main() {
   // lifted letters get a little deeper and fully opaque; the hovered title turns ink
   tone -= 0.06 * clamp(lift, 0.0, 1.0);
   vec3 col = mix(neutralRamp(tone), maroonRamp(tone), aLook.y);
+  // The fades behind the page's controls and at the hero's edges, for letters drawn fully opaque.
+  float fade = smoothstep(0.0, 28.0, c.y) * (1.0 - smoothstep(uView.y - 72.0, uView.y - 4.0, c.y))
+    * mix(1.0, 0.07, clear);
+  // The two street lamps, painted in the letters by day and by night.
+  float glassA; float glassB;
+  float iron = max(lampOne(c, uLamps.x, uLamps.z, uLamps.w, glassA), lampOne(c, uLamps.y, uLamps.z, uLamps.w, glassB));
+  float glass = max(glassA, glassB);
+  float lampAny = max(iron, glass);
+  if (uNight > 0.001) {
+    // A winter night. The sky's letters turn deep blue (darker high up), a few twinkle as stars,
+    // a disc of pale letters is the moon; the stone is moonlit, the trees frosted, the lawn and
+    // paths under snow; the great window glows warm.
+    float hy = clamp(c.y / max(1.0, uView.y), 0.0, 1.0);
+    vec3 skyCol = mix(vec3(0.02, 0.03, 0.11), vec3(0.13, 0.12, 0.32), smoothstep(0.0, 0.9, hy));
+    float md = length(c - uMoon.xy) / max(1.0, uMoon.z);
+    float moon = 1.0 - smoothstep(0.9, 1.0, md);
+    float halo = exp(-pow(max(0.0, md - 1.0) * 1.3, 2.0)) * (1.0 - moon);
+    skyCol = mix(skyCol, vec3(0.5, 0.53, 0.82), halo * 0.75);
+    skyCol = mix(skyCol, vec3(1.0, 0.95, 0.78), moon);
+    float h1 = hash(aPos.xy * 0.731);
+    float star = step(0.972, h1) * (1.0 - moon) * (1.0 - halo)
+      * (0.65 + 0.35 * sin(uTime * (0.9 + h1 * 2.6) + h1 * 60.0) * uMotion);
+    skyCol = mix(skyCol, vec3(1.0, 0.93, 0.72), clamp(star, 0.0, 1.0));
+    vec3 trees = mix(vec3(0.08, 0.11, 0.24), vec3(0.3, 0.36, 0.6), tone);
+    vec3 snow = mix(vec3(0.78, 0.84, 0.96), vec3(0.95, 0.97, 1.0), clamp(tone + 0.2, 0.0, 1.0));
+    vec3 nc = mix(trees, nightStoneRamp(tone * 0.88), aLook.y);
+    // under snow: the lawn and the paths, and everything in front of the chapel's ground line
+    float ground = smoothstep(uLamps.z - 24.0, uLamps.z + 16.0, c.y) * step(1.0, uLamps.w);
+    float snowy = max(aRelief.w, ground) * (1.0 - aLook.y);
+    nc = mix(nc, snow, snowy);
+    nc = mix(nc, skyCol, sky);
+    nc = mix(nc, vec3(1.0, 0.72, 0.34), clamp(aLook.z * 1.4, 0.0, 0.9));
+    // the lamps' light: an amber halo round each lantern and an orange pool on the snow below
+    float flicker = 0.93 + 0.07 * sin(uTime * 9.0) * sin(uTime * 2.3 + 1.0) * uMotion;
+    float light = 0.0;
+    float pool = 0.0;
+    for (int i = 0; i < 2; i++) {
+      float lx = i == 0 ? uLamps.x : uLamps.y;
+      vec2 q = (c - vec2(lx, uLamps.z - uLamps.w * 0.85)) / (uLamps.w * 0.42);
+      light += exp(-dot(q, q));
+      vec2 p2 = (c - vec2(lx, uLamps.z)) / vec2(uLamps.w * 0.75, uLamps.w * 0.2);
+      pool += exp(-dot(p2, p2));
+    }
+    light = clamp(light, 0.0, 1.0) * flicker;
+    pool = clamp(pool, 0.0, 1.0) * flicker;
+    nc = mix(nc, vec3(1.0, 0.62, 0.24), light * 0.8);
+    nc = mix(nc, vec3(1.0, 0.6, 0.28), pool * mix(0.45, 0.92, snowy));
+    col = mix(col, nc, uNight);
+    // the sky's letters fill in at night (bigger and nearly opaque), so the sky reads dark
+    alpha = mix(alpha, max(alpha, 0.97 * fade), uNight * sky);
+    alpha = mix(alpha, max(alpha, light * 0.9 * fade), uNight * (1.0 - sky));
+    // overlapping letters make a dark field; the moon and the stars stay crisp
+    scale *= 1.0 + 0.7 * uNight * sky * (1.0 - max(moon, star));
+  }
+  if (lampAny > 0.0) {
+    // cast iron: near black by day; at night dark, catching the lantern's light near the top
+    float lit = clamp(1.0 - abs(c.y - (uLamps.z - uLamps.w * 0.8)) / (uLamps.w * 0.5), 0.0, 1.0);
+    vec3 ironCol = mix(vec3(0.09, 0.07, 0.07), mix(vec3(0.05, 0.05, 0.1), vec3(0.42, 0.22, 0.08), lit * 0.7), uNight);
+    float glow = 0.9 + 0.1 * sin(uTime * 7.0 + 1.3) * uMotion;
+    vec3 glassCol = mix(vec3(0.85, 0.66, 0.36), vec3(1.0, 0.66, 0.2) * glow, uNight);
+    col = mix(col, ironCol, iron);
+    col = mix(col, glassCol, glass);
+    alpha = mix(alpha, 0.98 * fade, lampAny);
+    // the lamp's letters overlap into a solid silhouette
+    scale *= 1.0 + 0.45 * lampAny;
+  }
+  if (uNight > 0.001) {
+    // snowflakes: bright letters that drift down through the sky, lifted a little so they glow
+    // over their neighbours; near a lamp they catch its orange light
+    float flake = snowfall(c, uTime) * uNight * (1.0 - clear);
+    vec2 qa = (c - vec2(uLamps.x, uLamps.z - uLamps.w * 0.85)) / (uLamps.w * 0.6);
+    vec2 qb = (c - vec2(uLamps.y, uLamps.z - uLamps.w * 0.85)) / (uLamps.w * 0.6);
+    float warm = clamp(exp(-dot(qa, qa)) + exp(-dot(qb, qb)), 0.0, 1.0);
+    col = mix(col, mix(vec3(0.97, 0.98, 1.0), vec3(1.0, 0.8, 0.5), warm), flake);
+    alpha = mix(alpha, 0.98, flake * fade);
+    lift = max(lift, flake * 0.45);
+  }
   col = mix(col, uHoverColor, hov);
   alpha = mix(alpha, 1.0, clamp(max(lift * 1.4, hov), 0.0, 1.0) * e);
 
@@ -312,6 +441,12 @@ export type FrameState = {
   hover: number;
   clear: [number, number, number, number];
   motion: boolean;
+  /** 0 day .. 1 the snowy night scene */
+  night: number;
+  /** the two street lamps: x of each, the ground (y), their height; CSS px */
+  lamps: [number, number, number, number];
+  /** the moon at night: x, y, radius; CSS px */
+  moon: [number, number, number];
 };
 
 function compile(gl: WebGL2RenderingContext, type: number, src: string): WebGLShader {
@@ -381,6 +516,7 @@ export class ChapelRenderer {
     for (const name of [
       "uView", "uCam", "uShift", "uPointer", "uTrail", "uTrailCount", "uTime", "uHover",
       "uHoverColor", "uClear", "uFeather", "uPass", "uCell", "uMotion", "uAtlas",
+      "uNight", "uLamps", "uMoon",
     ]) {
       this.u[name] = gl.getUniformLocation(program, name);
     }
@@ -446,7 +582,7 @@ export class ChapelRenderer {
       data[o + 16] = set.relief[i * 4]!;
       data[o + 17] = set.relief[i * 4 + 1]!;
       data[o + 18] = set.relief[i * 4 + 2]!;
-      data[o + 19] = 0;
+      data[o + 19] = set.relief[i * 4 + 3]!;
     }
     gl.bindBuffer(gl.ARRAY_BUFFER, this.instances);
     gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW);
@@ -486,7 +622,12 @@ export class ChapelRenderer {
     gl.uniform1i(u.uTrailCount!, s.trailCount);
     gl.uniform1f(u.uTime!, s.time);
     gl.uniform1f(u.uHover!, s.hover);
-    gl.uniform3f(u.uHoverColor!, 0.067, 0.067, 0.067); // ink #111111
+    // the hovered title: ink by day, lamp-light amber at night
+    const n = s.night;
+    gl.uniform3f(u.uHoverColor!, 0.067 + (1 - 0.067) * n, 0.067 + (0.7 - 0.067) * n, 0.067 + (0.3 - 0.067) * n);
+    gl.uniform1f(u.uNight!, n);
+    gl.uniform4f(u.uLamps!, ...s.lamps);
+    gl.uniform3f(u.uMoon!, ...s.moon);
     gl.uniform4f(u.uClear!, ...s.clear);
     gl.uniform1f(u.uFeather!, 56);
     gl.uniform3f(u.uCell!, atlas.pad, atlas.ascent, atlas.cellHeight);

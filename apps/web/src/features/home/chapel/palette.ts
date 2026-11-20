@@ -35,6 +35,20 @@ export const MAROON = stops([
   [0.9, "#ebb3ab"],
   [1, "#f6dcd7"],
 ]);
+/**
+ * The night scene (HomePage's Day / Night switch): the chapel by moonlight, from a deep blue in
+ * shadow through slate and lavender to a pale frost where the moon is on the stone. The shader
+ * blends to it as night falls; the lamps' orange light and the lit windows are added on top.
+ */
+export const NIGHT_STONE = stops([
+  [0, "#141c45"],
+  [0.25, "#26336e"],
+  [0.45, "#3f5196"],
+  [0.62, "#6676b8"],
+  [0.78, "#97a3dc"],
+  [0.9, "#c6cdf2"],
+  [1, "#eef1ff"],
+]);
 /** Black through warm greys to white, for everything that is not the chapel. */
 export const NEUTRAL = stops([
   [0, "#0b0a0a"],

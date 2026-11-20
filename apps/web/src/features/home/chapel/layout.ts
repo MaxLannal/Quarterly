@@ -226,7 +226,10 @@ export function layoutGlyphs({
           advs.push(adv);
           depth.push(style.depth);
           look.push(style.tone, style.maroon, style.glass, alpha);
-          relief.push(gx, gy, style.relief, 0);
+          // how snowy the letter is on a winter night: the lawn and the paths, and a little frost
+          // on the trees (read by the shader's night scene)
+          const snowy = sample.land * Math.min(1, sample.grass + sample.path + 0.3 * sample.foliage);
+          relief.push(gx, gy, style.relief, snowy);
           rgba.push(rgb[0], rgb[1], rgb[2], alpha);
           word.push(isSep ? -1 : id);
           // the build-in lays the courses from the ground up, a little ragged, in under a second

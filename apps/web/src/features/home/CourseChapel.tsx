@@ -29,12 +29,18 @@ function canRun(): boolean {
 export function CourseChapel({
   sectionRef,
   uiRef,
+  night = false,
 }: {
   sectionRef: RefObject<HTMLElement | null>;
   uiRef: RefObject<HTMLElement | null>;
+  /** The snowy night scene (HomePage's Day / Night switch). */
+  night?: boolean;
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const labelRef = useRef<HTMLSpanElement>(null);
+  const controllerRef = useRef<ChapelController | null>(null);
+  const nightRef = useRef(night);
+  nightRef.current = night;
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -49,12 +55,21 @@ export function CourseChapel({
       prefersReducedMotion(),
     );
     (canvas as HTMLCanvasElement & { chapel?: ChapelController }).chapel = controller;
+    controllerRef.current = controller;
+    controller.setNight(nightRef.current);
     // start straight away: the page is already drawn, and the picture is the first thing to see
     controller.init().catch(() => {
       canvas.dataset.state = "failed";
     });
-    return () => controller.dispose();
+    return () => {
+      controllerRef.current = null;
+      controller.dispose();
+    };
   }, [sectionRef, uiRef, navigate]);
+
+  useEffect(() => {
+    controllerRef.current?.setNight(night);
+  }, [night]);
 
   return (
     <>

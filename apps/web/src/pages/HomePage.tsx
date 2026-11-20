@@ -4,6 +4,7 @@ import { standaloneLinkClass } from "@/components/layout/page";
 import { Button } from "@/components/ui/button";
 import { AskBar } from "@/features/home/AskBar";
 import { CourseChapel } from "@/features/home/CourseChapel";
+import { SceneSwitch, useScene } from "@/features/home/NightScene";
 import { activePlan } from "@/features/planner/localPlans";
 import { cn } from "@/lib/utils";
 
@@ -22,6 +23,8 @@ export default function HomePage() {
   const navigate = useNavigate();
   const sectionRef = useRef<HTMLElement>(null);
   const uiRef = useRef<HTMLDivElement>(null);
+  const [scene, setScene] = useScene();
+  const night = scene === "night";
   const [hasPlan] = useState(() => {
     try {
       return activePlan() !== null;
@@ -33,9 +36,16 @@ export default function HomePage() {
     <section
       ref={sectionRef}
       aria-label="Quarterly"
-      className="relative isolate flex h-[calc(100svh-100px)] min-h-[640px] overflow-hidden"
+      data-scene={scene}
+      className={cn(
+        "relative isolate flex h-[calc(100svh-100px)] min-h-[640px] overflow-hidden",
+      )}
     >
-      <CourseChapel sectionRef={sectionRef} uiRef={uiRef} />
+      <CourseChapel sectionRef={sectionRef} uiRef={uiRef} night={night} />
+      {/* Day or the snowy night (Max, 2026-11-20); remembered on this device. */}
+      <div className="absolute right-3 top-3 z-10 sm:right-5 sm:top-5">
+        <SceneSwitch scene={scene} onChange={setScene} />
+      </div>
       <div className="mx-auto flex w-full max-w-[1880px] items-end px-4 pb-8 sm:px-8 sm:pb-14 chapel-side:items-center chapel-side:px-12 chapel-side:pb-0">
         <div
           ref={uiRef}
