@@ -8,6 +8,7 @@ const COLUMNS: { title: string; links: { to: string; label: string }[] }[] = [
     links: [
       { to: "/plan", label: "Planner" },
       { to: "/plans", label: "My plans" },
+      { to: "/me", label: "Your dashboard" },
     ],
   },
   {
@@ -15,18 +16,21 @@ const COLUMNS: { title: string; links: { to: string; label: string }[] }[] = [
     links: [
       { to: "/courses", label: "Course search" },
       { to: "/programs", label: "Program explorer" },
+      { to: "/feed", label: "The feed" },
     ],
   },
   {
     title: "Forum",
     links: [
-      { to: "/instructors", label: "Forum" },
+      { to: "/forum", label: "Questions" },
+      { to: "/instructors", label: "Course reviews" },
       { to: "/guidelines", label: "Community guidelines" },
     ],
   },
   {
     title: "Quarterly",
     links: [
+      { to: "/ask", label: "Ask Quarterly" },
       { to: "/about", label: "About Quarterly" },
       { to: "/privacy", label: "Privacy" },
     ],

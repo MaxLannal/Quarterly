@@ -50,7 +50,7 @@ test("the DESIGN.md fonts load from the bundle", async ({ page }) => {
     if (r.resourceType() === "font" && !r.url().startsWith("data:")) fontRequests.push(new URL(r.url()).pathname);
   });
   await page.goto("/");
-  await expect(page.getByRole("heading", { level: 1, name: "Quarterly" })).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1, name: "The Best of UChicago, within your reach." })).toBeVisible();
   const loaded = await page.evaluate(async () => {
     await document.fonts.ready;
     return {
@@ -70,7 +70,7 @@ test("the DESIGN.md fonts load from the bundle", async ({ page }) => {
 
 test("home page: no axe violations", async ({ page }) => {
   await page.goto("/");
-  await expect(page.getByRole("heading", { level: 1, name: "Quarterly" })).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1, name: "The Best of UChicago, within your reach." })).toBeVisible();
   await expectNoAxeViolations(page);
 });
 
@@ -167,7 +167,7 @@ for (const size of [
 
     test(`home and course search @${size.width}: no serious axe violations`, async ({ page }) => {
       await page.goto("/");
-      await expect(page.getByRole("heading", { level: 1, name: "Quarterly" })).toBeVisible();
+      await expect(page.getByRole("heading", { level: 1, name: "The Best of UChicago, within your reach." })).toBeVisible();
       await expectNoSeriousAxeViolations(page);
       await page.goto("/courses");
       await expect(page.getByRole("heading", { level: 1, name: "Course search" })).toBeVisible();

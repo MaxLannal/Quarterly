@@ -208,6 +208,314 @@
         ],
         "title": "AgentEvent"
       },
+      "AskAnswerEvent": {
+        "properties": {
+          "ai": {
+            "default": true,
+            "title": "Ai",
+            "type": "boolean"
+          },
+          "citations": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/AskCitation"
+            },
+            "title": "Citations",
+            "type": "array"
+          },
+          "courses": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/AskCourse"
+            },
+            "title": "Courses",
+            "type": "array"
+          },
+          "followups": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Followups",
+            "type": "array"
+          },
+          "text": {
+            "title": "Text",
+            "type": "string"
+          },
+          "type": {
+            "const": "answer",
+            "default": "answer",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "text"
+        ],
+        "title": "AskAnswerEvent",
+        "type": "object"
+      },
+      "AskCitation": {
+        "description": "A source chip. `label` and `href` are built by the server from the id (never by the\nmodel): `href` is a path on this site, or an https page on uchicago.edu for `guide`.",
+        "properties": {
+          "href": {
+            "title": "Href",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "course",
+              "program",
+              "post",
+              "summary",
+              "attribute",
+              "thread",
+              "guide"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind",
+          "id",
+          "label",
+          "href"
+        ],
+        "title": "AskCitation",
+        "type": "object"
+      },
+      "AskContext": {
+        "description": "Where the student asks from (the companion sends it; the Ask page usually does not).",
+        "properties": {
+          "course_code": {
+            "anyOf": [
+              {
+                "maxLength": 16,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Course Code"
+          },
+          "page": {
+            "anyOf": [
+              {
+                "maxLength": 200,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Page"
+          },
+          "thread_id": {
+            "anyOf": [
+              {
+                "minimum": 1.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Thread Id"
+          }
+        },
+        "title": "AskContext",
+        "type": "object"
+      },
+      "AskCourse": {
+        "description": "A course the answer mentions; it exists in the catalog.",
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "title"
+        ],
+        "title": "AskCourse",
+        "type": "object"
+      },
+      "AskDoneEvent": {
+        "properties": {
+          "run_id": {
+            "title": "Run Id",
+            "type": "string"
+          },
+          "type": {
+            "const": "done",
+            "default": "done",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "run_id"
+        ],
+        "title": "AskDoneEvent",
+        "type": "object"
+      },
+      "AskErrorEvent": {
+        "properties": {
+          "message": {
+            "title": "Message",
+            "type": "string"
+          },
+          "type": {
+            "const": "error",
+            "default": "error",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "message"
+        ],
+        "title": "AskErrorEvent",
+        "type": "object"
+      },
+      "AskEvent": {
+        "description": "One Server-Sent Event `data:` payload from /agents/ask.",
+        "discriminator": {
+          "mapping": {
+            "answer": "#/components/schemas/AskAnswerEvent",
+            "done": "#/components/schemas/AskDoneEvent",
+            "error": "#/components/schemas/AskErrorEvent",
+            "step": "#/components/schemas/AskStepEvent"
+          },
+          "propertyName": "type"
+        },
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/AskStepEvent"
+          },
+          {
+            "$ref": "#/components/schemas/AskAnswerEvent"
+          },
+          {
+            "$ref": "#/components/schemas/AskDoneEvent"
+          },
+          {
+            "$ref": "#/components/schemas/AskErrorEvent"
+          }
+        ],
+        "title": "AskEvent"
+      },
+      "AskRequest": {
+        "properties": {
+          "context": {
+            "$ref": "#/components/schemas/AskContext",
+            "default": {}
+          },
+          "history": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/AskTurn"
+            },
+            "maxItems": 12,
+            "title": "History",
+            "type": "array"
+          },
+          "message": {
+            "maxLength": 4000,
+            "minLength": 1,
+            "title": "Message",
+            "type": "string"
+          },
+          "mode": {
+            "default": "ask",
+            "enum": [
+              "ask",
+              "companion"
+            ],
+            "title": "Mode",
+            "type": "string"
+          }
+        },
+        "required": [
+          "message"
+        ],
+        "title": "AskRequest",
+        "type": "object"
+      },
+      "AskStepEvent": {
+        "description": "The agent called a tool (\"Searching the catalog for \u201cquantum\u201d\").",
+        "properties": {
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "started",
+              "done",
+              "failed"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "tool": {
+            "title": "Tool",
+            "type": "string"
+          },
+          "type": {
+            "const": "step",
+            "default": "step",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "tool",
+          "label",
+          "status"
+        ],
+        "title": "AskStepEvent",
+        "type": "object"
+      },
+      "AskTurn": {
+        "properties": {
+          "role": {
+            "enum": [
+              "user",
+              "assistant"
+            ],
+            "title": "Role",
+            "type": "string"
+          },
+          "text": {
+            "maxLength": 4000,
+            "title": "Text",
+            "type": "string"
+          }
+        },
+        "required": [
+          "role",
+          "text"
+        ],
+        "title": "AskTurn",
+        "type": "object"
+      },
       "Assignment": {
         "additionalProperties": false,
         "properties": {
@@ -350,6 +658,46 @@
           "value"
         ],
         "title": "AttributeValue",
+        "type": "object"
+      },
+      "BookItem": {
+        "properties": {
+          "book": {
+            "$ref": "#/components/schemas/ShelfBook"
+          },
+          "category": {
+            "$ref": "#/components/schemas/FeedCategoryRef"
+          },
+          "courses": {
+            "items": {
+              "$ref": "#/components/schemas/CourseRef"
+            },
+            "title": "Courses",
+            "type": "array"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "kind": {
+            "const": "book",
+            "default": "book",
+            "title": "Kind",
+            "type": "string"
+          },
+          "reason": {
+            "title": "Reason",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "book",
+          "category",
+          "courses",
+          "reason"
+        ],
+        "title": "BookItem",
         "type": "object"
       },
       "BoundedPartsNode": {
@@ -987,6 +1335,74 @@
         "title": "CommentCreate",
         "type": "object"
       },
+      "CommentItem": {
+        "description": "A student's voice about a course: a Commons reply, or (logged in only) a forum post.",
+        "properties": {
+          "category": {
+            "$ref": "#/components/schemas/FeedCategoryRef"
+          },
+          "course": {
+            "$ref": "#/components/schemas/CourseRef"
+          },
+          "day": {
+            "format": "date",
+            "title": "Day",
+            "type": "string"
+          },
+          "handle": {
+            "title": "Handle",
+            "type": "string"
+          },
+          "href": {
+            "title": "Href",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "kind": {
+            "const": "comment",
+            "default": "comment",
+            "title": "Kind",
+            "type": "string"
+          },
+          "snippet": {
+            "title": "Snippet",
+            "type": "string"
+          },
+          "source": {
+            "enum": [
+              "commons",
+              "forum"
+            ],
+            "title": "Source",
+            "type": "string"
+          },
+          "voice": {
+            "enum": [
+              "reply",
+              "review",
+              "discussion"
+            ],
+            "title": "Voice",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "snippet",
+          "course",
+          "category",
+          "handle",
+          "voice",
+          "source",
+          "href",
+          "day"
+        ],
+        "title": "CommentItem",
+        "type": "object"
+      },
       "CommentOut": {
         "properties": {
           "body_html": {
@@ -1081,6 +1497,1090 @@
           "created_day"
         ],
         "title": "CommentOut",
+        "type": "object"
+      },
+      "CommonsAcceptIn": {
+        "properties": {
+          "reply_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reply Id"
+          }
+        },
+        "title": "CommonsAcceptIn",
+        "type": "object"
+      },
+      "CommonsAcceptOut": {
+        "properties": {
+          "accepted_reply_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Accepted Reply Id"
+          }
+        },
+        "title": "CommonsAcceptOut",
+        "type": "object"
+      },
+      "CommonsAnswerEvent": {
+        "properties": {
+          "fallback": {
+            "default": false,
+            "title": "Fallback",
+            "type": "boolean"
+          },
+          "reply": {
+            "$ref": "#/components/schemas/CommonsReply"
+          },
+          "type": {
+            "const": "answer",
+            "default": "answer",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "reply"
+        ],
+        "title": "CommonsAnswerEvent",
+        "type": "object"
+      },
+      "CommonsBotEvent": {
+        "description": "One Server-Sent Event of POST /commons/threads/{thread_id}/bot.",
+        "discriminator": {
+          "mapping": {
+            "answer": "#/components/schemas/CommonsAnswerEvent",
+            "busy": "#/components/schemas/CommonsBusyEvent",
+            "done": "#/components/schemas/CommonsDoneEvent",
+            "error": "#/components/schemas/CommonsErrorEvent",
+            "step": "#/components/schemas/CommonsStepEvent"
+          },
+          "propertyName": "type"
+        },
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/CommonsStepEvent"
+          },
+          {
+            "$ref": "#/components/schemas/CommonsAnswerEvent"
+          },
+          {
+            "$ref": "#/components/schemas/CommonsBusyEvent"
+          },
+          {
+            "$ref": "#/components/schemas/CommonsDoneEvent"
+          },
+          {
+            "$ref": "#/components/schemas/CommonsErrorEvent"
+          }
+        ],
+        "title": "CommonsBotEvent"
+      },
+      "CommonsBotRequest": {
+        "properties": {
+          "regenerate": {
+            "default": false,
+            "title": "Regenerate",
+            "type": "boolean"
+          },
+          "reply_to": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reply To"
+          }
+        },
+        "title": "CommonsBotRequest",
+        "type": "object"
+      },
+      "CommonsBusyEvent": {
+        "description": "Another reader's request is already writing this answer: poll the thread.",
+        "properties": {
+          "message": {
+            "title": "Message",
+            "type": "string"
+          },
+          "type": {
+            "const": "busy",
+            "default": "busy",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "message"
+        ],
+        "title": "CommonsBusyEvent",
+        "type": "object"
+      },
+      "CommonsCitation": {
+        "description": "A source the bot relied on. The web links `course` to /courses/<id>, `program` to\n/programs/<id>, `thread` to /forum/t/<id>; `guide` carries the official `url`.",
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "course",
+              "program",
+              "thread",
+              "guide",
+              "post",
+              "summary",
+              "attribute"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Url"
+          }
+        },
+        "required": [
+          "kind",
+          "id",
+          "label"
+        ],
+        "title": "CommonsCitation",
+        "type": "object"
+      },
+      "CommonsCourse": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "title"
+        ],
+        "title": "CommonsCourse",
+        "type": "object"
+      },
+      "CommonsDoneEvent": {
+        "properties": {
+          "type": {
+            "const": "done",
+            "default": "done",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "title": "CommonsDoneEvent",
+        "type": "object"
+      },
+      "CommonsErrorEvent": {
+        "properties": {
+          "message": {
+            "title": "Message",
+            "type": "string"
+          },
+          "type": {
+            "const": "error",
+            "default": "error",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "message"
+        ],
+        "title": "CommonsErrorEvent",
+        "type": "object"
+      },
+      "CommonsFollowIn": {
+        "properties": {
+          "follow": {
+            "title": "Follow",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "follow"
+        ],
+        "title": "CommonsFollowIn",
+        "type": "object"
+      },
+      "CommonsFollowOut": {
+        "properties": {
+          "following": {
+            "title": "Following",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "following"
+        ],
+        "title": "CommonsFollowOut",
+        "type": "object"
+      },
+      "CommonsPresence": {
+        "properties": {
+          "bot_state": {
+            "enum": [
+              "pending",
+              "answered",
+              "failed",
+              "off"
+            ],
+            "title": "Bot State",
+            "type": "string"
+          },
+          "latest_reply_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Latest Reply Id"
+          },
+          "reply_count": {
+            "title": "Reply Count",
+            "type": "integer"
+          },
+          "score": {
+            "title": "Score",
+            "type": "integer"
+          },
+          "typing": {
+            "title": "Typing",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "typing",
+          "reply_count",
+          "score",
+          "bot_state"
+        ],
+        "title": "CommonsPresence",
+        "type": "object"
+      },
+      "CommonsReply": {
+        "properties": {
+          "accepted": {
+            "default": false,
+            "title": "Accepted",
+            "type": "boolean"
+          },
+          "body_html": {
+            "title": "Body Html",
+            "type": "string"
+          },
+          "body_md": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Body Md"
+          },
+          "children": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/CommonsReply"
+            },
+            "title": "Children",
+            "type": "array"
+          },
+          "citations": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/CommonsCitation"
+            },
+            "title": "Citations",
+            "type": "array"
+          },
+          "created_day": {
+            "format": "date",
+            "title": "Created Day",
+            "type": "string"
+          },
+          "depth": {
+            "title": "Depth",
+            "type": "integer"
+          },
+          "edited_day": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Edited Day"
+          },
+          "handle": {
+            "title": "Handle",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "is_mine": {
+            "default": false,
+            "title": "Is Mine",
+            "type": "boolean"
+          },
+          "is_op": {
+            "default": false,
+            "title": "Is Op",
+            "type": "boolean"
+          },
+          "kind": {
+            "enum": [
+              "human",
+              "bot"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "my_vote": {
+            "default": 0,
+            "enum": [
+              -1,
+              0,
+              1
+            ],
+            "title": "My Vote",
+            "type": "integer"
+          },
+          "parent_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Parent Id"
+          },
+          "score": {
+            "title": "Score",
+            "type": "integer"
+          },
+          "status": {
+            "default": "visible",
+            "enum": [
+              "visible",
+              "removed",
+              "deleted"
+            ],
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "depth",
+          "kind",
+          "handle",
+          "body_html",
+          "score",
+          "created_day"
+        ],
+        "title": "CommonsReply",
+        "type": "object"
+      },
+      "CommonsReplyCreate": {
+        "properties": {
+          "body_md": {
+            "maxLength": 8000,
+            "minLength": 1,
+            "title": "Body Md",
+            "type": "string"
+          },
+          "parent_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Parent Id"
+          }
+        },
+        "required": [
+          "body_md"
+        ],
+        "title": "CommonsReplyCreate",
+        "type": "object"
+      },
+      "CommonsReplyPosted": {
+        "properties": {
+          "reply": {
+            "$ref": "#/components/schemas/CommonsReply"
+          },
+          "reply_count": {
+            "title": "Reply Count",
+            "type": "integer"
+          },
+          "summon_bot": {
+            "default": false,
+            "title": "Summon Bot",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "reply",
+          "reply_count"
+        ],
+        "title": "CommonsReplyPosted",
+        "type": "object"
+      },
+      "CommonsReplyUpdate": {
+        "properties": {
+          "body_md": {
+            "maxLength": 8000,
+            "minLength": 1,
+            "title": "Body Md",
+            "type": "string"
+          }
+        },
+        "required": [
+          "body_md"
+        ],
+        "title": "CommonsReplyUpdate",
+        "type": "object"
+      },
+      "CommonsReportIn": {
+        "properties": {
+          "reason": {
+            "maxLength": 500,
+            "minLength": 1,
+            "title": "Reason",
+            "type": "string"
+          },
+          "target_id": {
+            "title": "Target Id",
+            "type": "integer"
+          },
+          "target_type": {
+            "enum": [
+              "thread",
+              "reply"
+            ],
+            "title": "Target Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "target_type",
+          "target_id",
+          "reason"
+        ],
+        "title": "CommonsReportIn",
+        "type": "object"
+      },
+      "CommonsReportOut": {
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "status": {
+            "enum": [
+              "open",
+              "closed"
+            ],
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "status"
+        ],
+        "title": "CommonsReportOut",
+        "type": "object"
+      },
+      "CommonsStepEvent": {
+        "properties": {
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "started",
+              "done",
+              "failed"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "tool": {
+            "title": "Tool",
+            "type": "string"
+          },
+          "type": {
+            "const": "step",
+            "default": "step",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "tool",
+          "label",
+          "status"
+        ],
+        "title": "CommonsStepEvent",
+        "type": "object"
+      },
+      "CommonsThreadCreate": {
+        "properties": {
+          "body_md": {
+            "default": "",
+            "maxLength": 8000,
+            "title": "Body Md",
+            "type": "string"
+          },
+          "course_code": {
+            "anyOf": [
+              {
+                "maxLength": 16,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Course Code"
+          },
+          "tags": {
+            "default": [],
+            "items": {
+              "maxLength": 40,
+              "type": "string"
+            },
+            "maxItems": 12,
+            "title": "Tags",
+            "type": "array"
+          },
+          "title": {
+            "maxLength": 160,
+            "minLength": 8,
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "title"
+        ],
+        "title": "CommonsThreadCreate",
+        "type": "object"
+      },
+      "CommonsThreadDetail": {
+        "properties": {
+          "accepted": {
+            "default": false,
+            "title": "Accepted",
+            "type": "boolean"
+          },
+          "accepted_reply_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Accepted Reply Id"
+          },
+          "answer_count": {
+            "title": "Answer Count",
+            "type": "integer"
+          },
+          "answered": {
+            "title": "Answered",
+            "type": "boolean"
+          },
+          "body_html": {
+            "title": "Body Html",
+            "type": "string"
+          },
+          "body_md": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Body Md"
+          },
+          "bot_state": {
+            "enum": [
+              "pending",
+              "answered",
+              "failed",
+              "off"
+            ],
+            "title": "Bot State",
+            "type": "string"
+          },
+          "course": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CommonsCourse"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "created_day": {
+            "format": "date",
+            "title": "Created Day",
+            "type": "string"
+          },
+          "edited_day": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Edited Day"
+          },
+          "excerpt": {
+            "title": "Excerpt",
+            "type": "string"
+          },
+          "following": {
+            "default": false,
+            "title": "Following",
+            "type": "boolean"
+          },
+          "handle": {
+            "title": "Handle",
+            "type": "string"
+          },
+          "has_bot_answer": {
+            "title": "Has Bot Answer",
+            "type": "boolean"
+          },
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "is_mine": {
+            "default": false,
+            "title": "Is Mine",
+            "type": "boolean"
+          },
+          "last_reply_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Reply Id"
+          },
+          "mentions": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/CommonsCourse"
+            },
+            "title": "Mentions",
+            "type": "array"
+          },
+          "my_vote": {
+            "default": 0,
+            "enum": [
+              -1,
+              0,
+              1
+            ],
+            "title": "My Vote",
+            "type": "integer"
+          },
+          "replies": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/CommonsReply"
+            },
+            "title": "Replies",
+            "type": "array"
+          },
+          "reply_count": {
+            "title": "Reply Count",
+            "type": "integer"
+          },
+          "score": {
+            "title": "Score",
+            "type": "integer"
+          },
+          "status": {
+            "default": "visible",
+            "enum": [
+              "visible",
+              "removed",
+              "deleted"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "tags": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Tags",
+            "type": "array"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "excerpt",
+          "score",
+          "reply_count",
+          "answer_count",
+          "answered",
+          "bot_state",
+          "has_bot_answer",
+          "handle",
+          "created_day",
+          "body_html"
+        ],
+        "title": "CommonsThreadDetail",
+        "type": "object"
+      },
+      "CommonsThreadList": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/CommonsThreadSummary"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Cursor"
+          },
+          "total": {
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "total"
+        ],
+        "title": "CommonsThreadList",
+        "type": "object"
+      },
+      "CommonsThreadSummary": {
+        "properties": {
+          "accepted": {
+            "default": false,
+            "title": "Accepted",
+            "type": "boolean"
+          },
+          "answer_count": {
+            "title": "Answer Count",
+            "type": "integer"
+          },
+          "answered": {
+            "title": "Answered",
+            "type": "boolean"
+          },
+          "bot_state": {
+            "enum": [
+              "pending",
+              "answered",
+              "failed",
+              "off"
+            ],
+            "title": "Bot State",
+            "type": "string"
+          },
+          "course": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CommonsCourse"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "created_day": {
+            "format": "date",
+            "title": "Created Day",
+            "type": "string"
+          },
+          "edited_day": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Edited Day"
+          },
+          "excerpt": {
+            "title": "Excerpt",
+            "type": "string"
+          },
+          "handle": {
+            "title": "Handle",
+            "type": "string"
+          },
+          "has_bot_answer": {
+            "title": "Has Bot Answer",
+            "type": "boolean"
+          },
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "is_mine": {
+            "default": false,
+            "title": "Is Mine",
+            "type": "boolean"
+          },
+          "my_vote": {
+            "default": 0,
+            "enum": [
+              -1,
+              0,
+              1
+            ],
+            "title": "My Vote",
+            "type": "integer"
+          },
+          "reply_count": {
+            "title": "Reply Count",
+            "type": "integer"
+          },
+          "score": {
+            "title": "Score",
+            "type": "integer"
+          },
+          "status": {
+            "default": "visible",
+            "enum": [
+              "visible",
+              "removed",
+              "deleted"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "tags": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Tags",
+            "type": "array"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "excerpt",
+          "score",
+          "reply_count",
+          "answer_count",
+          "answered",
+          "bot_state",
+          "has_bot_answer",
+          "handle",
+          "created_day"
+        ],
+        "title": "CommonsThreadSummary",
+        "type": "object"
+      },
+      "CommonsThreadUpdate": {
+        "description": "Only the fields sent change. `course_code: null` detaches the course.",
+        "properties": {
+          "body_md": {
+            "anyOf": [
+              {
+                "maxLength": 8000,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Body Md"
+          },
+          "course_code": {
+            "anyOf": [
+              {
+                "maxLength": 16,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Course Code"
+          },
+          "tags": {
+            "anyOf": [
+              {
+                "items": {
+                  "maxLength": 40,
+                  "type": "string"
+                },
+                "maxItems": 12,
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tags"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "maxLength": 160,
+                "minLength": 8,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          }
+        },
+        "title": "CommonsThreadUpdate",
+        "type": "object"
+      },
+      "CommonsVoteIn": {
+        "properties": {
+          "target_id": {
+            "title": "Target Id",
+            "type": "integer"
+          },
+          "target_type": {
+            "enum": [
+              "thread",
+              "reply"
+            ],
+            "title": "Target Type",
+            "type": "string"
+          },
+          "value": {
+            "enum": [
+              -1,
+              0,
+              1
+            ],
+            "title": "Value",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "target_type",
+          "target_id",
+          "value"
+        ],
+        "title": "CommonsVoteIn",
+        "type": "object"
+      },
+      "CommonsVoteOut": {
+        "properties": {
+          "my_vote": {
+            "enum": [
+              -1,
+              0,
+              1
+            ],
+            "title": "My Vote",
+            "type": "integer"
+          },
+          "score": {
+            "title": "Score",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "score",
+          "my_vote"
+        ],
+        "title": "CommonsVoteOut",
         "type": "object"
       },
       "ConfirmEvent": {
@@ -1521,6 +3021,102 @@
         "title": "CourseInstructorOut",
         "type": "object"
       },
+      "CourseItem": {
+        "properties": {
+          "books": {
+            "items": {
+              "$ref": "#/components/schemas/ShelfBook"
+            },
+            "title": "Books",
+            "type": "array"
+          },
+          "category": {
+            "$ref": "#/components/schemas/FeedCategoryRef"
+          },
+          "code": {
+            "title": "Code",
+            "type": "string"
+          },
+          "commons_count": {
+            "default": 0,
+            "title": "Commons Count",
+            "type": "integer"
+          },
+          "core_tags": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Core Tags",
+            "type": "array"
+          },
+          "excerpt": {
+            "title": "Excerpt",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "illustration": {
+            "$ref": "#/components/schemas/Illustration"
+          },
+          "kind": {
+            "const": "course",
+            "default": "course",
+            "title": "Kind",
+            "type": "string"
+          },
+          "reason": {
+            "title": "Reason",
+            "type": "string"
+          },
+          "stats": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CourseStats"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "subject": {
+            "title": "Subject",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "units": {
+            "title": "Units",
+            "type": "integer"
+          },
+          "words": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Words",
+            "type": "array"
+          }
+        },
+        "required": [
+          "id",
+          "code",
+          "title",
+          "subject",
+          "category",
+          "units",
+          "excerpt",
+          "core_tags",
+          "words",
+          "illustration",
+          "books",
+          "reason"
+        ],
+        "title": "CourseItem",
+        "type": "object"
+      },
       "CourseList": {
         "additionalProperties": false,
         "description": "A named list per catalog year. Members = `courses` plus every course of `sublists`.\nA list of sequences (e.g. `core-huma-sequences`) has one sublist per sequence.",
@@ -1662,6 +3258,42 @@
         "title": "CourseLoadGoal",
         "type": "object"
       },
+      "CourseMention": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "title"
+        ],
+        "title": "CourseMention",
+        "type": "object"
+      },
+      "CourseRef": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "title"
+        ],
+        "title": "CourseRef",
+        "type": "object"
+      },
       "CourseRelation": {
         "additionalProperties": false,
         "properties": {
@@ -1707,6 +3339,40 @@
           "kind"
         ],
         "title": "CourseRelation",
+        "type": "object"
+      },
+      "CourseStats": {
+        "description": "From `attribute_value` (forum reviews and estimates), when there are any.",
+        "properties": {
+          "difficulty": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Difficulty"
+          },
+          "n": {
+            "default": 0,
+            "title": "N",
+            "type": "integer"
+          },
+          "workload_hours": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Workload Hours"
+          }
+        },
+        "title": "CourseStats",
         "type": "object"
       },
       "CourseSummary": {
@@ -1807,6 +3473,41 @@
           "label"
         ],
         "title": "Credit",
+        "type": "object"
+      },
+      "DashboardStepEvent": {
+        "description": "The agent is calling a tool (`label` is plain English, written by the server).",
+        "properties": {
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "started",
+              "done",
+              "failed"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "tool": {
+            "title": "Tool",
+            "type": "string"
+          },
+          "type": {
+            "const": "step",
+            "default": "step",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "tool",
+          "label",
+          "status"
+        ],
+        "title": "DashboardStepEvent",
         "type": "object"
       },
       "DifficultyCapGoal": {
@@ -2051,6 +3752,273 @@
           "op"
         ],
         "title": "Expr",
+        "type": "object"
+      },
+      "FeedCategories": {
+        "properties": {
+          "categories": {
+            "items": {
+              "$ref": "#/components/schemas/FeedCategory"
+            },
+            "title": "Categories",
+            "type": "array"
+          },
+          "selected": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Selected",
+            "type": "array"
+          }
+        },
+        "required": [
+          "categories",
+          "selected"
+        ],
+        "title": "FeedCategories",
+        "type": "object"
+      },
+      "FeedCategory": {
+        "properties": {
+          "blurb": {
+            "title": "Blurb",
+            "type": "string"
+          },
+          "course_count": {
+            "title": "Course Count",
+            "type": "integer"
+          },
+          "key": {
+            "title": "Key",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "motif": {
+            "title": "Motif",
+            "type": "string"
+          },
+          "subjects": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Subjects",
+            "type": "array"
+          }
+        },
+        "required": [
+          "key",
+          "label",
+          "motif",
+          "blurb",
+          "subjects",
+          "course_count"
+        ],
+        "title": "FeedCategory",
+        "type": "object"
+      },
+      "FeedCategoryRef": {
+        "properties": {
+          "key": {
+            "title": "Key",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "motif": {
+            "title": "Motif",
+            "type": "string"
+          }
+        },
+        "required": [
+          "key",
+          "label",
+          "motif"
+        ],
+        "title": "FeedCategoryRef",
+        "type": "object"
+      },
+      "FeedNotes": {
+        "properties": {
+          "ai": {
+            "title": "Ai",
+            "type": "boolean"
+          },
+          "headline": {
+            "title": "Headline",
+            "type": "string"
+          },
+          "notes": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "title": "Notes",
+            "type": "object"
+          }
+        },
+        "required": [
+          "headline",
+          "notes",
+          "ai"
+        ],
+        "title": "FeedNotes",
+        "type": "object"
+      },
+      "FeedNotesRequest": {
+        "properties": {
+          "categories": {
+            "anyOf": [
+              {
+                "maxLength": 400,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Categories"
+          },
+          "item_ids": {
+            "items": {
+              "maxLength": 96,
+              "minLength": 3,
+              "type": "string"
+            },
+            "maxItems": 12,
+            "minItems": 1,
+            "title": "Item Ids",
+            "type": "array"
+          },
+          "tab": {
+            "default": "for_you",
+            "enum": [
+              "for_you",
+              "explore",
+              "following"
+            ],
+            "title": "Tab",
+            "type": "string"
+          }
+        },
+        "required": [
+          "item_ids"
+        ],
+        "title": "FeedNotesRequest",
+        "type": "object"
+      },
+      "FeedPage": {
+        "properties": {
+          "categories_applied": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Categories Applied",
+            "type": "array"
+          },
+          "headline": {
+            "title": "Headline",
+            "type": "string"
+          },
+          "items": {
+            "items": {
+              "discriminator": {
+                "mapping": {
+                  "book": "#/components/schemas/BookItem",
+                  "comment": "#/components/schemas/CommentItem",
+                  "course": "#/components/schemas/CourseItem",
+                  "program": "#/components/schemas/ProgramItem",
+                  "question": "#/components/schemas/QuestionItem",
+                  "words": "#/components/schemas/WordsItem"
+                },
+                "propertyName": "kind"
+              },
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/CourseItem"
+                },
+                {
+                  "$ref": "#/components/schemas/CommentItem"
+                },
+                {
+                  "$ref": "#/components/schemas/BookItem"
+                },
+                {
+                  "$ref": "#/components/schemas/WordsItem"
+                },
+                {
+                  "$ref": "#/components/schemas/ProgramItem"
+                },
+                {
+                  "$ref": "#/components/schemas/QuestionItem"
+                }
+              ]
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Cursor"
+          },
+          "personalized": {
+            "title": "Personalized",
+            "type": "boolean"
+          },
+          "tab": {
+            "enum": [
+              "for_you",
+              "explore",
+              "following"
+            ],
+            "title": "Tab",
+            "type": "string"
+          }
+        },
+        "required": [
+          "tab",
+          "items",
+          "next_cursor",
+          "categories_applied",
+          "headline",
+          "personalized"
+        ],
+        "title": "FeedPage",
+        "type": "object"
+      },
+      "Follows": {
+        "properties": {
+          "courses": {
+            "default": [],
+            "items": {
+              "maxLength": 16,
+              "type": "string"
+            },
+            "maxItems": 200,
+            "title": "Courses",
+            "type": "array"
+          },
+          "threads": {
+            "default": [],
+            "items": {
+              "type": "integer"
+            },
+            "maxItems": 500,
+            "title": "Threads",
+            "type": "array"
+          }
+        },
+        "title": "Follows",
         "type": "object"
       },
       "ForumPageOut": {
@@ -2967,6 +4935,33 @@
         "title": "HealthOut",
         "type": "object"
       },
+      "Illustration": {
+        "description": "Inputs of the page's generated SVG art (no image is fetched).",
+        "properties": {
+          "motif": {
+            "title": "Motif",
+            "type": "string"
+          },
+          "palette": {
+            "maximum": 5.0,
+            "minimum": 0.0,
+            "title": "Palette",
+            "type": "integer"
+          },
+          "seed": {
+            "minimum": 0.0,
+            "title": "Seed",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "seed",
+          "motif",
+          "palette"
+        ],
+        "title": "Illustration",
+        "type": "object"
+      },
       "Infeasibility": {
         "additionalProperties": false,
         "properties": {
@@ -3204,6 +5199,263 @@
           "tags"
         ],
         "title": "InterestGoal",
+        "type": "object"
+      },
+      "InterviewEvent": {
+        "description": "One Server-Sent Event `data:` payload from /agents/interview.",
+        "discriminator": {
+          "mapping": {
+            "done": "#/components/schemas/ProfileDoneEvent",
+            "error": "#/components/schemas/ErrorEvent",
+            "step": "#/components/schemas/DashboardStepEvent",
+            "turn": "#/components/schemas/InterviewTurnEvent"
+          },
+          "propertyName": "type"
+        },
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/DashboardStepEvent"
+          },
+          {
+            "$ref": "#/components/schemas/InterviewTurnEvent"
+          },
+          {
+            "$ref": "#/components/schemas/ProfileDoneEvent"
+          },
+          {
+            "$ref": "#/components/schemas/ErrorEvent"
+          }
+        ],
+        "title": "InterviewEvent"
+      },
+      "InterviewMemory": {
+        "description": "What the guide remembers between visits: topics covered and the last turns.",
+        "properties": {
+          "covered": {
+            "default": [],
+            "items": {
+              "enum": [
+                "class_year",
+                "interests",
+                "humanities",
+                "research",
+                "career",
+                "future",
+                "constraints",
+                "wrapup"
+              ],
+              "type": "string"
+            },
+            "title": "Covered",
+            "type": "array"
+          },
+          "turns": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/InterviewTurn"
+            },
+            "title": "Turns",
+            "type": "array"
+          }
+        },
+        "title": "InterviewMemory",
+        "type": "object"
+      },
+      "InterviewMemoryPatch": {
+        "properties": {
+          "covered": {
+            "anyOf": [
+              {
+                "items": {
+                  "enum": [
+                    "class_year",
+                    "interests",
+                    "humanities",
+                    "research",
+                    "career",
+                    "future",
+                    "constraints",
+                    "wrapup"
+                  ],
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Covered"
+          },
+          "turns": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/InterviewTurn"
+                },
+                "maxItems": 200,
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Turns"
+          }
+        },
+        "title": "InterviewMemoryPatch",
+        "type": "object"
+      },
+      "InterviewRequest": {
+        "description": "`start` opens (or resumes) the interview, `reply` answers the guide's last question,\n`welcome_back` greets a returning student.",
+        "properties": {
+          "history": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/InterviewTurn"
+            },
+            "maxItems": 30,
+            "title": "History",
+            "type": "array"
+          },
+          "message": {
+            "anyOf": [
+              {
+                "maxLength": 2000,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Message"
+          },
+          "mode": {
+            "default": "start",
+            "enum": [
+              "start",
+              "reply",
+              "welcome_back"
+            ],
+            "title": "Mode",
+            "type": "string"
+          }
+        },
+        "title": "InterviewRequest",
+        "type": "object"
+      },
+      "InterviewTurn": {
+        "properties": {
+          "role": {
+            "enum": [
+              "guide",
+              "student"
+            ],
+            "title": "Role",
+            "type": "string"
+          },
+          "text": {
+            "maxLength": 2000,
+            "title": "Text",
+            "type": "string"
+          },
+          "topic": {
+            "anyOf": [
+              {
+                "enum": [
+                  "class_year",
+                  "interests",
+                  "humanities",
+                  "research",
+                  "career",
+                  "future",
+                  "constraints",
+                  "wrapup"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Topic"
+          }
+        },
+        "required": [
+          "role",
+          "text"
+        ],
+        "title": "InterviewTurn",
+        "type": "object"
+      },
+      "InterviewTurnEvent": {
+        "description": "The guide's next message. `proposed` holds only facts the student said in this\nconversation (list fields already merged with the profile); the browser saves what the\nstudent keeps with PATCH /me/profile.",
+        "properties": {
+          "courses": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/CourseMention"
+            },
+            "title": "Courses",
+            "type": "array"
+          },
+          "done": {
+            "default": false,
+            "title": "Done",
+            "type": "boolean"
+          },
+          "fallback": {
+            "default": false,
+            "title": "Fallback",
+            "type": "boolean"
+          },
+          "progress": {
+            "default": 0.0,
+            "title": "Progress",
+            "type": "number"
+          },
+          "proposed": {
+            "$ref": "#/components/schemas/ProfilePatch",
+            "default": {}
+          },
+          "quick_replies": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Quick Replies",
+            "type": "array"
+          },
+          "text": {
+            "title": "Text",
+            "type": "string"
+          },
+          "topic": {
+            "enum": [
+              "class_year",
+              "interests",
+              "humanities",
+              "research",
+              "career",
+              "future",
+              "constraints",
+              "wrapup"
+            ],
+            "title": "Topic",
+            "type": "string"
+          },
+          "type": {
+            "const": "turn",
+            "default": "turn",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "text",
+          "topic"
+        ],
+        "title": "InterviewTurnEvent",
         "type": "object"
       },
       "Issue": {
@@ -3714,6 +5966,26 @@
           "text"
         ],
         "title": "MessageEvent",
+        "type": "object"
+      },
+      "Milestone": {
+        "properties": {
+          "text": {
+            "maxLength": 200,
+            "title": "Text",
+            "type": "string"
+          },
+          "when": {
+            "maxLength": 40,
+            "title": "When",
+            "type": "string"
+          }
+        },
+        "required": [
+          "when",
+          "text"
+        ],
+        "title": "Milestone",
         "type": "object"
       },
       "ModerationDecision": {
@@ -5017,6 +7289,34 @@
         "title": "Policy",
         "type": "object"
       },
+      "Portrait": {
+        "description": "The guide's portrait of the student, kept by the student (written by an AI).",
+        "properties": {
+          "headline": {
+            "default": "",
+            "maxLength": 90,
+            "title": "Headline",
+            "type": "string"
+          },
+          "summary": {
+            "default": "",
+            "maxLength": 400,
+            "title": "Summary",
+            "type": "string"
+          },
+          "themes": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 6,
+            "title": "Themes",
+            "type": "array"
+          }
+        },
+        "title": "Portrait",
+        "type": "object"
+      },
       "PostCreate": {
         "description": "A review requires structured ratings and the term taken; a discussion post has neither.",
         "properties": {
@@ -5543,6 +7843,456 @@
         "title": "PrereqWitness",
         "type": "object"
       },
+      "ProfileDoneEvent": {
+        "properties": {
+          "fallback": {
+            "default": false,
+            "title": "Fallback",
+            "type": "boolean"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "type": {
+            "const": "done",
+            "default": "done",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "title": "ProfileDoneEvent",
+        "type": "object"
+      },
+      "ProfileOut": {
+        "properties": {
+          "career_paths": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Career Paths",
+            "type": "array"
+          },
+          "career_plans": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Career Plans"
+          },
+          "class_year": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Class Year"
+          },
+          "completeness": {
+            "default": 0.0,
+            "title": "Completeness",
+            "type": "number"
+          },
+          "constraints": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Constraints",
+            "type": "array"
+          },
+          "email": {
+            "title": "Email",
+            "type": "string"
+          },
+          "feed_categories": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Feed Categories",
+            "type": "array"
+          },
+          "follows": {
+            "$ref": "#/components/schemas/Follows",
+            "default": {
+              "courses": [],
+              "threads": []
+            }
+          },
+          "future_domains": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Future Domains",
+            "type": "array"
+          },
+          "humanities_goal": {
+            "anyOf": [
+              {
+                "enum": [
+                  "pass",
+                  "balance",
+                  "enjoy",
+                  "deep"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Humanities Goal"
+          },
+          "humanities_note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Humanities Note"
+          },
+          "humanities_topics": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Humanities Topics",
+            "type": "array"
+          },
+          "intended_programs": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Intended Programs",
+            "type": "array"
+          },
+          "interests": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Interests",
+            "type": "array"
+          },
+          "interview": {
+            "$ref": "#/components/schemas/InterviewMemory",
+            "default": {
+              "covered": [],
+              "turns": []
+            }
+          },
+          "member_since": {
+            "format": "date",
+            "title": "Member Since",
+            "type": "string"
+          },
+          "portrait": {
+            "$ref": "#/components/schemas/Portrait",
+            "default": {
+              "headline": "",
+              "summary": "",
+              "themes": []
+            }
+          },
+          "programs": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/ProgramRef"
+            },
+            "title": "Programs",
+            "type": "array"
+          },
+          "research_areas": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Research Areas",
+            "type": "array"
+          },
+          "updated_day": {
+            "format": "date",
+            "title": "Updated Day",
+            "type": "string"
+          },
+          "username": {
+            "title": "Username",
+            "type": "string"
+          },
+          "workload": {
+            "anyOf": [
+              {
+                "enum": [
+                  "light",
+                  "balanced",
+                  "intense"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Workload"
+          }
+        },
+        "required": [
+          "username",
+          "email",
+          "member_since",
+          "updated_day"
+        ],
+        "title": "ProfileOut",
+        "type": "object"
+      },
+      "ProfilePatch": {
+        "description": "A partial update: only the fields sent are changed (`null` clears a field). The feed,\nthe Commons follow button and the companion also send these.",
+        "properties": {
+          "career_paths": {
+            "anyOf": [
+              {
+                "items": {
+                  "maxLength": 200,
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Career Paths"
+          },
+          "career_plans": {
+            "anyOf": [
+              {
+                "maxLength": 2400,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Career Plans"
+          },
+          "class_year": {
+            "anyOf": [
+              {
+                "maximum": 2040.0,
+                "minimum": 2020.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Class Year"
+          },
+          "constraints": {
+            "anyOf": [
+              {
+                "items": {
+                  "maxLength": 200,
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Constraints"
+          },
+          "feed_categories": {
+            "anyOf": [
+              {
+                "items": {
+                  "maxLength": 200,
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Feed Categories"
+          },
+          "follows": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Follows"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "future_domains": {
+            "anyOf": [
+              {
+                "items": {
+                  "maxLength": 200,
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Future Domains"
+          },
+          "humanities_goal": {
+            "anyOf": [
+              {
+                "enum": [
+                  "pass",
+                  "balance",
+                  "enjoy",
+                  "deep"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Humanities Goal"
+          },
+          "humanities_note": {
+            "anyOf": [
+              {
+                "maxLength": 2400,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Humanities Note"
+          },
+          "humanities_topics": {
+            "anyOf": [
+              {
+                "items": {
+                  "maxLength": 200,
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Humanities Topics"
+          },
+          "intended_programs": {
+            "anyOf": [
+              {
+                "items": {
+                  "maxLength": 200,
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Intended Programs"
+          },
+          "interests": {
+            "anyOf": [
+              {
+                "items": {
+                  "maxLength": 200,
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Interests"
+          },
+          "interview": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/InterviewMemoryPatch"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "portrait": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Portrait"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "research_areas": {
+            "anyOf": [
+              {
+                "items": {
+                  "maxLength": 200,
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Research Areas"
+          },
+          "workload": {
+            "anyOf": [
+              {
+                "enum": [
+                  "light",
+                  "balanced",
+                  "intense"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Workload"
+          }
+        },
+        "title": "ProfilePatch",
+        "type": "object"
+      },
       "ProgramDetail": {
         "properties": {
           "catalog_year": {
@@ -5698,6 +8448,75 @@
           "checksum"
         ],
         "title": "ProgramDetail",
+        "type": "object"
+      },
+      "ProgramItem": {
+        "properties": {
+          "department": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Department"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "kind": {
+            "const": "program",
+            "default": "program",
+            "title": "Kind",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "program_id": {
+            "title": "Program Id",
+            "type": "string"
+          },
+          "reason": {
+            "title": "Reason",
+            "type": "string"
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "program_id",
+          "name",
+          "type",
+          "department",
+          "reason"
+        ],
+        "title": "ProgramItem",
+        "type": "object"
+      },
+      "ProgramRef": {
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ],
+        "title": "ProgramRef",
         "type": "object"
       },
       "ProgramSummary": {
@@ -5933,6 +8752,73 @@
           "id"
         ],
         "title": "ProtectGpaGoal",
+        "type": "object"
+      },
+      "QuestionItem": {
+        "description": "A Commons question that is waiting for an answer, or a recent one.",
+        "properties": {
+          "answered": {
+            "title": "Answered",
+            "type": "boolean"
+          },
+          "course": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CourseRef"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "day": {
+            "format": "date",
+            "title": "Day",
+            "type": "string"
+          },
+          "href": {
+            "title": "Href",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "kind": {
+            "const": "question",
+            "default": "question",
+            "title": "Kind",
+            "type": "string"
+          },
+          "reply_count": {
+            "title": "Reply Count",
+            "type": "integer"
+          },
+          "snippet": {
+            "title": "Snippet",
+            "type": "string"
+          },
+          "thread_id": {
+            "title": "Thread Id",
+            "type": "integer"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "thread_id",
+          "title",
+          "snippet",
+          "course",
+          "reply_count",
+          "answered",
+          "href",
+          "day"
+        ],
+        "title": "QuestionItem",
         "type": "object"
       },
       "RatingSummary": {
@@ -6571,6 +9457,532 @@
         "title": "ReviewRatingIn",
         "type": "object"
       },
+      "RouteCourse": {
+        "properties": {
+          "code": {
+            "maxLength": 16,
+            "title": "Code",
+            "type": "string"
+          },
+          "note": {
+            "default": "",
+            "maxLength": 240,
+            "title": "Note",
+            "type": "string"
+          },
+          "quarter": {
+            "anyOf": [
+              {
+                "enum": [
+                  "AU",
+                  "WI",
+                  "SP",
+                  "SU"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Quarter"
+          },
+          "role": {
+            "default": "elective",
+            "enum": [
+              "core",
+              "major",
+              "minor",
+              "elective",
+              "humanities",
+              "research"
+            ],
+            "title": "Role",
+            "type": "string"
+          },
+          "title": {
+            "default": "",
+            "title": "Title",
+            "type": "string"
+          },
+          "year": {
+            "maximum": 4.0,
+            "minimum": 1.0,
+            "title": "Year",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "code",
+          "year"
+        ],
+        "title": "RouteCourse",
+        "type": "object"
+      },
+      "RouteDraftEvent": {
+        "description": "One drafted route (not saved: POST /me/routes keeps it).",
+        "properties": {
+          "fallback": {
+            "default": false,
+            "title": "Fallback",
+            "type": "boolean"
+          },
+          "programs": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/ProgramRef"
+            },
+            "title": "Programs",
+            "type": "array"
+          },
+          "route": {
+            "$ref": "#/components/schemas/RouteIn"
+          },
+          "type": {
+            "const": "route",
+            "default": "route",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "route"
+        ],
+        "title": "RouteDraftEvent",
+        "type": "object"
+      },
+      "RouteFit": {
+        "description": "How well the route fits what the student said, 0..1 (an estimate, not a grade).",
+        "properties": {
+          "career": {
+            "default": 0.5,
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Career",
+            "type": "number"
+          },
+          "humanities": {
+            "default": 0.5,
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Humanities",
+            "type": "number"
+          },
+          "interests": {
+            "default": 0.5,
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Interests",
+            "type": "number"
+          },
+          "workload": {
+            "anyOf": [
+              {
+                "enum": [
+                  "light",
+                  "balanced",
+                  "intense"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Workload"
+          }
+        },
+        "title": "RouteFit",
+        "type": "object"
+      },
+      "RouteIn": {
+        "properties": {
+          "courses": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/RouteCourse"
+            },
+            "maxItems": 40,
+            "title": "Courses",
+            "type": "array"
+          },
+          "fit": {
+            "$ref": "#/components/schemas/RouteFit",
+            "default": {
+              "career": 0.5,
+              "humanities": 0.5,
+              "interests": 0.5
+            }
+          },
+          "kind": {
+            "default": "custom",
+            "enum": [
+              "major",
+              "double_major",
+              "major_minor",
+              "exploratory",
+              "custom"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "milestones": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/Milestone"
+            },
+            "maxItems": 12,
+            "title": "Milestones",
+            "type": "array"
+          },
+          "origin": {
+            "default": "user",
+            "enum": [
+              "ai",
+              "user"
+            ],
+            "title": "Origin",
+            "type": "string"
+          },
+          "program_ids": {
+            "default": [],
+            "items": {
+              "maxLength": 64,
+              "type": "string"
+            },
+            "maxItems": 6,
+            "title": "Program Ids",
+            "type": "array"
+          },
+          "summary": {
+            "default": "",
+            "maxLength": 1200,
+            "title": "Summary",
+            "type": "string"
+          },
+          "tagline": {
+            "default": "",
+            "maxLength": 140,
+            "title": "Tagline",
+            "type": "string"
+          },
+          "title": {
+            "maxLength": 80,
+            "minLength": 1,
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "title"
+        ],
+        "title": "RouteIn",
+        "type": "object"
+      },
+      "RouteList": {
+        "properties": {
+          "chosen_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Chosen Id"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/RouteOut"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "max_routes": {
+            "default": 12,
+            "title": "Max Routes",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "title": "RouteList",
+        "type": "object"
+      },
+      "RouteOut": {
+        "properties": {
+          "courses": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/RouteCourse"
+            },
+            "maxItems": 40,
+            "title": "Courses",
+            "type": "array"
+          },
+          "created_day": {
+            "format": "date",
+            "title": "Created Day",
+            "type": "string"
+          },
+          "fit": {
+            "$ref": "#/components/schemas/RouteFit",
+            "default": {
+              "career": 0.5,
+              "humanities": 0.5,
+              "interests": 0.5
+            }
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "kind": {
+            "default": "custom",
+            "enum": [
+              "major",
+              "double_major",
+              "major_minor",
+              "exploratory",
+              "custom"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "milestones": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/Milestone"
+            },
+            "maxItems": 12,
+            "title": "Milestones",
+            "type": "array"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "origin": {
+            "default": "user",
+            "enum": [
+              "ai",
+              "user"
+            ],
+            "title": "Origin",
+            "type": "string"
+          },
+          "position": {
+            "title": "Position",
+            "type": "integer"
+          },
+          "program_ids": {
+            "default": [],
+            "items": {
+              "maxLength": 64,
+              "type": "string"
+            },
+            "maxItems": 6,
+            "title": "Program Ids",
+            "type": "array"
+          },
+          "programs": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/ProgramRef"
+            },
+            "title": "Programs",
+            "type": "array"
+          },
+          "status": {
+            "enum": [
+              "open",
+              "chosen",
+              "archived"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "summary": {
+            "default": "",
+            "maxLength": 1200,
+            "title": "Summary",
+            "type": "string"
+          },
+          "tagline": {
+            "default": "",
+            "maxLength": 140,
+            "title": "Tagline",
+            "type": "string"
+          },
+          "title": {
+            "maxLength": 80,
+            "minLength": 1,
+            "title": "Title",
+            "type": "string"
+          },
+          "updated_day": {
+            "format": "date",
+            "title": "Updated Day",
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "id",
+          "status",
+          "position",
+          "created_day",
+          "updated_day"
+        ],
+        "title": "RouteOut",
+        "type": "object"
+      },
+      "RoutePatch": {
+        "description": "`status: chosen` makes any other chosen route `open`; `open` on the chosen route keeps\nthe options open.",
+        "properties": {
+          "note": {
+            "anyOf": [
+              {
+                "maxLength": 2400,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "position": {
+            "anyOf": [
+              {
+                "maximum": 999.0,
+                "minimum": 0.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Position"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "enum": [
+                  "open",
+                  "chosen",
+                  "archived"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Status"
+          },
+          "tagline": {
+            "anyOf": [
+              {
+                "maxLength": 140,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tagline"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "maxLength": 80,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          }
+        },
+        "title": "RoutePatch",
+        "type": "object"
+      },
+      "RoutesEvent": {
+        "description": "One Server-Sent Event `data:` payload from /agents/routes.",
+        "discriminator": {
+          "mapping": {
+            "done": "#/components/schemas/ProfileDoneEvent",
+            "error": "#/components/schemas/ErrorEvent",
+            "route": "#/components/schemas/RouteDraftEvent",
+            "step": "#/components/schemas/DashboardStepEvent"
+          },
+          "propertyName": "type"
+        },
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/DashboardStepEvent"
+          },
+          {
+            "$ref": "#/components/schemas/RouteDraftEvent"
+          },
+          {
+            "$ref": "#/components/schemas/ProfileDoneEvent"
+          },
+          {
+            "$ref": "#/components/schemas/ErrorEvent"
+          }
+        ],
+        "title": "RoutesEvent"
+      },
+      "RoutesRequest": {
+        "properties": {
+          "count": {
+            "default": 3,
+            "maximum": 4.0,
+            "minimum": 1.0,
+            "title": "Count",
+            "type": "integer"
+          },
+          "focus": {
+            "anyOf": [
+              {
+                "maxLength": 200,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Focus"
+          },
+          "keep_existing_titles": {
+            "default": [],
+            "items": {
+              "maxLength": 80,
+              "type": "string"
+            },
+            "maxItems": 12,
+            "title": "Keep Existing Titles",
+            "type": "array"
+          }
+        },
+        "title": "RoutesRequest",
+        "type": "object"
+      },
       "Section": {
         "additionalProperties": false,
         "properties": {
@@ -6872,6 +10284,44 @@
           "max"
         ],
         "title": "ShareLimit",
+        "type": "object"
+      },
+      "ShelfBook": {
+        "properties": {
+          "author": {
+            "title": "Author",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "slug": {
+            "title": "Slug",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "when": {
+            "title": "When",
+            "type": "string"
+          },
+          "year": {
+            "title": "Year",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "slug",
+          "title",
+          "author",
+          "year",
+          "when"
+        ],
+        "title": "ShelfBook",
         "type": "object"
       },
       "SlotNode": {
@@ -7348,6 +10798,164 @@
         "title": "UnlockOp",
         "type": "object"
       },
+      "UpdateItem": {
+        "description": "One new thing on Quarterly that concerns the student. Text is plain (no markdown) and\nscrubbed of emails and phone numbers; `href` is a path on this site.",
+        "properties": {
+          "course_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Course Code"
+          },
+          "day": {
+            "format": "date",
+            "title": "Day",
+            "type": "string"
+          },
+          "href": {
+            "title": "Href",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "is_new": {
+            "title": "Is New",
+            "type": "boolean"
+          },
+          "kind": {
+            "enum": [
+              "thread",
+              "reply",
+              "review",
+              "discussion",
+              "comment"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "reason": {
+            "title": "Reason",
+            "type": "string"
+          },
+          "snippet": {
+            "title": "Snippet",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind",
+          "id",
+          "title",
+          "snippet",
+          "href",
+          "day",
+          "reason",
+          "is_new"
+        ],
+        "title": "UpdateItem",
+        "type": "object"
+      },
+      "UpdatesOut": {
+        "properties": {
+          "digest": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Digest"
+          },
+          "digest_ai": {
+            "default": false,
+            "title": "Digest Ai",
+            "type": "boolean"
+          },
+          "items": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/UpdateItem"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "unread": {
+            "default": 0,
+            "title": "Unread",
+            "type": "integer"
+          }
+        },
+        "title": "UpdatesOut",
+        "type": "object"
+      },
+      "UpdatesSeen": {
+        "description": "High-water marks: the newest id the student has seen of each kind of item. In a request\na missing mark means \"the newest there is now\"; marks never move backwards.",
+        "properties": {
+          "comment": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Comment"
+          },
+          "post": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Post"
+          },
+          "reply": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reply"
+          },
+          "thread": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Thread"
+          }
+        },
+        "title": "UpdatesSeen",
+        "type": "object"
+      },
       "ValidationError": {
         "properties": {
           "ctx": {
@@ -7635,6 +11243,62 @@
           "cloud_cover"
         ],
         "title": "WeatherOut",
+        "type": "object"
+      },
+      "WeightedWord": {
+        "properties": {
+          "text": {
+            "title": "Text",
+            "type": "string"
+          },
+          "weight": {
+            "maximum": 5.0,
+            "minimum": 1.0,
+            "title": "Weight",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "text",
+          "weight"
+        ],
+        "title": "WeightedWord",
+        "type": "object"
+      },
+      "WordsItem": {
+        "properties": {
+          "category": {
+            "$ref": "#/components/schemas/FeedCategoryRef"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "kind": {
+            "const": "words",
+            "default": "words",
+            "title": "Kind",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "words": {
+            "items": {
+              "$ref": "#/components/schemas/WeightedWord"
+            },
+            "title": "Words",
+            "type": "array"
+          }
+        },
+        "required": [
+          "id",
+          "category",
+          "label",
+          "words"
+        ],
+        "title": "WordsItem",
         "type": "object"
       },
       "WorkloadHoursGoal": {
@@ -8283,6 +11947,48 @@
         ]
       }
     },
+    "/agents/ask": {
+      "post": {
+        "operationId": "ask_agents_ask_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AskRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AskEvent"
+                }
+              },
+              "text/event-stream": {}
+            },
+            "description": "Server-Sent Events; each `data:` line is one AskEvent as JSON."
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Ask",
+        "tags": [
+          "ask"
+        ]
+      }
+    },
     "/agents/chat": {
       "post": {
         "operationId": "chat_agents_chat_post",
@@ -8368,6 +12074,47 @@
         ]
       }
     },
+    "/agents/feed-notes": {
+      "post": {
+        "operationId": "post_feed_notes_agents_feed_notes_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FeedNotesRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FeedNotes"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Post Feed Notes",
+        "tags": [
+          "feed"
+        ]
+      }
+    },
     "/agents/generate": {
       "post": {
         "operationId": "generate_agents_generate_post",
@@ -8406,6 +12153,112 @@
         },
         "summary": "Generate",
         "tags": [
+          "agents"
+        ]
+      }
+    },
+    "/agents/interview": {
+      "post": {
+        "operationId": "interview_agents_interview_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InterviewRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InterviewEvent"
+                }
+              },
+              "text/event-stream": {}
+            },
+            "description": "Server-Sent Events; each `data:` line is one InterviewEvent as JSON."
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Not logged in"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Interview",
+        "tags": [
+          "profile",
+          "agents"
+        ]
+      }
+    },
+    "/agents/routes": {
+      "post": {
+        "operationId": "draft_routes_agents_routes_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RoutesRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoutesEvent"
+                }
+              },
+              "text/event-stream": {}
+            },
+            "description": "Server-Sent Events; each `data:` line is one RoutesEvent as JSON."
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Not logged in"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Draft Routes",
+        "tags": [
+          "profile",
           "agents"
         ]
       }
@@ -8799,6 +12652,780 @@
         ]
       }
     },
+    "/commons/replies/{reply_id}": {
+      "delete": {
+        "operationId": "delete_reply_commons_replies__reply_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "reply_id",
+            "required": true,
+            "schema": {
+              "title": "Reply Id",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Delete Reply",
+        "tags": [
+          "commons"
+        ]
+      },
+      "patch": {
+        "operationId": "update_reply_commons_replies__reply_id__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "reply_id",
+            "required": true,
+            "schema": {
+              "title": "Reply Id",
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CommonsReplyUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonsReply"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Update Reply",
+        "tags": [
+          "commons"
+        ]
+      }
+    },
+    "/commons/reports": {
+      "post": {
+        "operationId": "report_commons_reports_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CommonsReportIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonsReportOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Report",
+        "tags": [
+          "commons"
+        ]
+      }
+    },
+    "/commons/threads": {
+      "get": {
+        "operationId": "list_threads_commons_threads_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "sort",
+            "required": false,
+            "schema": {
+              "default": "hot",
+              "enum": [
+                "hot",
+                "new",
+                "top",
+                "unanswered",
+                "active"
+              ],
+              "title": "Sort",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "course",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 16,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Course"
+            }
+          },
+          {
+            "in": "query",
+            "name": "subject",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 8,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Subject"
+            }
+          },
+          {
+            "in": "query",
+            "name": "tag",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 24,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Tag"
+            }
+          },
+          {
+            "in": "query",
+            "name": "q",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 120,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Q"
+            }
+          },
+          {
+            "in": "query",
+            "name": "mine",
+            "required": false,
+            "schema": {
+              "default": false,
+              "title": "Mine",
+              "type": "boolean"
+            }
+          },
+          {
+            "in": "query",
+            "name": "cursor",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 12,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Cursor"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 20,
+              "maximum": 30,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonsThreadList"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "List Threads",
+        "tags": [
+          "commons"
+        ]
+      },
+      "post": {
+        "operationId": "create_thread_commons_threads_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CommonsThreadCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonsThreadDetail"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Thread",
+        "tags": [
+          "commons"
+        ]
+      }
+    },
+    "/commons/threads/{thread_id}": {
+      "delete": {
+        "operationId": "delete_thread_commons_threads__thread_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "thread_id",
+            "required": true,
+            "schema": {
+              "title": "Thread Id",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Delete Thread",
+        "tags": [
+          "commons"
+        ]
+      },
+      "get": {
+        "operationId": "get_thread_commons_threads__thread_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "thread_id",
+            "required": true,
+            "schema": {
+              "title": "Thread Id",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonsThreadDetail"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Thread",
+        "tags": [
+          "commons"
+        ]
+      },
+      "patch": {
+        "operationId": "update_thread_commons_threads__thread_id__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "thread_id",
+            "required": true,
+            "schema": {
+              "title": "Thread Id",
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CommonsThreadUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonsThreadDetail"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Update Thread",
+        "tags": [
+          "commons"
+        ]
+      }
+    },
+    "/commons/threads/{thread_id}/accept": {
+      "post": {
+        "operationId": "accept_commons_threads__thread_id__accept_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "thread_id",
+            "required": true,
+            "schema": {
+              "title": "Thread Id",
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CommonsAcceptIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonsAcceptOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Accept",
+        "tags": [
+          "commons"
+        ]
+      }
+    },
+    "/commons/threads/{thread_id}/bot": {
+      "post": {
+        "operationId": "bot_commons_threads__thread_id__bot_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "thread_id",
+            "required": true,
+            "schema": {
+              "title": "Thread Id",
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CommonsBotRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonsBotEvent"
+                }
+              },
+              "text/event-stream": {}
+            },
+            "description": "Server-Sent Events; each `data:` line is one CommonsBotEvent as JSON."
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Bot",
+        "tags": [
+          "commons"
+        ]
+      }
+    },
+    "/commons/threads/{thread_id}/follow": {
+      "post": {
+        "operationId": "follow_commons_threads__thread_id__follow_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "thread_id",
+            "required": true,
+            "schema": {
+              "title": "Thread Id",
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CommonsFollowIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonsFollowOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Follow",
+        "tags": [
+          "commons"
+        ]
+      }
+    },
+    "/commons/threads/{thread_id}/presence": {
+      "get": {
+        "operationId": "presence_commons_threads__thread_id__presence_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "thread_id",
+            "required": true,
+            "schema": {
+              "title": "Thread Id",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonsPresence"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Presence",
+        "tags": [
+          "commons"
+        ]
+      }
+    },
+    "/commons/threads/{thread_id}/replies": {
+      "post": {
+        "operationId": "create_reply_commons_threads__thread_id__replies_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "thread_id",
+            "required": true,
+            "schema": {
+              "title": "Thread Id",
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CommonsReplyCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonsReplyPosted"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Reply",
+        "tags": [
+          "commons"
+        ]
+      }
+    },
+    "/commons/threads/{thread_id}/typing": {
+      "post": {
+        "operationId": "typing_commons_threads__thread_id__typing_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "thread_id",
+            "required": true,
+            "schema": {
+              "title": "Thread Id",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Typing",
+        "tags": [
+          "commons"
+        ]
+      }
+    },
+    "/commons/votes": {
+      "post": {
+        "operationId": "vote_commons_votes_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CommonsVoteIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonsVoteOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Vote",
+        "tags": [
+          "commons"
+        ]
+      }
+    },
     "/course-lists/{name}": {
       "get": {
         "operationId": "get_course_list_course_lists__name__get",
@@ -9136,6 +13763,123 @@
         "summary": "Get Course",
         "tags": [
           "catalog"
+        ]
+      }
+    },
+    "/feed": {
+      "get": {
+        "operationId": "get_feed_feed_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "tab",
+            "required": false,
+            "schema": {
+              "default": "for_you",
+              "enum": [
+                "for_you",
+                "explore",
+                "following"
+              ],
+              "title": "Tab",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Comma-separated category keys; absent = the profile's saved focus.",
+            "in": "query",
+            "name": "categories",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 400,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Comma-separated category keys; absent = the profile's saved focus.",
+              "title": "Categories"
+            }
+          },
+          {
+            "in": "query",
+            "name": "cursor",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 200,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Cursor"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 12,
+              "maximum": 24,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FeedPage"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Feed",
+        "tags": [
+          "feed"
+        ]
+      }
+    },
+    "/feed/categories": {
+      "get": {
+        "operationId": "get_categories_feed_categories_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FeedCategories"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Get Categories",
+        "tags": [
+          "feed"
         ]
       }
     },
@@ -9853,6 +14597,394 @@
         "summary": "Get Instructor",
         "tags": [
           "catalog"
+        ]
+      }
+    },
+    "/me/profile": {
+      "get": {
+        "operationId": "get_profile_me_profile_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProfileOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Not logged in"
+          }
+        },
+        "summary": "Get Profile",
+        "tags": [
+          "profile"
+        ]
+      },
+      "patch": {
+        "operationId": "patch_profile_me_profile_patch",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProfilePatch"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProfileOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Not logged in"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Unknown program"
+          }
+        },
+        "summary": "Patch Profile",
+        "tags": [
+          "profile"
+        ]
+      }
+    },
+    "/me/routes": {
+      "get": {
+        "operationId": "list_routes_me_routes_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RouteList"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Not logged in"
+          }
+        },
+        "summary": "List Routes",
+        "tags": [
+          "profile"
+        ]
+      },
+      "post": {
+        "operationId": "create_route_me_routes_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RouteIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RouteOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Not logged in"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Too many routes"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Route",
+        "tags": [
+          "profile"
+        ]
+      }
+    },
+    "/me/routes/{route_id}": {
+      "delete": {
+        "operationId": "delete_route_me_routes__route_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "route_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Route Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Not logged in"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Not found"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Delete Route",
+        "tags": [
+          "profile"
+        ]
+      },
+      "patch": {
+        "operationId": "patch_route_me_routes__route_id__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "route_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Route Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RoutePatch"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RouteOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Not logged in"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Not found"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Patch Route",
+        "tags": [
+          "profile"
+        ]
+      }
+    },
+    "/me/updates": {
+      "get": {
+        "operationId": "updates_me_updates_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "digest",
+            "required": false,
+            "schema": {
+              "default": false,
+              "title": "Digest",
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdatesOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Updates",
+        "tags": [
+          "updates"
+        ]
+      }
+    },
+    "/me/updates/seen": {
+      "post": {
+        "operationId": "updates_seen_me_updates_seen_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/UpdatesSeen"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Body"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdatesSeen"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Updates Seen",
+        "tags": [
+          "updates"
         ]
       }
     },

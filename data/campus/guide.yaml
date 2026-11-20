@@ -1,0 +1,355 @@
+# The campus guide: short, general notes about College life at UChicago, read by the campus
+# agents through the `campus_guide` tool (services/api/api/agents/campus_tools.py) and cited as
+# `guide:<id>`. Written from general knowledge on 2026-11-20 by the "ask" work stream.
+#
+# MUST BE HAND-CHECKED BEFORE LAUNCH: every text against its source_url (and every source_url
+# opened once). The entries avoid numbers, dates, deadlines and names that change; keep it that
+# way. Course-level facts never belong here: they come from the catalog.
+#
+# Each entry: id (stable, cited as guide:<id>), title, keywords (lower case phrases a question
+# may contain), text (2-4 sentences, general), source_url (an official uchicago.edu page).
+
+entries:
+  - id: core-overview
+    title: The Core curriculum
+    keywords: [core, general education, gen ed, core curriculum, common core, core requirements]
+    text: >-
+      The Core is the College's shared general education curriculum. It spans the humanities,
+      civilization studies, the arts, the natural and mathematical sciences and the social
+      sciences, and students take its courses alongside their major. Most students complete
+      much of the Core in their first two years, and the College Catalog lists the courses and
+      sequences that count for each part.
+    source_url: https://college.uchicago.edu/academics/core-curriculum
+
+  - id: core-humanities
+    title: Humanities in the Core
+    keywords: [humanities core, hum core, humanities sequence, huma, humanities, great books, reading and writing]
+    text: >-
+      The Humanities part of the Core is taken as a sequence: students choose one of several
+      sequences that read major texts or works closely and ask how to interpret them. The
+      sequences put a strong emphasis on discussion and on writing. Students who want to just
+      get through the requirement and students who want to go deep can both find a fitting
+      sequence; the catalog's course descriptions say what each one reads.
+    source_url: https://college.uchicago.edu/academics/core-curriculum
+
+  - id: core-civilization
+    title: Civilization studies
+    keywords: [civ, civilization, civilization studies, civ sequence, civ abroad, history sequence]
+    text: >-
+      Civilization studies sequences look closely at one civilization or tradition through its
+      history, texts and art. Students choose among many sequences on campus, and several are
+      also taught abroad as quarter-long programs led by UChicago faculty. A civilization
+      program abroad is one of the most common ways students fulfill this part of the Core.
+    source_url: https://study-abroad.uchicago.edu/
+
+  - id: core-arts
+    title: The arts in the Core
+    keywords: [arts core, dramatic arts, music, visual arts, arts requirement, art, theater, film]
+    text: >-
+      The Core includes coursework in the arts: dramatic, musical or visual arts. These courses
+      can be about making art or about looking at and listening to it closely. Many students
+      use this part of the Core to try a medium they have never studied before.
+    source_url: https://college.uchicago.edu/academics/core-curriculum
+
+  - id: core-sciences
+    title: Natural and mathematical sciences in the Core
+    keywords: [science core, sci core, physical sciences, biological sciences, math core, mathematical sciences, natural sciences, stem core]
+    text: >-
+      The Core asks every student to study the biological and physical sciences and the
+      mathematical sciences. Students who are not majoring in a science can take Core
+      sequences written for non-majors, while science majors often meet these requirements
+      with courses from their own field. Placement results and the student's major decide which
+      courses make sense.
+    source_url: https://college.uchicago.edu/academics/core-curriculum
+
+  - id: core-social-sciences
+    title: Social sciences in the Core
+    keywords: [social sciences core, soc sci, sosc, social science sequence, social theory]
+    text: >-
+      The social sciences part of the Core is a sequence that reads classic and recent works
+      about society, power, the mind or the economy and asks how social scientists know what
+      they know. Several sequences are offered, each with its own focus. They are discussion
+      seminars with a lot of reading and writing.
+    source_url: https://college.uchicago.edu/academics/core-curriculum
+
+  - id: language-requirement
+    title: The language competency requirement
+    keywords: [language requirement, foreign language, language competency, placement exam language, learn a language]
+    text: >-
+      The College asks every student to show competency in a language other than English. Some
+      students meet it with a placement or competency exam, others by taking language courses at
+      UChicago. The College Catalog explains the ways to complete it.
+    source_url: https://college.uchicago.edu/
+
+  - id: placement
+    title: Placement tests
+    keywords: [placement, placement test, placement exam, math placement, which math, ap credit]
+    text: >-
+      Incoming students take placement tests, for example in mathematics and in languages, so
+      they can start at the right level. Placement results, together with any accepted exam
+      credit, decide where a student starts in sequences such as calculus. Advisers help read
+      the results.
+    source_url: https://college.uchicago.edu/
+
+  - id: quarter-system
+    title: The quarter system
+    keywords: [quarter, quarters, quarter system, autumn, winter, spring, summer, academic calendar, ten weeks, semester]
+    text: >-
+      UChicago runs on quarters rather than semesters: Autumn, Winter and Spring, plus an
+      optional Summer quarter. Each quarter has about ten weeks of classes followed by an exam
+      period, so courses move quickly. Many subjects are taught as sequences that run across two
+      or three quarters in order.
+    source_url: https://registrar.uchicago.edu/
+
+  - id: course-load
+    title: A typical course load
+    keywords: [course load, how many classes, how many courses, four classes, three classes, overload, full time, workload]
+    text: >-
+      Most College students take three or four courses a quarter. Because quarters are short,
+      a four-course quarter with several demanding courses can be intense; many students mix
+      heavier and lighter courses. Taking more than the usual load needs permission, and the
+      College adviser is the person to ask.
+    source_url: https://college.uchicago.edu/advising
+
+  - id: advising
+    title: College advising
+    keywords: [adviser, advisor, advising, academic adviser, college adviser, who do i ask, help choosing]
+    text: >-
+      Every College student has a College adviser who helps with the Core, choosing a major,
+      course loads and academic rules. Departments also have their own advisers for students in
+      their majors. Quarterly can help explore options, but an adviser confirms what counts
+      toward a degree.
+    source_url: https://college.uchicago.edu/advising
+
+  - id: majors-minors
+    title: Majors and minors
+    keywords: [major, majors, minor, minors, declare, choose a major, which major, double major, program]
+    text: >-
+      The College offers majors across the humanities, social sciences, physical and biological
+      sciences, plus minors that add a second field. Students usually settle on a major during
+      their first two years, often after trying courses in a few fields through the Core.
+      Some students take a double major or a major and a minor; advisers check how the
+      requirements fit together.
+    source_url: https://college.uchicago.edu/academics
+
+  - id: ba-vs-bs
+    title: BA and BS degrees
+    keywords: [ba vs bs, bs vs ba, ba or bs, bachelor of science, bachelor of arts, difference between ba and bs]
+    text: >-
+      Some departments, such as several in the sciences, offer both a Bachelor of Arts and a
+      Bachelor of Science. The BS usually asks for more courses in the field or in related
+      sciences, while the BA leaves more room for electives and other interests. The exact
+      requirements of each are in the College Catalog and in Quarterly's program pages.
+    source_url: https://college.uchicago.edu/academics
+
+  - id: college-catalog
+    title: The College Catalog
+    keywords: [catalog, college catalog, requirements, official requirements, rules]
+    text: >-
+      The College Catalog is the official description of the Core, every major and minor, and
+      the College's academic rules for the year. When Quarterly and the catalog disagree, the
+      catalog and the student's adviser are right. Quarterly's program pages quote the catalog
+      text they are built from.
+    source_url: https://college.uchicago.edu/academics
+
+  - id: registration
+    title: Registration
+    keywords: [register, registration, enroll, enrollment, sign up for classes, add drop, waitlist, consent, course search]
+    text: >-
+      Students register for courses online before each quarter, and the Registrar publishes
+      the schedule and the registration timeline. Some courses need the instructor's or the
+      department's consent, and popular courses can fill up, so having alternatives ready
+      helps. Students can usually adjust their schedule early in the quarter.
+    source_url: https://registrar.uchicago.edu/
+
+  - id: pass-fail
+    title: Pass/fail
+    keywords: [pass fail, pass/fail, p/f, grading option, take it pass]
+    text: >-
+      The College allows some courses to be taken pass/fail, within limits. Courses that count
+      toward the Core or a major usually need a letter grade, and the rules differ by program.
+      Check the College Catalog and ask an adviser before choosing pass/fail.
+    source_url: https://college.uchicago.edu/academics
+
+  - id: regenstein
+    title: Regenstein Library
+    keywords: [regenstein, reg, library, libraries, study spot, where to study, books]
+    text: >-
+      The Joseph Regenstein Library, known on campus as the Reg, is the University's main
+      research library for the humanities and social sciences. It has large open stacks and
+      many floors of study space, from busy social areas to quiet ones. It sits next to the
+      Mansueto Library.
+    source_url: https://www.lib.uchicago.edu/
+
+  - id: mansueto
+    title: Mansueto Library
+    keywords: [mansueto, glass dome, dome, library, reading room]
+    text: >-
+      The Joe and Rika Mansueto Library is the glass-domed reading room beside the Regenstein.
+      Beneath it, books are kept in an automated storage system and brought up on request. The
+      reading room under the dome is a favorite quiet place to study.
+    source_url: https://www.lib.uchicago.edu/mansueto/
+
+  - id: harper
+    title: Harper Memorial Library
+    keywords: [harper, harper library, gothic reading room, library, study]
+    text: >-
+      Harper Memorial Library, on the Main Quadrangle, is known for its long Gothic reading room
+      with tall windows. It is one of the College's best-known study spaces, especially for a
+      quiet and beautiful place to work.
+    source_url: https://www.lib.uchicago.edu/
+
+  - id: crerar
+    title: Crerar Library
+    keywords: [crerar, science library, sciences library, medicine, library, stem library]
+    text: >-
+      The John Crerar Library holds the University's collections in the sciences and medicine.
+      It is close to the science buildings on the north side of campus and is a common study
+      place for students in the physical and biological sciences.
+    source_url: https://www.lib.uchicago.edu/crerar/
+
+  - id: study-abroad
+    title: Study abroad
+    keywords: [study abroad, abroad, international, exchange, paris, overseas, travel]
+    text: >-
+      The College runs many study abroad programs, from quarter-long civilization programs
+      taught by UChicago faculty to language programs and direct enrollment at universities
+      overseas. Some programs fulfill Core requirements. Planning early helps fit a quarter
+      abroad around sequences in a major.
+    source_url: https://study-abroad.uchicago.edu/
+
+  - id: career-advancement
+    title: Career Advancement
+    keywords: [career, careers, internship, internships, job, jobs, resume, recruiting, metcalf, career advancement, industry]
+    text: >-
+      UChicago Career Advancement helps College students explore careers, find internships and
+      prepare for jobs and graduate school, starting in the first year. It offers career
+      advising by field, employer events and internship programs, including the Metcalf
+      internships. Meeting a career adviser early helps shape course and summer plans.
+    source_url: https://careeradvancement.uchicago.edu/
+
+  - id: undergraduate-research
+    title: Undergraduate research
+    keywords: [research, lab, labs, research assistant, undergraduate research, faculty research, get into research, thesis, ra]
+    text: >-
+      Many College students do research with faculty, in labs or on independent projects, and
+      many majors offer a BA thesis or research courses. A common first step is to take a
+      department's courses, go to office hours and ask faculty or graduate students about their
+      work. The College also has offices that help find research positions and fellowships.
+    source_url: https://college.uchicago.edu/
+
+  - id: quantum-molecular-engineering
+    title: Quantum science and molecular engineering
+    keywords: [quantum, quantum computing, quantum science, quantum engineering, molecular engineering, pme, nanotechnology]
+    text: >-
+      The Pritzker School of Molecular Engineering offers an undergraduate major in molecular
+      engineering and is a center of quantum science and engineering research at UChicago. The
+      University also works closely with Argonne National Laboratory and Fermilab. Students
+      interested in quantum computing usually build a base in physics, mathematics and computer
+      science first.
+    source_url: https://pme.uchicago.edu/
+
+  - id: computer-science
+    title: Computer science at UChicago
+    keywords: [computer science, cs, cmsc, programming, coding, software, ai, machine learning]
+    text: >-
+      The Department of Computer Science offers a BA and a BS, a minor, and research
+      opportunities across systems, theory, AI and more. The introductory sequence a student
+      starts with depends on their background and placement. Quarterly's program pages show the
+      requirements of each degree.
+    source_url: https://cs.uchicago.edu/
+
+  - id: economics
+    title: Economics at UChicago
+    keywords: [economics, econ, finance, business, economist]
+    text: >-
+      Economics is one of the College's most popular majors, with a strong emphasis on
+      mathematical and theoretical tools. Students often take calculus and other math early to
+      prepare for the major's core theory courses. The department's undergraduate advisers
+      explain the tracks available.
+    source_url: https://economics.uchicago.edu/
+
+  - id: housing
+    title: Housing and the house system
+    keywords: [housing, dorm, dorms, residence hall, house system, house, roommate, live on campus]
+    text: >-
+      College students live in houses, small communities within the residence halls, each with
+      its own traditions, resident staff and house events. The house system is a big part of
+      first-year life. Housing and Residence Life answers questions about halls and assignments.
+    source_url: https://housing.uchicago.edu/
+
+  - id: wellness
+    title: Student Wellness
+    keywords: [wellness, mental health, counseling, health, stress, sick, therapy, burnout]
+    text: >-
+      UChicago Student Wellness provides medical care, counseling and health promotion for
+      students. If the pace of the quarter feels like too much, talking to Student Wellness or
+      a College adviser early is a good step. In an emergency, call emergency services.
+    source_url: https://wellness.uchicago.edu/
+
+  - id: disability-services
+    title: Student Disability Services
+    keywords: [disability, accommodations, accessibility, extra time, disability services]
+    text: >-
+      Student Disability Services works with students who need accommodations in courses,
+      exams, housing or elsewhere on campus. Students request accommodations through that
+      office, ideally well before a quarter begins.
+    source_url: https://disabilities.uchicago.edu/
+
+  - id: hyde-park
+    title: Hyde Park
+    keywords: [hyde park, neighborhood, south side, lake, midway, getting downtown, chicago, off campus]
+    text: >-
+      The University is in Hyde Park, a neighborhood on Chicago's South Side near Lake Michigan.
+      The Midway Plaisance runs along the south of the main campus, and the lakefront and Jackson
+      Park are a short walk away. Buses and the Metra Electric line connect the neighborhood to
+      downtown Chicago.
+    source_url: https://www.uchicago.edu/
+
+  - id: arts-on-campus
+    title: The arts on campus
+    keywords: [logan center, arts, theater, music, film, doc films, museum, smart museum, perform]
+    text: >-
+      The Reva and David Logan Center for the Arts is the hub for making art on campus, with
+      studios, rehearsal rooms and performance spaces. The Smart Museum of Art is on campus, and
+      student groups put on theater, music and film all year, including the student film
+      society Doc Films.
+    source_url: https://artshumanities.uchicago.edu/
+
+  - id: athletics
+    title: Athletics and recreation
+    keywords: [athletics, sports, varsity, gym, recreation, maroons, club sports, intramural]
+    text: >-
+      UChicago's varsity teams, the Maroons, compete in NCAA Division III. Students who are not
+      varsity athletes can join club and intramural sports and use the campus recreation
+      facilities.
+    source_url: https://athletics.uchicago.edu/
+
+  - id: traditions
+    title: Campus traditions
+    keywords: [traditions, scav, scavenger hunt, kuvia, latke hamantash, fun, student life, culture]
+    text: >-
+      UChicago has well-loved traditions, such as the student-run Scavenger Hunt each spring
+      and Kuviasungnerk/Kangeiko, a winter festival of early-morning exercise. Student
+      organizations of every kind add events throughout the year.
+    source_url: https://www.uchicago.edu/
+
+  - id: entrepreneurship
+    title: Entrepreneurship and the Polsky Center
+    keywords: [startup, start-up, entrepreneurship, polsky, founder, venture, innovation]
+    text: >-
+      The Polsky Center for Entrepreneurship and Innovation supports students and researchers
+      who want to start companies, with programs, workshops and competitions. College students
+      interested in startups often pair it with courses in economics, computer science or the
+      sciences.
+    source_url: https://polsky.uchicago.edu/
+
+  - id: planning-with-quarterly
+    title: Planning courses
+    keywords: [plan, planning, four year plan, schedule, route, pathway, what should i take, first year, first-year]
+    text: >-
+      A good College plan balances the Core, the first courses of a possible major and room to
+      explore. Many first-years take a Core sequence or two, a mathematics or language course
+      at their placement level and one course in a field they are curious about. A College
+      adviser reviews the plan; Quarterly's planner checks a draft against the catalog rules.
+    source_url: https://college.uchicago.edu/

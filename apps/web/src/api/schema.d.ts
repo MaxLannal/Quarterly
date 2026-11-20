@@ -174,6 +174,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/agents/ask": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Ask */
+        post: operations["ask_agents_ask_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/agents/chat": {
         parameters: {
             query?: never;
@@ -208,6 +225,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/agents/feed-notes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Post Feed Notes */
+        post: operations["post_feed_notes_agents_feed_notes_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/agents/generate": {
         parameters: {
             query?: never;
@@ -219,6 +253,40 @@ export interface paths {
         put?: never;
         /** Generate */
         post: operations["generate_agents_generate_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/agents/interview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Interview */
+        post: operations["interview_agents_interview_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/agents/routes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Draft Routes */
+        post: operations["draft_routes_agents_routes_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -378,6 +446,197 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/commons/replies/{reply_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Delete Reply */
+        delete: operations["delete_reply_commons_replies__reply_id__delete"];
+        options?: never;
+        head?: never;
+        /** Update Reply */
+        patch: operations["update_reply_commons_replies__reply_id__patch"];
+        trace?: never;
+    };
+    "/commons/reports": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Report */
+        post: operations["report_commons_reports_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/commons/threads": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Threads */
+        get: operations["list_threads_commons_threads_get"];
+        put?: never;
+        /** Create Thread */
+        post: operations["create_thread_commons_threads_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/commons/threads/{thread_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Thread */
+        get: operations["get_thread_commons_threads__thread_id__get"];
+        put?: never;
+        post?: never;
+        /** Delete Thread */
+        delete: operations["delete_thread_commons_threads__thread_id__delete"];
+        options?: never;
+        head?: never;
+        /** Update Thread */
+        patch: operations["update_thread_commons_threads__thread_id__patch"];
+        trace?: never;
+    };
+    "/commons/threads/{thread_id}/accept": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Accept */
+        post: operations["accept_commons_threads__thread_id__accept_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/commons/threads/{thread_id}/bot": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Bot */
+        post: operations["bot_commons_threads__thread_id__bot_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/commons/threads/{thread_id}/follow": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Follow */
+        post: operations["follow_commons_threads__thread_id__follow_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/commons/threads/{thread_id}/presence": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Presence */
+        get: operations["presence_commons_threads__thread_id__presence_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/commons/threads/{thread_id}/replies": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create Reply */
+        post: operations["create_reply_commons_threads__thread_id__replies_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/commons/threads/{thread_id}/typing": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Typing */
+        post: operations["typing_commons_threads__thread_id__typing_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/commons/votes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Vote */
+        post: operations["vote_commons_votes_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/course-lists/{name}": {
         parameters: {
             query?: never;
@@ -421,6 +680,40 @@ export interface paths {
         };
         /** Get Course */
         get: operations["get_course_courses__code__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/feed": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Feed */
+        get: operations["get_feed_feed_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/feed/categories": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Categories */
+        get: operations["get_categories_feed_categories_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -613,6 +906,94 @@ export interface paths {
         get: operations["get_instructor_instructors__slug__get"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/profile": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Profile */
+        get: operations["get_profile_me_profile_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Patch Profile */
+        patch: operations["patch_profile_me_profile_patch"];
+        trace?: never;
+    };
+    "/me/routes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Routes */
+        get: operations["list_routes_me_routes_get"];
+        put?: never;
+        /** Create Route */
+        post: operations["create_route_me_routes_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/routes/{route_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Delete Route */
+        delete: operations["delete_route_me_routes__route_id__delete"];
+        options?: never;
+        head?: never;
+        /** Patch Route */
+        patch: operations["patch_route_me_routes__route_id__patch"];
+        trace?: never;
+    };
+    "/me/updates": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Updates */
+        get: operations["updates_me_updates_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/updates/seen": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Updates Seen */
+        post: operations["updates_seen_me_updates_seen_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1028,6 +1409,149 @@ export interface components {
          * @description One Server-Sent Event `data:` payload from /agents/generate or /agents/chat.
          */
         AgentEvent: components["schemas"]["StepEvent"] | components["schemas"]["VariantEvent"] | components["schemas"]["InfeasibleEvent"] | components["schemas"]["MessageEvent"] | components["schemas"]["ProposalEvent"] | components["schemas"]["ConfirmEvent"] | components["schemas"]["DoneEvent"] | components["schemas"]["ErrorEvent"];
+        /** AskAnswerEvent */
+        AskAnswerEvent: {
+            /**
+             * Ai
+             * @default true
+             */
+            ai: boolean;
+            /**
+             * Citations
+             * @default []
+             */
+            citations: components["schemas"]["AskCitation"][];
+            /**
+             * Courses
+             * @default []
+             */
+            courses: components["schemas"]["AskCourse"][];
+            /**
+             * Followups
+             * @default []
+             */
+            followups: string[];
+            /** Text */
+            text: string;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "answer";
+        };
+        /**
+         * AskCitation
+         * @description A source chip. `label` and `href` are built by the server from the id (never by the
+         *     model): `href` is a path on this site, or an https page on uchicago.edu for `guide`.
+         */
+        AskCitation: {
+            /** Href */
+            href: string;
+            /** Id */
+            id: string;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "course" | "program" | "post" | "summary" | "attribute" | "thread" | "guide";
+            /** Label */
+            label: string;
+        };
+        /**
+         * AskContext
+         * @description Where the student asks from (the companion sends it; the Ask page usually does not).
+         */
+        AskContext: {
+            /** Course Code */
+            course_code?: string | null;
+            /** Page */
+            page?: string | null;
+            /** Thread Id */
+            thread_id?: number | null;
+        };
+        /**
+         * AskCourse
+         * @description A course the answer mentions; it exists in the catalog.
+         */
+        AskCourse: {
+            /** Code */
+            code: string;
+            /** Title */
+            title: string;
+        };
+        /** AskDoneEvent */
+        AskDoneEvent: {
+            /** Run Id */
+            run_id: string;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "done";
+        };
+        /** AskErrorEvent */
+        AskErrorEvent: {
+            /** Message */
+            message: string;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "error";
+        };
+        /**
+         * AskEvent
+         * @description One Server-Sent Event `data:` payload from /agents/ask.
+         */
+        AskEvent: components["schemas"]["AskStepEvent"] | components["schemas"]["AskAnswerEvent"] | components["schemas"]["AskDoneEvent"] | components["schemas"]["AskErrorEvent"];
+        /** AskRequest */
+        AskRequest: {
+            /** @default {} */
+            context: components["schemas"]["AskContext"];
+            /**
+             * History
+             * @default []
+             */
+            history: components["schemas"]["AskTurn"][];
+            /** Message */
+            message: string;
+            /**
+             * Mode
+             * @default ask
+             * @enum {string}
+             */
+            mode: "ask" | "companion";
+        };
+        /**
+         * AskStepEvent
+         * @description The agent called a tool ("Searching the catalog for “quantum”").
+         */
+        AskStepEvent: {
+            /** Label */
+            label: string;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "started" | "done" | "failed";
+            /** Tool */
+            tool: string;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "step";
+        };
+        /** AskTurn */
+        AskTurn: {
+            /**
+             * Role
+             * @enum {string}
+             */
+            role: "user" | "assistant";
+            /** Text */
+            text: string;
+        };
         /** Assignment */
         Assignment: {
             /** Courses */
@@ -1086,6 +1610,22 @@ export interface components {
             subject_type: "course" | "course_instructor";
             /** Value */
             value: number;
+        };
+        /** BookItem */
+        BookItem: {
+            book: components["schemas"]["ShelfBook"];
+            category: components["schemas"]["FeedCategoryRef"];
+            /** Courses */
+            courses: components["schemas"]["CourseRef"][];
+            /** Id */
+            id: string;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            kind: "book";
+            /** Reason */
+            reason: string;
         };
         /**
          * BoundedPartsNode
@@ -1320,6 +1860,42 @@ export interface components {
             /** Parent Id */
             parent_id?: number | null;
         };
+        /**
+         * CommentItem
+         * @description A student's voice about a course: a Commons reply, or (logged in only) a forum post.
+         */
+        CommentItem: {
+            category: components["schemas"]["FeedCategoryRef"];
+            course: components["schemas"]["CourseRef"];
+            /**
+             * Day
+             * Format: date
+             */
+            day: string;
+            /** Handle */
+            handle: string;
+            /** Href */
+            href: string;
+            /** Id */
+            id: string;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            kind: "comment";
+            /** Snippet */
+            snippet: string;
+            /**
+             * Source
+             * @enum {string}
+             */
+            source: "commons" | "forum";
+            /**
+             * Voice
+             * @enum {string}
+             */
+            voice: "reply" | "review" | "discussion";
+        };
         /** CommentOut */
         CommentOut: {
             /**
@@ -1364,6 +1940,465 @@ export interface components {
              * @enum {string}
              */
             status: "visible" | "held" | "removed";
+        };
+        /** CommonsAcceptIn */
+        CommonsAcceptIn: {
+            /** Reply Id */
+            reply_id?: number | null;
+        };
+        /** CommonsAcceptOut */
+        CommonsAcceptOut: {
+            /** Accepted Reply Id */
+            accepted_reply_id?: number | null;
+        };
+        /** CommonsAnswerEvent */
+        CommonsAnswerEvent: {
+            /**
+             * Fallback
+             * @default false
+             */
+            fallback: boolean;
+            reply: components["schemas"]["CommonsReply"];
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "answer";
+        };
+        /**
+         * CommonsBotEvent
+         * @description One Server-Sent Event of POST /commons/threads/{thread_id}/bot.
+         */
+        CommonsBotEvent: components["schemas"]["CommonsStepEvent"] | components["schemas"]["CommonsAnswerEvent"] | components["schemas"]["CommonsBusyEvent"] | components["schemas"]["CommonsDoneEvent"] | components["schemas"]["CommonsErrorEvent"];
+        /** CommonsBotRequest */
+        CommonsBotRequest: {
+            /**
+             * Regenerate
+             * @default false
+             */
+            regenerate: boolean;
+            /** Reply To */
+            reply_to?: number | null;
+        };
+        /**
+         * CommonsBusyEvent
+         * @description Another reader's request is already writing this answer: poll the thread.
+         */
+        CommonsBusyEvent: {
+            /** Message */
+            message: string;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "busy";
+        };
+        /**
+         * CommonsCitation
+         * @description A source the bot relied on. The web links `course` to /courses/<id>, `program` to
+         *     /programs/<id>, `thread` to /forum/t/<id>; `guide` carries the official `url`.
+         */
+        CommonsCitation: {
+            /** Id */
+            id: string;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "course" | "program" | "thread" | "guide" | "post" | "summary" | "attribute";
+            /** Label */
+            label: string;
+            /** Url */
+            url?: string | null;
+        };
+        /** CommonsCourse */
+        CommonsCourse: {
+            /** Code */
+            code: string;
+            /** Title */
+            title: string;
+        };
+        /** CommonsDoneEvent */
+        CommonsDoneEvent: {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "done";
+        };
+        /** CommonsErrorEvent */
+        CommonsErrorEvent: {
+            /** Message */
+            message: string;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "error";
+        };
+        /** CommonsFollowIn */
+        CommonsFollowIn: {
+            /** Follow */
+            follow: boolean;
+        };
+        /** CommonsFollowOut */
+        CommonsFollowOut: {
+            /** Following */
+            following: boolean;
+        };
+        /** CommonsPresence */
+        CommonsPresence: {
+            /**
+             * Bot State
+             * @enum {string}
+             */
+            bot_state: "pending" | "answered" | "failed" | "off";
+            /** Latest Reply Id */
+            latest_reply_id?: number | null;
+            /** Reply Count */
+            reply_count: number;
+            /** Score */
+            score: number;
+            /** Typing */
+            typing: number;
+        };
+        /** CommonsReply */
+        CommonsReply: {
+            /**
+             * Accepted
+             * @default false
+             */
+            accepted: boolean;
+            /** Body Html */
+            body_html: string;
+            /** Body Md */
+            body_md?: string | null;
+            /**
+             * Children
+             * @default []
+             */
+            children: components["schemas"]["CommonsReply"][];
+            /**
+             * Citations
+             * @default []
+             */
+            citations: components["schemas"]["CommonsCitation"][];
+            /**
+             * Created Day
+             * Format: date
+             */
+            created_day: string;
+            /** Depth */
+            depth: number;
+            /** Edited Day */
+            edited_day?: string | null;
+            /** Handle */
+            handle: string;
+            /** Id */
+            id: number;
+            /**
+             * Is Mine
+             * @default false
+             */
+            is_mine: boolean;
+            /**
+             * Is Op
+             * @default false
+             */
+            is_op: boolean;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "human" | "bot";
+            /**
+             * My Vote
+             * @default 0
+             * @enum {integer}
+             */
+            my_vote: -1 | 0 | 1;
+            /** Parent Id */
+            parent_id?: number | null;
+            /** Score */
+            score: number;
+            /**
+             * Status
+             * @default visible
+             * @enum {string}
+             */
+            status: "visible" | "removed" | "deleted";
+        };
+        /** CommonsReplyCreate */
+        CommonsReplyCreate: {
+            /** Body Md */
+            body_md: string;
+            /** Parent Id */
+            parent_id?: number | null;
+        };
+        /** CommonsReplyPosted */
+        CommonsReplyPosted: {
+            reply: components["schemas"]["CommonsReply"];
+            /** Reply Count */
+            reply_count: number;
+            /**
+             * Summon Bot
+             * @default false
+             */
+            summon_bot: boolean;
+        };
+        /** CommonsReplyUpdate */
+        CommonsReplyUpdate: {
+            /** Body Md */
+            body_md: string;
+        };
+        /** CommonsReportIn */
+        CommonsReportIn: {
+            /** Reason */
+            reason: string;
+            /** Target Id */
+            target_id: number;
+            /**
+             * Target Type
+             * @enum {string}
+             */
+            target_type: "thread" | "reply";
+        };
+        /** CommonsReportOut */
+        CommonsReportOut: {
+            /** Id */
+            id: number;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "open" | "closed";
+        };
+        /** CommonsStepEvent */
+        CommonsStepEvent: {
+            /** Label */
+            label: string;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "started" | "done" | "failed";
+            /** Tool */
+            tool: string;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "step";
+        };
+        /** CommonsThreadCreate */
+        CommonsThreadCreate: {
+            /**
+             * Body Md
+             * @default
+             */
+            body_md: string;
+            /** Course Code */
+            course_code?: string | null;
+            /**
+             * Tags
+             * @default []
+             */
+            tags: string[];
+            /** Title */
+            title: string;
+        };
+        /** CommonsThreadDetail */
+        CommonsThreadDetail: {
+            /**
+             * Accepted
+             * @default false
+             */
+            accepted: boolean;
+            /** Accepted Reply Id */
+            accepted_reply_id?: number | null;
+            /** Answer Count */
+            answer_count: number;
+            /** Answered */
+            answered: boolean;
+            /** Body Html */
+            body_html: string;
+            /** Body Md */
+            body_md?: string | null;
+            /**
+             * Bot State
+             * @enum {string}
+             */
+            bot_state: "pending" | "answered" | "failed" | "off";
+            course?: components["schemas"]["CommonsCourse"] | null;
+            /**
+             * Created Day
+             * Format: date
+             */
+            created_day: string;
+            /** Edited Day */
+            edited_day?: string | null;
+            /** Excerpt */
+            excerpt: string;
+            /**
+             * Following
+             * @default false
+             */
+            following: boolean;
+            /** Handle */
+            handle: string;
+            /** Has Bot Answer */
+            has_bot_answer: boolean;
+            /** Id */
+            id: number;
+            /**
+             * Is Mine
+             * @default false
+             */
+            is_mine: boolean;
+            /** Last Reply Id */
+            last_reply_id?: number | null;
+            /**
+             * Mentions
+             * @default []
+             */
+            mentions: components["schemas"]["CommonsCourse"][];
+            /**
+             * My Vote
+             * @default 0
+             * @enum {integer}
+             */
+            my_vote: -1 | 0 | 1;
+            /**
+             * Replies
+             * @default []
+             */
+            replies: components["schemas"]["CommonsReply"][];
+            /** Reply Count */
+            reply_count: number;
+            /** Score */
+            score: number;
+            /**
+             * Status
+             * @default visible
+             * @enum {string}
+             */
+            status: "visible" | "removed" | "deleted";
+            /**
+             * Tags
+             * @default []
+             */
+            tags: string[];
+            /** Title */
+            title: string;
+        };
+        /** CommonsThreadList */
+        CommonsThreadList: {
+            /** Items */
+            items: components["schemas"]["CommonsThreadSummary"][];
+            /** Next Cursor */
+            next_cursor?: string | null;
+            /** Total */
+            total: number;
+        };
+        /** CommonsThreadSummary */
+        CommonsThreadSummary: {
+            /**
+             * Accepted
+             * @default false
+             */
+            accepted: boolean;
+            /** Answer Count */
+            answer_count: number;
+            /** Answered */
+            answered: boolean;
+            /**
+             * Bot State
+             * @enum {string}
+             */
+            bot_state: "pending" | "answered" | "failed" | "off";
+            course?: components["schemas"]["CommonsCourse"] | null;
+            /**
+             * Created Day
+             * Format: date
+             */
+            created_day: string;
+            /** Edited Day */
+            edited_day?: string | null;
+            /** Excerpt */
+            excerpt: string;
+            /** Handle */
+            handle: string;
+            /** Has Bot Answer */
+            has_bot_answer: boolean;
+            /** Id */
+            id: number;
+            /**
+             * Is Mine
+             * @default false
+             */
+            is_mine: boolean;
+            /**
+             * My Vote
+             * @default 0
+             * @enum {integer}
+             */
+            my_vote: -1 | 0 | 1;
+            /** Reply Count */
+            reply_count: number;
+            /** Score */
+            score: number;
+            /**
+             * Status
+             * @default visible
+             * @enum {string}
+             */
+            status: "visible" | "removed" | "deleted";
+            /**
+             * Tags
+             * @default []
+             */
+            tags: string[];
+            /** Title */
+            title: string;
+        };
+        /**
+         * CommonsThreadUpdate
+         * @description Only the fields sent change. `course_code: null` detaches the course.
+         */
+        CommonsThreadUpdate: {
+            /** Body Md */
+            body_md?: string | null;
+            /** Course Code */
+            course_code?: string | null;
+            /** Tags */
+            tags?: string[] | null;
+            /** Title */
+            title?: string | null;
+        };
+        /** CommonsVoteIn */
+        CommonsVoteIn: {
+            /** Target Id */
+            target_id: number;
+            /**
+             * Target Type
+             * @enum {string}
+             */
+            target_type: "thread" | "reply";
+            /**
+             * Value
+             * @enum {integer}
+             */
+            value: -1 | 0 | 1;
+        };
+        /** CommonsVoteOut */
+        CommonsVoteOut: {
+            /**
+             * My Vote
+             * @enum {integer}
+             */
+            my_vote: -1 | 0 | 1;
+            /** Score */
+            score: number;
         };
         /**
          * ConfirmEvent
@@ -1558,6 +2593,42 @@ export interface components {
             /** Page Id */
             page_id: number;
         };
+        /** CourseItem */
+        CourseItem: {
+            /** Books */
+            books: components["schemas"]["ShelfBook"][];
+            category: components["schemas"]["FeedCategoryRef"];
+            /** Code */
+            code: string;
+            /**
+             * Commons Count
+             * @default 0
+             */
+            commons_count: number;
+            /** Core Tags */
+            core_tags: string[];
+            /** Excerpt */
+            excerpt: string;
+            /** Id */
+            id: string;
+            illustration: components["schemas"]["Illustration"];
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            kind: "course";
+            /** Reason */
+            reason: string;
+            stats?: components["schemas"]["CourseStats"] | null;
+            /** Subject */
+            subject: string;
+            /** Title */
+            title: string;
+            /** Units */
+            units: number;
+            /** Words */
+            words: string[];
+        };
         /**
          * CourseList
          * @description A named list per catalog year. Members = `courses` plus every course of `sublists`.
@@ -1611,6 +2682,20 @@ export interface components {
              */
             weight: number;
         };
+        /** CourseMention */
+        CourseMention: {
+            /** Code */
+            code: string;
+            /** Title */
+            title: string;
+        };
+        /** CourseRef */
+        CourseRef: {
+            /** Code */
+            code: string;
+            /** Title */
+            title: string;
+        };
         /** CourseRelation */
         CourseRelation: {
             /**
@@ -1629,6 +2714,21 @@ export interface components {
              */
             kind: "equivalent" | "mutually_exclusive" | "replaces";
             source?: components["schemas"]["Source"] | null;
+        };
+        /**
+         * CourseStats
+         * @description From `attribute_value` (forum reviews and estimates), when there are any.
+         */
+        CourseStats: {
+            /** Difficulty */
+            difficulty?: number | null;
+            /**
+             * N
+             * @default 0
+             */
+            n: number;
+            /** Workload Hours */
+            workload_hours?: number | null;
         };
         /** CourseSummary */
         CourseSummary: {
@@ -1675,6 +2775,26 @@ export interface components {
              * @default 0
              */
             units: number;
+        };
+        /**
+         * DashboardStepEvent
+         * @description The agent is calling a tool (`label` is plain English, written by the server).
+         */
+        DashboardStepEvent: {
+            /** Label */
+            label: string;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "started" | "done" | "failed";
+            /** Tool */
+            tool: string;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "step";
         };
         /** DifficultyCapGoal */
         DifficultyCapGoal: {
@@ -1775,6 +2895,92 @@ export interface components {
              * @enum {string}
              */
             op: "all" | "any" | "n_of" | "atom";
+        };
+        /** FeedCategories */
+        FeedCategories: {
+            /** Categories */
+            categories: components["schemas"]["FeedCategory"][];
+            /** Selected */
+            selected: string[];
+        };
+        /** FeedCategory */
+        FeedCategory: {
+            /** Blurb */
+            blurb: string;
+            /** Course Count */
+            course_count: number;
+            /** Key */
+            key: string;
+            /** Label */
+            label: string;
+            /** Motif */
+            motif: string;
+            /** Subjects */
+            subjects: string[];
+        };
+        /** FeedCategoryRef */
+        FeedCategoryRef: {
+            /** Key */
+            key: string;
+            /** Label */
+            label: string;
+            /** Motif */
+            motif: string;
+        };
+        /** FeedNotes */
+        FeedNotes: {
+            /** Ai */
+            ai: boolean;
+            /** Headline */
+            headline: string;
+            /** Notes */
+            notes: {
+                [key: string]: string;
+            };
+        };
+        /** FeedNotesRequest */
+        FeedNotesRequest: {
+            /** Categories */
+            categories?: string | null;
+            /** Item Ids */
+            item_ids: string[];
+            /**
+             * Tab
+             * @default for_you
+             * @enum {string}
+             */
+            tab: "for_you" | "explore" | "following";
+        };
+        /** FeedPage */
+        FeedPage: {
+            /** Categories Applied */
+            categories_applied: string[];
+            /** Headline */
+            headline: string;
+            /** Items */
+            items: (components["schemas"]["CourseItem"] | components["schemas"]["CommentItem"] | components["schemas"]["BookItem"] | components["schemas"]["WordsItem"] | components["schemas"]["ProgramItem"] | components["schemas"]["QuestionItem"])[];
+            /** Next Cursor */
+            next_cursor: string | null;
+            /** Personalized */
+            personalized: boolean;
+            /**
+             * Tab
+             * @enum {string}
+             */
+            tab: "for_you" | "explore" | "following";
+        };
+        /** Follows */
+        Follows: {
+            /**
+             * Courses
+             * @default []
+             */
+            courses: string[];
+            /**
+             * Threads
+             * @default []
+             */
+            threads: number[];
         };
         /** ForumPageOut */
         ForumPageOut: {
@@ -2133,6 +3339,18 @@ export interface components {
              */
             status: "ok" | "degraded";
         };
+        /**
+         * Illustration
+         * @description Inputs of the page's generated SVG art (no image is fetched).
+         */
+        Illustration: {
+            /** Motif */
+            motif: string;
+            /** Palette */
+            palette: number;
+            /** Seed */
+            seed: number;
+        };
         /** Infeasibility */
         Infeasibility: {
             /** Conflicts */
@@ -2232,6 +3450,113 @@ export interface components {
              * @default 1
              */
             weight: number;
+        };
+        /**
+         * InterviewEvent
+         * @description One Server-Sent Event `data:` payload from /agents/interview.
+         */
+        InterviewEvent: components["schemas"]["DashboardStepEvent"] | components["schemas"]["InterviewTurnEvent"] | components["schemas"]["ProfileDoneEvent"] | components["schemas"]["ErrorEvent"];
+        /**
+         * InterviewMemory
+         * @description What the guide remembers between visits: topics covered and the last turns.
+         */
+        InterviewMemory: {
+            /**
+             * Covered
+             * @default []
+             */
+            covered: ("class_year" | "interests" | "humanities" | "research" | "career" | "future" | "constraints" | "wrapup")[];
+            /**
+             * Turns
+             * @default []
+             */
+            turns: components["schemas"]["InterviewTurn"][];
+        };
+        /** InterviewMemoryPatch */
+        InterviewMemoryPatch: {
+            /** Covered */
+            covered?: ("class_year" | "interests" | "humanities" | "research" | "career" | "future" | "constraints" | "wrapup")[] | null;
+            /** Turns */
+            turns?: components["schemas"]["InterviewTurn"][] | null;
+        };
+        /**
+         * InterviewRequest
+         * @description `start` opens (or resumes) the interview, `reply` answers the guide's last question,
+         *     `welcome_back` greets a returning student.
+         */
+        InterviewRequest: {
+            /**
+             * History
+             * @default []
+             */
+            history: components["schemas"]["InterviewTurn"][];
+            /** Message */
+            message?: string | null;
+            /**
+             * Mode
+             * @default start
+             * @enum {string}
+             */
+            mode: "start" | "reply" | "welcome_back";
+        };
+        /** InterviewTurn */
+        InterviewTurn: {
+            /**
+             * Role
+             * @enum {string}
+             */
+            role: "guide" | "student";
+            /** Text */
+            text: string;
+            /** Topic */
+            topic?: ("class_year" | "interests" | "humanities" | "research" | "career" | "future" | "constraints" | "wrapup") | null;
+        };
+        /**
+         * InterviewTurnEvent
+         * @description The guide's next message. `proposed` holds only facts the student said in this
+         *     conversation (list fields already merged with the profile); the browser saves what the
+         *     student keeps with PATCH /me/profile.
+         */
+        InterviewTurnEvent: {
+            /**
+             * Courses
+             * @default []
+             */
+            courses: components["schemas"]["CourseMention"][];
+            /**
+             * Done
+             * @default false
+             */
+            done: boolean;
+            /**
+             * Fallback
+             * @default false
+             */
+            fallback: boolean;
+            /**
+             * Progress
+             * @default 0
+             */
+            progress: number;
+            /** @default {} */
+            proposed: components["schemas"]["ProfilePatch"];
+            /**
+             * Quick Replies
+             * @default []
+             */
+            quick_replies: string[];
+            /** Text */
+            text: string;
+            /**
+             * Topic
+             * @enum {string}
+             */
+            topic: "class_year" | "interests" | "humanities" | "research" | "career" | "future" | "constraints" | "wrapup";
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "turn";
         };
         /** Issue */
         Issue: {
@@ -2412,6 +3737,13 @@ export interface components {
              * @enum {string}
              */
             type: "message";
+        };
+        /** Milestone */
+        Milestone: {
+            /** Text */
+            text: string;
+            /** When */
+            when: string;
         };
         /** ModerationDecision */
         ModerationDecision: {
@@ -2869,6 +4201,27 @@ export interface components {
             timing?: components["schemas"]["Timing"] | null;
         };
         /**
+         * Portrait
+         * @description The guide's portrait of the student, kept by the student (written by an AI).
+         */
+        Portrait: {
+            /**
+             * Headline
+             * @default
+             */
+            headline: string;
+            /**
+             * Summary
+             * @default
+             */
+            summary: string;
+            /**
+             * Themes
+             * @default []
+             */
+            themes: string[];
+        };
+        /**
          * PostCreate
          * @description A review requires structured ratings and the term taken; a discussion post has neither.
          */
@@ -3074,6 +4427,156 @@ export interface components {
              */
             term: string;
         };
+        /** ProfileDoneEvent */
+        ProfileDoneEvent: {
+            /**
+             * Fallback
+             * @default false
+             */
+            fallback: boolean;
+            /** Note */
+            note?: string | null;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "done";
+        };
+        /** ProfileOut */
+        ProfileOut: {
+            /**
+             * Career Paths
+             * @default []
+             */
+            career_paths: string[];
+            /** Career Plans */
+            career_plans?: string | null;
+            /** Class Year */
+            class_year?: number | null;
+            /**
+             * Completeness
+             * @default 0
+             */
+            completeness: number;
+            /**
+             * Constraints
+             * @default []
+             */
+            constraints: string[];
+            /** Email */
+            email: string;
+            /**
+             * Feed Categories
+             * @default []
+             */
+            feed_categories: string[];
+            /**
+             * @default {
+             *       "courses": [],
+             *       "threads": []
+             *     }
+             */
+            follows: components["schemas"]["Follows"];
+            /**
+             * Future Domains
+             * @default []
+             */
+            future_domains: string[];
+            /** Humanities Goal */
+            humanities_goal?: ("pass" | "balance" | "enjoy" | "deep") | null;
+            /** Humanities Note */
+            humanities_note?: string | null;
+            /**
+             * Humanities Topics
+             * @default []
+             */
+            humanities_topics: string[];
+            /**
+             * Intended Programs
+             * @default []
+             */
+            intended_programs: string[];
+            /**
+             * Interests
+             * @default []
+             */
+            interests: string[];
+            /**
+             * @default {
+             *       "covered": [],
+             *       "turns": []
+             *     }
+             */
+            interview: components["schemas"]["InterviewMemory"];
+            /**
+             * Member Since
+             * Format: date
+             */
+            member_since: string;
+            /**
+             * @default {
+             *       "headline": "",
+             *       "summary": "",
+             *       "themes": []
+             *     }
+             */
+            portrait: components["schemas"]["Portrait"];
+            /**
+             * Programs
+             * @default []
+             */
+            programs: components["schemas"]["ProgramRef"][];
+            /**
+             * Research Areas
+             * @default []
+             */
+            research_areas: string[];
+            /**
+             * Updated Day
+             * Format: date
+             */
+            updated_day: string;
+            /** Username */
+            username: string;
+            /** Workload */
+            workload?: ("light" | "balanced" | "intense") | null;
+        };
+        /**
+         * ProfilePatch
+         * @description A partial update: only the fields sent are changed (`null` clears a field). The feed,
+         *     the Commons follow button and the companion also send these.
+         */
+        ProfilePatch: {
+            /** Career Paths */
+            career_paths?: string[] | null;
+            /** Career Plans */
+            career_plans?: string | null;
+            /** Class Year */
+            class_year?: number | null;
+            /** Constraints */
+            constraints?: string[] | null;
+            /** Feed Categories */
+            feed_categories?: string[] | null;
+            follows?: components["schemas"]["Follows"] | null;
+            /** Future Domains */
+            future_domains?: string[] | null;
+            /** Humanities Goal */
+            humanities_goal?: ("pass" | "balance" | "enjoy" | "deep") | null;
+            /** Humanities Note */
+            humanities_note?: string | null;
+            /** Humanities Topics */
+            humanities_topics?: string[] | null;
+            /** Intended Programs */
+            intended_programs?: string[] | null;
+            /** Interests */
+            interests?: string[] | null;
+            interview?: components["schemas"]["InterviewMemoryPatch"] | null;
+            portrait?: components["schemas"]["Portrait"] | null;
+            /** Research Areas */
+            research_areas?: string[] | null;
+            /** Workload */
+            workload?: ("light" | "balanced" | "intense") | null;
+        };
         /** ProgramDetail */
         ProgramDetail: {
             /** Catalog Year */
@@ -3116,6 +4619,33 @@ export interface components {
             verified_by?: string | null;
             /** Version Id */
             version_id: number;
+        };
+        /** ProgramItem */
+        ProgramItem: {
+            /** Department */
+            department: string | null;
+            /** Id */
+            id: string;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            kind: "program";
+            /** Name */
+            name: string;
+            /** Program Id */
+            program_id: string;
+            /** Reason */
+            reason: string;
+            /** Type */
+            type: string;
+        };
+        /** ProgramRef */
+        ProgramRef: {
+            /** Id */
+            id: string;
+            /** Name */
+            name: string;
         };
         /** ProgramSummary */
         ProgramSummary: {
@@ -3199,6 +4729,37 @@ export interface components {
              * @default 1
              */
             weight: number;
+        };
+        /**
+         * QuestionItem
+         * @description A Commons question that is waiting for an answer, or a recent one.
+         */
+        QuestionItem: {
+            /** Answered */
+            answered: boolean;
+            course: components["schemas"]["CourseRef"] | null;
+            /**
+             * Day
+             * Format: date
+             */
+            day: string;
+            /** Href */
+            href: string;
+            /** Id */
+            id: string;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            kind: "question";
+            /** Reply Count */
+            reply_count: number;
+            /** Snippet */
+            snippet: string;
+            /** Thread Id */
+            thread_id: number;
+            /** Title */
+            title: string;
         };
         /**
          * RatingSummary
@@ -3392,6 +4953,254 @@ export interface components {
             /** Would Recommend */
             would_recommend: boolean;
         };
+        /** RouteCourse */
+        RouteCourse: {
+            /** Code */
+            code: string;
+            /**
+             * Note
+             * @default
+             */
+            note: string;
+            /** Quarter */
+            quarter?: ("AU" | "WI" | "SP" | "SU") | null;
+            /**
+             * Role
+             * @default elective
+             * @enum {string}
+             */
+            role: "core" | "major" | "minor" | "elective" | "humanities" | "research";
+            /**
+             * Title
+             * @default
+             */
+            title: string;
+            /** Year */
+            year: number;
+        };
+        /**
+         * RouteDraftEvent
+         * @description One drafted route (not saved: POST /me/routes keeps it).
+         */
+        RouteDraftEvent: {
+            /**
+             * Fallback
+             * @default false
+             */
+            fallback: boolean;
+            /**
+             * Programs
+             * @default []
+             */
+            programs: components["schemas"]["ProgramRef"][];
+            route: components["schemas"]["RouteIn"];
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "route";
+        };
+        /**
+         * RouteFit
+         * @description How well the route fits what the student said, 0..1 (an estimate, not a grade).
+         */
+        RouteFit: {
+            /**
+             * Career
+             * @default 0.5
+             */
+            career: number;
+            /**
+             * Humanities
+             * @default 0.5
+             */
+            humanities: number;
+            /**
+             * Interests
+             * @default 0.5
+             */
+            interests: number;
+            /** Workload */
+            workload?: ("light" | "balanced" | "intense") | null;
+        };
+        /** RouteIn */
+        RouteIn: {
+            /**
+             * Courses
+             * @default []
+             */
+            courses: components["schemas"]["RouteCourse"][];
+            /**
+             * @default {
+             *       "career": 0.5,
+             *       "humanities": 0.5,
+             *       "interests": 0.5
+             *     }
+             */
+            fit: components["schemas"]["RouteFit"];
+            /**
+             * Kind
+             * @default custom
+             * @enum {string}
+             */
+            kind: "major" | "double_major" | "major_minor" | "exploratory" | "custom";
+            /**
+             * Milestones
+             * @default []
+             */
+            milestones: components["schemas"]["Milestone"][];
+            /**
+             * Origin
+             * @default user
+             * @enum {string}
+             */
+            origin: "ai" | "user";
+            /**
+             * Program Ids
+             * @default []
+             */
+            program_ids: string[];
+            /**
+             * Summary
+             * @default
+             */
+            summary: string;
+            /**
+             * Tagline
+             * @default
+             */
+            tagline: string;
+            /** Title */
+            title: string;
+        };
+        /** RouteList */
+        RouteList: {
+            /** Chosen Id */
+            chosen_id?: string | null;
+            /** Items */
+            items: components["schemas"]["RouteOut"][];
+            /**
+             * Max Routes
+             * @default 12
+             */
+            max_routes: number;
+        };
+        /** RouteOut */
+        RouteOut: {
+            /**
+             * Courses
+             * @default []
+             */
+            courses: components["schemas"]["RouteCourse"][];
+            /**
+             * Created Day
+             * Format: date
+             */
+            created_day: string;
+            /**
+             * @default {
+             *       "career": 0.5,
+             *       "humanities": 0.5,
+             *       "interests": 0.5
+             *     }
+             */
+            fit: components["schemas"]["RouteFit"];
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Kind
+             * @default custom
+             * @enum {string}
+             */
+            kind: "major" | "double_major" | "major_minor" | "exploratory" | "custom";
+            /**
+             * Milestones
+             * @default []
+             */
+            milestones: components["schemas"]["Milestone"][];
+            /** Note */
+            note?: string | null;
+            /**
+             * Origin
+             * @default user
+             * @enum {string}
+             */
+            origin: "ai" | "user";
+            /** Position */
+            position: number;
+            /**
+             * Program Ids
+             * @default []
+             */
+            program_ids: string[];
+            /**
+             * Programs
+             * @default []
+             */
+            programs: components["schemas"]["ProgramRef"][];
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "open" | "chosen" | "archived";
+            /**
+             * Summary
+             * @default
+             */
+            summary: string;
+            /**
+             * Tagline
+             * @default
+             */
+            tagline: string;
+            /** Title */
+            title: string;
+            /**
+             * Updated Day
+             * Format: date
+             */
+            updated_day: string;
+        };
+        /**
+         * RoutePatch
+         * @description `status: chosen` makes any other chosen route `open`; `open` on the chosen route keeps
+         *     the options open.
+         */
+        RoutePatch: {
+            /** Note */
+            note?: string | null;
+            /** Position */
+            position?: number | null;
+            /** Status */
+            status?: ("open" | "chosen" | "archived") | null;
+            /** Tagline */
+            tagline?: string | null;
+            /** Title */
+            title?: string | null;
+        };
+        /**
+         * RoutesEvent
+         * @description One Server-Sent Event `data:` payload from /agents/routes.
+         */
+        RoutesEvent: components["schemas"]["DashboardStepEvent"] | components["schemas"]["RouteDraftEvent"] | components["schemas"]["ProfileDoneEvent"] | components["schemas"]["ErrorEvent"];
+        /** RoutesRequest */
+        RoutesRequest: {
+            /**
+             * Count
+             * @default 3
+             */
+            count: number;
+            /** Focus */
+            focus?: string | null;
+            /**
+             * Keep Existing Titles
+             * @default []
+             */
+            keep_existing_titles: string[];
+        };
         /** Section */
         Section: {
             /** Component */
@@ -3497,6 +5306,21 @@ export interface components {
             source?: components["schemas"]["Source"] | null;
             /** With */
             with: string;
+        };
+        /** ShelfBook */
+        ShelfBook: {
+            /** Author */
+            author: string;
+            /** Id */
+            id: string;
+            /** Slug */
+            slug: string;
+            /** Title */
+            title: string;
+            /** When */
+            when: string;
+            /** Year */
+            year: number;
         };
         /**
          * SlotNode
@@ -3667,6 +5491,72 @@ export interface components {
             /** Term */
             term?: string | null;
         };
+        /**
+         * UpdateItem
+         * @description One new thing on Quarterly that concerns the student. Text is plain (no markdown) and
+         *     scrubbed of emails and phone numbers; `href` is a path on this site.
+         */
+        UpdateItem: {
+            /** Course Code */
+            course_code?: string | null;
+            /**
+             * Day
+             * Format: date
+             */
+            day: string;
+            /** Href */
+            href: string;
+            /** Id */
+            id: number;
+            /** Is New */
+            is_new: boolean;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "thread" | "reply" | "review" | "discussion" | "comment";
+            /** Reason */
+            reason: string;
+            /** Snippet */
+            snippet: string;
+            /** Title */
+            title: string;
+        };
+        /** UpdatesOut */
+        UpdatesOut: {
+            /** Digest */
+            digest?: string | null;
+            /**
+             * Digest Ai
+             * @default false
+             */
+            digest_ai: boolean;
+            /**
+             * Items
+             * @default []
+             */
+            items: components["schemas"]["UpdateItem"][];
+            /**
+             * Unread
+             * @default 0
+             */
+            unread: number;
+        };
+        /**
+         * UpdatesSeen
+         * @description High-water marks: the newest id the student has seen of each kind of item. In a request
+         *     a missing mark means "the newest there is now"; marks never move backwards.
+         */
+        UpdatesSeen: {
+            /** Comment */
+            comment?: number | null;
+            /** Post */
+            post?: number | null;
+            /** Reply */
+            reply?: number | null;
+            /** Thread */
+            thread?: number | null;
+        };
         /** ValidationError */
         ValidationError: {
             /** Context */
@@ -3794,6 +5684,28 @@ export interface components {
             cloud_cover: number | null;
             /** Weather Code */
             weather_code: number;
+        };
+        /** WeightedWord */
+        WeightedWord: {
+            /** Text */
+            text: string;
+            /** Weight */
+            weight: number;
+        };
+        /** WordsItem */
+        WordsItem: {
+            category: components["schemas"]["FeedCategoryRef"];
+            /** Id */
+            id: string;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            kind: "words";
+            /** Label */
+            label: string;
+            /** Words */
+            words: components["schemas"]["WeightedWord"][];
         };
         /** WorkloadHoursGoal */
         WorkloadHoursGoal: {
@@ -4236,6 +6148,40 @@ export interface operations {
             };
         };
     };
+    ask_agents_ask_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AskRequest"];
+            };
+        };
+        responses: {
+            /** @description Server-Sent Events; each `data:` line is one AskEvent as JSON. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AskEvent"];
+                    "text/event-stream": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     chat_agents_chat_post: {
         parameters: {
             query?: never;
@@ -4301,6 +6247,39 @@ export interface operations {
             };
         };
     };
+    post_feed_notes_agents_feed_notes_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["FeedNotesRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FeedNotes"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     generate_agents_generate_post: {
         parameters: {
             query?: never;
@@ -4322,6 +6301,92 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["AgentEvent"];
                     "text/event-stream": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    interview_agents_interview_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["InterviewRequest"];
+            };
+        };
+        responses: {
+            /** @description Server-Sent Events; each `data:` line is one InterviewEvent as JSON. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InterviewEvent"];
+                    "text/event-stream": unknown;
+                };
+            };
+            /** @description Not logged in */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    draft_routes_agents_routes_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RoutesRequest"];
+            };
+        };
+        responses: {
+            /** @description Server-Sent Events; each `data:` line is one RoutesEvent as JSON. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RoutesEvent"];
+                    "text/event-stream": unknown;
+                };
+            };
+            /** @description Not logged in */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
                 };
             };
             /** @description Validation Error */
@@ -4670,6 +6735,503 @@ export interface operations {
             };
         };
     };
+    delete_reply_commons_replies__reply_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                reply_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_reply_commons_replies__reply_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                reply_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CommonsReplyUpdate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CommonsReply"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    report_commons_reports_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CommonsReportIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CommonsReportOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_threads_commons_threads_get: {
+        parameters: {
+            query?: {
+                sort?: "hot" | "new" | "top" | "unanswered" | "active";
+                course?: string | null;
+                subject?: string | null;
+                tag?: string | null;
+                q?: string | null;
+                mine?: boolean;
+                cursor?: string | null;
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CommonsThreadList"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_thread_commons_threads_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CommonsThreadCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CommonsThreadDetail"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_thread_commons_threads__thread_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                thread_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CommonsThreadDetail"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_thread_commons_threads__thread_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                thread_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_thread_commons_threads__thread_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                thread_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CommonsThreadUpdate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CommonsThreadDetail"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    accept_commons_threads__thread_id__accept_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                thread_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CommonsAcceptIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CommonsAcceptOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    bot_commons_threads__thread_id__bot_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                thread_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CommonsBotRequest"];
+            };
+        };
+        responses: {
+            /** @description Server-Sent Events; each `data:` line is one CommonsBotEvent as JSON. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CommonsBotEvent"];
+                    "text/event-stream": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    follow_commons_threads__thread_id__follow_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                thread_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CommonsFollowIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CommonsFollowOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    presence_commons_threads__thread_id__presence_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                thread_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CommonsPresence"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_reply_commons_threads__thread_id__replies_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                thread_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CommonsReplyCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CommonsReplyPosted"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    typing_commons_threads__thread_id__typing_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                thread_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    vote_commons_votes_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CommonsVoteIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CommonsVoteOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     get_course_list_course_lists__name__get: {
         parameters: {
             query?: {
@@ -4800,6 +7362,61 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+        };
+    };
+    get_feed_feed_get: {
+        parameters: {
+            query?: {
+                tab?: "for_you" | "explore" | "following";
+                /** @description Comma-separated category keys; absent = the profile's saved focus. */
+                categories?: string | null;
+                cursor?: string | null;
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FeedPage"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_categories_feed_categories_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FeedCategories"];
                 };
             };
         };
@@ -5264,6 +7881,321 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+        };
+    };
+    get_profile_me_profile_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProfileOut"];
+                };
+            };
+            /** @description Not logged in */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+        };
+    };
+    patch_profile_me_profile_patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ProfilePatch"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProfileOut"];
+                };
+            };
+            /** @description Not logged in */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+            /** @description Unknown program */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+        };
+    };
+    list_routes_me_routes_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RouteList"];
+                };
+            };
+            /** @description Not logged in */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+        };
+    };
+    create_route_me_routes_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RouteIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RouteOut"];
+                };
+            };
+            /** @description Not logged in */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+            /** @description Too many routes */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_route_me_routes__route_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                route_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not logged in */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    patch_route_me_routes__route_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                route_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RoutePatch"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RouteOut"];
+                };
+            };
+            /** @description Not logged in */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    updates_me_updates_get: {
+        parameters: {
+            query?: {
+                digest?: boolean;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UpdatesOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    updates_seen_me_updates_seen_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["UpdatesSeen"] | null;
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UpdatesSeen"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };

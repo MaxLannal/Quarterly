@@ -37,10 +37,11 @@ test("the homepage is Rockefeller Chapel drawn with real course titles, loaded f
   await expect(chapel).toHaveAttribute("data-placement", "side");
   expect(data).toEqual(["/home/course-chapel.json"]);
   // the controls sit on the picture and still work
-  await expect(page.getByRole("heading", { level: 1, name: "Quarterly" })).toBeVisible();
-  await page.getByRole("searchbox", { name: "Search courses" }).fill("CMSC");
-  await page.getByRole("button", { name: "Search" }).click();
-  await expect(page).toHaveURL(/\/courses\?q=CMSC$/);
+  await expect(page.getByRole("heading", { level: 1, name: "The Best of UChicago, within your reach." })).toBeVisible();
+  // the bar asks the Ask chatbot (docs/BEST-OF-UCHICAGO-PLAN.md)
+  await page.getByRole("combobox", { name: "Ask Quarterly a question about UChicago" }).fill("Which CMSC course first?");
+  await page.keyboard.press("Enter");
+  await expect(page).toHaveURL(/\/ask(\?q=|$)/);
 });
 
 test("hovering a title names its course, and a click opens that course", async ({ page }) => {
@@ -64,7 +65,7 @@ test("hovering a title names its course, and a click opens that course", async (
 test("nothing opens from the picture behind the controls", async ({ page }) => {
   await page.goto("/");
   const chapel = await chapelReady(page);
-  const h1 = (await page.getByRole("heading", { level: 1, name: "Quarterly" }).boundingBox())!;
+  const h1 = (await page.getByRole("heading", { level: 1, name: "The Best of UChicago, within your reach." }).boundingBox())!;
   await page.mouse.move(h1.x + h1.width / 2, h1.y + h1.height / 2);
   await expect(chapel).toHaveAttribute("data-hover", "");
   await page.mouse.click(h1.x + h1.width / 2, h1.y + h1.height / 2);
@@ -91,7 +92,7 @@ test.describe("phone", () => {
     const chapel = await chapelReady(page);
     await expect(chapel).toHaveAttribute("data-placement", "bottom");
     const hero = (await chapel.boundingBox())!;
-    const h1 = (await page.getByRole("heading", { level: 1, name: "Quarterly" }).boundingBox())!;
+    const h1 = (await page.getByRole("heading", { level: 1, name: "The Best of UChicago, within your reach." }).boundingBox())!;
     expect(h1.y - hero.y).toBeGreaterThan(hero.height * 0.5);
     expect(hero.height).toBeGreaterThan(844 * 0.8);
   });

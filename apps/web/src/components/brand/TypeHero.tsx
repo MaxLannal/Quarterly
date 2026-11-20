@@ -76,7 +76,7 @@ export function TypeHero({
     <section
       className={cn(
         "relative isolate overflow-hidden border-b border-hairline",
-        tall ? "min-h-[min(78svh,760px)]" : "min-h-[440px] sm:min-h-[480px]",
+        tall ? "min-h-[min(78svh,760px)]" : "min-h-[460px] sm:min-h-[540px]",
         className,
       )}
     >
@@ -89,7 +89,7 @@ export function TypeHero({
       <div
         className={cn(
           "pointer-events-none mx-auto flex w-full max-w-content px-4 sm:px-6 lg:px-8",
-          tall ? "min-h-[min(78svh,760px)]" : "min-h-[440px] sm:min-h-[480px]",
+          tall ? "min-h-[min(78svh,760px)]" : "min-h-[460px] sm:min-h-[540px]",
           "items-end pb-10 pt-40 min-[900px]:items-center min-[900px]:py-16",
         )}
       >

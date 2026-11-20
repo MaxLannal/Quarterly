@@ -153,8 +153,8 @@ export class TypeScapeEngine {
     }
     this.field.width = Math.ceil(w / CELL);
     this.field.height = Math.ceil(h / CELL);
-    const size = w < 640 ? 10 : w < 1100 ? 11 : 12;
-    this.rowH = Math.round(size * 1.28);
+    const size = w < 640 ? 10.5 : w < 1100 ? 11.5 : 12.5;
+    this.rowH = Math.round(size * 1.24);
     this.font = `500 ${size}px Newsreader, "Times New Roman", serif`;
     this.setRows();
     this.draw(true);
@@ -172,8 +172,12 @@ export class TypeScapeEngine {
       c.font = this.font;
       c.textBaseline = "alphabetic";
     }
-    faint.fillStyle = "rgba(17,17,17,0.085)";
+    faint.fillStyle = "rgba(17,17,17,0.075)";
     strong.fillStyle = "#ffffff";
+    // A hairline stroke thickens the figure's letters a little against the faint ones.
+    strong.strokeStyle = "#ffffff";
+    strong.lineWidth = 0.5;
+    strong.lineJoin = "round";
     this.rows = [];
     let k = 0;
     const gap = this.rowH * 0.55;
@@ -191,6 +195,7 @@ export class TypeScapeEngine {
         const tw = strong.measureText(text).width;
         faint.fillText(text, x, y);
         strong.fillText(text, x, y);
+        strong.strokeText(text, x, y);
         if (useWord) strong.font = this.font;
         row.spans.push({ x0: x, x1: x + tw, course });
         x += tw + gap;

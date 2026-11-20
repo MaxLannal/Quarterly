@@ -1,0 +1,893 @@
+# The Quarterly shelf: real, well-known books the feed pairs with courses ("reading for the
+# curious, not a syllabus"). Hand-written; no course assigns these. Read by api/feed/shelf.py.
+#
+# year: the year of first publication (negative = BCE); year_label, when present, is what the
+# page shows instead (an approximate date or a span). categories: feed category keys
+# (api/feed/categories.py). keywords: lowercase words and phrases matched as whole words against
+# course titles and descriptions to pair a course with a book.
+books:
+# ------------------------------------------------------------------ Mathematics & Statistics
+- slug: euclid-elements
+  title: Elements
+  author: Euclid
+  year: -300
+  year_label: c. 300 BCE
+  categories: [math, core]
+  keywords: [geometry, euclid, euclidean, axiom, proof, number theory]
+- slug: what-is-mathematics
+  title: What Is Mathematics?
+  author: Richard Courant and Herbert Robbins
+  year: 1941
+  categories: [math]
+  keywords: [calculus, analysis, topology, mathematical thinking, geometry]
+- slug: a-mathematicians-apology
+  title: A Mathematician's Apology
+  author: G. H. Hardy
+  year: 1940
+  categories: [math]
+  keywords: [pure mathematics, number theory, prime, primes, proof]
+- slug: how-to-solve-it
+  title: How to Solve It
+  author: George Pólya
+  year: 1945
+  categories: [math]
+  keywords: [problem solving, proof, proofs, discrete mathematics, mathematical reasoning]
+- slug: godel-escher-bach
+  title: "Gödel, Escher, Bach: An Eternal Golden Braid"
+  author: Douglas R. Hofstadter
+  year: 1979
+  categories: [math, computing, mind]
+  keywords: [logic, recursion, incompleteness, formal systems, computability, self-reference, consciousness]
+- slug: the-lady-tasting-tea
+  title: The Lady Tasting Tea
+  author: David Salsburg
+  year: 2001
+  categories: [math]
+  keywords: [statistics, statistical, statistical inference, probability, experimental design, hypothesis testing]
+- slug: how-to-lie-with-statistics
+  title: How to Lie with Statistics
+  author: Darrell Huff
+  year: 1954
+  categories: [math, society]
+  keywords: [statistics, data visualization, surveys, statistical reasoning]
+- slug: principles-of-mathematical-analysis
+  title: Principles of Mathematical Analysis
+  author: Walter Rudin
+  year: 1953
+  categories: [math]
+  keywords: [real analysis, analysis, metric spaces, continuity, sequences, integration]
+# ----------------------------------------------------------- Physical Sciences & Engineering
+- slug: feynman-lectures-on-physics
+  title: The Feynman Lectures on Physics
+  author: Richard P. Feynman, Robert B. Leighton and Matthew Sands
+  year: 1963
+  year_label: 1963–65
+  categories: [physical]
+  keywords: [physics, mechanics, electromagnetism, electricity and magnetism, thermodynamics, quantum mechanics]
+- slug: qed
+  title: "QED: The Strange Theory of Light and Matter"
+  author: Richard P. Feynman
+  year: 1985
+  categories: [physical]
+  keywords: [quantum electrodynamics, quantum field theory, photons, light, particle physics]
+- slug: a-brief-history-of-time
+  title: A Brief History of Time
+  author: Stephen Hawking
+  year: 1988
+  categories: [physical]
+  keywords: [cosmology, black holes, black hole, big bang, spacetime, general relativity]
+- slug: cosmos
+  title: Cosmos
+  author: Carl Sagan
+  year: 1980
+  categories: [physical, core]
+  keywords: [astronomy, universe, galaxies, solar system, planets, astrophysics]
+- slug: principia
+  title: Philosophiæ Naturalis Principia Mathematica
+  author: Isaac Newton
+  year: 1687
+  categories: [physical, math]
+  keywords: [classical mechanics, mechanics, gravitation, newtonian, motion]
+- slug: the-periodic-table
+  title: The Periodic Table
+  author: Primo Levi
+  year: 1975
+  categories: [physical, literature]
+  keywords: [chemistry, chemical, chemists, elements]
+- slug: the-making-of-the-atomic-bomb
+  title: The Making of the Atomic Bomb
+  author: Richard Rhodes
+  year: 1986
+  categories: [physical, history]
+  keywords: [nuclear, atomic, fission, manhattan project, nuclear physics]
+- slug: what-is-life
+  title: What Is Life?
+  author: Erwin Schrödinger
+  year: 1944
+  categories: [life, physical]
+  keywords: [biophysics, molecular biology, genetics, entropy, physics of life]
+# ------------------------------------------------------------------ Computer & Data Science
+- slug: sicp
+  title: Structure and Interpretation of Computer Programs
+  author: Harold Abelson and Gerald Jay Sussman
+  year: 1985
+  categories: [computing]
+  keywords: [computer programming, programming, functional programming, abstraction, interpreters, recursion]
+- slug: quantum-computation-and-quantum-information
+  title: Quantum Computation and Quantum Information
+  author: Michael A. Nielsen and Isaac L. Chuang
+  year: 2000
+  categories: [computing, physical]
+  keywords: [quantum computing, quantum computation, quantum information, qubits, quantum algorithms]
+- slug: the-art-of-computer-programming
+  title: The Art of Computer Programming
+  author: Donald E. Knuth
+  year: 1968
+  categories: [computing, math]
+  keywords: [algorithms, data structures, combinatorics, sorting, discrete mathematics]
+- slug: introduction-to-algorithms
+  title: Introduction to Algorithms
+  author: Thomas H. Cormen, Charles E. Leiserson and Ronald L. Rivest
+  year: 1990
+  categories: [computing]
+  keywords: [algorithms, data structures, complexity, dynamic programming, graph algorithms]
+- slug: artificial-intelligence-a-modern-approach
+  title: "Artificial Intelligence: A Modern Approach"
+  author: Stuart Russell and Peter Norvig
+  year: 1995
+  categories: [computing]
+  keywords: [artificial intelligence, intelligent agents, search, reasoning, robotics]
+- slug: the-c-programming-language
+  title: The C Programming Language
+  author: Brian W. Kernighan and Dennis M. Ritchie
+  year: 1978
+  categories: [computing]
+  keywords: [systems programming, computer systems, operating systems, unix, low-level]
+- slug: the-elements-of-statistical-learning
+  title: The Elements of Statistical Learning
+  author: Trevor Hastie, Robert Tibshirani and Jerome Friedman
+  year: 2001
+  categories: [computing, math]
+  keywords: [machine learning, statistical learning, regression, classification, data science]
+- slug: deep-learning
+  title: Deep Learning
+  author: Ian Goodfellow, Yoshua Bengio and Aaron Courville
+  year: 2016
+  categories: [computing]
+  keywords: [deep learning, neural networks, neural network, machine learning]
+- slug: weapons-of-math-destruction
+  title: Weapons of Math Destruction
+  author: Cathy O'Neil
+  year: 2016
+  categories: [computing, society]
+  keywords: [algorithmic, algorithms, big data, bias, fairness, data ethics]
+- slug: the-cuckoos-egg
+  title: The Cuckoo's Egg
+  author: Clifford Stoll
+  year: 1989
+  categories: [computing]
+  keywords: [computer security, security, networks, networking, hacking]
+# ------------------------------------------------------------------ Life Sciences & Medicine
+- slug: on-the-origin-of-species
+  title: On the Origin of Species
+  author: Charles Darwin
+  year: 1859
+  categories: [life, core]
+  keywords: [evolution, natural selection, evolutionary biology, species, adaptation]
+- slug: the-selfish-gene
+  title: The Selfish Gene
+  author: Richard Dawkins
+  year: 1976
+  categories: [life]
+  keywords: [evolution, genes, natural selection, animal behavior, evolutionary biology]
+- slug: the-double-helix
+  title: The Double Helix
+  author: James D. Watson
+  year: 1968
+  categories: [life]
+  keywords: [dna, molecular biology, genetics, structural biology]
+- slug: the-immortal-life-of-henrietta-lacks
+  title: The Immortal Life of Henrietta Lacks
+  author: Rebecca Skloot
+  year: 2010
+  categories: [life, society]
+  keywords: [bioethics, research ethics, cell biology, cancer, medicine]
+- slug: the-emperor-of-all-maladies
+  title: The Emperor of All Maladies
+  author: Siddhartha Mukherjee
+  year: 2010
+  categories: [life]
+  keywords: [cancer, oncology, history of medicine, medicine, tumor]
+- slug: the-gene
+  title: "The Gene: An Intimate History"
+  author: Siddhartha Mukherjee
+  year: 2016
+  categories: [life]
+  keywords: [genetics, genome, genomics, heredity, human genetics]
+- slug: your-inner-fish
+  title: Your Inner Fish
+  author: Neil Shubin
+  year: 2008
+  categories: [life]
+  keywords: [anatomy, fossils, vertebrate, paleontology, evolution, developmental biology]
+- slug: being-mortal
+  title: Being Mortal
+  author: Atul Gawande
+  year: 2014
+  categories: [life, society]
+  keywords: [aging, health care, end of life, palliative, medicine]
+- slug: spillover
+  title: Spillover
+  author: David Quammen
+  year: 2012
+  categories: [life, environment]
+  keywords: [infectious disease, infectious diseases, viruses, pandemic, epidemiology, zoonotic]
+# ---------------------------------------------------------------- Mind, Brain & Language
+- slug: thinking-fast-and-slow
+  title: Thinking, Fast and Slow
+  author: Daniel Kahneman
+  year: 2011
+  categories: [mind, economics]
+  keywords: [judgment, decision making, cognitive biases, heuristics, behavioral economics, psychology]
+- slug: the-language-instinct
+  title: The Language Instinct
+  author: Steven Pinker
+  year: 1994
+  categories: [mind]
+  keywords: [language acquisition, linguistics, grammar, cognitive science]
+- slug: syntactic-structures
+  title: Syntactic Structures
+  author: Noam Chomsky
+  year: 1957
+  categories: [mind]
+  keywords: [syntax, generative grammar, grammar, linguistics]
+- slug: course-in-general-linguistics
+  title: Course in General Linguistics
+  author: Ferdinand de Saussure
+  year: 1916
+  categories: [mind, literature]
+  keywords: [linguistics, semiotics, structuralism, signs]
+- slug: the-interpretation-of-dreams
+  title: The Interpretation of Dreams
+  author: Sigmund Freud
+  year: 1899
+  categories: [mind, philosophy]
+  keywords: [psychoanalysis, dreams, unconscious, freud]
+- slug: the-principles-of-psychology
+  title: The Principles of Psychology
+  author: William James
+  year: 1890
+  categories: [mind]
+  keywords: [psychology, consciousness, attention, habit, emotion]
+- slug: metaphors-we-live-by
+  title: Metaphors We Live By
+  author: George Lakoff and Mark Johnson
+  year: 1980
+  categories: [mind, literature]
+  keywords: [metaphor, semantics, cognitive linguistics, meaning]
+- slug: flow
+  title: "Flow: The Psychology of Optimal Experience"
+  author: Mihaly Csikszentmihalyi
+  year: 1990
+  categories: [mind]
+  keywords: [happiness, motivation, creativity, positive psychology, well-being]
+- slug: the-man-who-mistook-his-wife-for-a-hat
+  title: The Man Who Mistook His Wife for a Hat
+  author: Oliver Sacks
+  year: 1985
+  categories: [mind, life]
+  keywords: [neurology, neuroscience, brain, perception, memory]
+# ------------------------------------------------------------------- Economics & Business
+- slug: the-wealth-of-nations
+  title: The Wealth of Nations
+  author: Adam Smith
+  year: 1776
+  categories: [economics, core]
+  keywords: [markets, political economy, division of labor, trade, capitalism]
+- slug: capital-volume-one
+  title: Capital, Volume I
+  author: Karl Marx
+  year: 1867
+  categories: [economics, society, philosophy]
+  keywords: [capitalism, marx, marxism, labor, political economy, class]
+- slug: the-general-theory
+  title: The General Theory of Employment, Interest and Money
+  author: John Maynard Keynes
+  year: 1936
+  categories: [economics]
+  keywords: [macroeconomics, unemployment, monetary policy, fiscal policy, keynesian, interest rates]
+- slug: capitalism-and-freedom
+  title: Capitalism and Freedom
+  author: Milton Friedman
+  year: 1962
+  categories: [economics, society]
+  keywords: [free markets, monetary, economic freedom, public policy]
+- slug: capital-in-the-twenty-first-century
+  title: Capital in the Twenty-First Century
+  author: Thomas Piketty
+  year: 2013
+  categories: [economics]
+  keywords: [inequality, wealth, income distribution, capital]
+- slug: freakonomics
+  title: Freakonomics
+  author: Steven D. Levitt and Stephen J. Dubner
+  year: 2005
+  categories: [economics]
+  keywords: [incentives, applied economics, empirical economics, economics of crime]
+- slug: nudge
+  title: Nudge
+  author: Richard H. Thaler and Cass R. Sunstein
+  year: 2008
+  categories: [economics, mind]
+  keywords: [behavioral economics, choice architecture, decision making, public policy]
+- slug: triumph-of-the-city
+  title: Triumph of the City
+  author: Edward Glaeser
+  year: 2011
+  categories: [economics, society]
+  keywords: [urban economics, cities, urban, urbanization]
+- slug: theory-of-games-and-economic-behavior
+  title: Theory of Games and Economic Behavior
+  author: John von Neumann and Oskar Morgenstern
+  year: 1944
+  categories: [economics, math]
+  keywords: [game theory, strategy, strategic, decision theory, utility]
+# ----------------------------------------------------------------- Society, Politics & Law
+- slug: leviathan
+  title: Leviathan
+  author: Thomas Hobbes
+  year: 1651
+  categories: [society, philosophy]
+  keywords: [political philosophy, political theory, sovereignty, social contract, state of nature]
+- slug: democracy-in-america
+  title: Democracy in America
+  author: Alexis de Tocqueville
+  year: 1835
+  year_label: 1835–40
+  categories: [society, history]
+  keywords: [democracy, american democracy, civil society, equality, american politics]
+- slug: the-human-condition
+  title: The Human Condition
+  author: Hannah Arendt
+  year: 1958
+  categories: [society, philosophy]
+  keywords: [arendt, political theory, public sphere, labor, action]
+- slug: seeing-like-a-state
+  title: Seeing Like a State
+  author: James C. Scott
+  year: 1998
+  categories: [society, environment]
+  keywords: [the state, planning, development, governance, agrarian, legibility]
+- slug: the-souls-of-black-folk
+  title: The Souls of Black Folk
+  author: W. E. B. Du Bois
+  year: 1903
+  categories: [society, literature, core]
+  keywords: [race, african american, black, double consciousness, du bois, civil rights]
+- slug: the-second-sex
+  title: The Second Sex
+  author: Simone de Beauvoir
+  year: 1949
+  categories: [society, philosophy]
+  keywords: [gender, feminism, feminist, women, sexuality, existentialism]
+- slug: discipline-and-punish
+  title: Discipline and Punish
+  author: Michel Foucault
+  year: 1975
+  categories: [society, philosophy]
+  keywords: [prison, prisons, punishment, surveillance, incarceration, foucault]
+- slug: the-truly-disadvantaged
+  title: The Truly Disadvantaged
+  author: William Julius Wilson
+  year: 1987
+  categories: [society]
+  keywords: [urban poverty, poverty, inequality, neighborhoods, segregation]
+- slug: the-death-and-life-of-great-american-cities
+  title: The Death and Life of Great American Cities
+  author: Jane Jacobs
+  year: 1961
+  categories: [society, arts, environment]
+  keywords: [urban planning, cities, neighborhoods, urbanism, city]
+- slug: a-theory-of-justice
+  title: A Theory of Justice
+  author: John Rawls
+  year: 1971
+  categories: [philosophy, society]
+  keywords: [justice, political philosophy, liberalism, fairness, rawls]
+- slug: the-interpretation-of-cultures
+  title: The Interpretation of Cultures
+  author: Clifford Geertz
+  year: 1973
+  categories: [society]
+  keywords: [anthropology, ethnography, culture, ritual, symbolic]
+# ------------------------------------------------------------------ History & Archaeology
+- slug: the-histories
+  title: The Histories
+  author: Herodotus
+  year: -430
+  year_label: c. 430 BCE
+  categories: [history, core]
+  keywords: [herodotus, ancient greece, persian, persia, greek history, ancient history]
+- slug: history-of-the-peloponnesian-war
+  title: History of the Peloponnesian War
+  author: Thucydides
+  year: -400
+  year_label: c. 400 BCE
+  categories: [history, society]
+  keywords: [thucydides, peloponnesian, athenian, athens, sparta, athenian democracy]
+- slug: decline-and-fall-of-the-roman-empire
+  title: The History of the Decline and Fall of the Roman Empire
+  author: Edward Gibbon
+  year: 1776
+  year_label: 1776–89
+  categories: [history]
+  keywords: [roman empire, late antiquity, byzantine, byzantium, fall of rome]
+- slug: guns-germs-and-steel
+  title: Guns, Germs, and Steel
+  author: Jared Diamond
+  year: 1997
+  categories: [history, environment]
+  keywords: [world history, agriculture, domestication, global history]
+- slug: the-making-of-the-english-working-class
+  title: The Making of the English Working Class
+  author: E. P. Thompson
+  year: 1963
+  categories: [history, society]
+  keywords: [working class, labor history, industrial revolution, social history, britain]
+- slug: spqr
+  title: "SPQR: A History of Ancient Rome"
+  author: Mary Beard
+  year: 2015
+  categories: [history]
+  keywords: [ancient rome, roman republic, rome, roman, romans]
+- slug: the-warmth-of-other-suns
+  title: The Warmth of Other Suns
+  author: Isabel Wilkerson
+  year: 2010
+  categories: [history, society]
+  keywords: [great migration, chicago, african american, migration, jim crow]
+- slug: the-structure-of-scientific-revolutions
+  title: The Structure of Scientific Revolutions
+  author: Thomas S. Kuhn
+  year: 1962
+  categories: [history, philosophy]
+  keywords: [history of science, philosophy of science, scientific revolution, paradigms, paradigm]
+- slug: natures-metropolis
+  title: "Nature's Metropolis: Chicago and the Great West"
+  author: William Cronon
+  year: 1991
+  categories: [history, environment]
+  keywords: [chicago, environmental history, american west, urban history]
+- slug: the-muqaddimah
+  title: The Muqaddimah
+  author: Ibn Khaldun
+  year: 1377
+  categories: [history, area]
+  keywords: [ibn khaldun, historiography, north africa, islamic history, medieval islam]
+# -------------------------------------------------------------------- Philosophy & Religion
+- slug: nicomachean-ethics
+  title: Nicomachean Ethics
+  author: Aristotle
+  year: -340
+  year_label: c. 340 BCE
+  categories: [philosophy, core]
+  keywords: [aristotle, virtue, ethics, moral philosophy, happiness, friendship]
+- slug: the-republic
+  title: The Republic
+  author: Plato
+  year: -375
+  year_label: c. 375 BCE
+  categories: [philosophy, society, core]
+  keywords: [plato, justice, ancient philosophy, greek philosophy, political philosophy, soul]
+- slug: meditations-on-first-philosophy
+  title: Meditations on First Philosophy
+  author: René Descartes
+  year: 1641
+  categories: [philosophy]
+  keywords: [descartes, epistemology, skepticism, metaphysics, mind and body, early modern philosophy]
+- slug: critique-of-pure-reason
+  title: Critique of Pure Reason
+  author: Immanuel Kant
+  year: 1781
+  categories: [philosophy]
+  keywords: [kant, kantian, metaphysics, epistemology, transcendental, reason]
+- slug: thus-spoke-zarathustra
+  title: Thus Spoke Zarathustra
+  author: Friedrich Nietzsche
+  year: 1883
+  year_label: 1883–85
+  categories: [philosophy, literature]
+  keywords: [nietzsche, nihilism, existentialism, german philosophy]
+- slug: being-and-time
+  title: Being and Time
+  author: Martin Heidegger
+  year: 1927
+  categories: [philosophy]
+  keywords: [heidegger, phenomenology, ontology, existentialism, being]
+- slug: philosophical-investigations
+  title: Philosophical Investigations
+  author: Ludwig Wittgenstein
+  year: 1953
+  categories: [philosophy, mind]
+  keywords: [wittgenstein, philosophy of language, meaning, analytic philosophy, rule-following]
+- slug: the-varieties-of-religious-experience
+  title: The Varieties of Religious Experience
+  author: William James
+  year: 1902
+  categories: [philosophy, mind]
+  keywords: [religious experience, mysticism, psychology of religion, religion, faith]
+- slug: confessions
+  title: Confessions
+  author: Augustine of Hippo
+  year: 400
+  year_label: c. 400 CE
+  categories: [philosophy, literature]
+  keywords: [augustine, christianity, early christianity, theology, late antiquity]
+- slug: the-sacred-and-the-profane
+  title: The Sacred and the Profane
+  author: Mircea Eliade
+  year: 1957
+  categories: [philosophy]
+  keywords: [history of religions, sacred, myth, ritual, religion]
+- slug: phenomenology-of-spirit
+  title: Phenomenology of Spirit
+  author: G. W. F. Hegel
+  year: 1807
+  categories: [philosophy]
+  keywords: [hegel, hegelian, hegelianism, dialectic, german idealism]
+- slug: on-liberty
+  title: On Liberty
+  author: John Stuart Mill
+  year: 1859
+  categories: [philosophy, society]
+  keywords: [liberty, freedom of speech, free speech, liberalism, utilitarianism]
+# --------------------------------------------------------------------- Literature & Writing
+- slug: the-odyssey
+  title: The Odyssey
+  author: Homer
+  year: -725
+  year_label: 8th century BCE
+  categories: [literature, core]
+  keywords: [homer, homeric, epic, odyssey, greek literature, myth]
+- slug: the-oresteia
+  title: The Oresteia
+  author: Aeschylus
+  year: -458
+  year_label: 458 BCE
+  categories: [literature, arts]
+  keywords: [greek tragedy, tragedy, aeschylus, athenian drama, drama]
+- slug: oedipus-the-king
+  title: Oedipus the King
+  author: Sophocles
+  year: -429
+  year_label: c. 429 BCE
+  categories: [literature, arts]
+  keywords: [greek tragedy, tragedy, sophocles, oedipus, drama]
+- slug: the-divine-comedy
+  title: The Divine Comedy
+  author: Dante Alighieri
+  year: 1320
+  year_label: c. 1320
+  categories: [literature, philosophy]
+  keywords: [dante, inferno, medieval literature, italian literature, allegory]
+- slug: hamlet
+  title: Hamlet
+  author: William Shakespeare
+  year: 1600
+  year_label: c. 1600
+  categories: [literature, arts]
+  keywords: [shakespeare, tragedy, renaissance drama, drama, theater]
+- slug: don-quixote
+  title: Don Quixote
+  author: Miguel de Cervantes
+  year: 1605
+  year_label: 1605–15
+  categories: [literature, languages]
+  keywords: [cervantes, quixote, spanish literature, golden age, novel]
+- slug: pride-and-prejudice
+  title: Pride and Prejudice
+  author: Jane Austen
+  year: 1813
+  categories: [literature]
+  keywords: [austen, jane austen, regency, marriage plot, english novel]
+- slug: moby-dick
+  title: Moby-Dick
+  author: Herman Melville
+  year: 1851
+  categories: [literature]
+  keywords: [melville, american literature, american novel, whaling]
+- slug: middlemarch
+  title: Middlemarch
+  author: George Eliot
+  year: 1871
+  year_label: 1871–72
+  categories: [literature]
+  keywords: [victorian, victorian novel, realism, english novel, george eliot]
+- slug: war-and-peace
+  title: War and Peace
+  author: Leo Tolstoy
+  year: 1869
+  categories: [literature, area]
+  keywords: [tolstoy, russian literature, russian novel, napoleon]
+- slug: invisible-man
+  title: Invisible Man
+  author: Ralph Ellison
+  year: 1952
+  categories: [literature, society]
+  keywords: [african american literature, ellison, race, american literature]
+- slug: beloved
+  title: Beloved
+  author: Toni Morrison
+  year: 1987
+  categories: [literature]
+  keywords: [toni morrison, morrison, slavery, african american literature, memory]
+- slug: one-hundred-years-of-solitude
+  title: One Hundred Years of Solitude
+  author: Gabriel García Márquez
+  year: 1967
+  categories: [literature, area]
+  keywords: [latin american literature, magical realism, colombia, garcía márquez]
+- slug: things-fall-apart
+  title: Things Fall Apart
+  author: Chinua Achebe
+  year: 1958
+  categories: [literature, area]
+  keywords: [african literature, achebe, nigeria, colonialism, postcolonial]
+- slug: native-son
+  title: Native Son
+  author: Richard Wright
+  year: 1940
+  categories: [literature, society]
+  keywords: [richard wright, chicago, african american literature, race]
+- slug: the-elements-of-style
+  title: The Elements of Style
+  author: William Strunk Jr. and E. B. White
+  year: 1959
+  categories: [literature]
+  keywords: [writing, prose, style, composition, academic writing]
+- slug: a-room-of-ones-own
+  title: A Room of One's Own
+  author: Virginia Woolf
+  year: 1929
+  categories: [literature, society]
+  keywords: [woolf, virginia woolf, women writers, feminism, essay]
+- slug: the-waste-land
+  title: The Waste Land
+  author: T. S. Eliot
+  year: 1922
+  categories: [literature]
+  keywords: [poetry, modernism, modernist, poems, poetics]
+# --------------------------------------------------------------------------------- Languages
+- slug: the-metamorphosis
+  title: The Metamorphosis
+  author: Franz Kafka
+  year: 1915
+  categories: [languages, literature]
+  keywords: [kafka, german literature, german, modernism]
+- slug: the-name-of-the-rose
+  title: The Name of the Rose
+  author: Umberto Eco
+  year: 1980
+  categories: [languages, literature, history]
+  keywords: [umberto eco, italian, italian literature, medieval, semiotics]
+- slug: pedro-paramo
+  title: Pedro Páramo
+  author: Juan Rulfo
+  year: 1955
+  categories: [languages, literature, area]
+  keywords: [mexico, mexican, spanish, latin american literature, rulfo]
+- slug: the-little-prince
+  title: The Little Prince
+  author: Antoine de Saint-Exupéry
+  year: 1943
+  categories: [languages, literature]
+  keywords: [french, french literature, francophone, fable]
+- slug: is-that-a-fish-in-your-ear
+  title: Is That a Fish in Your Ear?
+  author: David Bellos
+  year: 2011
+  categories: [languages, literature]
+  keywords: [translation, translating, translator, language]
+- slug: through-the-language-glass
+  title: Through the Language Glass
+  author: Guy Deutscher
+  year: 2010
+  categories: [languages, mind]
+  keywords: [language and thought, linguistic relativity, language, culture]
+# --------------------------------------------------------------- Arts, Music, Theater & Film
+- slug: ways-of-seeing
+  title: Ways of Seeing
+  author: John Berger
+  year: 1972
+  categories: [arts]
+  keywords: [visual culture, painting, images, art history, seeing]
+- slug: the-story-of-art
+  title: The Story of Art
+  author: E. H. Gombrich
+  year: 1950
+  categories: [arts, history]
+  keywords: [art history, painting, sculpture, renaissance art, art]
+- slug: the-rest-is-noise
+  title: The Rest Is Noise
+  author: Alex Ross
+  year: 2007
+  categories: [arts]
+  keywords: [twentieth-century music, classical music, composers, music history, music]
+- slug: musicophilia
+  title: Musicophilia
+  author: Oliver Sacks
+  year: 2007
+  categories: [arts, mind]
+  keywords: [music, music cognition, hearing, neurology]
+- slug: film-art
+  title: "Film Art: An Introduction"
+  author: David Bordwell and Kristin Thompson
+  year: 1979
+  categories: [arts]
+  keywords: [film, cinema, film analysis, film history, filmmaking]
+- slug: the-empty-space
+  title: The Empty Space
+  author: Peter Brook
+  year: 1968
+  categories: [arts]
+  keywords: [theater, theatre, performance, acting, directing, stage]
+- slug: understanding-comics
+  title: Understanding Comics
+  author: Scott McCloud
+  year: 1993
+  categories: [arts]
+  keywords: [comics, graphic novel, graphic novels, visual storytelling]
+- slug: interaction-of-color
+  title: Interaction of Color
+  author: Josef Albers
+  year: 1963
+  categories: [arts]
+  keywords: [color, studio art, drawing, design, visual]
+- slug: on-photography
+  title: On Photography
+  author: Susan Sontag
+  year: 1977
+  categories: [arts]
+  keywords: [photography, photographs, images, visual culture, media]
+- slug: a-raisin-in-the-sun
+  title: A Raisin in the Sun
+  author: Lorraine Hansberry
+  year: 1959
+  categories: [arts, literature]
+  keywords: [hansberry, chicago, american drama, theater, playwriting]
+# --------------------------------------------------------------- Area & Civilization Studies
+- slug: orientalism
+  title: Orientalism
+  author: Edward W. Said
+  year: 1978
+  categories: [area, society, literature]
+  keywords: [orientalism, middle east, colonialism, postcolonial, empire]
+- slug: the-search-for-modern-china
+  title: The Search for Modern China
+  author: Jonathan D. Spence
+  year: 1990
+  categories: [area, history]
+  keywords: [modern china, china, chinese history, qing, chinese revolution]
+- slug: open-veins-of-latin-america
+  title: Open Veins of Latin America
+  author: Eduardo Galeano
+  year: 1971
+  categories: [area, history, economics]
+  keywords: [latin america, latin american, colonialism, dependency]
+- slug: midnights-children
+  title: Midnight's Children
+  author: Salman Rushdie
+  year: 1981
+  categories: [area, literature]
+  keywords: [india, south asia, partition, south asian, indian]
+- slug: season-of-migration-to-the-north
+  title: Season of Migration to the North
+  author: Tayeb Salih
+  year: 1966
+  categories: [area, literature]
+  keywords: [arabic literature, sudan, arabic novel, colonialism, migration]
+- slug: the-gulag-archipelago
+  title: The Gulag Archipelago
+  author: Aleksandr Solzhenitsyn
+  year: 1973
+  categories: [area, history]
+  keywords: [soviet union, soviet, gulag, stalinism, russia]
+- slug: if-this-is-a-man
+  title: If This Is a Man
+  author: Primo Levi
+  year: 1947
+  categories: [area, history, literature]
+  keywords: [holocaust, auschwitz, jewish, testimony, witness]
+- slug: persepolis
+  title: Persepolis
+  author: Marjane Satrapi
+  year: 2000
+  categories: [area, arts]
+  keywords: [iran, iranian revolution, persian, graphic memoir, comics]
+- slug: a-history-of-the-arab-peoples
+  title: A History of the Arab Peoples
+  author: Albert Hourani
+  year: 1991
+  categories: [area, history]
+  keywords: [arab, arab world, middle east, islamic, ottoman]
+# --------------------------------------------------------------------- Environment & Geography
+- slug: silent-spring
+  title: Silent Spring
+  author: Rachel Carson
+  year: 1962
+  categories: [environment, life]
+  keywords: [pesticides, environmental movement, ecology, conservation, toxicology]
+- slug: a-sand-county-almanac
+  title: A Sand County Almanac
+  author: Aldo Leopold
+  year: 1949
+  categories: [environment]
+  keywords: [land ethic, conservation, wilderness, ecology, nature]
+- slug: walden
+  title: Walden
+  author: Henry David Thoreau
+  year: 1854
+  categories: [environment, literature, philosophy]
+  keywords: [thoreau, transcendentalism, nature writing, simplicity]
+- slug: the-sixth-extinction
+  title: The Sixth Extinction
+  author: Elizabeth Kolbert
+  year: 2014
+  categories: [environment, life]
+  keywords: [extinction, biodiversity, anthropocene, mass extinction]
+- slug: the-uninhabitable-earth
+  title: The Uninhabitable Earth
+  author: David Wallace-Wells
+  year: 2019
+  categories: [environment]
+  keywords: [climate change, global warming, climate, warming]
+- slug: collapse
+  title: "Collapse: How Societies Choose to Fail or Succeed"
+  author: Jared Diamond
+  year: 2005
+  categories: [environment, history]
+  keywords: [sustainability, environmental history, deforestation, societal collapse]
+- slug: braiding-sweetgrass
+  title: Braiding Sweetgrass
+  author: Robin Wall Kimmerer
+  year: 2013
+  categories: [environment, life]
+  keywords: [botany, plants, indigenous, ecology, plant]
+# ---------------------------------------------------------------------------------- The Core
+- slug: how-to-read-a-book
+  title: How to Read a Book
+  author: Mortimer J. Adler
+  year: 1940
+  categories: [core, literature]
+  keywords: [great books, close reading, liberal education, interpretation]
+- slug: the-closing-of-the-american-mind
+  title: The Closing of the American Mind
+  author: Allan Bloom
+  year: 1987
+  categories: [core, philosophy]
+  keywords: [liberal education, higher education, university, great books]
+- slug: democracy-and-education
+  title: Democracy and Education
+  author: John Dewey
+  year: 1916
+  categories: [core, society]
+  keywords: [education, pragmatism, schools, schooling, democracy]
+# --------------------------------------------------------------------------- Interdisciplinary
+- slug: the-two-cultures
+  title: The Two Cultures
+  author: C. P. Snow
+  year: 1959
+  categories: [more, core]
+  keywords: [science and the humanities, two cultures, science and society]
+- slug: consilience
+  title: "Consilience: The Unity of Knowledge"
+  author: Edward O. Wilson
+  year: 1998
+  categories: [more, life]
+  keywords: [interdisciplinary, unity of knowledge, sociobiology]
+- slug: the-demon-haunted-world
+  title: The Demon-Haunted World
+  author: Carl Sagan
+  year: 1995
+  categories: [more, physical]
+  keywords: [science communication, skepticism, scientific thinking, pseudoscience]

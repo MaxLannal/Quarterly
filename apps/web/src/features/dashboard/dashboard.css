@@ -1,0 +1,128 @@
+/* The dashboard's motion (docs/BEST-OF-UCHICAGO-PLAN.md "/me"): slow orbits for the interests,
+   the student's words drifting behind the guide, and the guide's question appearing word by
+   word. Every element's resting style is its final state, so under reduced motion (index.css
+   turns every animation off) everything is simply there and still. */
+
+/* ---- the interests constellation ---- */
+.dash-orbit {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  border-radius: 9999px;
+  border: 1px dashed color-mix(in srgb, var(--color-primary) 22%, transparent);
+  animation: dash-spin var(--orbit-s, 140s) linear infinite;
+}
+.dash-orbit[data-reverse="true"] {
+  animation-direction: reverse;
+}
+.dash-orbit-item {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  /* Placed on the ring by --a (angle) and --r (radius); the inner span counter-rotates. */
+  transform: rotate(var(--a)) translate(var(--r)) rotate(calc(-1 * var(--a)));
+}
+.dash-orbit-upright {
+  display: inline-flex;
+  translate: -50% -50%;
+  animation: dash-spin var(--orbit-s, 140s) linear infinite reverse;
+}
+.dash-orbit[data-reverse="true"] .dash-orbit-upright {
+  animation-direction: normal;
+}
+.dash-constellation:hover .dash-orbit,
+.dash-constellation:hover .dash-orbit-upright,
+.dash-constellation:focus-within .dash-orbit,
+.dash-constellation:focus-within .dash-orbit-upright {
+  animation-play-state: paused;
+}
+@keyframes dash-spin {
+  to {
+    rotate: 360deg;
+  }
+}
+
+/* The sun at the centre breathes. */
+.dash-sun {
+  animation: dash-breathe 7s ease-in-out infinite;
+}
+@keyframes dash-breathe {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-primary) 18%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 0 14px color-mix(in srgb, var(--color-primary) 0%, transparent);
+  }
+}
+
+/* ---- the guide ---- */
+.dash-drift-word {
+  position: absolute;
+  white-space: nowrap;
+  font-family: var(--font-display);
+  font-style: italic;
+  color: var(--color-on-dark);
+  opacity: var(--o, 0.1);
+  animation: dash-drift var(--d, 60s) ease-in-out infinite alternate;
+  animation-delay: var(--delay, 0s);
+  pointer-events: none;
+  user-select: none;
+}
+@keyframes dash-drift {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(var(--dx, 40px), var(--dy, -24px), 0);
+  }
+}
+
+.dash-word {
+  display: inline-block;
+  animation: dash-word-in 520ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation-delay: calc(var(--i, 0) * 38ms);
+}
+@keyframes dash-word-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.3em);
+    filter: blur(5px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+
+.dash-rise {
+  animation: dash-rise-in 420ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation-delay: var(--delay, 0ms);
+}
+@keyframes dash-rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* The guide's mark: a small maroon star that turns while the guide thinks. */
+.dash-thinking {
+  animation: dash-spin 2.4s linear infinite;
+}
+
+/* ---- the completeness ring ---- */
+.dash-ring-fill {
+  transition: stroke-dashoffset 900ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+/* ---- the logged-out preview ---- */
+.dash-preview {
+  filter: blur(2.5px) saturate(0.9);
+  opacity: 0.75;
+}

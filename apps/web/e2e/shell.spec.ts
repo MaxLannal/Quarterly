@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 
 test("home and app shell", async ({ page }) => {
   await page.goto("/");
-  await expect(page.getByRole("heading", { level: 1, name: "Quarterly" })).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1, name: "The Best of UChicago, within your reach." })).toBeVisible();
   const nav = page.getByRole("navigation", { name: "Main" });
   for (const name of ["Plan", "Catalog", "Forum"]) await expect(nav.getByRole("link", { name })).toBeVisible();
   await expect(page.getByRole("link", { name: "Log in" })).toBeVisible();
