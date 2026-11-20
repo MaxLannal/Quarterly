@@ -19,7 +19,9 @@ const FORUM_PATH = /^\/courses\/[^/]+\/i\//;
 /** Each link is the current section for its own path and the pages that belong to it. */
 const NAV: { to: string; label: string; current: (path: string) => boolean }[] =
   [
-    // Campus companion (docs/BEST-OF-UCHICAGO-PLAN.md): the chatbot and the feed lead the bar.
+    // Campus companion (docs/BEST-OF-UCHICAGO-PLAN.md): the student's dashboard, then the chatbot
+    // and the feed lead the bar.
+    { to: "/me", label: "Dashboard", current: (p) => /^\/me(\/|$)/.test(p) },
     { to: "/ask", label: "Ask", current: (p) => /^\/ask(\/|$)/.test(p) },
     { to: "/feed", label: "Feed", current: (p) => /^\/feed(\/|$)/.test(p) },
     {
@@ -120,7 +122,7 @@ function NavLinks({ vertical = false }: { vertical?: boolean }) {
             aria-current={current ? "page" : undefined}
             className={cn(
               // Larger words; the current page is a soft rose wash, not a solid red.
-              "flex min-h-11 items-center rounded-pill px-4 text-[18px] font-medium tracking-[-0.01em] text-body-strong transition-colors hover:bg-surface-strong hover:text-ink",
+              "flex min-h-11 items-center rounded-pill px-4 text-[18px] font-medium tracking-[-0.01em] text-body-strong transition-colors hover:bg-surface-strong hover:text-ink md:px-2.5 xl:px-4",
               vertical && "w-full md:w-auto",
               current && "bg-primary-wash text-primary hover:bg-primary-wash",
             )}
@@ -150,11 +152,11 @@ export function TopNav() {
     <Link
       to="/me"
       aria-current={location.pathname === "/me" ? "page" : undefined}
-      className="flex min-h-11 items-center gap-2 rounded-pill bg-surface-strong/80 pl-1 pr-1 text-[17px] font-medium text-ink hover:bg-surface-strong aria-[current=page]:bg-primary-wash aria-[current=page]:text-primary sm:pr-4"
+      className="flex min-h-11 items-center gap-2 rounded-pill bg-surface-strong/80 pl-1 pr-1 text-[17px] font-medium text-ink hover:bg-surface-strong aria-[current=page]:bg-primary-wash aria-[current=page]:text-primary lg:pr-4"
     >
       <Avatar name={session.account.username} className="bg-primary-wash text-primary" />
-      {/* On a phone the avatar alone keeps the bar on one row; the name stays for screen readers. */}
-      <span className="max-sm:sr-only">{session.account.username}</span>
+      {/* Below wide screens the avatar alone keeps the bar on one row; the name stays for screen readers. */}
+      <span className="max-lg:sr-only">{session.account.username}</span>
     </Link>
   ) : AUTH_PAGES.has(location.pathname) ? null : (
     // D11 AU-3: no "Log in" pill on the login and sign-up pages themselves.
@@ -170,7 +172,7 @@ export function TopNav() {
       <div
         className={cn(
           "nav-glass mx-auto flex w-full flex-wrap rounded-[22px] sm:rounded-[26px]",
-          "items-center gap-x-2 px-3 sm:px-5 md:h-[72px] md:flex-nowrap lg:px-7",
+          "items-center gap-x-2 px-3 sm:px-5 md:min-h-[72px] lg:h-[72px] lg:flex-nowrap lg:px-7",
         )}
       >
         <Wordmark className="mr-2 h-16 md:h-auto" />
@@ -190,14 +192,15 @@ export function TopNav() {
         {!PAGE_HAS_SEARCH.has(location.pathname) && (
           <div
             className={cn(
-              "order-1 w-full pb-3 md:order-none md:ml-auto md:w-auto md:max-w-[17rem] md:flex-1 md:pb-0",
-              location.pathname === "/" && "max-md:hidden",
+              // Its own row below the links until the bar is wide enough for six links and a search.
+              "order-1 w-full pb-3 lg:order-none lg:ml-auto lg:w-auto lg:max-w-[17rem] lg:flex-1 lg:pb-0",
+              location.pathname === "/" && "max-lg:hidden",
             )}
           >
             <SearchBox />
           </div>
         )}
-        <div className="ml-auto flex items-center gap-1 md:ml-2">
+        <div className="ml-auto flex items-center gap-1 lg:ml-2">
           {account}
           <Button
             variant="ghost"
