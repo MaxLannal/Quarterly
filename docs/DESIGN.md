@@ -658,5 +658,8 @@ Richard: where it conflicts with the sections above, this section describes what
   letters' own colour and transparency: drifting night clouds (darker, denser banks; thin clear
   patches where the stars show; lavender edges near the moon), a darker zenith, moonlit and shadowed
   carving on the side facing the moon, weathered patches in the stone, mottled trees, and snow
-  drifts. Reduced motion: a still night (no falling snow, no twinkle, the clouds stay put).
+  drifts. Reduced motion: a still night (no falling snow, no twinkle, the clouds stay put). The day
+  scene has the same kind of texture, gentler: soft grey cloud banks drifting across the sky with
+  thin clear patches and a deeper zenith, weathered patches and grain in the maroon stone (darker
+  low down, lighter at the spires), mottled trees and lawn, and transparency that varies with them.
 

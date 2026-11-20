@@ -308,6 +308,32 @@ void main() {
 
   float hov = (aMeta.y >= 0.0 && abs(aMeta.y - uHover) < 0.5) ? 1.0 - clear : 0.0;
 
+  // Day texture (Max, 2026-11-20): light and shade through the letters' own tone and transparency,
+  // fading out as night falls (the night scene has its own). Soft grey cloud banks drift across
+  // the sky (a little denser, with thin clear patches and a deeper zenith); the stone has weathered
+  // patches and a fine grain, darkens low down and catches the light at the spires; the trees and
+  // the lawn are mottled.
+  float dayK = 1.0 - uNight;
+  if (dayK > 0.001) {
+    float hyD = clamp(c.y / max(1.0, uView.y), 0.0, 1.0);
+    vec2 dDrift = vec2(uTime * 6.0, uTime * 1.0) * uMotion;
+    float dBank = fbm((c - dDrift) / vec2(520.0, 250.0));
+    float dWisp = fbm((c - dDrift * 1.6 + vec2(-220.0, 90.0)) / vec2(180.0, 95.0));
+    float dThick = smoothstep(0.4, 0.62, clamp(dBank * 0.72 + dWisp * 0.38 - 0.05, 0.0, 1.0));
+    float dWeather = fbm(c / 70.0 + vec2(29.0, 7.0));
+    float dGrain = noise(c / 9.0 + 4.0);
+    float dLeaf = fbm(c / 46.0 + vec2(13.0, 1.0));
+    float stoneTex = (dWeather - 0.5) * 0.2 + (dGrain - 0.5) * 0.06
+      - smoothstep(0.62, 0.92, hyD) * 0.07 + (1.0 - smoothstep(0.12, 0.5, hyD)) * 0.06;
+    float groundTex = (dLeaf - 0.5) * 0.24;
+    tone += dayK * (1.0 - sky) * mix(groundTex, stoneTex, aLook.y);
+    tone += dayK * sky * (0.5 - dThick) * 0.14; // cloud undersides a touch deeper
+    tone = clamp(tone, 0.0, 1.0);
+    float skyTex = mix(0.55, 2.1, dThick) * mix(1.3, 0.8, hyD);
+    float landTex = mix(mix(0.74, 1.08, dLeaf), mix(0.76, 1.06, dWeather) + clamp(-facing, 0.0, 1.0) * 0.2, aLook.y);
+    alpha = min(1.0, alpha * mix(1.0, mix(landTex, skyTex, sky), dayK));
+  }
+
   // lifted letters get a little deeper and fully opaque; the hovered title turns ink
   tone -= 0.06 * clamp(lift, 0.0, 1.0);
   vec3 col = mix(neutralRamp(tone), maroonRamp(tone), aLook.y);
