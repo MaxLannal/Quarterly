@@ -23,7 +23,7 @@ export function AiHeadline({ headline, ai, pending }: { headline: string; ai: bo
           <span>Today’s river</span>
         )}
       </p>
-      <h2 key={headline} className="font-display text-[28px] font-light leading-[1.15] tracking-[-0.4px] text-ink text-balance sm:text-[36px]">
+      <h2 key={headline} className="font-display text-[28px] font-bold leading-[1.15] tracking-[-0.4px] text-ink text-balance sm:text-[36px]">
         <span className="sr-only">{headline}</span>
         <span aria-hidden="true">
           {words.map((w, i) => (

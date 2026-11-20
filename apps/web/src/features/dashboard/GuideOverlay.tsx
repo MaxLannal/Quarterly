@@ -212,7 +212,7 @@ export function GuideOverlay({ open, onClose, guide, profile, onDraftRoutes }: {
 function Question({ text }: { text: string }) {
   const words = text.split(/\s+/).filter(Boolean);
   return (
-    <p aria-hidden="true" className="max-w-[46rem] font-display text-[28px] font-light leading-[1.18] tracking-[-0.3px] text-on-dark text-balance sm:text-[40px] sm:leading-[1.12]">
+    <p aria-hidden="true" className="max-w-[46rem] font-serif text-[28px] font-light leading-[1.18] tracking-[-0.3px] text-on-dark text-balance sm:text-[40px] sm:leading-[1.12]">
       {words.map((w, i) => (
         <Fragment key={i}>
           <span className="dash-word" style={{ "--i": Math.min(i, 60) } as CSSProperties}>
@@ -231,7 +231,7 @@ function Thinking({ steps }: { steps: Guide["steps"] }) {
   for (const s of steps) latest.set(`${s.tool}:${s.label}`, s);
   return (
     <div role="status" aria-live="polite" className="flex flex-col gap-3">
-      <p className="flex items-center gap-3 font-display text-[26px] font-light italic text-on-dark-soft sm:text-[32px]">
+      <p className="flex items-center gap-3 font-serif text-[26px] font-light italic text-on-dark-soft sm:text-[32px]">
         <GuideMark size={20} className="dash-thinking text-primary" />
         Your guide is thinking…
       </p>

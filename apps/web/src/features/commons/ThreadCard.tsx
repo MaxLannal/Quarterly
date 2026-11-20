@@ -60,7 +60,7 @@ export function ThreadCard({ thread, loggedIn, tagHref }: { thread: ThreadSummar
             </Badge>
           )}
         </div>
-        <h3 id={titleId} className="font-display text-[21px] font-normal leading-snug text-ink sm:text-[23px]">
+        <h3 id={titleId} className="font-display text-[21px] font-bold leading-snug text-ink sm:text-[23px] tracking-[-0.02em]">
           <Link to={threadPath(thread.id)} className="rounded-xs decoration-primary/40 underline-offset-4 hover:underline focus-visible:underline">
             {thread.title}
           </Link>

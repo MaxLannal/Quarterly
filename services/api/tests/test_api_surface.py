@@ -106,6 +106,8 @@ EXPECTED = {
     ("get", "/commons/threads/{thread_id}/presence"),
     ("post", "/commons/threads/{thread_id}/follow"),
     ("post", "/commons/reports"),
+    ("get", "/admin/commons-reports"),
+    ("post", "/admin/commons-reports/{target_type}/{target_id}/decision"),
 }
 
 PLAN = {"catalog_year": "2026-27", "entry_term": "2026-AU"}

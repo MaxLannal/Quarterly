@@ -173,6 +173,8 @@ function sse(events: BotEvent[]) {
 const escapeHtml = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
 export const commonsHandlers = [
+  // The admin's Commons reports (OPEN_QUESTIONS CC-7): none in the mock world.
+  http.get(`${A}/admin/commons-reports`, () => HttpResponse.json([] as S["CommonsModerationItem"][])),
   http.get(`${A}/commons/threads`, ({ request }) => {
     const u = new URL(request.url);
     const q = (u.searchParams.get("q") ?? "").toLowerCase();

@@ -20,7 +20,7 @@ export function BookCard({ item, note }: { item: BookItem; note?: string }) {
           />
         </div>
         <div className="flex min-w-0 flex-col gap-1">
-          <h3 id={id} className="font-display text-[23px] font-light leading-tight text-ink">
+          <h3 id={id} className="font-display text-[23px] font-bold leading-tight text-ink tracking-[-0.02em]">
             <cite className="not-italic">{b.title}</cite>
           </h3>
           <p className="text-body-sm text-body">{b.author}</p>

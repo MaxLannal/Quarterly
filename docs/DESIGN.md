@@ -612,3 +612,32 @@ Richard's FEEDBACK "Minor design changes" overrides the rules above in these pla
 - **Catalog switch.** Courses/Programs is a small segmented control: `surface-strong` track, the current side on a white pill with maroon text; the pill slides 200ms ease-out between sides (still under reduced motion).
 - **Top-bar search.** A filled `surface-strong` field without an outline until it is hovered or focused; the icon and placeholder identify it.
 - **Footer links.** 32px rows with a mouse; 44px targets on touch screens.
+
+## Maroon and night (Max, 2026-11-20; branch `feature/best-of-uchicago`)
+
+Requested with a reference login card ("Have words bigger and background colors maroon and black
+combined. Take inspiration from this and apply to every page and every detail"). Not yet confirmed by
+Richard: where it conflicts with the sections above, this section describes what is built now.
+
+- **The night.** Every page sits on a fixed maroon-and-black background (`body`, `index.css`): deep
+  maroon `#5c0a1d` to near black `#12040a`, with crimson light. The top bar and the footer live on it
+  in white (`on-night`, `on-night-soft`, `on-night-muted`); the wordmark stays Newsreader, white.
+- **The sheet.** Page content is one white sheet with large rounded corners (`rounded-sheet`, 44px;
+  28px on phones) and a deep shadow, like the reference's card. Notices that belong to a page sit
+  inside it.
+- **Bigger words.** Body 17px, small 16px, captions 15px, buttons and nav 16px. Headlines are bold
+  Inter (650-800, tight tracking, like "Welcome home"); their `<em>` words are Newsreader italic in
+  maroon ("within your reach.", "Ask *anything*"). Voices and quotes (the guide, student quotes, the
+  ticker, book covers) keep the serif.
+- **Pills.** Buttons are 46px pills in a 52px box, semibold; `light` and `night` variants for the
+  dark background. Inputs and selects are 52px pills (26px radius) with a soft maroon halo on focus;
+  email fields carry an envelope, password fields an eye that shows or hides the characters.
+- **Radii.** Cards 18-24px, panels 32px, art panels 36px (`rounded-art`).
+- **Art panels.** `GradientArt` (generated SVG: crimson and coral folds of light over maroon and
+  black, slowly drifting, still under reduced motion) is the reference's right panel. Page headers
+  (`TypeHero`) are split like the reference card: title and controls on the left, an art panel on the
+  right (on top on phones) with the page's TypeScape figure of real course titles glowing on it
+  (`theme="night"`). Sign-in and sign-up are the reference itself: a maroon arch emblem, a big bold
+  title, pill fields, an "or" rule, and the art panel.
+- **The homepage** keeps the chapel drawn with course titles, on the white sheet; its title is bold
+  Inter with the Newsreader accent line.

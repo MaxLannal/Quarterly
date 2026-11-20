@@ -26,7 +26,7 @@ export function WordsCard({ item, note }: { item: WordsItem; note?: string }) {
       className="relative overflow-hidden rounded-xl border border-hairline bg-canvas-soft p-6"
     >
       <p className="text-caption-uppercase uppercase text-muted">In other words</p>
-      <h3 id={id} className="mt-1 font-display text-[22px] font-light leading-tight text-ink">
+      <h3 id={id} className="mt-1 font-display text-[22px] font-bold leading-tight text-ink tracking-[-0.02em]">
         What {item.label} talks about
       </h3>
       <ul className="mt-4 flex flex-wrap items-baseline gap-x-3 gap-y-1" aria-label={`Words from ${item.label} course titles`}>
@@ -37,7 +37,7 @@ export function WordsCard({ item, note }: { item: WordsItem; note?: string }) {
               <Link
                 to={searchHref(w.text)}
                 className={cn(
-                  "feed-bob inline-flex min-h-11 items-center rounded-sm px-0.5 font-display leading-none hover:text-primary hover:underline",
+                  "feed-bob inline-flex min-h-11 items-center rounded-sm px-0.5 font-serif leading-none hover:text-primary hover:underline",
                   SIZE[w.weight],
                   TONE[w.weight],
                   w.weight >= 4 ? "font-normal" : "font-light italic",

@@ -77,7 +77,7 @@ export function CourseSearch({
           <div className="flex min-w-0 items-start justify-between gap-3 rounded-lg border border-primary/25 bg-primary-wash/60 px-4 py-3">
             <div className="min-w-0">
               <p className="text-caption font-semibold tabular-nums text-primary">{value.code}</p>
-              <p className="font-display text-title-md font-normal text-ink">{value.title}</p>
+              <p className="font-display text-title-md font-bold text-ink tracking-[-0.02em]">{value.title}</p>
               <Link to={coursePath(value.code)} target="_blank" className="inline-flex min-h-11 items-center text-caption text-primary underline underline-offset-2">
                 Open the course page
               </Link>

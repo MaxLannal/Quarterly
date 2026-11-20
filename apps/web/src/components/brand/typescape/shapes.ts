@@ -19,6 +19,8 @@ export interface Frame {
   /** Horizontal centre of the figure, in CSS px. */
   cx: number;
   t: number;
+  /** Zoom: how much of a narrow canvas the figure fills (1 on a page, ~1.5 in an art panel). */
+  k: number;
 }
 
 const clamp01 = (v: number) => (v < 0 ? 0 : v > 1 ? 1 : v);
@@ -35,7 +37,7 @@ function pointed(dx: number, y: number, half: number, spring: number): number {
 
 /** A Gothic window: a pointed arch with three lancets, mullions and a rose. */
 function arch(x: number, y: number, f: Frame): Sample {
-  const ww = Math.min(f.w * 0.36, f.h * 0.6, 520);
+  const ww = Math.min(f.w * 0.36 * f.k, f.h * 0.6, 520 * f.k);
   const half = ww / 2;
   const bottom = f.h * 0.99;
   const top = f.h * 0.06;
@@ -68,7 +70,7 @@ function arch(x: number, y: number, f: Frame): Sample {
  * that lights the letters it passes. The far half of each ring is dimmer: depth. */
 function orbit(x: number, y: number, f: Frame): Sample {
   const cy = f.h * 0.5;
-  const base = Math.min(f.h * 0.13, f.w * 0.08);
+  const base = Math.min(f.h * 0.13, f.w * 0.08 * f.k);
   const tilt = 0.78; // a slight perspective: the rings lie almost face on, so they read as rings
   const dx = x - f.cx;
   const dy = (y - cy) / tilt;

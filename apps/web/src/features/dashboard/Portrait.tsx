@@ -40,7 +40,7 @@ export function PortraitHeader({ profile, onAsk }: { profile: Profile; onAsk: As
   }
   return (
     <figure className="flex flex-col gap-3">
-      <blockquote className="font-display text-[30px] leading-[1.12] tracking-[-0.4px] text-ink sm:text-[40px]">
+      <blockquote className="font-display text-[32px] font-extrabold leading-[1.08] tracking-[-1px] text-ink sm:text-[44px]">
         <span aria-hidden="true" className="text-primary">“</span>
         {headline}
         <span aria-hidden="true" className="text-primary">”</span>

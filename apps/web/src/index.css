@@ -36,11 +36,12 @@
   --color-muted: #6b6b6b;
   --color-muted-soft: #adadad;
 
-  /* Surfaces */
-  --color-canvas: #f7f7f5;
-  --color-canvas-soft: #fbfbfa;
+  /* Surfaces. Redesign 2026-11-20 (docs/DESIGN.md "Maroon and night"): pages are white sheets on a
+     maroon-and-black night; the sheet is pure white like the reference card. */
+  --color-canvas: #ffffff;
+  --color-canvas-soft: #faf7f7;
   --color-surface-card: #ffffff;
-  --color-surface-strong: #f1f1ee;
+  --color-surface-strong: #f4eff0;
   --color-surface-dark: #111111;
   --color-surface-dark-elevated: #1f1f1f;
   --color-surface-inverse: #800000;
@@ -49,11 +50,21 @@
   --color-on-inverse-soft: #f0e0e0;
 
   /* Lines */
-  --color-hairline: #e8e8e4;
-  --color-hairline-soft: #f1f1ee;
-  --color-hairline-strong: #d6d6ce;
+  --color-hairline: #ece5e6;
+  --color-hairline-soft: #f4eff0;
+  --color-hairline-strong: #d9cfd1;
   --color-border-input: #8a8a8a;
   --color-gray-dark: #767676;
+
+  /* The night around the sheets: maroon and black, with crimson and coral light (GradientArt). */
+  --color-night: #12040a;
+  --color-night-2: #2b0711;
+  --color-maroon-deep: #5c0a1d;
+  --color-crimson: #d9264e;
+  --color-coral: #ff9a76;
+  --color-on-night: #ffffff;
+  --color-on-night-soft: #f1d9de;
+  --color-on-night-muted: #c99ea8;
 
   /* Atmospheric orbs: soft radial blooms only (see .orb below) */
   --color-orb-lake: #5b8fa8;
@@ -86,82 +97,89 @@
   --color-data-6: #58593f;
 
   /* Type families (fonts are bundled from npm, see main.tsx) */
-  --font-display: "Newsreader", "Times New Roman", serif;
+  /* Headlines are bold Inter (the reference's "Welcome home"); Newsreader stays for the wordmark
+     and the italic maroon accent words (`em` in headlines). */
+  --font-display: "Inter Variable", "Inter", system-ui, sans-serif;
+  --font-serif: "Newsreader", "Times New Roman", serif;
   --font-sans: "Inter Variable", "Inter", system-ui, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
 
   /* Type scale: `text-<token>` sets size, line height, tracking and weight together */
   /* The home page's wordmark headline (D2): larger and one step heavier than display-mega. */
-  --text-display-hero: 96px;
+  --text-display-hero: 112px;
   --text-display-hero--line-height: 1;
-  --text-display-hero--letter-spacing: -2.88px;
-  --text-display-hero--font-weight: 400;
-  --text-display-mega: 64px;
-  --text-display-mega--line-height: 1.05;
-  --text-display-mega--letter-spacing: -1.92px;
-  --text-display-mega--font-weight: 300;
-  --text-display-xl: 48px;
-  --text-display-xl--line-height: 1.08;
-  --text-display-xl--letter-spacing: -0.96px;
-  --text-display-xl--font-weight: 300;
-  --text-display-lg: 36px;
-  --text-display-lg--line-height: 1.17;
-  --text-display-lg--letter-spacing: -0.36px;
-  --text-display-lg--font-weight: 300;
-  --text-display-md: 32px;
-  --text-display-md--line-height: 1.13;
-  --text-display-md--letter-spacing: -0.32px;
-  --text-display-md--font-weight: 300;
-  --text-display-sm: 24px;
+  --text-display-hero--letter-spacing: -4px;
+  --text-display-hero--font-weight: 800;
+  --text-display-mega: 72px;
+  --text-display-mega--line-height: 1.02;
+  --text-display-mega--letter-spacing: -2.6px;
+  --text-display-mega--font-weight: 800;
+  --text-display-xl: 56px;
+  --text-display-xl--line-height: 1.05;
+  --text-display-xl--letter-spacing: -1.9px;
+  --text-display-xl--font-weight: 750;
+  --text-display-lg: 42px;
+  --text-display-lg--line-height: 1.1;
+  --text-display-lg--letter-spacing: -1.2px;
+  --text-display-lg--font-weight: 700;
+  --text-display-md: 36px;
+  --text-display-md--line-height: 1.12;
+  --text-display-md--letter-spacing: -0.9px;
+  --text-display-md--font-weight: 700;
+  --text-display-sm: 28px;
   --text-display-sm--line-height: 1.2;
-  --text-display-sm--letter-spacing: 0;
-  --text-display-sm--font-weight: 300;
-  --text-title-md: 20px;
+  --text-display-sm--letter-spacing: -0.5px;
+  --text-display-sm--font-weight: 650;
+  --text-title-md: 22px;
   --text-title-md--line-height: 1.35;
-  --text-title-md--letter-spacing: 0;
-  --text-title-md--font-weight: 500;
-  --text-title-sm: 18px;
-  --text-title-sm--line-height: 1.44;
-  --text-title-sm--letter-spacing: 0.18px;
-  --text-title-sm--font-weight: 500;
-  --text-body-md: 16px;
-  --text-body-md--line-height: 1.5;
-  --text-body-md--letter-spacing: 0.16px;
-  --text-body-strong: 16px;
-  --text-body-strong--line-height: 1.5;
-  --text-body-strong--letter-spacing: 0.16px;
-  --text-body-strong--font-weight: 500;
-  --text-body-sm: 15px;
-  --text-body-sm--line-height: 1.47;
-  --text-body-sm--letter-spacing: 0.15px;
-  --text-caption: 14px;
+  --text-title-md--letter-spacing: -0.2px;
+  --text-title-md--font-weight: 600;
+  --text-title-sm: 19px;
+  --text-title-sm--line-height: 1.42;
+  --text-title-sm--letter-spacing: -0.1px;
+  --text-title-sm--font-weight: 600;
+  --text-body-md: 17px;
+  --text-body-md--line-height: 1.55;
+  --text-body-md--letter-spacing: 0;
+  --text-body-strong: 17px;
+  --text-body-strong--line-height: 1.55;
+  --text-body-strong--letter-spacing: 0;
+  --text-body-strong--font-weight: 600;
+  --text-body-sm: 16px;
+  --text-body-sm--line-height: 1.5;
+  --text-body-sm--letter-spacing: 0;
+  --text-caption: 15px;
   --text-caption--line-height: 1.5;
   --text-caption--letter-spacing: 0;
-  --text-caption-uppercase: 12px;
+  --text-caption-uppercase: 13px;
   --text-caption-uppercase--line-height: 1.4;
-  --text-caption-uppercase--letter-spacing: 0.96px;
-  --text-caption-uppercase--font-weight: 600;
-  --text-button: 15px;
+  --text-caption-uppercase--letter-spacing: 1px;
+  --text-caption-uppercase--font-weight: 700;
+  --text-button: 16px;
   --text-button--line-height: 1;
   --text-button--letter-spacing: 0;
-  --text-button--font-weight: 500;
-  --text-nav-link: 15px;
+  --text-button--font-weight: 600;
+  --text-nav-link: 16px;
   --text-nav-link--line-height: 1.4;
   --text-nav-link--letter-spacing: 0;
   --text-nav-link--font-weight: 500;
 
   /* Radii */
-  --radius-xs: 4px;
-  --radius-sm: 4px;
-  --radius-md: 6px;
-  --radius-lg: 8px;
-  --radius-xl: 10px;
-  --radius-xxl: 14px;
+  --radius-xs: 6px;
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+  --radius-xxl: 32px;
+  /* The page sheet and the art panels (the reference's big rounded card and inner panel). */
+  --radius-sheet: 44px;
+  --radius-art: 36px;
   --radius-pill: 9999px;
 
   /* Elevation: one hover tier and one overlay tier */
-  --shadow-hover: 0 4px 16px rgba(0, 0, 0, 0.04);
-  --shadow-overlay: 0 8px 32px rgba(0, 0, 0, 0.08);
+  --shadow-hover: 0 12px 32px rgba(70, 6, 22, 0.08);
+  --shadow-overlay: 0 24px 64px rgba(30, 2, 10, 0.2);
+  --shadow-sheet: 0 40px 120px rgba(0, 0, 0, 0.45);
 
   /* Layout */
   --spacing-section: 96px;
@@ -306,8 +324,16 @@
     -webkit-font-smoothing: antialiased;
   }
 
+  /* The night (docs/DESIGN.md "Maroon and night"): maroon and black with crimson light, fixed
+     behind the page sheet, the top bar and the footer. */
   body {
-    background: var(--color-canvas);
+    background-color: var(--color-night);
+    background-image:
+      radial-gradient(1100px 760px at 6% -10%, rgb(150 18 48 / 0.55), transparent 62%),
+      radial-gradient(900px 720px at 104% 16%, rgb(92 10 29 / 0.75), transparent 60%),
+      radial-gradient(1000px 900px at 62% 118%, rgb(217 38 78 / 0.22), transparent 62%),
+      linear-gradient(165deg, #5c0a1d 0%, #2b0711 50%, #12040a 100%);
+    background-attachment: fixed;
     color: var(--color-ink);
     font-size: var(--text-body-md);
     line-height: var(--text-body-md--line-height);
@@ -346,6 +372,16 @@
   h3,
   h4 {
     color: var(--color-ink);
+  }
+
+  /* Headlines are bold sans; their emphasised words are the serif italic in maroon (the accent
+     of every page title, "within your reach.", "Ask anything"). */
+  :where(h1, h2, h3, .page-title, .home-title) em {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    color: var(--color-primary);
   }
 }
 
@@ -394,8 +430,7 @@
 
 /* The new pages' headlines (components/brand/TypeHero.tsx): emphasised words turn italic maroon. */
 .page-title em {
-  font-style: italic;
-  color: var(--color-primary);
+  font-size: 1.06em;
 }
 
 /* The homepage title, "The Best of UChicago, within your reach." (HomePage.tsx): three lines that
@@ -404,19 +439,20 @@
 .home-title {
   display: flex;
   flex-direction: column;
-  font-size: clamp(60px, 7vw, 104px);
-  line-height: 0.92;
-  letter-spacing: -0.03em;
+  font-size: clamp(56px, 6.4vw, 96px);
+  line-height: 0.95;
+  letter-spacing: -0.045em;
+  font-weight: 800;
 }
 .home-title-line {
   display: block;
   animation: home-title-rise 900ms var(--ease-out, cubic-bezier(0.2, 0.7, 0.2, 1)) both;
 }
 .home-title-lead {
-  font-size: 0.42em;
-  font-weight: 300;
-  letter-spacing: -0.01em;
-  line-height: 1.1;
+  font-size: 0.4em;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
   color: var(--color-body-strong);
 }
 .home-title-main {
@@ -427,7 +463,7 @@
   width: max-content;
   max-width: 100%;
   margin-top: 0.08em;
-  font-size: 0.56em;
+  font-size: 0.66em;
   line-height: 1.05;
   letter-spacing: -0.02em;
   animation-delay: 240ms;
@@ -480,5 +516,33 @@
   .home-title-swash path {
     animation: none;
     stroke-dashoffset: 0;
+  }
+}
+
+/* GradientArt (components/brand/GradientArt.tsx): the folds of light drift slowly. */
+.gradient-art-drift-a {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: art-drift-a 26s ease-in-out infinite alternate;
+}
+.gradient-art-drift-b {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: art-drift-b 32s ease-in-out infinite alternate;
+}
+@keyframes art-drift-a {
+  from {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  to {
+    transform: translate(18px, 14px) rotate(2.5deg);
+  }
+}
+@keyframes art-drift-b {
+  from {
+    transform: translate(0, 0) scale(1);
+  }
+  to {
+    transform: translate(-22px, -10px) scale(1.06);
   }
 }

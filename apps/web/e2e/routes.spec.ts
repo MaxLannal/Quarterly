@@ -16,7 +16,7 @@ const ROUTES: [string, string][] = [
   ["/programs", "Program explorer"],
   ["/programs/fake-major", "Fake Program"],
   ["/signup", "Create an account"],
-  ["/login", "Log in"],
+  ["/login", "Welcome back"], // the redesign's sign-in title (docs/DESIGN.md "Maroon and night")
   ["/account", "Account"],
   ["/guidelines", "Community guidelines"],
   ["/privacy", "Privacy"],

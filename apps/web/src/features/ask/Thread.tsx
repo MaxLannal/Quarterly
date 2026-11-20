@@ -134,7 +134,7 @@ function Courses({ turn, onNavigate, compact }: { turn: AssistantTurn; onNavigat
               className="group flex min-h-11 items-baseline gap-2 rounded-lg border border-hairline bg-canvas-soft px-3 py-2 transition-[border-color,background-color] hover:border-primary/40 hover:bg-surface-card"
             >
               <span className="shrink-0 text-caption font-semibold tabular-nums text-primary">{c.code}</span>
-              <span className="truncate font-display text-[15px] text-ink group-hover:underline group-hover:decoration-primary/40 group-hover:underline-offset-2">{c.title}</span>
+              <span className="truncate font-display text-[15px] font-semibold text-ink group-hover:underline group-hover:decoration-primary/40 group-hover:underline-offset-2">{c.title}</span>
             </Link>
           </li>
         ))}

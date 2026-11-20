@@ -72,7 +72,7 @@ export function GuideCard({
       </div>
       {!known ? (
         <div className="mt-4 flex flex-col gap-5">
-          <p className="font-display text-[26px] font-light leading-[1.2] text-on-dark sm:text-[32px]">
+          <p className="font-serif text-[26px] font-light leading-[1.2] text-on-dark sm:text-[32px]">
             Hi, I'm your guide. Give me ten minutes, one question at a time, and I'll draw a portrait of what you want from <em className="italic text-[color:var(--color-on-inverse-soft)]">UChicago</em>.
           </p>
           <div className="flex flex-wrap gap-2">
@@ -89,9 +89,9 @@ export function GuideCard({
               <div className="h-7 w-3/4 rounded-md bg-on-dark/10" />
             </div>
           ) : turn ? (
-            <p className="font-display text-[22px] font-light leading-[1.3] text-on-dark sm:text-[26px]">{turn.text}</p>
+            <p className="font-serif text-[22px] font-light leading-[1.3] text-on-dark sm:text-[26px]">{turn.text}</p>
           ) : (
-            <p className="font-display text-[22px] font-light leading-[1.3] text-on-dark sm:text-[26px]">Welcome back. Want to pick up where we left off, or draft a few routes?</p>
+            <p className="font-serif text-[22px] font-light leading-[1.3] text-on-dark sm:text-[26px]">Welcome back. Want to pick up where we left off, or draft a few routes?</p>
           )}
           {turn && turn.courses.length > 0 && (
             <ul className="flex flex-wrap gap-2">

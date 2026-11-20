@@ -287,3 +287,38 @@ class CommonsBotEvent(
     ]
 ):
     """One Server-Sent Event of POST /commons/threads/{thread_id}/bot."""
+
+
+# ------------------------------------------------------------- moderation (OPEN_QUESTIONS CC-7)
+
+
+class CommonsModerationReport(BaseModel):
+    reason: str
+    created_day: dt.date
+
+
+class CommonsModerationItem(BaseModel):
+    """A reported Commons question or reply in the admin's queue."""
+
+    target_type: TargetType
+    target_id: int
+    title: str
+    excerpt: str
+    status: Literal["visible", "removed", "deleted"]
+    #: The AI's answer (a bot reply), not a student's words.
+    by_ai: bool = False
+    course_code: str | None = None
+    href: str
+    reports: list[CommonsModerationReport]
+
+
+class CommonsModerationDecision(BaseModel):
+    decision: Literal["remove", "keep"]
+    note: str | None = Field(default=None, max_length=500)
+
+
+class CommonsModerationResult(BaseModel):
+    target_type: TargetType
+    target_id: int
+    status: Literal["visible", "removed"]
+    reports_closed: int

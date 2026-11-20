@@ -69,7 +69,7 @@ export const BookCover = memo(function BookCover({
           ))}
         </g>
       )}
-      <g style={{ fontFamily: "var(--font-display)" }} fill={c.ink} textAnchor="middle">
+      <g style={{ fontFamily: "var(--font-serif)" }} fill={c.ink} textAnchor="middle">
         {lines.map((line, i) => (
           <text key={i} x={64} y={top + i * (fontSize + 3)} fontSize={fontSize} fontWeight={500}>
             {line}

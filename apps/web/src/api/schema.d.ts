@@ -55,6 +55,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/admin/commons-reports": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Commons Reports */
+        get: operations["commons_reports_admin_commons_reports_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/admin/commons-reports/{target_type}/{target_id}/decision": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Commons Report Decision */
+        post: operations["commons_report_decision_admin_commons_reports__target_type___target_id__decision_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/admin/moderation": {
         parameters: {
             query?: never;
@@ -2059,6 +2093,76 @@ export interface components {
         CommonsFollowOut: {
             /** Following */
             following: boolean;
+        };
+        /** CommonsModerationDecision */
+        CommonsModerationDecision: {
+            /**
+             * Decision
+             * @enum {string}
+             */
+            decision: "remove" | "keep";
+            /** Note */
+            note?: string | null;
+        };
+        /**
+         * CommonsModerationItem
+         * @description A reported Commons question or reply in the admin's queue.
+         */
+        CommonsModerationItem: {
+            /**
+             * By Ai
+             * @default false
+             */
+            by_ai: boolean;
+            /** Course Code */
+            course_code?: string | null;
+            /** Excerpt */
+            excerpt: string;
+            /** Href */
+            href: string;
+            /** Reports */
+            reports: components["schemas"]["CommonsModerationReport"][];
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "visible" | "removed" | "deleted";
+            /** Target Id */
+            target_id: number;
+            /**
+             * Target Type
+             * @enum {string}
+             */
+            target_type: "thread" | "reply";
+            /** Title */
+            title: string;
+        };
+        /** CommonsModerationReport */
+        CommonsModerationReport: {
+            /**
+             * Created Day
+             * Format: date
+             */
+            created_day: string;
+            /** Reason */
+            reason: string;
+        };
+        /** CommonsModerationResult */
+        CommonsModerationResult: {
+            /** Reports Closed */
+            reports_closed: number;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "visible" | "removed";
+            /** Target Id */
+            target_id: number;
+            /**
+             * Target Type
+             * @enum {string}
+             */
+            target_type: "thread" | "reply";
         };
         /** CommonsPresence */
         CommonsPresence: {
@@ -5864,6 +5968,80 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Not implemented yet */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+        };
+    };
+    commons_reports_admin_commons_reports_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CommonsModerationItem"][];
+                };
+            };
+            /** @description Not implemented yet */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+        };
+    };
+    commons_report_decision_admin_commons_reports__target_type___target_id__decision_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                target_type: "thread" | "reply";
+                target_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CommonsModerationDecision"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CommonsModerationResult"];
+                };
             };
             /** @description Validation Error */
             422: {

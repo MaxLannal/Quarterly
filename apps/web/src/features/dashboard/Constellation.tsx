@@ -57,7 +57,7 @@ export function Constellation({ items, onRemove, center }: { items: string[]; on
       </div>
       <div aria-hidden="true" className={cn("dash-sun absolute left-1/2 top-1/2 flex size-24 -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center rounded-pill bg-primary text-center text-on-primary")}>
         <GuideMark size={16} />
-        <span className="mt-1 max-w-[5.5rem] truncate font-display text-[15px] italic leading-tight">{center}</span>
+        <span className="mt-1 max-w-[5.5rem] truncate font-serif text-[16px] italic leading-tight">{center}</span>
       </div>
     </div>
   );

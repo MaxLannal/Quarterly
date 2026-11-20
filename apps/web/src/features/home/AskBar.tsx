@@ -267,7 +267,7 @@ function OptionRow({ option, active }: { option: Option; active: boolean }) {
         <span className="shrink-0 rounded-pill bg-surface-strong px-2 py-0.5 font-mono text-caption text-ink">
           {option.code}
         </span>
-        <span className="min-w-0 flex-1 truncate font-display text-body-md text-ink">
+        <span className="min-w-0 flex-1 truncate font-display text-body-md font-semibold text-ink">
           {option.title}
         </span>
         <span className="shrink-0 text-caption text-muted">Course</span>

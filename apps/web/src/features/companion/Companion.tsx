@@ -1,4 +1,4 @@
-import { useCallback, useId, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useFocusTrap } from "@/components/ui/dialog";
 import { CloseIcon } from "@/components/ui/icons";
@@ -32,13 +32,22 @@ export function Companion() {
   const chat = useAskChat({ storageKey: COMPANION_KEY, mode: "companion", context, initialActive: "latest" });
   const unread = useUnreadCount(!!account);
   const hidden = /^\/ask(\/|$)/.test(pathname);
+  const orbRef = useRef<HTMLButtonElement>(null);
   const close = useCallback(() => setOpen(false), []);
+  // Focus goes back to the orb once the closed state is rendered (the orb is hidden while the panel
+  // is open, so focusing it any earlier fails); this effect runs after the panel's own cleanup.
+  const wasOpen = useRef(false);
+  useEffect(() => {
+    if (wasOpen.current && !open) orbRef.current?.focus();
+    wasOpen.current = open;
+  }, [open]);
 
   if (hidden) return null;
   const count = account ? (unread.data ?? 0) : 0;
   return (
     <>
       <button
+        ref={orbRef}
         type="button"
         onClick={() => setOpen(true)}
         aria-label={count > 0 ? `Open Quarterly companion, ${count} new ${count === 1 ? "update" : "updates"}` : "Open Quarterly companion"}
@@ -136,7 +145,7 @@ function Panel({
                 </svg>
               </span>
               <div>
-                <h2 id={`${id}-title`} className="font-display text-[20px] leading-tight text-ink">
+                <h2 id={`${id}-title`} className="font-display text-[21px] font-bold leading-tight tracking-[-0.02em] text-ink">
                   Quarterly <em className="text-primary">companion</em>
                 </h2>
               </div>

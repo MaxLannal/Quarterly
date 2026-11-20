@@ -8,16 +8,18 @@ import { ErrorIcon } from "./icons";
  * Errors: error-colored line + icon + message below (see Field).
  */
 export const controlClass = cn(
-  "min-h-11 w-full min-w-0 rounded-md border border-border-input bg-surface-card px-4 py-[9px] font-sans text-body-md text-ink",
-  "placeholder:text-muted transition-colors",
-  "focus-visible:outline-none focus:border-primary focus:shadow-[inset_0_0_0_1px_var(--color-primary)]",
+  // Redesign 2026-11-20: pills like the reference's Email and Password fields (26px radius: a
+  // pill on one line, a soft rounded box when taller), 52px tall, a soft maroon halo on focus.
+  "min-h-[52px] w-full min-w-0 rounded-[26px] border border-hairline-strong bg-surface-card px-5 py-3 font-sans text-body-md text-ink",
+  "placeholder:text-muted transition-[border-color,box-shadow]",
+  "focus-visible:outline-none focus:border-primary focus:shadow-[0_0_0_4px_var(--color-primary-wash)]",
   "disabled:cursor-not-allowed disabled:bg-surface-strong disabled:text-muted",
   "aria-[invalid=true]:border-error",
 );
 
 /** Compact controls for dense panels (planner rails, dialogs): same 44px height, 15px text. */
 // 16px on touch screens: iOS Safari zooms the page into a smaller field on focus (D11 harden).
-export const controlCompactClass = "px-3 text-body-sm pointer-coarse:text-body-md";
+export const controlCompactClass = "min-h-11 rounded-[22px] px-4 py-2 text-body-sm pointer-coarse:text-body-md";
 
 export const Input = React.forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLInputElement> & { compact?: boolean }>(
   ({ className, compact, ...props }, ref) => <input ref={ref} className={cn(controlClass, compact && controlCompactClass, className)} {...props} />,

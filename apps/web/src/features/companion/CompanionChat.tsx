@@ -34,7 +34,10 @@ export function CompanionChat({
   const turns = chat.active?.turns ?? [];
 
   useEffect(() => {
-    if (open) window.setTimeout(() => composer.current?.focus(), 60);
+    if (!open) return;
+    // Cancelled when the panel closes first, so a quick Escape keeps focus on the orb.
+    const timer = window.setTimeout(() => composer.current?.focus(), 60);
+    return () => window.clearTimeout(timer);
   }, [open]);
 
   const openInAsk = () => {
@@ -50,7 +53,7 @@ export function CompanionChat({
     <div className="flex min-h-0 flex-1 flex-col">
       <div ref={setScroller} className="relative min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 pb-4 pt-5 sm:px-5">
         <div className="companion-greeting mb-5">
-          <p className="font-display text-[24px] leading-[1.15] tracking-[-0.3px] text-ink">
+          <p className="font-display text-[26px] font-bold leading-[1.15] tracking-[-0.6px] text-ink">
             {username ? (
               <>
                 Hi {username}. <em className="text-primary">What’s on your mind?</em>

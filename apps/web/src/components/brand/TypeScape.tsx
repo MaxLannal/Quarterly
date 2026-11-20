@@ -30,6 +30,8 @@ export function TypeScape({
   words = [],
   label,
   className,
+  theme = "paper",
+  zoom = 1,
 }: {
   shape: ShapeName;
   /** Horizontal centre of the figure (0..1) on wide screens; narrow screens centre it. */
@@ -38,6 +40,10 @@ export function TypeScape({
   words?: string[];
   label: string;
   className?: string;
+  /** "night": light titles for a GradientArt panel (the redesign's split heroes). */
+  theme?: "paper" | "night";
+  /** How large the figure is drawn in its canvas (about 1.5 in a panel). */
+  zoom?: number;
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const labelRef = useRef<HTMLSpanElement>(null);
@@ -60,6 +66,8 @@ export function TypeScape({
           words: wordKey ? wordKey.split("\u0001") : [],
           reducedMotion: prefersReducedMotion(),
           onOpen: (code) => navigate(`/courses/${encodeURIComponent(code)}`),
+          theme,
+          zoom,
         });
         engine.loop();
         canvas.dataset.state = "running";
@@ -71,7 +79,7 @@ export function TypeScape({
       cancelled = true;
       engine?.dispose();
     };
-  }, [shape, focus, wordKey, navigate]);
+  }, [shape, focus, wordKey, navigate, theme, zoom]);
 
   return (
     <div className={cn("pointer-events-none absolute inset-0 -z-10", className)}>

@@ -41,7 +41,7 @@ export function ReasonChip({ children, dark = false }: { children: ReactNode; da
 /** The AI curator's line for this card, always labelled as AI. */
 export function AiNote({ note }: { note: string }) {
   return (
-    <p className="flex gap-2 border-l-2 border-primary/40 pl-3 font-display text-[17px] italic leading-snug text-body-strong">
+    <p className="flex gap-2 border-l-2 border-primary/40 pl-3 font-serif text-[18px] italic leading-snug text-body-strong">
       <SparkIcon size={14} className="mt-1 shrink-0 text-primary not-italic" />
       <span>
         {note} <span className="whitespace-nowrap font-sans text-caption not-italic text-muted">(AI note)</span>

@@ -111,7 +111,7 @@ export default function AskPage() {
               <span aria-hidden="true" className="inline-block h-px w-6 bg-primary" />
               Ask Quarterly
             </p>
-            <h1 className="mt-1.5 truncate font-display text-[26px] font-normal leading-tight tracking-[-0.4px] text-ink sm:text-[32px]">{chat.active.title}</h1>
+            <h1 className="mt-1.5 truncate font-display text-[26px] font-bold leading-tight tracking-[-0.4px] text-ink sm:text-[32px]">{chat.active.title}</h1>
           </div>
           <div className="flex shrink-0 items-center gap-1">
             <button
@@ -219,7 +219,7 @@ function AskLanding({
             <ol className="mt-6 grid gap-x-8 gap-y-6 sm:grid-cols-2">
               {SOURCES.map((s, i) => (
                 <li key={s.title} className="border-t border-hairline pt-4">
-                  <p className="font-display text-[15px] italic text-primary">{["i.", "ii.", "iii.", "iv."][i]}</p>
+                  <p className="font-serif text-[16px] italic text-primary">{["i.", "ii.", "iii.", "iv."][i]}</p>
                   <h3 className="mt-1 text-body-strong text-ink">{s.title}</h3>
                   <p className="mt-1 text-body-sm text-body">{s.text}</p>
                 </li>

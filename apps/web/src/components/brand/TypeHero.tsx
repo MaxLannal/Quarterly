@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
+import { GradientArt } from "./GradientArt";
 import { TypeScape, type ShapeName } from "./TypeScape";
 
 /**
@@ -31,28 +32,29 @@ export function PageTitle({
       )}
       <Tag
         className={cn(
-          "page-title font-display font-normal text-ink text-balance",
+          "page-title font-display font-extrabold text-ink text-balance",
           size === "lg"
-            ? "text-[44px] leading-[1.02] tracking-[-1.2px] sm:text-[64px] sm:tracking-[-1.92px]"
-            : "text-[34px] leading-[1.08] tracking-[-0.6px] sm:text-display-xl",
+            ? "text-[46px] leading-[1.02] tracking-[-1.8px] sm:text-[64px] sm:tracking-[-2.6px] xl:text-[72px]"
+            : "text-[36px] leading-[1.06] tracking-[-1.1px] sm:text-display-xl",
         )}
       >
         {title}
       </Tag>
-      {subline && <p className="max-w-[38rem] text-body-md text-body">{subline}</p>}
+      {subline && <p className="max-w-[36rem] text-[19px] leading-[1.55] text-body">{subline}</p>}
     </div>
   );
 }
 
 /**
- * A page header in the chapel's manner: a TypeScape figure on the right (behind the content on
- * phones), the title and the page's main controls on the left over a soft paper veil.
+ * A page header in the redesign's manner (docs/DESIGN.md "Maroon and night"), after the reference
+ * login card: the title and the page's main controls on the left; on the right a rounded art panel,
+ * maroon, crimson and coral light on black, with a TypeScape figure of real course titles glowing
+ * on it (point at a title to see its course; click to open it). On phones the panel comes first.
  */
 export function TypeHero({
   shape,
   label,
   words,
-  focus,
   kicker,
   title,
   subline,
@@ -63,6 +65,7 @@ export function TypeHero({
   shape: ShapeName;
   label: string;
   words?: string[];
+  /** Kept for callers of the earlier full-width hero; the panel centres its figure. */
   focus?: number;
   kicker?: ReactNode;
   title: ReactNode;
@@ -75,28 +78,22 @@ export function TypeHero({
   return (
     <section
       className={cn(
-        "relative isolate overflow-hidden border-b border-hairline",
-        tall ? "min-h-[min(78svh,760px)]" : "min-h-[460px] sm:min-h-[540px]",
+        "mx-auto grid w-full max-w-content items-stretch gap-6 px-4 pb-8 pt-5 sm:px-6 sm:pt-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-12 lg:px-8 lg:pb-12 lg:pt-8",
         className,
       )}
     >
-      <TypeScape shape={shape} label={label} words={words} focus={focus} />
-      {/* The veil keeps the text readable where the titles run under it. */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(90deg,var(--color-canvas)_0%,color-mix(in_srgb,var(--color-canvas)_88%,transparent)_38%,transparent_62%)] max-[899px]:bg-[linear-gradient(180deg,color-mix(in_srgb,var(--color-canvas)_10%,transparent)_0px,color-mix(in_srgb,var(--color-canvas)_82%,transparent)_140px,color-mix(in_srgb,var(--color-canvas)_96%,transparent)_190px,var(--color-canvas)_100%)]"
-      />
+      <div className="order-2 flex min-w-0 flex-col justify-center gap-7 lg:order-1 lg:py-10">
+        <PageTitle kicker={kicker} title={title} subline={subline} />
+        {children}
+      </div>
       <div
         className={cn(
-          "pointer-events-none mx-auto flex w-full max-w-content px-4 sm:px-6 lg:px-8",
-          tall ? "min-h-[min(78svh,760px)]" : "min-h-[460px] sm:min-h-[540px]",
-          "items-end pb-10 pt-40 min-[900px]:items-center min-[900px]:py-16",
+          "relative isolate order-1 overflow-hidden rounded-[28px] shadow-overlay sm:rounded-art lg:order-2",
+          tall ? "min-h-[300px] sm:min-h-[380px] lg:min-h-[620px]" : "min-h-[240px] sm:min-h-[320px] lg:min-h-[540px]",
         )}
       >
-        <div className="pointer-events-auto flex w-full max-w-[36rem] flex-col gap-6">
-          <PageTitle kicker={kicker} title={title} subline={subline} />
-          {children}
-        </div>
+        <GradientArt seed={shape} />
+        <TypeScape shape={shape} label={label} words={words} focus={0.5} theme="night" zoom={1.6} />
       </div>
     </section>
   );

@@ -331,7 +331,7 @@ export default function FeedPage() {
                     {isFetchingNextPage ? "Loading more…" : "Load more"}
                   </Button>
                 ) : (
-                  <p className="max-w-reading font-display text-[22px] font-light italic text-body">
+                  <p className="max-w-reading font-serif text-[22px] font-light italic text-body">
                     That is today&rsquo;s river. Come back tomorrow, or try{" "}
                     <button type="button" className="text-primary underline underline-offset-4" onClick={() => setTab(tab === "explore" ? "for_you" : "explore")}>
                       {tab === "explore" ? "For you" : "Explore"}
@@ -361,7 +361,7 @@ export default function FeedPage() {
 function EmptyState({ title, children }: { title: string; children: ReactNode }) {
   return (
     <div className="flex max-w-reading flex-col gap-3 rounded-xl border border-dashed border-hairline-strong bg-canvas-soft p-8 text-body-md text-body">
-      <h2 className="font-display text-[28px] font-light text-ink">{title}</h2>
+      <h2 className="font-display text-[28px] font-bold text-ink tracking-[-0.02em]">{title}</h2>
       {children}
     </div>
   );

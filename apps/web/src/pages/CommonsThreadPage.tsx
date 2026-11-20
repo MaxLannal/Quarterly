@@ -264,7 +264,7 @@ export default function CommonsThreadPage() {
                     <span aria-hidden="true">·</span>
                     <Day day={detail.created_day} edited={detail.edited_day} />
                   </p>
-                  <h1 id="question-title" className="font-display text-[32px] font-normal leading-[1.1] tracking-[-0.5px] text-ink text-balance sm:text-[44px] sm:tracking-[-1px]">
+                  <h1 id="question-title" className="font-display text-[32px] font-bold leading-[1.1] tracking-[-0.5px] text-ink text-balance sm:text-[44px] sm:tracking-[-1px]">
                     {detail.title}
                   </h1>
                   {detail.body_html && <Body html={detail.body_html} className="max-w-reading" />}
@@ -423,7 +423,7 @@ export default function CommonsThreadPage() {
             <section className="relative overflow-hidden rounded-xl border border-hairline bg-surface-card p-5">
               <span aria-hidden="true" className="absolute inset-x-0 top-0 h-1 bg-primary" />
               <p className="text-caption font-semibold tabular-nums text-primary">{detail.course.code}</p>
-              <p className="mt-1 font-display text-title-md font-normal text-ink">{detail.course.title}</p>
+              <p className="mt-1 font-display text-title-md font-bold text-ink tracking-[-0.02em]">{detail.course.title}</p>
               <Link to={coursePath(detail.course.code)} className="mt-2 inline-flex min-h-11 items-center text-caption font-medium text-primary underline underline-offset-2">
                 Course page, reviews and planner
               </Link>

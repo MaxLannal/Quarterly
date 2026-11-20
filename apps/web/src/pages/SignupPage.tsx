@@ -7,6 +7,7 @@ import { api, attempt } from "@/features/auth/api";
 import { signedIn } from "@/features/auth/session";
 import {
   AuthPage,
+  OrDivider,
   CODE_PATTERN,
   FormError,
   linkClass,
@@ -126,13 +127,18 @@ export default function SignupPage() {
   }
 
   return (
-    <AuthPage title="Create an account" eyebrow={`Step ${STEP_NUMBER[step.name]} of 3`}>
+    <AuthPage
+      title="Create an account"
+      eyebrow={`Step ${STEP_NUMBER[step.name]} of 3`}
+      subline="Use your @uchicago.edu email. It stays private: the forum only ever shows a random handle."
+    >
       <form onSubmit={onSubmit} noValidate className="flex flex-col gap-5">
         {step.name === "email" ? (
           <>
             <StepHeading>Your UChicago email</StepHeading>
             <TextField
               label="Email address"
+              icon="mail"
               type="email"
               name="email"
               autoComplete="email"
@@ -236,7 +242,8 @@ export default function SignupPage() {
           </>
         ) : null}
       </form>
-      <p className="border-t border-hairline pt-4 text-body-sm text-body">
+      <OrDivider />
+      <p className="text-center text-body-sm text-body">
         Already have an account?{" "}
         <Link to={keepNext("/login", params.get("next"))} className={linkClass}>
           Log in

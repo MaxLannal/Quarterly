@@ -33,7 +33,7 @@ export default function HomePage() {
     <section
       ref={sectionRef}
       aria-label="Quarterly"
-      className="relative isolate flex h-[calc(100svh-65px)] min-h-[640px] overflow-hidden"
+      className="relative isolate flex h-[calc(100svh-88px)] min-h-[640px] overflow-hidden"
     >
       <CourseChapel sectionRef={sectionRef} uiRef={uiRef} />
       <div className="mx-auto flex w-full max-w-[1600px] items-end px-4 pb-8 sm:px-8 sm:pb-14 chapel-side:items-center chapel-side:px-12 chapel-side:pb-0">
@@ -41,7 +41,7 @@ export default function HomePage() {
           ref={uiRef}
           className="flex w-full max-w-[34rem] flex-col items-start gap-5 chapel-side:gap-7"
         >
-          <h1 className="home-title font-display font-normal text-ink">
+          <h1 className="home-title font-display text-ink">
             <span className="home-title-line home-title-lead">The Best of</span>{" "}
             <span className="home-title-line home-title-main">UChicago,</span>{" "}
             <span className="home-title-line home-title-reach">

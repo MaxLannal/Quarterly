@@ -75,7 +75,7 @@ const MOD = IS_MAC ? "⌘" : "Ctrl+";
 
 const TOOLS: { kind: FormatKind; label: string; key?: string; icon: ReactNode }[] = [
   { kind: "bold", label: "Bold", key: "B", icon: <span className="font-sans text-[15px] font-bold">B</span> },
-  { kind: "italic", label: "Italic", key: "I", icon: <span className="font-display text-[17px] italic">I</span> },
+  { kind: "italic", label: "Italic", key: "I", icon: <span className="font-serif text-[18px] italic">I</span> },
   {
     kind: "code",
     label: "Code",

@@ -128,7 +128,7 @@ export const RoutesSection = forwardRef<RoutesHandle, { profile: Profile }>(func
         <p className="flex items-center gap-2 text-caption-uppercase uppercase text-primary">
           <span aria-hidden="true" className="inline-block h-px w-6 bg-primary" /> Four years, several ways
         </p>
-        <h2 id={`${focusId}-title`} className="font-display text-[36px] leading-[1.05] tracking-[-0.6px] text-ink sm:text-[52px]">
+        <h2 id={`${focusId}-title`} className="font-display text-[38px] font-extrabold leading-[1.04] tracking-[-1.4px] text-ink sm:text-[56px]">
           Your <em className="italic text-primary">routes</em>
         </h2>
         <p className="max-w-reading text-body-md text-body" role="status">

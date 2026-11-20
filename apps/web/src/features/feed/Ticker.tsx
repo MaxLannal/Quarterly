@@ -19,7 +19,7 @@ export function Ticker({ courses }: { courses: { code: string; title: string }[]
         <Link
           to={courseHref(c.code)}
           tabIndex={copy === 0 ? undefined : -1}
-          className="inline-flex min-h-11 items-center gap-2 whitespace-nowrap rounded-pill px-3 font-display text-[19px] font-light italic text-ink hover:text-primary"
+          className="inline-flex min-h-11 items-center gap-2 whitespace-nowrap rounded-pill px-3 font-serif text-[19px] font-light italic text-ink hover:text-primary"
         >
           <span className="not-italic font-sans text-caption-uppercase uppercase text-muted">{c.code}</span>
           {c.title}

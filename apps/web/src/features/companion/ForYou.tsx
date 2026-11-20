@@ -39,7 +39,7 @@ export function ForYou({ loggedIn, onNavigate }: { loggedIn: boolean; onNavigate
   if (!loggedIn) {
     return (
       <div className="flex flex-col gap-4 px-5 py-6">
-        <p className="font-display text-[26px] leading-tight text-ink">
+        <p className="font-display text-[26px] font-bold leading-tight tracking-[-0.6px] text-ink">
           What’s new, <em className="text-primary">for you</em>.
         </p>
         <p className="text-body-sm text-body">
@@ -87,7 +87,7 @@ export function ForYou({ loggedIn, onNavigate }: { loggedIn: boolean; onNavigate
       )}
       {digest.data?.text && (
         <div className="companion-digest rounded-xl border border-primary/15 bg-primary-wash/60 px-4 py-3.5">
-          <p className="font-display text-[17px] leading-snug text-ink">{digest.data.text}</p>
+          <p className="font-display text-[17px] font-semibold leading-snug text-ink">{digest.data.text}</p>
           {digest.data.ai && (
             <p className="mt-2 flex items-center gap-1.5 text-caption text-muted">
               <SparkIcon size={12} />

@@ -7,6 +7,7 @@ import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { Badge, CourseCode, ErrorText, Notice } from "@/components/ui/misc";
 import { useSession } from "@/features/auth/session";
+import { CommonsModerationSection } from "@/features/commons/ModerationSection";
 import { useEndSuspension, useModerationDecision, useModerationQueue, useSuspensions, type ModerationItem } from "@/features/forum/api";
 import { plural, relativeDay, threadPath } from "@/features/forum/format";
 import { LoginRequired, PostBody } from "@/features/forum/parts";
@@ -177,6 +178,7 @@ export default function AdminModerationPage() {
           ))}
         </div>
       )}
+      <CommonsModerationSection onDone={setDone} />
       <Suspensions onDone={setDone} />
     </PageContainer>
   );

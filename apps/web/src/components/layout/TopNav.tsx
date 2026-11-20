@@ -52,7 +52,8 @@ export function Wordmark({ className }: { className?: string }) {
     <Link
       to="/"
       className={cn(
-        "flex min-h-11 shrink-0 items-center rounded-xs font-display text-display-sm font-medium tracking-[-0.24px] text-ink",
+        // The serif wordmark, white on the night (docs/DESIGN.md "Maroon and night").
+        "flex min-h-11 shrink-0 items-center rounded-xs font-serif text-[28px] font-medium tracking-[-0.4px] text-on-night",
         className,
       )}
     >
@@ -88,8 +89,9 @@ function SearchBox() {
         className={cn(
           // A quiet filled field (D6, FEEDBACK "Minor design changes"): no outline until it is used;
           // the icon and placeholder say what it is. Focus: white, with the maroon ring.
-          "min-h-11 w-full min-w-0 rounded-pill border border-transparent bg-surface-strong pl-11 pr-4 text-body-sm pointer-coarse:text-body-md text-ink transition-colors duration-150 placeholder:text-muted",
-          "hover:bg-hairline-soft hover:border-hairline focus-visible:outline-none focus:border-primary focus:bg-surface-card focus:shadow-[inset_0_0_0_1px_var(--color-primary)]",
+          // On the night: a translucent pill that turns white while it is used.
+          "peer min-h-12 w-full min-w-0 rounded-pill border border-on-night/15 bg-on-night/10 pl-12 pr-4 text-body-sm pointer-coarse:text-body-md text-on-night transition-colors duration-150 placeholder:text-on-night-muted",
+          "hover:bg-on-night/15 focus-visible:outline-none focus:border-on-night focus:bg-surface-card focus:text-ink focus:placeholder:text-muted focus:shadow-[0_0_0_4px_rgb(255_255_255/0.18)]",
         )}
       />
       <Button
@@ -97,7 +99,7 @@ function SearchBox() {
         variant="ghost"
         size="icon"
         aria-label="Search"
-        className="absolute left-0 text-muted hover:bg-transparent hover:text-ink"
+        className="absolute left-0 text-on-night-muted hover:bg-transparent hover:text-on-night peer-focus:text-muted"
       >
         <SearchIcon />
       </Button>
@@ -117,9 +119,9 @@ function NavLinks({ vertical = false }: { vertical?: boolean }) {
             to={item.to}
             aria-current={current ? "page" : undefined}
             className={cn(
-              "flex min-h-11 items-center rounded-pill px-4 text-nav-link text-ink transition-colors hover:bg-surface-strong",
+              "flex min-h-11 items-center rounded-pill px-4 text-nav-link text-on-night-soft transition-colors hover:bg-on-night/10 hover:text-on-night",
               vertical && "w-full md:w-auto",
-              current && "bg-primary-wash hover:bg-primary-wash",
+              current && "bg-on-night/15 text-on-night hover:bg-on-night/15",
             )}
           >
             {item.label}
@@ -147,25 +149,25 @@ export function TopNav() {
     <Link
       to="/me"
       aria-current={location.pathname === "/me" ? "page" : undefined}
-      className="flex min-h-11 items-center gap-2 rounded-pill pl-1 pr-3 text-nav-link text-ink hover:bg-surface-strong aria-[current=page]:bg-primary-wash"
+      className="flex min-h-11 items-center gap-2 rounded-pill bg-on-night/10 pl-1 pr-4 text-nav-link text-on-night hover:bg-on-night/15 aria-[current=page]:bg-on-night/20"
     >
-      <Avatar name={session.account.username} />
+      <Avatar name={session.account.username} className="bg-crimson text-on-night" />
       {session.account.username}
     </Link>
   ) : AUTH_PAGES.has(location.pathname) ? null : (
     // D11 AU-3: no "Log in" pill on the login and sign-up pages themselves.
-    <Button asChild variant="outline">
+    <Button asChild variant="light">
       <Link to={authLinks.login}>Log in</Link>
     </Button>
   );
 
   return (
-    <header className="border-b border-hairline bg-canvas">
+    <header className="text-on-night">
       <div
         className={cn(
           "mx-auto flex w-full flex-wrap",
           location.pathname === "/plan" ? "max-w-tool" : "max-w-content",
-          "items-center gap-x-2 px-4 sm:px-6 md:h-16 md:flex-nowrap lg:px-8",
+          "items-center gap-x-2 px-4 sm:px-6 md:h-[76px] md:flex-nowrap lg:px-8",
         )}
       >
         <Wordmark className="mr-2 h-16 md:h-auto" />
@@ -175,7 +177,7 @@ export function TopNav() {
           className={cn(
             "items-center gap-1 md:flex",
             open
-              ? "order-last mb-3 flex w-full flex-col items-stretch border-t border-hairline pt-3 md:order-none md:mb-0 md:w-auto md:flex-row md:items-center md:border-0 md:pt-0"
+              ? "order-last mb-3 flex w-full flex-col items-stretch border-t border-on-night/15 pt-3 md:order-none md:mb-0 md:w-auto md:flex-row md:items-center md:border-0 md:pt-0"
               : "hidden",
           )}
         >
@@ -197,7 +199,7 @@ export function TopNav() {
           <Button
             variant="ghost"
             size="icon"
-            className="md:hidden"
+            className="text-on-night hover:bg-on-night/10 active:bg-on-night/15 md:hidden"
             aria-expanded={open}
             aria-controls={panelId}
             aria-label="Menu"

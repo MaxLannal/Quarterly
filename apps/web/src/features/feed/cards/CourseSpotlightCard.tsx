@@ -90,7 +90,7 @@ export function CourseSpotlightCard({
                   key={word}
                   style={style}
                   className={cn(
-                    "feed-burst-word rounded-pill px-2.5 py-0.5 font-display text-[17px] italic shadow-overlay",
+                    "feed-burst-word rounded-pill px-2.5 py-0.5 font-serif text-[18px] italic shadow-overlay",
                     i % 3 === 0 ? "bg-primary text-on-primary" : "bg-surface-card text-ink",
                   )}
                 >
@@ -103,7 +103,7 @@ export function CourseSpotlightCard({
       </div>
       <div className="flex flex-col gap-3 p-5 sm:p-6">
         <ReasonChip>{item.reason}</ReasonChip>
-        <h3 id={titleId} className="font-display text-[26px] font-light leading-[1.12] tracking-[-0.3px] text-ink">
+        <h3 id={titleId} className="font-display text-[26px] font-bold leading-[1.12] tracking-[-0.3px] text-ink">
           <Link to={href} className="rounded-xs hover:text-primary focus-visible:text-primary">
             {item.title}
           </Link>
@@ -151,7 +151,7 @@ export function CourseSpotlightCard({
                 <li key={b.id} className="flex items-center gap-3">
                   <BookCover title={b.title} author={b.author} slug={b.slug} size="sm" className="h-[54px] w-9 shrink-0 rounded-xs shadow-hover" />
                   <span className="min-w-0 text-caption leading-snug">
-                    <cite className="font-display text-[15px] not-italic text-ink">{b.title}</cite>
+                    <cite className="font-sans text-[15px] font-semibold not-italic text-ink">{b.title}</cite>
                     <span className="block text-muted">
                       {b.author}, {b.when}
                     </span>

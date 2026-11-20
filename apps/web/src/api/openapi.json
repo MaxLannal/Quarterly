@@ -1760,6 +1760,162 @@
         "title": "CommonsFollowOut",
         "type": "object"
       },
+      "CommonsModerationDecision": {
+        "properties": {
+          "decision": {
+            "enum": [
+              "remove",
+              "keep"
+            ],
+            "title": "Decision",
+            "type": "string"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "maxLength": 500,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          }
+        },
+        "required": [
+          "decision"
+        ],
+        "title": "CommonsModerationDecision",
+        "type": "object"
+      },
+      "CommonsModerationItem": {
+        "description": "A reported Commons question or reply in the admin's queue.",
+        "properties": {
+          "by_ai": {
+            "default": false,
+            "title": "By Ai",
+            "type": "boolean"
+          },
+          "course_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Course Code"
+          },
+          "excerpt": {
+            "title": "Excerpt",
+            "type": "string"
+          },
+          "href": {
+            "title": "Href",
+            "type": "string"
+          },
+          "reports": {
+            "items": {
+              "$ref": "#/components/schemas/CommonsModerationReport"
+            },
+            "title": "Reports",
+            "type": "array"
+          },
+          "status": {
+            "enum": [
+              "visible",
+              "removed",
+              "deleted"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "target_id": {
+            "title": "Target Id",
+            "type": "integer"
+          },
+          "target_type": {
+            "enum": [
+              "thread",
+              "reply"
+            ],
+            "title": "Target Type",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "target_type",
+          "target_id",
+          "title",
+          "excerpt",
+          "status",
+          "href",
+          "reports"
+        ],
+        "title": "CommonsModerationItem",
+        "type": "object"
+      },
+      "CommonsModerationReport": {
+        "properties": {
+          "created_day": {
+            "format": "date",
+            "title": "Created Day",
+            "type": "string"
+          },
+          "reason": {
+            "title": "Reason",
+            "type": "string"
+          }
+        },
+        "required": [
+          "reason",
+          "created_day"
+        ],
+        "title": "CommonsModerationReport",
+        "type": "object"
+      },
+      "CommonsModerationResult": {
+        "properties": {
+          "reports_closed": {
+            "title": "Reports Closed",
+            "type": "integer"
+          },
+          "status": {
+            "enum": [
+              "visible",
+              "removed"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "target_id": {
+            "title": "Target Id",
+            "type": "integer"
+          },
+          "target_type": {
+            "enum": [
+              "thread",
+              "reply"
+            ],
+            "title": "Target Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "target_type",
+          "target_id",
+          "status",
+          "reports_closed"
+        ],
+        "title": "CommonsModerationResult",
+        "type": "object"
+      },
       "CommonsPresence": {
         "properties": {
           "bot_state": {
@@ -11527,6 +11683,116 @@
         "summary": "Change Password",
         "tags": [
           "account"
+        ]
+      }
+    },
+    "/admin/commons-reports": {
+      "get": {
+        "operationId": "commons_reports_admin_commons_reports_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/CommonsModerationItem"
+                  },
+                  "title": "Response Commons Reports Admin Commons Reports Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Not implemented yet"
+          }
+        },
+        "summary": "Commons Reports",
+        "tags": [
+          "admin"
+        ]
+      }
+    },
+    "/admin/commons-reports/{target_type}/{target_id}/decision": {
+      "post": {
+        "operationId": "commons_report_decision_admin_commons_reports__target_type___target_id__decision_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "target_type",
+            "required": true,
+            "schema": {
+              "enum": [
+                "thread",
+                "reply"
+              ],
+              "title": "Target Type",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "target_id",
+            "required": true,
+            "schema": {
+              "title": "Target Id",
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CommonsModerationDecision"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonsModerationResult"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Not implemented yet"
+          }
+        },
+        "summary": "Commons Report Decision",
+        "tags": [
+          "admin"
         ]
       }
     },

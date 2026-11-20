@@ -4,12 +4,18 @@ from fastapi import APIRouter, Depends, Query, Response
 from sqlalchemy.orm import Session
 
 from api.auth.sessions import current_account
+from api.commons import moderation as commons_moderation
 from api.db.models import Account
 from api.db.session import get_session
 from api.forum import admin as forum_admin
 from api.review import service as review
 from api.schemas.admin import ProgramVersionOut, ReviewDecision, ReviewItemOut
 from api.schemas.common import NOT_IMPLEMENTED, Page
+from api.schemas.commons import (
+    CommonsModerationDecision,
+    CommonsModerationItem,
+    CommonsModerationResult,
+)
 from api.schemas.forum import (
     EndSuspensionResult,
     ModerationDecision,
@@ -108,3 +114,27 @@ def publish_program_version(
     db: SessionDep, admin: ReviewerDep, version_id: int
 ) -> ProgramVersionOut:
     return review.publish(db, admin, version_id)
+
+
+# ------------------------------------------------------------------ Commons moderation (CC-7)
+
+
+# Reported Commons questions and replies, oldest report first.
+@router.get("/commons-reports", response_model=list[CommonsModerationItem])
+def commons_reports(db: SessionDep, _: AdminDep) -> list[CommonsModerationItem]:
+    return commons_moderation.queue(db)
+
+
+# Remove (shown as "[removed]", replies under it stay) or keep; the open reports close.
+@router.post(
+    "/commons-reports/{target_type}/{target_id}/decision",
+    response_model=CommonsModerationResult,
+)
+def commons_report_decision(
+    db: SessionDep,
+    admin: AdminDep,
+    target_type: Literal["thread", "reply"],
+    target_id: int,
+    body: CommonsModerationDecision,
+) -> CommonsModerationResult:
+    return commons_moderation.decide(db, admin, target_type, target_id, body)

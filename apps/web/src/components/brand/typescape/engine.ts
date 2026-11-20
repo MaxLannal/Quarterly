@@ -45,6 +45,10 @@ export interface EngineOptions {
   words: string[];
   reducedMotion: boolean;
   onOpen: (code: string) => void;
+  /** "paper": maroon and ink on white; "night": light titles glowing on a GradientArt panel. */
+  theme: "paper" | "night";
+  /** How large the figure is drawn relative to its canvas (a panel frames it: about 1.5). */
+  zoom: number;
 }
 
 type RGB = readonly [number, number, number];
@@ -62,6 +66,16 @@ function mix(a: RGB, b: RGB, t: number): RGB {
 function toneColor(tone: number): RGB {
   if (tone <= 1) return mix(INK, MAROON, Math.max(0, tone));
   return mix(MAROON, GLASS, Math.min(1, tone - 1));
+}
+
+const SNOW: RGB = [255, 244, 240];
+const PEACH: RGB = [255, 196, 170];
+const CORAL: RGB = [255, 138, 120];
+
+/** On the night panel: white for the stone, peach and coral for the glowing glass. */
+function nightColor(tone: number): RGB {
+  if (tone <= 1) return mix(SNOW, PEACH, Math.max(0, tone));
+  return mix(PEACH, CORAL, Math.min(1, tone - 1));
 }
 
 /** A small seeded shuffle, so each shape has its own order of titles. */
@@ -172,7 +186,8 @@ export class TypeScapeEngine {
       c.font = this.font;
       c.textBaseline = "alphabetic";
     }
-    faint.fillStyle = "rgba(17,17,17,0.075)";
+    const night = this.opts.theme === "night";
+    faint.fillStyle = night ? "rgba(255,240,236,0.1)" : "rgba(17,17,17,0.075)";
     strong.fillStyle = "#ffffff";
     // A hairline stroke thickens the figure's letters a little against the faint ones.
     strong.strokeStyle = "#ffffff";
@@ -206,7 +221,7 @@ export class TypeScapeEngine {
 
   private frame(t: number): Frame {
     const narrow = this.w < 900;
-    return { w: this.w, h: this.h, cx: this.w * (narrow ? 0.5 : this.opts.focus), t };
+    return { w: this.w, h: this.h, cx: this.w * (narrow ? 0.5 : this.opts.focus), t, k: this.opts.zoom };
   }
 
   /** Samples the shape on the coarse grid: colour in RGB, strength in alpha. */
@@ -221,7 +236,7 @@ export class TypeScapeEngine {
       const y = r * CELL + CELL / 2;
       for (let c = 0; c < cols; c++) {
         const s = fn(c * CELL + CELL / 2, y, f);
-        const [cr, cg, cb] = toneColor(s.tone);
+        const [cr, cg, cb] = this.opts.theme === "night" ? nightColor(s.tone) : toneColor(s.tone);
         img.data[i] = cr;
         img.data[i + 1] = cg;
         img.data[i + 2] = cb;
@@ -268,7 +283,7 @@ export class TypeScapeEngine {
     ctx.beginPath();
     ctx.arc(p.x * d, p.y * d, LENS_R * d, 0, Math.PI * 2);
     ctx.clip();
-    ctx.fillStyle = "rgba(247,247,245,0.92)";
+    ctx.fillStyle = this.opts.theme === "night" ? "rgba(26,5,11,0.82)" : "rgba(255,255,255,0.92)";
     ctx.fillRect((p.x - LENS_R) * d, (p.y - LENS_R) * d, LENS_R * 2 * d, LENS_R * 2 * d);
     for (const layer of [this.faint, this.work]) {
       ctx.drawImage(
@@ -286,7 +301,7 @@ export class TypeScapeEngine {
     ctx.restore();
     ctx.beginPath();
     ctx.arc(p.x * d, p.y * d, LENS_R * d, 0, Math.PI * 2);
-    ctx.strokeStyle = "rgba(128,0,0,0.35)";
+    ctx.strokeStyle = this.opts.theme === "night" ? "rgba(255,190,170,0.55)" : "rgba(128,0,0,0.35)";
     ctx.lineWidth = 1 * d;
     ctx.stroke();
   }
@@ -300,9 +315,10 @@ export class TypeScapeEngine {
     ctx.save();
     ctx.setTransform(d, 0, 0, d, 0, 0);
     ctx.font = this.font;
-    ctx.fillStyle = "rgba(247,247,245,0.9)";
+    const night = this.opts.theme === "night";
+    ctx.fillStyle = night ? "rgba(26,5,11,0.9)" : "rgba(255,255,255,0.92)";
     ctx.fillRect(span.x0 + par - 2, row.y + parY - this.rowH + 3, span.x1 - span.x0 + 4, this.rowH);
-    ctx.fillStyle = "#111111";
+    ctx.fillStyle = night ? "#ffffff" : "#111111";
     ctx.fillText(span.course.title, span.x0 + par, row.y + parY);
     ctx.fillRect(span.x0 + par, row.y + parY + 2, span.x1 - span.x0, 1);
     ctx.restore();

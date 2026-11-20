@@ -197,7 +197,7 @@ export default function CommonsNewPage() {
               placeholder="MATH 15300 or MATH 16300 for a likely math major?"
               aria-invalid={tried && !!titleProblem ? true : undefined}
               aria-describedby={`${id}-title-hint`}
-              className={cn(controlClass, "min-h-14 font-display text-[22px] leading-snug sm:text-[24px]")}
+              className={cn(controlClass, "min-h-14 font-display text-[22px] font-semibold leading-snug tracking-[-0.02em] sm:text-[24px]")}
             />
             <p id={`${id}-title-hint`} className="text-caption text-muted">
               One question, as you would ask a friend who knows.

@@ -16,13 +16,13 @@ export function CommentCard({ item, note }: { item: CommentItem; note?: string }
   const id = useId();
   return (
     <article aria-labelledby={id} className="relative overflow-hidden rounded-xl border border-hairline bg-surface-card p-6">
-      <span aria-hidden="true" className="pointer-events-none absolute left-4 top-2 h-[84px] select-none overflow-hidden font-display text-[132px] leading-[1] text-primary/25">
+      <span aria-hidden="true" className="pointer-events-none absolute left-4 top-2 h-[84px] select-none overflow-hidden font-serif text-[132px] leading-[1] text-primary/25">
         &ldquo;
       </span>
       <h3 id={id} className="sr-only">
         A student on {item.course.code} {item.course.title}
       </h3>
-      <blockquote className="relative mt-12 font-display text-[21px] font-light italic leading-[1.35] text-ink">
+      <blockquote className="relative mt-12 font-serif text-[21px] font-light italic leading-[1.35] text-ink">
         <p>{item.snippet}</p>
       </blockquote>
       <Meta>
@@ -53,7 +53,7 @@ export function QuestionCard({ item, note }: { item: QuestionItem; note?: string
         </span>
         Can you help?
       </p>
-      <h3 id={id} className="mt-3 font-display text-[22px] font-light leading-tight text-ink">
+      <h3 id={id} className="mt-3 font-display text-[22px] font-bold leading-tight text-ink tracking-[-0.02em]">
         <Link to={item.href} className="rounded-xs hover:text-primary">
           {item.title}
         </Link>
@@ -93,7 +93,7 @@ export function ProgramCard({ item, note }: { item: ProgramItem; note?: string }
         ))}
       </svg>
       <p className="text-caption-uppercase uppercase text-muted">{PROGRAM_TYPE[item.type] ?? "Program"}</p>
-      <h3 id={id} className="mt-2 font-display text-[24px] font-light leading-tight text-ink">
+      <h3 id={id} className="mt-2 font-display text-[24px] font-bold leading-tight text-ink tracking-[-0.02em]">
         <Link to={`/programs/${encodeURIComponent(item.program_id)}`} className="rounded-xs hover:text-primary">
           {item.name}
         </Link>

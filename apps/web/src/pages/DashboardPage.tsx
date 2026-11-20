@@ -99,7 +99,7 @@ function Preview() {
       <div className="dash-preview grid gap-6 md:grid-cols-[1.3fr_1fr]">
         <div className="rounded-xxl bg-surface-dark p-6 text-on-dark">
           <p className="text-caption-uppercase uppercase text-on-dark-soft">Your guide</p>
-          <p className="mt-3 font-display text-[24px] font-light leading-snug">Welcome back. Last time you told me you love Greek tragedy and that you're heading toward quantum computing. Want to draft a few routes?</p>
+          <p className="mt-3 font-serif text-[24px] font-light leading-snug">Welcome back. Last time you told me you love Greek tragedy and that you're heading toward quantum computing. Want to draft a few routes?</p>
         </div>
         <div className="rounded-xxl border border-hairline bg-surface-card p-6">
           <p className="font-display text-display-sm text-ink">“A physicist with a poet's ear”</p>
