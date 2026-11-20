@@ -132,7 +132,7 @@ export function AuthPage({
   return (
     <section className="mx-auto grid w-full max-w-content gap-6 p-3 sm:p-5 lg:min-h-[760px] lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-8">
       <div className="flex flex-col justify-center px-3 py-10 sm:px-10 lg:py-16">
-        <div className="mx-auto flex w-full max-w-[27rem] flex-col gap-8">
+        <div className="mx-auto flex w-full max-w-[30rem] flex-col gap-8">
           <div className="flex flex-col items-center gap-4 text-center">
             <ArchMark />
             {eyebrow && <Eyebrow>{eyebrow}</Eyebrow>}

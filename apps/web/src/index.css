@@ -183,11 +183,12 @@
 
   /* Layout */
   --spacing-section: 96px;
-  --container-content: 1200px;
-  --container-reading: 720px;
-  --container-form: 448px;
+  /* Wider pages (Max, 2026-11-20: "widen everything horizontally in every page"). */
+  --container-content: 1560px;
+  --container-reading: 960px;
+  --container-form: 560px;
   /* The planner is a three-rail tool and needs more than the 1200px content width. */
-  --container-tool: 1600px;
+  --container-tool: 1920px;
 
   /* Motion (DESIGN.md "Motion"; docs/DESIGN-IMPLEMENTATION.md "FEEDBACK UI"): 150ms for hover
      and press, 200-250ms for menus, dialogs, drawers and sheets, ease-out entrances. Each
@@ -545,4 +546,15 @@
   to {
     transform: translate(-22px, -10px) scale(1.06);
   }
+}
+
+/* The menu bar (TopNav): frosted white glass the width of the page sheet, on the maroon frame. */
+.nav-glass {
+  background: rgb(255 255 255 / 0.84);
+  -webkit-backdrop-filter: blur(20px) saturate(170%);
+  backdrop-filter: blur(20px) saturate(170%);
+  border: 1px solid rgb(255 255 255 / 0.7);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.95),
+    0 14px 44px rgb(30 0 8 / 0.28);
 }

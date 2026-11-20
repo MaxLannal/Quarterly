@@ -641,3 +641,10 @@ Richard: where it conflicts with the sections above, this section describes what
   title, pill fields, an "or" rule, and the art panel.
 - **The homepage** keeps the chapel drawn with course titles, on the white sheet; its title is bold
   Inter with the Newsreader accent line.
+- **Wider pages** (Max, 2026-11-20, "widen everything horizontally in every page"): content 1560px
+  (was 1200), reading 960 (720), forms 560 (448), the planner 1920 (1600); the Ask conversation
+  1040px.
+- **The menu bar** is a frosted white glass bar the width of the page sheet, floating on the maroon
+  frame and sticky at the top: ink serif wordmark, 18px links, the current page a soft rose wash (not
+  solid red), a quiet filled search pill. On a phone the account shows as its avatar only, so the bar
+  keeps to two rows. (A dark "glass and flowing red" theme was tried and withdrawn the same day.)

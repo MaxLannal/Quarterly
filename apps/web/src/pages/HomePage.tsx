@@ -33,10 +33,10 @@ export default function HomePage() {
     <section
       ref={sectionRef}
       aria-label="Quarterly"
-      className="relative isolate flex h-[calc(100svh-88px)] min-h-[640px] overflow-hidden"
+      className="relative isolate flex h-[calc(100svh-100px)] min-h-[640px] overflow-hidden"
     >
       <CourseChapel sectionRef={sectionRef} uiRef={uiRef} />
-      <div className="mx-auto flex w-full max-w-[1600px] items-end px-4 pb-8 sm:px-8 sm:pb-14 chapel-side:items-center chapel-side:px-12 chapel-side:pb-0">
+      <div className="mx-auto flex w-full max-w-[1880px] items-end px-4 pb-8 sm:px-8 sm:pb-14 chapel-side:items-center chapel-side:px-12 chapel-side:pb-0">
         <div
           ref={uiRef}
           className="flex w-full max-w-[34rem] flex-col items-start gap-5 chapel-side:gap-7"

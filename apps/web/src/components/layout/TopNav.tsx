@@ -52,8 +52,8 @@ export function Wordmark({ className }: { className?: string }) {
     <Link
       to="/"
       className={cn(
-        // The serif wordmark, white on the night (docs/DESIGN.md "Maroon and night").
-        "flex min-h-11 shrink-0 items-center rounded-xs font-serif text-[28px] font-medium tracking-[-0.4px] text-on-night",
+        // The serif wordmark, in ink on the frosted bar (docs/DESIGN.md "Maroon and night").
+        "flex min-h-11 shrink-0 items-center rounded-xs font-serif text-[30px] font-medium tracking-[-0.4px] text-ink",
         className,
       )}
     >
@@ -89,9 +89,9 @@ function SearchBox() {
         className={cn(
           // A quiet filled field (D6, FEEDBACK "Minor design changes"): no outline until it is used;
           // the icon and placeholder say what it is. Focus: white, with the maroon ring.
-          // On the night: a translucent pill that turns white while it is used.
-          "peer min-h-12 w-full min-w-0 rounded-pill border border-on-night/15 bg-on-night/10 pl-12 pr-4 text-body-sm pointer-coarse:text-body-md text-on-night transition-colors duration-150 placeholder:text-on-night-muted",
-          "hover:bg-on-night/15 focus-visible:outline-none focus:border-on-night focus:bg-surface-card focus:text-ink focus:placeholder:text-muted focus:shadow-[0_0_0_4px_rgb(255_255_255/0.18)]",
+          // On the frosted bar: a quiet filled pill that turns white, with the maroon halo, in use.
+          "peer min-h-12 w-full min-w-0 rounded-pill border border-transparent bg-surface-strong/80 pl-12 pr-4 text-body-md text-ink transition-colors duration-150 placeholder:text-muted",
+          "hover:border-hairline hover:bg-surface-strong focus-visible:outline-none focus:border-primary focus:bg-surface-card focus:shadow-[0_0_0_4px_var(--color-primary-wash)]",
         )}
       />
       <Button
@@ -99,7 +99,7 @@ function SearchBox() {
         variant="ghost"
         size="icon"
         aria-label="Search"
-        className="absolute left-0 text-on-night-muted hover:bg-transparent hover:text-on-night peer-focus:text-muted"
+        className="absolute left-0 text-muted hover:bg-transparent hover:text-ink"
       >
         <SearchIcon />
       </Button>
@@ -119,9 +119,10 @@ function NavLinks({ vertical = false }: { vertical?: boolean }) {
             to={item.to}
             aria-current={current ? "page" : undefined}
             className={cn(
-              "flex min-h-11 items-center rounded-pill px-4 text-nav-link text-on-night-soft transition-colors hover:bg-on-night/10 hover:text-on-night",
+              // Larger words; the current page is a soft rose wash, not a solid red.
+              "flex min-h-11 items-center rounded-pill px-4 text-[18px] font-medium tracking-[-0.01em] text-body-strong transition-colors hover:bg-surface-strong hover:text-ink",
               vertical && "w-full md:w-auto",
-              current && "bg-on-night/15 text-on-night hover:bg-on-night/15",
+              current && "bg-primary-wash text-primary hover:bg-primary-wash",
             )}
           >
             {item.label}
@@ -149,25 +150,27 @@ export function TopNav() {
     <Link
       to="/me"
       aria-current={location.pathname === "/me" ? "page" : undefined}
-      className="flex min-h-11 items-center gap-2 rounded-pill bg-on-night/10 pl-1 pr-4 text-nav-link text-on-night hover:bg-on-night/15 aria-[current=page]:bg-on-night/20"
+      className="flex min-h-11 items-center gap-2 rounded-pill bg-surface-strong/80 pl-1 pr-1 text-[17px] font-medium text-ink hover:bg-surface-strong aria-[current=page]:bg-primary-wash aria-[current=page]:text-primary sm:pr-4"
     >
-      <Avatar name={session.account.username} className="bg-crimson text-on-night" />
-      {session.account.username}
+      <Avatar name={session.account.username} className="bg-primary-wash text-primary" />
+      {/* On a phone the avatar alone keeps the bar on one row; the name stays for screen readers. */}
+      <span className="max-sm:sr-only">{session.account.username}</span>
     </Link>
   ) : AUTH_PAGES.has(location.pathname) ? null : (
     // D11 AU-3: no "Log in" pill on the login and sign-up pages themselves.
-    <Button asChild variant="light">
+    <Button asChild variant="outline" className="bg-surface-card">
       <Link to={authLinks.login}>Log in</Link>
     </Button>
   );
 
   return (
-    <header className="text-on-night">
+    // A frosted white bar the width of the page sheet, floating on the maroon frame and staying at
+    // the top while the page scrolls (Max, 2026-11-20: "less out of place", larger words).
+    <header className="sticky top-0 z-30 px-2 pb-2 pt-2 sm:px-3 sm:pb-3 sm:pt-3 lg:px-5">
       <div
         className={cn(
-          "mx-auto flex w-full flex-wrap",
-          location.pathname === "/plan" ? "max-w-tool" : "max-w-content",
-          "items-center gap-x-2 px-4 sm:px-6 md:h-[76px] md:flex-nowrap lg:px-8",
+          "nav-glass mx-auto flex w-full flex-wrap rounded-[22px] sm:rounded-[26px]",
+          "items-center gap-x-2 px-3 sm:px-5 md:h-[72px] md:flex-nowrap lg:px-7",
         )}
       >
         <Wordmark className="mr-2 h-16 md:h-auto" />
@@ -177,7 +180,7 @@ export function TopNav() {
           className={cn(
             "items-center gap-1 md:flex",
             open
-              ? "order-last mb-3 flex w-full flex-col items-stretch border-t border-on-night/15 pt-3 md:order-none md:mb-0 md:w-auto md:flex-row md:items-center md:border-0 md:pt-0"
+              ? "order-last mb-3 flex w-full flex-col items-stretch border-t border-hairline pt-3 md:order-none md:mb-0 md:w-auto md:flex-row md:items-center md:border-0 md:pt-0"
               : "hidden",
           )}
         >
@@ -199,7 +202,7 @@ export function TopNav() {
           <Button
             variant="ghost"
             size="icon"
-            className="text-on-night hover:bg-on-night/10 active:bg-on-night/15 md:hidden"
+            className="text-ink md:hidden"
             aria-expanded={open}
             aria-controls={panelId}
             aria-label="Menu"

@@ -245,7 +245,7 @@ export default function FeedPage() {
 
           <div id={panelId} role="tabpanel" aria-labelledby={`feed-tab-${tab}`} className="mt-6 flex flex-col gap-6">
             {canFollow && !loading && items.length > 0 && (
-              <div className="max-w-[52rem] rounded-lg bg-canvas/80 py-1">
+              <div className="max-w-[68rem] rounded-lg bg-canvas/80 py-1">
                 <AiHeadline headline={headline} ai={headlineAi} pending={Boolean(first?.isLoading)} />
               </div>
             )}

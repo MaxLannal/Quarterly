@@ -140,7 +140,7 @@ export default function AskPage() {
           <div className="sticky top-4 max-h-[calc(100svh-32px)] overflow-y-auto py-8 pe-1">{list}</div>
         </aside>
         <div className="flex min-h-[calc(100svh-200px)] min-w-0 flex-1 flex-col">
-          <div className="mx-auto w-full max-w-[760px] flex-1 pb-6 pt-8">
+          <div className="mx-auto w-full max-w-[1040px] flex-1 pb-6 pt-8">
             <h2 className="sr-only">Conversation</h2>
             <TurnList
               turns={chat.active.turns}
@@ -149,7 +149,7 @@ export default function AskPage() {
               onFeedback={chat.setFeedback}
             />
           </div>
-          <div className="sticky bottom-0 z-10 mx-auto w-full max-w-[760px] bg-[linear-gradient(to_top,var(--color-canvas)_72%,transparent)] pb-[max(14px,env(safe-area-inset-bottom))] pt-6">
+          <div className="sticky bottom-0 z-10 mx-auto w-full max-w-[1040px] bg-[linear-gradient(to_top,var(--color-canvas)_72%,transparent)] pb-[max(14px,env(safe-area-inset-bottom))] pt-6">
             <Composer ref={composer} onSend={chat.send} onStop={chat.stop} running={chat.running} placeholder="Ask a follow-up" label="Your next question" />
             <p className="mt-2 hidden text-center text-caption text-muted sm:block">
               Enter to send, Shift+Enter for a new line. Answers are written by an AI and can be wrong.

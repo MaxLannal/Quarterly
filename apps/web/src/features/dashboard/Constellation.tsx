@@ -31,7 +31,7 @@ export function Constellation({ items, onRemove, center }: { items: string[]; on
   ];
   const height = outer.length ? 520 : 380;
   return (
-    <div className="dash-constellation relative mx-auto w-full max-w-[640px] overflow-hidden" style={{ height }}>
+    <div className="dash-constellation relative mx-auto w-full max-w-[860px] overflow-hidden" style={{ height }}>
       <div role="list" aria-label="Interests" className="absolute inset-0">
         {rings.map((ring, r) =>
           ring.items.length === 0 ? null : (
