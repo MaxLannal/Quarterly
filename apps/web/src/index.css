@@ -391,3 +391,9 @@
 .course-chapel-label[data-visible="true"] {
   opacity: 1;
 }
+
+/* The new pages' headlines (components/brand/TypeHero.tsx): emphasised words turn italic maroon. */
+.page-title em {
+  font-style: italic;
+  color: var(--color-primary);
+}

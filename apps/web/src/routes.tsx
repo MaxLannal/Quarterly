@@ -4,10 +4,16 @@ import AboutPage from "./pages/AboutPage";
 import AccountPage from "./pages/AccountPage";
 import AdminModerationPage from "./pages/AdminModerationPage";
 import AdminReviewPage from "./pages/AdminReviewPage";
+import AskPage from "./pages/AskPage";
+import CommonsNewPage from "./pages/CommonsNewPage";
+import CommonsPage from "./pages/CommonsPage";
+import CommonsThreadPage from "./pages/CommonsThreadPage";
 import ComparePlansPage from "./pages/ComparePlansPage";
 import CourseInstructorPage from "./pages/CourseInstructorPage";
 import CoursePage from "./pages/CoursePage";
 import CoursesPage from "./pages/CoursesPage";
+import DashboardPage from "./pages/DashboardPage";
+import FeedPage from "./pages/FeedPage";
 import GuidelinesPage from "./pages/GuidelinesPage";
 import HomePage from "./pages/HomePage";
 import InstructorPage from "./pages/InstructorPage";
@@ -29,6 +35,13 @@ export const routes: RouteObject[] = [
     element: <AppShell />,
     children: [
       { path: "/", element: <HomePage /> },
+      // Campus companion (docs/BEST-OF-UCHICAGO-PLAN.md)
+      { path: "/ask", element: <AskPage /> },
+      { path: "/me", element: <DashboardPage /> },
+      { path: "/feed", element: <FeedPage /> },
+      { path: "/forum", element: <CommonsPage /> },
+      { path: "/forum/new", element: <CommonsNewPage /> },
+      { path: "/forum/t/:id", element: <CommonsThreadPage /> },
       { path: "/onboarding", element: <OnboardingPage /> },
       { path: "/plan", element: <PlanPage /> },
       { path: "/plans", element: <PlansPage /> },

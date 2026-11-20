@@ -19,6 +19,10 @@ import {
   summary,
 } from "./data";
 import { agentHandlers, generateVariants } from "./agents";
+import { askHandlers } from "./ask";
+import { commonsHandlers } from "./commons";
+import { feedHandlers } from "./feed";
+import { profileHandlers } from "./profile";
 import { forumHandlers, resetForumMock } from "./forum";
 import { resetReviewMock, reviewHandlers } from "./review";
 import { mockVerify } from "./verify";
@@ -119,6 +123,11 @@ export function resetMockState() {
 // ------------------------------------------------------------------------------------------
 
 export const handlers = [
+  // Campus companion (docs/BEST-OF-UCHICAGO-PLAN.md): one file per work stream.
+  ...askHandlers,
+  ...profileHandlers,
+  ...feedHandlers,
+  ...commonsHandlers,
   ...forumHandlers, // forum, instructors and moderation: src/mocks/forum.ts (prompt 08)
   http.get(`${A}/health`, () =>
     json<S["HealthOut"]>({ status: "ok", db: true, redis: true }),

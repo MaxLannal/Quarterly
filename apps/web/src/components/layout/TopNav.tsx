@@ -17,6 +17,9 @@ const FORUM_PATH = /^\/courses\/[^/]+\/i\//;
 /** Each link is the current section for its own path and the pages that belong to it. */
 const NAV: { to: string; label: string; current: (path: string) => boolean }[] =
   [
+    // Campus companion (docs/BEST-OF-UCHICAGO-PLAN.md): the chatbot and the feed lead the bar.
+    { to: "/ask", label: "Ask", current: (p) => /^\/ask(\/|$)/.test(p) },
+    { to: "/feed", label: "Feed", current: (p) => /^\/feed(\/|$)/.test(p) },
     {
       to: "/plan",
       label: "Plan",
@@ -30,11 +33,13 @@ const NAV: { to: string; label: string; current: (path: string) => boolean }[] =
         (/^\/courses(\/|$)/.test(p) && !FORUM_PATH.test(p)) ||
         /^\/programs(\/|$)/.test(p),
     },
+    // The Forum opens the Commons (course questions with a bot answer); course x instructor
+    // reviews stay at /instructors, linked from the Commons header.
     {
-      to: "/instructors",
+      to: "/forum",
       label: "Forum",
       current: (p) =>
-        /^\/(instructors|guidelines)(\/|$)/.test(p) || FORUM_PATH.test(p),
+        /^\/(forum|instructors|guidelines)(\/|$)/.test(p) || FORUM_PATH.test(p),
     },
   ];
 
@@ -138,8 +143,9 @@ export function TopNav() {
 
   const account = session ? (
     <Link
-      to="/account"
-      className="flex min-h-11 items-center gap-2 rounded-pill pl-1 pr-3 text-nav-link text-ink hover:bg-surface-strong"
+      to="/me"
+      aria-current={location.pathname === "/me" ? "page" : undefined}
+      className="flex min-h-11 items-center gap-2 rounded-pill pl-1 pr-3 text-nav-link text-ink hover:bg-surface-strong aria-[current=page]:bg-primary-wash"
     >
       <Avatar name={session.account.username} />
       {session.account.username}
