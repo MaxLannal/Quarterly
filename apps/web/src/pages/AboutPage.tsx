@@ -38,16 +38,9 @@ export default function AboutPage() {
         .
       </p>
       <p>
-        The drawing of Rockefeller Chapel on the home page follows the time of
-        day and the weather in Hyde Park. Weather data by{" "}
-        <a
-          href="https://open-meteo.com/"
-          className={inlineLinkClass}
-          rel="noopener noreferrer"
-        >
-          Open-Meteo.com
-        </a>{" "}
-        (CC BY 4.0).
+        The drawing of Rockefeller Chapel on the home page is made of the
+        titles of courses in the 2026-27 College Catalog. Point at a title to
+        see which course it is.
       </p>
     </PageContainer>
   );

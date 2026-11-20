@@ -7,8 +7,10 @@ import { CloseIcon, MenuIcon, SearchIcon } from "@/components/ui/icons";
 import { useSession } from "@/lib/session";
 import { cn } from "@/lib/utils";
 
-/** Pages with their own course search box; the bar hides its copy there (D11 H-1, CS-1). */
-const PAGE_HAS_SEARCH = new Set(["/", "/courses"]);
+/** Pages with their own course search box; the bar hides its copy there (D11 H-1, CS-1). The
+ * homepage's bar asks questions instead (docs/BEST-OF-UCHICAGO-PLAN.md), so the top bar's course
+ * search shows there too, on wide screens only: on a phone the chapel keeps the first screen. */
+const PAGE_HAS_SEARCH = new Set(["/courses"]);
 const AUTH_PAGES = new Set(["/login", "/signup"]);
 
 /** A forum page or thread: /courses/:code/i/:instructor[/t/:id]. */
@@ -17,6 +19,11 @@ const FORUM_PATH = /^\/courses\/[^/]+\/i\//;
 /** Each link is the current section for its own path and the pages that belong to it. */
 const NAV: { to: string; label: string; current: (path: string) => boolean }[] =
   [
+    // Campus companion (docs/BEST-OF-UCHICAGO-PLAN.md): the student's dashboard, then the chatbot
+    // and the feed lead the bar.
+    { to: "/me", label: "Dashboard", current: (p) => /^\/me(\/|$)/.test(p) },
+    { to: "/ask", label: "Ask", current: (p) => /^\/ask(\/|$)/.test(p) },
+    { to: "/feed", label: "Feed", current: (p) => /^\/feed(\/|$)/.test(p) },
     {
       to: "/plan",
       label: "Plan",
@@ -30,11 +37,13 @@ const NAV: { to: string; label: string; current: (path: string) => boolean }[] =
         (/^\/courses(\/|$)/.test(p) && !FORUM_PATH.test(p)) ||
         /^\/programs(\/|$)/.test(p),
     },
+    // The Forum opens the Commons (course questions with a bot answer); course x instructor
+    // reviews stay at /instructors, linked from the Commons header.
     {
-      to: "/instructors",
+      to: "/forum",
       label: "Forum",
       current: (p) =>
-        /^\/(instructors|guidelines)(\/|$)/.test(p) || FORUM_PATH.test(p),
+        /^\/(forum|instructors|guidelines)(\/|$)/.test(p) || FORUM_PATH.test(p),
     },
   ];
 
@@ -45,7 +54,8 @@ export function Wordmark({ className }: { className?: string }) {
     <Link
       to="/"
       className={cn(
-        "flex min-h-11 shrink-0 items-center rounded-xs font-display text-display-sm font-medium tracking-[-0.24px] text-ink",
+        // The serif wordmark, in ink on the frosted bar (docs/DESIGN.md "Maroon and night").
+        "flex min-h-11 shrink-0 items-center rounded-xs font-serif text-[30px] font-medium tracking-[-0.4px] text-ink",
         className,
       )}
     >
@@ -81,8 +91,9 @@ function SearchBox() {
         className={cn(
           // A quiet filled field (D6, FEEDBACK "Minor design changes"): no outline until it is used;
           // the icon and placeholder say what it is. Focus: white, with the maroon ring.
-          "min-h-11 w-full min-w-0 rounded-pill border border-transparent bg-surface-strong pl-11 pr-4 text-body-sm pointer-coarse:text-body-md text-ink transition-colors duration-150 placeholder:text-muted",
-          "hover:bg-hairline-soft hover:border-hairline focus-visible:outline-none focus:border-primary focus:bg-surface-card focus:shadow-[inset_0_0_0_1px_var(--color-primary)]",
+          // On the frosted bar: a quiet filled pill that turns white, with the maroon halo, in use.
+          "peer min-h-12 w-full min-w-0 rounded-pill border border-transparent bg-surface-strong/80 pl-12 pr-4 text-body-md text-ink transition-colors duration-150 placeholder:text-muted",
+          "hover:border-hairline hover:bg-surface-strong focus-visible:outline-none focus:border-primary focus:bg-surface-card focus:shadow-[0_0_0_4px_var(--color-primary-wash)]",
         )}
       />
       <Button
@@ -110,9 +121,10 @@ function NavLinks({ vertical = false }: { vertical?: boolean }) {
             to={item.to}
             aria-current={current ? "page" : undefined}
             className={cn(
-              "flex min-h-11 items-center rounded-pill px-4 text-nav-link text-ink transition-colors hover:bg-surface-strong",
+              // Larger words; the current page is a soft rose wash, not a solid red.
+              "flex min-h-11 items-center rounded-pill px-4 text-[18px] font-medium tracking-[-0.01em] text-body-strong transition-colors hover:bg-surface-strong hover:text-ink md:px-2.5 xl:px-4",
               vertical && "w-full md:w-auto",
-              current && "bg-primary-wash hover:bg-primary-wash",
+              current && "bg-primary-wash text-primary hover:bg-primary-wash",
             )}
           >
             {item.label}
@@ -138,26 +150,29 @@ export function TopNav() {
 
   const account = session ? (
     <Link
-      to="/account"
-      className="flex min-h-11 items-center gap-2 rounded-pill pl-1 pr-3 text-nav-link text-ink hover:bg-surface-strong"
+      to="/me"
+      aria-current={location.pathname === "/me" ? "page" : undefined}
+      className="flex min-h-11 items-center gap-2 rounded-pill bg-surface-strong/80 pl-1 pr-1 text-[17px] font-medium text-ink hover:bg-surface-strong aria-[current=page]:bg-primary-wash aria-[current=page]:text-primary lg:pr-4"
     >
-      <Avatar name={session.account.username} />
-      {session.account.username}
+      <Avatar name={session.account.username} className="bg-primary-wash text-primary" />
+      {/* Below wide screens the avatar alone keeps the bar on one row; the name stays for screen readers. */}
+      <span className="max-lg:sr-only">{session.account.username}</span>
     </Link>
   ) : AUTH_PAGES.has(location.pathname) ? null : (
     // D11 AU-3: no "Log in" pill on the login and sign-up pages themselves.
-    <Button asChild variant="outline">
+    <Button asChild variant="outline" className="bg-surface-card">
       <Link to={authLinks.login}>Log in</Link>
     </Button>
   );
 
   return (
-    <header className="border-b border-hairline bg-canvas">
+    // A frosted white bar the width of the page sheet, floating on the maroon frame and staying at
+    // the top while the page scrolls (Max, 2026-11-20: "less out of place", larger words).
+    <header className="sticky top-0 z-30 px-2 pb-2 pt-2 sm:px-3 sm:pb-3 sm:pt-3 lg:px-5">
       <div
         className={cn(
-          "mx-auto flex w-full flex-wrap",
-          location.pathname === "/plan" ? "max-w-tool" : "max-w-content",
-          "items-center gap-x-2 px-4 sm:px-6 md:h-16 md:flex-nowrap lg:px-8",
+          "nav-glass mx-auto flex w-full flex-wrap rounded-[22px] sm:rounded-[26px]",
+          "items-center gap-x-2 px-3 sm:px-5 md:min-h-[72px] lg:h-[72px] lg:flex-nowrap lg:px-7",
         )}
       >
         <Wordmark className="mr-2 h-16 md:h-auto" />
@@ -175,16 +190,22 @@ export function TopNav() {
         </nav>
         {/* D11 H-1/CS-1: home and course search have their own search box; one is enough. */}
         {!PAGE_HAS_SEARCH.has(location.pathname) && (
-          <div className="order-1 w-full pb-3 md:order-none md:ml-auto md:w-auto md:max-w-[17rem] md:flex-1 md:pb-0">
+          <div
+            className={cn(
+              // Its own row below the links until the bar is wide enough for six links and a search.
+              "order-1 w-full pb-3 lg:order-none lg:ml-auto lg:w-auto lg:max-w-[17rem] lg:flex-1 lg:pb-0",
+              location.pathname === "/" && "max-lg:hidden",
+            )}
+          >
             <SearchBox />
           </div>
         )}
-        <div className="ml-auto flex items-center gap-1 md:ml-2">
+        <div className="ml-auto flex items-center gap-1 lg:ml-2">
           {account}
           <Button
             variant="ghost"
             size="icon"
-            className="md:hidden"
+            className="text-ink md:hidden"
             aria-expanded={open}
             aria-controls={panelId}
             aria-label="Menu"

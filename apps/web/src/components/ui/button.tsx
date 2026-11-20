@@ -4,11 +4,12 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 
 /*
- * DESIGN.md buttons: pills, `button` type, 40px tall with 10x20px padding.
+ * DESIGN.md buttons: pills, `button` type. Redesign 2026-11-20 ("Maroon and night"): bigger, like
+ * the reference's Login pill: 46px tall inside a 52px box, 16px semibold.
  *
- * Accessibility keeps a 44px target: the element is 44px tall and draws its pill inside a
- * transparent border (`bg-clip-padding`), so the visible pill is 40px (32px for `sm`) while the
- * hit area and the bounding box stay 44px. Outline pills draw their 1px line as an inset shadow,
+ * Accessibility keeps a generous target: the element is 52px tall and draws its pill inside a
+ * transparent border (`bg-clip-padding`), so the visible pill is 46px (36px for `sm`, in a 44px
+ * box) while the hit area and the bounding box stay larger. Outline pills draw their 1px line as an inset shadow,
  * which sits inside that transparent border. The focus ring is pulled in by the same amount, so
  * it reads as DESIGN.md's "2px ring, 2px offset" around the visible pill.
  */
@@ -36,14 +37,19 @@ export const buttonVariants = cva(
           "bg-transparent text-error shadow-[inset_0_0_0_1px_var(--color-hairline-strong)] hover:bg-error-wash active:bg-error-wash",
         /** link-inline as a button: maroon, underlined. */
         link: "rounded-xs bg-transparent text-primary underline underline-offset-4 hover:text-primary-hover",
+        /** On the night background: a white pill with maroon text. */
+        light: "bg-on-night text-primary hover:bg-on-night-soft active:bg-on-night-soft",
+        /** On the night background: a clear pill with a soft white line. */
+        night:
+          "bg-transparent text-on-night shadow-[inset_0_0_0_1px_rgb(255_255_255/0.35)] hover:bg-on-night/10 active:bg-on-night/15",
       },
       size: {
-        /** 40px pill in a 44px box. */
-        md: "min-h-11 border-2 px-[18px] focus-visible:outline-offset-0",
-        /** 32px pill in a 44px box (chips, dense rows). */
-        sm: "min-h-11 border-[6px] px-[6px] text-caption font-medium focus-visible:outline-offset-[-4px]",
-        /** 40px circle in a 44px box. */
-        icon: "size-11 border-2 p-0 focus-visible:outline-offset-0",
+        /** 46px pill in a 52px box. */
+        md: "min-h-[52px] border-[3px] px-6 focus-visible:outline-offset-[-1px]",
+        /** 36px pill in a 44px box (chips, dense rows). */
+        sm: "min-h-11 border-4 px-3 text-caption font-semibold focus-visible:outline-offset-[-2px]",
+        /** 44px circle in a 48px box. */
+        icon: "size-12 border-2 p-0 focus-visible:outline-offset-0",
       },
     },
     compoundVariants: [{ variant: "link", size: ["md", "sm"], class: "px-1" }],

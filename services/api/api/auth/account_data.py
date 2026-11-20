@@ -100,6 +100,9 @@ def delete_account(db: Session, account: m.Account, posts: Literal["delete", "ke
         )
         db.execute(sa.delete(m.Pseudonym).where(m.Pseudonym.author_ref.in_(refs)))
     from api.agents.chat import forget_chats
+    from api.commons.account import forget_commons
 
     forget_chats(db, list(db.scalars(sa.select(m.Plan.id).where(m.Plan.account_id == account.id))))
+    # The Commons uses its own per-thread refs; the profile and routes go by FK cascade.
+    forget_commons(db, account.id, posts)
     db.delete(account)

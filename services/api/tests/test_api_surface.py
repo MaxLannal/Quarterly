@@ -73,6 +73,41 @@ EXPECTED = {
     ("post", "/admin/moderation/{target_type}/{target_id}/end-suspension"),
     # homepage scene (FEEDBACK "ASCII Scene")
     ("get", "/weather"),
+    # campus companion (docs/BEST-OF-UCHICAGO-PLAN.md) -- ask
+    ("post", "/agents/ask"),
+    ("get", "/me/updates"),
+    ("post", "/me/updates/seen"),
+    # -- me (dashboard)
+    ("get", "/me/profile"),
+    ("patch", "/me/profile"),
+    ("post", "/agents/interview"),
+    ("get", "/me/routes"),
+    ("post", "/me/routes"),
+    ("patch", "/me/routes/{route_id}"),
+    ("delete", "/me/routes/{route_id}"),
+    ("post", "/agents/routes"),
+    # -- feed
+    ("get", "/feed"),
+    ("get", "/feed/categories"),
+    ("post", "/agents/feed-notes"),
+    # -- commons
+    ("get", "/commons/threads"),
+    ("post", "/commons/threads"),
+    ("get", "/commons/threads/{thread_id}"),
+    ("patch", "/commons/threads/{thread_id}"),
+    ("delete", "/commons/threads/{thread_id}"),
+    ("post", "/commons/threads/{thread_id}/replies"),
+    ("patch", "/commons/replies/{reply_id}"),
+    ("delete", "/commons/replies/{reply_id}"),
+    ("post", "/commons/votes"),
+    ("post", "/commons/threads/{thread_id}/accept"),
+    ("post", "/commons/threads/{thread_id}/bot"),
+    ("post", "/commons/threads/{thread_id}/typing"),
+    ("get", "/commons/threads/{thread_id}/presence"),
+    ("post", "/commons/threads/{thread_id}/follow"),
+    ("post", "/commons/reports"),
+    ("get", "/admin/commons-reports"),
+    ("post", "/admin/commons-reports/{target_type}/{target_id}/decision"),
 }
 
 PLAN = {"catalog_year": "2026-27", "entry_term": "2026-AU"}

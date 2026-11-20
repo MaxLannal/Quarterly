@@ -7,7 +7,7 @@ import LoginPage from "@/pages/LoginPage";
 import PrivacyPage from "@/pages/PrivacyPage";
 import SignupPage from "@/pages/SignupPage";
 import type { SessionOut } from "./api";
-import { resetSession } from "./session";
+import { forgetPersonalDevice, resetSession } from "./session";
 
 interface Call {
   method: string;
@@ -330,5 +330,21 @@ describe("privacy", () => {
     expect(within(table).getByText(/by anyone with access to the database/)).toBeInTheDocument();
     expect(screen.getByText(/has both the database and the server key can link a post to/)).toBeInTheDocument();
     expect(screen.getByText(/pseudonymous, not anonymous to the people who run Quarterly/)).toBeInTheDocument();
+  });
+});
+
+describe("logging out on a shared computer", () => {
+  it("forgets the companion's conversations, drafts and feed choices, but keeps plans", () => {
+    localStorage.setItem("quarterly.ask.v1", "[]");
+    localStorage.setItem("quarterly.companion.v1", "[]");
+    localStorage.setItem("quarterly.commons.draft.reply-1", "half an answer");
+    localStorage.setItem("quarterly.feed.saved", "[]");
+    localStorage.setItem("quarterly.plans.v1", "{}");
+    forgetPersonalDevice();
+    expect(localStorage.getItem("quarterly.ask.v1")).toBeNull();
+    expect(localStorage.getItem("quarterly.companion.v1")).toBeNull();
+    expect(localStorage.getItem("quarterly.commons.draft.reply-1")).toBeNull();
+    expect(localStorage.getItem("quarterly.feed.saved")).toBeNull();
+    expect(localStorage.getItem("quarterly.plans.v1")).toBe("{}");
   });
 });

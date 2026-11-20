@@ -20,7 +20,8 @@ export function parseSseChunk(buffer: string): { events: string[]; rest: string 
   return { events, rest };
 }
 
-async function* readEvents(stream: ReadableStream<Uint8Array>): AsyncGenerator<AgentEvent> {
+/** Reads a text/event-stream body as JSON events of type `T` (any SSE endpoint's own union). */
+export async function* readSse<T>(stream: ReadableStream<Uint8Array>): AsyncGenerator<T> {
   const reader = stream.getReader();
   const decoder = new TextDecoder();
   let buffer = "";
@@ -29,12 +30,17 @@ async function* readEvents(stream: ReadableStream<Uint8Array>): AsyncGenerator<A
     buffer += done ? "\n\n" : decoder.decode(value, { stream: true });
     const { events, rest } = parseSseChunk(buffer);
     buffer = rest;
-    for (const raw of events) yield JSON.parse(raw) as AgentEvent;
+    for (const raw of events) yield JSON.parse(raw) as T;
     if (done) return;
   }
 }
 
-function checkStream(response: Response, stream: ReadableStream<Uint8Array> | null | undefined) {
+async function* readEvents(stream: ReadableStream<Uint8Array>): AsyncGenerator<AgentEvent> {
+  yield* readSse<AgentEvent>(stream);
+}
+
+/** The body of a streamed response, or the error the request failed with. */
+export function checkStream(response: Response, stream: ReadableStream<Uint8Array> | null | undefined) {
   if (response.status === 501) throw new NotAvailableError();
   if (!response.ok || !stream) throw new ApiError(response.status, `Request failed (${response.status})`);
   return stream;

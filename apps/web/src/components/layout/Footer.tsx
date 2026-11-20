@@ -8,6 +8,7 @@ const COLUMNS: { title: string; links: { to: string; label: string }[] }[] = [
     links: [
       { to: "/plan", label: "Planner" },
       { to: "/plans", label: "My plans" },
+      { to: "/me", label: "Your dashboard" },
     ],
   },
   {
@@ -15,18 +16,21 @@ const COLUMNS: { title: string; links: { to: string; label: string }[] }[] = [
     links: [
       { to: "/courses", label: "Course search" },
       { to: "/programs", label: "Program explorer" },
+      { to: "/feed", label: "The feed" },
     ],
   },
   {
     title: "Forum",
     links: [
-      { to: "/instructors", label: "Forum" },
+      { to: "/forum", label: "Questions" },
+      { to: "/instructors", label: "Course reviews" },
       { to: "/guidelines", label: "Community guidelines" },
     ],
   },
   {
     title: "Quarterly",
     links: [
+      { to: "/ask", label: "Ask Quarterly" },
       { to: "/about", label: "About Quarterly" },
       { to: "/privacy", label: "Privacy" },
     ],
@@ -45,7 +49,7 @@ export function Footer() {
   // Same width as the top bar: the planner's wider tool width (DF-2) on /plan, 1200px elsewhere.
   const wide = useLocation().pathname === "/plan";
   return (
-    <footer className="border-t border-hairline bg-canvas">
+    <footer className="text-on-night">
       <div
         className={cn(
           "mx-auto grid w-full grid-cols-2 gap-x-6 gap-y-8 px-4 py-10 sm:px-6 md:grid-cols-[2fr_repeat(4,1fr)] md:gap-10 md:py-12 lg:px-8",
@@ -53,15 +57,15 @@ export function Footer() {
         )}
       >
         <div className="col-span-2 max-w-xs md:col-span-1">
-          <p className="font-display text-display-sm font-medium tracking-[-0.24px] text-ink">Quarterly</p>
-          <p className="mt-2 text-body-sm text-body">
+          <p className="font-serif text-[28px] font-medium tracking-[-0.4px] text-on-night">Quarterly</p>
+          <p className="mt-2 text-body-sm text-on-night-soft">
             Quarterly is a student project, not affiliated with the University
             of Chicago. It is not official advising.
           </p>
         </div>
         {COLUMNS.map((col) => (
           <nav key={col.title} aria-label={`${col.title} links`}>
-            <p className="text-caption-uppercase uppercase text-muted">
+            <p className="text-caption-uppercase uppercase text-on-night-muted">
               {col.title}
             </p>
             <ul className="mt-3 flex flex-col">
@@ -69,7 +73,7 @@ export function Footer() {
                 <li key={l.to}>
                   <Link
                     to={l.to}
-                    className="inline-flex min-h-8 items-center rounded-xs text-body-sm text-body hover:text-ink hover:underline pointer-coarse:min-h-11"
+                    className="inline-flex min-h-9 items-center rounded-xs text-body-sm text-on-night-soft hover:text-on-night hover:underline pointer-coarse:min-h-11"
                   >
                     {l.label}
                   </Link>

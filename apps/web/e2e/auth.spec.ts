@@ -90,7 +90,7 @@ test("log in, and reset a forgotten password", async ({ page }) => {
     "POST /auth/password-reset/finish": { status: 204 },
   });
   await page.goto("/login");
-  await expect(page.getByRole("heading", { level: 1, name: "Log in" })).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1, name: "Welcome back" })).toBeVisible();
   await expectAccessible(page);
 
   await page.getByRole("button", { name: "Forgot password?" }).click();
