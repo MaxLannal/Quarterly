@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+/* The homepage's controls sit beside the chapel on wide screens (CHAPEL_SIDE_QUERY in
+   features/home/chapel/layout.ts holds the same query, so the picture and the CSS agree). */
+@custom-variant chapel-side (@media (min-width: 900px) and (min-aspect-ratio: 6/5));
+
 /*
  * Design tokens from docs/DESIGN.md (YAML front matter + "Implementation tokens").
  * docs/DESIGN-IMPLEMENTATION.md maps every DESIGN.md part to the names below.
@@ -378,12 +382,12 @@
   }
 }
 
-/* The homepage chapel scene (FEEDBACK "ASCII Scene"): reserve its 3:2 space before the module
-   loads, so the page does not shift. */
-ascii-scene {
-  display: block;
-  width: 100%;
+/* The course code that follows the mouse over the homepage chapel (CourseChapel). */
+.course-chapel-label {
+  opacity: 0;
+  transition: opacity 150ms var(--ease-out);
+  will-change: transform;
 }
-ascii-scene:not(:defined) {
-  aspect-ratio: 3 / 2;
+.course-chapel-label[data-visible="true"] {
+  opacity: 1;
 }

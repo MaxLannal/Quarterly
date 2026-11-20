@@ -4,6 +4,7 @@ Each line records a change to `docs/SPEC.md` that came from Richard's feedback (
 
 | Date | Source | SPEC section | Change |
 | --- | --- | --- | --- |
+| 2026-11-19 | Chat request "Course-title chapel" (FEEDBACK, in progress, not committed) | Home page; About page | The homepage hero is Rockefeller Chapel filling the screen, drawn with 1,600 real course titles from the seed instead of ASCII characters, in maroon, black and white, with depth, drifting clouds and sunlight, and a pointer lens; a title opens its course. Replaces the ASCII scene: no time-of-day or weather versions, so the page no longer calls `GET /weather` (the endpoint stays) and the About page drops the Open-Meteo credit. |
 | 2026-11-14 | FEEDBACK "Generate Plan Failure" | A1 plan generator, steps 1 and 5 | Unknown credits or completed courses already in the plan stop generation with a "Fix these first" message; when every variant fails verification the student is told what the check found. |
 | 2026-11-14 | FEEDBACK "Locations of Summer Quarter" | Planner, the grid; term arithmetic | An academic year runs Summer, Autumn, Winter, Spring: the summer before autumn belongs to it (was: summer after spring). No summer after the last spring. |
 | 2026-11-14 | FEEDBACK "Number of Years" | Planner, the grid; `plan` table | Plans end at `graduation_term` (default: Spring of the last year from the entry level, so three years for a second-year transfer); add a year, remove the last year, graduate early in Autumn or Winter. Replaces "Y1–Y4, optional Y5". |
