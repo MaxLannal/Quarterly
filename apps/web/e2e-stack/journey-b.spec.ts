@@ -85,6 +85,9 @@ test("journey B: transfer student with CS BS + Math BS + Bx/MS sees what cannot 
   const phrase = (await proposal.innerText()).match(/Or type “(I agree to [^”]+)”/)?.[1];
   expect(phrase, "the card shows the typed confirmation sentence").toBeTruthy();
   await input.fill(phrase!);
+  // The panel drops a message sent while the previous reply still streams (Send stays disabled
+  // until it ends); the card can show before that (integration run 2026-11-24).
+  await expect(sheet.getByRole("button", { name: "Send", exact: true })).toBeEnabled();
   await input.press("Enter");
   await expect(proposal).toContainText("Applied.");
   await expect(card(page, "MATH 20700")).toBeAttached();
