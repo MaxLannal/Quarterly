@@ -26,6 +26,21 @@ Write down anything you notice: something broken, something confusing, or someth
 
 ## In progress
 
+### Course-title chapel on the homepage
+- Date: 2026-11-19
+- Where: Homepage (landing page)
+- What: I want you to design the opening page UI like this. Currently there is a Rockefeller Church in code. I want you to make this church very big such that it fills the screen. Then, take the course names and use those instead of code to illustrate the rockefeller church. Do this colorfully and have dynamic depth. When the mouse swipes over the letters, have a good visual effect that responds to the mouse and your fingers. (Asked in chat; not to be committed until the owner has seen it.)
+- Second note (2026-11-20): Make the effects less wave-like. The ball shaped view is good but uchicago should have a more solemn, serious hardcore feel. Less wave vibrations. Less color vibrations. Change the overall color tone to different shades of maroon red. Have some Natural sunlight shifts that changes the colors a bit, or some moving clouds, or moving people, even when the mouse is not moving. Animate it. Main color tone: maroon and black and white.
+- Third note (2026-11-20): Little too monotone, add some more dynamical depth in terms of maroon, white, and black. Add also some natural movement of dynamics or luster that is not too exaggerate for when mouse not landing.
+- Fourth note (2026-11-20): Still doesn't look very much like a building. the colors mix, especially black and maroon. Need to be lighter red at some parts, denser and dark red at others. Don't just create the shape. Create the depth. Also, build faster.
+- Status: committed on branch `feature/best-of-uchicago` in a28c853 (the patch as built), waiting for the owner's OK. Since then (2026-11-20, `docs/BEST-OF-UCHICAGO-PLAN.md`) the wordmark headline became the title "The Best of UChicago, within your reach.", the search box became a question bar for the Ask chatbot, and "Browse reviews" became "Explore the feed"; the chapel itself is unchanged.
+  - The first screen is Rockefeller Chapel, as large as the screen allows (beside the wordmark, search and buttons on wide screens; the front with its spires fills a phone), drawn with 1,600 real course titles from `data/seed/2026-27` set in rows like courses of stone. The chapel is in reds only, evenly spaced in lightness from a dense dark red through the site's maroon to a pale rose, so it never mixes with black: recesses and the great window are dark red in heavy type, walls in half light maroon, sunlit walls light red in light type. Its brightness is ranked across all the stone (so shadow, half light and sun each get their share) and its detail sharpened, so windows, buttresses and spires stand out. The front, the nave and the tower each have their own depth and light, the corners where they meet fall into shadow, and the stone darkens near the ground. Trees and lawn are black and greys, the sky faint grey with white clouds.
+  - Depth: the letters shift with the pointer by how near they are (the sky stays, the lawn moves most) and sway slowly when no mouse is there; on load the letters settle into place from the ground up in under a second, and the picture starts loading as soon as the page opens.
+  - It moves on its own, slowly: the sun swings across the sky over about two minutes, so the carving of the stone is lit from one side and then the other (lit faces towards white, faces turned away towards black); white clouds with soft rims drift across the sky and their shadows cross the chapel; every 26 seconds a soft glint of light passes over the stone; the great window glows and dims a little. The lawn darkens to black towards the viewer and what is far is a little paler, so maroon, white and black also carry the depth.
+  - Mouse and fingers: the letters under the pointer lift and magnify like a glass ball, with a short wake behind it (no ripples, no rainbow colours, after the owner's second note: "more solemn, serious"). The title under the mouse turns ink with a label of its code and full title; a click opens that course. Under reduced motion, and on a computer without a graphics processor, it is a still picture (the label and the click still work).
+  - Replaces the ASCII scene, so the time-of-day and weather versions, the swaying trees, shooting stars and birds are gone, and the About page no longer credits Open-Meteo. The drawing still comes from the watermarked demo photo (OPEN_QUESTIONS DF-A1).
+  - Proof: `layout.test.ts` (14), `test_course_chapel_data.py` (2), e2e `course-chapel.spec.ts` (5).
+
 ## Later
 
 ### Follow-ups noticed while working (suggested by Claude, 2026-11-16; not yet asked for)
@@ -33,6 +48,11 @@ Write down anything you notice: something broken, something confusing, or someth
 - Design review deferrals (`docs/DESIGN-REVIEW.md`): PL-4 merge the planner's panel buttons into one control; AD-2 advisor as a side panel on desktop; CS-3 department and Core lists in course search; FO-4 naming of untitled reviews; PL-6 an explanation of "Difficulty"; A-4 the 401 on the logged-out session check.
 - Journey C's preference check (major courses mostly in years 2-3) sometimes fails because the generator stops at its time limit (`docs/OPEN_QUESTIONS.md` E2E-2).
 - Before launch: replace the watermarked demo photo behind the homepage chapel; Open-Meteo is free for non-commercial use only (`docs/OPEN_QUESTIONS.md` DF-A1).
+
+### Follow-ups noticed while doing GitHub issues #15 and #19 (suggested by Claude, 2026-11-24; not yet asked for)
+- No page lets a student follow a course any more (the routes and the Feed's buttons are gone), but the Catalog's spotlights and the dashboard's "What's new" still use followed courses. A "Follow" button on the course page would bring that back.
+- Nothing marks "What's new" as seen since the companion went (`POST /me/updates/seen` has no caller), so its "New" dots show for a week. Issue #16 decides whether the card stays.
+- The README's screenshots of the homepage and the Feed show removed parts (the question bar, the Feed); retake them after the integration run.
 
 ## Done
 

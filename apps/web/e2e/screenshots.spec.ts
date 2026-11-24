@@ -81,7 +81,7 @@ const SHOTS: Shot[] = [
     phoneOnly: true,
     run: async (p) => {
       await p.goto("/courses");
-      await h1(p, "Course search");
+      await h1(p, "Catalog");
       await p.getByRole("button", { name: "Menu" }).click();
       await expect(
         p
@@ -217,7 +217,7 @@ const SHOTS: Shot[] = [
   },
   {
     name: "courses",
-    run: async (p) => (await p.goto("/courses"), h1(p, "Course search")),
+    run: async (p) => (await p.goto("/courses"), h1(p, "Catalog")),
   },
   {
     name: "course",

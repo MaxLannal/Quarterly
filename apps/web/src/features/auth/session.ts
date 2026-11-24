@@ -31,6 +31,29 @@ export function signedOut() {
   set({ status: "anonymous" });
 }
 
+/** What the campus-companion features keep on this device (docs/BEST-OF-UCHICAGO-PLAN.md): Commons
+ * drafts, and what the removed Ask page, companion and Feed left (issues #15 and #19: conversations
+ * and feed choices; still cleared, so an old copy never outlives a logout). Plans are not here: they are
+ * imported into the account on login. */
+const PERSONAL_PREFIXES = [
+  "quarterly.ask.",
+  "quarterly.companion.",
+  "quarterly.commons.draft.",
+  "quarterly.feed.",
+];
+
+/** Clears that data when the student logs out or deletes the account, so the next person on a
+ * shared computer does not read their conversations. */
+export function forgetPersonalDevice() {
+  try {
+    for (const key of Object.keys(window.localStorage)) {
+      if (PERSONAL_PREFIXES.some((p) => key.startsWith(p))) window.localStorage.removeItem(key);
+    }
+  } catch {
+    // storage blocked (private mode): nothing was kept
+  }
+}
+
 /** Asks the API who is logged in (once per page load unless `force`). */
 export function loadSession(force = false): Promise<void> {
   if (loading && !force) return loading;

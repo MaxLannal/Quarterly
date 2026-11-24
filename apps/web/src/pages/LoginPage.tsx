@@ -6,6 +6,7 @@ import { api, attempt } from "@/features/auth/api";
 import { signedIn } from "@/features/auth/session";
 import {
   AuthPage,
+  OrDivider,
   CODE_PATTERN,
   FormError,
   linkClass,
@@ -119,13 +120,14 @@ export default function LoginPage() {
   }
 
   return (
-    <AuthPage title="Log in">
+    <AuthPage title="Welcome back" subline="Please enter your details to log in.">
       <form onSubmit={onSubmit} noValidate className="flex flex-col gap-5">
         {view.name === "login" ? (
           <>
             <Notice message={notice} />
             <TextField
               label="Username or email"
+              icon="mail"
               name="username"
               autoComplete="username"
               autoCapitalize="none"
@@ -159,6 +161,7 @@ export default function LoginPage() {
             <StepHeading>Reset your password</StepHeading>
             <TextField
               label="Email address"
+              icon="mail"
               type="email"
               name="email"
               autoComplete="email"
@@ -225,7 +228,8 @@ export default function LoginPage() {
           </>
         ) : null}
       </form>
-      <p className="border-t border-hairline pt-4 text-body-sm text-body">
+      <OrDivider />
+      <p className="text-center text-body-sm text-body">
         New here?{" "}
         <Link to={keepNext("/signup", params.get("next"))} className={linkClass}>
           Create an account

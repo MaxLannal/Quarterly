@@ -1,10 +1,21 @@
 import { expect, test } from "@playwright/test";
+import { logIn } from "./helpers";
 
-test("course search lists nothing until a search; one centered field", async ({ page }) => {
+test("the Catalog shows browse rows until a search; one centered field (issue #19)", async ({ page }) => {
   await page.goto("/courses");
-  await expect(page.getByRole("heading", { level: 1, name: "Course search" })).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1, name: "Catalog" })).toBeVisible();
   await expect(page.getByRole("navigation", { name: "Courses or programs" }).getByRole("link", { name: "Courses" })).toHaveAttribute("aria-current", "page");
   await expect(page.getByRole("region", { name: "Results" })).toHaveCount(0);
+  // Before a search: new courses, spotlights from the old Feed, and what students say.
+  const fresh = page.getByRole("region", { name: "Newly released courses" });
+  await expect(fresh.getByRole("link", { name: /Fake Introduction II/ })).toHaveAttribute("href", "/courses/TEST%2010100");
+  await fresh.getByText("Why it is new").click();
+  await expect(fresh.getByText("Fake quote: TEST 10100 is new this year.")).toBeVisible();
+  await expect(fresh.getByRole("link", { name: "Source" })).toHaveAttribute("href", "https://example.invalid/fake-new-courses");
+  const spotlights = page.getByRole("region", { name: "Course spotlights" });
+  await expect(spotlights.getByRole("link", { name: "Fake Introduction I", exact: true })).toHaveAttribute("href", "/courses/TEST%2010000");
+  await expect(page.getByRole("region", { name: "What students say" }).getByText(/first course in Autumn/)).toBeVisible();
+  await expect(page.getByText("to see student ratings.")).toBeVisible(); // logged out: no ratings
   await expect(page.getByLabel("Quarter offered")).toBeHidden(); // folded under "More filters"
   await page.getByLabel("Code or title").fill("Fake Elective");
   await page.getByRole("form", { name: "Course filters" }).getByRole("button", { name: "Search", exact: true }).click();
@@ -20,7 +31,7 @@ test("course search: header search, filters, results", async ({ page }) => {
   await page.getByRole("searchbox", { name: "Search courses", exact: true }).fill("Fake Elective");
   await page.getByRole("button", { name: "Search", exact: true }).first().click();
   await expect(page).toHaveURL(/\/courses\?q=Fake%20Elective/);
-  await expect(page.getByRole("heading", { level: 1, name: "Course search" })).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1, name: "Catalog" })).toBeVisible();
   await expect(page.getByRole("status").filter({ hasText: "3 courses" })).toBeVisible();
 
   // FEEDBACK 2026-11-16: the extra filters sit under "More filters".
@@ -57,4 +68,26 @@ test("course page: prerequisites graph, offerings, attributes, add to plan", asy
 
   await page.goto("/courses/TEST%2099999");
   await expect(page.getByRole("heading", { level: 1, name: "Course not found" })).toBeVisible();
+});
+
+test("a logged-in student sees ratings on the rows and the results (issue #19)", async ({ page }) => {
+  await logIn(page);
+  await page.goto("/courses");
+  const spotlights = page.getByRole("region", { name: "Course spotlights" });
+  await expect(spotlights.getByText("4.2 / 5", { exact: true }).first()).toBeVisible();
+  await expect(page.getByRole("region", { name: "What students say" }).getByText(/hard but fair/)).toBeVisible();
+  await page.getByLabel("Code or title").fill("Fake Introduction");
+  await page.getByRole("form", { name: "Course filters" }).getByRole("button", { name: "Search", exact: true }).click();
+  const results = page.getByRole("region", { name: "Results" });
+  await expect(results.getByText("4.2 / 5", { exact: true }).first()).toBeVisible();
+  await expect(page.getByRole("region", { name: "Course spotlights" })).toHaveCount(0);
+});
+
+test("the old Feed opens the Catalog, and the homepage button says so (issue #19)", async ({ page }) => {
+  await page.goto("/feed");
+  await expect(page).toHaveURL(/\/courses$/);
+  await expect(page.getByRole("heading", { level: 1, name: "Catalog" })).toBeVisible();
+  await page.goto("/");
+  await page.getByRole("link", { name: "Explore the catalog" }).click();
+  await expect(page).toHaveURL(/\/courses$/);
 });

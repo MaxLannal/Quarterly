@@ -14,7 +14,14 @@ from llm_gateway.gateway import Gateway
 from llm_gateway.routing import load_routing
 from pydantic import SecretStr
 
-PROMPTS = ("a1_preferences", "a1_rationale", "a2_chat", "a2_scope")
+PROMPTS = (
+    "a1_preferences",
+    "a1_rationale",
+    "a2_chat",
+    "a2_scope",
+    "a9_commons_bot",
+    "a6_interview",
+)
 
 
 @pytest.mark.parametrize("name", PROMPTS)

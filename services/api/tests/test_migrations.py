@@ -57,6 +57,13 @@ SPEC_TABLES = {
     "forum_summary",
     # Accounts (decision 5)
     "account",
+    # Campus companion (docs/BEST-OF-UCHICAGO-PLAN.md)
+    "student_profile",
+    "commons_thread",
+    "commons_reply",
+    "commons_pseudonym",
+    "commons_vote",
+    "commons_report",
 }
 
 
@@ -113,6 +120,11 @@ def test_user_rows_have_day_level_dates_only(migrated_db_url: str) -> None:
         "review_rating",
         "chat_message",
         "review_item",
+        "student_profile",
+        "commons_thread",
+        "commons_reply",
+        "commons_vote",
+        "commons_report",
     ]
     for table in user_tables:
         for col in insp.get_columns(table):

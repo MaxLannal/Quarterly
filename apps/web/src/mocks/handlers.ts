@@ -19,6 +19,10 @@ import {
   summary,
 } from "./data";
 import { agentHandlers, generateVariants } from "./agents";
+import { resetUpdatesMock, updatesHandlers } from "./updates";
+import { commonsHandlers, resetCommonsMock } from "./commons";
+import { browseHandlers } from "./browse";
+import { profileHandlers, resetProfileMock } from "./profile";
 import { forumHandlers, resetForumMock } from "./forum";
 import { resetReviewMock, reviewHandlers } from "./review";
 import { mockVerify } from "./verify";
@@ -112,6 +116,9 @@ export function resetMockState() {
   setLoggedIn(false);
   resetForumMock();
   resetReviewMock();
+  resetUpdatesMock();
+  resetCommonsMock();
+  resetProfileMock();
 }
 
 // ------------------------------------------------------------------------------------------
@@ -119,6 +126,11 @@ export function resetMockState() {
 // ------------------------------------------------------------------------------------------
 
 export const handlers = [
+  // Campus companion (docs/BEST-OF-UCHICAGO-PLAN.md): one file per work stream.
+  ...updatesHandlers,
+  ...profileHandlers,
+  ...browseHandlers,
+  ...commonsHandlers,
   ...forumHandlers, // forum, instructors and moderation: src/mocks/forum.ts (prompt 08)
   http.get(`${A}/health`, () =>
     json<S["HealthOut"]>({ status: "ok", db: true, redis: true }),
@@ -315,6 +327,8 @@ export const handlers = [
       ? json<S["AccountExport"]>({
           account: MOCK_ACCOUNT,
           plans: [...plans.values()],
+          profile: {},
+          commons: {},
         })
       : unauthorized(),
   ),

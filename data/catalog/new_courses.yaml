@@ -1,0 +1,18 @@
+# Newly released courses for the Catalog page's "Newly released courses" row (GitHub issue #19,
+# decision D2). A person writes this list; an agent never adds a course here without a source.
+#
+# Each entry names a course of the catalog year below and the page that says the course is new,
+# with a verbatim quote from that page (CLAUDE.md: never invent catalog facts). A course that is
+# not in that catalog year is not shown. Example (fake, not a real course):
+#
+#   - code: ABCD 12345
+#     source:
+#       url: https://college.uchicago.edu/...
+#       quote: "ABCD 12345, a new course this year, ..."
+#       fetched: 2026-11-24
+#
+# The list is empty: no page in the seed says that a 2026-27 course is new
+# (docs/OPEN_QUESTIONS.md S19-N1). Once the database holds an earlier catalog year, the row also
+# shows the courses that year did not have, with no entry here.
+catalog_year: "2026-27"
+courses: []

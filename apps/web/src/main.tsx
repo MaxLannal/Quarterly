@@ -8,6 +8,8 @@ import "@fontsource/newsreader/300.css";
 // 400: the home wordmark (D2); 500: the top-bar wordmark (D4). FEEDBACK "Minor design changes".
 import "@fontsource/newsreader/400.css";
 import "@fontsource/newsreader/500.css";
+// 400 italic: the maroon accent words of the headlines (TypeHero, the homepage title).
+import "@fontsource/newsreader/400-italic.css";
 import "./index.css";
 import { routes } from "./routes";
 

@@ -612,3 +612,72 @@ Richard's FEEDBACK "Minor design changes" overrides the rules above in these pla
 - **Catalog switch.** Courses/Programs is a small segmented control: `surface-strong` track, the current side on a white pill with maroon text; the pill slides 200ms ease-out between sides (still under reduced motion).
 - **Top-bar search.** A filled `surface-strong` field without an outline until it is hovered or focused; the icon and placeholder identify it.
 - **Footer links.** 32px rows with a mouse; 44px targets on touch screens.
+
+## Maroon and night (Max, 2026-11-20; branch `feature/best-of-uchicago`)
+
+Requested with a reference login card ("Have words bigger and background colors maroon and black
+combined. Take inspiration from this and apply to every page and every detail"). Not yet confirmed by
+Richard: where it conflicts with the sections above, this section describes what is built now.
+
+- **The night.** Every page sits on a fixed maroon-and-black background (`body`, `index.css`): deep
+  maroon `#5c0a1d` to near black `#12040a`, with crimson light. The top bar and the footer live on it
+  in white (`on-night`, `on-night-soft`, `on-night-muted`); the wordmark stays Newsreader, white.
+- **The sheet.** Page content is one white sheet with large rounded corners (`rounded-sheet`, 44px;
+  28px on phones) and a deep shadow, like the reference's card. Notices that belong to a page sit
+  inside it.
+- **Bigger words.** Body 17px, small 16px, captions 15px, buttons and nav 16px. Headlines are bold
+  Inter (650-800, tight tracking, like "Welcome home"); their `<em>` words are Newsreader italic in
+  maroon ("within your reach.", "Ask *anything*"). Voices and quotes (the guide, student quotes, the
+  ticker, book covers) keep the serif.
+- **Pills.** Buttons are 46px pills in a 52px box, semibold; `light` and `night` variants for the
+  dark background. Inputs and selects are 52px pills (26px radius) with a soft maroon halo on focus;
+  email fields carry an envelope, password fields an eye that shows or hides the characters.
+- **Radii.** Cards 18-24px, panels 32px, art panels 36px (`rounded-art`).
+- **Art panels.** `GradientArt` (generated SVG: crimson and coral folds of light over maroon and
+  black, slowly drifting, still under reduced motion) is the reference's right panel. Page headers
+  (`TypeHero`) are split like the reference card: title and controls on the left, an art panel on the
+  right (on top on phones) with the page's TypeScape figure of real course titles glowing on it
+  (`theme="night"`). Sign-in and sign-up are the reference itself: a maroon arch emblem, a big bold
+  title, pill fields, an "or" rule, and the art panel.
+- **The homepage** keeps the chapel drawn with course titles, on the white sheet; its title is bold
+  Inter with the Newsreader accent line.
+- **Wider pages** (Max, 2026-11-20, "widen everything horizontally in every page"): content 1560px
+  (was 1200), reading 960 (720), forms 560 (448), the planner 1920 (1600); the Ask conversation
+  1040px (the Ask page was removed in issue #15, 2026-11-24).
+- **The menu bar** is a frosted white glass bar the width of the page sheet, floating on the maroon
+  frame and sticky at the top: ink serif wordmark, 18px links, the current page a soft rose wash (not
+  solid red), a quiet filled search pill. On a phone the account shows as its avatar only, so the bar
+  keeps to two rows. (A dark "glass and flowing red" theme was tried and withdrawn the same day.)
+- **Day and night on the homepage** (Max, 2026-11-20): a Day / Night switch at the top right of the
+  hero (remembered on the device). Everything is painted in the chapel's course titles by the shader,
+  with no separate layers and no enlarged type: two slim street lamps (about two letters wide)
+  flank the chapel by day and night (iron letters, a gold lantern by day); at night the sky's titles
+  turn a dim navy with a few twinkling gold star letters and a moon of gold letters, small snowflakes
+  drift down as bright letters, the stone is a deep moonlit blue, the lawn and paths are under snow,
+  and the lanterns glow orange, warming the snow and the letters near them. Texture comes from the
+  letters' own colour and transparency: drifting night clouds (darker, denser banks; thin clear
+  patches where the stars show; lavender edges near the moon), a darker zenith, moonlit and shadowed
+  carving on the side facing the moon, weathered patches in the stone, mottled trees, and snow
+  drifts. Reduced motion: a still night (no falling snow, no twinkle, the clouds stay put). The day
+  scene has the same kind of texture, gentler: soft grey cloud banks drifting across the sky with
+  thin clear patches and a deeper zenith, weathered patches and grain in the maroon stone (darker
+  low down, lighter at the spires), mottled trees and lawn, and transparency that varies with them.
+
+- **The dashboard (`/me`)** is a tight grid of panels the full width of the page sheet (12 columns,
+  12px gaps; 6 on tablets, one column on phones), with no orbit animations (the orrery header and
+  the orbiting interests were removed, Max 2026-11-20). Top left: the student (name and class year,
+  email, the portrait with its themes, class year and programs, "Talk with your guide" and "Draft my
+  routes", the completeness ring). Top right: the guide. Below: interests, research areas and
+  what's new; the humanities compass, career and horizons; workload and an "at a glance" panel;
+  then the routes, two side by side, each laid out for its own width. Issue #15 (2026-11-24)
+  removed "Draft my routes", the "at a glance" panel and the routes: workload now spans the row.
+- **The menu bar has four tabs** (issue #15, 2026-11-24): Dashboard, Planner, Catalog, Forum. The
+  homepage is not a tab (the wordmark links to it), and no page has the floating companion orb.
+- **The Catalog page** (`/courses`, issue #19, 2026-11-24) keeps the centred search and its
+  filters. Before a search, browse rows sit below it: "Newly released courses" (when any are
+  known), "Course spotlights" (the Feed's illustrated cards, without the flying words, the book
+  shelf, the AI note and the Save / Less buttons) and "What students say" (the Feed's quote cards).
+  Each row is a heading over cards that scroll sideways and snap, inside the page width. A rating
+  line (overall, difficulty, number of reviews) sits on each card and result for a logged-in
+  student; a logged-out visitor sees one "Log in to see student ratings" line under the search.
+  The Feed page and its floating words, ticker, focus chips and AI headline are gone.

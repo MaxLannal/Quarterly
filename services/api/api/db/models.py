@@ -633,3 +633,156 @@ class Account(Base):
     status: Mapped[str] = mapped_column(sa.String(16), server_default="active")
     suspended_until: Mapped[dt.date | None]
     created_day: Mapped[dt.date] = mapped_column(server_default=TODAY)
+
+
+# ------------------------------------------------- Campus companion (docs/BEST-OF-UCHICAGO-PLAN.md)
+
+
+class StudentProfile(Base):
+    """The dashboard's portrait of one student (`/me`). Keyed by the account like a plan: it is
+    the student's own data, exported with the account and deleted with it (cascade). The email is
+    never copied here (decision 5): the dashboard reads it from `account`."""
+
+    __tablename__ = "student_profile"
+    __table_args__ = (
+        sa.CheckConstraint(
+            "class_year IS NULL OR class_year BETWEEN 2020 AND 2040", name="class_year_range"
+        ),
+        sa.CheckConstraint(
+            "humanities_goal IS NULL OR humanities_goal IN ('pass', 'balance', 'enjoy', 'deep')",
+            name="humanities_goal",
+        ),
+        sa.CheckConstraint(
+            "workload IS NULL OR workload IN ('light', 'balanced', 'intense')", name="workload"
+        ),
+    )
+    account_id: Mapped[uuid.UUID] = mapped_column(
+        sa.ForeignKey("account.id", ondelete="CASCADE"), primary_key=True
+    )
+    class_year: Mapped[int | None] = mapped_column(sa.SmallInteger)
+    #: Program ids (program.id) the student is considering.
+    intended_programs: Mapped[list[str]] = _texts()
+    interests: Mapped[list[str]] = _texts()
+    research_areas: Mapped[list[str]] = _texts()
+    #: pass ("just get through the Core") | balance | enjoy (specific topics) | deep.
+    humanities_goal: Mapped[str | None] = mapped_column(sa.String(16))
+    humanities_topics: Mapped[list[str]] = _texts()
+    humanities_note: Mapped[str | None] = mapped_column(sa.Text)
+    career_plans: Mapped[str | None] = mapped_column(sa.Text)
+    career_paths: Mapped[list[str]] = _texts()
+    future_domains: Mapped[list[str]] = _texts()
+    constraints: Mapped[list[str]] = _texts()
+    workload: Mapped[str | None] = mapped_column(sa.String(16))
+    #: {headline, summary, themes: [str]}: written by the interviewer, kept by the student.
+    portrait: Mapped[dict[str, Any]] = mapped_column(JSONB, server_default="{}")
+    #: The interviewer's memory: {covered: [topic], turns: [{role, text}] (last 24, scrubbed)}.
+    interview: Mapped[dict[str, Any]] = mapped_column(JSONB, server_default="{}")
+    #: {threads: [commons_thread.id], courses: [course code]}.
+    follows: Mapped[dict[str, Any]] = mapped_column(JSONB, server_default="{}")
+    #: High-water marks of what the student has seen (/me/updates): {thread, reply, post, comment}.
+    updates_seen: Mapped[dict[str, Any]] = mapped_column(JSONB, server_default="{}")
+    created_day: Mapped[dt.date] = mapped_column(server_default=TODAY)
+    updated_day: Mapped[dt.date] = mapped_column(server_default=TODAY)
+
+
+class CommonsThread(Base):
+    """A question in the Commons (`/forum`), optionally about one course. Authors are stored as
+    `commons_ref(account_id, thread_id)` (api.commons), so posts on different threads cannot be
+    linked. `bot_state`: pending (no bot answer yet) | answered | failed | off."""
+
+    __tablename__ = "commons_thread"
+    __table_args__ = (
+        sa.CheckConstraint("status IN ('visible', 'removed', 'deleted')", name="status"),
+        sa.CheckConstraint(
+            "bot_state IN ('pending', 'answered', 'failed', 'off')", name="bot_state"
+        ),
+    )
+    id: Mapped[int] = _id()
+    course_id: Mapped[int | None] = mapped_column(
+        sa.ForeignKey("course.id", ondelete="SET NULL"), index=True
+    )
+    #: NULL once the author deleted their account ("[deleted account]").
+    author_ref: Mapped[str | None] = mapped_column(sa.String(64))
+    title: Mapped[str] = mapped_column(sa.Text)
+    body_md: Mapped[str] = mapped_column(sa.Text, server_default="")
+    tags: Mapped[list[str]] = _texts()
+    score: Mapped[int] = mapped_column(server_default="0")
+    reply_count: Mapped[int] = mapped_column(server_default="0")
+    accepted_reply_id: Mapped[int | None] = mapped_column(sa.BigInteger)
+    #: The newest reply's id, for "active" ordering and the live new-reply banner.
+    last_reply_id: Mapped[int | None] = mapped_column(sa.BigInteger)
+    bot_state: Mapped[str] = mapped_column(sa.String(16), server_default="pending")
+    status: Mapped[str] = mapped_column(sa.String(16), server_default="visible")
+    created_day: Mapped[dt.date] = mapped_column(server_default=TODAY)
+    edited_day: Mapped[dt.date | None]
+
+
+class CommonsReply(Base):
+    """An answer (depth 0) or a nested comment (`parent_id`) on a Commons thread. `kind` bot is
+    the AI's answer: written by an agent, stored by the harness, always labelled as AI."""
+
+    __tablename__ = "commons_reply"
+    __table_args__ = (
+        sa.CheckConstraint("kind IN ('human', 'bot')", name="kind"),
+        sa.CheckConstraint("status IN ('visible', 'removed', 'deleted')", name="status"),
+    )
+    id: Mapped[int] = _id()
+    thread_id: Mapped[int] = mapped_column(
+        sa.ForeignKey("commons_thread.id", ondelete="CASCADE"), index=True
+    )
+    parent_id: Mapped[int | None] = mapped_column(
+        sa.ForeignKey("commons_reply.id", ondelete="CASCADE")
+    )
+    depth: Mapped[int] = mapped_column(sa.SmallInteger, server_default="0")
+    author_ref: Mapped[str | None] = mapped_column(sa.String(64))
+    kind: Mapped[str] = mapped_column(sa.String(8), server_default="human")
+    body_md: Mapped[str] = mapped_column(sa.Text)
+    #: The bot's citations: [{kind, id, label}] (checked like the advisor's).
+    citations: Mapped[list[dict[str, Any]]] = mapped_column(JSONB, server_default="[]")
+    score: Mapped[int] = mapped_column(server_default="0")
+    status: Mapped[str] = mapped_column(sa.String(16), server_default="visible")
+    created_day: Mapped[dt.date] = mapped_column(server_default=TODAY)
+    edited_day: Mapped[dt.date | None]
+
+
+class CommonsPseudonym(Base):
+    """Per-thread random handle of an author (like `pseudonym` for forum pages)."""
+
+    __tablename__ = "commons_pseudonym"
+    __table_args__ = (
+        sa.UniqueConstraint("thread_id", "author_ref", name="uq_commons_pseudonym_author"),
+        sa.UniqueConstraint("thread_id", "handle", name="uq_commons_pseudonym_handle"),
+    )
+    id: Mapped[int] = _id()
+    thread_id: Mapped[int] = mapped_column(sa.ForeignKey("commons_thread.id", ondelete="CASCADE"))
+    author_ref: Mapped[str] = mapped_column(sa.String(64))
+    handle: Mapped[str] = mapped_column(sa.String(64))
+
+
+class CommonsVote(Base):
+    __tablename__ = "commons_vote"
+    __table_args__ = (
+        sa.CheckConstraint("target_type IN ('thread', 'reply')", name="target_type"),
+        sa.CheckConstraint("value IN (-1, 1)", name="value"),
+        sa.UniqueConstraint("target_type", "target_id", "voter_ref", name="uq_commons_vote"),
+    )
+    id: Mapped[int] = _id()
+    target_type: Mapped[str] = mapped_column(sa.String(8))
+    target_id: Mapped[int] = mapped_column(sa.BigInteger)
+    voter_ref: Mapped[str] = mapped_column(sa.String(64))
+    value: Mapped[int] = mapped_column(sa.SmallInteger)
+
+
+class CommonsReport(Base):
+    __tablename__ = "commons_report"
+    __table_args__ = (
+        sa.CheckConstraint("target_type IN ('thread', 'reply')", name="target_type"),
+        sa.CheckConstraint("status IN ('open', 'closed')", name="status"),
+    )
+    id: Mapped[int] = _id()
+    target_type: Mapped[str] = mapped_column(sa.String(8))
+    target_id: Mapped[int] = mapped_column(sa.BigInteger)
+    reason: Mapped[str] = mapped_column(sa.Text)
+    reporter_ref: Mapped[str | None] = mapped_column(sa.String(64))
+    status: Mapped[str] = mapped_column(sa.String(16), server_default="open")
+    created_day: Mapped[dt.date] = mapped_column(server_default=TODAY)

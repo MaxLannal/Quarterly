@@ -50,27 +50,31 @@ test("the DESIGN.md fonts load from the bundle", async ({ page }) => {
     if (r.resourceType() === "font" && !r.url().startsWith("data:")) fontRequests.push(new URL(r.url()).pathname);
   });
   await page.goto("/");
-  await expect(page.getByRole("heading", { level: 1, name: "Quarterly" })).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1, name: "The Best of UChicago, within your reach." })).toBeVisible();
   const loaded = await page.evaluate(async () => {
     await document.fonts.ready;
     return {
-      // The home page uses Newsreader 400 (the headline, D2) and 500 (the wordmarks, D4); a browser
-      // loads only the faces a page uses.
-      display: document.fonts.check('400 96px "Newsreader"') && document.fonts.check('500 24px "Newsreader"'),
+      // Redesign 2026-11-20 (docs/DESIGN.md "Maroon and night"): headlines are bold Inter; Newsreader
+      // stays for the wordmark (500) and the italic accent ("within your reach.", 400 italic). A
+      // browser loads only the faces a page uses.
+      display:
+        document.fonts.check('800 96px "Inter Variable"') &&
+        document.fonts.check('500 28px "Newsreader"') &&
+        document.fonts.check('italic 400 60px "Newsreader"'),
       body: document.fonts.check('400 16px "Inter Variable"'),
       h1: getComputedStyle(document.querySelector("h1") as Element).fontFamily,
     };
   });
   expect(loaded.display).toBe(true);
   expect(loaded.body).toBe(true);
-  expect(loaded.h1).toContain("Newsreader");
+  expect(loaded.h1).toContain("Inter");
   expect(fontRequests.length).toBeGreaterThan(0);
   expect(fontRequests.every((p) => p.startsWith("/assets/"))).toBe(true);
 });
 
 test("home page: no axe violations", async ({ page }) => {
   await page.goto("/");
-  await expect(page.getByRole("heading", { level: 1, name: "Quarterly" })).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1, name: "The Best of UChicago, within your reach." })).toBeVisible();
   await expectNoAxeViolations(page);
 });
 
@@ -81,7 +85,7 @@ test("course page: no axe violations", async ({ page }) => {
   await expectNoAxeViolations(page);
 });
 
-test("buttons keep a 44px target although pills are drawn 40px tall", async ({ page }) => {
+test("buttons keep a 44px target; pills are drawn 46px tall", async ({ page }) => {
   for (const path of ["/", "/plan", "/courses", "/courses/TEST%2020000"]) {
     await page.goto(path);
     await expect(page.getByRole("heading", { level: 1 })).toBeAttached();
@@ -101,13 +105,13 @@ test("buttons keep a 44px target although pills are drawn 40px tall", async ({ p
     );
     expect(small, path).toEqual([]);
   }
-  // The primary pill is drawn 40px tall inside its 44px box.
+  // The primary pill is drawn 46px tall inside its 52px box (the redesign's bigger pills).
   await page.goto("/");
   const pill = page.getByRole("link", { name: "Start planning" });
   const box = await pill.boundingBox();
-  expect(box?.height).toBeGreaterThanOrEqual(44);
+  expect(box?.height).toBeGreaterThanOrEqual(52);
   const drawn = await pill.evaluate((el) => el.clientHeight); // the padding box, inside the transparent border
-  expect(drawn).toBe(40);
+  expect(drawn).toBe(46);
 });
 
 // ------------------------------------------------------------------------------------------
@@ -167,10 +171,10 @@ for (const size of [
 
     test(`home and course search @${size.width}: no serious axe violations`, async ({ page }) => {
       await page.goto("/");
-      await expect(page.getByRole("heading", { level: 1, name: "Quarterly" })).toBeVisible();
+      await expect(page.getByRole("heading", { level: 1, name: "The Best of UChicago, within your reach." })).toBeVisible();
       await expectNoSeriousAxeViolations(page);
       await page.goto("/courses");
-      await expect(page.getByRole("heading", { level: 1, name: "Course search" })).toBeVisible();
+      await expect(page.getByRole("heading", { level: 1, name: "Catalog" })).toBeVisible();
       await expectNoSeriousAxeViolations(page);
       await page.getByLabel("Code or title").fill("Fake");
       await page.getByRole("form", { name: "Course filters" }).getByRole("button", { name: "Search", exact: true }).click();
@@ -201,7 +205,7 @@ test("on a touch screen, footer links and the catalog switch keep 44px targets (
   const context = await browser.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true });
   const page = await context.newPage();
   await page.goto("/courses");
-  await expect(page.getByRole("heading", { level: 1, name: "Course search" })).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1, name: "Catalog" })).toBeVisible();
   expect(await page.evaluate(() => matchMedia("(pointer: coarse)").matches)).toBe(true);
   for (const link of await page.getByRole("contentinfo").getByRole("link").all()) {
     expect((await link.boundingBox())!.height, (await link.textContent()) ?? "footer link").toBeGreaterThanOrEqual(44);

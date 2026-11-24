@@ -1,20 +1,22 @@
-import { useState, type FormEvent } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import { standaloneLinkClass } from "@/components/layout/page";
 import { Button } from "@/components/ui/button";
-import { Orb } from "@/components/ui/card";
-import { SearchIcon } from "@/components/ui/icons";
-import { controlClass } from "@/components/ui/input";
-import { ChapelScene } from "@/features/home/ChapelScene";
+import { CourseChapel } from "@/features/home/CourseChapel";
+import { SceneSwitch, useScene } from "@/features/home/NightScene";
 import { activePlan } from "@/features/planner/localPlans";
 import { cn } from "@/lib/utils";
 
-/** hero-band: canvas, the wordmark as headline, search and one primary pill, one orb; beside it
- * (below it on narrow screens) the live ASCII chapel scene (FEEDBACK "ASCII Scene"). No subhead or
- * footnote: Richard cut them (FEEDBACK "Minor design changes" D1, 2026-11-16). */
+/** hero-band: the whole first screen is Rockefeller Chapel, drawn with the catalog's course titles
+ * (CourseChapel); the title and the pills sit on it, beside the chapel on wide screens and under
+ * its spires on phones. The title is "The Best of UChicago, within your reach."
+ * (docs/BEST-OF-UCHICAGO-PLAN.md). The question bar and its "Try" questions went with the Ask page
+ * (issue #15): the planner is where a student talks to the planner agent. */
 export default function HomePage() {
-  const navigate = useNavigate();
-  const [q, setQ] = useState("");
+  const sectionRef = useRef<HTMLElement>(null);
+  const uiRef = useRef<HTMLDivElement>(null);
+  const [scene, setScene] = useScene();
+  const night = scene === "night";
   const [hasPlan] = useState(() => {
     try {
       return activePlan() !== null;
@@ -22,53 +24,46 @@ export default function HomePage() {
       return false;
     }
   });
-  function submit(e: FormEvent) {
-    e.preventDefault();
-    navigate(
-      q.trim() ? `/courses?q=${encodeURIComponent(q.trim())}` : "/courses",
-    );
-  }
   return (
-    <section aria-label="Quarterly" className="relative isolate overflow-hidden">
-      <Orb
-        color="maroon"
-        className="-left-16 top-0 size-[320px] sm:left-0 sm:size-[480px] lg:-top-6 lg:left-[8%] lg:size-[560px]"
-      />
-      <div className="mx-auto grid w-full max-w-content items-center gap-10 px-4 pb-12 pt-10 sm:px-6 sm:py-24 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:px-8 lg:py-section">
-        <div className="flex min-w-0 flex-col items-start gap-8">
-          <h1 className="font-display text-[64px] font-normal leading-none tracking-[-1.92px] text-ink text-balance sm:text-display-hero">
-            Quarterly
+    <section
+      ref={sectionRef}
+      aria-label="Quarterly"
+      data-scene={scene}
+      className={cn(
+        "relative isolate flex h-[calc(100svh-100px)] min-h-[640px] overflow-hidden",
+      )}
+    >
+      <CourseChapel sectionRef={sectionRef} uiRef={uiRef} night={night} />
+      {/* Day or the snowy night (Max, 2026-11-20); remembered on this device. */}
+      <div className="absolute right-3 top-3 z-10 sm:right-5 sm:top-5">
+        <SceneSwitch scene={scene} onChange={setScene} />
+      </div>
+      <div className="mx-auto flex w-full max-w-[1880px] items-end px-4 pb-8 sm:px-8 sm:pb-14 chapel-side:items-center chapel-side:px-12 chapel-side:pb-0">
+        <div
+          ref={uiRef}
+          className="flex w-full max-w-[34rem] flex-col items-start gap-5 chapel-side:gap-7"
+        >
+          <h1 className="home-title font-display text-ink">
+            <span className="home-title-line home-title-lead">The Best of</span>{" "}
+            <span className="home-title-line home-title-main">UChicago,</span>{" "}
+            <span className="home-title-line home-title-reach">
+              <em>within your reach.</em>
+              <svg
+                aria-hidden="true"
+                className="home-title-swash"
+                viewBox="0 0 320 24"
+                preserveAspectRatio="none"
+              >
+                <path d="M4 15 C 70 4, 150 4, 214 11 S 300 20, 316 7" />
+              </svg>
+            </span>
           </h1>
-          <form
-            role="search"
-            onSubmit={submit}
-            className="flex w-full max-w-xl flex-col gap-3 sm:flex-row"
-            aria-label="Search courses"
-          >
-            <label htmlFor="home-search" className="sr-only">
-              Search courses
-            </label>
-            <div className="relative min-w-0 flex-1">
-              <SearchIcon className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-muted" />
-              <input
-                id="home-search"
-                type="search"
-                value={q}
-                onChange={(e) => setQ(e.target.value)}
-                placeholder="Code or title, e.g. CMSC 14100"
-                className={cn(controlClass, "rounded-pill pl-11")}
-              />
-            </div>
-            <Button type="submit" variant="outline">
-              Search
-            </Button>
-          </form>
           <div className="flex flex-wrap items-center gap-3">
             <Button asChild>
               <Link to="/onboarding">Start planning</Link>
             </Button>
-            <Button asChild variant="outline">
-              <Link to="/instructors">Browse reviews</Link>
+            <Button asChild variant="outline" className="bg-canvas">
+              <Link to="/courses">Explore the catalog</Link>
             </Button>
             {/* D11 H-3: only when there is a plan to open. */}
             {hasPlan && (
@@ -81,7 +76,6 @@ export default function HomePage() {
             )}
           </div>
         </div>
-        <ChapelScene />
       </div>
     </section>
   );

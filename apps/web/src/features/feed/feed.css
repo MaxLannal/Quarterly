@@ -1,0 +1,11 @@
+/* The Catalog's browse rows (issue #19; the rest of the Feed's motion went with the Feed). index.css
+   stops every animation under prefers-reduced-motion. Transforms only. */
+
+/* -- a spotlight's art panel breathes a little on hover ------------------------------------ */
+.feed-art {
+  transition: transform 600ms var(--ease-out);
+}
+.feed-spotlight:hover .feed-art,
+.feed-spotlight:focus-within .feed-art {
+  transform: scale(1.035);
+}

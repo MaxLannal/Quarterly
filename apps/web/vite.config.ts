@@ -14,7 +14,8 @@ export default defineConfig({
     port: 5173,
     proxy: {
       "/api": {
-        target: "http://localhost:8000",
+        // API_PROXY points a second dev server at another API (e.g. a local uvicorn on 8010).
+        target: process.env.API_PROXY ?? "http://localhost:8000",
         rewrite: (p) => p.replace(/^\/api/, ""),
       },
     },

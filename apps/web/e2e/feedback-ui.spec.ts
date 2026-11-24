@@ -237,7 +237,7 @@ test.describe("F4: planner layout", () => {
     expect(code?.text).toBe("TEST 10000");
     expect(code?.weight).toBeGreaterThanOrEqual(600);
     expect(name?.text).toBe("Fake Introduction I");
-    expect(name?.size).toBe("14px");
+    expect(name?.size).toBe("15px"); // the caption size of the redesign's bigger type
     await expect(
       drawer.getByRole("button", { name: /^Fake introductory sequence/ }),
     ).toContainText("0 of 3");
@@ -380,7 +380,7 @@ test.describe("F5: text", () => {
 
     await page.goto("/courses");
     await expect(
-      page.getByRole("heading", { level: 1, name: "Course search" }),
+      page.getByRole("heading", { level: 1, name: "Catalog" }),
     ).toBeVisible();
     await expect(
       page.getByText("Filter by department, level, quarter"),

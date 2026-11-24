@@ -60,7 +60,15 @@ def export_account(
     db: Annotated[Session, Depends(get_session)],
 ) -> AccountExport:
     response.headers["Cache-Control"] = "no-store"
-    return AccountExport(account=account_out(account), plans=export_plans(db, account.id))
+    from api.commons.account import export_commons
+    from api.profile_data import export_profile
+
+    return AccountExport(
+        account=account_out(account),
+        plans=export_plans(db, account.id),
+        profile=export_profile(db, account.id),
+        commons=export_commons(db, account.id),
+    )
 
 
 @router.post(

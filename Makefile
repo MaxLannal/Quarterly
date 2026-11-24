@@ -7,7 +7,7 @@ NPM := npm --prefix $(WEB)
 COMPOSE := docker compose
 
 .PHONY: attributes help install env up down ps logs scraper-up lint typecheck test test-py test-web \
-        golden check e2e e2e-stack screenshots evals migrate seed seed-forum-demo api-client api-client-check format \
+        golden check e2e e2e-stack screenshots evals migrate seed seed-forum-demo seed-commons-demo api-client api-client-check format \
         loadtest
 
 help:
@@ -121,6 +121,11 @@ seed: env
 # `make seed-forum-demo ARGS=--remove` deletes them again.
 seed-forum-demo: env
 	$(UV) run python -m api.cli seed-forum-demo $(ARGS)
+
+# Development only: demo QUESTIONS in the Commons (/forum) on real courses, asked by refs that match
+# no account (docs/BEST-OF-UCHICAGO-PLAN.md). Idempotent; ARGS=--remove deletes them.
+seed-commons-demo: env
+	$(UV) run python -m api.commons.demo $(ARGS)
 
 # Regenerate the OpenAPI document and the TypeScript types the frontend uses.
 api-client:

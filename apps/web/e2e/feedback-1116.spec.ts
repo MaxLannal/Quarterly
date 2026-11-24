@@ -189,7 +189,7 @@ test("catalog: one menu item, a switch between courses and programs, a centered 
 }) => {
   await page.goto("/courses");
   await expect(
-    page.getByRole("heading", { level: 1, name: "Course search" }),
+    page.getByRole("heading", { level: 1, name: "Catalog" }),
   ).toBeVisible();
   await expect(page.getByRole("region", { name: "Results" })).toHaveCount(0);
   await shot(page, "course-search-empty");

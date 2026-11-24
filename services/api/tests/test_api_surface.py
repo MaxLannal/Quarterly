@@ -73,6 +73,34 @@ EXPECTED = {
     ("post", "/admin/moderation/{target_type}/{target_id}/end-suspension"),
     # homepage scene (FEEDBACK "ASCII Scene")
     ("get", "/weather"),
+    # campus companion (docs/BEST-OF-UCHICAGO-PLAN.md) -- what's new (POST /agents/ask went in #15)
+    ("get", "/me/updates"),
+    ("post", "/me/updates/seen"),
+    # -- me (dashboard)
+    ("get", "/me/profile"),
+    ("patch", "/me/profile"),
+    ("post", "/agents/interview"),  # the routes (/me/routes, /agents/routes) went in #15
+    # -- the Catalog's browse rows and ratings (the Feed's endpoints went in #19)
+    ("get", "/catalog/browse"),
+    ("get", "/course-ratings"),
+    # -- commons
+    ("get", "/commons/threads"),
+    ("post", "/commons/threads"),
+    ("get", "/commons/threads/{thread_id}"),
+    ("patch", "/commons/threads/{thread_id}"),
+    ("delete", "/commons/threads/{thread_id}"),
+    ("post", "/commons/threads/{thread_id}/replies"),
+    ("patch", "/commons/replies/{reply_id}"),
+    ("delete", "/commons/replies/{reply_id}"),
+    ("post", "/commons/votes"),
+    ("post", "/commons/threads/{thread_id}/accept"),
+    ("post", "/commons/threads/{thread_id}/bot"),
+    ("post", "/commons/threads/{thread_id}/typing"),
+    ("get", "/commons/threads/{thread_id}/presence"),
+    ("post", "/commons/threads/{thread_id}/follow"),
+    ("post", "/commons/reports"),
+    ("get", "/admin/commons-reports"),
+    ("post", "/admin/commons-reports/{target_type}/{target_id}/decision"),
 }
 
 PLAN = {"catalog_year": "2026-27", "entry_term": "2026-AU"}
