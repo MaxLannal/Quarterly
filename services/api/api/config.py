@@ -59,6 +59,11 @@ class Settings(BaseSettings):
     rules_cache_ttl_s: float = 0.0
     #: Seconds a forum page header is reused per process (api.forum.pages). 0 = off.
     page_cache_ttl_s: float = 0.0
+    #: Seconds the plan generator may solve (api.agents.generate). 0 = the app's default,
+    #: SOLVER_SECONDS (4). The end-to-end stack sets more: since the full catalog import a busy
+    #: test machine often needs longer for the second variant or an infeasibility proof
+    #: (OPEN_QUESTIONS E2E-2, integration run 2026-11-24).
+    generate_solver_seconds: float = 0.0
 
     def production_problems(self) -> list[str]:
         """Settings that are unsafe outside development (checked at start-up)."""

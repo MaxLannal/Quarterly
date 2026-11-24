@@ -120,7 +120,33 @@ export async function signUp(page: Page, prefix: string, next = "/plan") {
 }
 
 /** Drags with the mouse in small steps (dnd-kit's pointer sensor needs a few pixels to start). */
-export async function drag(page: Page, from: Locator, to: Locator) {
+/**
+ * Drags `from` onto `to` until the plan check runs, and returns the time of the drop (the
+ * mouse button's release) that started it. A pointer drag can miss on a busy machine (OPEN_QUESTIONS E2E-1), so up to three
+ * drags; a missed drag changes nothing, so no plan check starts within 5 s.
+ */
+export async function dragUntilChecked(page: Page, from: Locator, to: Locator): Promise<number> {
+  // Both ends must be on screen at once (a pointer outside the window drops nowhere). Since the
+  // full catalog import the cards are taller, so two quarters a year apart may not fit.
+  const size = page.viewportSize();
+  const a = await from.boundingBox();
+  const b = await to.boundingBox();
+  if (size && a && b) {
+    const span = Math.abs(b.y - a.y) + Math.max(a.height, b.height) + 200;
+    if (span > size.height) await page.setViewportSize({ width: size.width, height: Math.ceil(span) });
+  }
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    const checked = page
+      .waitForResponse((r) => r.url().endsWith("/api/verify") && r.request().method() === "POST", { timeout: 5_000 })
+      .catch(() => null);
+    const dropped = await drag(page, from, to);
+    if (await checked) return dropped;
+  }
+  throw new Error("drag: no plan check after three drags");
+}
+
+/** A pointer drag from `from` to `to`; returns the time of the drop. */
+export async function drag(page: Page, from: Locator, to: Locator): Promise<number> {
   await to.scrollIntoViewIfNeeded();
   await from.scrollIntoViewIfNeeded();
   const a = await from.boundingBox();
@@ -131,4 +157,5 @@ export async function drag(page: Page, from: Locator, to: Locator) {
   await page.mouse.move(a.x + a.width / 2 + 12, a.y + a.height / 2 + 12, { steps: 5 });
   await page.mouse.move(b.x + b.width / 2, b.y + b.height / 2, { steps: 15 });
   await page.mouse.up();
+  return Date.now();
 }

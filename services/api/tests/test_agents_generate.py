@@ -268,3 +268,36 @@ def test_a_foreign_plan_id_is_not_found(env: Env) -> None:
         headers=headers,
     )
     assert resp.status_code == 404
+
+
+def test_solver_time_comes_from_the_setting_or_the_app_default() -> None:
+    """GENERATE_SOLVER_SECONDS (the end-to-end stack sets 20) overrides SOLVER_SECONDS; 0 keeps
+    the app's 4 s (integration run 2026-11-24, OPEN_QUESTIONS E2E-2)."""
+    from types import SimpleNamespace
+
+    from api.agents import generate as gen
+    from api.config import get_settings
+
+    settings = get_settings()
+    saved = settings.generate_solver_seconds
+    run = SimpleNamespace(
+        req=SimpleNamespace(
+            scope="whole",
+            selected_terms=[],
+            today_term=None,
+            load=0.0,
+            per_term_load={},
+            max_courses_per_term=None,
+            allow_overload=False,
+            goals=[],
+            interests=[],
+            variants=2,
+        )
+    )
+    try:
+        settings.generate_solver_seconds = 0.0
+        assert gen.GenerateRun.options(run, None).time_limit_s == gen.SOLVER_SECONDS == 4.0
+        settings.generate_solver_seconds = 20.0
+        assert gen.GenerateRun.options(run, None).time_limit_s == 20.0
+    finally:
+        settings.generate_solver_seconds = saved
