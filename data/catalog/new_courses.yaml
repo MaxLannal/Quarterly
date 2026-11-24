@@ -11,8 +11,9 @@
 #       quote: "ABCD 12345, a new course this year, ..."
 #       fetched: 2026-11-24
 #
-# The list is empty: no page in the seed says that a 2026-27 course is new
-# (docs/OPEN_QUESTIONS.md S19-N1). Once the database holds an earlier catalog year, the row also
+# The list is empty: no page in the seed says that a 2026-27 course is new. Richard's answer
+# (docs/OPEN_QUESTIONS.md S19-N1, 2026-11-24): leave it empty for now; he and Max add courses here
+# by hand, or the row waits for the next catalog year. Once the database holds an earlier catalog year, the row also
 # shows the courses that year did not have, with no entry here.
 catalog_year: "2026-27"
 courses: []

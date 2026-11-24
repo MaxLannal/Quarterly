@@ -1,9 +1,10 @@
 """The word limit of the AI answer under a Commons question (issue #20, D1 option A).
 
-Richard chose a short AI answer under each question and set no number, so the limit is 60 words
-(docs/OPEN_QUESTIONS.md F20-1, "Needs Richard"). The prompt asks for it, the submit tool rejects a
-longer answer once (the model gets one repair turn), and `limit_words` clips anything longer that
-is stored or shown, so the limit holds even for answers stored before it existed.
+Richard chose a short AI answer under each question; the limit is 60 words, which he confirmed on
+2026-11-24 "for now", to be tested in use (docs/OPEN_QUESTIONS.md F20-1). The prompt asks for
+it, the submit tool rejects a longer answer once (the model gets one repair turn), and
+`limit_words` clips anything longer that is stored or shown, so the limit holds even for answers
+stored before it existed.
 
 A word is what a reader sees: a run of characters between spaces that holds a letter or a digit.
 Markdown bullets and dashes do not count; `[CMSC 14100](/courses/...)` counts two.

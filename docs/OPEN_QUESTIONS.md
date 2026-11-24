@@ -1,12 +1,12 @@
 # Open questions and decisions
 
-> **Start here (updated 2026-11-16).** This file is the record of every question asked and how it was answered, grouped by the build step that raised it. Almost everything below is answered; the code cites items by id (for example P05-7), so search for an id when you meet one. Still open:
+> **Start here (updated 2026-11-24).** This file is the record of every question asked and how it was answered, grouped by the build step that raised it. Almost everything below is answered; the code cites items by id (for example P05-7), so search for an id when you meet one. Still open:
 >
 > - **Before launch** ("Deferred until before deployment" below): **DF-A1** replace the watermarked demo photo behind the homepage chapel; **DF-S1** 44 summer-only courses not yet in the planner; the **"Later (by Richard)"** list (email to real users, placement field, Econ specializations, more study-abroad programs, Econ items, the full hand check of `data/seed/REVIEW.md`).
 > - **Tests:** **E2E-1** (drawer drag test retries a missed drag) and **E2E-2** (journey C's preference checks depend on the solver's time limit), at the end of the file.
 > - **Campus companion** (2026-11-20, at the end of the file): **CC-1** to **CC-8**, decisions made while building the Ask chatbot, the dashboard, the feed and the Commons; each has a suggested answer.
-> - **Site structure and catalog** (GitHub issues #15 and #19, 2026-11-24, at the end of the file): the answers to both issues' decisions, and **S19-N1** (Needs Richard): the list of new courses is empty until a person adds courses with a source quote.
-> - **Forum page, issue #20** (2026-11-24, at the end of the file): **F20-1 Needs Richard:** how many words the AI's answer under a forum question may have (60 for now). F20-2 to F20-4 are defaults taken while building, each with a suggested answer.
+> - **Site structure and catalog** (GitHub issues #15 and #19, 2026-11-24, at the end of the file): the answers to both issues' decisions; **S19-N1** (the list of new courses) is answered: it stays empty until Richard or Max add courses with a source quote, or the next catalog year fills it.
+> - **Forum page, issue #20** (2026-11-24, at the end of the file): **F20-1** is answered (the AI's answer under a forum question keeps its 60-word limit, to be tested in use). Still open: **F20-2** to **F20-4**, defaults taken while building, each with a suggested answer.
 > - **"Work these answers create (not started)"** below was listed on 2026-11-14; some of it was built since. Check `docs/PROGRESS.md` and the code before starting an item.
 >
 > New questions go at the end of the matching section, in plain language with a suggested answer (see `CLAUDE.md`, "Working with the owner").
