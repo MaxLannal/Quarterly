@@ -5,8 +5,8 @@
 > - **Before launch** ("Deferred until before deployment" below): **DF-A1** replace the watermarked demo photo behind the homepage chapel; **DF-S1** 44 summer-only courses not yet in the planner; the **"Later (by Richard)"** list (email to real users, placement field, Econ specializations, more study-abroad programs, Econ items, the full hand check of `data/seed/REVIEW.md`).
 > - **Tests:** **E2E-1** (drawer drag test retries a missed drag) and **E2E-2** (journey C's preference checks depend on the solver's time limit), at the end of the file.
 > - **Campus companion** (2026-11-20, at the end of the file): **CC-1** to **CC-8**, decisions made while building the Ask chatbot, the dashboard, the feed and the Commons; each has a suggested answer.
-> - **Site structure and catalog** (GitHub issues #15 and #19, 2026-11-24, at the end of the file): the answers to both issues' decisions; **S19-N1** (the list of new courses) is answered: it stays empty until Richard or Max add courses with a source quote, or the next catalog year fills it.
-> - **Forum page, issue #20** (2026-11-24, at the end of the file): **F20-1** is answered (the AI's answer under a forum question keeps its 60-word limit, to be tested in use). Still open: **F20-2** to **F20-4**, defaults taken while building, each with a suggested answer.
+> - **Site structure and catalog** (GitHub issues #15 and #19, 2026-11-24, at the end of the file): the answers to both issues' decisions. **S19-N1** (the list of new courses) has an answer: the list stays empty until Richard or Max add courses with a source quote, or until the next catalog year fills it.
+> - **Forum page, issue #20** (2026-11-24, at the end of the file): **F20-1** has an answer: the AI's answer under a forum question keeps its 60-word limit, and the team can test how it works in use. Still open: **F20-2** to **F20-4**, defaults taken while building, each with a suggested answer.
 > - **"Work these answers create (not started)"** below was listed on 2026-11-14; some of it was built since. Check `docs/PROGRESS.md` and the code before starting an item.
 >
 > New questions go at the end of the matching section, in plain language with a suggested answer (see `CLAUDE.md`, "Working with the owner").
@@ -530,7 +530,7 @@ Questions about the schedule pipeline (reading Class Search). The pipeline is bu
 
 **Richard's answer: Yes, option (a) is fine**
 
-Resolved in b09f3f1: option (a), no change; the Suspensions list keeps one row per suspended student, as built there.
+Resolved in b09f3f1: option (a), no change. The Suspensions list keeps one row per suspended student, as that commit built it.
 
 - **P12-3 (privacy; needs Richard).** **Restoring a backup brings back accounts deleted after that backup.** Backups are kept 14 days. If the database is ever restored from one, accounts (with their emails) deleted since that backup come back. `/privacy` now says backups keep a deleted account for 14 days, and `docs/DEPLOY.md` says what to do after a restore.
   - **(a) Restore only to recover from losing the database, and tell students deleted in that window to delete again (suggested for launch).**
@@ -538,7 +538,7 @@ Resolved in b09f3f1: option (a), no change; the Suspensions list keeps one row p
 
 **Richard's answer: (a) is fine, since this is not very likely**
 
-Resolved in 57c6723: option (a), no change; `docs/DEPLOY.md` says to restore only after losing the database and to ask students who deleted their account in that window to delete it again, and `/privacy` states the 14 days.
+Resolved in 57c6723: option (a), no change. `docs/DEPLOY.md` says to restore only after a loss of the database, and to ask students who deleted their account in that window to delete it again. `/privacy` states the 14 days.
 
 ## Prompt 13 (live agent tests)
 
@@ -550,7 +550,7 @@ Resolved in 57c6723: option (a), no change; `docs/DEPLOY.md` says to restore onl
 
 Done 2026-11-16: `a1_plan_generator` now uses the Sonnet 5.5 settings (`llm_routing.yaml`, SPEC routing table, SPEC-CHANGES).
 
-Resolved in 4049a63: option (a); the plan generator runs on Sonnet 5.5.
+Resolved in 4049a63: option (a). The plan generator runs on Sonnet 5.5.
 
 ## End-to-end tests
 
@@ -583,7 +583,7 @@ Richard answered each issue's open decisions in a comment on the issue. Each ans
   - Wait for the 2027-28 catalog: once it is loaded next to 2026-27, the row fills itself with the courses 2026-27 did not have.
   - Show the row anyway, with a short "No new courses listed yet" line.
   Richard's Answer: leave it empty for now. Max and I will manually add new courses. If not, we wait for the new catalog. No actions needed.
-  Resolved in c3ef474: no code change; the list stays empty and the row hidden until Richard or Max add a course with a source quote, or the next catalog year fills it (recorded in `data/catalog/new_courses.yaml`).
+  Resolved in c3ef474: no code change. The list stays empty and the row stays hidden until Richard or Max add a course with a source quote, or until the next catalog year fills it. `data/catalog/new_courses.yaml` records this.
 
 ## Forum page, issue #20 (2026-11-24)
 
@@ -592,7 +592,7 @@ Richard's answers on the issue: D1 is option A (a short AI answer under each for
 - **F20-1 How long may the AI's answer under a question be? Needs Richard.** Option A needs a word limit and the issue comments set none, so the limit is **60 words** for now. The prompt asks for it, a longer answer is sent back to the AI once to shorten, and the site clips anything longer when it stores or shows it (older, longer answers are shown clipped too). 60 words is about three short sentences or one sentence and two bullets.
   **Suggested:** keep 60. Options: **40** (one or two sentences; the AI gives a pointer, students give the detail); **100** (room for a short list of courses with prerequisites; the list on `/forum` gets longer to scroll).
   Richard's answer: 60 is fine for now. We can test how 60 works out.
-  Resolved in c3ef474: the limit stays 60 words; SPEC (A9) and `api/commons/words.py` record it as confirmed, to be revisited after testing.
+  Resolved in c3ef474: the limit stays 60 words. SPEC (A9) and `api/commons/words.py` record it as confirmed, to revisit after testing.
 - **F20-2 What "this quarter" and "this year" mean in the rankings.** Built: the reviews posted in the last 91 days ("Last 3 months") and the last 365 days ("Last 12 months"), counted back from today. This always has recent reviews to rank.
   **Suggested:** keep. Option: count the academic quarter or year in which students *took* the course ("Autumn 2026"); this matches how students think of a course, but early in a quarter almost nothing is ranked because reviews come after the course ends.
 - **F20-3 The starting point of each score.** SPEC's Bayesian average needs a starting average m (each course starts at m as if it had 5 reviews). Built: one m for everything, the average rating of all reviews in the period, so courses from different departments compare fairly in one ranking.
