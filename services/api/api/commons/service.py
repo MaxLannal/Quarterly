@@ -31,6 +31,7 @@ from sqlalchemy.orm import Session, aliased
 from api.agents.live import CAMPUS_YEAR, course_codes_in, normalize_code
 from api.auth.store import Store
 from api.commons.identity import commons_ref, presence_key
+from api.commons.words import limit_words
 from api.db import models as m
 from api.forum.markdown import render_markdown
 from api.forum.pseudonyms import DELETED, random_handle
@@ -481,7 +482,8 @@ def reply_out(
         body_html = f"<p>{REMOVED_BODY if reply.status == 'removed' else DELETED_BODY}</p>"
         handle = DELETED_BODY
     elif reply.kind == "bot":
-        body_html = render(db, reply.body_md)
+        # Answers stored before the word limit (issue #20) are shown clipped to it.
+        body_html = render(db, limit_words(reply.body_md))
         handle = BOT_HANDLE
     else:
         body_html = render(db, reply.body_md)

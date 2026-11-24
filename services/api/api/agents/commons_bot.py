@@ -11,6 +11,10 @@ POST /commons/threads/{id}/bot streams one run:
 - The harness, not the agent, stores the answer: a `commons_reply` of kind `bot` with no author
   (top-level, or nested under the reply that summoned it with @quarterly), always labelled as
   AI on the page. The thread's `bot_state` becomes `answered` (`failed` on an unexpected error).
+- The answer is short: at most `ANSWER_WORDS` (60) words (issue #20, D1 option A). The prompt
+  asks for it; `submit_answer` rejects a longer answer once, so the model gets one repair turn
+  (a second long answer ends the run and the deterministic search answers); the stored text is
+  clipped to the limit as a last guard (`api.commons.words`).
 
 The question, its details and the other replies are student writing: they reach the model only
 inside `untrusted()` tags. With no model (off, failing, over budget) the answer is a
@@ -42,7 +46,7 @@ from llm_gateway.api import (
     Message,
     SubmitTool,
 )
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 from sqlalchemy.orm import Session
 
 from api.agents import live
@@ -56,6 +60,7 @@ from api.auth.ratelimit import DAY, Limit, account_subject, ip_subject
 from api.auth.store import Store
 from api.commons import service
 from api.commons.service import Viewer
+from api.commons.words import ANSWER_WORDS, count_words, limit_words
 from api.db import models as m
 from api.repo import catalog as catalog_repo
 from api.schemas.commons import (
@@ -113,13 +118,24 @@ class BotAnswer(BaseModel):
     text: str = Field(min_length=1, max_length=MAX_ANSWER_CHARS)
     citations: list[CitationIn] = Field(default=[], max_length=16)
 
+    @field_validator("text")
+    @classmethod
+    def _short(cls, value: str) -> str:
+        n = count_words(value)
+        if n > ANSWER_WORDS:
+            raise ValueError(
+                f"the answer has {n} words; the limit is {ANSWER_WORDS}. Write a shorter answer"
+            )
+        return value
+
 
 _ANSWER_SCHEMA: dict[str, Any] = {
     "type": "object",
     "properties": {
         "text": {
             "type": "string",
-            "description": "Your answer in plain markdown (lists, bold), at most 220 words.",
+            "description": f"Your answer in plain markdown (bold, a short list), at most "
+            f"{ANSWER_WORDS} words.",
         },
         "citations": {
             "type": "array",
@@ -290,22 +306,12 @@ def prepare(
 # --------------------------------------------------------------------------------- the run
 
 
-def _clip(text: str, limit: int) -> str:
-    text = text.strip()
-    return text if len(text) <= limit else text[: limit - 1].rstrip() + "…"
-
-
 _MD_SPECIAL = re.compile(r"([\\`*_\[\]()<>#!|~])")
 
 
 def _md(text: str) -> str:
     """Catalog text placed in markdown: special characters escaped."""
     return _MD_SPECIAL.sub(r"\\\1", " ".join(text.split()))
-
-
-def _first_sentence(text: str, limit: int = 180) -> str:
-    sentence = re.split(r"(?<=[.!?])\s", " ".join(text.split()), maxsplit=1)[0]
-    return _clip(sentence, limit)
 
 
 @dataclass
@@ -385,7 +391,8 @@ class BotHarness:
                 lines += [
                     "",
                     f"reply:{summoner.id} mentions you (@quarterly) and asks for your help. "
-                    "Answer that reply, in the context of the question, in at most 150 words:",
+                    "Answer that reply, in the context of the question, in at most "
+                    f"{ANSWER_WORDS} words:",
                     untrusted(f"reply:{summoner.id}", summoner.body_md[:REPLY_CHARS]),
                 ]
         lines += ["", "Look up what you need, then call submit_answer."]
@@ -396,8 +403,8 @@ class BotHarness:
         lines = [prompt.text, "", f"Today is {dt.date.today().isoformat()}."]
         if not tools.logged_in:
             lines.append(
-                "The reader is not logged in: course reviews are not available to you, so do "
-                "not write a “What students say” part unless search_commons found something."
+                "Course reviews are not available to you: never say what students say about a "
+                "course unless search_commons returned it."
             )
         return "\n".join(lines)
 
@@ -484,37 +491,28 @@ class BotHarness:
         guide = search_guide(text, limit=2)
 
         parts = [f"*{OFF}*"]
-        if own is not None:
-            parts.append(f"This question is about **{own[0]}**, {_md(own[1])}.")
         if courses:
-            parts.append(
-                "**Courses that may help**\n"
-                + "\n".join(f"- {code}: {_md(title)}" for code, title in courses.items())
-            )
+            parts.append("Courses that may help: " + ", ".join(f"**{c}**" for c in courses) + ".")
         if guide:
-            parts.append(
-                "**From the campus guide**\n"
-                + "\n".join(f"- *{_md(e.title)}*: {_md(_first_sentence(e.text))}" for e in guide)
-            )
+            parts.append("From the campus guide: " + "; ".join(_md(e.title) for e in guide) + ".")
         if threads:
             n = len(threads)
-            parts.append(
-                f"**Asked before**: {n} related question{'s are' if n > 1 else ' is'} linked below."
-            )
+            parts.append(f"{n} related question{'s are' if n > 1 else ' is'} linked below.")
         if not courses and not guide and not threads:
             parts.append(
                 "I found nothing in the catalog or the Commons for these words. Adding a course "
-                "code (like MATH 15300) to the question helps."
+                "code (like MATH 15300) helps."
             )
-        parts.append(
-            "**Next steps**: open a course page for its description, prerequisites and what "
-            "students say. Students' answers will appear below."
-        )
+        parts.append("Open a course page for details. Students' answers will appear below.")
+        kept: list[str] = []
+        for part in parts:  # the sources are also cited as chips, so a part may be left out
+            if count_words("\n\n".join([*kept, part])) <= ANSWER_WORDS:
+                kept.append(part)
         seen = {f"course:{c}" for c in courses}
         seen |= {f"guide:{e.id}" for e in guide} | {f"thread:{t}" for t in threads}
         cited = [("course", c) for c in courses]
         cited += [("guide", e.id) for e in guide] + [("thread", str(t)) for t in threads]
-        return "\n\n".join(parts), self._cite(seen, cited, thread.id)
+        return "\n\n".join(kept), self._cite(seen, cited, thread.id)
 
     def _related(self, thread: m.CommonsThread, words: list[str]) -> list[int]:
         t = m.CommonsThread
@@ -539,7 +537,7 @@ class BotHarness:
     def store(
         self, thread: m.CommonsThread, text: str, citations: list[CommonsCitation]
     ) -> m.CommonsReply:
-        text = safe_answer(text)
+        text = limit_words(safe_answer(text))
         cites = [c.model_dump(exclude_none=True) for c in citations]
         reply: m.CommonsReply | None = None
         if self.run.regenerate and self.run.existing_id is not None:

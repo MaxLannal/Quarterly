@@ -4,6 +4,7 @@ student text wrapped as untrusted, the deterministic fallback, replays, the lock
 
 from __future__ import annotations
 
+import re
 import uuid
 from collections.abc import Iterator
 from typing import Any
@@ -12,7 +13,9 @@ import pytest
 import sqlalchemy as sa
 from agent_test_support import INJECTION, events, of
 from api.agents import commons_bot
+from api.agents.prompts import load_prompt
 from api.auth.ratelimit import DAY, Limit
+from api.commons.words import count_words
 from api.db import models as m
 from auth_test_support import migrated_database
 from llm_gateway.api import FakeLLM, ToolCall
@@ -230,3 +233,80 @@ def test_unknown_or_deleted_threads(c: CommonsEnv) -> None:
     asker.delete(f"/commons/threads/{t['id']}")
     assert c.anon().post(f"/commons/threads/{t['id']}/bot", json={}).status_code == 404
     assert uuid.UUID(asker.account_id)
+
+
+# ------------------------------------------------------------------ the word limit (issue #20)
+
+
+def _words_shown(body_html: str) -> int:
+    return count_words(re.sub(r"<[^>]+>", " ", body_html))
+
+
+def _long(n: int, word: str = "word") -> str:
+    return "Yes: **CMSC 14100** assumes no programming. " + " ".join([word] * (n - 6)) + "."
+
+
+def test_a_long_answer_is_sent_back_once_and_the_short_rewrite_is_stored(c: CommonsEnv) -> None:
+    _, t = question(c)
+    short = "Yes: **CMSC 14100** assumes no programming. Take CMSC 14200 next."
+    fake = c.use(scripted(answer(_long(90), []), answer(short, [])))
+    evs = bot(c.anon(), t["id"])
+    event = of(evs, "answer")[0]
+    assert event["fallback"] is False
+    assert "next.</p>" in event["reply"]["body_html"]
+    assert _words_shown(event["reply"]["body_html"]) <= commons_bot.ANSWER_WORDS
+    # The model saw why its first answer was refused (one repair turn).
+    assert len(fake.calls) == 2
+    repair = content(fake, 1)
+    assert "the answer has 90 words; the limit is 60" in repair
+
+
+def test_two_long_answers_end_in_the_short_search_answer(c: CommonsEnv) -> None:
+    _, t = question(c)
+    c.use(scripted(answer(_long(61), []), answer(_long(75, "again"), [])))
+    event = of(bot(c.anon(), t["id"]), "answer")[0]
+    assert event["fallback"] is True
+    body = event["reply"]["body_html"]
+    assert commons_bot.OFF in body and "again" not in body
+    assert _words_shown(body) <= commons_bot.ANSWER_WORDS
+    with c.env.db() as db:
+        row = db.get(m.CommonsReply, event["reply"]["id"])
+        assert row is not None and count_words(row.body_md) <= commons_bot.ANSWER_WORDS
+
+
+def test_an_answer_of_exactly_sixty_words_is_kept_whole(c: CommonsEnv) -> None:
+    _, t = question(c)
+    text = _long(60)
+    assert count_words(text) == 60
+    c.use(scripted(answer(text, [])))
+    reply = of(bot(c.anon(), t["id"]), "answer")[0]["reply"]
+    assert _words_shown(reply["body_html"]) == 60 and "…" not in reply["body_html"]
+
+
+def test_an_answer_stored_before_the_limit_is_shown_clipped(c: CommonsEnv) -> None:
+    asker, t = question(c)
+    with c.env.db() as db:
+        db.add(
+            m.CommonsReply(
+                thread_id=t["id"],
+                parent_id=None,
+                depth=0,
+                author_ref=None,
+                kind="bot",
+                body_md=" ".join(["Old long answer."] * 70),
+                citations=[],
+                status="visible",
+            )
+        )
+        db.commit()
+    replies = asker.thread(t["id"])["replies"]
+    assert replies[0]["kind"] == "bot"
+    assert _words_shown(replies[0]["body_html"]) <= commons_bot.ANSWER_WORDS
+
+
+def test_the_prompt_and_the_tool_state_the_same_limit() -> None:
+    prompt = load_prompt(commons_bot.PROMPT).text
+    assert f"at most {commons_bot.ANSWER_WORDS} words" in prompt
+    assert "Phil" not in prompt and "You are Quarterly" in prompt
+    schema = commons_bot._ANSWER_SCHEMA["properties"]["text"]["description"]
+    assert f"at most {commons_bot.ANSWER_WORDS} words" in schema
