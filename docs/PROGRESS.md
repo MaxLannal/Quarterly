@@ -1,5 +1,14 @@
 # Progress
 
+> **Hand-off for the integration run: issue #20, branch `issue-20` (2026-11-24).** The forum page `/forum` now shows course reviews and Commons discussions in one list (newest first; filters for type, course and instructor) with rating statistics and rankings in the left third for logged-in students, a "New post" button instead of the ask box, and the AI's answer under each question cut to at most 60 words in Quarterly's own voice. Details: "Issue #20" at the end of this file.
+>
+> - **Base.** The branch was fast-forwarded from local `main` (1f6cb0d, which had no Commons) to `github/main` (6c83d2d, PR #10, the campus companion), because the issue changes the Commons. Merge it onto a `main` that contains 6c83d2d.
+> - **Not run here** (the Docker stack was shared with the issue 15/19 session): `make up`, `make down`, `make e2e` (journeys A-D), `make migrate`, `make seed`, `make screenshots`. Run during integration: `make api-client` after merging (the generated `openapi.json` and `schema.d.ts` will conflict with any other API change: regenerate, do not hand-merge), `make check`, `make e2e`, then `make up`. No migration: the branch changes no table.
+> - **Run here:** `make check` and the mock-data browser tests (`E2E_PORT=4175 npm --prefix apps/web run e2e`); results at the end of this file.
+> - **To look at with real data:** `make seed-forum-demo` and `make seed-commons-demo`, then `/forum` logged in and logged out (rankings need 3 reviews in the last 91 days; the stats are cached per process for `PAGE_CACHE_TTL_S`).
+> - **Files other work may also touch:** `services/api/api/commons/service.py` (`thread_filters` taken out of `list_threads`), `services/api/api/routers/forum.py`, `apps/web/src/pages/CommonsPage.tsx`, `apps/web/src/features/commons/ThreadCard.tsx`, `apps/web/src/mocks/forum.ts` (six more fake reviews on pages 4 and 10), `apps/web/src/mocks/commons.ts`, `apps/web/e2e/forum.spec.ts`, `apps/web/e2e/campus.spec.ts`, and the docs (SPEC, SPEC-CHANGES, CONTRACTS, OPEN_QUESTIONS, PROGRESS).
+> - **Needs Richard:** OPEN_QUESTIONS F20-1 (the word limit, 60 for now); F20-2 to F20-4 are defaults with suggestions.
+>
 > **Current state (2026-11-20).** On branch `feature/best-of-uchicago`: the course-title chapel homepage, now titled "The Best of UChicago, within your reach." with a question bar for the new Ask chatbot, plus the campus companion (Ask, a companion on every page, the dashboard with the interviewing guide and routes, the feed, the Commons). See "Campus companion" at the end of this file, `docs/BEST-OF-UCHICAGO-PLAN.md`, and OPEN_QUESTIONS CC-1 to CC-8.
 >
 > **Earlier state (2026-11-16).** Every prompt (00-13) has been run (the schedule scraper stays switched off until the University allows scraping); the owner's FEEDBACK items are all resolved (index at the top of "Done" in `docs/FEEDBACK.md`). The latest work, at the end of this file: the design pass with Impeccable (D1-D11, `docs/DESIGN-REVIEW.md`), TRNC 10100 transfer credit, and the advisor's cut-off replies (output limit 800 to 4000; a cut-off reply now stops the run). The project moved from `quadplan-kit/` to the repository root for GitHub.
@@ -668,3 +677,29 @@ Max's request in one overnight pass (`docs/BEST-OF-UCHICAGO-PLAN.md` has the pla
 - **Redesign "Maroon and night" (same day, Max's reference login card):** every page is a white rounded sheet on a maroon-and-black background, with bigger type, bold sans headlines (Newsreader italic accents), pill buttons and fields, split headers with a generated art panel (`GradientArt` + TypeScape `theme="night"`), and sign-in/sign-up after the reference (`docs/DESIGN.md` "Maroon and night"). e2e expectations follow it (sign-in title, fonts, 46px pills, 15px captions).
 - **Then:** Commons reports in the admin moderation queue (CC-7, `test_commons_moderation.py`); an e2e spec for the new pages (`e2e/campus.spec.ts`: the question bar to Ask, the art header, the companion, the feed, a Commons thread, the dashboard, the redesigned sign-in).
 - **Not done:** eval sets for the new prompts (they need paid model calls, so the owner's OK).
+
+## Issue #20 · Forum: ratings and discussions on one page (2026-11-24, branch `issue-20`)
+
+Richard's answers on the issue: D1 option A (a short AI answer under each Commons question), named "Quarterly", not "Phil the Phoenix"; D2 as suggested (separate tables, one list). The comments set no word limit, so the limit is 60 words (OPEN_QUESTIONS F20-1, Needs Richard).
+
+**The issue's checklist**
+1. Ask the open decisions first: done (answers in the issue's comment).
+2. Read CLAUDE.md, DESIGN.md and the forum sections of SPEC: done.
+3. Change the UI only where the page's job changes: done. `/forum` keeps its header, search, course filter, subject and tag chips, "My questions", the notes and popular courses; the sort tabs went, because the list is now newest first.
+4. The Commons bot is `agents/commons_bot.py`: noted.
+5. D1 = A, an answer shorter than the word limit, in the set voice: done. Prompt `a9_commons_bot` version 2 speaks as "Quarterly" and asks for at most 60 words; `submit_answer` rejects a longer answer once (one repair turn); the stored and the shown text is clipped to 60 words (`api/commons/words.py`), so older long answers show clipped too; the deterministic fallback also fits. Tests with FakeLLM: `test_commons_bot.py` (a 90-word answer is sent back and the rewrite stored; two long answers end in the short fallback; exactly 60 words is kept whole; an old long answer is shown clipped; prompt and tool state the same limit) and `test_commons_words.py`.
+6. and 7. D1 = B (remove the bot, add `a3_forum_summary`): skipped, because D1 is A.
+8. The list in the right two thirds, following D2: done (`GET /forum/items`, `api/forum/board.py`). Each discussion shows the AI's answer under it, labelled "Quarterly AI · AI · Written by an AI and can be wrong."
+9. Newest first; filters for course, instructor and item type: done (keyset cursor; a review matches every code of a cross-listed course; an instructor filter shows reviews only).
+10. `GET /forum/stats?period=quarter|year` from `review_rating`: done (`api/forum/stats.py`; the last 91 or 365 days, F20-2).
+11. Top courses, and rankings for each major, each Humanities sequence and each instructor: done.
+12. Humanities sequences from the Core lists in `course_list`: done (the sublists of `core-huma-sequences`).
+13. Bayesian average of SPEC with k = 5, shown in the left third: done; the prior is the period's mean rating (F20-3); at least 3 reviews; each line shows its review count.
+14. Statistics for logged-in students only: done (the endpoint needs a login; logged out, the panel is a login card and the list has discussions only).
+15. "New post" button to `/forum/new` instead of the ask box: done.
+16. On phones the statistics come above the list: done (e2e checks the boxes at 390 px; the notes go below the list).
+17. Change `forum.spec.ts` and `campus.spec.ts`; `make api-client` and `make check`: done. `make e2e` and `make up`: skipped in this session (the shared Docker stack); the mock-data browser tests ran instead, and the integration run does the rest (hand-off note at the top).
+18. SPEC ("The forum page", "A9", sitemap), SPEC-CHANGES, PROGRESS: done; also CONTRACTS and OPEN_QUESTIONS F20-1 to F20-4.
+19. "Finishing a task": the `spec-reviewer` review and the final checks are below.
+
+**Not done:** an eval set for prompt `a9_commons_bot` version 2 (it needs paid model calls, so the owner's OK). No paid call was made.

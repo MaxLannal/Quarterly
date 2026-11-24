@@ -361,9 +361,16 @@ def test_rankings_use_the_bayesian_average_with_k_5_and_at_least_3_reviews(f: Fo
     assert quarter["n_reviews"] == 14 and quarter["prior_weight"] == 5
     assert quarter["min_reviews"] == 3 and quarter["prior_mean"] == round(prior, 2)
     assert quarter["since"] == (TODAY - dt.timedelta(days=90)).isoformat()
-    assert quarter["n_courses"] == 6 and quarter["recommend_rate"] == 1.0
+    assert quarter["n_courses"] == 5 and quarter["recommend_rate"] == 1.0  # HUMA = CLAS 11000
     top = quarter["top_courses"]
-    assert [(e["id"], e["n_reviews"]) for e in top] == [("CMSC 14100", 3), ("MATH 15300", 4)]
+    # A cross-listed course pools its codes (HUMA 11000 = CLAS 11000, pages of one instructor
+    # under each code), named by the code with the most reviews.
+    assert [(e["id"], e["n_reviews"]) for e in top] == [
+        ("CMSC 14100", 3),
+        ("HUMA 11000", 3),
+        ("MATH 15300", 4),
+    ]
+    assert top[1]["score"] == _expected([4, 4, 5], prior)
     assert top[0]["score"] == _expected([5, 5, 4], prior) == 4.21
     assert top[0]["mean"] == 4.67 and top[0]["rank"] == 1
     assert top[0]["detail"] == "Introduction to Computer Science I"
@@ -399,6 +406,15 @@ def test_with_no_reviews_the_statistics_are_empty(f: Forum) -> None:
     out = f.c.user().get("/forum/stats").json()
     assert out["n_reviews"] == 0 and out["prior_mean"] is None
     assert out["top_courses"] == [] and out["majors"] == [] and out["instructors"] == []
+
+
+def test_with_fewer_than_3_reviews_no_average_is_shown(f: Forum) -> None:
+    f.review("cmsc141_doe", 2, workload=12, recommend=False)
+    f.review("cmsc142_doe", 4)
+    out = f.c.user().get("/forum/stats").json()
+    assert out["n_reviews"] == 2 and out["n_courses"] == 2
+    assert out["prior_mean"] is None and out["recommend_rate"] is None
+    assert out["workload_hours"] is None and out["top_courses"] == []
 
 
 def test_the_bayesian_average_pulls_few_reviews_toward_the_prior() -> None:

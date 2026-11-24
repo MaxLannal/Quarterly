@@ -28,13 +28,17 @@ def count_words(text: str) -> int:
 
 def limit_words(text: str, limit: int = ANSWER_WORDS) -> str:
     """`text` with at most `limit` words. A longer text ends at its last full sentence inside the
-    limit when that keeps at least half of it; otherwise it is cut after the limit-th word and
-    ends with "…". An open `**` is closed."""
+    limit when that keeps at least half of it; otherwise it is cut after the limit-th word (or
+    before a markdown link that the limit would split) and ends with "…". An open `**` is
+    closed."""
     text = text.strip()
     words = [t for t in _TOKEN.finditer(text) if _WORDLIKE.search(t.group())]
     if len(words) <= limit:
         return text
     kept = text[: words[limit - 1].end()]
+    link = kept.rfind("[")
+    if link != -1 and "](" not in kept[link:]:
+        kept = kept[:link]  # never end inside a link's text: the link would show as "[..."
     ends = [mt.end() for mt in _SENTENCE_END.finditer(kept)]
     if ends and count_words(kept[: ends[-1]]) >= limit // 2:
         kept = kept[: ends[-1]].rstrip()

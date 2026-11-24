@@ -210,6 +210,35 @@ def _humanities(db: Session, reviews: list[_Review], prior_mean: float) -> list[
     return _ranked(pools, prior_mean, labels, None)
 
 
+def _courses(
+    db: Session, reviews: list[_Review]
+) -> tuple[dict[str, _Pool], dict[str, tuple[str, str | None]]]:
+    """Ratings per course, every instructor pooled. A cross-listed course can have pages under
+    different codes (one per instructor), so its codes are pooled; the pool is named by the code
+    with the most reviews in the period (ties: the first code)."""
+    group_of: dict[str, str] = {}
+    for code in {r.course_code for r in reviews}:
+        if code not in group_of:
+            group = crosslisted_codes(db, code)
+            for member in group:
+                group_of[member] = group[0]
+    pools: dict[str, _Pool] = defaultdict(_Pool)
+    counts: dict[str, dict[str, int]] = defaultdict(lambda: defaultdict(int))
+    titles: dict[str, str] = {}
+    for r in reviews:
+        key = group_of.get(r.course_code, r.course_code)
+        pools[key].add(r.overall)
+        counts[key][r.course_code] += 1
+        titles[r.course_code] = r.course_title
+    out: dict[str, _Pool] = {}
+    labels: dict[str, tuple[str, str | None]] = {}
+    for key, by_code in counts.items():
+        code = min(by_code, key=lambda c: (-by_code[c], c))
+        out[code] = pools[key]
+        labels[code] = (code, titles[code])
+    return out, labels
+
+
 def forum_stats(
     db: Session,
     period: Period,
@@ -221,23 +250,20 @@ def forum_stats(
     reviews = _reviews(db, since)
     n = len(reviews)
     prior = sum(r.overall for r in reviews) / n if n else None
-    by_course: dict[str, _Pool] = defaultdict(_Pool)
+    by_course, course_labels = _courses(db, reviews)
     by_instructor: dict[str, _Pool] = defaultdict(_Pool)
-    course_labels: dict[str, tuple[str, str | None]] = {}
-    for r in reviews:
-        by_course[r.course_code].add(r.overall)
-        course_labels[r.course_code] = (r.course_code, r.course_title)
     ids = {r.instructor_id for r in reviews}
+    shown = n >= MIN_REVIEWS  # SPEC: forum-derived values only from 3 reviews
     stats = ForumStats(
         period=period,
         since=since,
         prior_weight=PRIOR_WEIGHT,
         min_reviews=MIN_REVIEWS,
-        prior_mean=round(prior, 2) if prior is not None else None,
+        prior_mean=round(prior, 2) if prior is not None and shown else None,
         n_reviews=n,
         n_courses=len(by_course),
-        recommend_rate=round(sum(r.would_recommend for r in reviews) / n, 3) if n else None,
-        workload_hours=round(sum(r.workload_hours for r in reviews) / n, 1) if n else None,
+        recommend_rate=round(sum(r.would_recommend for r in reviews) / n, 3) if shown else None,
+        workload_hours=round(sum(r.workload_hours for r in reviews) / n, 1) if shown else None,
     )
     if prior is None:
         return stats

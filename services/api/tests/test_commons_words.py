@@ -33,3 +33,14 @@ def test_a_long_text_with_no_sentence_end_is_cut_with_an_ellipsis() -> None:
 
 def test_the_limit_can_be_smaller() -> None:
     assert limit_words("one two three four", 2) == "one two…"
+
+
+def test_a_link_is_never_split() -> None:
+    text = " ".join(["word"] * 58) + " [Intro to Programming](/courses/CMSC%2014100) after"
+    out = limit_words(text)
+    assert "[" not in out and out.endswith("word…")
+    assert count_words(out) == 58
+    whole = (
+        " ".join(["word"] * 50) + " [Intro to Programming](/courses/CMSC%2014100) and more words"
+    )
+    assert "[Intro to Programming](/courses/CMSC%2014100)" in limit_words(whole)
