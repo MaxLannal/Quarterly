@@ -8,25 +8,23 @@ import { useSession } from "@/lib/session";
 import { cn } from "@/lib/utils";
 
 /** Pages with their own course search box; the bar hides its copy there (D11 H-1, CS-1). The
- * homepage's bar asks questions instead (docs/BEST-OF-UCHICAGO-PLAN.md), so the top bar's course
- * search shows there too, on wide screens only: on a phone the chapel keeps the first screen. */
+ * homepage has no search of its own since its question bar went (issue #15), so the top bar's
+ * course search shows there too, on phones as well. */
 const PAGE_HAS_SEARCH = new Set(["/courses"]);
 const AUTH_PAGES = new Set(["/login", "/signup"]);
 
 /** A forum page or thread: /courses/:code/i/:instructor[/t/:id]. */
 const FORUM_PATH = /^\/courses\/[^/]+\/i\//;
 
-/** Each link is the current section for its own path and the pages that belong to it. */
+/** Each link is the current section for its own path and the pages that belong to it. Four
+ * tabs, one job each (issue #15): the homepage is not a tab; the wordmark links to it. */
 const NAV: { to: string; label: string; current: (path: string) => boolean }[] =
   [
-    // Campus companion (docs/BEST-OF-UCHICAGO-PLAN.md): the student's dashboard, then the chatbot
-    // and the feed lead the bar.
     { to: "/me", label: "Dashboard", current: (p) => /^\/me(\/|$)/.test(p) },
-    { to: "/ask", label: "Ask", current: (p) => /^\/ask(\/|$)/.test(p) },
-    { to: "/feed", label: "Feed", current: (p) => /^\/feed(\/|$)/.test(p) },
+    // The only page where a student talks to the planner agent ("Ask Quarterly").
     {
       to: "/plan",
-      label: "Plan",
+      label: "Planner",
       current: (p) => /^\/(plan|plans|onboarding)(\/|$)/.test(p),
     },
     // Courses and programs share one item; a switch on each page moves between them (FEEDBACK 2026-11-16).
@@ -192,9 +190,8 @@ export function TopNav() {
         {!PAGE_HAS_SEARCH.has(location.pathname) && (
           <div
             className={cn(
-              // Its own row below the links until the bar is wide enough for six links and a search.
+              // Its own row below the links until the bar is wide enough for the links and a search.
               "order-1 w-full pb-3 lg:order-none lg:ml-auto lg:w-auto lg:max-w-[17rem] lg:flex-1 lg:pb-0",
-              location.pathname === "/" && "max-lg:hidden",
             )}
           >
             <SearchBox />

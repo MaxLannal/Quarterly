@@ -106,7 +106,7 @@ def test_the_rule_guide_walks_the_topics_and_ends_with_a_portrait(env: Env) -> N
     portrait = t["proposed"]["portrait"]
     assert portrait["headline"] and len(portrait["headline"]) <= 90
     assert "Physics" in portrait["themes"] and len(portrait["summary"]) <= 400
-    assert "Draft my routes" in t["quick_replies"]
+    assert t["quick_replies"] == ["Change something"]  # no routes to draft (issue #15)
 
 
 def test_class_year_from_words_and_humanities_goal_from_keywords(env: Env) -> None:
@@ -161,7 +161,7 @@ def test_welcome_back_without_a_model_recalls_the_profile(env: Env) -> None:
     t = ask(env, headers, "welcome_back")
     assert t["text"].startswith("Welcome back, quiet-heron.")
     assert "physics" in t["text"].lower() and "physicist with a film" in t["text"]
-    assert "Draft my routes" in t["quick_replies"] and t["proposed"] == {
+    assert "Draft my routes" not in t["quick_replies"] and t["proposed"] == {
         k: None for k in t["proposed"]
     }
 
@@ -303,7 +303,7 @@ def test_welcome_back_is_cached_per_profile(env: Env) -> None:
                 "a6_interview": [
                     ToolCall(
                         "submit_turn",
-                        turn("Welcome back! Still thinking about film? Draft routes?", "research"),
+                        turn("Welcome back! Still on film? Update a topic?", "research"),
                     ),
                 ]
             }

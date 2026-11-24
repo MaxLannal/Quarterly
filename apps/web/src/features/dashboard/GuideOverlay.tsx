@@ -10,18 +10,13 @@ import { answeredTopics, courseHref, filledTopics, ownWords, seeded, TOPIC_LABEL
 import { GuideMark } from "./parts";
 import type { Guide } from "./useGuide";
 
-/** Quick replies that are actions on the page rather than answers. */
-export function isDraftChip(text: string): boolean {
-  return /draft (my |some |a few )?routes?/i.test(text);
-}
-
 /**
  * The guide, immersive: a full-screen ink room with the student's own words drifting behind the
  * question, which appears word by word in large Newsreader. Quick replies, a composer, the live
  * trace of what the guide is reading, a rail of topics, and "Noted" chips the student keeps or
  * drops (kept facts are saved at once and the dashboard behind updates). Escape closes.
  */
-export function GuideOverlay({ open, onClose, guide, profile, onDraftRoutes }: { open: boolean; onClose: () => void; guide: Guide; profile: Profile; onDraftRoutes: () => void }) {
+export function GuideOverlay({ open, onClose, guide, profile }: { open: boolean; onClose: () => void; guide: Guide; profile: Profile }) {
   const ref = useRef<HTMLDivElement>(null);
   const composer = useRef<HTMLTextAreaElement>(null);
   const titleId = useId();
@@ -51,10 +46,6 @@ export function GuideOverlay({ open, onClose, guide, profile, onDraftRoutes }: {
   const lastStudent = guide.pending ?? [...guide.turns].reverse().find((t) => t.role === "student")?.text ?? null;
 
   function send(text: string) {
-    if (isDraftChip(text)) {
-      onDraftRoutes();
-      return;
-    }
     guide.reply(text);
     setDraft("");
   }
@@ -141,10 +132,7 @@ export function GuideOverlay({ open, onClose, guide, profile, onDraftRoutes }: {
                   type="button"
                   onClick={() => send(q)}
                   style={{ "--delay": `${200 + i * 50}ms` } as CSSProperties}
-                  className={cn(
-                    "dash-rise min-h-11 rounded-pill border px-4 text-body-sm transition-colors",
-                    isDraftChip(q) ? "border-primary bg-primary text-on-primary hover:bg-primary-hover" : "border-on-dark/25 text-on-dark hover:border-on-dark/60 hover:bg-on-dark/10",
-                  )}
+                  className="dash-rise min-h-11 rounded-pill border border-on-dark/25 px-4 text-body-sm text-on-dark transition-colors hover:border-on-dark/60 hover:bg-on-dark/10"
                 >
                   {q}
                 </button>
@@ -155,10 +143,7 @@ export function GuideOverlay({ open, onClose, guide, profile, onDraftRoutes }: {
           {turn?.done && !thinking && (
             <div className="dash-rise flex flex-wrap items-center gap-3 rounded-xl border border-on-dark/15 bg-surface-dark-elevated p-4">
               <p className="min-w-0 flex-1 text-body-sm text-on-dark">That's the whole conversation. Keep the notes that ring true; your portrait waits on the dashboard.</p>
-              <button type="button" onClick={onDraftRoutes} className="min-h-11 rounded-pill bg-primary px-5 text-button text-on-primary hover:bg-primary-hover">
-                Draft my routes
-              </button>
-              <button type="button" onClick={onClose} className="min-h-11 rounded-pill px-4 text-button text-on-dark hover:bg-on-dark/10">
+              <button type="button" onClick={onClose} className="min-h-11 rounded-pill bg-primary px-5 text-button text-on-primary hover:bg-primary-hover">
                 Back to your dashboard
               </button>
             </div>

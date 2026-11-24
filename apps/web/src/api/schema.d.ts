@@ -208,23 +208,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/agents/ask": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Ask */
-        post: operations["ask_agents_ask_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/agents/chat": {
         parameters: {
             query?: never;
@@ -304,23 +287,6 @@ export interface paths {
         put?: never;
         /** Interview */
         post: operations["interview_agents_interview_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/agents/routes": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Draft Routes */
-        post: operations["draft_routes_agents_routes_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -964,42 +930,6 @@ export interface paths {
         patch: operations["patch_profile_me_profile_patch"];
         trace?: never;
     };
-    "/me/routes": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** List Routes */
-        get: operations["list_routes_me_routes_get"];
-        put?: never;
-        /** Create Route */
-        post: operations["create_route_me_routes_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/me/routes/{route_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        /** Delete Route */
-        delete: operations["delete_route_me_routes__route_id__delete"];
-        options?: never;
-        head?: never;
-        /** Patch Route */
-        patch: operations["patch_route_me_routes__route_id__patch"];
-        trace?: never;
-    };
     "/me/updates": {
         parameters: {
             query?: never;
@@ -1457,149 +1387,6 @@ export interface components {
          * @description One Server-Sent Event `data:` payload from /agents/generate or /agents/chat.
          */
         AgentEvent: components["schemas"]["StepEvent"] | components["schemas"]["VariantEvent"] | components["schemas"]["InfeasibleEvent"] | components["schemas"]["MessageEvent"] | components["schemas"]["ProposalEvent"] | components["schemas"]["ConfirmEvent"] | components["schemas"]["DoneEvent"] | components["schemas"]["ErrorEvent"];
-        /** AskAnswerEvent */
-        AskAnswerEvent: {
-            /**
-             * Ai
-             * @default true
-             */
-            ai: boolean;
-            /**
-             * Citations
-             * @default []
-             */
-            citations: components["schemas"]["AskCitation"][];
-            /**
-             * Courses
-             * @default []
-             */
-            courses: components["schemas"]["AskCourse"][];
-            /**
-             * Followups
-             * @default []
-             */
-            followups: string[];
-            /** Text */
-            text: string;
-            /**
-             * @description discriminator enum property added by openapi-typescript
-             * @enum {string}
-             */
-            type: "answer";
-        };
-        /**
-         * AskCitation
-         * @description A source chip. `label` and `href` are built by the server from the id (never by the
-         *     model): `href` is a path on this site, or an https page on uchicago.edu for `guide`.
-         */
-        AskCitation: {
-            /** Href */
-            href: string;
-            /** Id */
-            id: string;
-            /**
-             * Kind
-             * @enum {string}
-             */
-            kind: "course" | "program" | "post" | "summary" | "attribute" | "thread" | "guide";
-            /** Label */
-            label: string;
-        };
-        /**
-         * AskContext
-         * @description Where the student asks from (the companion sends it; the Ask page usually does not).
-         */
-        AskContext: {
-            /** Course Code */
-            course_code?: string | null;
-            /** Page */
-            page?: string | null;
-            /** Thread Id */
-            thread_id?: number | null;
-        };
-        /**
-         * AskCourse
-         * @description A course the answer mentions; it exists in the catalog.
-         */
-        AskCourse: {
-            /** Code */
-            code: string;
-            /** Title */
-            title: string;
-        };
-        /** AskDoneEvent */
-        AskDoneEvent: {
-            /** Run Id */
-            run_id: string;
-            /**
-             * @description discriminator enum property added by openapi-typescript
-             * @enum {string}
-             */
-            type: "done";
-        };
-        /** AskErrorEvent */
-        AskErrorEvent: {
-            /** Message */
-            message: string;
-            /**
-             * @description discriminator enum property added by openapi-typescript
-             * @enum {string}
-             */
-            type: "error";
-        };
-        /**
-         * AskEvent
-         * @description One Server-Sent Event `data:` payload from /agents/ask.
-         */
-        AskEvent: components["schemas"]["AskStepEvent"] | components["schemas"]["AskAnswerEvent"] | components["schemas"]["AskDoneEvent"] | components["schemas"]["AskErrorEvent"];
-        /** AskRequest */
-        AskRequest: {
-            /** @default {} */
-            context: components["schemas"]["AskContext"];
-            /**
-             * History
-             * @default []
-             */
-            history: components["schemas"]["AskTurn"][];
-            /** Message */
-            message: string;
-            /**
-             * Mode
-             * @default ask
-             * @enum {string}
-             */
-            mode: "ask" | "companion";
-        };
-        /**
-         * AskStepEvent
-         * @description The agent called a tool ("Searching the catalog for “quantum”").
-         */
-        AskStepEvent: {
-            /** Label */
-            label: string;
-            /**
-             * Status
-             * @enum {string}
-             */
-            status: "started" | "done" | "failed";
-            /** Tool */
-            tool: string;
-            /**
-             * @description discriminator enum property added by openapi-typescript
-             * @enum {string}
-             */
-            type: "step";
-        };
-        /** AskTurn */
-        AskTurn: {
-            /**
-             * Role
-             * @enum {string}
-             */
-            role: "user" | "assistant";
-            /** Text */
-            text: string;
-        };
         /** Assignment */
         Assignment: {
             /** Courses */
@@ -3856,13 +3643,6 @@ export interface components {
              */
             type: "message";
         };
-        /** Milestone */
-        Milestone: {
-            /** Text */
-            text: string;
-            /** When */
-            when: string;
-        };
         /** ModerationDecision */
         ModerationDecision: {
             /**
@@ -4661,8 +4441,8 @@ export interface components {
         };
         /**
          * ProfilePatch
-         * @description A partial update: only the fields sent are changed (`null` clears a field). The feed,
-         *     the Commons follow button and the companion also send these.
+         * @description A partial update: only the fields sent are changed (`null` clears a field). The feed
+         *     and the Commons follow button also send these.
          */
         ProfilePatch: {
             /** Career Paths */
@@ -5071,259 +4851,6 @@ export interface components {
             /** Would Recommend */
             would_recommend: boolean;
         };
-        /** RouteCourse */
-        RouteCourse: {
-            /** Code */
-            code: string;
-            /**
-             * Note
-             * @default
-             */
-            note: string;
-            /**
-             * Offered
-             * @default []
-             */
-            offered: ("AU" | "WI" | "SP" | "SU")[];
-            /** Quarter */
-            quarter?: ("AU" | "WI" | "SP" | "SU") | null;
-            /**
-             * Role
-             * @default elective
-             * @enum {string}
-             */
-            role: "core" | "major" | "minor" | "elective" | "humanities" | "research";
-            /**
-             * Title
-             * @default
-             */
-            title: string;
-            /** Year */
-            year: number;
-        };
-        /**
-         * RouteDraftEvent
-         * @description One drafted route (not saved: POST /me/routes keeps it).
-         */
-        RouteDraftEvent: {
-            /**
-             * Fallback
-             * @default false
-             */
-            fallback: boolean;
-            /**
-             * Programs
-             * @default []
-             */
-            programs: components["schemas"]["ProgramRef"][];
-            route: components["schemas"]["RouteIn"];
-            /**
-             * @description discriminator enum property added by openapi-typescript
-             * @enum {string}
-             */
-            type: "route";
-        };
-        /**
-         * RouteFit
-         * @description How well the route fits what the student said, 0..1 (an estimate, not a grade).
-         */
-        RouteFit: {
-            /**
-             * Career
-             * @default 0.5
-             */
-            career: number;
-            /**
-             * Humanities
-             * @default 0.5
-             */
-            humanities: number;
-            /**
-             * Interests
-             * @default 0.5
-             */
-            interests: number;
-            /** Workload */
-            workload?: ("light" | "balanced" | "intense") | null;
-        };
-        /** RouteIn */
-        RouteIn: {
-            /**
-             * Courses
-             * @default []
-             */
-            courses: components["schemas"]["RouteCourse"][];
-            /**
-             * @default {
-             *       "career": 0.5,
-             *       "humanities": 0.5,
-             *       "interests": 0.5
-             *     }
-             */
-            fit: components["schemas"]["RouteFit"];
-            /**
-             * Kind
-             * @default custom
-             * @enum {string}
-             */
-            kind: "major" | "double_major" | "major_minor" | "exploratory" | "custom";
-            /**
-             * Milestones
-             * @default []
-             */
-            milestones: components["schemas"]["Milestone"][];
-            /**
-             * Origin
-             * @default user
-             * @enum {string}
-             */
-            origin: "ai" | "user";
-            /**
-             * Program Ids
-             * @default []
-             */
-            program_ids: string[];
-            /**
-             * Summary
-             * @default
-             */
-            summary: string;
-            /**
-             * Tagline
-             * @default
-             */
-            tagline: string;
-            /** Title */
-            title: string;
-        };
-        /** RouteList */
-        RouteList: {
-            /** Chosen Id */
-            chosen_id?: string | null;
-            /** Items */
-            items: components["schemas"]["RouteOut"][];
-            /**
-             * Max Routes
-             * @default 12
-             */
-            max_routes: number;
-        };
-        /** RouteOut */
-        RouteOut: {
-            /**
-             * Courses
-             * @default []
-             */
-            courses: components["schemas"]["RouteCourse"][];
-            /**
-             * Created Day
-             * Format: date
-             */
-            created_day: string;
-            /**
-             * @default {
-             *       "career": 0.5,
-             *       "humanities": 0.5,
-             *       "interests": 0.5
-             *     }
-             */
-            fit: components["schemas"]["RouteFit"];
-            /**
-             * Id
-             * Format: uuid
-             */
-            id: string;
-            /**
-             * Kind
-             * @default custom
-             * @enum {string}
-             */
-            kind: "major" | "double_major" | "major_minor" | "exploratory" | "custom";
-            /**
-             * Milestones
-             * @default []
-             */
-            milestones: components["schemas"]["Milestone"][];
-            /** Note */
-            note?: string | null;
-            /**
-             * Origin
-             * @default user
-             * @enum {string}
-             */
-            origin: "ai" | "user";
-            /** Position */
-            position: number;
-            /**
-             * Program Ids
-             * @default []
-             */
-            program_ids: string[];
-            /**
-             * Programs
-             * @default []
-             */
-            programs: components["schemas"]["ProgramRef"][];
-            /**
-             * Status
-             * @enum {string}
-             */
-            status: "open" | "chosen" | "archived";
-            /**
-             * Summary
-             * @default
-             */
-            summary: string;
-            /**
-             * Tagline
-             * @default
-             */
-            tagline: string;
-            /** Title */
-            title: string;
-            /**
-             * Updated Day
-             * Format: date
-             */
-            updated_day: string;
-        };
-        /**
-         * RoutePatch
-         * @description `status: chosen` makes any other chosen route `open`; `open` on the chosen route keeps
-         *     the options open.
-         */
-        RoutePatch: {
-            /** Note */
-            note?: string | null;
-            /** Position */
-            position?: number | null;
-            /** Status */
-            status?: ("open" | "chosen" | "archived") | null;
-            /** Tagline */
-            tagline?: string | null;
-            /** Title */
-            title?: string | null;
-        };
-        /**
-         * RoutesEvent
-         * @description One Server-Sent Event `data:` payload from /agents/routes.
-         */
-        RoutesEvent: components["schemas"]["DashboardStepEvent"] | components["schemas"]["RouteDraftEvent"] | components["schemas"]["ProfileDoneEvent"] | components["schemas"]["ErrorEvent"];
-        /** RoutesRequest */
-        RoutesRequest: {
-            /**
-             * Count
-             * @default 3
-             */
-            count: number;
-            /** Focus */
-            focus?: string | null;
-            /**
-             * Keep Existing Titles
-             * @default []
-             */
-            keep_existing_titles: string[];
-        };
         /** Section */
         Section: {
             /** Component */
@@ -5647,13 +5174,6 @@ export interface components {
         };
         /** UpdatesOut */
         UpdatesOut: {
-            /** Digest */
-            digest?: string | null;
-            /**
-             * Digest Ai
-             * @default false
-             */
-            digest_ai: boolean;
             /**
              * Items
              * @default []
@@ -6345,40 +5865,6 @@ export interface operations {
             };
         };
     };
-    ask_agents_ask_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["AskRequest"];
-            };
-        };
-        responses: {
-            /** @description Server-Sent Events; each `data:` line is one AskEvent as JSON. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AskEvent"];
-                    "text/event-stream": unknown;
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
     chat_agents_chat_post: {
         parameters: {
             query?: never;
@@ -6531,49 +6017,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["InterviewEvent"];
-                    "text/event-stream": unknown;
-                };
-            };
-            /** @description Not logged in */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorOut"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    draft_routes_agents_routes_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["RoutesRequest"];
-            };
-        };
-        responses: {
-            /** @description Server-Sent Events; each `data:` line is one RoutesEvent as JSON. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["RoutesEvent"];
                     "text/event-stream": unknown;
                 };
             };
@@ -8153,191 +7596,9 @@ export interface operations {
             };
         };
     };
-    list_routes_me_routes_get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["RouteList"];
-                };
-            };
-            /** @description Not logged in */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorOut"];
-                };
-            };
-        };
-    };
-    create_route_me_routes_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["RouteIn"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["RouteOut"];
-                };
-            };
-            /** @description Not logged in */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorOut"];
-                };
-            };
-            /** @description Too many routes */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorOut"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    delete_route_me_routes__route_id__delete: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                route_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not logged in */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorOut"];
-                };
-            };
-            /** @description Not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorOut"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    patch_route_me_routes__route_id__patch: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                route_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["RoutePatch"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["RouteOut"];
-                };
-            };
-            /** @description Not logged in */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorOut"];
-                };
-            };
-            /** @description Not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorOut"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
     updates_me_updates_get: {
         parameters: {
-            query?: {
-                digest?: boolean;
-            };
+            query?: never;
             header?: never;
             path?: never;
             cookie?: never;
@@ -8351,15 +7612,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["UpdatesOut"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };

@@ -23,10 +23,14 @@ def patch(env: Env, headers: dict[str, str], body: dict[str, Any]) -> Any:
 def test_everything_needs_login(env: Env) -> None:
     assert env.client.get("/me/profile").status_code == 401
     assert env.client.patch("/me/profile", json={"interests": ["x"]}).status_code == 401
-    assert env.client.get("/me/routes").status_code == 401
-    assert env.client.post("/me/routes", json={"title": "x"}).status_code == 401
     assert env.client.post("/agents/interview", json={"mode": "start"}).status_code == 401
-    assert env.client.post("/agents/routes", json={}).status_code == 401
+
+
+def test_the_routes_are_gone(env: Env) -> None:
+    # Issue #15 removed "Your routes": the planner makes every plan proposal.
+    headers = login(env)
+    assert env.client.get("/me/routes", headers=headers).status_code == 404
+    assert env.client.post("/agents/routes", json={}, headers=headers).status_code == 404
 
 
 def test_the_row_is_created_lazily_and_the_email_comes_from_the_account(env: Env) -> None:
@@ -128,20 +132,14 @@ def test_csrf_is_required_for_writes(env: Env) -> None:
     assert env.client.patch("/me/profile", json={"interests": ["x"]}).status_code == 403
 
 
-def test_export_profile_has_the_profile_and_routes_without_the_email(env: Env) -> None:
+def test_export_profile_has_the_profile_without_the_email(env: Env) -> None:
     headers = login(env, "quiet-heron", email="heron.q@uchicago.edu")
     me = account_id(env, "quiet-heron")
     with env.db() as db:
-        assert export_profile(db, me) == {"profile": None, "routes": []}
+        assert export_profile(db, me) == {"profile": None}
     patch(env, headers, {"interests": ["Physics"], "class_year": 2029})
-    env.client.post(
-        "/me/routes",
-        json={"title": "Physics first", "courses": [{"code": "PHYS 13100", "year": 1}]},
-        headers=headers,
-    )
     with env.db() as db:
         out = export_profile(db, me)
     assert out["profile"]["interests"] == ["Physics"] and out["profile"]["class_year"] == 2029
-    assert out["routes"][0]["title"] == "Physics first"
-    assert out["routes"][0]["courses"][0]["title"] == "Mechanics"
+    assert set(out) == {"profile"}  # the routes went in issue #15
     assert "heron.q" not in repr(out)

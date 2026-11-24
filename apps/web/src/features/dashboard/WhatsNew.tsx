@@ -4,13 +4,8 @@ import { DashCard } from "./parts";
 
 const KIND_LABELS = { thread: "Question", reply: "Reply", review: "Review", discussion: "Discussion", comment: "Comment" } as const;
 
-/** Opens the companion (the floating orb on every page), if it is there. */
-function openCompanion() {
-  const orb = document.querySelector<HTMLButtonElement>("button.companion-orb");
-  orb?.click();
-}
-
-/** What's new for this student on the forum (GET /me/updates, owned by the Ask work stream). */
+/** What's new for this student on the forum (GET /me/updates). The companion that listed these in
+ * full went in issue #15; issue #16 decides whether this card stays. */
 export function WhatsNew() {
   const q = useDashboardUpdates(true);
   const items = q.data?.items.slice(0, 3) ?? [];
@@ -42,9 +37,6 @@ export function WhatsNew() {
           ))}
         </ul>
       )}
-      <button type="button" onClick={openCompanion} className="mt-3 inline-flex min-h-11 items-center rounded-pill px-1 text-button text-primary underline underline-offset-4 hover:text-primary-hover">
-        Open your companion
-      </button>
     </DashCard>
   );
 }

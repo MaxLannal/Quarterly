@@ -5,7 +5,7 @@ import type { FeedTab } from "./api";
 export const TABS: { key: FeedTab; label: string; hint: string }[] = [
   { key: "for_you", label: "For you", hint: "Ranked by your interests and focus" },
   { key: "explore", label: "Explore", hint: "A daily shuffle, leaning away from your focus" },
-  { key: "following", label: "Following", hint: "Your routes and the courses and threads you follow" },
+  { key: "following", label: "Following", hint: "The courses and threads you follow" },
 ];
 
 /** For you / Explore / Following (WAI-ARIA tabs controlling the one feed panel). */

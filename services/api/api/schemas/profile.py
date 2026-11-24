@@ -1,11 +1,10 @@
-"""The personal dashboard (`/me`): the student's profile, the interviewing guide's turns and the
-routes (docs/BEST-OF-UCHICAGO-PLAN.md). The email shown on the dashboard is read from
-`account.email` and never stored in `student_profile` (decision 5)."""
+"""The personal dashboard (`/me`): the student's profile and the interviewing guide's turns
+(docs/BEST-OF-UCHICAGO-PLAN.md; the routes were removed in issue #15). The email shown on the
+dashboard is read from `account.email` and never stored in `student_profile` (decision 5)."""
 
 from __future__ import annotations
 
 import datetime as dt
-import uuid
 from collections.abc import Iterable
 from typing import Annotated, Literal
 
@@ -44,7 +43,6 @@ MAX_TEXT_CHARS = 1200
 MAX_FEED_CATEGORIES = 16
 MAX_TURNS = 24
 MAX_TURN_CHARS = 2000
-MAX_ROUTES = 12
 
 
 def squash(text: str) -> str:
@@ -184,8 +182,8 @@ class InterviewMemoryPatch(BaseModel):
 
 
 class ProfilePatch(BaseModel):
-    """A partial update: only the fields sent are changed (`null` clears a field). The feed,
-    the Commons follow button and the companion also send these."""
+    """A partial update: only the fields sent are changed (`null` clears a field). The feed
+    and the Commons follow button also send these."""
 
     class_year: int | None = Field(default=None, ge=2020, le=2040)
     intended_programs: Items | None = None
@@ -240,111 +238,6 @@ class ProfilePatch(BaseModel):
         return Follows(threads=list(dict.fromkeys(value.threads)), courses=courses)
 
 
-# ------------------------------------------------------------------------------ routes
-
-Quarter = Literal["AU", "WI", "SP", "SU"]
-CourseRole = Literal["core", "major", "minor", "elective", "humanities", "research"]
-RouteKind = Literal["major", "double_major", "major_minor", "exploratory", "custom"]
-RouteStatus = Literal["open", "chosen", "archived"]
-
-
-class RouteCourse(BaseModel):
-    code: str = Field(max_length=16)
-    #: Filled in by the server from the catalog (whatever is sent is replaced).
-    title: str = ""
-    year: int = Field(ge=1, le=4)
-    quarter: Quarter | None = None
-    role: CourseRole = "elective"
-    note: str = Field(default="", max_length=240)
-    #: The quarters the course is usually offered in (AU, WI, SP), filled by the server from
-    #: the catalog's offering patterns (whatever is sent is replaced).
-    offered: list[Quarter] = []
-
-    @field_validator("note", mode="before")
-    @classmethod
-    def _note(cls, value: object) -> object:
-        return squash(value)[:240] if isinstance(value, str) else value
-
-
-class Milestone(BaseModel):
-    when: str = Field(max_length=40)
-    text: str = Field(max_length=200)
-
-    @field_validator("when", "text", mode="before")
-    @classmethod
-    def _clean(cls, value: object) -> object:
-        return squash(value) if isinstance(value, str) else value
-
-
-class RouteFit(BaseModel):
-    """How well the route fits what the student said, 0..1 (an estimate, not a grade)."""
-
-    interests: float = Field(default=0.5, ge=0, le=1)
-    career: float = Field(default=0.5, ge=0, le=1)
-    humanities: float = Field(default=0.5, ge=0, le=1)
-    workload: Workload | None = None
-
-
-class RouteIn(BaseModel):
-    title: str = Field(min_length=1, max_length=80)
-    tagline: str = Field(default="", max_length=140)
-    summary: str = Field(default="", max_length=MAX_TEXT_CHARS)
-    kind: RouteKind = "custom"
-    program_ids: list[Annotated[str, Field(max_length=64)]] = Field(default=[], max_length=6)
-    courses: list[RouteCourse] = Field(default=[], max_length=40)
-    milestones: list[Milestone] = Field(default=[], max_length=12)
-    fit: RouteFit = RouteFit()
-    origin: Literal["ai", "user"] = "user"
-
-    @field_validator("title", "tagline", mode="before")
-    @classmethod
-    def _line(cls, value: object) -> object:
-        return squash(value) if isinstance(value, str) else value
-
-    @field_validator("summary", mode="before")
-    @classmethod
-    def _summary(cls, value: object) -> object:
-        return (clean_text(value, MAX_TEXT_CHARS * 2) or "") if isinstance(value, str) else value
-
-
-class RouteOut(RouteIn):
-    id: uuid.UUID
-    status: RouteStatus
-    position: int
-    note: str | None = None
-    created_day: dt.date
-    updated_day: dt.date
-    programs: list[ProgramRef] = []
-
-
-class RouteList(BaseModel):
-    items: list[RouteOut]
-    #: The chosen route, if the student chose one ("keeping options open" otherwise).
-    chosen_id: uuid.UUID | None = None
-    max_routes: int = MAX_ROUTES
-
-
-class RoutePatch(BaseModel):
-    """`status: chosen` makes any other chosen route `open`; `open` on the chosen route keeps
-    the options open."""
-
-    status: RouteStatus | None = None
-    title: str | None = Field(default=None, min_length=1, max_length=80)
-    tagline: str | None = Field(default=None, max_length=140)
-    note: str | None = Field(default=None, max_length=MAX_TEXT_CHARS * 2)
-    position: int | None = Field(default=None, ge=0, le=999)
-
-    @field_validator("title", "tagline", mode="before")
-    @classmethod
-    def _line(cls, value: object) -> object:
-        return squash(value) if isinstance(value, str) else value
-
-    @field_validator("note")
-    @classmethod
-    def _note(cls, value: str | None) -> str | None:
-        return clean_text(value)
-
-
 # ------------------------------------------------------------------------------ agents
 
 
@@ -355,16 +248,6 @@ class InterviewRequest(BaseModel):
     mode: Literal["start", "reply", "welcome_back"] = "start"
     message: str | None = Field(default=None, max_length=MAX_TURN_CHARS)
     history: list[InterviewTurn] = Field(default=[], max_length=30)
-
-
-class RoutesRequest(BaseModel):
-    count: int = Field(default=3, ge=1, le=4)
-    #: e.g. "more humanities", "a lighter load".
-    focus: str | None = Field(default=None, max_length=200)
-    #: Titles of routes the student already has, so the drafts differ from them.
-    keep_existing_titles: list[Annotated[str, Field(max_length=80)]] = Field(
-        default=[], max_length=MAX_ROUTES
-    )
 
 
 class CourseMention(BaseModel):
@@ -399,15 +282,6 @@ class InterviewTurnEvent(BaseModel):
     fallback: bool = False
 
 
-class RouteDraftEvent(BaseModel):
-    """One drafted route (not saved: POST /me/routes keeps it)."""
-
-    type: Literal["route"] = "route"
-    route: RouteIn
-    programs: list[ProgramRef] = []
-    fallback: bool = False
-
-
 class ProfileDoneEvent(BaseModel):
     type: Literal["done"] = "done"
     #: True when the answer was assembled without the AI.
@@ -424,14 +298,3 @@ class InterviewEvent(
     ]
 ):
     """One Server-Sent Event `data:` payload from /agents/interview."""
-
-
-class RoutesEvent(
-    RootModel[
-        Annotated[
-            DashboardStepEvent | RouteDraftEvent | ProfileDoneEvent | ErrorEvent,
-            Field(discriminator="type"),
-        ]
-    ]
-):
-    """One Server-Sent Event `data:` payload from /agents/routes."""

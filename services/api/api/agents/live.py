@@ -1,5 +1,5 @@
-"""Shared plumbing for the campus-companion agents (docs/BEST-OF-UCHICAGO-PLAN.md): the Ask
-chatbot, the interviewer, the route drafter, the feed's notes and the Commons bot.
+"""Shared plumbing for the campus agents (docs/BEST-OF-UCHICAGO-PLAN.md): the interviewer, the
+feed's notes and the Commons bot. (The Ask chatbot and the route drafter went in issue #15.)
 
 - `run_live` runs an agent in a worker thread and yields a `LiveStep` each time the model calls
   a tool, so the page can show the agent working ("Reading CMSC 14100") while it thinks. Only the

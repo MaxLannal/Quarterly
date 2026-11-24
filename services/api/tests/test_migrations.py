@@ -59,7 +59,6 @@ SPEC_TABLES = {
     "account",
     # Campus companion (docs/BEST-OF-UCHICAGO-PLAN.md)
     "student_profile",
-    "pathway",
     "commons_thread",
     "commons_reply",
     "commons_pseudonym",
@@ -122,7 +121,6 @@ def test_user_rows_have_day_level_dates_only(migrated_db_url: str) -> None:
         "chat_message",
         "review_item",
         "student_profile",
-        "pathway",
         "commons_thread",
         "commons_reply",
         "commons_vote",

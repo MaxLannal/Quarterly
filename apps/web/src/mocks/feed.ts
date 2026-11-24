@@ -88,7 +88,7 @@ export const feedHandlers: HttpHandler[] = [
       items,
       next_cursor: end < all.length ? String(end) : null,
       categories_applied: (url.searchParams.get("categories") ?? "").split(",").filter(Boolean),
-      headline: tab === "following" ? "Nothing to follow yet: keep a route or follow a course" : "Today's river: fake introductions and fake theory",
+      headline: tab === "following" ? "Nothing to follow yet: follow a course" : "Today's river: fake introductions and fake theory",
       personalized: false,
     };
     return HttpResponse.json(page);

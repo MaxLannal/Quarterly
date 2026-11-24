@@ -1,7 +1,7 @@
 """The feed (`/feed`, `/feed/categories`, `/agents/feed-notes`), docs/BEST-OF-UCHICAGO-PLAN.md.
 
 Public endpoints: logged out, the feed is a curated mix and the notes are written for "anon";
-logged in, both read the student's profile and routes. Forum posts (which need a login to read)
+logged in, both read the student's profile. Forum posts (which need a login to read)
 appear only for a logged-in reader; Commons replies and questions are public.
 """
 

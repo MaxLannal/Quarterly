@@ -16,7 +16,6 @@ from api.routers import (
     account,
     admin,
     agents,
-    ask,
     auth,
     catalog,
     commons,
@@ -68,8 +67,8 @@ def create_app() -> FastAPI:
     app.include_router(health_router)
     for module in (catalog, plans, verify, agents, forum, auth, account, admin, weather):
         app.include_router(module.router)
-    # Campus companion (docs/BEST-OF-UCHICAGO-PLAN.md).
-    for module in (ask, updates, profile, feed, commons):
+    # Campus companion (docs/BEST-OF-UCHICAGO-PLAN.md); the Ask chatbot went in issue #15.
+    for module in (updates, profile, feed, commons):
         app.include_router(module.router)
     return app
 

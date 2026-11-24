@@ -3,7 +3,6 @@ import { useId, useState, type CSSProperties } from "react";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { streamInterview, type Profile, type TurnEvent } from "./api";
-import { isDraftChip } from "./GuideOverlay";
 import { courseHref, filledTopics } from "./logic";
 import { GuideMark } from "./parts";
 
@@ -40,12 +39,10 @@ function useWelcome(profile: Profile, enabled: boolean) {
 export function GuideCard({
   profile,
   onOpen,
-  onDraftRoutes,
   paused = false,
 }: {
   profile: Profile;
   onOpen: (options?: { seed?: TurnEvent | null; message?: string }) => void;
-  onDraftRoutes: () => void;
   /** While the immersive guide is open the greeting waits (each kept fact changes the profile). */
   paused?: boolean;
 }) {
@@ -56,8 +53,7 @@ export function GuideCard({
   const turn = welcome.data ?? null;
 
   function chip(text: string) {
-    if (isDraftChip(text)) onDraftRoutes();
-    else if (/^(keep going|continue)/i.test(text)) onOpen();
+    if (/^(keep going|continue)/i.test(text)) onOpen();
     else onOpen({ seed: turn, message: text });
   }
 
@@ -91,7 +87,7 @@ export function GuideCard({
           ) : turn ? (
             <p className="dash-guide-text max-h-[13.5rem] overflow-y-auto pr-1 font-serif text-[19px] font-light leading-[1.35] text-on-dark sm:text-[20px]">{turn.text}</p>
           ) : (
-            <p className="font-serif text-[19px] font-light leading-[1.35] text-on-dark sm:text-[21px]">Welcome back. Want to pick up where we left off, or draft a few routes?</p>
+            <p className="font-serif text-[19px] font-light leading-[1.35] text-on-dark sm:text-[21px]">Welcome back. Want to pick up where we left off?</p>
           )}
           {turn && turn.courses.length > 0 && (
             <ul className="flex flex-wrap gap-2">
@@ -105,12 +101,12 @@ export function GuideCard({
             </ul>
           )}
           <div className="flex flex-wrap gap-2">
-            {(turn?.quick_replies.length ? turn.quick_replies : ["Keep going", "Draft my routes"]).map((q) => (
+            {(turn?.quick_replies.length ? turn.quick_replies : ["Keep going"]).map((q) => (
               <button
                 key={q}
                 type="button"
                 onClick={() => chip(q)}
-                className={cn("min-h-11 rounded-pill border px-4 text-body-sm", isDraftChip(q) ? "border-primary bg-primary text-on-primary hover:bg-primary-hover" : "border-on-dark/25 text-on-dark hover:bg-on-dark/10")}
+                className="min-h-11 rounded-pill border border-on-dark/25 px-4 text-body-sm text-on-dark hover:bg-on-dark/10"
               >
                 {q}
               </button>

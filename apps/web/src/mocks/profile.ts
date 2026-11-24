@@ -1,9 +1,8 @@
 /**
  * MSW handlers for the campus companion's "profile" endpoints (docs/BEST-OF-UCHICAGO-PLAN.md):
- * `/me/profile` (GET, PATCH: a partial update like the server's), `/me/routes` (list, keep,
- * choose / keep open / archive / rename / note, delete; one chosen route at most, twelve at
- * most), `/agents/interview` (the deterministic guide's topic order, streamed) and
- * `/agents/routes` (two tool steps and two drafted routes). No model involved; fake data only.
+ * `/me/profile` (GET, PATCH: a partial update like the server's) and `/agents/interview` (the
+ * deterministic guide's topic order, streamed). The routes went in issue #15. No model involved;
+ * fake data only.
  */
 import { http, HttpResponse, type HttpHandler } from "msw";
 import type { components } from "@/api/schema";
@@ -57,13 +56,9 @@ function emptyProfile(): S["ProfileOut"] {
 }
 
 let profile = emptyProfile();
-let routes: S["RouteOut"][] = [];
-let routeSeq = 0;
 
 export function resetProfileMock() {
   profile = emptyProfile();
-  routes = [];
-  routeSeq = 0;
 }
 
 function completeness(p: S["ProfileOut"]): number {
@@ -167,7 +162,7 @@ export function interviewReply(req: S["InterviewRequest"]): unknown[] {
   if (req.mode === "reply" && asked) answered.add(asked);
   if (req.mode === "welcome_back") {
     return [
-      { type: "turn", text: `Welcome back. Last time you told me about ${profile.interests[0] ?? "your plans"}. Want to keep going, or draft a few routes?`, quick_replies: ["Keep going", "Draft my routes"], topic: "research", proposed: {}, progress: 0.3, done: false, courses: [], fallback: false },
+      { type: "turn", text: `Welcome back. Last time you told me about ${profile.interests[0] ?? "your plans"}. Want to keep going?`, quick_replies: ["Keep going", "Update my interests"], topic: "research", proposed: {}, progress: 0.3, done: false, courses: [], fallback: false },
       { type: "done", fallback: false, note: null },
     ];
   }
@@ -180,7 +175,7 @@ export function interviewReply(req: S["InterviewRequest"]): unknown[] {
       {
         type: "turn",
         text: "That's everything I wanted to ask. Here's your portrait: “A fake student with real curiosity.”",
-        quick_replies: ["Draft my routes"],
+        quick_replies: ["Change something"],
         topic: "wrapup",
         proposed: { ...proposed, portrait: { headline: "A fake student with real curiosity", summary: "You like fake things.", themes: ["Testing"] } },
         progress: 1,
@@ -199,31 +194,6 @@ export function interviewReply(req: S["InterviewRequest"]): unknown[] {
   ];
 }
 
-// ------------------------------------------------------------------------------ routes
-
-function draftRoute(title: string, kind: S["RouteIn"]["kind"]): S["RouteIn"] {
-  return {
-    title,
-    tagline: "A fake route for tests",
-    summary: "Two fake courses and a milestone.",
-    kind,
-    program_ids: kind === "exploratory" ? [] : ["test-bs"],
-    courses: [
-      { code: "TEST 10000", title: "Fake Intro I", year: 1, quarter: "AU", role: "major", note: "Start here", offered: [] },
-      { code: "TEST 10100", title: "Fake Intro II", year: 1, quarter: "WI", role: "major", note: "", offered: [] },
-      { code: "TEST 20000", title: "Fake Advanced", year: 3, quarter: null, role: "elective", note: "", offered: [] },
-    ],
-    milestones: [{ when: "Year 2, Spring", text: "Ask a professor about summer research." }],
-    fit: { interests: 0.8, career: 0.6, humanities: 0.5, workload: "balanced" },
-    origin: "ai",
-  };
-}
-
-function routeList(): S["RouteList"] {
-  const chosen = routes.find((r) => r.status === "chosen");
-  return { items: routes, chosen_id: chosen?.id ?? null, max_routes: 12 };
-}
-
 export const profileHandlers: HttpHandler[] = [
   http.get(`${A}/me/profile`, () => (loggedIn() ? HttpResponse.json(profile) : unauthorized())),
   http.patch(`${A}/me/profile`, async ({ request }) => {
@@ -233,65 +203,8 @@ export const profileHandlers: HttpHandler[] = [
     profile = result;
     return HttpResponse.json(profile);
   }),
-  http.get(`${A}/me/routes`, () => (loggedIn() ? HttpResponse.json(routeList()) : unauthorized())),
-  http.post(`${A}/me/routes`, async ({ request }) => {
-    if (!loggedIn()) return unauthorized();
-    if (routes.length >= 12) return HttpResponse.json({ detail: "You can keep up to 12 routes. Delete one to keep another." }, { status: 409 });
-    const body = (await request.json()) as S["RouteIn"];
-    routeSeq += 1;
-    const route: S["RouteOut"] = {
-      ...body,
-      courses: body.courses.filter((c) => c.code.startsWith("TEST")),
-      id: `00000000-0000-4000-8000-${String(routeSeq).padStart(12, "0")}`,
-      status: "open",
-      position: routes.length,
-      note: null,
-      created_day: today(),
-      updated_day: today(),
-      programs: body.program_ids.filter((id) => id in PROGRAM_NAMES).map((id) => ({ id, name: PROGRAM_NAMES[id] ?? id })),
-    };
-    routes = [...routes, route];
-    return HttpResponse.json(route, { status: 201 });
-  }),
-  http.patch(`${A}/me/routes/:id`, async ({ params, request }) => {
-    if (!loggedIn()) return unauthorized();
-    const patch = (await request.json()) as S["RoutePatch"];
-    const target = routes.find((r) => r.id === params.id);
-    if (!target) return HttpResponse.json({ detail: "Route not found." }, { status: 404 });
-    routes = routes.map((r) => {
-      if (r.id === target.id) {
-        return {
-          ...r,
-          ...(patch.status ? { status: patch.status } : {}),
-          ...(patch.title ? { title: patch.title } : {}),
-          ...(patch.tagline !== undefined ? { tagline: patch.tagline ?? "" } : {}),
-          ...(patch.note !== undefined ? { note: patch.note } : {}),
-          updated_day: today(),
-        };
-      }
-      return patch.status === "chosen" && r.status === "chosen" ? { ...r, status: "open" } : r;
-    });
-    return HttpResponse.json(routes.find((r) => r.id === target.id));
-  }),
-  http.delete(`${A}/me/routes/:id`, ({ params }) => {
-    if (!loggedIn()) return unauthorized();
-    if (!routes.some((r) => r.id === params.id)) return HttpResponse.json({ detail: "Route not found." }, { status: 404 });
-    routes = routes.filter((r) => r.id !== params.id);
-    return new HttpResponse(null, { status: 204 });
-  }),
   http.post(`${A}/agents/interview`, async ({ request }) => {
     if (!loggedIn()) return unauthorized();
     return sse(interviewReply((await request.json()) as S["InterviewRequest"]));
-  }),
-  http.post(`${A}/agents/routes`, async ({ request }) => {
-    if (!loggedIn()) return unauthorized();
-    const body = (await request.json()) as S["RoutesRequest"];
-    const drafts = [draftRoute("Fake major route", "major"), draftRoute("Keep your options open", "exploratory")].filter((r) => !(body.keep_existing_titles ?? []).includes(r.title));
-    return sse([
-      { type: "step", tool: "list_programs", label: "Looking through majors and minors", status: "started" },
-      { type: "step", tool: "list_programs", label: "Looking through majors and minors", status: "done" },
-      ...drafts.map((route) => ({ type: "route", route, programs: route.program_ids.map((id) => ({ id, name: PROGRAM_NAMES[id] ?? id })), fallback: false })),
-      { type: "done", fallback: false, note: null },
-    ]);
   }),
 ];

@@ -87,7 +87,7 @@ describe("the feed page", () => {
 
   it("explains the Following tab to a logged-out reader", async () => {
     renderRoute("/feed?tab=following");
-    expect(await screen.findByRole("heading", { name: "Follow courses and routes to fill this tab" })).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: "Follow courses to fill this tab" })).toBeInTheDocument();
     const panel = screen.getByRole("tabpanel");
     expect(within(panel).getByRole("link", { name: "Log in" })).toHaveAttribute("href", expect.stringContaining("/login"));
   });

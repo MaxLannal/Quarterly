@@ -1,10 +1,9 @@
-import type { RouteObject } from "react-router-dom";
+import { Navigate, type RouteObject } from "react-router-dom";
 import { AppShell } from "./AppShell";
 import AboutPage from "./pages/AboutPage";
 import AccountPage from "./pages/AccountPage";
 import AdminModerationPage from "./pages/AdminModerationPage";
 import AdminReviewPage from "./pages/AdminReviewPage";
-import AskPage from "./pages/AskPage";
 import CommonsNewPage from "./pages/CommonsNewPage";
 import CommonsPage from "./pages/CommonsPage";
 import CommonsThreadPage from "./pages/CommonsThreadPage";
@@ -35,8 +34,9 @@ export const routes: RouteObject[] = [
     element: <AppShell />,
     children: [
       { path: "/", element: <HomePage /> },
-      // Campus companion (docs/BEST-OF-UCHICAGO-PLAN.md)
-      { path: "/ask", element: <AskPage /> },
+      // The Ask page went with the homepage's question bar (issue #15): the planner is where a
+      // student talks to the planner agent.
+      { path: "/ask", element: <Navigate to="/plan" replace /> },
       { path: "/me", element: <DashboardPage /> },
       { path: "/feed", element: <FeedPage /> },
       { path: "/forum", element: <CommonsPage /> },

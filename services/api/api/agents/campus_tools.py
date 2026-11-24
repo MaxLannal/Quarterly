@@ -1,5 +1,6 @@
-"""The campus read tools shared by the campus-companion agents (docs/BEST-OF-UCHICAGO-PLAN.md):
-the Ask chatbot and the companion, the dashboard's route drafter and the Commons bot.
+"""The campus read tools shared by the campus agents (docs/BEST-OF-UCHICAGO-PLAN.md): the
+Commons bot and the dashboard's guide. (The Ask chatbot, the companion and the route drafter
+were removed in issue #15.)
 
 `CampusTools(db, account=..., show_unpublished=...)` is built per request; `.tools(names)` gives
 the `Tool`s an agent may call. None of them writes anything.
@@ -331,12 +332,7 @@ class CampusTools:
         if self.account is None:
             raise ValueError("The student is not logged in.")
         profile = self.db.get(m.StudentProfile, self.account.id)
-        chosen = self.db.scalar(
-            sa.select(m.Pathway).where(
-                m.Pathway.account_id == self.account.id, m.Pathway.status == "chosen"
-            )
-        )
-        if profile is None and chosen is None:
+        if profile is None:
             return ToolOutput(
                 to_json(
                     {
@@ -350,35 +346,25 @@ class CampusTools:
             p.id
             for p in catalog_repo.list_programs(self.db, live.CAMPUS_YEAR, statuses=self.statuses)
         }
-        facts: dict[str, Any] = {}
-        words: dict[str, Any] = {}
-        if profile is not None:
-            programs = [p for p in profile.intended_programs if p in known_programs]
-            ids |= {f"program:{p}" for p in programs}
-            facts = {
-                "class_year": profile.class_year,
-                "workload": profile.workload,
-                "humanities_goal": profile.humanities_goal,
-                "intended_programs": programs,
-            }
-            words = {
-                "interests": profile.interests,
-                "research_areas": profile.research_areas,
-                "humanities_topics": profile.humanities_topics,
-                "humanities_note": profile.humanities_note,
-                "career_plans": profile.career_plans,
-                "career_paths": profile.career_paths,
-                "future_domains": profile.future_domains,
-                "constraints": profile.constraints,
-            }
-            words = {k: v for k, v in words.items() if v}
-        if chosen is not None:
-            codes = live.known_courses(
-                self.db, [str(c.get("code") or "") for c in chosen.courses if isinstance(c, dict)]
-            )
-            facts["chosen_route_courses"] = sorted(codes)
-            ids |= {f"course:{c}" for c in codes}
-            words["chosen_route_title"] = chosen.title
+        programs = [p for p in profile.intended_programs if p in known_programs]
+        ids |= {f"program:{p}" for p in programs}
+        facts = {
+            "class_year": profile.class_year,
+            "workload": profile.workload,
+            "humanities_goal": profile.humanities_goal,
+            "intended_programs": programs,
+        }
+        words = {
+            "interests": profile.interests,
+            "research_areas": profile.research_areas,
+            "humanities_topics": profile.humanities_topics,
+            "humanities_note": profile.humanities_note,
+            "career_plans": profile.career_plans,
+            "career_paths": profile.career_paths,
+            "future_domains": profile.future_domains,
+            "constraints": profile.constraints,
+        }
+        words = {k: v for k, v in words.items() if v}
         parts = ["The student's dashboard profile:", to_json(facts)]
         if words:
             parts.append(untrusted("profile", to_json(words)))
@@ -455,8 +441,8 @@ _OWN_TOOLS: dict[str, Any] = {
     "get_profile": lambda t: Tool(
         "get_profile",
         "The student's own dashboard profile: class year, interests, research areas, "
-        "humanities goal, career plans, future domains, constraints, workload, intended "
-        "programs and chosen route.",
+        "humanities goal, career plans, future domains, constraints, workload and intended "
+        "programs.",
         _obj({}),
         t.get_profile,
     ),

@@ -45,14 +45,25 @@ test("onboarding: five steps create a plan and open the generator", async ({ pag
   // Both ends of the drag on screen: a pointer near the window edge makes dnd-kit scroll the page.
   await page.setViewportSize({ width: 1280, height: 1000 });
   await target.scrollIntoViewIfNeeded();
-  const a = await chip.boundingBox();
-  const b = await target.boundingBox();
-  if (!a || !b) throw new Error("no boxes");
-  await page.mouse.move(a.x + a.width / 2, a.y + a.height / 2);
-  await page.mouse.down();
-  await page.mouse.move(a.x + 20, a.y + 20, { steps: 5 });
-  await page.mouse.move(b.x + b.width / 2, b.y + b.height / 2, { steps: 10 });
-  await page.mouse.up();
+  // A pointer drag can miss when the machine is busy (OPEN_QUESTIONS E2E-1, seen here too on
+  // 2026-11-24): up to three attempts; the goal must land in the end.
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    const a = await chip.boundingBox();
+    const b = await target.boundingBox();
+    if (!a || !b) throw new Error("no boxes");
+    await page.mouse.move(a.x + a.width / 2, a.y + a.height / 2);
+    await page.mouse.down();
+    await page.mouse.move(a.x + 20, a.y + 20, { steps: 5 });
+    await page.waitForTimeout(150); // let the drag overlay mount before aiming
+    await page.mouse.move(b.x + b.width / 2, b.y + b.height / 2, { steps: 10 });
+    await page.mouse.up();
+    try {
+      await expect(target).toContainText("At most 4 courses", { timeout: 1500 });
+      break;
+    } catch {
+      // the drag missed: try again
+    }
+  }
   await expect(target).toContainText("At most 4 courses");
   // dnd-kit swallows a click that lands within a few milliseconds of a drop (a person cannot
   // click that fast; Playwright can), so press Next until the step changes.

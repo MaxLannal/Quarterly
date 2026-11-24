@@ -358,25 +358,21 @@ def test_following_is_empty_until_there_is_something_to_follow(env: Env) -> None
     assert "follow" in empty["headline"].lower()
 
 
-def test_following_shows_route_courses_and_their_commons_activity(env: Env) -> None:
+def test_following_shows_followed_courses_and_their_commons_activity(env: Env) -> None:
+    # Routes went in issue #15; Following shows the courses the student follows.
     ids = add_voices(env, codes_of(env))
     env.signup("quiet-heron")
     with env.db() as db:
-        db.add(
-            m.Pathway(
-                account_id=account_id(env, "quiet-heron"),
-                title="The quantum track",
-                courses=[{"code": QUANTUM, "title": "Quantum Computing", "year": 1}],
-                status="chosen",
+        db.merge(
+            m.StudentProfile(
+                account_id=account_id(env, "quiet-heron"), follows={"courses": [QUANTUM]}
             )
         )
-        db.add(m.Pathway(account_id=account_id(env, "quiet-heron"), title="Old", status="archived",
-                         courses=[{"code": "MATH 13100", "year": 1}]))  # fmt: skip
         db.commit()
     items = feed(env.client, tab="following", limit=24)["items"]
     courses = [i for i in items if i["kind"] == "course"]
     assert [c["code"] for c in courses] == [QUANTUM]
-    assert courses[0]["reason"] == "On your route 'The quantum track'"
+    assert courses[0]["reason"] == "You follow this course"
     assert courses[0]["commons_count"] == 1
     voices = {i["id"] for i in items if i["kind"] in ("comment", "question")}
     assert f"comment:commons:{ids['human']}" in voices and f"question:{ids['thread']}" in voices

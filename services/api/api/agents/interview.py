@@ -948,12 +948,12 @@ def rule_turn(ctx: Context) -> InterviewTurnEvent:
         )
         text = (
             f"{ack} That's everything I wanted to ask. Here's how I'd sum you up: "
-            f"“{portrait.headline}.” Keep what rings true, and I can draft a few routes "
-            "through the College from it."
+            f"“{portrait.headline}.” Keep what rings true; your portrait waits on your "
+            "dashboard."
         ).strip()
         return InterviewTurnEvent(
             text=text,
-            quick_replies=["Draft my routes", "Change something"],
+            quick_replies=["Change something"],
             topic="wrapup",
             proposed=patch,
             progress=1.0,
@@ -996,11 +996,11 @@ def welcome_rule_turn(ctx: Context) -> InterviewTurnEvent:
     memory = f"Last time you told me {_join(bits, 2)}." if bits else ""
     line = f" I still think of you as “{portrait.headline}”." if portrait.headline else ""
     if nxt != "wrapup":
-        ask = f"Want to pick up with {TOPIC_LABELS[nxt]}, or draft a few routes?"
-        chips = ["Keep going", "Draft my routes", "Update my interests"]
+        ask = f"Want to pick up with {TOPIC_LABELS[nxt]}?"
+        chips = ["Keep going", "Update my interests"]
     else:
-        ask = "Anything changed since then? I can also draft a few routes from it."
-        chips = ["Draft my routes", "Update my interests", "Something changed"]
+        ask = "Anything changed since then?"
+        chips = ["Update my interests", "Something changed"]
     text = f"Welcome back, {ctx.username}. {memory}{line} {ask}".replace("  ", " ")
     return InterviewTurnEvent(
         text=text.strip(),

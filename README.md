@@ -10,17 +10,15 @@
 
 ## What Quarterly does
 
-Quarterly has two halves of equal weight that share one course database, and a campus companion around them.
+Quarterly has two halves of equal weight that share one course database. The top bar has four tabs: Dashboard, Planner, Catalog and Forum.
 
 - **Quarterly Planner** takes a student from "I don't know my first class" to a full, goal-aware four-year plan. An AI agent proposes plans; a deterministic verifier checks every requirement and prerequisite and issues a certificate. A plan is only called "Valid" when that certificate is accepted.
 - **Quarterly Forum** has two parts. The **Commons** (`/forum`) is for questions about any course: the AI answers first, with its sources, then students answer, comment, vote and accept the best reply. **Course reviews** (`/instructors`) give every course × instructor pair its own page with anonymous threads and structured ratings; the ratings feed each course's workload and difficulty, which the planner uses.
-- **The campus companion:**
-  - **Ask** (`/ask`) is a UChicago chatbot. The homepage's question bar leads to it. It looks things up in the catalog, the programs, the forum and a campus guide, shows its sources, and links every course it names.
-  - **The companion** is a button on every page. It knows the page you are on and, when you are logged in, your dashboard, and it lists new forum posts, comments and reviews for you.
-  - **Your dashboard** (`/me`) holds your class year, interests, research areas, humanities goals, career plans and the fields you are heading toward. An interviewing guide helps you fill it in and remembers you next time. **Routes** are AI-drafted four-year pathways; choose one, or keep them all open.
+- **Around them:**
+  - **Your dashboard** (`/me`) holds your class year, interests, research areas, humanities goals, career plans and the fields you are heading toward. An interviewing guide helps you fill it in and remembers you next time.
   - **The feed** (`/feed`) is a personalised stream of course spotlights with generated illustrations, related books, student comments and word clouds, in the categories you choose.
 
-The rule behind it: **agents propose, code disposes.** AI drafts plans, summaries, answers and routes; code decides what is true (every course an AI names is checked against the catalog); a student's explicit action applies a change.
+The rule behind it: **agents propose, code disposes.** AI drafts plans, summaries and answers; code decides what is true (every course an AI names is checked against the catalog); a student's explicit action applies a change.
 
 | Homepage at night | Your dashboard |
 |---|---|
@@ -40,7 +38,7 @@ A working demo, used by its owner and a few testers; a public launch comes after
 
 - **Catalog:** 2026-27, 11,301 courses (about 1,270 hand-checked, with structured prerequisites; the rest imported from the College Catalog with verbatim source quotes and marked for review) and 11 programs (the Core; Computer Science BA, BS and three Bx/MS options; Mathematics BA and BS; Economics BA; two study-abroad civilization blocks), plus 152 Summer Session offerings. Every course opens its own page.
 - **Built:** onboarding, the four-year planner with drag and drop, live verifier and certificate checker, plan generator (OR-Tools CP-SAT), the planner's advisor chat, course search, course and program pages, course × instructor reviews, anonymous accounts, curator console with moderation, and the homepage chapel drawn in course titles (day and night).
-- **Campus companion** (branch `feature/best-of-uchicago`, see [`docs/BEST-OF-UCHICAGO-PLAN.md`](docs/BEST-OF-UCHICAGO-PLAN.md)): Ask, the companion, the dashboard with its guide and routes, the feed and the Commons. Decisions for the owner are in `docs/OPEN_QUESTIONS.md` CC-1 to CC-8; the campus guide (`data/campus/guide.yaml`) and the feed's book shelf (`data/feed/books.yaml`) must be hand-checked before launch.
+- **Campus companion** (branch `feature/best-of-uchicago`, see [`docs/BEST-OF-UCHICAGO-PLAN.md`](docs/BEST-OF-UCHICAGO-PLAN.md)): the dashboard with its guide, the feed and the Commons. (Issue #15 removed the Ask chatbot, the floating companion and the dashboard's routes: the planner is the one place to talk to the planner agent.) Decisions for the owner are in `docs/OPEN_QUESTIONS.md` CC-1 to CC-8; the campus guide (`data/campus/guide.yaml`) and the feed's book shelf (`data/feed/books.yaml`) must be hand-checked before launch.
 - **AI:** off unless `LLM_LIVE=true` and a key are set (see below). Every AI feature has a version that works without it, and tests always use fake AI.
 - **Open work:** `docs/FEEDBACK.md` (requests and their status), `docs/OPEN_QUESTIONS.md` (decisions waiting for the owner), `docs/PROGRESS.md` (what was built and when).
 
@@ -77,7 +75,7 @@ CI (`.github/workflows/ci.yml`) runs `make install && make check` on every push 
 | Path | What it is |
 |---|---|
 | `apps/web/` | React + TypeScript (Vite, Tailwind v4, TanStack Query, dnd-kit). `e2e/` browser tests on mock data (MSW), `e2e-stack/` journeys on the real stack. |
-| `services/api/` | FastAPI app: routers, database models (SQLAlchemy, Alembic), the seed loader, agent orchestration (`api/agents/`: the planner's agents and the campus companion's Ask, guide, routes, feed notes and Commons bot), the Commons (`api/commons/`) and the feed (`api/feed/`). |
+| `services/api/` | FastAPI app: routers, database models (SQLAlchemy, Alembic), the seed loader, agent orchestration (`api/agents/`: the planner's agents and the dashboard's guide, the feed notes and the Commons bot), the Commons (`api/commons/`) and the feed (`api/feed/`). |
 | `services/worker/` | Arq background jobs: nightly course attributes, catalog ingestion, the schedule watch, chat purge and the hourly AI spend check. |
 | `services/scraper/` | Playwright scraper for the class schedule; `SCHEDULE_SCRAPER_ENABLED=false` until the University allows scraping. |
 | `packages/planner_core/` | The requirements DSL, verifier, certificate checker and CP-SAT plan generator. Pure Python: no database, web framework, HTTP or LLM client. |
@@ -108,4 +106,4 @@ CI (`.github/workflows/ci.yml`) runs `make install && make check` on every push 
 
 ## Privacy
 
-Accounts are anonymous: forum posts show a different pseudonym on every page, and Commons posts a different handle on every question. An email address is stored only in the account record and never logged; the dashboard reads it from there and never copies it. No IP addresses are logged; user dates are day-level only. Account export includes the dashboard, routes and Commons posts, and deleting an account removes them. Ask and companion conversations stay in the browser and are cleared on logout. Nothing a visitor's browser loads comes from another site (fonts, icons and images, including the feed's illustrations and book covers, are made or served by Quarterly).
+Accounts are anonymous: forum posts show a different pseudonym on every page, and Commons posts a different handle on every question. An email address is stored only in the account record and never logged; the dashboard reads it from there and never copies it. No IP addresses are logged; user dates are day-level only. Account export includes the dashboard and Commons posts, and deleting an account removes them. Nothing a visitor's browser loads comes from another site (fonts, icons and images, including the feed's illustrations and book covers, are made or served by Quarterly).

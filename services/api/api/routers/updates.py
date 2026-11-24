@@ -1,21 +1,18 @@
-"""The companion's "what is new for you" (`/me/updates`), docs/BEST-OF-UCHICAGO-PLAN.md.
+"""What is new for the student (`/me/updates`), read by the dashboard's "What's new" card.
 
 New Commons threads and replies and new forum reviews, discussions and comments, picked for the
-logged-in student: threads they follow or asked, courses they follow or have in a route, and
-titles that match their interests, future domains or research areas. When nothing personal
-turns up, a few "New on Quarterly" items fill in. High-water marks in
-`student_profile.updates_seen` say what is new; POST /me/updates/seen moves them.
+logged-in student: threads they follow or asked, courses they follow, and titles that match
+their interests, future domains or research areas. When nothing personal turns up, a few "New
+on Quarterly" items fill in. High-water marks in `student_profile.updates_seen` say what is new;
+POST /me/updates/seen moves them.
 
-`?digest=true` adds a two-sentence digest (task `a10_updates_digest`; a template sentence when
-the AI is off). Student text reaches the model only inside untrusted tags.
+The companion and its AI digest (task `a10_updates_digest`) were removed in issue #15; this list
+uses no model.
 """
 
 from __future__ import annotations
 
 import datetime as dt
-import hashlib
-import json
-import logging
 import re
 import uuid
 from collections.abc import Callable, Iterable
@@ -24,35 +21,21 @@ from typing import Annotated, Any
 from urllib.parse import quote
 
 import sqlalchemy as sa
-from fastapi import APIRouter, Depends, HTTPException
-from llm_gateway.api import LLM, LLMUnavailableError, Message, get_llm
-from pydantic import BaseModel, Field
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from api.agents.campus_tools import keywords
-from api.agents.prompts import load_prompt
-from api.agents.tools import untrusted
-from api.auth.ratelimit import DAY, Limit, account_subject
 from api.auth.sessions import current_account
-from api.auth.store import Store, get_store
 from api.db import models as m
 from api.db.session import get_session
 from api.forum.scrub import scrub
 from api.schemas.updates import UpdateItem, UpdateKind, UpdatesOut, UpdatesSeen
 
 router = APIRouter(prefix="/me", tags=["updates"])
-logger = logging.getLogger("api.updates")
 
 Db = Annotated[Session, Depends(get_session)]
 Me = Annotated[m.Account, Depends(current_account)]
-Llm = Annotated[LLM, Depends(get_llm)]
-RedisStore = Annotated[Store, Depends(get_store)]
 
-TASK = "a10_updates_digest"
-INTRO = "Items for this student, newest first:\n"
-PROMPT = "a10_digest"
-DIGEST_TIMEOUT_S = 8.0
-DIGEST_TTL_S = 3600
 MAX_ITEMS = 30
 SCAN = 150
 SNIPPET = 160
@@ -108,25 +91,18 @@ def forum_thread_href(code: str, slug: str, post_id: int) -> str:
 
 @dataclass
 class Interests:
-    """What the student cares about: followed threads and courses, route courses, interest
-    terms; and whether a Commons thread is theirs."""
+    """What the student cares about: followed threads and courses, interest terms; and whether
+    a Commons thread is theirs."""
 
     account_id: uuid.UUID
     threads: set[int]
     followed_courses: set[str]
-    route_courses: set[str]
     terms: list[tuple[str, list[str]]]  # (the interest as written, words to look for)
     own: Callable[[int, str | None], bool]
-
-    @property
-    def courses(self) -> set[str]:
-        return self.followed_courses | self.route_courses
 
     def course_reason(self, code: str | None) -> str | None:
         if not code:
             return None
-        if code in self.route_courses:
-            return f"About {code} in your route"
         if code in self.followed_courses:
             return f"About {code}, a course you follow"
         return None
@@ -173,13 +149,6 @@ def interests_of(db: Session, account: m.Account, profile: m.StudentProfile) -> 
     follows = profile.follows or {}
     threads = {int(t) for t in follows.get("threads", []) if str(t).isdigit()}
     followed = _codes(follows.get("courses", []))
-    route: set[str] = set()
-    for courses in db.scalars(
-        sa.select(m.Pathway.courses).where(
-            m.Pathway.account_id == account.id, m.Pathway.status.in_(("chosen", "open"))
-        )
-    ):
-        route |= _codes(c.get("code") for c in courses or [] if isinstance(c, dict))
     terms: list[tuple[str, list[str]]] = []
     for raw in [*profile.interests, *profile.future_domains, *profile.research_areas]:
         term = " ".join(str(raw).split())[:60]
@@ -191,7 +160,6 @@ def interests_of(db: Session, account: m.Account, profile: m.StudentProfile) -> 
         account_id=account.id,
         threads=threads,
         followed_courses=followed,
-        route_courses=route,
         terms=terms[:12],
         own=_own_checker(account.id),
     )
@@ -386,96 +354,16 @@ def profile_of(db: Session, account: m.Account) -> m.StudentProfile:
     return ensure_profile(db, account.id)
 
 
-# ------------------------------------------------------------------------------ digest
-
-
-class Digest(BaseModel):
-    text: str = Field(min_length=1, max_length=400)
-
-
-def template_digest(items: list[UpdateItem]) -> str:
-    new = [i for i in items if i.is_new]
-    if not new:
-        if not items:
-            return (
-                "Nothing new for you yet. Follow a course or a forum question, and new replies "
-                "and reviews will show up here."
-            )
-        return "Nothing new since your last visit. Here is what has been happening lately."
-    counts: dict[str, int] = {}
-    for i in new:
-        counts[i.kind] = counts.get(i.kind, 0) + 1
-    names = {
-        "thread": ("new question", "new questions"),
-        "reply": ("reply", "replies"),
-        "review": ("review", "reviews"),
-        "discussion": ("discussion", "discussions"),
-        "comment": ("comment", "comments"),
-    }
-    parts = [f"{n} {names[k][0 if n == 1 else 1]}" for k, n in counts.items()]
-    listed = parts[0] if len(parts) == 1 else ", ".join(parts[:-1]) + " and " + parts[-1]
-    first = new[0]
-    return f"{listed.capitalize()} since your last visit. Start with “{first.title}”."
-
-
-#: Model-written digests per account per day (cache hits are free); beyond it the template answers.
-DIGEST_PER_ACCOUNT = Limit("updates-digest:account", 40, DAY)
-
-
-def ai_digest(llm: LLM, store: Store, account: m.Account, items: list[UpdateItem]) -> str | None:
-    key_src = json.dumps(
-        [str(account.id), [(i.kind, i.id, i.is_new) for i in items]], separators=(",", ":")
-    )
-    key = "updates-digest:" + hashlib.sha256(key_src.encode()).hexdigest()[:32]
-    cached = store.get(key)
-    if cached:
-        return cached
-    try:
-        DIGEST_PER_ACCOUNT.hit(store, account_subject(account.id))
-    except HTTPException:
-        return None  # over the daily limit: the template sentence answers
-    lines = []
-    for i in items[:15]:
-        head = f"- {i.kind}{' (new)' if i.is_new else ''}, {i.reason}"
-        if i.course_code:
-            head += f", course {i.course_code}"
-        lines.append(head)
-        lines.append(untrusted(f"{i.kind}:{i.id}", f"{i.title}\n{i.snippet}"))
-    prompt = load_prompt(PROMPT)
-    try:
-        out = llm.structured(
-            TASK,
-            system=prompt.text,
-            messages=[
-                Message("user", "Items for this student, newest first:\n" + "\n".join(lines))
-            ],
-            schema=Digest,
-            prompt_version=prompt.version_tag,
-            timeout_s=DIGEST_TIMEOUT_S,
-        )
-    except (LLMUnavailableError, TimeoutError) as exc:
-        logger.info("%s: no digest (%s)", TASK, type(exc).__name__)
-        return None
-    digest = out if isinstance(out, Digest) else Digest.model_validate(out)
-    text = " ".join(scrub(digest.text).split())
-    store.put(key, text, DIGEST_TTL_S)
-    return text
-
-
 # ------------------------------------------------------------------------------ endpoints
 
 
 @router.get("/updates", response_model=UpdatesOut)
-def updates(db: Db, me: Me, llm: Llm, store: RedisStore, digest: bool = False) -> UpdatesOut:
-    # What is new for the logged-in student; `digest=true` adds two sentences about it.
+def updates(db: Db, me: Me) -> UpdatesOut:
+    # What is new for the logged-in student (the dashboard's "What's new" card).
     profile = profile_of(db, me)
     items = collect(db, me, profile)
     db.commit()
-    out = UpdatesOut(items=items, unread=sum(1 for i in items if i.is_new))
-    if digest:
-        text = ai_digest(llm, store, me, items) if items else None
-        out.digest, out.digest_ai = (text, True) if text else (template_digest(items), False)
-    return out
+    return UpdatesOut(items=items, unread=sum(1 for i in items if i.is_new))
 
 
 def _maxima(db: Session) -> dict[str, int]:
@@ -492,7 +380,7 @@ def _maxima(db: Session) -> dict[str, int]:
 
 @router.post("/updates/seen", response_model=UpdatesSeen)
 def updates_seen(db: Db, me: Me, body: UpdatesSeen | None = None) -> UpdatesSeen:
-    # The companion showed the updates: move the marks (default: the newest ids there are).
+    # The student saw the updates: move the marks (default: the newest ids there are).
     profile = profile_of(db, me)
     maxima = _maxima(db)
     asked = body.model_dump() if body is not None else {}

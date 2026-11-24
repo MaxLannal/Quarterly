@@ -1,10 +1,9 @@
-"""The dashboard's data (`/me`): the student profile and the routes, read and written for the
-profile router, the interviewing guide and the route drafter, plus `export_profile` for
-`/account/export`.
+"""The dashboard's data (`/me`): the student profile, read and written for the profile router
+and the interviewing guide, plus `export_profile` for `/account/export`. (The routes were
+removed in issue #15.)
 
 The profile row is created lazily (the first read or write). The email is never stored here
-(decision 5): `ProfileOut.email` is read from `account.email` each time. Routes keep only course
-codes that exist in the catalog (`api.agents.live.known_courses`) and program ids that exist.
+(decision 5): `ProfileOut.email` is read from `account.email` each time.
 """
 
 from __future__ import annotations
@@ -19,10 +18,8 @@ from pydantic import ValidationError
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy.orm import Session
 
-from api.agents.live import CAMPUS_YEAR, known_courses, normalize_code
 from api.db import models as m
 from api.schemas.profile import (
-    MAX_ROUTES,
     MAX_TURNS,
     Follows,
     InterviewMemory,
@@ -30,11 +27,6 @@ from api.schemas.profile import (
     ProfileOut,
     ProfilePatch,
     ProgramRef,
-    RouteCourse,
-    RouteIn,
-    RouteList,
-    RouteOut,
-    RoutePatch,
 )
 
 #: The list columns a patch may set.
@@ -57,14 +49,6 @@ class UnknownProgramError(ValueError):
         self.program_ids = list(program_ids)
 
 
-class RouteLimitError(RuntimeError):
-    pass
-
-
-class RouteNotFoundError(LookupError):
-    pass
-
-
 def today() -> dt.date:
     return dt.date.today()
 
@@ -78,7 +62,7 @@ def find_profile(db: Session, account_id: uuid.UUID) -> m.StudentProfile | None:
 
 def ensure_profile(db: Session, account_id: uuid.UUID) -> m.StudentProfile:
     """The account's profile, created on first use. Safe when two requests create it at once
-    (the dashboard and the companion load together): the insert does nothing on a conflict."""
+    (two dashboard requests load together): the insert does nothing on a conflict."""
     row = db.get(m.StudentProfile, account_id)
     if row is None:
         db.execute(
@@ -228,179 +212,12 @@ def profile_brief(row: m.StudentProfile) -> dict[str, Any]:
     return {k: v for k, v in data.items() if v not in (None, [], "")}
 
 
-# ------------------------------------------------------------------------------ routes
-
-
-QUARTER_ORDER = {"SU": 0, "AU": 1, "WI": 2, "SP": 3}
-#: A quarter counts as "usually offered" from this predicted probability (as the catalog search).
-OFFERED_MIN = 0.3
-
-
-def offered_quarters(db: Session, codes: Sequence[str]) -> dict[str, list[Any]]:
-    """{code: [AU, WI, SP...]}: the quarters each course is usually offered in."""
-    if not codes:
-        return {}
-    rows = db.execute(
-        sa.select(m.Course.code, m.OfferingPattern.quarter)
-        .join(m.OfferingPattern, m.OfferingPattern.course_id == m.Course.id)
-        .where(
-            m.Course.catalog_year == CAMPUS_YEAR,
-            m.Course.code.in_(list(codes)),
-            m.OfferingPattern.p_offered >= OFFERED_MIN,
-        )
-    ).all()
-    out: dict[str, list[Any]] = {}
-    for code, quarter in rows:
-        out.setdefault(code, []).append(quarter)
-    return {c: sorted(set(q), key=lambda x: QUARTER_ORDER.get(x, 9)) for c, q in out.items()}
-
-
-def clean_route(db: Session, route: RouteIn) -> RouteIn:
-    """The route with unknown course codes and program ids dropped, codes normalised, each
-    course once, and titles filled in from the catalog."""
-    codes = [normalize_code(c.code) or "" for c in route.courses]
-    titles = known_courses(db, [c for c in codes if c])
-    offered = offered_quarters(db, list(titles))
-    courses: list[RouteCourse] = []
-    seen: set[str] = set()
-    for course, code in zip(route.courses, codes, strict=True):
-        if code in titles and code not in seen:
-            seen.add(code)
-            courses.append(
-                course.model_copy(
-                    update={"code": code, "title": titles[code], "offered": offered.get(code, [])}
-                )
-            )
-    courses.sort(key=lambda c: (c.year, QUARTER_ORDER.get(c.quarter or "", 9)))
-    return route.model_copy(
-        update={"courses": courses, "program_ids": existing_programs(db, route.program_ids)}
-    )
-
-
-def _route_in(row: m.Pathway) -> RouteIn:
-    try:
-        return RouteIn.model_validate(
-            {
-                "title": row.title or "Untitled route",
-                "tagline": row.tagline or "",
-                "summary": row.summary or "",
-                "kind": row.kind,
-                "program_ids": list(row.program_ids),
-                "courses": row.courses or [],
-                "milestones": row.milestones or [],
-                "fit": row.fit or {},
-                "origin": row.origin,
-            }
-        )
-    except ValidationError:
-        return RouteIn(title=row.title[:80] or "Untitled route", origin="user")
-
-
-def route_out(db: Session, row: m.Pathway) -> RouteOut:
-    base = _route_in(row)
-    offered = offered_quarters(db, [c.code for c in base.courses])
-    base.courses = [c.model_copy(update={"offered": offered.get(c.code, [])}) for c in base.courses]
-    return RouteOut(
-        **base.model_dump(),
-        id=row.id,
-        status=row.status,
-        position=row.position,
-        note=row.note,
-        created_day=row.created_day,
-        updated_day=row.updated_day,
-        programs=program_refs(db, base.program_ids),
-    )
-
-
-def _routes(db: Session, account_id: uuid.UUID) -> list[m.Pathway]:
-    return list(
-        db.scalars(
-            sa.select(m.Pathway)
-            .where(m.Pathway.account_id == account_id)
-            .order_by(m.Pathway.position, m.Pathway.created_day, m.Pathway.id)
-        )
-    )
-
-
-def list_routes(db: Session, account_id: uuid.UUID) -> RouteList:
-    rows = _routes(db, account_id)
-    chosen = next((r.id for r in rows if r.status == "chosen"), None)
-    return RouteList(items=[route_out(db, r) for r in rows], chosen_id=chosen)
-
-
-def create_route(db: Session, account_id: uuid.UUID, route: RouteIn) -> m.Pathway:
-    """Raises `RouteLimitError` when the account already has MAX_ROUTES routes."""
-    rows = _routes(db, account_id)
-    if len(rows) >= MAX_ROUTES:
-        raise RouteLimitError(f"at most {MAX_ROUTES} routes")
-    clean = clean_route(db, route)
-    row = m.Pathway(
-        account_id=account_id,
-        title=clean.title,
-        tagline=clean.tagline or None,
-        summary=clean.summary,
-        kind=clean.kind,
-        program_ids=clean.program_ids,
-        courses=[c.model_dump() for c in clean.courses],
-        milestones=[ms.model_dump() for ms in clean.milestones],
-        fit=clean.fit.model_dump(),
-        status="open",
-        origin=clean.origin,
-        position=max((r.position for r in rows), default=-1) + 1,
-        created_day=today(),
-        updated_day=today(),
-    )
-    db.add(row)
-    db.flush()
-    return row
-
-
-def owned_route(db: Session, account_id: uuid.UUID, route_id: uuid.UUID) -> m.Pathway:
-    row = db.get(m.Pathway, route_id)
-    if row is None or row.account_id != account_id:
-        raise RouteNotFoundError(str(route_id))
-    return row
-
-
-def patch_route(db: Session, row: m.Pathway, patch: RoutePatch) -> None:
-    sent = patch.model_fields_set
-    if "status" in sent and patch.status is not None and patch.status != row.status:
-        if patch.status == "chosen":
-            # One chosen route per account (index uq_pathway_one_chosen): the others go back
-            # to open first, in the same transaction. Locking the account's routes first makes
-            # two "choose" clicks at once wait for each other instead of failing on the index.
-            mine = sa.select(m.Pathway.id).where(m.Pathway.account_id == row.account_id)
-            db.execute(mine.with_for_update())
-            db.execute(
-                sa.update(m.Pathway)
-                .where(
-                    m.Pathway.account_id == row.account_id,
-                    m.Pathway.status == "chosen",
-                    m.Pathway.id != row.id,
-                )
-                .values(status="open", updated_day=today())
-                .execution_options(synchronize_session="fetch")
-            )
-            db.flush()
-        row.status = patch.status
-    if "title" in sent and patch.title:
-        row.title = patch.title
-    if "tagline" in sent:
-        row.tagline = patch.tagline or None
-    if "note" in sent:
-        row.note = patch.note
-    if "position" in sent and patch.position is not None:
-        row.position = patch.position
-    row.updated_day = today()
-    db.flush()
-
-
 # ------------------------------------------------------------------------------ export
 
 
 def export_profile(db: Session, account_id: uuid.UUID) -> dict[str, Any]:
     """The account's dashboard data for `/account/export`: the profile (without the email,
-    which the export already has from the account) and every route. JSON-ready."""
+    which the export already has from the account). JSON-ready."""
     row = find_profile(db, account_id)
     profile: dict[str, Any] | None = None
     if row is not None:
@@ -425,8 +242,4 @@ def export_profile(db: Session, account_id: uuid.UUID) -> dict[str, Any]:
             "created_day": row.created_day.isoformat(),
             "updated_day": row.updated_day.isoformat(),
         }
-    routes = [
-        route_out(db, r).model_dump(mode="json", exclude={"programs"})
-        for r in _routes(db, account_id)
-    ]
-    return {"profile": profile, "routes": routes}
+    return {"profile": profile}

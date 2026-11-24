@@ -251,8 +251,8 @@ export default function FeedPage() {
             )}
 
             {!canFollow && (
-              <EmptyState title="Follow courses and routes to fill this tab">
-                <p>Log in to see the courses on your routes and the questions you follow, with what is new on them.</p>
+              <EmptyState title="Follow courses to fill this tab">
+                <p>Log in to see the courses and questions you follow, with what is new on them.</p>
                 <div className="flex flex-wrap gap-2">
                   <Button asChild>
                     <Link to={auth.login}>Log in</Link>
@@ -286,13 +286,9 @@ export default function FeedPage() {
               tab === "following" ? (
                 <EmptyState title="Nothing to follow yet">
                   <p>
-                    Keep a route on your dashboard, or follow a question in the Forum, and its courses and new answers will flow
-                    in here.
+                    Follow a course, or a question in the Forum, and its new answers will flow in here.
                   </p>
                   <div className="flex flex-wrap gap-2">
-                    <Button asChild>
-                      <Link to="/me">Plan routes on your dashboard</Link>
-                    </Button>
                     <Button asChild variant="outline">
                       <Link to="/forum">Browse the Forum</Link>
                     </Button>

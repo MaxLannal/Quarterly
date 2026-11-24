@@ -125,25 +125,12 @@ tasks:
     fallback: {provider: openrouter, model: anthropic/claude-sonnet-5.5}
 
   # Campus companion (docs/BEST-OF-UCHICAGO-PLAN.md, 2026-11-20). Every one of these has a
-  # deterministic fallback, so the features work with the AI off.
-  a5_campus_ask:              # the Ask page and the companion's chat (read tools, cited answer)
-    model: claude-sonnet-5-5
-    effort: low
-    max_tokens: 4000
-    thinking: between_tools
-    refusal_fallback: true
-    fallback: {provider: openrouter, model: anthropic/claude-sonnet-5.5}
+  # deterministic fallback, so the features work with the AI off. (a5_campus_ask, a7_routes and
+  # a10_updates_digest were removed with the Ask page, the routes and the companion, issue #15.)
   a6_interview:               # the dashboard's interviewing guide (next question + profile patch)
     model: claude-sonnet-5-5
     effort: low
     max_tokens: 3000
-    thinking: between_tools
-    refusal_fallback: true
-    fallback: {provider: openrouter, model: anthropic/claude-sonnet-5.5}
-  a7_routes:                  # drafts 3 routes (programs + courses by year) from the profile
-    model: claude-sonnet-5-5
-    effort: medium
-    max_tokens: 8000
     thinking: between_tools
     refusal_fallback: true
     fallback: {provider: openrouter, model: anthropic/claude-sonnet-5.5}
@@ -160,12 +147,6 @@ tasks:
     thinking: between_tools
     refusal_fallback: true
     fallback: {provider: openrouter, model: anthropic/claude-sonnet-5.5}
-  a10_updates_digest:         # the companion's two-sentence digest of what is new
-    model: claude-haiku-5-5
-    effort: low
-    max_tokens: 400
-    thinking: disabled
-    fallback: {provider: openrouter, model: anthropic/claude-haiku-5.5}
 
 # List prices in USD per million tokens, for llm_call.cost_usd and the live-test budget guard.
 # Checked 2026-11-16 against the Claude models overview (prompt 13): Opus 5.5 $4 / $20, cache

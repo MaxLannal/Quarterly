@@ -1,4 +1,4 @@
-"""The companion's "For you" feed of what is new (`/me/updates`), docs/BEST-OF-UCHICAGO-PLAN.md."""
+"""What is new for the student (`/me/updates`), shown by the dashboard's "What's new" card."""
 
 import datetime as dt
 from typing import Literal
@@ -22,7 +22,7 @@ class UpdateItem(BaseModel):
     day: dt.date
     #: Why it is shown: "On a thread you follow", "Matches your interest in ...".
     reason: str
-    #: Newer than what the companion last showed the student.
+    #: Newer than the student's high-water mark (POST /me/updates/seen).
     is_new: bool
 
 
@@ -31,10 +31,6 @@ class UpdatesOut(BaseModel):
     items: list[UpdateItem] = []
     #: How many of `items` are new.
     unread: int = 0
-    #: Two sentences about what is new (only with `?digest=true`).
-    digest: str | None = None
-    #: True when the digest was written by the AI (label it), false for the template.
-    digest_ai: bool = False
 
 
 class UpdatesSeen(BaseModel):

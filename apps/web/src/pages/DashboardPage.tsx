@@ -1,18 +1,17 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useState } from "react";
 import { Link } from "react-router-dom";
 import { LoadingState, PageContainer } from "@/components/layout/page";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Avatar } from "@/components/ui/card";
 import { Notice } from "@/components/ui/misc";
 import { useAuthLinks } from "@/features/auth/next";
-import { errorText, useProfile, useRoutes, type Profile, type Topic, type TurnEvent } from "@/features/dashboard/api";
+import { errorText, useProfile, type Profile, type Topic, type TurnEvent } from "@/features/dashboard/api";
 import "@/features/dashboard/dashboard.css";
 import { GuideCard } from "@/features/dashboard/GuideCard";
 import { GuideOverlay } from "@/features/dashboard/GuideOverlay";
 import { IdentityFields, memberLine } from "@/features/dashboard/IdentityCard";
-import { CompletenessRing, DashCard, GuideMark } from "@/features/dashboard/parts";
+import { CompletenessRing, GuideMark } from "@/features/dashboard/parts";
 import { CareerCard, ConstraintsCard, HorizonsCard, HumanitiesCard, InterestsCard, PortraitHeader, ResearchCard } from "@/features/dashboard/Portrait";
-import { RoutesSection, type RoutesHandle } from "@/features/dashboard/Routes";
 import { useGuide } from "@/features/dashboard/useGuide";
 import { WhatsNew } from "@/features/dashboard/WhatsNew";
 import { useSession } from "@/lib/session";
@@ -34,7 +33,8 @@ const ASK_ABOUT: Record<Topic, string> = {
 
 /**
  * The personal dashboard (`/me`, docs/BEST-OF-UCHICAGO-PLAN.md): a portrait of what the student
- * wants from UChicago, a guide who remembers them, and routes they can choose or keep open.
+ * wants from UChicago and a guide who remembers them. "Your routes" and "At a glance" went in
+ * issue #15: the planner makes every plan proposal.
  */
 export default function DashboardPage() {
   const session = useSession();
@@ -58,7 +58,7 @@ function LoggedOut() {
           A place that <em>remembers</em> you.
         </h1>
         <p className="max-w-[40rem] text-body-md text-body">
-          A portrait of what you want from UChicago, a guide who remembers, and routes you can keep open.
+          A portrait of what you want from UChicago, and a guide who remembers.
         </p>
         <div className="flex flex-wrap gap-2">
           <Link to={links.signup} className={buttonVariants()}>
@@ -74,15 +74,14 @@ function LoggedOut() {
           <GuideMark size={14} className="text-primary" /> Your guide
         </p>
         <p className="mt-3 font-serif text-[20px] font-light leading-[1.35]">
-          “Last time you told me you love Greek tragedy and that you're heading toward quantum computing. Want to draft a few routes?”
+          “Last time you told me you love Greek tragedy and that you're heading toward quantum computing. Want to pick up where we left off?”
         </p>
       </section>
       {[
         ["Your portrait", "Interests, a humanities compass, research questions and the fields you're heading toward, in your own words."],
         ["A guide who remembers", "Ten minutes of good questions, one at a time. Next time, it picks up where you left off."],
-        ["Routes, kept open", "Several four-year routes drafted from your portrait. Choose one, or keep them all open."],
       ].map(([title, text]) => (
-        <section key={title} className="rounded-[22px] border border-hairline bg-surface-card p-4 sm:p-5 md:col-span-2 xl:col-span-4">
+        <section key={title} className="rounded-[22px] border border-hairline bg-surface-card p-4 sm:p-5 md:col-span-3 xl:col-span-6">
           <h2 className="font-display text-[21px] font-bold tracking-[-0.02em] text-ink">{title}</h2>
           <p className="mt-1.5 text-body-sm text-body">{text}</p>
         </section>
@@ -101,7 +100,7 @@ function Preview() {
       <div className="dash-preview grid gap-3 md:grid-cols-[1.3fr_1fr]">
         <div className="rounded-xxl bg-surface-dark p-6 text-on-dark">
           <p className="text-caption-uppercase uppercase text-on-dark-soft">Your guide</p>
-          <p className="mt-3 font-serif text-[24px] font-light leading-snug">Welcome back. Last time you told me you love Greek tragedy and that you're heading toward quantum computing. Want to draft a few routes?</p>
+          <p className="mt-3 font-serif text-[24px] font-light leading-snug">Welcome back. Last time you told me you love Greek tragedy and that you're heading toward quantum computing. Want to pick up where we left off?</p>
         </div>
         <div className="rounded-xxl border border-hairline bg-surface-card p-6">
           <p className="font-display text-display-sm text-ink">“A physicist with a poet's ear”</p>
@@ -110,19 +109,6 @@ function Preview() {
               <span key={w} className="rounded-pill border border-hairline-strong px-3 py-1 text-body-sm text-ink">
                 {w}
               </span>
-            ))}
-          </div>
-        </div>
-        <div className="rounded-xxl border border-hairline bg-surface-card p-6 md:col-span-2">
-          <p className="font-display text-display-sm text-ink">Your routes</p>
-          <div className="mt-4 grid grid-cols-4 gap-3">
-            {[1, 2, 3, 4].map((y) => (
-              <div key={y} className="flex flex-col gap-2 rounded-xl bg-canvas-soft p-3">
-                <span className="text-caption-uppercase uppercase text-muted">Year {y}</span>
-                {[0, 1, 2].map((i) => (
-                  <span key={i} className="h-8 rounded-lg border border-hairline bg-surface-card" style={{ boxShadow: `inset 3px 0 0 var(--color-${["primary", "data-1", "data-5"][i]})` }} />
-                ))}
-              </div>
             ))}
           </div>
         </div>
@@ -161,7 +147,6 @@ function Dashboard() {
 function DashboardBody({ profile }: { profile: Profile }) {
   const guide = useGuide();
   const [open, setOpen] = useState(false);
-  const routes = useRef<RoutesHandle>(null);
 
   const openGuide = useCallback(
     (options?: { seed?: TurnEvent | null; message?: string }) => {
@@ -171,17 +156,12 @@ function DashboardBody({ profile }: { profile: Profile }) {
     [guide],
   );
   const ask = useCallback((topic: Topic) => openGuide({ message: ASK_ABOUT[topic] }), [openGuide]);
-  const draftRoutes = useCallback(() => {
-    setOpen(false);
-    guide.stop();
-    window.setTimeout(() => routes.current?.draft(), 60);
-  }, [guide]);
 
   const year = profile.class_year;
   return (
     <>
       <div className={GRID}>
-        {/* Top left: who the student is, and the two things to do next. */}
+        {/* Top left: who the student is, and what to do next. */}
         <section aria-labelledby="dash-name" className="flex flex-col gap-4 rounded-[22px] border border-hairline bg-surface-card p-4 sm:p-5 md:col-span-6 xl:col-span-8">
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div className="flex min-w-0 items-center gap-3">
@@ -206,15 +186,12 @@ function DashboardBody({ profile }: { profile: Profile }) {
             <Button onClick={() => openGuide()}>
               <GuideMark size={14} /> Talk with your guide
             </Button>
-            <Button variant="outline" onClick={draftRoutes}>
-              Draft my routes
-            </Button>
           </div>
         </section>
 
         {/* Top right: the guide. */}
         <div className="md:col-span-6 xl:col-span-4">
-          <GuideCard profile={profile} onOpen={openGuide} onDraftRoutes={draftRoutes} paused={open} />
+          <GuideCard profile={profile} onOpen={openGuide} paused={open} />
         </div>
 
         <div className="md:col-span-3 xl:col-span-4">
@@ -237,15 +214,8 @@ function DashboardBody({ profile }: { profile: Profile }) {
           <HorizonsCard profile={profile} onAsk={ask} />
         </div>
 
-        <div className="md:col-span-3 xl:col-span-7">
-          <ConstraintsCard profile={profile} onAsk={ask} />
-        </div>
-        <div className="md:col-span-3 xl:col-span-5">
-          <AtAGlance profile={profile} />
-        </div>
-
         <div className="md:col-span-6 xl:col-span-12">
-          <RoutesSection ref={routes} profile={profile} />
+          <ConstraintsCard profile={profile} onAsk={ask} />
         </div>
       </div>
 
@@ -257,35 +227,7 @@ function DashboardBody({ profile }: { profile: Profile }) {
         }}
         guide={guide}
         profile={profile}
-        onDraftRoutes={draftRoutes}
       />
     </>
-  );
-}
-
-/** A small block of numbers: how far the portrait has come and where the routes stand. */
-function AtAGlance({ profile }: { profile: Profile }) {
-  const routes = useRoutes(true);
-  const items = routes.data?.items ?? [];
-  const kept = items.filter((r) => r.status !== "archived").length;
-  const chosen = items.find((r) => r.status === "chosen");
-  const stats: [string, string][] = [
-    ["Interests", String(profile.interests.length)],
-    ["Fields ahead", String(profile.future_domains.length)],
-    ["Routes kept", routes.isLoading ? "…" : String(kept)],
-    ["Programs", String(profile.programs.length)],
-  ];
-  return (
-    <DashCard kicker="At a glance" title={chosen ? chosen.title : "Options open"}>
-      <dl className="grid grid-cols-2 gap-2">
-        {stats.map(([label, value]) => (
-          <div key={label} className="rounded-[14px] bg-canvas-soft px-3 py-2">
-            <dt className="text-[12px] font-bold uppercase tracking-[0.08em] text-muted">{label}</dt>
-            <dd className="font-display text-[26px] font-extrabold leading-tight tracking-[-0.5px] text-ink tabular-nums">{value}</dd>
-          </div>
-        ))}
-      </dl>
-      <p className="mt-2 text-caption text-muted">{chosen ? "Your chosen route." : "No route chosen yet: nothing is committed."}</p>
-    </DashCard>
   );
 }

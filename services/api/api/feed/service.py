@@ -5,14 +5,14 @@ items in the same order, so a cursor is just {tab, seed, offset} and pages never
 
 - **For you**, logged in: courses whose title or description match the student's interests,
   research areas, future domains, humanities topics, career paths and intended programs (whole
-  words; a match in the title counts double), plus route courses, within the focus categories
+  words; a match in the title counts double), plus followed courses, within the focus categories
   if any; then the best of those categories. Logged out (or nothing to go on): a curated
   "best of UChicago" mix across categories (Core courses, approachable levels, rich
   descriptions), rotated daily.
 - **Explore**: a daily shuffle across every category, two courses from the categories the
   student has not chosen for every one from those they have.
-- **Following**: the courses on the student's routes and the courses and threads they follow,
-  with Commons activity on them. Empty when there is nothing to follow.
+- **Following**: the courses and threads the student follows, with Commons activity on them.
+  Empty when there is nothing to follow. (Routes were removed in issue #15.)
 
 Courses are spread so no two in a row share a category (when there is a choice), and a card of
 another kind (a book from the shelf, a student's comment, a word cloud, an open question, a
@@ -162,8 +162,6 @@ class Viewer:
     interests: list[Interest] = field(default_factory=list)
     #: The profile's saved focus categories.
     saved_focus: list[str] = field(default_factory=list)
-    #: Route course code -> the route's title (the chosen route first).
-    route_courses: dict[str, str] = field(default_factory=dict)
     followed_courses: list[str] = field(default_factory=list)
     followed_threads: list[int] = field(default_factory=list)
     intended_programs: list[str] = field(default_factory=list)
@@ -182,7 +180,7 @@ def _strings(values: Iterable[object] | None) -> list[str]:
 
 
 def load_viewer(db: Session, account_id: uuid.UUID | None) -> Viewer:
-    """What the feed knows about the student: their profile and routes, read directly."""
+    """What the feed knows about the student: their profile, read directly."""
     if account_id is None:
         return Viewer()
     viewer = Viewer(account_id=account_id)
@@ -223,16 +221,6 @@ def load_viewer(db: Session, account_id: uuid.UUID | None) -> Viewer:
                     seen.add(interest.phrase)
                     viewer.interests.append(interest)
         viewer.interests = viewer.interests[:MAX_INTERESTS]
-    routes = db.scalars(
-        sa.select(m.Pathway)
-        .where(m.Pathway.account_id == account_id, m.Pathway.status != "archived")
-        .order_by((m.Pathway.status == "chosen").desc(), m.Pathway.position, m.Pathway.title)
-    ).all()
-    for route in routes:
-        for entry in route.courses or []:
-            code = catalog_repo.normalize_code(str(entry.get("code", ""))) if entry else None
-            if code and code not in viewer.route_courses:
-                viewer.route_courses[code] = route.title
     return viewer
 
 
@@ -342,7 +330,7 @@ def _for_you(ctx: Ctx) -> list[Pick]:
     categories = ctx.focus or [c.key for c in CATEGORIES]
     allowed = set(categories)
     groups: dict[str, list[tuple[float, Pick]]] = {}
-    if viewer.interests or viewer.route_courses or viewer.followed_courses:
+    if viewer.interests or viewer.followed_courses:
         for course in ctx.pool.courses:
             if course.category not in allowed:
                 continue
@@ -354,11 +342,7 @@ def _for_you(ctx: Ctx) -> list[Pick]:
                     best, best_score, whole = interest, s, exact
             reason = "" if best is None else best.reason if whole else best.near_reason
             group = best.phrase if best is not None else ""
-            if course.code in viewer.route_courses:
-                total += 5.0
-                reason = _cap(f"On your route '{viewer.route_courses[course.code]}'", 80)
-                group = "\x00route"
-            elif course.code in viewer.followed_courses:
+            if course.code in viewer.followed_courses:
                 total += 3.0
                 reason = reason or "You follow this course"
                 group = group or "\x00follow"
@@ -369,7 +353,7 @@ def _for_you(ctx: Ctx) -> list[Pick]:
             groups.setdefault(group, []).append((rank, Pick(course, reason, theme)))
     for rows in groups.values():
         rows.sort(key=lambda t: -t[0])
-    order = sorted(groups, key=lambda k: (k != "\x00route", -groups[k][0][0]))
+    order = sorted(groups, key=lambda k: -groups[k][0][0])
     queues = {k: [p for _, p in groups[k][:PER_INTEREST]] for k in order}
     cap = STREAM_COURSES * 2 // 3
     matched: list[Pick] = []
@@ -411,26 +395,20 @@ def _explore(ctx: Ctx) -> list[Pick]:
 
 def _following(ctx: Ctx) -> list[Pick]:
     viewer = ctx.viewer
-    codes = list(viewer.route_courses) + [
-        c for c in viewer.followed_courses if c not in viewer.route_courses
-    ]
+    codes = list(dict.fromkeys(viewer.followed_courses))
     found = _courses_by_code(ctx, codes)
     picks: list[Pick] = []
     for code in codes:
         course = found.get(code)
         if course is None:
             continue
-        if code in viewer.route_courses:
-            reason = _cap(f"On your route '{viewer.route_courses[code]}'", 80)
-        else:
-            reason = "You follow this course"
-        picks.append(Pick(course, reason))
+        picks.append(Pick(course, "You follow this course"))
     return picks[:STREAM_COURSES]
 
 
 def _courses_by_code(ctx: Ctx, codes: Sequence[str]) -> dict[str, PoolCourse]:
     """Pool courses for `codes`; codes outside the pool (graduate, no description) are read
-    from the catalog, so a route's every real course can appear."""
+    from the catalog, so every followed course can appear."""
     out = {c: ctx.pool.by_code[c] for c in codes if c in ctx.pool.by_code}
     missing = [c for c in codes if c not in out]
     if missing:
@@ -581,7 +559,7 @@ def _forum_comments(ctx: Ctx, limit: int = 40) -> list[CommentItem]:
 
 
 def _followed_course_ids(ctx: Ctx) -> list[int]:
-    codes = list(ctx.viewer.route_courses) + ctx.viewer.followed_courses
+    codes = ctx.viewer.followed_courses
     if not codes:
         return [-1]
     ids = ctx.db.scalars(
@@ -834,9 +812,9 @@ def _headline(ctx: Ctx, picks: Sequence[Pick]) -> str:
             break
     if not topics:
         if ctx.tab == "following":
-            return "Nothing to follow yet: keep a route or follow a course"
+            return "Nothing to follow yet: follow a course"
         return "Today's river is still filling up"
-    lead = "On your routes today" if ctx.tab == "following" else "Today's river"
+    lead = "On what you follow today" if ctx.tab == "following" else "Today's river"
     for n in (3, 2, 1):
         chosen = topics[:n]
         joined = chosen[0] if n == 1 else ", ".join(chosen[:-1]) + " and " + chosen[-1]
@@ -950,7 +928,7 @@ def build_feed(
     seed = seed or (today or dt.date.today()).isoformat()
     year = catalog_repo.latest_catalog_year(db)
     personalized = viewer.logged_in and (
-        bool(viewer.interests or viewer.route_courses or viewer.followed_courses) or bool(focus)
+        bool(viewer.interests or viewer.followed_courses) or bool(focus)
     )
     if year is None or (tab == "following" and not viewer.logged_in):
         return FeedPage(
@@ -959,7 +937,7 @@ def build_feed(
             next_cursor=None,
             categories_applied=focus,
             headline=(
-                "Log in to follow courses and routes"
+                "Log in to follow courses"
                 if tab == "following"
                 else "The catalog has not been loaded yet"
             ),
@@ -1171,9 +1149,6 @@ def _reason_for(ctx: Ctx, course: PoolCourse) -> Pick:
     viewer = ctx.viewer
     if ctx.tab == "explore":
         return Pick(course, _explore_reason(course.category, set(ctx.focus or viewer.saved_focus)))
-    if course.code in viewer.route_courses:
-        route = viewer.route_courses[course.code]
-        return Pick(course, _cap(f"On your route '{route}'", 80))
     if ctx.tab == "following":
         return Pick(course, "You follow this course")
     best, best_score, whole = None, 0.0, False

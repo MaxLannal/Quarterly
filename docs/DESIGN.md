@@ -643,7 +643,7 @@ Richard: where it conflicts with the sections above, this section describes what
   Inter with the Newsreader accent line.
 - **Wider pages** (Max, 2026-11-20, "widen everything horizontally in every page"): content 1560px
   (was 1200), reading 960 (720), forms 560 (448), the planner 1920 (1600); the Ask conversation
-  1040px.
+  1040px (the Ask page was removed in issue #15, 2026-11-24).
 - **The menu bar** is a frosted white glass bar the width of the page sheet, floating on the maroon
   frame and sticky at the top: ink serif wordmark, 18px links, the current page a soft rose wash (not
   solid red), a quiet filled search pill. On a phone the account shows as its avatar only, so the bar
@@ -669,4 +669,7 @@ Richard: where it conflicts with the sections above, this section describes what
   email, the portrait with its themes, class year and programs, "Talk with your guide" and "Draft my
   routes", the completeness ring). Top right: the guide. Below: interests, research areas and
   what's new; the humanities compass, career and horizons; workload and an "at a glance" panel;
-  then the routes, two side by side, each laid out for its own width.
+  then the routes, two side by side, each laid out for its own width. Issue #15 (2026-11-24)
+  removed "Draft my routes", the "at a glance" panel and the routes: workload now spans the row.
+- **The menu bar has four tabs** (issue #15, 2026-11-24): Dashboard, Planner, Catalog, Forum. The
+  homepage is not a tab (the wordmark links to it), and no page has the floating companion orb.
