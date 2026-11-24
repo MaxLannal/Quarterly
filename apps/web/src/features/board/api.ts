@@ -21,8 +21,8 @@ export const TYPES: { key: ItemType | null; label: string }[] = [
 ];
 
 export const PERIODS: { key: Period; label: string }[] = [
-  { key: "quarter", label: "This quarter" },
-  { key: "year", label: "This year" },
+  { key: "quarter", label: "Last 3 months" },
+  { key: "year", label: "Last 12 months" },
 ];
 
 export const boardKeys = {

@@ -42,7 +42,6 @@ function NewPost() {
         </Link>
       </Button>
       <p className="flex flex-wrap items-center gap-x-4 gap-y-1 text-caption text-muted">
-        <span>Anonymous handles. Quarterly AI writes a short first answer to each question.</span>
         <Link to="/instructors" className="inline-flex min-h-11 items-center gap-1 font-medium text-primary underline-offset-4 hover:underline">
           Course reviews by instructor →
         </Link>

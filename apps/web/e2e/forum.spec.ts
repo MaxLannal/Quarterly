@@ -205,8 +205,8 @@ test("/forum: a New post button, discussions for everyone, reviews and ratings a
   await expect(stats.getByRole("region", { name: "Humanities sequences" })).toContainText("FAKE 11000-11100-11200");
   await expect(stats.getByRole("region", { name: "Instructors" })).toContainText("Fake Instructor A");
   await expect(stats.getByText(/Bayesian averages/)).toContainText("as if it had 5 reviews");
-  await stats.getByRole("button", { name: "This year" }).click();
-  await expect(stats.getByRole("button", { name: "This year" })).toHaveAttribute("aria-pressed", "true");
+  await stats.getByRole("button", { name: "Last 12 months" }).click();
+  await expect(stats.getByRole("button", { name: "Last 12 months" })).toHaveAttribute("aria-pressed", "true");
   // Reviews and discussions in one list, newest first.
   await expect(list.getByText("Review", { exact: true }).first()).toBeVisible();
   await expect(list.locator("article")).toHaveCount(10);
