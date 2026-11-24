@@ -17,9 +17,9 @@ from api.routers import (
     admin,
     agents,
     auth,
+    browse,
     catalog,
     commons,
-    feed,
     forum,
     plans,
     profile,
@@ -65,10 +65,11 @@ def create_app() -> FastAPI:
         lifespan=lifespan,
     )
     app.include_router(health_router)
-    for module in (catalog, plans, verify, agents, forum, auth, account, admin, weather):
+    for module in (catalog, browse, plans, verify, agents, forum, auth, account, admin, weather):
         app.include_router(module.router)
     # Campus companion (docs/BEST-OF-UCHICAGO-PLAN.md); the Ask chatbot went in issue #15.
-    for module in (updates, profile, feed, commons):
+    # The Feed went in issue #19: its spotlights and quotes are the Catalog's rows (browse).
+    for module in (updates, profile, commons):
         app.include_router(module.router)
     return app
 

@@ -46,7 +46,6 @@ function emptyProfile(): S["ProfileOut"] {
     future_domains: [],
     constraints: [],
     workload: null,
-    feed_categories: [],
     portrait: { headline: "", summary: "", themes: [] },
     interview: { covered: [], turns: [] },
     follows: { threads: [], courses: [] },

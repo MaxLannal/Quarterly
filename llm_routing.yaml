@@ -126,7 +126,8 @@ tasks:
 
   # Campus companion (docs/BEST-OF-UCHICAGO-PLAN.md, 2026-11-20). Every one of these has a
   # deterministic fallback, so the features work with the AI off. (a5_campus_ask, a7_routes and
-  # a10_updates_digest were removed with the Ask page, the routes and the companion, issue #15.)
+  # a10_updates_digest were removed with the Ask page, the routes and the companion, issue #15;
+  # a8_feed_notes with the Feed, issue #19.)
   a6_interview:               # the dashboard's interviewing guide (next question + profile patch)
     model: claude-sonnet-5-5
     effort: low
@@ -134,12 +135,6 @@ tasks:
     thinking: between_tools
     refusal_fallback: true
     fallback: {provider: openrouter, model: anthropic/claude-sonnet-5.5}
-  a8_feed_notes:              # one line "why this is in your feed" per item, and a headline
-    model: claude-haiku-5-5
-    effort: low
-    max_tokens: 1500
-    thinking: disabled
-    fallback: {provider: openrouter, model: anthropic/claude-haiku-5.5}
   a9_commons_bot:             # the bot's answer under a Commons question (read tools, cited)
     model: claude-sonnet-5-5
     effort: low

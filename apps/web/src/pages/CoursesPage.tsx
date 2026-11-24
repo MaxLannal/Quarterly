@@ -5,7 +5,7 @@ import { useCourseSearch, type CourseSearchParams } from "@/api/hooks";
 import type { CourseSummary } from "@/api/types";
 import { Button } from "@/components/ui/button";
 import { ChevronIcon } from "@/components/ui/icons";
-import { EmptyState, PageContainer } from "@/components/layout/page";
+import { EmptyState, inlineLinkClass, PageContainer } from "@/components/layout/page";
 import { Card } from "@/components/ui/card";
 import { controlClass } from "@/components/ui/input";
 import {
@@ -16,8 +16,13 @@ import {
   NotAvailable,
   Spinner,
 } from "@/components/ui/misc";
+import { useAuthLinks } from "@/features/auth/next";
 import { CatalogToggle } from "@/features/courses/CatalogToggle";
+import { RatingLine } from "@/features/courses/RatingLine";
+import { useCatalogBrowse, useCourseRatings, type RatingSummary } from "@/features/feed/api";
+import { BrowseRows, browseCodes } from "@/features/feed/BrowseRows";
 import { attribute, isEstimate, round1 } from "@/features/planner/metrics";
+import { useSession } from "@/lib/session";
 import { cn } from "@/lib/utils";
 
 const PAGE = 20;
@@ -45,7 +50,7 @@ function paramsFrom(sp: URLSearchParams): CourseSearchParams {
   };
 }
 
-export function CourseRow({ c }: { c: CourseSummary }) {
+export function CourseRow({ c, rating }: { c: CourseSummary; rating?: RatingSummary }) {
   const hours = attribute(c, "workload_hours");
   const diff = attribute(c, "difficulty");
   return (
@@ -57,6 +62,7 @@ export function CourseRow({ c }: { c: CourseSummary }) {
         <CourseCode>{c.code}</CourseCode> <span className="sr-only">·</span>{" "}
         <span className="text-title-md underline-offset-4">{c.title}</span>
       </Link>
+      <RatingLine rating={rating} />
       <div className="mt-auto flex flex-wrap items-center gap-x-3 gap-y-2 text-caption text-muted">
         <span>{c.units} units</span>
         {hours && (
@@ -75,16 +81,31 @@ export function CourseRow({ c }: { c: CourseSummary }) {
   );
 }
 
+/**
+ * The Catalog page (`/courses`, issue #19): the course search with its filters, and before the
+ * student searches, the browse rows that replaced the Feed (newly released courses, course
+ * spotlights, what students say). Student ratings show on every course for a logged-in student.
+ */
 export default function CoursesPage() {
   const [sp, setSp] = useSearchParams();
+  const session = useSession();
+  const authLinks = useAuthLinks();
+  const account = session.data?.account ?? null;
+  const loggedIn = account !== null;
   const params = paramsFrom(sp);
   const [draft, setDraft] = useState(() => Object.fromEntries(sp.entries()));
-  // Nothing is listed until the student searches (FEEDBACK 2026-11-16: a simple, centered search).
+  // Results only after a search (FEEDBACK 2026-11-16: a simple, centered search); before it, the
+  // browse rows (issue #19).
   const searched = [...sp.entries()].some(([k, v]) => k !== "offset" && v);
   const filtered = [...sp.entries()].some(
     ([k, v]) => k !== "offset" && k !== "q" && v,
   );
   const q = useCourseSearch(params, searched);
+  const browse = useCatalogBrowse(account?.id ?? "anon", !searched && !session.isLoading);
+  const shown = searched ? (q.data?.items.map((c) => c.code) ?? []) : browseCodes(browse.data);
+  const ratingsQuery = useCourseRatings(account?.id ?? null, shown);
+  // Never show ratings logged out, not even from a cache (checklist item 9 of issue #19).
+  const ratings = loggedIn ? ratingsQuery.data : undefined;
   const id = useId();
   const field = (k: string) => `${id}-${k}`;
   const box = controlClass;
@@ -115,7 +136,7 @@ export default function CoursesPage() {
     <PageContainer>
       <div className="mx-auto flex w-full max-w-2xl flex-col items-center gap-5 pt-4 text-center sm:pt-8">
         <CatalogToggle current="courses" />
-        <h1 className="font-display text-display-md text-ink">Course search</h1>
+        <h1 className="font-display text-display-md text-ink">Catalog</h1>
         <form
           onSubmit={submit}
           className="w-full text-left"
@@ -273,7 +294,20 @@ export default function CoursesPage() {
             </div>
           </details>
         </form>
+        {!session.isLoading && !loggedIn && (
+          // Ratings need a login, as on the course page (CourseOverview).
+          <p className="text-caption text-muted">
+            <Link to={authLinks.login} className={inlineLinkClass}>
+              Log in
+            </Link>{" "}
+            to see student ratings.
+          </p>
+        )}
       </div>
+
+      {!searched && (
+        <BrowseRows data={browse.data} isLoading={browse.isLoading} isError={browse.isError} ratings={ratings} />
+      )}
 
       {searched && (
         <section aria-label="Results" className="mt-10">
@@ -312,7 +346,7 @@ export default function CoursesPage() {
               ) : (
               <ul className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {q.data?.items.map((c) => (
-                  <CourseRow key={c.code} c={c} />
+                  <CourseRow key={c.code} c={c} rating={ratings?.[c.code]} />
                 ))}
               </ul>
               )}

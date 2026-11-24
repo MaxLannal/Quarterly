@@ -364,46 +364,6 @@
         "title": "AttributeValue",
         "type": "object"
       },
-      "BookItem": {
-        "properties": {
-          "book": {
-            "$ref": "#/components/schemas/ShelfBook"
-          },
-          "category": {
-            "$ref": "#/components/schemas/FeedCategoryRef"
-          },
-          "courses": {
-            "items": {
-              "$ref": "#/components/schemas/CourseRef"
-            },
-            "title": "Courses",
-            "type": "array"
-          },
-          "id": {
-            "title": "Id",
-            "type": "string"
-          },
-          "kind": {
-            "const": "book",
-            "default": "book",
-            "title": "Kind",
-            "type": "string"
-          },
-          "reason": {
-            "title": "Reason",
-            "type": "string"
-          }
-        },
-        "required": [
-          "id",
-          "book",
-          "category",
-          "courses",
-          "reason"
-        ],
-        "title": "BookItem",
-        "type": "object"
-      },
       "BoundedPartsNode": {
         "additionalProperties": false,
         "description": "Parts with [min, max] counts that sum to a total.",
@@ -550,6 +510,51 @@
           "apply_by"
         ],
         "title": "BxmsGoal",
+        "type": "object"
+      },
+      "CatalogBrowse": {
+        "description": "The rows the Catalog page shows before the student searches. Any row may be empty.",
+        "properties": {
+          "catalog_year": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Catalog Year"
+          },
+          "new_courses": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/NewCourse"
+            },
+            "title": "New Courses",
+            "type": "array"
+          },
+          "quotes": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/CommentItem"
+            },
+            "title": "Quotes",
+            "type": "array"
+          },
+          "spotlights": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/CourseItem"
+            },
+            "title": "Spotlights",
+            "type": "array"
+          }
+        },
+        "required": [
+          "catalog_year"
+        ],
+        "title": "CatalogBrowse",
         "type": "object"
       },
       "CatalogYearOut": {
@@ -2882,14 +2887,8 @@
         "type": "object"
       },
       "CourseItem": {
+        "description": "A course spotlight.",
         "properties": {
-          "books": {
-            "items": {
-              "$ref": "#/components/schemas/ShelfBook"
-            },
-            "title": "Books",
-            "type": "array"
-          },
           "category": {
             "$ref": "#/components/schemas/FeedCategoryRef"
           },
@@ -2951,13 +2950,6 @@
           "units": {
             "title": "Units",
             "type": "integer"
-          },
-          "words": {
-            "items": {
-              "type": "string"
-            },
-            "title": "Words",
-            "type": "array"
           }
         },
         "required": [
@@ -2969,9 +2961,7 @@
           "units",
           "excerpt",
           "core_tags",
-          "words",
           "illustration",
-          "books",
           "reason"
         ],
         "title": "CourseItem",
@@ -3134,6 +3124,23 @@
           "title"
         ],
         "title": "CourseMention",
+        "type": "object"
+      },
+      "CourseRatings": {
+        "description": "Student ratings pooled over every instructor's page of each course (logged in only).\nA course with no visible review has `n_reviews` 0.",
+        "properties": {
+          "ratings": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/RatingSummary"
+            },
+            "title": "Ratings",
+            "type": "object"
+          }
+        },
+        "required": [
+          "ratings"
+        ],
+        "title": "CourseRatings",
         "type": "object"
       },
       "CourseRef": {
@@ -3614,72 +3621,8 @@
         "title": "Expr",
         "type": "object"
       },
-      "FeedCategories": {
-        "properties": {
-          "categories": {
-            "items": {
-              "$ref": "#/components/schemas/FeedCategory"
-            },
-            "title": "Categories",
-            "type": "array"
-          },
-          "selected": {
-            "items": {
-              "type": "string"
-            },
-            "title": "Selected",
-            "type": "array"
-          }
-        },
-        "required": [
-          "categories",
-          "selected"
-        ],
-        "title": "FeedCategories",
-        "type": "object"
-      },
-      "FeedCategory": {
-        "properties": {
-          "blurb": {
-            "title": "Blurb",
-            "type": "string"
-          },
-          "course_count": {
-            "title": "Course Count",
-            "type": "integer"
-          },
-          "key": {
-            "title": "Key",
-            "type": "string"
-          },
-          "label": {
-            "title": "Label",
-            "type": "string"
-          },
-          "motif": {
-            "title": "Motif",
-            "type": "string"
-          },
-          "subjects": {
-            "items": {
-              "type": "string"
-            },
-            "title": "Subjects",
-            "type": "array"
-          }
-        },
-        "required": [
-          "key",
-          "label",
-          "motif",
-          "blurb",
-          "subjects",
-          "course_count"
-        ],
-        "title": "FeedCategory",
-        "type": "object"
-      },
       "FeedCategoryRef": {
+        "description": "A family of subjects (`api.feed.categories`), with the motif of its generated art.",
         "properties": {
           "key": {
             "title": "Key",
@@ -3700,160 +3643,6 @@
           "motif"
         ],
         "title": "FeedCategoryRef",
-        "type": "object"
-      },
-      "FeedNotes": {
-        "properties": {
-          "ai": {
-            "title": "Ai",
-            "type": "boolean"
-          },
-          "headline": {
-            "title": "Headline",
-            "type": "string"
-          },
-          "notes": {
-            "additionalProperties": {
-              "type": "string"
-            },
-            "title": "Notes",
-            "type": "object"
-          }
-        },
-        "required": [
-          "headline",
-          "notes",
-          "ai"
-        ],
-        "title": "FeedNotes",
-        "type": "object"
-      },
-      "FeedNotesRequest": {
-        "properties": {
-          "categories": {
-            "anyOf": [
-              {
-                "maxLength": 400,
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Categories"
-          },
-          "item_ids": {
-            "items": {
-              "maxLength": 96,
-              "minLength": 3,
-              "type": "string"
-            },
-            "maxItems": 12,
-            "minItems": 1,
-            "title": "Item Ids",
-            "type": "array"
-          },
-          "tab": {
-            "default": "for_you",
-            "enum": [
-              "for_you",
-              "explore",
-              "following"
-            ],
-            "title": "Tab",
-            "type": "string"
-          }
-        },
-        "required": [
-          "item_ids"
-        ],
-        "title": "FeedNotesRequest",
-        "type": "object"
-      },
-      "FeedPage": {
-        "properties": {
-          "categories_applied": {
-            "items": {
-              "type": "string"
-            },
-            "title": "Categories Applied",
-            "type": "array"
-          },
-          "headline": {
-            "title": "Headline",
-            "type": "string"
-          },
-          "items": {
-            "items": {
-              "discriminator": {
-                "mapping": {
-                  "book": "#/components/schemas/BookItem",
-                  "comment": "#/components/schemas/CommentItem",
-                  "course": "#/components/schemas/CourseItem",
-                  "program": "#/components/schemas/ProgramItem",
-                  "question": "#/components/schemas/QuestionItem",
-                  "words": "#/components/schemas/WordsItem"
-                },
-                "propertyName": "kind"
-              },
-              "oneOf": [
-                {
-                  "$ref": "#/components/schemas/CourseItem"
-                },
-                {
-                  "$ref": "#/components/schemas/CommentItem"
-                },
-                {
-                  "$ref": "#/components/schemas/BookItem"
-                },
-                {
-                  "$ref": "#/components/schemas/WordsItem"
-                },
-                {
-                  "$ref": "#/components/schemas/ProgramItem"
-                },
-                {
-                  "$ref": "#/components/schemas/QuestionItem"
-                }
-              ]
-            },
-            "title": "Items",
-            "type": "array"
-          },
-          "next_cursor": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Next Cursor"
-          },
-          "personalized": {
-            "title": "Personalized",
-            "type": "boolean"
-          },
-          "tab": {
-            "enum": [
-              "for_you",
-              "explore",
-              "following"
-            ],
-            "title": "Tab",
-            "type": "string"
-          }
-        },
-        "required": [
-          "tab",
-          "items",
-          "next_cursor",
-          "categories_applied",
-          "headline",
-          "personalized"
-        ],
-        "title": "FeedPage",
         "type": "object"
       },
       "Follows": {
@@ -6130,6 +5919,79 @@
         "title": "MoveOp",
         "type": "object"
       },
+      "NewCourse": {
+        "description": "A newly released course. `basis` says how it is known to be new: `listed` (a person put\nit in `data/catalog/new_courses.yaml`, with the quote that says so) or `catalog` (it is in\nthis catalog year and was not in the one before).",
+        "properties": {
+          "basis": {
+            "enum": [
+              "listed",
+              "catalog"
+            ],
+            "title": "Basis",
+            "type": "string"
+          },
+          "code": {
+            "title": "Code",
+            "type": "string"
+          },
+          "core_tags": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Core Tags",
+            "type": "array"
+          },
+          "excerpt": {
+            "default": "",
+            "title": "Excerpt",
+            "type": "string"
+          },
+          "reason": {
+            "title": "Reason",
+            "type": "string"
+          },
+          "source_quote": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Quote"
+          },
+          "source_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Url"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "units": {
+            "title": "Units",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "code",
+          "title",
+          "units",
+          "basis",
+          "reason"
+        ],
+        "title": "NewCourse",
+        "type": "object"
+      },
       "NodeProgress": {
         "additionalProperties": false,
         "description": "Per-node progress for the planner's requirement rail.",
@@ -7760,14 +7622,6 @@
             "title": "Email",
             "type": "string"
           },
-          "feed_categories": {
-            "default": [],
-            "items": {
-              "type": "string"
-            },
-            "title": "Feed Categories",
-            "type": "array"
-          },
           "follows": {
             "$ref": "#/components/schemas/Follows",
             "default": {
@@ -7907,7 +7761,7 @@
         "type": "object"
       },
       "ProfilePatch": {
-        "description": "A partial update: only the fields sent are changed (`null` clears a field). The feed\nand the Commons follow button also send these.",
+        "description": "A partial update: only the fields sent are changed (`null` clears a field). The Commons\nfollow button also sends these.",
         "properties": {
           "career_paths": {
             "anyOf": [
@@ -7963,21 +7817,6 @@
               }
             ],
             "title": "Constraints"
-          },
-          "feed_categories": {
-            "anyOf": [
-              {
-                "items": {
-                  "maxLength": 200,
-                  "type": "string"
-                },
-                "type": "array"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Feed Categories"
           },
           "follows": {
             "anyOf": [
@@ -8290,57 +8129,6 @@
         "title": "ProgramDetail",
         "type": "object"
       },
-      "ProgramItem": {
-        "properties": {
-          "department": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Department"
-          },
-          "id": {
-            "title": "Id",
-            "type": "string"
-          },
-          "kind": {
-            "const": "program",
-            "default": "program",
-            "title": "Kind",
-            "type": "string"
-          },
-          "name": {
-            "title": "Name",
-            "type": "string"
-          },
-          "program_id": {
-            "title": "Program Id",
-            "type": "string"
-          },
-          "reason": {
-            "title": "Reason",
-            "type": "string"
-          },
-          "type": {
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "id",
-          "program_id",
-          "name",
-          "type",
-          "department",
-          "reason"
-        ],
-        "title": "ProgramItem",
-        "type": "object"
-      },
       "ProgramRef": {
         "properties": {
           "id": {
@@ -8592,73 +8380,6 @@
           "id"
         ],
         "title": "ProtectGpaGoal",
-        "type": "object"
-      },
-      "QuestionItem": {
-        "description": "A Commons question that is waiting for an answer, or a recent one.",
-        "properties": {
-          "answered": {
-            "title": "Answered",
-            "type": "boolean"
-          },
-          "course": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/CourseRef"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "day": {
-            "format": "date",
-            "title": "Day",
-            "type": "string"
-          },
-          "href": {
-            "title": "Href",
-            "type": "string"
-          },
-          "id": {
-            "title": "Id",
-            "type": "string"
-          },
-          "kind": {
-            "const": "question",
-            "default": "question",
-            "title": "Kind",
-            "type": "string"
-          },
-          "reply_count": {
-            "title": "Reply Count",
-            "type": "integer"
-          },
-          "snippet": {
-            "title": "Snippet",
-            "type": "string"
-          },
-          "thread_id": {
-            "title": "Thread Id",
-            "type": "integer"
-          },
-          "title": {
-            "title": "Title",
-            "type": "string"
-          }
-        },
-        "required": [
-          "id",
-          "thread_id",
-          "title",
-          "snippet",
-          "course",
-          "reply_count",
-          "answered",
-          "href",
-          "day"
-        ],
-        "title": "QuestionItem",
         "type": "object"
       },
       "RatingSummary": {
@@ -9600,44 +9321,6 @@
         "title": "ShareLimit",
         "type": "object"
       },
-      "ShelfBook": {
-        "properties": {
-          "author": {
-            "title": "Author",
-            "type": "string"
-          },
-          "id": {
-            "title": "Id",
-            "type": "string"
-          },
-          "slug": {
-            "title": "Slug",
-            "type": "string"
-          },
-          "title": {
-            "title": "Title",
-            "type": "string"
-          },
-          "when": {
-            "title": "When",
-            "type": "string"
-          },
-          "year": {
-            "title": "Year",
-            "type": "integer"
-          }
-        },
-        "required": [
-          "id",
-          "slug",
-          "title",
-          "author",
-          "year",
-          "when"
-        ],
-        "title": "ShelfBook",
-        "type": "object"
-      },
       "SlotNode": {
         "additionalProperties": false,
         "description": "One specific course or alternatives.",
@@ -10543,62 +10226,6 @@
         "title": "WeatherOut",
         "type": "object"
       },
-      "WeightedWord": {
-        "properties": {
-          "text": {
-            "title": "Text",
-            "type": "string"
-          },
-          "weight": {
-            "maximum": 5.0,
-            "minimum": 1.0,
-            "title": "Weight",
-            "type": "integer"
-          }
-        },
-        "required": [
-          "text",
-          "weight"
-        ],
-        "title": "WeightedWord",
-        "type": "object"
-      },
-      "WordsItem": {
-        "properties": {
-          "category": {
-            "$ref": "#/components/schemas/FeedCategoryRef"
-          },
-          "id": {
-            "title": "Id",
-            "type": "string"
-          },
-          "kind": {
-            "const": "words",
-            "default": "words",
-            "title": "Kind",
-            "type": "string"
-          },
-          "label": {
-            "title": "Label",
-            "type": "string"
-          },
-          "words": {
-            "items": {
-              "$ref": "#/components/schemas/WeightedWord"
-            },
-            "title": "Words",
-            "type": "array"
-          }
-        },
-        "required": [
-          "id",
-          "category",
-          "label",
-          "words"
-        ],
-        "title": "WordsItem",
-        "type": "object"
-      },
       "WorkloadHoursGoal": {
         "additionalProperties": false,
         "properties": {
@@ -11440,47 +11067,6 @@
         ]
       }
     },
-    "/agents/feed-notes": {
-      "post": {
-        "operationId": "post_feed_notes_agents_feed_notes_post",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/FeedNotesRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FeedNotes"
-                }
-              }
-            },
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "summary": "Post Feed Notes",
-        "tags": [
-          "feed"
-        ]
-      }
-    },
     "/agents/generate": {
       "post": {
         "operationId": "generate_agents_generate_post",
@@ -11960,6 +11546,27 @@
           }
         },
         "summary": "List Catalog Years",
+        "tags": [
+          "catalog"
+        ]
+      }
+    },
+    "/catalog/browse": {
+      "get": {
+        "operationId": "browse_catalog_browse_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CatalogBrowse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Browse",
         "tags": [
           "catalog"
         ]
@@ -12807,6 +12414,61 @@
         ]
       }
     },
+    "/course-ratings": {
+      "get": {
+        "operationId": "course_ratings_course_ratings_get",
+        "parameters": [
+          {
+            "description": "Comma-separated course codes",
+            "in": "query",
+            "name": "codes",
+            "required": true,
+            "schema": {
+              "description": "Comma-separated course codes",
+              "maxLength": 1200,
+              "title": "Codes",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CourseRatings"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Not logged in"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Course Ratings",
+        "tags": [
+          "catalog"
+        ]
+      }
+    },
     "/courses": {
       "get": {
         "operationId": "search_courses_courses_get",
@@ -13076,123 +12738,6 @@
         "summary": "Get Course",
         "tags": [
           "catalog"
-        ]
-      }
-    },
-    "/feed": {
-      "get": {
-        "operationId": "get_feed_feed_get",
-        "parameters": [
-          {
-            "in": "query",
-            "name": "tab",
-            "required": false,
-            "schema": {
-              "default": "for_you",
-              "enum": [
-                "for_you",
-                "explore",
-                "following"
-              ],
-              "title": "Tab",
-              "type": "string"
-            }
-          },
-          {
-            "description": "Comma-separated category keys; absent = the profile's saved focus.",
-            "in": "query",
-            "name": "categories",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "maxLength": 400,
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "description": "Comma-separated category keys; absent = the profile's saved focus.",
-              "title": "Categories"
-            }
-          },
-          {
-            "in": "query",
-            "name": "cursor",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "maxLength": 200,
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Cursor"
-            }
-          },
-          {
-            "in": "query",
-            "name": "limit",
-            "required": false,
-            "schema": {
-              "default": 12,
-              "maximum": 24,
-              "minimum": 1,
-              "title": "Limit",
-              "type": "integer"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FeedPage"
-                }
-              }
-            },
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "summary": "Get Feed",
-        "tags": [
-          "feed"
-        ]
-      }
-    },
-    "/feed/categories": {
-      "get": {
-        "operationId": "get_categories_feed_categories_get",
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FeedCategories"
-                }
-              }
-            },
-            "description": "Successful Response"
-          }
-        },
-        "summary": "Get Categories",
-        "tags": [
-          "feed"
         ]
       }
     },

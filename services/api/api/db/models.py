@@ -673,8 +673,6 @@ class StudentProfile(Base):
     future_domains: Mapped[list[str]] = _texts()
     constraints: Mapped[list[str]] = _texts()
     workload: Mapped[str | None] = mapped_column(sa.String(16))
-    #: Feed category keys the student focuses on (api.feed categories).
-    feed_categories: Mapped[list[str]] = _texts()
     #: {headline, summary, themes: [str]}: written by the interviewer, kept by the student.
     portrait: Mapped[dict[str, Any]] = mapped_column(JSONB, server_default="{}")
     #: The interviewer's memory: {covered: [topic], turns: [{role, text}] (last 24, scrubbed)}.

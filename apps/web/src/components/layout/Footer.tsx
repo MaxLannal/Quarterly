@@ -16,7 +16,6 @@ const COLUMNS: { title: string; links: { to: string; label: string }[] }[] = [
     links: [
       { to: "/courses", label: "Course search" },
       { to: "/programs", label: "Program explorer" },
-      { to: "/feed", label: "The feed" },
     ],
   },
   {

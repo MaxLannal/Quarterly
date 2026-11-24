@@ -20,7 +20,6 @@ function profile(over: Partial<Profile> = {}): Profile {
     future_domains: [],
     constraints: [],
     workload: null,
-    feed_categories: [],
     portrait: { headline: "", summary: "", themes: [] },
     interview: { covered: ["class_year"], turns: [] },
     follows: { threads: [], courses: [] },

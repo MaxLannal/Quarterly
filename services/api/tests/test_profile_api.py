@@ -97,7 +97,6 @@ def test_patch_cleans_lists_and_scrubs_text(env: Env) -> None:
         {"interests": [f"item {i}" for i in range(25)]},
         {"interests": ["x" * 61]},
         {"career_plans": "y" * 1201},
-        {"feed_categories": [f"cat{i}" for i in range(17)]},
         {"intended_programs": ["nope-ba"]},
         {"interview": {"turns": [{"role": "guide", "text": "z" * 2001}]}},
     ],

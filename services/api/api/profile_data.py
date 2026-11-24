@@ -38,7 +38,6 @@ LIST_FIELDS = (
     "career_paths",
     "future_domains",
     "constraints",
-    "feed_categories",
 )
 SCALAR_FIELDS = ("class_year", "humanities_goal", "humanities_note", "career_plans", "workload")
 
@@ -148,7 +147,6 @@ def profile_out(db: Session, account: m.Account, row: m.StudentProfile) -> Profi
         future_domains=list(row.future_domains),
         constraints=list(row.constraints),
         workload=row.workload,
-        feed_categories=list(row.feed_categories),
         portrait=portrait_of(row),
         interview=memory_of(row),
         follows=follows_of(row),
@@ -234,7 +232,6 @@ def export_profile(db: Session, account_id: uuid.UUID) -> dict[str, Any]:
             "future_domains": list(row.future_domains),
             "constraints": list(row.constraints),
             "workload": row.workload,
-            "feed_categories": list(row.feed_categories),
             "portrait": portrait_of(row).model_dump(mode="json"),
             "interview": memory_of(row).model_dump(mode="json"),
             "follows": follows_of(row).model_dump(mode="json"),

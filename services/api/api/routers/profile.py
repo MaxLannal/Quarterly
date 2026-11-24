@@ -105,7 +105,7 @@ def get_profile(db: Db, me: Me, response: Response) -> ProfileOut:
     responses={**AUTH, 422: {"model": ErrorOut, "description": "Unknown program"}},
 )
 def patch_profile(body: ProfilePatch, db: Db, me: Me, response: Response) -> ProfileOut:
-    # A partial update: only the fields sent change (the feed and the Commons send some of
+    # A partial update: only the fields sent change (the Commons follow button sends some of
     # them too).
     row = data.ensure_profile(db, me.id)
     try:

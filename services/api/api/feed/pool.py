@@ -83,9 +83,6 @@ class Pool:
     courses: list[PoolCourse]
     by_code: dict[str, PoolCourse] = field(default_factory=dict)
     by_category: dict[str, list[PoolCourse]] = field(default_factory=dict)
-    _clouds: dict[str, list[tuple[str, int]]] = field(default_factory=dict)
-    #: Other per-pool results that do not depend on the reader (a book's linked courses).
-    memo: dict[str, Any] = field(default_factory=dict)
 
     def __post_init__(self) -> None:
         self.by_code = {c.code: c for c in self.courses}
@@ -94,13 +91,6 @@ class Pool:
             self.by_category[c.category].append(c)
         for rows in self.by_category.values():
             rows.sort(key=lambda c: (-c.quality, c.code))
-
-    def cloud(self, category: str) -> list[tuple[str, int]]:
-        """The category's word cloud (words of its course titles), computed once."""
-        if category not in self._clouds:
-            titles = [c.title for c in self.by_category.get(category, [])]
-            self._clouds[category] = ftext.cloud(titles, n=28)
-        return self._clouds[category]
 
 
 def load_pool(db: Session, catalog_year: str) -> Pool:

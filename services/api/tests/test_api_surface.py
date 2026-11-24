@@ -80,10 +80,9 @@ EXPECTED = {
     ("get", "/me/profile"),
     ("patch", "/me/profile"),
     ("post", "/agents/interview"),  # the routes (/me/routes, /agents/routes) went in #15
-    # -- feed
-    ("get", "/feed"),
-    ("get", "/feed/categories"),
-    ("post", "/agents/feed-notes"),
+    # -- the Catalog's browse rows and ratings (the Feed's endpoints went in #19)
+    ("get", "/catalog/browse"),
+    ("get", "/course-ratings"),
     # -- commons
     ("get", "/commons/threads"),
     ("post", "/commons/threads"),

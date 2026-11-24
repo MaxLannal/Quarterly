@@ -242,23 +242,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/agents/feed-notes": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Post Feed Notes */
-        post: operations["post_feed_notes_agents_feed_notes_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/agents/generate": {
         parameters: {
             query?: never;
@@ -438,6 +421,23 @@ export interface paths {
         };
         /** List Catalog Years */
         get: operations["list_catalog_years_catalog_years_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/catalog/browse": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Browse */
+        get: operations["browse_catalog_browse_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -654,6 +654,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/course-ratings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Course Ratings */
+        get: operations["course_ratings_course_ratings_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/courses": {
         parameters: {
             query?: never;
@@ -680,40 +697,6 @@ export interface paths {
         };
         /** Get Course */
         get: operations["get_course_courses__code__get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/feed": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get Feed */
-        get: operations["get_feed_feed_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/feed/categories": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get Categories */
-        get: operations["get_categories_feed_categories_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1446,22 +1429,6 @@ export interface components {
             /** Value */
             value: number;
         };
-        /** BookItem */
-        BookItem: {
-            book: components["schemas"]["ShelfBook"];
-            category: components["schemas"]["FeedCategoryRef"];
-            /** Courses */
-            courses: components["schemas"]["CourseRef"][];
-            /** Id */
-            id: string;
-            /**
-             * @description discriminator enum property added by openapi-typescript
-             * @enum {string}
-             */
-            kind: "book";
-            /** Reason */
-            reason: string;
-        };
         /**
          * BoundedPartsNode
          * @description Parts with [min, max] counts that sum to a total.
@@ -1527,6 +1494,29 @@ export interface components {
              * @default 1
              */
             weight: number;
+        };
+        /**
+         * CatalogBrowse
+         * @description The rows the Catalog page shows before the student searches. Any row may be empty.
+         */
+        CatalogBrowse: {
+            /** Catalog Year */
+            catalog_year: string | null;
+            /**
+             * New Courses
+             * @default []
+             */
+            new_courses: components["schemas"]["NewCourse"][];
+            /**
+             * Quotes
+             * @default []
+             */
+            quotes: components["schemas"]["CommentItem"][];
+            /**
+             * Spotlights
+             * @default []
+             */
+            spotlights: components["schemas"]["CourseItem"][];
         };
         /** CatalogYearOut */
         CatalogYearOut: {
@@ -1714,8 +1704,9 @@ export interface components {
             /** Id */
             id: string;
             /**
-             * @description discriminator enum property added by openapi-typescript
-             * @enum {string}
+             * Kind
+             * @default comment
+             * @constant
              */
             kind: "comment";
             /** Snippet */
@@ -2498,10 +2489,11 @@ export interface components {
             /** Page Id */
             page_id: number;
         };
-        /** CourseItem */
+        /**
+         * CourseItem
+         * @description A course spotlight.
+         */
         CourseItem: {
-            /** Books */
-            books: components["schemas"]["ShelfBook"][];
             category: components["schemas"]["FeedCategoryRef"];
             /** Code */
             code: string;
@@ -2518,8 +2510,9 @@ export interface components {
             id: string;
             illustration: components["schemas"]["Illustration"];
             /**
-             * @description discriminator enum property added by openapi-typescript
-             * @enum {string}
+             * Kind
+             * @default course
+             * @constant
              */
             kind: "course";
             /** Reason */
@@ -2531,8 +2524,6 @@ export interface components {
             title: string;
             /** Units */
             units: number;
-            /** Words */
-            words: string[];
         };
         /**
          * CourseList
@@ -2593,6 +2584,17 @@ export interface components {
             code: string;
             /** Title */
             title: string;
+        };
+        /**
+         * CourseRatings
+         * @description Student ratings pooled over every instructor's page of each course (logged in only).
+         *     A course with no visible review has `n_reviews` 0.
+         */
+        CourseRatings: {
+            /** Ratings */
+            ratings: {
+                [key: string]: components["schemas"]["RatingSummary"];
+            };
         };
         /** CourseRef */
         CourseRef: {
@@ -2801,29 +2803,10 @@ export interface components {
              */
             op: "all" | "any" | "n_of" | "atom";
         };
-        /** FeedCategories */
-        FeedCategories: {
-            /** Categories */
-            categories: components["schemas"]["FeedCategory"][];
-            /** Selected */
-            selected: string[];
-        };
-        /** FeedCategory */
-        FeedCategory: {
-            /** Blurb */
-            blurb: string;
-            /** Course Count */
-            course_count: number;
-            /** Key */
-            key: string;
-            /** Label */
-            label: string;
-            /** Motif */
-            motif: string;
-            /** Subjects */
-            subjects: string[];
-        };
-        /** FeedCategoryRef */
+        /**
+         * FeedCategoryRef
+         * @description A family of subjects (`api.feed.categories`), with the motif of its generated art.
+         */
         FeedCategoryRef: {
             /** Key */
             key: string;
@@ -2831,48 +2814,6 @@ export interface components {
             label: string;
             /** Motif */
             motif: string;
-        };
-        /** FeedNotes */
-        FeedNotes: {
-            /** Ai */
-            ai: boolean;
-            /** Headline */
-            headline: string;
-            /** Notes */
-            notes: {
-                [key: string]: string;
-            };
-        };
-        /** FeedNotesRequest */
-        FeedNotesRequest: {
-            /** Categories */
-            categories?: string | null;
-            /** Item Ids */
-            item_ids: string[];
-            /**
-             * Tab
-             * @default for_you
-             * @enum {string}
-             */
-            tab: "for_you" | "explore" | "following";
-        };
-        /** FeedPage */
-        FeedPage: {
-            /** Categories Applied */
-            categories_applied: string[];
-            /** Headline */
-            headline: string;
-            /** Items */
-            items: (components["schemas"]["CourseItem"] | components["schemas"]["CommentItem"] | components["schemas"]["BookItem"] | components["schemas"]["WordsItem"] | components["schemas"]["ProgramItem"] | components["schemas"]["QuestionItem"])[];
-            /** Next Cursor */
-            next_cursor: string | null;
-            /** Personalized */
-            personalized: boolean;
-            /**
-             * Tab
-             * @enum {string}
-             */
-            tab: "for_you" | "explore" | "following";
         };
         /** Follows */
         Follows: {
@@ -3764,6 +3705,41 @@ export interface components {
             to_term: string;
         };
         /**
+         * NewCourse
+         * @description A newly released course. `basis` says how it is known to be new: `listed` (a person put
+         *     it in `data/catalog/new_courses.yaml`, with the quote that says so) or `catalog` (it is in
+         *     this catalog year and was not in the one before).
+         */
+        NewCourse: {
+            /**
+             * Basis
+             * @enum {string}
+             */
+            basis: "listed" | "catalog";
+            /** Code */
+            code: string;
+            /**
+             * Core Tags
+             * @default []
+             */
+            core_tags: string[];
+            /**
+             * Excerpt
+             * @default
+             */
+            excerpt: string;
+            /** Reason */
+            reason: string;
+            /** Source Quote */
+            source_quote?: string | null;
+            /** Source Url */
+            source_url?: string | null;
+            /** Title */
+            title: string;
+            /** Units */
+            units: number;
+        };
+        /**
          * NodeProgress
          * @description Per-node progress for the planner's requirement rail.
          */
@@ -4364,11 +4340,6 @@ export interface components {
             /** Email */
             email: string;
             /**
-             * Feed Categories
-             * @default []
-             */
-            feed_categories: string[];
-            /**
              * @default {
              *       "courses": [],
              *       "threads": []
@@ -4441,8 +4412,8 @@ export interface components {
         };
         /**
          * ProfilePatch
-         * @description A partial update: only the fields sent are changed (`null` clears a field). The feed
-         *     and the Commons follow button also send these.
+         * @description A partial update: only the fields sent are changed (`null` clears a field). The Commons
+         *     follow button also sends these.
          */
         ProfilePatch: {
             /** Career Paths */
@@ -4453,8 +4424,6 @@ export interface components {
             class_year?: number | null;
             /** Constraints */
             constraints?: string[] | null;
-            /** Feed Categories */
-            feed_categories?: string[] | null;
             follows?: components["schemas"]["Follows"] | null;
             /** Future Domains */
             future_domains?: string[] | null;
@@ -4517,26 +4486,6 @@ export interface components {
             verified_by?: string | null;
             /** Version Id */
             version_id: number;
-        };
-        /** ProgramItem */
-        ProgramItem: {
-            /** Department */
-            department: string | null;
-            /** Id */
-            id: string;
-            /**
-             * @description discriminator enum property added by openapi-typescript
-             * @enum {string}
-             */
-            kind: "program";
-            /** Name */
-            name: string;
-            /** Program Id */
-            program_id: string;
-            /** Reason */
-            reason: string;
-            /** Type */
-            type: string;
         };
         /** ProgramRef */
         ProgramRef: {
@@ -4627,37 +4576,6 @@ export interface components {
              * @default 1
              */
             weight: number;
-        };
-        /**
-         * QuestionItem
-         * @description A Commons question that is waiting for an answer, or a recent one.
-         */
-        QuestionItem: {
-            /** Answered */
-            answered: boolean;
-            course: components["schemas"]["CourseRef"] | null;
-            /**
-             * Day
-             * Format: date
-             */
-            day: string;
-            /** Href */
-            href: string;
-            /** Id */
-            id: string;
-            /**
-             * @description discriminator enum property added by openapi-typescript
-             * @enum {string}
-             */
-            kind: "question";
-            /** Reply Count */
-            reply_count: number;
-            /** Snippet */
-            snippet: string;
-            /** Thread Id */
-            thread_id: number;
-            /** Title */
-            title: string;
         };
         /**
          * RatingSummary
@@ -4956,21 +4874,6 @@ export interface components {
             source?: components["schemas"]["Source"] | null;
             /** With */
             with: string;
-        };
-        /** ShelfBook */
-        ShelfBook: {
-            /** Author */
-            author: string;
-            /** Id */
-            id: string;
-            /** Slug */
-            slug: string;
-            /** Title */
-            title: string;
-            /** When */
-            when: string;
-            /** Year */
-            year: number;
         };
         /**
          * SlotNode
@@ -5327,28 +5230,6 @@ export interface components {
             cloud_cover: number | null;
             /** Weather Code */
             weather_code: number;
-        };
-        /** WeightedWord */
-        WeightedWord: {
-            /** Text */
-            text: string;
-            /** Weight */
-            weight: number;
-        };
-        /** WordsItem */
-        WordsItem: {
-            category: components["schemas"]["FeedCategoryRef"];
-            /** Id */
-            id: string;
-            /**
-             * @description discriminator enum property added by openapi-typescript
-             * @enum {string}
-             */
-            kind: "words";
-            /** Label */
-            label: string;
-            /** Words */
-            words: components["schemas"]["WeightedWord"][];
         };
         /** WorkloadHoursGoal */
         WorkloadHoursGoal: {
@@ -5930,39 +5811,6 @@ export interface operations {
             };
         };
     };
-    post_feed_notes_agents_feed_notes_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["FeedNotesRequest"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["FeedNotes"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
     generate_agents_generate_post: {
         parameters: {
             query?: never;
@@ -6371,6 +6219,26 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+        };
+    };
+    browse_catalog_browse_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CatalogBrowse"];
                 };
             };
         };
@@ -6914,6 +6782,47 @@ export interface operations {
             };
         };
     };
+    course_ratings_course_ratings_get: {
+        parameters: {
+            query: {
+                /** @description Comma-separated course codes */
+                codes: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CourseRatings"];
+                };
+            };
+            /** @description Not logged in */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     search_courses_courses_get: {
         parameters: {
             query?: {
@@ -7002,61 +6911,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ErrorOut"];
-                };
-            };
-        };
-    };
-    get_feed_feed_get: {
-        parameters: {
-            query?: {
-                tab?: "for_you" | "explore" | "following";
-                /** @description Comma-separated category keys; absent = the profile's saved focus. */
-                categories?: string | null;
-                cursor?: string | null;
-                limit?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["FeedPage"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    get_categories_feed_categories_get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["FeedCategories"];
                 };
             };
         };

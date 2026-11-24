@@ -40,7 +40,6 @@ TOPICS: tuple[Topic, ...] = (
 MAX_ITEMS = 24
 MAX_ITEM_CHARS = 60
 MAX_TEXT_CHARS = 1200
-MAX_FEED_CATEGORIES = 16
 MAX_TURNS = 24
 MAX_TURN_CHARS = 2000
 
@@ -150,7 +149,6 @@ class ProfileOut(BaseModel):
     future_domains: list[str] = []
     constraints: list[str] = []
     workload: Workload | None = None
-    feed_categories: list[str] = []
     portrait: Portrait = Portrait()
     interview: InterviewMemory = InterviewMemory()
     follows: Follows = Follows()
@@ -182,8 +180,8 @@ class InterviewMemoryPatch(BaseModel):
 
 
 class ProfilePatch(BaseModel):
-    """A partial update: only the fields sent are changed (`null` clears a field). The feed
-    and the Commons follow button also send these."""
+    """A partial update: only the fields sent are changed (`null` clears a field). The Commons
+    follow button also sends these."""
 
     class_year: int | None = Field(default=None, ge=2020, le=2040)
     intended_programs: Items | None = None
@@ -197,7 +195,6 @@ class ProfilePatch(BaseModel):
     future_domains: Items | None = None
     constraints: Items | None = None
     workload: Workload | None = None
-    feed_categories: Items | None = None
     portrait: Portrait | None = None
     interview: InterviewMemoryPatch | None = None
     follows: Follows | None = None
@@ -218,11 +215,6 @@ class ProfilePatch(BaseModel):
     @classmethod
     def _programs(cls, value: list[str] | None) -> list[str] | None:
         return None if value is None else clean_items(value, max_items=8, max_chars=64)
-
-    @field_validator("feed_categories")
-    @classmethod
-    def _categories(cls, value: list[str] | None) -> list[str] | None:
-        return None if value is None else clean_items(value, max_items=MAX_FEED_CATEGORIES)
 
     @field_validator("humanities_note", "career_plans")
     @classmethod

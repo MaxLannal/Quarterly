@@ -63,7 +63,7 @@ export default function HomePage() {
               <Link to="/onboarding">Start planning</Link>
             </Button>
             <Button asChild variant="outline" className="bg-canvas">
-              <Link to="/feed">Explore the feed</Link>
+              <Link to="/courses">Explore the catalog</Link>
             </Button>
             {/* D11 H-3: only when there is a plan to open. */}
             {hasPlan && (

@@ -174,7 +174,7 @@ for (const size of [
       await expect(page.getByRole("heading", { level: 1, name: "The Best of UChicago, within your reach." })).toBeVisible();
       await expectNoSeriousAxeViolations(page);
       await page.goto("/courses");
-      await expect(page.getByRole("heading", { level: 1, name: "Course search" })).toBeVisible();
+      await expect(page.getByRole("heading", { level: 1, name: "Catalog" })).toBeVisible();
       await expectNoSeriousAxeViolations(page);
       await page.getByLabel("Code or title").fill("Fake");
       await page.getByRole("form", { name: "Course filters" }).getByRole("button", { name: "Search", exact: true }).click();
@@ -205,7 +205,7 @@ test("on a touch screen, footer links and the catalog switch keep 44px targets (
   const context = await browser.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true });
   const page = await context.newPage();
   await page.goto("/courses");
-  await expect(page.getByRole("heading", { level: 1, name: "Course search" })).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1, name: "Catalog" })).toBeVisible();
   expect(await page.evaluate(() => matchMedia("(pointer: coarse)").matches)).toBe(true);
   for (const link of await page.getByRole("contentinfo").getByRole("link").all()) {
     expect((await link.boundingBox())!.height, (await link.textContent()) ?? "footer link").toBeGreaterThanOrEqual(44);

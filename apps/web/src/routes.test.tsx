@@ -5,7 +5,7 @@ const CASES: [string, string][] = [
   ["/", "The Best of UChicago, within your reach."],
   ["/plan", "Planner"],
   ["/onboarding", "Planner setup"],
-  ["/courses", "Course search"],
+  ["/courses", "Catalog"],
   ["/courses/TEST%2010000", "TEST 10000 · Fake Introduction I"],
   ["/programs", "Program explorer"],
   ["/programs/fake-major", "Fake Program"],

@@ -31,15 +31,3 @@ export const PALETTES: readonly Palette[] = [
 export function palette(index: number): Palette {
   return PALETTES[((index % PALETTES.length) + PALETTES.length) % PALETTES.length] as Palette;
 }
-
-/** Book covers: a ground and a type colour each (tokens only). */
-export const COVERS: readonly { ground: string; ink: string; rule: string }[] = [
-  { ground: v("primary"), ink: v("on-primary"), rule: v("on-inverse-soft") },
-  { ground: v("surface-dark"), ink: v("on-dark"), rule: v("data-2") },
-  { ground: v("data-1"), ink: v("on-primary"), rule: v("canvas") },
-  { ground: v("data-3"), ink: v("on-primary"), rule: v("canvas") },
-  { ground: v("data-4"), ink: v("on-primary"), rule: v("canvas") },
-  { ground: v("primary-wash"), ink: v("primary"), rule: v("primary") },
-  { ground: v("data-5"), ink: v("on-primary"), rule: v("data-2") },
-  { ground: v("canvas"), ink: v("ink"), rule: v("primary") },
-];

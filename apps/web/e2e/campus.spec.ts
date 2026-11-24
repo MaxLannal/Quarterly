@@ -1,9 +1,10 @@
 import { expect, test } from "@playwright/test";
 import { logIn } from "./helpers";
 
-// The campus companion's pages on mock data (docs/BEST-OF-UCHICAGO-PLAN.md): the feed, the Commons
-// and the dashboard, in the "Maroon and night" design (docs/DESIGN.md). The Ask page, the
-// homepage's question bar and the companion went in issue #15.
+// The campus companion's pages on mock data (docs/BEST-OF-UCHICAGO-PLAN.md): the Commons and the
+// dashboard, in the "Maroon and night" design (docs/DESIGN.md). The Ask page, the homepage's
+// question bar and the companion went in issue #15; the Feed moved into the Catalog in issue #19
+// (e2e/courses.spec.ts).
 
 test("the homepage has no question bar, and the old Ask page opens the planner (issue #15)", async ({ page }) => {
   await page.goto("/");
@@ -21,13 +22,6 @@ test("no page has the companion orb (issue #15)", async ({ page }) => {
     await expect(page.getByRole("heading", { level: 1 }).first()).toBeVisible();
     await expect(page.getByRole("button", { name: /companion/i })).toHaveCount(0);
   }
-});
-
-test("the feed lists course spotlights that open their course", async ({ page }) => {
-  await page.goto("/feed");
-  await expect(page.getByRole("heading", { level: 1, name: /A river of ideas/ })).toBeVisible();
-  const course = page.locator('main a[href^="/courses/TEST"]').first();
-  await expect(course).toBeVisible();
 });
 
 test("a Commons question shows the AI's answer and the replies; a logged-in student can answer", async ({

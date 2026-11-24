@@ -1,6 +1,6 @@
 # "The Best of UChicago, within your reach": build plan (2026-11-20)
 
-> **Later changes (2026-11-24).** This is the plan as built on 2026-11-20 (history). GitHub issue #15 then removed the Ask page (`/ask` opens the planner), the homepage's question bar, the floating companion with its digest, and the dashboard's routes (`/me/routes`, `POST /agents/routes`, the `pathway` table). See `docs/SPEC.md` "Sitemap and every page" for the current pages.
+> **Later changes (2026-11-24).** This is the plan as built on 2026-11-20 (history). GitHub issue #15 then removed the Ask page (`/ask` opens the planner), the homepage's question bar, the floating companion with its digest, and the dashboard's routes (`/me/routes`, `POST /agents/routes`, the `pathway` table). Issue #19 then moved the Feed's course spotlights and student quotes into the Catalog page (`/courses`) and removed the Feed (`/feed` opens the Catalog), its book shelf and its AI notes. See `docs/SPEC.md` "Sitemap and every page" for the current pages.
 
 The owner of this pass (Max) asked, in one message, for:
 

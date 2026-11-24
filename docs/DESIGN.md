@@ -673,3 +673,11 @@ Richard: where it conflicts with the sections above, this section describes what
   removed "Draft my routes", the "at a glance" panel and the routes: workload now spans the row.
 - **The menu bar has four tabs** (issue #15, 2026-11-24): Dashboard, Planner, Catalog, Forum. The
   homepage is not a tab (the wordmark links to it), and no page has the floating companion orb.
+- **The Catalog page** (`/courses`, issue #19, 2026-11-24) keeps the centred search and its
+  filters. Before a search, browse rows sit below it: "Newly released courses" (when any are
+  known), "Course spotlights" (the Feed's illustrated cards, without the flying words, the book
+  shelf, the AI note and the Save / Less buttons) and "What students say" (the Feed's quote cards).
+  Each row is a heading over cards that scroll sideways and snap, inside the page width. A rating
+  line (overall, difficulty, number of reviews) sits on each card and result for a logged-in
+  student; a logged-out visitor sees one "Log in to see student ratings" line under the search.
+  The Feed page and its floating words, ticker, focus chips and AI headline are gone.

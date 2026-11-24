@@ -32,8 +32,8 @@ export function signedOut() {
 }
 
 /** What the campus-companion features keep on this device (docs/BEST-OF-UCHICAGO-PLAN.md): Commons
- * drafts and feed choices, and conversations left from the removed Ask page and companion (issue
- * #15; still cleared, so an old copy never outlives a logout). Plans are not here: they are
+ * drafts, and what the removed Ask page, companion and Feed left (issues #15 and #19: conversations
+ * and feed choices; still cleared, so an old copy never outlives a logout). Plans are not here: they are
  * imported into the account on login. */
 const PERSONAL_PREFIXES = [
   "quarterly.ask.",

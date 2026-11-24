@@ -49,6 +49,11 @@ Write down anything you notice: something broken, something confusing, or someth
 - Journey C's preference check (major courses mostly in years 2-3) sometimes fails because the generator stops at its time limit (`docs/OPEN_QUESTIONS.md` E2E-2).
 - Before launch: replace the watermarked demo photo behind the homepage chapel; Open-Meteo is free for non-commercial use only (`docs/OPEN_QUESTIONS.md` DF-A1).
 
+### Follow-ups noticed while doing GitHub issues #15 and #19 (suggested by Claude, 2026-11-24; not yet asked for)
+- No page lets a student follow a course any more (the routes and the Feed's buttons are gone), but the Catalog's spotlights and the dashboard's "What's new" still use followed courses. A "Follow" button on the course page would bring that back.
+- Nothing marks "What's new" as seen since the companion went (`POST /me/updates/seen` has no caller), so its "New" dots show for a week. Issue #16 decides whether the card stays.
+- The README's screenshots of the homepage and the Feed show removed parts (the question bar, the Feed); retake them after the integration run.
+
 ## Done
 
 Every item below is finished. Newest first; each keeps Richard's original text, with the resolution under it.
