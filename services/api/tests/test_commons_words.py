@@ -44,3 +44,6 @@ def test_a_link_is_never_split() -> None:
         " ".join(["word"] * 50) + " [Intro to Programming](/courses/CMSC%2014100) and more words"
     )
     assert "[Intro to Programming](/courses/CMSC%2014100)" in limit_words(whole)
+    # A closed bracket that is not a link ("[sic]", "[1]") does not move the cut.
+    plain = "Take CMSC 14100 [the intro course] first. " + "word " * 70
+    assert count_words(limit_words(plain)) >= 30

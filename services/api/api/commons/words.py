@@ -37,7 +37,7 @@ def limit_words(text: str, limit: int = ANSWER_WORDS) -> str:
         return text
     kept = text[: words[limit - 1].end()]
     link = kept.rfind("[")
-    if link != -1 and "](" not in kept[link:]:
+    if link != -1 and "]" not in kept[link:]:
         kept = kept[:link]  # never end inside a link's text: the link would show as "[..."
     ends = [mt.end() for mt in _SENTENCE_END.finditer(kept)]
     if ends and count_words(kept[: ends[-1]]) >= limit // 2:
