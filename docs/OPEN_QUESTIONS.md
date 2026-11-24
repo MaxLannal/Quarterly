@@ -6,6 +6,7 @@
 > - **Tests:** **E2E-1** (drawer drag test retries a missed drag) and **E2E-2** (journey C's preference checks depend on the solver's time limit), at the end of the file.
 > - **Campus companion** (2026-11-20, at the end of the file): **CC-1** to **CC-8**, decisions made while building the Ask chatbot, the dashboard, the feed and the Commons; each has a suggested answer.
 > - **Site structure and catalog** (GitHub issues #15 and #19, 2026-11-24, at the end of the file): the answers to both issues' decisions, and **S19-N1** (Needs Richard): the list of new courses is empty until a person adds courses with a source quote.
+> - **Forum page, issue #20** (2026-11-24, at the end of the file): **F20-1 Needs Richard:** how many words the AI's answer under a forum question may have (60 for now). F20-2 to F20-4 are defaults taken while building, each with a suggested answer.
 > - **"Work these answers create (not started)"** below was listed on 2026-11-14; some of it was built since. Check `docs/PROGRESS.md` and the code before starting an item.
 >
 > New questions go at the end of the matching section, in plain language with a suggested answer (see `CLAUDE.md`, "Working with the owner").
@@ -547,7 +548,7 @@ Done 2026-11-16: `a1_plan_generator` now uses the Sonnet 5.5 settings (`llm_rout
 
 ## End-to-end tests
 
-- **E2E-1 (flaky test, logged after the same fix failed twice; 2026-11-16).** The F4 test drags a course from the requirements drawer onto a quarter with a real mouse drag. Under heavy machine load (Docker builds during `make e2e`) the drop sometimes misses. Measuring the target after the drag starts did not fully fix it, so the test now tries the drag up to three times and still requires the course to land. Suggested: if it keeps flaking, drive the drag with dnd-kit's keyboard sensor instead of the mouse. (2026-11-24: the onboarding test's drag of a goal chip onto a quarter missed once in the same way; it now retries up to three times too.)
+- **E2E-1 (flaky test, logged after the same fix failed twice; 2026-11-16).** The F4 test drags a course from the requirements drawer onto a quarter with a real mouse drag. Under heavy machine load (Docker builds during `make e2e`) the drop sometimes misses. Measuring the target after the drag starts did not fully fix it, so the test now tries the drag up to three times and still requires the course to land. Suggested: if it keeps flaking, drive the drag with dnd-kit's keyboard sensor instead of the mouse. The onboarding test's goal-chip drag failed the same way on 2026-11-24 on both overnight branches while the two worktrees ran their tests (load average 30 to 100; it passed alone), and retries were not enough: it now tries two pointer drags and then drags with dnd-kit's keyboard sensor (Space, arrows until the chip sits on the quarter, Space), as suggested above, with a 60 s test limit (the issue #15/#19 branch's three pointer attempts were replaced by this at the integration merge).
 - **E2E-2 (flaky journey, 2026-11-16).** Journey C sometimes fails under heavy machine load: the plan generator stops at its time limit, so a busy machine can return a different valid plan. Twice the test then failed on a preference rather than a rule: once on which courses the verifier credits to the Core's civilization requirement, once on "the major's courses sit mostly in years 2-3". Both runs passed on retry. Suggested: keep the hard checks (the Paris block, at most 3 courses a quarter in year 4, a verified plan) and turn the preference checks into warnings, or give the e2e generator more time.
 
 ## Campus companion (2026-11-20, docs/BEST-OF-UCHICAGO-PLAN.md)
@@ -576,3 +577,18 @@ Richard answered each issue's open decisions in a comment on the issue. Each ans
   - Wait for the 2027-28 catalog: once it is loaded next to 2026-27, the row fills itself with the courses 2026-27 did not have.
   - Show the row anyway, with a short "No new courses listed yet" line.
   Richard's Answer: leave it empty for now. Max and I will manually add new courses. If not, we wait for the new catalog. No actions needed.
+
+## Forum page, issue #20 (2026-11-24)
+
+Richard's answers on the issue: D1 is option A (a short AI answer under each forum question), written as "Quarterly", not "Phil the Phoenix"; D2 as suggested (reviews and Commons keep their own tables and show in one list). The items below came up while building it.
+
+- **F20-1 How long may the AI's answer under a question be? Needs Richard.** Option A needs a word limit and the issue comments set none, so the limit is **60 words** for now. The prompt asks for it, a longer answer is sent back to the AI once to shorten, and the site clips anything longer when it stores or shows it (older, longer answers are shown clipped too). 60 words is about three short sentences or one sentence and two bullets.
+  **Suggested:** keep 60. Options: **40** (one or two sentences; the AI gives a pointer, students give the detail); **100** (room for a short list of courses with prerequisites; the list on `/forum` gets longer to scroll).
+  Richard's answer: 60 is fine for now. We can test how 60 works out.
+- **F20-2 What "this quarter" and "this year" mean in the rankings.** Built: the reviews posted in the last 91 days ("Last 3 months") and the last 365 days ("Last 12 months"), counted back from today. This always has recent reviews to rank.
+  **Suggested:** keep. Option: count the academic quarter or year in which students *took* the course ("Autumn 2026"); this matches how students think of a course, but early in a quarter almost nothing is ranked because reviews come after the course ends.
+- **F20-3 The starting point of each score.** SPEC's Bayesian average needs a starting average m (each course starts at m as if it had 5 reviews). Built: one m for everything, the average rating of all reviews in the period, so courses from different departments compare fairly in one ranking.
+  **Suggested:** keep. Option: each department's own average, as SPEC uses for course attributes; a course would then be compared with its department, which makes a single cross-department ranking less fair.
+- **F20-4 Writing a review from `/forum`.** "New post" opens the question form (as the issue asks). Reviews are still written on a course's instructor page (the forum's "Course reviews by instructor" link), because a review needs its course, instructor and term.
+  **Suggested:** later, let "New post" offer "Ask a question" or "Review a course" (the second asks for the course and instructor, then opens that page's review form). Option: keep as built.
+

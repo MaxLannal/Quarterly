@@ -29,6 +29,11 @@ test("a Commons question shows the AI's answer and the replies; a logged-in stud
 }) => {
   await page.goto("/forum");
   await expect(page.getByRole("heading", { level: 1, name: /Ask the quad/ })).toBeVisible();
+  // Issue #20: discussions start from a "New post" button, not a chatbot-like ask box.
+  await expect(page.getByRole("link", { name: "New post" })).toHaveAttribute("href", "/forum/new");
+  await expect(page.getByRole("textbox", { name: "Your question" })).toHaveCount(0);
+  await page.getByRole("link", { name: "Fake question: is TEST 10000 fine without background?", exact: true }).click();
+  await expect(page).toHaveURL(/\/forum\/t\/1$/);
   await page.goto("/forum/t/1");
   await expect(
     page.getByRole("heading", { level: 1, name: "Fake question: is TEST 10000 fine without background?" }),

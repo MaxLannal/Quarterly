@@ -3670,6 +3670,87 @@
         "title": "Follows",
         "type": "object"
       },
+      "ForumDiscussionItem": {
+        "description": "A Commons question in the list, with the AI's short answer under it (D1 option A).",
+        "properties": {
+          "ai_answer_html": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ai Answer Html"
+          },
+          "thread": {
+            "$ref": "#/components/schemas/CommonsThreadSummary"
+          },
+          "type": {
+            "const": "discussion",
+            "default": "discussion",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "thread"
+        ],
+        "title": "ForumDiscussionItem",
+        "type": "object"
+      },
+      "ForumItemList": {
+        "properties": {
+          "items": {
+            "items": {
+              "discriminator": {
+                "mapping": {
+                  "discussion": "#/components/schemas/ForumDiscussionItem",
+                  "review": "#/components/schemas/ForumReviewItem"
+                },
+                "propertyName": "type"
+              },
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/ForumReviewItem"
+                },
+                {
+                  "$ref": "#/components/schemas/ForumDiscussionItem"
+                }
+              ]
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Cursor"
+          },
+          "reviews_hidden": {
+            "default": false,
+            "title": "Reviews Hidden",
+            "type": "boolean"
+          },
+          "total": {
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "total"
+        ],
+        "title": "ForumItemList",
+        "type": "object"
+      },
       "ForumPageOut": {
         "properties": {
           "also_listed_as": {
@@ -3826,6 +3907,243 @@
           "status"
         ],
         "title": "ForumReportOut",
+        "type": "object"
+      },
+      "ForumReviewItem": {
+        "description": "A course review in the list. Only logged-in readers get these.",
+        "properties": {
+          "course": {
+            "$ref": "#/components/schemas/CommonsCourse"
+          },
+          "created_day": {
+            "format": "date",
+            "title": "Created Day",
+            "type": "string"
+          },
+          "difficulty": {
+            "title": "Difficulty",
+            "type": "integer"
+          },
+          "edited_day": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Edited Day"
+          },
+          "excerpt": {
+            "title": "Excerpt",
+            "type": "string"
+          },
+          "handle": {
+            "title": "Handle",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "instructor": {
+            "$ref": "#/components/schemas/InstructorSummary"
+          },
+          "is_mine": {
+            "default": false,
+            "title": "Is Mine",
+            "type": "boolean"
+          },
+          "my_vote": {
+            "default": 0,
+            "enum": [
+              -1,
+              0,
+              1
+            ],
+            "title": "My Vote",
+            "type": "integer"
+          },
+          "n_comments": {
+            "title": "N Comments",
+            "type": "integer"
+          },
+          "overall": {
+            "title": "Overall",
+            "type": "integer"
+          },
+          "page_id": {
+            "title": "Page Id",
+            "type": "integer"
+          },
+          "score": {
+            "title": "Score",
+            "type": "integer"
+          },
+          "term_taken": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Term Taken"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          },
+          "type": {
+            "const": "review",
+            "default": "review",
+            "title": "Type",
+            "type": "string"
+          },
+          "workload_hours": {
+            "title": "Workload Hours",
+            "type": "number"
+          },
+          "would_recommend": {
+            "title": "Would Recommend",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "page_id",
+          "course",
+          "instructor",
+          "excerpt",
+          "handle",
+          "overall",
+          "difficulty",
+          "workload_hours",
+          "would_recommend",
+          "score",
+          "n_comments",
+          "created_day"
+        ],
+        "title": "ForumReviewItem",
+        "type": "object"
+      },
+      "ForumStats": {
+        "description": "Ratings of reviews posted in the period, for logged-in students only.",
+        "properties": {
+          "humanities": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/RankedEntry"
+            },
+            "title": "Humanities",
+            "type": "array"
+          },
+          "instructors": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/RankedEntry"
+            },
+            "title": "Instructors",
+            "type": "array"
+          },
+          "majors": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/MajorRanking"
+            },
+            "title": "Majors",
+            "type": "array"
+          },
+          "min_reviews": {
+            "title": "Min Reviews",
+            "type": "integer"
+          },
+          "n_courses": {
+            "title": "N Courses",
+            "type": "integer"
+          },
+          "n_reviews": {
+            "title": "N Reviews",
+            "type": "integer"
+          },
+          "period": {
+            "enum": [
+              "quarter",
+              "year"
+            ],
+            "title": "Period",
+            "type": "string"
+          },
+          "prior_mean": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Prior Mean"
+          },
+          "prior_weight": {
+            "title": "Prior Weight",
+            "type": "integer"
+          },
+          "recommend_rate": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Recommend Rate"
+          },
+          "since": {
+            "format": "date",
+            "title": "Since",
+            "type": "string"
+          },
+          "top_courses": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/RankedEntry"
+            },
+            "title": "Top Courses",
+            "type": "array"
+          },
+          "workload_hours": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Workload Hours"
+          }
+        },
+        "required": [
+          "period",
+          "since",
+          "prior_weight",
+          "min_reviews",
+          "n_reviews",
+          "n_courses"
+        ],
+        "title": "ForumStats",
         "type": "object"
       },
       "ForumSummaryOut": {
@@ -5514,6 +5832,32 @@
           "password"
         ],
         "title": "Login",
+        "type": "object"
+      },
+      "MajorRanking": {
+        "properties": {
+          "items": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/RankedEntry"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "program_id": {
+            "title": "Program Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "program_id",
+          "name"
+        ],
+        "title": "MajorRanking",
         "type": "object"
       },
       "MaxFrom": {
@@ -8380,6 +8724,56 @@
           "id"
         ],
         "title": "ProtectGpaGoal",
+        "type": "object"
+      },
+      "RankedEntry": {
+        "description": "One line of a ranking. `score` is the Bayesian average of the overall rating\n(docs/SPEC.md \"Forum -> course attributes\", prior weight k = 5, prior mean the period's\naverage); only subjects with at least 3 reviews in the period are ranked.",
+        "properties": {
+          "detail": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Detail"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "mean": {
+            "title": "Mean",
+            "type": "number"
+          },
+          "n_reviews": {
+            "title": "N Reviews",
+            "type": "integer"
+          },
+          "rank": {
+            "title": "Rank",
+            "type": "integer"
+          },
+          "score": {
+            "title": "Score",
+            "type": "number"
+          }
+        },
+        "required": [
+          "rank",
+          "id",
+          "label",
+          "score",
+          "mean",
+          "n_reviews"
+        ],
+        "title": "RankedEntry",
         "type": "object"
       },
       "RatingSummary": {
@@ -12783,6 +13177,183 @@
         ]
       }
     },
+    "/forum/items": {
+      "get": {
+        "operationId": "list_items_forum_items_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "type",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "review",
+                    "discussion"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Type"
+            }
+          },
+          {
+            "in": "query",
+            "name": "course",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 16,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Course"
+            }
+          },
+          {
+            "in": "query",
+            "name": "instructor",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 128,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Instructor"
+            }
+          },
+          {
+            "in": "query",
+            "name": "subject",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 8,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Subject"
+            }
+          },
+          {
+            "in": "query",
+            "name": "tag",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 24,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Tag"
+            }
+          },
+          {
+            "in": "query",
+            "name": "q",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 120,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Q"
+            }
+          },
+          {
+            "in": "query",
+            "name": "mine",
+            "required": false,
+            "schema": {
+              "default": false,
+              "title": "Mine",
+              "type": "boolean"
+            }
+          },
+          {
+            "in": "query",
+            "name": "cursor",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 32,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Cursor"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 20,
+              "maximum": 30,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForumItemList"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "List Items",
+        "tags": [
+          "forum"
+        ]
+      }
+    },
     "/forum/pages": {
       "get": {
         "operationId": "find_page_forum_pages_get",
@@ -13257,6 +13828,53 @@
           }
         },
         "summary": "Report",
+        "tags": [
+          "forum"
+        ]
+      }
+    },
+    "/forum/stats": {
+      "get": {
+        "operationId": "forum_stats_forum_stats_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "period",
+            "required": false,
+            "schema": {
+              "default": "quarter",
+              "enum": [
+                "quarter",
+                "year"
+              ],
+              "title": "Period",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForumStats"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Forum Stats",
         "tags": [
           "forum"
         ]

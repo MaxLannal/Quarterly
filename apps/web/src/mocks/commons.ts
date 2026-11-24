@@ -149,6 +149,17 @@ function summary(t: Thread): S["CommonsThreadSummary"] {
   };
 }
 
+/** The Commons side of the `/forum` list (issue #20; the list itself is in forum.ts). */
+export function discussionItems(): S["ForumDiscussionItem"][] {
+  return threads
+    .filter((t) => t.status === "visible")
+    .map((t) => ({
+      type: "discussion" as const,
+      thread: summary(t),
+      ai_answer_html: t.replies.find((r) => r.kind === "bot" && r.parent_id == null && r.status === "visible")?.body_html ?? null,
+    }));
+}
+
 function find(id: number): Thread | undefined {
   return threads.find((t) => t.id === id && t.status === "visible");
 }
