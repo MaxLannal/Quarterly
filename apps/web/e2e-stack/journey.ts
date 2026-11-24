@@ -119,13 +119,15 @@ export async function signUp(page: Page, prefix: string, next = "/plan") {
   return who;
 }
 
-/** Drags with the mouse in small steps (dnd-kit's pointer sensor needs a few pixels to start). */
 /**
- * Drags `from` onto `to` until the plan check runs, and returns the time of the drop (the
- * mouse button's release) that started it. A pointer drag can miss on a busy machine (OPEN_QUESTIONS E2E-1), so up to three
- * drags; a missed drag changes nothing, so no plan check starts within 5 s.
+ * Drags the card of `code` onto `to` until the plan check runs, and returns the time of the drop
+ * (the mouse button's release) that started it. A pointer drag can miss on a busy machine
+ * (OPEN_QUESTIONS E2E-1), so up to three drags. A missed drag changes nothing, so no plan check
+ * starts. When 5 s pass without a check but the card did move, the check is slow: wait for it
+ * and return the first drop's time, so the caller's timing still fails.
  */
-export async function dragUntilChecked(page: Page, from: Locator, to: Locator): Promise<number> {
+export async function dragUntilChecked(page: Page, code: string, to: Locator): Promise<number> {
+  const from = page.getByRole("button", { name: `Drag ${code}`, exact: true });
   // Both ends must be on screen at once (a pointer outside the window drops nowhere). Since the
   // full catalog import the cards are taller, so two quarters a year apart may not fit.
   const size = page.viewportSize();
@@ -137,15 +139,23 @@ export async function dragUntilChecked(page: Page, from: Locator, to: Locator): 
   }
   for (let attempt = 0; attempt < 3; attempt += 1) {
     const checked = page
-      .waitForResponse((r) => r.url().endsWith("/api/verify") && r.request().method() === "POST", { timeout: 5_000 })
-      .catch(() => null);
+      .waitForResponse((r) => r.url().endsWith("/api/verify") && r.request().method() === "POST", { timeout: 60_000 })
+      .then(
+        () => true,
+        () => false,
+      );
     const dropped = await drag(page, from, to);
-    if (await checked) return dropped;
+    const quick = await Promise.race([checked, page.waitForTimeout(5_000).then(() => false)]);
+    if (quick) return dropped;
+    if ((await to.getByRole("button", { name: `Drag ${code}`, exact: true }).count()) > 0) {
+      if (await checked) return dropped; // moved, but the check was slow
+      throw new Error("drag: the card moved but no plan check ran");
+    }
   }
-  throw new Error("drag: no plan check after three drags");
+  throw new Error("drag: the card did not move after three drags");
 }
 
-/** A pointer drag from `from` to `to`; returns the time of the drop. */
+/** Drags with the mouse in small steps (dnd-kit's pointer sensor needs a few pixels to start). */
 export async function drag(page: Page, from: Locator, to: Locator): Promise<number> {
   await to.scrollIntoViewIfNeeded();
   await from.scrollIntoViewIfNeeded();

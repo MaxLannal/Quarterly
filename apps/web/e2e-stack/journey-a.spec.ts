@@ -54,7 +54,7 @@ test("journey A: first-year onboards, generates, drags a course and saves to a n
   const moved = before["2027-SP"]?.[0];
   if (!moved) throw new Error("no course in Spring 2027 after applying the variant");
   const target = page.getByTestId("quarter-2028-SP");
-  const dropped = await dragUntilChecked(page, page.getByRole("button", { name: `Drag ${moved}`, exact: true }), target);
+  const dropped = await dragUntilChecked(page, moved, target);
   await verifierSettled(page);
   const elapsed = Date.now() - dropped;
   expect((await gridByTerm(page))["2028-SP"]).toContain(moved);
