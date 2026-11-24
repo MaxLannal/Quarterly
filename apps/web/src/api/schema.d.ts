@@ -773,6 +773,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/forum/items": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Items */
+        get: operations["list_items_forum_items_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/forum/pages": {
         parameters: {
             query?: never;
@@ -872,6 +889,23 @@ export interface paths {
         put?: never;
         /** Report */
         post: operations["report_forum_reports_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/forum/stats": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Forum Stats */
+        get: operations["forum_stats_forum_stats_get"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -3100,6 +3134,34 @@ export interface components {
              */
             threads: number[];
         };
+        /**
+         * ForumDiscussionItem
+         * @description A Commons question in the list, with the AI's short answer under it (D1 option A).
+         */
+        ForumDiscussionItem: {
+            /** Ai Answer Html */
+            ai_answer_html?: string | null;
+            thread: components["schemas"]["CommonsThreadSummary"];
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "discussion";
+        };
+        /** ForumItemList */
+        ForumItemList: {
+            /** Items */
+            items: (components["schemas"]["ForumReviewItem"] | components["schemas"]["ForumDiscussionItem"])[];
+            /** Next Cursor */
+            next_cursor?: string | null;
+            /**
+             * Reviews Hidden
+             * @default false
+             */
+            reviews_hidden: boolean;
+            /** Total */
+            total: number;
+        };
         /** ForumPageOut */
         ForumPageOut: {
             /**
@@ -3177,6 +3239,111 @@ export interface components {
              * @enum {string}
              */
             status: "open" | "upheld" | "dismissed";
+        };
+        /**
+         * ForumReviewItem
+         * @description A course review in the list. Only logged-in readers get these.
+         */
+        ForumReviewItem: {
+            course: components["schemas"]["CommonsCourse"];
+            /**
+             * Created Day
+             * Format: date
+             */
+            created_day: string;
+            /** Difficulty */
+            difficulty: number;
+            /** Edited Day */
+            edited_day?: string | null;
+            /** Excerpt */
+            excerpt: string;
+            /** Handle */
+            handle: string;
+            /** Id */
+            id: number;
+            instructor: components["schemas"]["InstructorSummary"];
+            /**
+             * Is Mine
+             * @default false
+             */
+            is_mine: boolean;
+            /**
+             * My Vote
+             * @default 0
+             * @enum {integer}
+             */
+            my_vote: -1 | 0 | 1;
+            /** N Comments */
+            n_comments: number;
+            /** Overall */
+            overall: number;
+            /** Page Id */
+            page_id: number;
+            /** Score */
+            score: number;
+            /** Term Taken */
+            term_taken?: string | null;
+            /** Title */
+            title?: string | null;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "review";
+            /** Workload Hours */
+            workload_hours: number;
+            /** Would Recommend */
+            would_recommend: boolean;
+        };
+        /**
+         * ForumStats
+         * @description Ratings of reviews posted in the period, for logged-in students only.
+         */
+        ForumStats: {
+            /**
+             * Humanities
+             * @default []
+             */
+            humanities: components["schemas"]["RankedEntry"][];
+            /**
+             * Instructors
+             * @default []
+             */
+            instructors: components["schemas"]["RankedEntry"][];
+            /**
+             * Majors
+             * @default []
+             */
+            majors: components["schemas"]["MajorRanking"][];
+            /** Min Reviews */
+            min_reviews: number;
+            /** N Courses */
+            n_courses: number;
+            /** N Reviews */
+            n_reviews: number;
+            /**
+             * Period
+             * @enum {string}
+             */
+            period: "quarter" | "year";
+            /** Prior Mean */
+            prior_mean?: number | null;
+            /** Prior Weight */
+            prior_weight: number;
+            /** Recommend Rate */
+            recommend_rate?: number | null;
+            /**
+             * Since
+             * Format: date
+             */
+            since: string;
+            /**
+             * Top Courses
+             * @default []
+             */
+            top_courses: components["schemas"]["RankedEntry"][];
+            /** Workload Hours */
+            workload_hours?: number | null;
         };
         /** ForumSummaryOut */
         ForumSummaryOut: {
@@ -3812,6 +3979,18 @@ export interface components {
             login: string;
             /** Password */
             password: string;
+        };
+        /** MajorRanking */
+        MajorRanking: {
+            /**
+             * Items
+             * @default []
+             */
+            items: components["schemas"]["RankedEntry"][];
+            /** Name */
+            name: string;
+            /** Program Id */
+            program_id: string;
         };
         /**
          * MaxFrom
@@ -4878,6 +5057,28 @@ export interface components {
             thread_id: number;
             /** Title */
             title: string;
+        };
+        /**
+         * RankedEntry
+         * @description One line of a ranking. `score` is the Bayesian average of the overall rating
+         *     (docs/SPEC.md "Forum -> course attributes", prior weight k = 5, prior mean the period's
+         *     average); only subjects with at least 3 reviews in the period are ranked.
+         */
+        RankedEntry: {
+            /** Detail */
+            detail?: string | null;
+            /** Id */
+            id: string;
+            /** Label */
+            label: string;
+            /** Mean */
+            mean: number;
+            /** N Reviews */
+            n_reviews: number;
+            /** Rank */
+            rank: number;
+            /** Score */
+            score: number;
         };
         /**
          * RatingSummary
@@ -7649,6 +7850,45 @@ export interface operations {
             };
         };
     };
+    list_items_forum_items_get: {
+        parameters: {
+            query?: {
+                type?: ("review" | "discussion") | null;
+                course?: string | null;
+                instructor?: string | null;
+                subject?: string | null;
+                tag?: string | null;
+                q?: string | null;
+                mine?: boolean;
+                cursor?: string | null;
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ForumItemList"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     find_page_forum_pages_get: {
         parameters: {
             query: {
@@ -7934,6 +8174,37 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ForumReportOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    forum_stats_forum_stats_get: {
+        parameters: {
+            query?: {
+                period?: "quarter" | "year";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ForumStats"];
                 };
             };
             /** @description Validation Error */

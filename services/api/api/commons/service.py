@@ -371,6 +371,38 @@ def _matches(text: str) -> Any:
     return sa.or_(hit(text), sa.and_(*(hit(w) for w in words))) if words else hit(text)
 
 
+def thread_filters(
+    db: Session,
+    viewer: Viewer,
+    *,
+    course: str | None = None,
+    subject: str | None = None,
+    tag: str | None = None,
+    q: str | None = None,
+    mine: bool = False,
+) -> list[Any] | None:
+    """WHERE clauses over `_summary_query()` for visible threads that match; None when nothing
+    can match (a course filter that is not a course code). Also used by the `/forum` list."""
+    t = m.CommonsThread
+    where: list[Any] = [t.status == "visible"]
+    if course:
+        code = normalize_code(course)
+        if code is None:
+            return None
+        where.append(m.Course.code == code)
+    if subject:
+        where.append(m.Course.subject == subject.strip().upper()[:8])
+    if tag:
+        where.append(sa.literal(tag.strip().lower()[:24], sa.Text) == sa.any_(t.tags))
+    text = " ".join((q or "").split())[:120]
+    if text:
+        where.append(_matches(text))
+    if mine:
+        account = viewer.require()
+        where.append(t.id.in_(_my_thread_ids(db, account) or [-1]))
+    return where
+
+
 def list_threads(
     db: Session,
     viewer: Viewer,
@@ -384,26 +416,12 @@ def list_threads(
     cursor: str | None = None,
     limit: int = 20,
 ) -> CommonsThreadList:
-    t = m.CommonsThread
     limit = max(1, min(limit, PAGE_MAX))
     offset = _decode_cursor(cursor)
     stmt, n_answers, answered = _summary_query()
-    where: list[Any] = [t.status == "visible"]
-    if course:
-        code = normalize_code(course)
-        if code is None:
-            return CommonsThreadList(items=[], next_cursor=None, total=0)
-        where.append(m.Course.code == code)
-    if subject:
-        where.append(m.Course.subject == subject.strip().upper()[:8])
-    if tag:
-        where.append(sa.literal(tag.strip().lower()[:24], sa.Text) == sa.any_(t.tags))
-    text = " ".join((q or "").split())[:120]
-    if text:
-        where.append(_matches(text))
-    if mine:
-        account = viewer.require()
-        where.append(t.id.in_(_my_thread_ids(db, account) or [-1]))
+    where = thread_filters(db, viewer, course=course, subject=subject, tag=tag, q=q, mine=mine)
+    if where is None:
+        return CommonsThreadList(items=[], next_cursor=None, total=0)
     if sort == "unanswered":
         where.append(sa.not_(answered))
     filtered = stmt.where(*where)

@@ -40,6 +40,8 @@ EXPECTED = {
     ("post", "/agents/chat"),
     ("get", "/agents/chat/history"),
     # forum
+    ("get", "/forum/items"),
+    ("get", "/forum/stats"),
     ("get", "/forum/pages"),
     ("get", "/forum/pages/{page_id}"),
     ("get", "/forum/pages/{page_id}/posts"),
