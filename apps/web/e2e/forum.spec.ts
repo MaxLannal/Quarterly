@@ -180,6 +180,7 @@ test("instructors: public names; course page ratings need login", async ({ page 
 // in one list (newest first) in the right two thirds, and the statistics and rankings (logged-in
 // students only) in the left third; on a phone the statistics come above the list.
 test("/forum: a New post button, discussions for everyone, reviews and ratings after login", async ({ page }) => {
+  test.setTimeout(60_000); // logged out, then logged in, with axe: long on a busy machine
   await page.goto("/forum");
   // The list's heading (its name) follows the filters ("Latest posts", "About TEST 20000").
   const list = page.locator("section[aria-labelledby='commons-list-title']");
