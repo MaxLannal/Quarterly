@@ -9,6 +9,7 @@
  */
 import { http, HttpResponse } from "msw";
 import type { components } from "@/api/schema";
+import { discussionItems } from "./commons";
 import { allCourses, FAKE_INSTRUCTOR, findCourse } from "./data";
 
 type S = components["schemas"];
@@ -154,6 +155,14 @@ function seed() {
     parent = addComment(d.post.id, depth % 2 ? "a" : "b", `Fake reply at depth ${depth}.`, parent).comment.id;
   }
   addComment(d.post.id, "d", "Fake second top-level reply.", null);
+  // Three reviews each on TEST 20000 (page 4) and FAKE 11000 (page 10), so the `/forum` rankings
+  // (issue #20: at least 3 reviews) have a course, a sequence and an instructor to rank.
+  addPost(4, "a", { kind: "review", title: "Fake: hard but fair", body_md: "Fake review: the proofs take time.", term_taken: "2100-WI", ratings: ratings(4, 4, 14, true) }, daysAgo(6));
+  addPost(4, "b", { kind: "review", body_md: "Fake review: great problem sessions.", term_taken: "2100-WI", ratings: ratings(5, 4, 12, true) }, daysAgo(8));
+  addPost(4, "c", { kind: "review", body_md: "Fake review: too fast for me.", term_taken: "2099-AU", ratings: ratings(3, 5, 16, false) }, daysAgo(12));
+  addPost(10, "a", { kind: "review", body_md: "Fake review: lively discussions.", term_taken: "2099-AU", ratings: ratings(5, 2, 6, true) }, daysAgo(4));
+  addPost(10, "b", { kind: "review", body_md: "Fake review: lots of reading.", term_taken: "2099-AU", ratings: ratings(4, 2, 8, true) }, daysAgo(9));
+  addPost(10, "c", { kind: "review", body_md: "Fake review: a fine first Core course.", term_taken: "2099-AU", ratings: ratings(4, 2, 7, true) }, daysAgo(15));
   // Held for review (another author), so the moderation queue has an item.
   addPost(1, "d", { kind: "discussion", title: "Fake held post", body_md: "Fake: [hold] mentions someone.", status: "held" }, daysAgo(2));
 }
@@ -270,6 +279,102 @@ function published(): { status: Post["status"]; note: string | null } {
   return { status: "visible", note: null };
 }
 
+// ------------------------------------------------------------------- the `/forum` page (issue #20)
+
+function reviewItems(): S["ForumReviewItem"][] {
+  return posts
+    .filter((r) => r.post.kind === "review" && r.post.status === "visible" && r.post.ratings)
+    .flatMap((r) => {
+      const page = pageOf(r.post.page_id);
+      const rating = r.post.ratings;
+      if (!page || !rating) return [];
+      const p = shown(r);
+      return [
+        {
+          type: "review" as const,
+          id: p.id,
+          page_id: p.page_id,
+          course: { code: page.course.code, title: page.course.title },
+          instructor: FAKE_INSTRUCTOR,
+          title: p.title ?? null,
+          excerpt: (p.body_md ?? "").replace(/\*\*/g, "").slice(0, 200),
+          handle: p.pseudonym,
+          term_taken: p.term_taken ?? null,
+          overall: rating.overall,
+          difficulty: rating.difficulty,
+          workload_hours: rating.workload_hours,
+          would_recommend: rating.would_recommend,
+          score: p.score,
+          my_vote: p.my_vote,
+          is_mine: p.mine,
+          n_comments: p.n_comments,
+          created_day: p.created_day,
+          edited_day: p.edited_day ?? null,
+        },
+      ];
+    });
+}
+
+type Item = S["ForumReviewItem"] | S["ForumDiscussionItem"];
+const dayOf = (i: Item) => (i.type === "review" ? i.created_day : i.thread.created_day);
+const idOf = (i: Item) => (i.type === "review" ? i.id : i.thread.id);
+const courseOf = (i: Item) => (i.type === "review" ? i.course : i.thread.course);
+
+/** The Bayesian average of SPEC with k = 5 and the period's average as the prior. */
+function ranked(groups: Map<string, { label: string; detail: string | null; ratings: number[] }>, prior: number): S["RankedEntry"][] {
+  return [...groups.entries()]
+    .filter(([, g]) => g.ratings.length >= 3)
+    .map(([id, g]) => {
+      const sum = g.ratings.reduce((a, b) => a + b, 0);
+      return { id, label: g.label, detail: g.detail, score: Math.round(((5 * prior + sum) / (5 + g.ratings.length)) * 100) / 100, mean: Math.round((sum / g.ratings.length) * 100) / 100, n_reviews: g.ratings.length, rank: 0 };
+    })
+    .sort((a, b) => b.score - a.score || b.n_reviews - a.n_reviews)
+    .map((e, i) => ({ ...e, rank: i + 1 }));
+}
+
+function stats(period: "quarter" | "year"): S["ForumStats"] {
+  const days = period === "quarter" ? 91 : 365;
+  const since = daysAgo(days - 1);
+  const reviews = reviewItems().filter((r) => r.created_day >= since);
+  const n = reviews.length;
+  const prior = n ? reviews.reduce((a, r) => a + r.overall, 0) / n : null;
+  const base: S["ForumStats"] = {
+    period,
+    since,
+    prior_weight: 5,
+    min_reviews: 3,
+    prior_mean: prior == null ? null : Math.round(prior * 100) / 100,
+    n_reviews: n,
+    n_courses: new Set(reviews.map((r) => r.course.code)).size,
+    recommend_rate: n ? Math.round((reviews.filter((r) => r.would_recommend).length / n) * 1000) / 1000 : null,
+    workload_hours: n ? Math.round((reviews.reduce((a, r) => a + r.workload_hours, 0) / n) * 10) / 10 : null,
+    top_courses: [],
+    majors: [],
+    humanities: [],
+    instructors: [],
+  };
+  if (prior == null) return base;
+  const group = (pick: (r: S["ForumReviewItem"]) => [string, string, string | null] | null) => {
+    const out = new Map<string, { label: string; detail: string | null; ratings: number[] }>();
+    for (const r of reviews) {
+      const key = pick(r);
+      if (!key) continue;
+      const g = out.get(key[0]) ?? { label: key[1], detail: key[2], ratings: [] };
+      g.ratings.push(r.overall);
+      out.set(key[0], g);
+    }
+    return out;
+  };
+  const courses = group((r) => [r.course.code, r.course.code, r.course.title]);
+  return {
+    ...base,
+    top_courses: ranked(courses, prior).slice(0, 10),
+    majors: [{ program_id: "fake-bs", name: "Fake Major (BS)", items: ranked(group((r) => (r.course.code.startsWith("TEST") ? [r.course.code, r.course.code, r.course.title] : null)), prior).slice(0, 5) }],
+    humanities: ranked(group((r) => (/^FAKE 11[012]00$/.test(r.course.code) ? ["fake-huma", "FAKE 11000-11100-11200", "Fake Humanities"] : null)), prior),
+    instructors: ranked(group((r) => [r.instructor.slug, r.instructor.display_name, r.instructor.department ?? null]), prior).slice(0, 10),
+  };
+}
+
 // ----------------------------------------------------------------------------------- handlers
 
 export const forumHandlers = [
@@ -294,6 +399,37 @@ export const forumHandlers = [
       .slice(0, 2)
       .map((c, i) => ({ code: c.code, title: c.title, n_terms: 2, page_id: i + 1, attributes: [], ratings: loggedIn() ? ratingsOf([i + 1]).summary : null }));
     return json<S["InstructorDetail"]>({ ...FAKE_INSTRUCTOR, courses });
+  }),
+
+  http.get(`${A}/forum/items`, ({ request }) => {
+    const u = new URL(request.url);
+    const type = u.searchParams.get("type");
+    if (type && type !== "review" && type !== "discussion") return err("Bad type.", 422);
+    const course = (u.searchParams.get("course") ?? "").replace(/\s/g, "").toUpperCase();
+    const instructor = u.searchParams.get("instructor");
+    const subject = u.searchParams.get("subject");
+    const tag = u.searchParams.get("tag");
+    const q = (u.searchParams.get("q") ?? "").toLowerCase();
+    const mine = u.searchParams.get("mine") === "true";
+    if (mine && !loggedIn()) return unauthorized();
+    let items: Item[] = [];
+    if (type !== "review" && !instructor) items.push(...discussionItems());
+    if (type !== "discussion" && loggedIn() && !tag && !mine) items.push(...reviewItems());
+    if (course) items = items.filter((i) => courseOf(i)?.code.replace(" ", "") === course);
+    if (instructor) items = items.filter((i) => i.type === "review" && i.instructor.slug === instructor);
+    if (subject) items = items.filter((i) => courseOf(i)?.code.startsWith(`${subject} `));
+    if (tag) items = items.filter((i) => i.type === "discussion" && i.thread.tags.includes(tag));
+    if (mine) items = items.filter((i) => i.type === "discussion" && i.thread.is_mine);
+    if (q) items = items.filter((i) => (i.type === "review" ? `${i.title ?? ""} ${i.excerpt} ${i.course.code}` : `${i.thread.title} ${i.thread.excerpt}`).toLowerCase().includes(q));
+    // Newest day first; on one day discussions first, then the newest id.
+    items.sort((a, b) => dayOf(b).localeCompare(dayOf(a)) || (a.type === b.type ? 0 : a.type === "discussion" ? -1 : 1) || idOf(b) - idOf(a));
+    return json<S["ForumItemList"]>({ items, next_cursor: null, total: items.length, reviews_hidden: !loggedIn() });
+  }),
+  http.get(`${A}/forum/stats`, ({ request }) => {
+    if (!loggedIn()) return unauthorized();
+    const period = new URL(request.url).searchParams.get("period") ?? "quarter";
+    if (period !== "quarter" && period !== "year") return err("Bad period.", 422);
+    return json(stats(period));
   }),
 
   http.get(`${A}/forum/pages`, ({ request }) => {

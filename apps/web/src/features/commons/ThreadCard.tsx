@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import type { ThreadSummary } from "./api";
-import { ArchGlyph, CourseChip, Day, Handle, TagChip, VoteControl } from "./parts";
+import { ArchGlyph, Body, CourseChip, Day, Handle, TagChip, VoteControl } from "./parts";
 import { plural, threadPath } from "./text";
 
 function Badge({ tone, children }: { tone: "answered" | "accepted" | "ai" | "open"; children: React.ReactNode }) {
@@ -20,8 +20,39 @@ function Badge({ tone, children }: { tone: "answered" | "accepted" | "ai" | "ope
   );
 }
 
+/**
+ * The AI's short answer under a question in the `/forum` list (issue #20, at most 60 words),
+ * always labelled as written by an AI.
+ */
+function AiAnswer({ html, questionTitle }: { html: string; questionTitle: string }) {
+  return (
+    <section aria-label={`Quarterly AI's answer to “${questionTitle}”`} className="rounded-lg border-l-2 border-primary bg-primary-wash/40 px-3 py-2.5">
+      <p className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-caption">
+        <span className="inline-flex items-center gap-1 font-semibold text-ink">
+          <ArchGlyph size={14} className="text-primary" />
+          Quarterly AI
+        </span>
+        <span className="rounded-pill border border-primary/30 px-1.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-primary">AI</span>
+        <span className="text-muted">Written by an AI and can be wrong.</span>
+      </p>
+      <Body html={html} className="mt-1 text-body-sm" />
+    </section>
+  );
+}
+
 /** A question in the Commons list: votes, title, excerpt, course, tags, status and who asked. */
-export function ThreadCard({ thread, loggedIn, tagHref }: { thread: ThreadSummary; loggedIn: boolean; tagHref: (tag: string) => string }) {
+export function ThreadCard({
+  thread,
+  loggedIn,
+  tagHref,
+  aiAnswerHtml,
+}: {
+  thread: ThreadSummary;
+  loggedIn: boolean;
+  tagHref: (tag: string) => string;
+  /** The AI's short answer, shown under the question (the `/forum` list). */
+  aiAnswerHtml?: string | null;
+}) {
   const titleId = `thread-${thread.id}-title`;
   return (
     <article
@@ -66,6 +97,7 @@ export function ThreadCard({ thread, loggedIn, tagHref }: { thread: ThreadSummar
           </Link>
         </h3>
         {thread.excerpt && <p className="line-clamp-2 text-body-sm text-body">{thread.excerpt}</p>}
+        {aiAnswerHtml && <AiAnswer html={aiAnswerHtml} questionTitle={thread.title} />}
         <div className="flex flex-wrap items-center gap-x-2 gap-y-2 pt-1">
           {thread.course && <CourseChip course={thread.course} />}
           {thread.tags.map((t) => (

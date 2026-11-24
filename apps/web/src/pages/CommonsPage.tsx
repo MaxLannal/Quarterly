@@ -1,20 +1,23 @@
-import { useEffect, useMemo, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { TypeHero } from "@/components/brand/TypeHero";
 import { EmptyState } from "@/components/layout/page";
 import { Button } from "@/components/ui/button";
-import { ArrowIcon, SearchIcon } from "@/components/ui/icons";
+import { SearchIcon } from "@/components/ui/icons";
 import { controlClass } from "@/components/ui/input";
 import { ErrorText } from "@/components/ui/misc";
 import { useSession } from "@/lib/session";
 import { cn } from "@/lib/utils";
-import { SORTS, useThreadPage, useThreads, type CourseRef, type ListFilters, type Sort, type ThreadSummary } from "@/features/commons/api";
+import { itemKey, TYPES, useForumItems, type ItemFilters, type ItemType } from "@/features/board/api";
+import { InstructorSearch } from "@/features/board/InstructorSearch";
+import { ReviewCard } from "@/features/board/ReviewCard";
+import { StatsPanel } from "@/features/board/StatsPanel";
+import { useThreadPage, type CourseRef } from "@/features/commons/api";
 import { CourseSearch } from "@/features/commons/CourseSearch";
-import { ArchGlyph, useToast } from "@/features/commons/parts";
+import { ArchGlyph, LoginCard, useToast } from "@/features/commons/parts";
 import { ThreadCard, ThreadCardSkeleton } from "@/features/commons/ThreadCard";
 import { coursePath, plural } from "@/features/commons/text";
-
-const SORT_KEYS = new Set<string>(SORTS.map((s) => s.key));
+import type { InstructorSummary } from "@/features/forum/api";
 
 /** The search box keeps its own text and writes `q` to the URL a moment after typing stops. */
 function useDebounced<T>(value: T, ms: number): T {
@@ -26,61 +29,45 @@ function useDebounced<T>(value: T, ms: number): T {
   return out;
 }
 
-function AskBox() {
-  const navigate = useNavigate();
-  const [title, setTitle] = useState("");
-  function submit(e: FormEvent) {
-    e.preventDefault();
-    const t = title.trim();
-    navigate(t ? `/forum/new?title=${encodeURIComponent(t)}` : "/forum/new");
-  }
+/** Issue #20: the forum starts discussions, not chatbot questions, so the header has a "New post" button. */
+function NewPost() {
   return (
-    <form onSubmit={submit} role="search" aria-label="Ask a question" className="flex flex-col gap-3">
-      <label htmlFor="commons-ask" className="sr-only">
-        Your question
-      </label>
-      <div className="flex min-w-0 items-center gap-2 rounded-pill border border-hairline-strong bg-surface-card p-1.5 pl-5 shadow-overlay focus-within:border-primary focus-within:shadow-[0_0_0_1px_var(--color-primary),0_8px_32px_rgba(0,0,0,0.08)]">
-        <input
-          id="commons-ask"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          maxLength={160}
-          autoComplete="off"
-          placeholder="Is CMSC 14100 OK with no programming background?"
-          className="min-h-11 min-w-0 flex-1 bg-transparent text-body-md text-ink placeholder:text-muted focus:outline-none"
-        />
-        <Button type="submit" className="shrink-0">
-          Ask
-          <ArrowIcon />
-        </Button>
-      </div>
+    <div className="flex flex-col items-start gap-3">
+      <Button asChild>
+        <Link to="/forum/new">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" aria-hidden="true">
+            <path d="M12 5v14M5 12h14" />
+          </svg>
+          New post
+        </Link>
+      </Button>
       <p className="flex flex-wrap items-center gap-x-4 gap-y-1 text-caption text-muted">
-        <span>Anonymous handles. Quarterly AI answers first.</span>
+        <span>Anonymous handles. Quarterly AI writes a short first answer to each question.</span>
         <Link to="/instructors" className="inline-flex min-h-11 items-center gap-1 font-medium text-primary underline-offset-4 hover:underline">
           Course reviews by instructor →
         </Link>
       </p>
-    </form>
+    </div>
   );
 }
 
 function Rail({ popular, onCourse }: { popular: CourseRef[]; onCourse: (c: CourseRef) => void }) {
   return (
-    <aside aria-label="About the Commons" className="flex flex-col gap-6 lg:sticky lg:top-24">
+    <aside aria-label="About the forum" className="flex flex-col gap-6">
       <section className="relative overflow-hidden rounded-xl border border-hairline bg-surface-card p-6">
         <span aria-hidden="true" className="absolute inset-x-0 top-0 h-1 bg-primary" />
-        <h2 className="font-display text-display-sm text-ink">How the Commons works</h2>
+        <h2 className="font-display text-display-sm text-ink">How the forum works</h2>
         <ol className="mt-4 flex flex-col gap-4 text-body-sm text-body">
           <li className="flex gap-3">
             <span aria-hidden="true" className="font-display text-title-md italic text-primary">i.</span>
             <span>
-              <strong className="font-medium text-ink">Anonymous, per question.</strong> You get a random handle on each question, like “Quiet Heron”. Nobody can link your posts across questions.
+              <strong className="font-medium text-ink">Anonymous, per post.</strong> You get a random handle on each question and each course page, like “Quiet Heron”. Nobody can link your posts across them.
             </span>
           </li>
           <li className="flex gap-3">
             <span aria-hidden="true" className="font-display text-title-md italic text-primary">ii.</span>
             <span>
-              <strong className="font-medium text-ink">The AI answers first.</strong> Quarterly AI reads the catalog and what students say, and cites its sources. It can be wrong: check, vote and correct it.
+              <strong className="font-medium text-ink">The AI answers first, briefly.</strong> Quarterly AI writes a short first answer (60 words at most) from the catalog and earlier questions, and cites its sources. It can be wrong: check, vote and correct it.
             </span>
           </li>
           <li className="flex gap-3">
@@ -103,7 +90,7 @@ function Rail({ popular, onCourse }: { popular: CourseRef[]; onCourse: (c: Cours
                 <button
                   type="button"
                   onClick={() => onCourse(c)}
-                  title={`Questions about ${c.title}`}
+                  title={`Posts about ${c.title}`}
                   className="inline-flex min-h-11 items-center rounded-pill border border-primary/25 bg-surface-card px-3 text-caption font-semibold tabular-nums text-primary hover:bg-primary-wash"
                 >
                   {c.code}
@@ -126,6 +113,8 @@ function tally<T>(items: T[], key: (t: T) => string | null | undefined): [string
   return [...counts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
 }
 
+const TYPE_KEYS = new Set<string>(["review", "discussion"]);
+
 export default function CommonsPage() {
   const { data: session } = useSession();
   const loggedIn = !!session;
@@ -133,14 +122,16 @@ export default function CommonsPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const toast = useToast();
-  const sort = (SORT_KEYS.has(params.get("sort") ?? "") ? params.get("sort") : "hot") as Sort;
+  const type = (TYPE_KEYS.has(params.get("type") ?? "") ? params.get("type") : null) as ItemType | null;
   const courseCode = params.get("course") ?? "";
+  const instructorSlug = params.get("instructor") ?? "";
   const subject = params.get("subject") ?? "";
   const tag = params.get("tag") ?? "";
   const mine = params.get("mine") === "1" && loggedIn;
   const [search, setSearch] = useState(params.get("q") ?? "");
   const q = useDebounced(search.trim(), 300);
   const [courseTitle, setCourseTitle] = useState<string>("");
+  const [instructorName, setInstructorName] = useState<string>("");
 
   // A toast handed over by another page ("Question deleted").
   const handed = (location.state as { toast?: string } | null)?.toast;
@@ -165,13 +156,22 @@ export default function CommonsPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps -- only when the debounced text changes
   }, [q]);
 
-  const filters: ListFilters = useMemo(
-    () => ({ sort, q: q || undefined, course: courseCode || undefined, subject: subject || undefined, tag: tag || undefined, mine: mine || undefined }),
-    [sort, q, courseCode, subject, tag, mine],
+  const filters: ItemFilters = useMemo(
+    () => ({
+      type: type ?? undefined,
+      q: q || undefined,
+      course: courseCode || undefined,
+      instructor: instructorSlug || undefined,
+      subject: subject || undefined,
+      tag: tag || undefined,
+      mine: mine || undefined,
+    }),
+    [type, q, courseCode, instructorSlug, subject, tag, mine],
   );
-  const list = useThreads(filters);
-  const items: ThreadSummary[] = useMemo(() => list.data?.pages.flatMap((p) => p.items) ?? [], [list.data]);
+  const list = useForumItems(filters, loggedIn);
+  const items = useMemo(() => list.data?.pages.flatMap((p) => p.items) ?? [], [list.data]);
   const total = list.data?.pages[0]?.total ?? 0;
+  const reviewsHidden = list.data?.pages[0]?.reviews_hidden ?? !loggedIn;
 
   // The rail and the chips come from the whole Commons (top 30), not the filtered list.
   const overview = useThreadPage({ sort: "top" }, 30);
@@ -190,47 +190,80 @@ export default function CommonsPage() {
   }, [everything]);
 
   const courseRef: CourseRef | null = courseCode
-    ? { code: courseCode, title: courseTitle || items.find((t) => t.course?.code === courseCode)?.course?.title || popularCourses.find((c) => c.code === courseCode)?.title || "" }
+    ? {
+        code: courseCode,
+        title:
+          courseTitle ||
+          items.map((i) => (i.type === "review" ? i.course : i.thread.course)).find((c) => c?.code === courseCode)?.title ||
+          popularCourses.find((c) => c.code === courseCode)?.title ||
+          "",
+      }
+    : null;
+  const instructorRef: InstructorSummary | null = instructorSlug
+    ? {
+        slug: instructorSlug,
+        display_name:
+          instructorName || items.map((i) => (i.type === "review" ? i.instructor : null)).find((x) => x?.slug === instructorSlug)?.display_name || instructorSlug,
+      }
     : null;
 
-  const filtered = !!(q || courseCode || subject || tag || mine);
-  const tagHref = (t: string) => `/forum?${new URLSearchParams({ ...(sort !== "hot" ? { sort } : {}), tag: t }).toString()}`;
+  const filtered = !!(type || q || courseCode || instructorSlug || subject || tag || mine);
+  const tagHref = (t: string) => `/forum?${new URLSearchParams({ tag: t }).toString()}`;
+  const courseHref = (code: string) => `/forum?${new URLSearchParams({ course: code }).toString()}`;
+  const instructorHref = (slug: string) => `/forum?${new URLSearchParams({ instructor: slug }).toString()}`;
+  const noun = type === "review" ? "review" : type === "discussion" ? "discussion" : "post";
+
+  const heading = mine ? (
+    "Your questions"
+  ) : courseRef ? (
+    <>
+      About <Link to={coursePath(courseRef.code)} className="text-primary underline-offset-4 hover:underline">{courseRef.code}</Link>
+    </>
+  ) : instructorRef ? (
+    `Reviews of ${instructorRef.display_name}`
+  ) : filtered && !type ? (
+    "Matching posts"
+  ) : type === "review" ? (
+    "Latest reviews"
+  ) : type === "discussion" ? (
+    "Latest discussions"
+  ) : (
+    "Latest posts"
+  );
 
   return (
     <>
       <TypeHero
         shape="arcade"
         label="A cloister arcade drawn with the titles of real courses"
-        kicker="The Commons"
+        kicker="The forum"
         title={
           <>
             Ask the quad. <em>Someone</em> knows.
           </>
         }
-        subline="Questions about courses, majors and the College, asked under a random handle. Quarterly AI writes the first answer; students take it from there."
+        subline="Course reviews and discussions, under a random handle. Quarterly AI writes a short first answer to each question; students take it from there."
       >
-        <AskBox />
+        <NewPost />
       </TypeHero>
 
       <div className="mx-auto w-full max-w-content px-4 pb-24 sm:px-6 lg:px-8">
-        <div className="z-20 -mx-4 border-b sm:sticky sm:top-0 border-hairline bg-canvas/95 px-4 pb-3 pt-3 backdrop-blur supports-[backdrop-filter]:bg-canvas/85 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+        <div className="z-20 -mx-4 border-b border-hairline bg-canvas/95 px-4 pb-3 pt-3 backdrop-blur supports-[backdrop-filter]:bg-canvas/85 sm:sticky sm:top-0 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
           <div className="flex flex-col gap-3">
             <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
-              <div role="tablist" aria-label="Sort questions" className="-mx-1 flex max-w-full gap-0.5 overflow-x-auto px-1 [scrollbar-width:none]">
-                {SORTS.map((s) => (
+              <div role="group" aria-label="Show" className="-mx-1 flex max-w-full gap-0.5 overflow-x-auto px-1 [scrollbar-width:none]">
+                {TYPES.map((t) => (
                   <button
-                    key={s.key}
+                    key={t.label}
                     type="button"
-                    role="tab"
-                    aria-selected={sort === s.key}
-                    title={s.hint}
-                    onClick={() => update({ sort: s.key === "hot" ? null : s.key })}
+                    aria-pressed={type === t.key}
+                    onClick={() => update({ type: t.key })}
                     className={cn(
                       "inline-flex min-h-11 shrink-0 items-center rounded-pill px-3.5 text-nav-link transition-colors",
-                      sort === s.key ? "bg-ink text-on-dark" : "text-body hover:bg-surface-strong hover:text-ink",
+                      type === t.key ? "bg-ink text-on-dark" : "text-body hover:bg-surface-strong hover:text-ink",
                     )}
                   >
-                    {s.label}
+                    {t.label}
                   </button>
                 ))}
               </div>
@@ -248,10 +281,10 @@ export default function CommonsPage() {
                 </button>
               )}
             </div>
-            <div className="grid gap-2 sm:grid-cols-[minmax(0,1fr)_minmax(0,18rem)]">
+            <div className="grid gap-2 md:grid-cols-[minmax(0,1fr)_minmax(0,16rem)_minmax(0,16rem)]">
               <div className="relative">
                 <label htmlFor="commons-search" className="sr-only">
-                  Search questions
+                  Search posts
                 </label>
                 <SearchIcon className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
                 <input
@@ -259,7 +292,7 @@ export default function CommonsPage() {
                   type="search"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  placeholder="Search questions"
+                  placeholder="Search reviews and discussions"
                   className={cn(controlClass, "pl-9 text-body-sm pointer-coarse:text-body-md")}
                 />
               </div>
@@ -271,6 +304,13 @@ export default function CommonsPage() {
                 onChange={(c) => {
                   setCourseTitle(c?.title ?? "");
                   update({ course: c?.code ?? null });
+                }}
+              />
+              <InstructorSearch
+                value={instructorRef}
+                onChange={(i) => {
+                  setInstructorName(i?.display_name ?? "");
+                  update({ instructor: i?.slug ?? null });
                 }}
               />
             </div>
@@ -310,25 +350,27 @@ export default function CommonsPage() {
           </div>
         </div>
 
-        <div className="mt-8 grid gap-10 lg:grid-cols-[minmax(0,1fr)_300px]">
-          <section aria-labelledby="commons-list-title" className="min-w-0">
+        {/* Issue #20: statistics in the left third, the list in the right two thirds; on a phone the
+            statistics come first, then the list, then the notes about the forum. */}
+        <div className="mt-8 grid gap-8 lg:grid-cols-3 lg:grid-rows-[auto_1fr] lg:gap-10">
+          <div className="min-w-0 lg:col-start-1 lg:row-start-1">
+            <StatsPanel loggedIn={loggedIn} courseHref={courseHref} instructorHref={instructorHref} />
+          </div>
+          <section aria-labelledby="commons-list-title" className="min-w-0 lg:col-span-2 lg:col-start-2 lg:row-span-2 lg:row-start-1">
             <div className="mb-4 flex flex-wrap items-baseline justify-between gap-2">
               <h2 id="commons-list-title" className="font-display text-display-sm text-ink">
-                {mine ? "Your questions" : courseRef ? (
-                  <>
-                    Questions about <Link to={coursePath(courseRef.code)} className="text-primary underline-offset-4 hover:underline">{courseRef.code}</Link>
-                  </>
-                ) : filtered ? "Matching questions" : SORTS.find((s) => s.key === sort)?.label === "Hot" ? "Being asked now" : `${SORTS.find((s) => s.key === sort)?.label} questions`}
+                {heading}
               </h2>
               <p className="text-caption text-muted" aria-live="polite">
-                {list.isSuccess ? plural(total, "question") : ""}
+                {list.isSuccess ? plural(total, noun) : ""}
                 {filtered && (
                   <button
                     type="button"
                     onClick={() => {
                       setSearch("");
                       setCourseTitle("");
-                      setParams(sort === "hot" ? {} : { sort }, { replace: true });
+                      setInstructorName("");
+                      setParams({}, { replace: true });
                     }}
                     className="ml-3 inline-flex min-h-11 items-center font-medium text-primary underline underline-offset-2"
                   >
@@ -337,51 +379,58 @@ export default function CommonsPage() {
                 )}
               </p>
             </div>
+            {reviewsHidden && type !== "discussion" && !tag && !mine && (
+              <LoginCard className="mb-4">
+                {type === "review" || instructorSlug ? "Reviews are for logged-in students. Log in to read them." : "Showing discussions. Log in to read course reviews too."}
+              </LoginCard>
+            )}
             {list.isLoading ? (
               <div className="flex flex-col gap-3">
                 <p role="status" className="sr-only">
-                  Loading questions…
+                  Loading posts…
                 </p>
                 {[0, 1, 2, 3].map((i) => (
                   <ThreadCardSkeleton key={i} />
                 ))}
               </div>
             ) : list.isError ? (
-              <EmptyState title="The Commons could not load">
+              <EmptyState title="The forum could not load">
                 <ErrorText>{list.error.message}</ErrorText>
                 <Button variant="outline" className="mt-2" onClick={() => void list.refetch()}>
                   Try again
                 </Button>
               </EmptyState>
             ) : items.length === 0 ? (
-              <EmptyState
-                title={
-                  courseRef
-                    ? `No questions yet about ${courseRef.code}. Ask the first one.`
-                    : mine
-                      ? "You have not asked anything yet."
-                      : q
-                        ? `Nothing matches “${q}” yet. Ask it.`
-                        : sort === "unanswered"
-                          ? "Every question has an answer. Nice."
-                          : "No questions yet. Ask the first one."
-                }
-                action={
-                  <Button asChild>
-                    <Link
-                      to={`/forum/new?${new URLSearchParams({ ...(courseRef ? { course: courseRef.code } : {}), ...(q ? { title: q } : {}) }).toString()}`}
-                    >
-                      Ask a question
-                    </Link>
-                  </Button>
-                }
-              />
+              reviewsHidden && (type === "review" || instructorSlug) ? null : (
+                <EmptyState
+                  title={
+                    courseRef
+                      ? `Nothing yet about ${courseRef.code}. Start the first discussion.`
+                      : mine
+                        ? "You have not asked anything yet."
+                        : q
+                          ? `Nothing matches “${q}” yet. Ask it.`
+                          : type === "review"
+                            ? "No reviews yet."
+                            : "No posts yet. Start the first discussion."
+                  }
+                  action={
+                    <Button asChild>
+                      <Link to={`/forum/new?${new URLSearchParams({ ...(courseRef ? { course: courseRef.code } : {}), ...(q ? { title: q } : {}) }).toString()}`}>New post</Link>
+                    </Button>
+                  }
+                />
+              )
             ) : (
               <>
                 <ol className="flex flex-col gap-3">
-                  {items.map((t) => (
-                    <li key={t.id}>
-                      <ThreadCard thread={t} loggedIn={loggedIn} tagHref={tagHref} />
+                  {items.map((item) => (
+                    <li key={itemKey(item)}>
+                      {item.type === "review" ? (
+                        <ReviewCard review={item} />
+                      ) : (
+                        <ThreadCard thread={item.thread} loggedIn={loggedIn} tagHref={tagHref} aiAnswerHtml={item.ai_answer_html} />
+                      )}
                     </li>
                   ))}
                 </ol>
@@ -392,21 +441,24 @@ export default function CommonsPage() {
                     </Button>
                   ) : (
                     <p className="flex items-center gap-2 text-caption text-muted">
-                      <ArchGlyph size={16} className="text-primary" /> That is every question{filtered ? " that matches" : ""}.
+                      <ArchGlyph size={16} className="text-primary" /> That is every {noun}
+                      {filtered ? " that matches" : ""}.
                     </p>
                   )}
                 </div>
               </>
             )}
           </section>
-          <Rail
-            popular={popularCourses}
-            onCourse={(c) => {
-              setCourseTitle(c.title);
-              update({ course: c.code });
-              window.scrollTo({ top: 0 });
-            }}
-          />
+          <div className="min-w-0 lg:col-start-1 lg:row-start-2">
+            <Rail
+              popular={popularCourses}
+              onCourse={(c) => {
+                setCourseTitle(c.title);
+                update({ course: c.code });
+                window.scrollTo({ top: 0 });
+              }}
+            />
+          </div>
         </div>
       </div>
       {toast.node}
