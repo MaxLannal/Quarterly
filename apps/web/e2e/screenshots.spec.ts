@@ -74,7 +74,7 @@ type Shot = {
 };
 
 const SHOTS: Shot[] = [
-  { name: "home", run: async (p) => (await p.goto("/"), h1(p, "Quarterly")) },
+  { name: "home", run: async (p) => (await p.goto("/"), h1(p, "The Best of UChicago, within your reach.")) },
   {
     name: "nav-menu",
     dialog: true,
@@ -281,7 +281,7 @@ const SHOTS: Shot[] = [
   },
   {
     name: "login",
-    run: async (p) => (await p.goto("/login"), h1(p, "Log in")),
+    run: async (p) => (await p.goto("/login"), h1(p, "Welcome back")),
   },
   {
     name: "account",
