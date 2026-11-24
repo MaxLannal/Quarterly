@@ -1,0 +1,474 @@
+{
+  "version": 1,
+  "groups": [
+    {
+      "id": "academic_background",
+      "title": "Academic background"
+    },
+    {
+      "id": "goals",
+      "title": "Goals"
+    },
+    {
+      "id": "scheduling",
+      "title": "Scheduling"
+    },
+    {
+      "id": "learning_preferences",
+      "title": "Learning preferences"
+    }
+  ],
+  "questions": [
+    {
+      "id": "class_year",
+      "group": "academic_background",
+      "field": "class_year",
+      "label": "Class year",
+      "text": "What is your class year?",
+      "type": "single",
+      "options": [
+        {
+          "value": 2027,
+          "label": "Class of 2027"
+        },
+        {
+          "value": 2028,
+          "label": "Class of 2028"
+        },
+        {
+          "value": 2029,
+          "label": "Class of 2029"
+        },
+        {
+          "value": 2030,
+          "label": "Class of 2030"
+        }
+      ],
+      "step": 1,
+      "value": "integer",
+      "min": 2020,
+      "max": 2040,
+      "ends": null,
+      "when": null,
+      "columns": [],
+      "help": null
+    },
+    {
+      "id": "expected_graduation_term",
+      "group": "academic_background",
+      "field": "expected_graduation_term",
+      "label": "Expected graduation",
+      "text": "When do you expect to graduate?",
+      "type": "single",
+      "options": [],
+      "step": 1,
+      "value": "term",
+      "min": null,
+      "max": null,
+      "ends": null,
+      "when": null,
+      "columns": [],
+      "help": "Usually the spring of your class year."
+    },
+    {
+      "id": "intended_programs",
+      "group": "academic_background",
+      "field": "intended_programs",
+      "label": "Intended programs",
+      "text": "Which majors or minors do you intend to take?",
+      "type": "multi",
+      "options": [],
+      "step": 1,
+      "value": "program",
+      "min": null,
+      "max": null,
+      "ends": null,
+      "when": null,
+      "columns": [],
+      "help": "Choose from the catalog. You can change them at any time."
+    },
+    {
+      "id": "entry_term",
+      "group": "academic_background",
+      "field": "entry_term",
+      "label": "Started at UChicago",
+      "text": "Which quarter did you start at UChicago?",
+      "type": "single",
+      "options": [],
+      "step": 1,
+      "value": "term",
+      "min": null,
+      "max": null,
+      "ends": null,
+      "when": {
+        "transfer_or_later": true
+      },
+      "columns": [],
+      "help": null
+    },
+    {
+      "id": "entry_year_level",
+      "group": "academic_background",
+      "field": "entry_year_level",
+      "label": "Started in",
+      "text": "Which year did you start in?",
+      "type": "single",
+      "options": [
+        {
+          "value": 1,
+          "label": "First year"
+        },
+        {
+          "value": 2,
+          "label": "Second year"
+        },
+        {
+          "value": 3,
+          "label": "Third year"
+        },
+        {
+          "value": 4,
+          "label": "Fourth year"
+        }
+      ],
+      "step": 1,
+      "value": "integer",
+      "min": null,
+      "max": null,
+      "ends": null,
+      "when": {
+        "transfer_or_later": true
+      },
+      "columns": [],
+      "help": null
+    },
+    {
+      "id": "credits",
+      "group": "academic_background",
+      "field": "credits",
+      "label": "Credits",
+      "text": "Which AP, placement or transfer credits do you have?",
+      "type": "table",
+      "options": [],
+      "step": 1,
+      "value": "text",
+      "min": null,
+      "max": null,
+      "ends": null,
+      "when": {
+        "transfer_or_later": true
+      },
+      "columns": [
+        {
+          "id": "kind",
+          "label": "Kind",
+          "options": [
+            "AP",
+            "placement",
+            "transfer"
+          ]
+        },
+        {
+          "id": "label",
+          "label": "Credit",
+          "options": []
+        },
+        {
+          "id": "maps_to",
+          "label": "Counts as course",
+          "options": []
+        },
+        {
+          "id": "units",
+          "label": "Units",
+          "options": []
+        }
+      ],
+      "help": null
+    },
+    {
+      "id": "taken_courses",
+      "group": "academic_background",
+      "field": "taken_courses",
+      "label": "Taken courses",
+      "text": "Which UChicago courses have you taken, or are you taking now?",
+      "type": "table",
+      "options": [],
+      "step": 1,
+      "value": "course",
+      "min": null,
+      "max": null,
+      "ends": null,
+      "when": {
+        "transfer_or_later": true
+      },
+      "columns": [
+        {
+          "id": "course",
+          "label": "Course",
+          "options": []
+        },
+        {
+          "id": "term",
+          "label": "Quarter",
+          "options": []
+        },
+        {
+          "id": "status",
+          "label": "Status",
+          "options": [
+            "completed",
+            "in_progress"
+          ]
+        },
+        {
+          "id": "grade",
+          "label": "Grade (optional)",
+          "options": []
+        }
+      ],
+      "help": null
+    },
+    {
+      "id": "post_grad_plan",
+      "group": "goals",
+      "field": "post_grad_plan",
+      "label": "After graduation",
+      "text": "What do you plan to do after you graduate?",
+      "type": "single",
+      "options": [
+        {
+          "value": "industry",
+          "label": "Work in industry"
+        },
+        {
+          "value": "grad_school",
+          "label": "Graduate school"
+        },
+        {
+          "value": "med_law",
+          "label": "Medical or law school"
+        },
+        {
+          "value": "undecided",
+          "label": "Undecided"
+        }
+      ],
+      "step": 2,
+      "value": "text",
+      "min": null,
+      "max": null,
+      "ends": null,
+      "when": null,
+      "columns": [],
+      "help": null
+    },
+    {
+      "id": "pace",
+      "group": "goals",
+      "field": "pace",
+      "label": "Graduation pace",
+      "text": "How fast do you want to graduate?",
+      "type": "single",
+      "options": [
+        {
+          "value": "early",
+          "label": "Early"
+        },
+        {
+          "value": "on_time",
+          "label": "On time"
+        },
+        {
+          "value": "flexible",
+          "label": "Flexible"
+        }
+      ],
+      "step": 2,
+      "value": "text",
+      "min": null,
+      "max": null,
+      "ends": null,
+      "when": null,
+      "columns": [],
+      "help": null
+    },
+    {
+      "id": "wants_research",
+      "group": "goals",
+      "field": "wants_research",
+      "label": "Interested in research",
+      "text": "Are you interested in doing research?",
+      "type": "single",
+      "options": [
+        {
+          "value": true,
+          "label": "Yes"
+        },
+        {
+          "value": false,
+          "label": "No"
+        }
+      ],
+      "step": 2,
+      "value": "boolean",
+      "min": null,
+      "max": null,
+      "ends": null,
+      "when": null,
+      "columns": [],
+      "help": null
+    },
+    {
+      "id": "research_areas",
+      "group": "goals",
+      "field": "research_areas",
+      "label": "Research areas",
+      "text": "Which research areas interest you?",
+      "type": "list",
+      "options": [],
+      "step": 2,
+      "value": "text",
+      "min": null,
+      "max": null,
+      "ends": null,
+      "when": {
+        "wants_research": true
+      },
+      "columns": [],
+      "help": "Add as many as you like, for example machine learning theory, ancient Mediterranean trade or condensed matter."
+    },
+    {
+      "id": "courses_per_term",
+      "group": "scheduling",
+      "field": "courses_per_term",
+      "label": "Courses per quarter",
+      "text": "How many courses do you want to take each quarter?",
+      "type": "single",
+      "options": [
+        {
+          "value": 3,
+          "label": "3 courses"
+        },
+        {
+          "value": 4,
+          "label": "4 courses"
+        },
+        {
+          "value": 5,
+          "label": "5 courses"
+        }
+      ],
+      "step": 2,
+      "value": "integer",
+      "min": 1,
+      "max": 6,
+      "ends": null,
+      "when": null,
+      "columns": [],
+      "help": null
+    },
+    {
+      "id": "terms_away",
+      "group": "scheduling",
+      "field": "terms_away",
+      "label": "Quarters away",
+      "text": "Will you spend any quarters away, for study abroad, an internship or a leave?",
+      "type": "table",
+      "options": [],
+      "step": 2,
+      "value": "term",
+      "min": null,
+      "max": null,
+      "ends": null,
+      "when": null,
+      "columns": [
+        {
+          "id": "term",
+          "label": "Quarter",
+          "options": []
+        },
+        {
+          "id": "kind",
+          "label": "Reason",
+          "options": [
+            "abroad",
+            "internship",
+            "leave"
+          ]
+        }
+      ],
+      "help": "Answer \"None\" if you plan to stay every quarter."
+    },
+    {
+      "id": "class_formats",
+      "group": "learning_preferences",
+      "field": "class_formats",
+      "label": "Class formats",
+      "text": "Which class formats do you like?",
+      "type": "multi",
+      "options": [
+        {
+          "value": "seminar",
+          "label": "Seminar"
+        },
+        {
+          "value": "lecture",
+          "label": "Lecture"
+        },
+        {
+          "value": "lab",
+          "label": "Lab"
+        },
+        {
+          "value": "online",
+          "label": "Online"
+        }
+      ],
+      "step": 2,
+      "value": "text",
+      "min": null,
+      "max": null,
+      "ends": null,
+      "when": null,
+      "columns": [],
+      "help": null
+    },
+    {
+      "id": "theory_vs_application",
+      "group": "learning_preferences",
+      "field": "theory_vs_application",
+      "label": "Theory or application",
+      "text": "On a scale from 1 to 10, do you lean toward theory or application?",
+      "type": "scale",
+      "options": [],
+      "step": 2,
+      "value": "integer",
+      "min": 1,
+      "max": 10,
+      "ends": {
+        "min": "Theory",
+        "max": "Application"
+      },
+      "when": null,
+      "columns": [],
+      "help": null
+    }
+  ],
+  "labels": {
+    "kind": {
+      "AP": "AP exam",
+      "placement": "Placement",
+      "transfer": "Transfer"
+    },
+    "status": {
+      "completed": "Completed",
+      "in_progress": "In progress"
+    },
+    "away": {
+      "abroad": "Study abroad",
+      "internship": "Internship",
+      "leave": "Leave"
+    }
+  }
+}

@@ -133,10 +133,10 @@ tasks:
     thinking: between_tools
     refusal_fallback: true
     fallback: {provider: openrouter, model: anthropic/claude-sonnet-5.5}
-  a6_interview:               # the dashboard's interviewing guide (next question + profile patch)
+  a6_interview:               # the dashboard agent: the General Information questions (Issue #16)
     model: claude-sonnet-5-5
     effort: low
-    max_tokens: 3000
+    max_tokens: 4000
     thinking: between_tools
     refusal_fallback: true
     fallback: {provider: openrouter, model: anthropic/claude-sonnet-5.5}

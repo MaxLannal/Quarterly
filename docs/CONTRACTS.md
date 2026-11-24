@@ -57,6 +57,10 @@ All stubs return `501 {"detail": "Not implemented yet (prompt NN)"}` after reque
 | GET | `/admin/review-items?status` | | `Page[ReviewItemOut]` | Admin | 09 |
 | POST | `/admin/review-items/{item_id}/decision` | `ReviewDecision` | `ReviewItemOut` | Admin | 09 |
 | POST | `/admin/program-versions/{version_id}/publish` | | `ProgramVersionOut` | Admin | 09 |
+| GET | `/profile/questions` | | `QuestionSet` (the General Information questions, `data/profile/questions.yaml`) | No | Issue #14 |
+| GET / PATCH | `/me/profile` | `ProfilePatch` (partial; `credits` and `taken_courses` replace the whole list; 422 for unknown programs or courses) | `ProfileOut` (the student record: General Information answers, `answered`, `completeness`) | Yes | Issue #14 |
+| GET | `/me/profile/export.md` | | `student.md` (`text/markdown` download, with the working information; never the email or username) | Yes | Issue #14 |
+| POST | `/agents/interview` | `InterviewRequest` | SSE stream of `InterviewEvent` (turn: `topic` = a step-2 question id or `wrapup`, `quick_replies` = its option labels + "Skip", `answered` + `proposed` = the mapped answer to accept, `retry`) | Yes | Issue #16 |
 
 The frontend calls these under `/api/...` (Vite dev proxy and nginx strip the prefix).
 

@@ -1,0 +1,248 @@
+# The General Information questions (Issue #14; Max's list of 2026-11-24 in discussion #12).
+#
+# This is the only place the questions are written. The registration form (step 1), the
+# dashboard agent (step 2) and the planner agent read this file through the API
+# (`GET /profile/questions`); `make api-client` copies it to apps/web/src/mocks/questions.json
+# for the mock API, and a test fails when the copy is out of date.
+#
+# Each question has:
+#   id       a stable name (also the dashboard agent's topic)
+#   group    one of `groups` below; student.md uses the groups as its headings, in this order
+#   field    the student record field the answer is saved to
+#   label    a short name for the answer (the dashboard and student.md show it)
+#   text     the question as the form shows it (the agent may reword it, never its options)
+#   type     single | multi | scale | list | table
+#   options  the allowed answers ({value, label}); empty when the answer is free (a list, a
+#            table, a term or a program from the catalog: see `value`)
+#   step     1 = the registration form, 2 = the dashboard agent (Issue #16 D1)
+# and may have:
+#   value    what one answer is: integer | boolean | term | program | text | course (default: text)
+#   min, max the range of an integer or a scale
+#   ends     the labels of a scale's two ends
+#   when     a condition: the question is asked only if another field has this value
+#            (`transfer_or_later` is the registration form's checkbox, not a stored field)
+#   columns  a table's columns
+#   help     one line under the question
+#
+# Nothing here is a catalog fact: these are questions about the student.
+
+version: 1
+
+groups:
+  - id: academic_background
+    title: Academic background
+  - id: goals
+    title: Goals
+  - id: scheduling
+    title: Scheduling
+  - id: learning_preferences
+    title: Learning preferences
+
+questions:
+  # ------------------------------------------------------------- Academic background (step 1)
+  - id: class_year
+    group: academic_background
+    field: class_year
+    label: Class year
+    text: What is your class year?
+    type: single
+    value: integer
+    min: 2020
+    max: 2040
+    options:
+      - {value: 2027, label: Class of 2027}
+      - {value: 2028, label: Class of 2028}
+      - {value: 2029, label: Class of 2029}
+      - {value: 2030, label: Class of 2030}
+    step: 1
+
+  - id: expected_graduation_term
+    group: academic_background
+    field: expected_graduation_term
+    label: Expected graduation
+    text: When do you expect to graduate?
+    type: single
+    value: term
+    options: []
+    help: Usually the spring of your class year.
+    step: 1
+
+  - id: intended_programs
+    group: academic_background
+    field: intended_programs
+    label: Intended programs
+    text: Which majors or minors do you intend to take?
+    type: multi
+    value: program
+    options: []
+    help: Choose from the catalog. You can change them at any time.
+    step: 1
+
+  - id: entry_term
+    group: academic_background
+    field: entry_term
+    label: Started at UChicago
+    text: Which quarter did you start at UChicago?
+    type: single
+    value: term
+    options: []
+    when: {transfer_or_later: true}
+    step: 1
+
+  - id: entry_year_level
+    group: academic_background
+    field: entry_year_level
+    label: Started in
+    text: Which year did you start in?
+    type: single
+    value: integer
+    options:
+      - {value: 1, label: First year}
+      - {value: 2, label: Second year}
+      - {value: 3, label: Third year}
+      - {value: 4, label: Fourth year}
+    when: {transfer_or_later: true}
+    step: 1
+
+  - id: credits
+    group: academic_background
+    field: credits
+    label: Credits
+    text: Which AP, placement or transfer credits do you have?
+    type: table
+    options: []
+    columns:
+      - {id: kind, label: Kind, options: [AP, placement, transfer]}
+      - {id: label, label: Credit}
+      - {id: maps_to, label: Counts as course}
+      - {id: units, label: Units}
+    when: {transfer_or_later: true}
+    step: 1
+
+  - id: taken_courses
+    group: academic_background
+    field: taken_courses
+    label: Taken courses
+    text: Which UChicago courses have you taken, or are you taking now?
+    type: table
+    value: course
+    options: []
+    columns:
+      - {id: course, label: Course}
+      - {id: term, label: Quarter}
+      - {id: status, label: Status, options: [completed, in_progress]}
+      - {id: grade, label: Grade (optional)}
+    when: {transfer_or_later: true}
+    step: 1
+
+  # ------------------------------------------------------------------------ Goals (step 2)
+  - id: post_grad_plan
+    group: goals
+    field: post_grad_plan
+    label: After graduation
+    text: What do you plan to do after you graduate?
+    type: single
+    options:
+      - {value: industry, label: Work in industry}
+      - {value: grad_school, label: Graduate school}
+      - {value: med_law, label: Medical or law school}
+      - {value: undecided, label: Undecided}
+    step: 2
+
+  - id: pace
+    group: goals
+    field: pace
+    label: Graduation pace
+    text: How fast do you want to graduate?
+    type: single
+    options:
+      - {value: early, label: Early}
+      - {value: on_time, label: On time}
+      - {value: flexible, label: Flexible}
+    step: 2
+
+  - id: wants_research
+    group: goals
+    field: wants_research
+    label: Interested in research
+    text: Are you interested in doing research?
+    type: single
+    value: boolean
+    options:
+      - {value: true, label: "Yes"}
+      - {value: false, label: "No"}
+    step: 2
+
+  - id: research_areas
+    group: goals
+    field: research_areas
+    label: Research areas
+    text: Which research areas interest you?
+    type: list
+    options: []
+    help: Add as many as you like, for example machine learning theory, ancient Mediterranean trade or condensed matter.
+    when: {wants_research: true}
+    step: 2
+
+  # ------------------------------------------------------------------- Scheduling (step 2)
+  - id: courses_per_term
+    group: scheduling
+    field: courses_per_term
+    label: Courses per quarter
+    text: How many courses do you want to take each quarter?
+    type: single
+    value: integer
+    min: 1
+    max: 6
+    options:
+      - {value: 3, label: "3 courses"}
+      - {value: 4, label: "4 courses"}
+      - {value: 5, label: "5 courses"}
+    step: 2
+
+  - id: terms_away
+    group: scheduling
+    field: terms_away
+    label: Quarters away
+    text: Will you spend any quarters away, for study abroad, an internship or a leave?
+    type: table
+    value: term
+    options: []
+    columns:
+      - {id: term, label: Quarter}
+      - {id: kind, label: Reason, options: [abroad, internship, leave]}
+    help: Answer "None" if you plan to stay every quarter.
+    step: 2
+
+  # --------------------------------------------------------- Learning preferences (step 2)
+  - id: class_formats
+    group: learning_preferences
+    field: class_formats
+    label: Class formats
+    text: Which class formats do you like?
+    type: multi
+    options:
+      - {value: seminar, label: Seminar}
+      - {value: lecture, label: Lecture}
+      - {value: lab, label: Lab}
+      - {value: online, label: Online}
+    step: 2
+
+  - id: theory_vs_application
+    group: learning_preferences
+    field: theory_vs_application
+    label: Theory or application
+    text: On a scale from 1 to 10, do you lean toward theory or application?
+    type: scale
+    value: integer
+    min: 1
+    max: 10
+    ends: {min: Theory, max: Application}
+    options: []
+    step: 2
+
+# Labels for the values of table columns (the form, the agent and student.md use them).
+labels:
+  kind: {AP: AP exam, placement: Placement, transfer: Transfer}
+  status: {completed: Completed, in_progress: In progress}
+  away: {abroad: Study abroad, internship: Internship, leave: Leave}

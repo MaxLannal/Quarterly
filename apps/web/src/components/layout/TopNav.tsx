@@ -27,7 +27,7 @@ const NAV: { to: string; label: string; current: (path: string) => boolean }[] =
     {
       to: "/plan",
       label: "Plan",
-      current: (p) => /^\/(plan|plans|onboarding)(\/|$)/.test(p),
+      current: (p) => /^\/(plan|plans)(\/|$)/.test(p),
     },
     // Courses and programs share one item; a switch on each page moves between them (FEEDBACK 2026-11-16).
     {

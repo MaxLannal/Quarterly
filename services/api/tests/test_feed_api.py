@@ -290,13 +290,13 @@ def test_logged_in_readers_also_see_forum_posts(env: Env) -> None:
 
 def test_for_you_ranks_a_course_matching_an_interest_first(env: Env) -> None:
     env.signup("quiet-heron")
-    set_profile(env, "quiet-heron", interests=["quantum"])
+    set_profile(env, "quiet-heron", research_areas=["quantum"])
     page = feed(env.client, limit=12)
     assert page["personalized"] is True
     courses = [i for i in page["items"] if i["kind"] == "course"]
     quantum = [c for c in courses if "quantum" in c["title"].lower()]
     assert quantum, [c["title"] for c in courses]
-    assert courses[0]["reason"] == "Because you're into quantum"
+    assert courses[0]["reason"] == "Near your research interest: quantum"
     assert "quantum" in page["headline"]
 
 

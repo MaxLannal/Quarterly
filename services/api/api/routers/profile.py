@@ -13,7 +13,7 @@ from collections.abc import Iterator
 from typing import Annotated, Any
 
 from fastapi import APIRouter, Depends, HTTPException, Response
-from fastapi.responses import StreamingResponse
+from fastapi.responses import PlainTextResponse, StreamingResponse
 from llm_gateway.api import LLM, get_llm
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
@@ -28,6 +28,7 @@ from api.auth.store import Store, get_store
 from api.config import get_settings
 from api.db import models as m
 from api.db.session import get_session
+from api.profile_questions import QuestionSet, question_set
 from api.schemas.agents import ErrorEvent
 from api.schemas.common import ErrorOut
 from api.schemas.profile import (
@@ -100,6 +101,14 @@ def _stream(db: Session, events: Iterator[BaseModel]) -> StreamingResponse:
 # ------------------------------------------------------------------------------ profile
 
 
+@router.get("/profile/questions", response_model=QuestionSet)
+def get_questions(response: Response) -> QuestionSet:
+    # The General Information questions (data/profile/questions.yaml): the registration form,
+    # the dashboard and the dashboard agent's answer boxes read them. Public: no student data.
+    response.headers["Cache-Control"] = "public, max-age=300"
+    return question_set()
+
+
 @router.get("/me/profile", response_model=ProfileOut, responses=AUTH)
 def get_profile(db: Db, me: Me, response: Response) -> ProfileOut:
     # The row is created on first read; the email comes from the account each time.
@@ -109,14 +118,34 @@ def get_profile(db: Db, me: Me, response: Response) -> ProfileOut:
     return data.profile_out(db, me, row)
 
 
+@router.get(
+    "/me/profile/export.md",
+    response_class=PlainTextResponse,
+    responses={**AUTH, 200: {"content": {"text/markdown": {}}, "description": "student.md"}},
+)
+def export_student_md(db: Db, me: Me) -> PlainTextResponse:
+    # student.md with the working information (Issue #14): everything Quarterly keeps about the
+    # student's plans, without the email or the username.
+    row = data.ensure_profile(db, me.id)
+    db.commit()
+    return PlainTextResponse(
+        data.render_student_md(db, row, working_notes=True),
+        media_type="text/markdown; charset=utf-8",
+        headers={
+            "Content-Disposition": 'attachment; filename="student.md"',
+            "Cache-Control": "no-store",
+        },
+    )
+
+
 @router.patch(
     "/me/profile",
     response_model=ProfileOut,
-    responses={**AUTH, 422: {"model": ErrorOut, "description": "Unknown program"}},
+    responses={**AUTH, 422: {"model": ErrorOut, "description": "Unknown program or course"}},
 )
 def patch_profile(body: ProfilePatch, db: Db, me: Me, response: Response) -> ProfileOut:
-    # A partial update: only the fields sent change (the feed, the Commons and the companion
-    # send some of them too).
+    # A partial update: only the fields sent change (the registration form, the dashboard, the
+    # dashboard agent's accepted answers, the feed and the Commons send some of them).
     row = data.ensure_profile(db, me.id)
     try:
         data.apply_patch(db, row, body)
@@ -124,6 +153,11 @@ def patch_profile(body: ProfilePatch, db: Db, me: Me, response: Response) -> Pro
         db.rollback()
         raise HTTPException(
             status_code=422, detail=f"Unknown program(s): {', '.join(exc.program_ids)}"
+        ) from exc
+    except data.UnknownCourseError as exc:
+        db.rollback()
+        raise HTTPException(
+            status_code=422, detail=f"Unknown course(s): {', '.join(exc.codes)}"
         ) from exc
     db.commit()
     response.headers["Cache-Control"] = "no-store"

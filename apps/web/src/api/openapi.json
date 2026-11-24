@@ -5397,21 +5397,13 @@
         "title": "InterviewEvent"
       },
       "InterviewMemory": {
-        "description": "What the guide remembers between visits: topics covered and the last turns.",
+        "description": "What the dashboard agent remembers between visits: the questions it covered (answered\nor skipped) and the last turns.",
         "properties": {
           "covered": {
             "default": [],
             "items": {
-              "enum": [
-                "class_year",
-                "interests",
-                "humanities",
-                "research",
-                "career",
-                "future",
-                "constraints",
-                "wrapup"
-              ],
+              "maxLength": 40,
+              "pattern": "^[a-z_]+$",
               "type": "string"
             },
             "title": "Covered",
@@ -5435,16 +5427,8 @@
             "anyOf": [
               {
                 "items": {
-                  "enum": [
-                    "class_year",
-                    "interests",
-                    "humanities",
-                    "research",
-                    "career",
-                    "future",
-                    "constraints",
-                    "wrapup"
-                  ],
+                  "maxLength": 40,
+                  "pattern": "^[a-z_]+$",
                   "type": "string"
                 },
                 "type": "array"
@@ -5530,16 +5514,8 @@
           "topic": {
             "anyOf": [
               {
-                "enum": [
-                  "class_year",
-                  "interests",
-                  "humanities",
-                  "research",
-                  "career",
-                  "future",
-                  "constraints",
-                  "wrapup"
-                ],
+                "maxLength": 40,
+                "pattern": "^[a-z_]+$",
                 "type": "string"
               },
               {
@@ -5557,8 +5533,21 @@
         "type": "object"
       },
       "InterviewTurnEvent": {
-        "description": "The guide's next message. `proposed` holds only facts the student said in this\nconversation (list fields already merged with the profile); the browser saves what the\nstudent keeps with PATCH /me/profile.",
+        "description": "The dashboard agent's next message (Issue #16). `topic` is the id of the question it\nasks (data/profile/questions.yaml) or \"wrapup\". `quick_replies` are that question's option\nlabels, unchanged, then \"Skip\". `proposed` holds only the answer the student gave to the\nprevious question, mapped to its field (list fields already merged with the record); the\nbrowser saves it with PATCH /me/profile once the student accepts it.",
         "properties": {
+          "answered": {
+            "anyOf": [
+              {
+                "maxLength": 40,
+                "pattern": "^[a-z_]+$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Answered"
+          },
           "courses": {
             "default": [],
             "items": {
@@ -5594,21 +5583,18 @@
             "title": "Quick Replies",
             "type": "array"
           },
+          "retry": {
+            "default": false,
+            "title": "Retry",
+            "type": "boolean"
+          },
           "text": {
             "title": "Text",
             "type": "string"
           },
           "topic": {
-            "enum": [
-              "class_year",
-              "interests",
-              "humanities",
-              "research",
-              "career",
-              "future",
-              "constraints",
-              "wrapup"
-            ],
+            "maxLength": 40,
+            "pattern": "^[a-z_]+$",
             "title": "Topic",
             "type": "string"
           },
@@ -7457,34 +7443,6 @@
         "title": "Policy",
         "type": "object"
       },
-      "Portrait": {
-        "description": "The guide's portrait of the student, kept by the student (written by an AI).",
-        "properties": {
-          "headline": {
-            "default": "",
-            "maxLength": 90,
-            "title": "Headline",
-            "type": "string"
-          },
-          "summary": {
-            "default": "",
-            "maxLength": 400,
-            "title": "Summary",
-            "type": "string"
-          },
-          "themes": {
-            "default": [],
-            "items": {
-              "type": "string"
-            },
-            "maxItems": 6,
-            "title": "Themes",
-            "type": "array"
-          }
-        },
-        "title": "Portrait",
-        "type": "object"
-      },
       "PostCreate": {
         "description": "A review requires structured ratings and the term taken; a discussion post has neither.",
         "properties": {
@@ -8040,25 +7998,35 @@
         "type": "object"
       },
       "ProfileOut": {
+        "description": "The student record (Issue #14) as the dashboard shows it. `null` = not answered.",
         "properties": {
-          "career_paths": {
+          "answered": {
             "default": [],
             "items": {
               "type": "string"
             },
-            "title": "Career Paths",
+            "title": "Answered",
             "type": "array"
           },
-          "career_plans": {
+          "class_formats": {
             "anyOf": [
               {
-                "type": "string"
+                "items": {
+                  "enum": [
+                    "seminar",
+                    "lecture",
+                    "lab",
+                    "online"
+                  ],
+                  "type": "string"
+                },
+                "type": "array"
               },
               {
                 "type": "null"
               }
             ],
-            "title": "Career Plans"
+            "title": "Class Formats"
           },
           "class_year": {
             "anyOf": [
@@ -8076,17 +8044,61 @@
             "title": "Completeness",
             "type": "number"
           },
-          "constraints": {
+          "courses_per_term": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Courses Per Term"
+          },
+          "credits": {
             "default": [],
             "items": {
-              "type": "string"
+              "$ref": "#/components/schemas/RecordCredit"
             },
-            "title": "Constraints",
+            "title": "Credits",
             "type": "array"
           },
           "email": {
             "title": "Email",
             "type": "string"
+          },
+          "entry_term": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Entry Term"
+          },
+          "entry_year_level": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Entry Year Level"
+          },
+          "expected_graduation_term": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expected Graduation Term"
           },
           "feed_categories": {
             "default": [],
@@ -8103,49 +8115,10 @@
               "threads": []
             }
           },
-          "future_domains": {
-            "default": [],
-            "items": {
-              "type": "string"
-            },
-            "title": "Future Domains",
-            "type": "array"
-          },
-          "humanities_goal": {
-            "anyOf": [
-              {
-                "enum": [
-                  "pass",
-                  "balance",
-                  "enjoy",
-                  "deep"
-                ],
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Humanities Goal"
-          },
-          "humanities_note": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Humanities Note"
-          },
-          "humanities_topics": {
-            "default": [],
-            "items": {
-              "type": "string"
-            },
-            "title": "Humanities Topics",
-            "type": "array"
+          "has_working_notes": {
+            "default": false,
+            "title": "Has Working Notes",
+            "type": "boolean"
           },
           "intended_programs": {
             "default": [],
@@ -8153,14 +8126,6 @@
               "type": "string"
             },
             "title": "Intended Programs",
-            "type": "array"
-          },
-          "interests": {
-            "default": [],
-            "items": {
-              "type": "string"
-            },
-            "title": "Interests",
             "type": "array"
           },
           "interview": {
@@ -8175,13 +8140,38 @@
             "title": "Member Since",
             "type": "string"
           },
-          "portrait": {
-            "$ref": "#/components/schemas/Portrait",
-            "default": {
-              "headline": "",
-              "summary": "",
-              "themes": []
-            }
+          "pace": {
+            "anyOf": [
+              {
+                "enum": [
+                  "early",
+                  "on_time",
+                  "flexible"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pace"
+          },
+          "post_grad_plan": {
+            "anyOf": [
+              {
+                "enum": [
+                  "industry",
+                  "grad_school",
+                  "med_law",
+                  "undecided"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Post Grad Plan"
           },
           "programs": {
             "default": [],
@@ -8199,6 +8189,39 @@
             "title": "Research Areas",
             "type": "array"
           },
+          "taken_courses": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/TakenCourseOut"
+            },
+            "title": "Taken Courses",
+            "type": "array"
+          },
+          "terms_away": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/TermAway"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Terms Away"
+          },
+          "theory_vs_application": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Theory Vs Application"
+          },
           "updated_day": {
             "format": "date",
             "title": "Updated Day",
@@ -8208,21 +8231,16 @@
             "title": "Username",
             "type": "string"
           },
-          "workload": {
+          "wants_research": {
             "anyOf": [
               {
-                "enum": [
-                  "light",
-                  "balanced",
-                  "intense"
-                ],
-                "type": "string"
+                "type": "boolean"
               },
               {
                 "type": "null"
               }
             ],
-            "title": "Workload"
+            "title": "Wants Research"
           }
         },
         "required": [
@@ -8235,34 +8253,28 @@
         "type": "object"
       },
       "ProfilePatch": {
-        "description": "A partial update: only the fields sent are changed (`null` clears a field). The feed,\nthe Commons follow button and the companion also send these.",
+        "description": "A partial update: only the fields sent are changed (`null` clears a field). `credits`\nand `taken_courses` replace the whole list. The registration form, the dashboard, the\ndashboard agent's accepted answers, the feed and the Commons follow button send these.",
         "properties": {
-          "career_paths": {
+          "class_formats": {
             "anyOf": [
               {
                 "items": {
-                  "maxLength": 200,
+                  "enum": [
+                    "seminar",
+                    "lecture",
+                    "lab",
+                    "online"
+                  ],
                   "type": "string"
                 },
+                "maxItems": 4,
                 "type": "array"
               },
               {
                 "type": "null"
               }
             ],
-            "title": "Career Paths"
-          },
-          "career_plans": {
-            "anyOf": [
-              {
-                "maxLength": 2400,
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Career Plans"
+            "title": "Class Formats"
           },
           "class_year": {
             "anyOf": [
@@ -8277,20 +8289,70 @@
             ],
             "title": "Class Year"
           },
-          "constraints": {
+          "courses_per_term": {
+            "anyOf": [
+              {
+                "maximum": 6.0,
+                "minimum": 1.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Courses Per Term"
+          },
+          "credits": {
             "anyOf": [
               {
                 "items": {
-                  "maxLength": 200,
-                  "type": "string"
+                  "$ref": "#/components/schemas/RecordCredit"
                 },
+                "maxItems": 40,
                 "type": "array"
               },
               {
                 "type": "null"
               }
             ],
-            "title": "Constraints"
+            "title": "Credits"
+          },
+          "entry_term": {
+            "anyOf": [
+              {
+                "pattern": "^\\d{4}-(AU|WI|SP|SU)$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Entry Term"
+          },
+          "entry_year_level": {
+            "anyOf": [
+              {
+                "maximum": 4.0,
+                "minimum": 1.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Entry Year Level"
+          },
+          "expected_graduation_term": {
+            "anyOf": [
+              {
+                "pattern": "^\\d{4}-(AU|WI|SP|SU)$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expected Graduation Term"
           },
           "feed_categories": {
             "anyOf": [
@@ -8317,65 +8379,6 @@
               }
             ]
           },
-          "future_domains": {
-            "anyOf": [
-              {
-                "items": {
-                  "maxLength": 200,
-                  "type": "string"
-                },
-                "type": "array"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Future Domains"
-          },
-          "humanities_goal": {
-            "anyOf": [
-              {
-                "enum": [
-                  "pass",
-                  "balance",
-                  "enjoy",
-                  "deep"
-                ],
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Humanities Goal"
-          },
-          "humanities_note": {
-            "anyOf": [
-              {
-                "maxLength": 2400,
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Humanities Note"
-          },
-          "humanities_topics": {
-            "anyOf": [
-              {
-                "items": {
-                  "maxLength": 200,
-                  "type": "string"
-                },
-                "type": "array"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Humanities Topics"
-          },
           "intended_programs": {
             "anyOf": [
               {
@@ -8391,21 +8394,6 @@
             ],
             "title": "Intended Programs"
           },
-          "interests": {
-            "anyOf": [
-              {
-                "items": {
-                  "maxLength": 200,
-                  "type": "string"
-                },
-                "type": "array"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Interests"
-          },
           "interview": {
             "anyOf": [
               {
@@ -8416,15 +8404,38 @@
               }
             ]
           },
-          "portrait": {
+          "pace": {
             "anyOf": [
               {
-                "$ref": "#/components/schemas/Portrait"
+                "enum": [
+                  "early",
+                  "on_time",
+                  "flexible"
+                ],
+                "type": "string"
               },
               {
                 "type": "null"
               }
-            ]
+            ],
+            "title": "Pace"
+          },
+          "post_grad_plan": {
+            "anyOf": [
+              {
+                "enum": [
+                  "industry",
+                  "grad_school",
+                  "med_law",
+                  "undecided"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Post Grad Plan"
           },
           "research_areas": {
             "anyOf": [
@@ -8441,21 +8452,71 @@
             ],
             "title": "Research Areas"
           },
-          "workload": {
+          "taken_courses": {
             "anyOf": [
               {
-                "enum": [
-                  "light",
-                  "balanced",
-                  "intense"
-                ],
+                "items": {
+                  "$ref": "#/components/schemas/TakenCourse"
+                },
+                "maxItems": 80,
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Taken Courses"
+          },
+          "terms_away": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/TermAway"
+                },
+                "maxItems": 12,
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Terms Away"
+          },
+          "theory_vs_application": {
+            "anyOf": [
+              {
+                "maximum": 10.0,
+                "minimum": 1.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Theory Vs Application"
+          },
+          "wants_research": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Wants Research"
+          },
+          "working_notes": {
+            "anyOf": [
+              {
+                "maxLength": 20000,
                 "type": "string"
               },
               {
                 "type": "null"
               }
             ],
-            "title": "Workload"
+            "title": "Working Notes"
           }
         },
         "title": "ProfilePatch",
@@ -8922,6 +8983,192 @@
         "title": "ProtectGpaGoal",
         "type": "object"
       },
+      "Question": {
+        "properties": {
+          "columns": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/QuestionColumn"
+            },
+            "title": "Columns",
+            "type": "array"
+          },
+          "ends": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ScaleEnds"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "field": {
+            "title": "Field",
+            "type": "string"
+          },
+          "group": {
+            "title": "Group",
+            "type": "string"
+          },
+          "help": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Help"
+          },
+          "id": {
+            "maxLength": 40,
+            "pattern": "^[a-z_]+$",
+            "title": "Id",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "max": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max"
+          },
+          "min": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Min"
+          },
+          "options": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/QuestionOption"
+            },
+            "title": "Options",
+            "type": "array"
+          },
+          "step": {
+            "enum": [
+              1,
+              2
+            ],
+            "title": "Step",
+            "type": "integer"
+          },
+          "text": {
+            "title": "Text",
+            "type": "string"
+          },
+          "type": {
+            "enum": [
+              "single",
+              "multi",
+              "scale",
+              "list",
+              "table"
+            ],
+            "title": "Type",
+            "type": "string"
+          },
+          "value": {
+            "default": "text",
+            "enum": [
+              "integer",
+              "boolean",
+              "term",
+              "program",
+              "text",
+              "course"
+            ],
+            "title": "Value",
+            "type": "string"
+          },
+          "when": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "type": "boolean"
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "When"
+          }
+        },
+        "required": [
+          "id",
+          "group",
+          "field",
+          "label",
+          "text",
+          "type",
+          "step"
+        ],
+        "title": "Question",
+        "type": "object"
+      },
+      "QuestionColumn": {
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "options": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Options",
+            "type": "array"
+          }
+        },
+        "required": [
+          "id",
+          "label"
+        ],
+        "title": "QuestionColumn",
+        "type": "object"
+      },
+      "QuestionGroup": {
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title"
+        ],
+        "title": "QuestionGroup",
+        "type": "object"
+      },
       "QuestionItem": {
         "description": "A Commons question that is waiting for an answer, or a recent one.",
         "properties": {
@@ -8987,6 +9234,74 @@
           "day"
         ],
         "title": "QuestionItem",
+        "type": "object"
+      },
+      "QuestionOption": {
+        "properties": {
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "value": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "title": "Value"
+          }
+        },
+        "required": [
+          "value",
+          "label"
+        ],
+        "title": "QuestionOption",
+        "type": "object"
+      },
+      "QuestionSet": {
+        "properties": {
+          "groups": {
+            "items": {
+              "$ref": "#/components/schemas/QuestionGroup"
+            },
+            "title": "Groups",
+            "type": "array"
+          },
+          "labels": {
+            "additionalProperties": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "type": "object"
+            },
+            "default": {},
+            "title": "Labels",
+            "type": "object"
+          },
+          "questions": {
+            "items": {
+              "$ref": "#/components/schemas/Question"
+            },
+            "title": "Questions",
+            "type": "array"
+          },
+          "version": {
+            "title": "Version",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "version",
+          "groups",
+          "questions"
+        ],
+        "title": "QuestionSet",
         "type": "object"
       },
       "RatingSummary": {
@@ -9076,6 +9391,51 @@
           }
         },
         "title": "RatingSummary",
+        "type": "object"
+      },
+      "RecordCredit": {
+        "description": "An AP, placement or transfer credit (planner_core `Credit`).",
+        "properties": {
+          "kind": {
+            "enum": [
+              "AP",
+              "placement",
+              "transfer"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "label": {
+            "maxLength": 120,
+            "minLength": 1,
+            "title": "Label",
+            "type": "string"
+          },
+          "maps_to": {
+            "anyOf": [
+              {
+                "maxLength": 16,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Maps To"
+          },
+          "units": {
+            "default": 0,
+            "maximum": 1000.0,
+            "minimum": 0.0,
+            "title": "Units",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "kind",
+          "label"
+        ],
+        "title": "RecordCredit",
         "type": "object"
       },
       "Register": {
@@ -10165,6 +10525,24 @@
         "title": "RoutesRequest",
         "type": "object"
       },
+      "ScaleEnds": {
+        "properties": {
+          "max": {
+            "title": "Max",
+            "type": "string"
+          },
+          "min": {
+            "title": "Min",
+            "type": "string"
+          }
+        },
+        "required": [
+          "min",
+          "max"
+        ],
+        "title": "ScaleEnds",
+        "type": "object"
+      },
       "Section": {
         "additionalProperties": false,
         "properties": {
@@ -10782,6 +11160,96 @@
         "title": "SuspensionOut",
         "type": "object"
       },
+      "TakenCourse": {
+        "description": "A UChicago course the student took or is taking.",
+        "properties": {
+          "course": {
+            "maxLength": 16,
+            "minLength": 1,
+            "title": "Course",
+            "type": "string"
+          },
+          "grade": {
+            "anyOf": [
+              {
+                "maxLength": 4,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Grade"
+          },
+          "status": {
+            "default": "completed",
+            "enum": [
+              "completed",
+              "in_progress"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "term": {
+            "pattern": "^\\d{4}-(AU|WI|SP|SU)$",
+            "title": "Term",
+            "type": "string"
+          }
+        },
+        "required": [
+          "course",
+          "term"
+        ],
+        "title": "TakenCourse",
+        "type": "object"
+      },
+      "TakenCourseOut": {
+        "properties": {
+          "course": {
+            "maxLength": 16,
+            "minLength": 1,
+            "title": "Course",
+            "type": "string"
+          },
+          "grade": {
+            "anyOf": [
+              {
+                "maxLength": 4,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Grade"
+          },
+          "status": {
+            "default": "completed",
+            "enum": [
+              "completed",
+              "in_progress"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "term": {
+            "pattern": "^\\d{4}-(AU|WI|SP|SU)$",
+            "title": "Term",
+            "type": "string"
+          },
+          "title": {
+            "default": "",
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "course",
+          "term"
+        ],
+        "title": "TakenCourseOut",
+        "type": "object"
+      },
       "Term": {
         "additionalProperties": false,
         "properties": {
@@ -10822,6 +11290,31 @@
           "id"
         ],
         "title": "Term",
+        "type": "object"
+      },
+      "TermAway": {
+        "description": "A quarter the student plans to spend away.",
+        "properties": {
+          "kind": {
+            "enum": [
+              "abroad",
+              "internship",
+              "leave"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "term": {
+            "pattern": "^\\d{4}-(AU|WI|SP|SU)$",
+            "title": "Term",
+            "type": "string"
+          }
+        },
+        "required": [
+          "term",
+          "kind"
+        ],
+        "title": "TermAway",
         "type": "object"
       },
       "Timing": {
@@ -14963,10 +15456,42 @@
                 }
               }
             },
-            "description": "Unknown program"
+            "description": "Unknown program or course"
           }
         },
         "summary": "Patch Profile",
+        "tags": [
+          "profile"
+        ]
+      }
+    },
+    "/me/profile/export.md": {
+      "get": {
+        "operationId": "export_student_md_me_profile_export_md_get",
+        "responses": {
+          "200": {
+            "content": {
+              "text/markdown": {},
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "student.md"
+          },
+          "401": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Not logged in"
+          }
+        },
+        "summary": "Export Student Md",
         "tags": [
           "profile"
         ]
@@ -15947,6 +16472,27 @@
         "summary": "Patch Items",
         "tags": [
           "plans"
+        ]
+      }
+    },
+    "/profile/questions": {
+      "get": {
+        "operationId": "get_questions_profile_questions_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuestionSet"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Get Questions",
+        "tags": [
+          "profile"
         ]
       }
     },

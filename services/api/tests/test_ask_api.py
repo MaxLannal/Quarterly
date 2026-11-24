@@ -211,7 +211,7 @@ def test_logged_in_students_get_the_profile_and_forum_tools(env: Env) -> None:
             m.StudentProfile(
                 account_id=account_id,
                 class_year=2029,
-                interests=["quantum computing"],
+                research_areas=["quantum computing"],
                 intended_programs=["test-bs", "not-a-program"],
             )
         )

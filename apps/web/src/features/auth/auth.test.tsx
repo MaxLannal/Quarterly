@@ -1,3 +1,4 @@
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { createMemoryRouter, RouterProvider } from "react-router-dom";
@@ -6,6 +7,7 @@ import AccountPage from "@/pages/AccountPage";
 import LoginPage from "@/pages/LoginPage";
 import PrivacyPage from "@/pages/PrivacyPage";
 import SignupPage from "@/pages/SignupPage";
+import questionFile from "@/mocks/questions.json";
 import type { SessionOut } from "./api";
 import { forgetPersonalDevice, resetSession } from "./session";
 
@@ -63,7 +65,12 @@ function renderAt(path: string) {
     ],
     { initialEntries: [path] },
   );
-  render(<RouterProvider router={router} />);
+  const client = new QueryClient({ defaultOptions: { queries: { retry: false }, mutations: { retry: false } } });
+  render(
+    <QueryClientProvider client={client}>
+      <RouterProvider router={router} />
+    </QueryClientProvider>,
+  );
   return router;
 }
 
@@ -80,7 +87,7 @@ describe("sign-up", () => {
     const calls = mockApi({});
     const user = userEvent.setup();
     renderAt("/signup");
-    expect(screen.getByText("Step 1 of 3")).toBeInTheDocument();
+    expect(screen.getByText("Step 1 of 4")).toBeInTheDocument();
     await user.type(screen.getByLabelText("Email address"), "student@gmail.com");
     await user.click(screen.getByRole("button", { name: "Send code" }));
     const input = screen.getByLabelText("Email address");
@@ -90,11 +97,13 @@ describe("sign-up", () => {
     expect(calls).toEqual([]);
   });
 
-  it("walks email, code, then username and password", async () => {
+  it("walks email, code, username and password, then About you", async () => {
     const calls = mockApi({
       "POST /auth/email": { status: 202, body: { pending_id: "pend-1" } },
       "POST /auth/verify-code": { status: 200, body: { ticket: "ticket-1" } },
       "POST /auth/register": { status: 201, body: SESSION },
+      "GET /profile/questions": { status: 200, body: questionFile },
+      "PATCH /me/profile": { status: 200, body: {} },
     });
     const user = userEvent.setup();
     const router = renderAt("/signup");
@@ -104,22 +113,35 @@ describe("sign-up", () => {
 
     const codeHeading = await screen.findByRole("heading", { level: 2, name: "Enter the code" });
     expect(codeHeading).toHaveFocus();
-    expect(screen.getByText("Step 2 of 3")).toBeInTheDocument();
+    expect(screen.getByText("Step 2 of 4")).toBeInTheDocument();
     await user.type(screen.getByLabelText("6-digit code"), "123456");
     await user.click(screen.getByRole("button", { name: "Verify code" }));
 
     await screen.findByRole("heading", { level: 2, name: "Choose a username and password" });
-    expect(screen.getByText("Step 3 of 3")).toBeInTheDocument();
+    expect(screen.getByText("Step 3 of 4")).toBeInTheDocument();
     await user.type(screen.getByLabelText("Username"), "quiet-heron");
     await user.type(screen.getByLabelText("Password"), PASSWORD);
     await user.type(screen.getByLabelText("Repeat password"), PASSWORD);
     await user.click(screen.getByRole("button", { name: "Create account" }));
 
+    // Step 4: the registration form, from the question file.
+    expect(await screen.findByRole("heading", { level: 2, name: "About you" })).toHaveFocus();
+    expect(screen.getByText("Step 4 of 4")).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "Save and continue" }));
+    expect(screen.getByText("Choose your class year.")).toBeInTheDocument();
+    await user.selectOptions(await screen.findByLabelText("What is your class year?"), "Class of 2030");
+    expect(screen.getByLabelText("When do you expect to graduate?")).toHaveValue("2030-SP");
+    await user.click(screen.getByRole("button", { name: "Save and continue" }));
+
+    // Then the dashboard agent's questions, now or later.
+    await screen.findByRole("heading", { level: 2, name: "A few more questions?" });
+    await user.click(screen.getByRole("button", { name: "Skip for now" }));
     await waitFor(() => expect(router.state.location.pathname).toBe("/plan"));
-    expect(calls.map((c) => [c.method, c.path, c.body])).toEqual([
+    expect(calls.filter((c) => c.method !== "GET").map((c) => [c.method, c.path, c.body])).toEqual([
       ["POST", "/auth/email", { email: "Student@uchicago.edu" }],
       ["POST", "/auth/verify-code", { pending_id: "pend-1", code: "123456" }],
       ["POST", "/auth/register", { ticket: "ticket-1", username: "quiet-heron", password: PASSWORD }],
+      ["PATCH", "/me/profile", { class_year: 2030, expected_graduation_term: "2030-SP", intended_programs: [], entry_term: "2026-AU", entry_year_level: 1 }],
     ]);
     expect(calls.every((c) => c.credentials === "same-origin")).toBe(true);
   });
@@ -320,11 +342,22 @@ describe("account", () => {
 });
 
 describe("privacy", () => {
+  it("lists each General Information answer and what plans with it; no resume, no GPA", async () => {
+    mockApi({ "GET /profile/questions": { status: 200, body: questionFile } });
+    renderAt("/privacy");
+    const table = await screen.findByRole("table", { name: /General Information Quarterly stores/ });
+    for (const row of ["Class year", "Taken courses", "Quarters away", "Theory or application"]) {
+      expect(within(table).getByRole("rowheader", { name: new RegExp(`^${row}`) })).toBeInTheDocument();
+    }
+    expect(within(table).getByText("The last quarter of your plan.")).toBeInTheDocument();
+    expect(screen.getByText("Quarterly stores no resume and no GPA.")).toBeInTheDocument();
+  });
+
   it("states plainly what is stored and the limits", () => {
     renderAt("/privacy");
     expect(screen.getByRole("heading", { level: 1, name: "Privacy" })).toBeInTheDocument();
-    const table = screen.getByRole("table");
-    for (const row of ["Email address", "Username, password hash (argon2id), plans", "Forum posts, comments, votes", "IP addresses", "Timestamps"]) {
+    const table = screen.getByRole("table", { name: /whether it can be linked/ });
+    for (const row of ["Email address", "Username, password hash (argon2id), plans, your General Information and planner notes", "Forum posts, comments, votes", "IP addresses", "Timestamps"]) {
       expect(within(table).getByRole("rowheader", { name: row })).toBeInTheDocument();
     }
     expect(within(table).getByText(/by anyone with access to the database/)).toBeInTheDocument();

@@ -65,6 +65,9 @@ SPEC_TABLES = {
     "commons_pseudonym",
     "commons_vote",
     "commons_report",
+    # The student record (Issue #14)
+    "student_credit",
+    "student_course",
 }
 
 
@@ -139,3 +142,121 @@ def test_email_lives_only_on_account(migrated_db_url: str) -> None:
         t for t in insp.get_table_names() for c in insp.get_columns(t) if "email" in c["name"]
     ]
     assert sorted(set(holders)) == ["account"]
+
+
+def test_0005_copies_the_primary_plan_into_the_student_record(fresh_db_url: str) -> None:
+    """Issue #14 step 12: credits, completed and in-progress courses and the entry term of each
+    primary plan move into the record; a second plan's copies are not used."""
+    cfg = alembic_config(fresh_db_url)
+    engine = create_engine(fresh_db_url)
+    command.upgrade(cfg, "0004")
+    with engine.begin() as conn:
+        conn.execute(
+            text(
+                "INSERT INTO account (id, username, email, email_verified_day) VALUES "
+                "('00000000-0000-0000-0000-000000000001', 'heron', 'h@uchicago.edu', CURRENT_DATE)"
+            )
+        )
+        conn.execute(text("INSERT INTO catalog_year (id) VALUES ('2026-27')"))
+        course = conn.execute(
+            text(
+                "INSERT INTO course (catalog_year, subject, number, code, title, source) VALUES "
+                "('2026-27', 'PHYS', '13100', 'PHYS 13100', 'Mechanics', '{}') RETURNING id"
+            )
+        ).scalar_one()
+        for name, primary in (("Main", True), ("Other", False)):
+            plan = conn.execute(
+                text(
+                    "INSERT INTO plan (id, account_id, name, catalog_year, entry_term, "
+                    "entry_year_level, graduation_term, is_primary) VALUES (gen_random_uuid(), "
+                    "'00000000-0000-0000-0000-000000000001', :name, '2026-27', '2025-AU', 2, "
+                    "'2028-SP', :primary) RETURNING id"
+                ),
+                {"name": name, "primary": primary},
+            ).scalar_one()
+            conn.execute(
+                text(
+                    "INSERT INTO credit (plan_id, kind, label, maps_to_course_id, units) "
+                    "VALUES (:plan, 'AP', :label, :course, 100)"
+                ),
+                {"plan": plan, "label": f"AP for {name}", "course": course},
+            )
+            for status in ("completed", "planned"):
+                conn.execute(
+                    text(
+                        "INSERT INTO plan_item (plan_id, course_id, term_id, status, grade) "
+                        "VALUES (:plan, :course, :term, :status, 'A')"
+                    ),
+                    {
+                        "plan": plan,
+                        "course": course,
+                        "term": "2025-AU" if status == "completed" else "2026-AU",
+                        "status": status,
+                    },
+                )
+    command.upgrade(cfg, "head")
+    with engine.connect() as conn:
+        profile = conn.execute(
+            text(
+                "SELECT entry_term, entry_year_level, expected_graduation_term FROM student_profile"
+            )
+        ).one()
+        assert tuple(profile) == ("2025-AU", 2, "2028-SP")
+        assert conn.execute(text("SELECT label FROM student_credit")).scalars().all() == [
+            "AP for Main"
+        ]
+        taken = conn.execute(text("SELECT term_id, status, grade FROM student_course")).all()
+        assert [tuple(t) for t in taken] == [("2025-AU", "completed", "A")]
+    engine.dispose()
+
+
+def test_0005_downgrade_copies_the_record_back_into_the_primary_plan(fresh_db_url: str) -> None:
+    cfg = alembic_config(fresh_db_url)
+    engine = create_engine(fresh_db_url)
+    command.upgrade(cfg, "head")
+    account = "00000000-0000-0000-0000-000000000002"
+    with engine.begin() as conn:
+        conn.execute(
+            text(
+                "INSERT INTO account (id, username, email, email_verified_day) VALUES "
+                f"('{account}', 'heron', 'h@uchicago.edu', CURRENT_DATE)"
+            )
+        )
+        conn.execute(text("INSERT INTO catalog_year (id) VALUES ('2026-27')"))
+        course = conn.execute(
+            text(
+                "INSERT INTO course (catalog_year, subject, number, code, title, source) VALUES "
+                "('2026-27', 'PHYS', '13100', 'PHYS 13100', 'Mechanics', '{}') RETURNING id"
+            )
+        ).scalar_one()
+        plan = conn.execute(
+            text(
+                "INSERT INTO plan (id, account_id, name, catalog_year, entry_term, is_primary) "
+                f"VALUES (gen_random_uuid(), '{account}', 'Main', '2026-27', '2026-AU', true) "
+                "RETURNING id"
+            )
+        ).scalar_one()
+        conn.execute(
+            text(
+                "INSERT INTO student_credit (account_id, kind, label, units) "
+                f"VALUES ('{account}', 'AP', 'AP Physics', 100)"
+            )
+        )
+        conn.execute(
+            text(
+                "INSERT INTO student_course (account_id, course_id, term_id, status, grade) "
+                f"VALUES ('{account}', :course, '2026-AU', 'completed', 'A')"
+            ),
+            {"course": course},
+        )
+    command.downgrade(cfg, "0004")
+    with engine.connect() as conn:
+        labels = conn.execute(
+            text("SELECT label FROM credit WHERE plan_id = :p"), {"p": plan}
+        ).scalars()
+        assert list(labels) == ["AP Physics"]
+        items = conn.execute(
+            text("SELECT term_id, status, grade FROM plan_item WHERE plan_id = :p"), {"p": plan}
+        ).all()
+        assert [tuple(i) for i in items] == [("2026-AU", "completed", "A")]
+    engine.dispose()

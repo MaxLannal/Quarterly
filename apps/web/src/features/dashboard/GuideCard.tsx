@@ -1,120 +1,79 @@
-import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useId, useState, type CSSProperties } from "react";
-import { Link } from "react-router-dom";
+import { remainingQuestions, type QuestionSet } from "@/features/profile/questions";
 import { cn } from "@/lib/utils";
-import { streamInterview, type Profile, type TurnEvent } from "./api";
-import { isDraftChip } from "./GuideOverlay";
-import { courseHref, filledTopics } from "./logic";
+import type { Profile, TurnEvent } from "./api";
+import { questionTurn, SKIP } from "./logic";
 import { GuideMark } from "./parts";
 
-/** What the greeting depends on: it is asked again only when the portrait changed. */
-function fingerprint(p: Profile): string {
-  return JSON.stringify([p.class_year, p.interests, p.research_areas, p.humanities_goal, p.humanities_topics, p.career_paths, p.future_domains, p.workload, p.constraints, p.portrait.headline]);
-}
-
-/** The welcome-back greeting (the server caches it per profile for a few hours). */
-function useWelcome(profile: Profile, enabled: boolean) {
-  return useQuery({
-    queryKey: ["me", "welcome", profile.username, fingerprint(profile)],
-    queryFn: async ({ signal }) => {
-      let turn: TurnEvent | null = null;
-      for await (const event of streamInterview({ mode: "welcome_back", history: [] }, signal)) {
-        if (event.type === "turn") turn = event;
-        else if (event.type === "error") throw new Error(event.message);
-      }
-      return turn;
-    },
-    enabled,
-    staleTime: Infinity,
-    retry: false,
-    // The last greeting stays while a new one is on its way.
-    placeholderData: keepPreviousData,
-  });
-}
-
 /**
- * The guide on the dashboard: a first invitation for a new student, then (once they told it
- * something) a greeting that remembers them ("Last time you told me…") with its quick replies and
- * a one-line composer. Everything opens the immersive guide.
+ * The dashboard agent on the dashboard (Issue #16): the next General Information question it
+ * would ask, read from the question file (no AI call while the page loads), with its options as
+ * buttons and a one-line box for a typed answer. Every answer opens the immersive guide, which
+ * sends it to the agent. Once every question is answered it offers to go over them again.
  */
-export function GuideCard({
-  profile,
-  onOpen,
-  onDraftRoutes,
-  paused = false,
-}: {
-  profile: Profile;
-  onOpen: (options?: { seed?: TurnEvent | null; message?: string }) => void;
-  onDraftRoutes: () => void;
-  /** While the immersive guide is open the greeting waits (each kept fact changes the profile). */
-  paused?: boolean;
-}) {
-  const known = filledTopics(profile).length > 0 || profile.interview.turns.length > 0;
-  const welcome = useWelcome(profile, known && !paused);
+export function GuideCard({ profile, questions, onOpen }: { profile: Profile; questions: QuestionSet | undefined; onOpen: (options?: { seed?: TurnEvent | null; message?: string }) => void }) {
   const inputId = useId();
   const [draft, setDraft] = useState("");
-  const turn = welcome.data ?? null;
-
-  function chip(text: string) {
-    if (isDraftChip(text)) onDraftRoutes();
-    else if (/^(keep going|continue)/i.test(text)) onOpen();
-    else onOpen({ seed: turn, message: text });
-  }
+  const left = remainingQuestions(questions, profile);
+  const next = left[0];
+  const total = (questions?.questions ?? []).filter((q) => q.step === 2).length;
+  const turn = next ? questionTurn(next, total ? (total - left.length) / total : 0) : null;
+  const replies = turn ? turn.quick_replies.filter((q) => q !== SKIP) : [];
+  const multi = next?.type === "multi";
 
   return (
     <section aria-labelledby={`${inputId}-title`} className="relative isolate h-full overflow-hidden rounded-[22px] bg-surface-dark p-4 text-on-dark sm:p-5">
       <div aria-hidden="true" className="orb -right-24 -top-24 size-72" style={{ "--orb-color": "var(--color-primary)" } as CSSProperties} />
-      <div className="flex items-center gap-2">
-        <GuideMark size={16} className={cn("text-primary", welcome.isFetching && "dash-thinking")} />
-        <h2 id={`${inputId}-title`} className="text-caption-uppercase uppercase text-on-dark-soft">
-          Your guide
-        </h2>
-      </div>
-      {!known ? (
-        <div className="mt-3 flex flex-col gap-4">
-          <p className="font-serif text-[21px] font-light leading-[1.25] text-on-dark sm:text-[23px]">
-            Hi, I'm your guide. Give me ten minutes, one question at a time, and I'll draw a portrait of what you want from <em className="italic text-[color:var(--color-on-inverse-soft)]">UChicago</em>.
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex items-center gap-2">
+          <GuideMark size={16} className="text-primary" />
+          <h2 id={`${inputId}-title`} className="text-caption-uppercase uppercase text-on-dark-soft">
+            Your guide
+          </h2>
+        </div>
+        {total > 0 && (
+          <p className="text-caption tabular-nums text-on-dark-soft">
+            {total - left.length} of {total} answered
           </p>
-          <div className="flex flex-wrap gap-2">
+        )}
+      </div>
+      {!questions ? (
+        <div aria-hidden="true" className="mt-3 flex flex-col gap-2">
+          <div className="h-7 w-11/12 rounded-md bg-on-dark/10" />
+          <div className="h-7 w-3/4 rounded-md bg-on-dark/10" />
+        </div>
+      ) : !turn || !next ? (
+        <div className="mt-3 flex flex-col gap-4">
+          <p className="font-serif text-[21px] font-light leading-[1.25] text-on-dark sm:text-[23px]">You've answered every question. The planner uses your answers for a first plan; change any of them on the left, or go over them with me.</p>
+          <div>
             <button type="button" onClick={() => onOpen()} className="min-h-11 rounded-pill bg-primary px-5 text-button text-on-primary hover:bg-primary-hover">
-              Start the conversation
+              Go over my answers
             </button>
           </div>
         </div>
       ) : (
         <div className="mt-3 flex flex-col gap-3">
-          {welcome.isLoading || (paused && !turn) ? (
-            <div aria-hidden="true" className="flex flex-col gap-2">
-              <div className="h-7 w-11/12 rounded-md bg-on-dark/10" />
-              <div className="h-7 w-3/4 rounded-md bg-on-dark/10" />
-            </div>
-          ) : turn ? (
-            <p className="dash-guide-text max-h-[13.5rem] overflow-y-auto pr-1 font-serif text-[19px] font-light leading-[1.35] text-on-dark sm:text-[20px]">{turn.text}</p>
-          ) : (
-            <p className="font-serif text-[19px] font-light leading-[1.35] text-on-dark sm:text-[21px]">Welcome back. Want to pick up where we left off, or draft a few routes?</p>
-          )}
-          {turn && turn.courses.length > 0 && (
-            <ul className="flex flex-wrap gap-2">
-              {turn.courses.map((c) => (
-                <li key={c.code}>
-                  <Link to={courseHref(c.code)} className="inline-flex min-h-11 items-center gap-2 rounded-pill border border-on-dark/25 px-3 text-caption text-on-dark hover:bg-on-dark/10">
-                    <span className="uppercase tabular-nums text-on-dark-soft">{c.code}</span> {c.title}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          )}
-          <div className="flex flex-wrap gap-2">
-            {(turn?.quick_replies.length ? turn.quick_replies : ["Keep going", "Draft my routes"]).map((q) => (
+          <p className="font-serif text-[21px] font-light leading-[1.3] text-on-dark sm:text-[23px]">{next.text}</p>
+          {next.help && <p className="text-caption text-on-dark-soft">{next.help}</p>}
+          <div className="flex flex-wrap gap-2" role="group" aria-label="Quick answers">
+            {(multi ? [] : replies).map((q) => (
               <button
                 key={q}
                 type="button"
-                onClick={() => chip(q)}
-                className={cn("min-h-11 rounded-pill border px-4 text-body-sm", isDraftChip(q) ? "border-primary bg-primary text-on-primary hover:bg-primary-hover" : "border-on-dark/25 text-on-dark hover:bg-on-dark/10")}
+                onClick={() => onOpen({ seed: turn, message: q })}
+                className={cn("min-h-11 rounded-pill border border-on-dark/25 px-4 text-body-sm text-on-dark hover:bg-on-dark/10", next.type === "scale" && "w-11 px-0 tabular-nums")}
               >
                 {q}
               </button>
             ))}
+            {multi && (
+              <button type="button" onClick={() => onOpen({ seed: turn })} className="min-h-11 rounded-pill border border-on-dark/25 px-4 text-body-sm text-on-dark hover:bg-on-dark/10">
+                Choose your answers
+              </button>
+            )}
+            <button type="button" onClick={() => onOpen({ seed: turn, message: SKIP })} className="min-h-11 rounded-pill px-4 text-body-sm text-on-dark-soft underline underline-offset-4 hover:bg-on-dark/10 hover:text-on-dark">
+              {SKIP}
+            </button>
           </div>
           <form
             className="flex items-center gap-2 rounded-pill border border-on-dark/20 bg-surface-dark-elevated py-1 pl-4 pr-1 focus-within:border-on-dark/50"
@@ -126,14 +85,14 @@ export function GuideCard({
             }}
           >
             <label htmlFor={inputId} className="sr-only">
-              Tell your guide something
+              Your answer
             </label>
-            <input id={inputId} value={draft} maxLength={2000} onChange={(e) => setDraft(e.target.value)} placeholder="Tell your guide something new…" className="min-h-11 min-w-0 flex-1 bg-transparent text-body-sm text-on-dark outline-none placeholder:text-on-dark-soft" />
+            <input id={inputId} value={draft} maxLength={2000} onChange={(e) => setDraft(e.target.value)} placeholder="Or type your answer…" className="min-h-11 min-w-0 flex-1 bg-transparent text-body-sm text-on-dark outline-none placeholder:text-on-dark-soft" />
             <button type="submit" className="min-h-11 rounded-pill bg-on-dark px-4 text-button text-ink hover:bg-on-dark-soft">
-              Tell
+              Answer
             </button>
           </form>
-          <p className="text-caption text-on-dark-soft">{turn?.fallback ? "Your guide is running without the AI right now." : "Your guide is an AI and can be wrong."}</p>
+          <p className="text-caption text-on-dark-soft">Your guide is an AI and can be wrong. Nothing is saved until you accept it.</p>
         </div>
       )}
     </section>

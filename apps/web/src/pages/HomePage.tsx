@@ -6,6 +6,7 @@ import { AskBar } from "@/features/home/AskBar";
 import { CourseChapel } from "@/features/home/CourseChapel";
 import { SceneSwitch, useScene } from "@/features/home/NightScene";
 import { activePlan } from "@/features/planner/localPlans";
+import { useSession } from "@/lib/session";
 import { cn } from "@/lib/utils";
 
 /** Short questions under the bar; each opens the Ask chatbot with it. */
@@ -25,6 +26,8 @@ export default function HomePage() {
   const uiRef = useRef<HTMLDivElement>(null);
   const [scene, setScene] = useScene();
   const night = scene === "night";
+  // Issue #16: a new student signs up first (the registration form sets up the plan's basics).
+  const { data: session } = useSession();
   const [hasPlan] = useState(() => {
     try {
       return activePlan() !== null;
@@ -83,7 +86,7 @@ export default function HomePage() {
           </div>
           <div className="flex flex-wrap items-center gap-3">
             <Button asChild>
-              <Link to="/onboarding">Start planning</Link>
+              <Link to={session ? "/plan" : "/signup"}>Start planning</Link>
             </Button>
             <Button asChild variant="outline" className="bg-canvas">
               <Link to="/feed">Explore the feed</Link>

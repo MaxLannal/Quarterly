@@ -64,14 +64,12 @@ class NotesAnswer(BaseModel):
 
 _PROFILE_FIELDS = (
     ("class_year", "Class year"),
-    ("interests", "Interests"),
     ("research_areas", "Research areas"),
-    ("future_domains", "Future domains"),
-    ("humanities_goal", "Humanities goal"),
-    ("humanities_topics", "Humanities topics"),
-    ("career_paths", "Career paths"),
-    ("career_plans", "Career plans"),
-    ("workload", "Workload preference"),
+    ("post_grad_plan", "After graduation"),
+    ("pace", "Graduation pace"),
+    ("courses_per_term", "Courses per quarter"),
+    ("class_formats", "Class formats"),
+    ("theory_vs_application", "Theory (1) or application (10)"),
 )
 
 

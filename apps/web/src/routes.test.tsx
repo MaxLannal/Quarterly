@@ -4,7 +4,7 @@ import { renderRoute } from "./test-utils";
 const CASES: [string, string][] = [
   ["/", "The Best of UChicago, within your reach."],
   ["/plan", "Planner"],
-  ["/onboarding", "Planner setup"],
+  ["/onboarding", "Tell Quarterly about you."],
   ["/courses", "Course search"],
   ["/courses/TEST%2010000", "TEST 10000 · Fake Introduction I"],
   ["/programs", "Program explorer"],
@@ -25,7 +25,7 @@ describe("routes", () => {
 describe("top nav", () => {
   it.each([
     ["/plans", "Plan"],
-    ["/onboarding", "Plan"],
+    ["/onboarding", "Dashboard"],
     ["/courses/TEST%2010000", "Catalog"],
     ["/programs", "Catalog"], // courses and programs share one item (FEEDBACK 2026-11-16)
     ["/courses/TEST%2010000/i/fake-instructor-a", "Forum"],

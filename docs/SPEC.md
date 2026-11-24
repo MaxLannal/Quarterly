@@ -72,12 +72,12 @@ Every journey ends in the same place: a plan on the 4-year grid with a green ver
 
 **A. Incoming first-year with no plan**
 
-1. Lands on the home page, clicks **Start planning** (no login).
-2. Onboarding asks: entry quarter, AP/placement results, 1–3 interest areas, and career goals as chips ("lighter first year", "pre-med", "study abroad").
-3. Planner opens with the Core pre-placed as requirement slots ("HUMA sequence, quarter 1–3") instead of courses.
+1. Lands on the home page, clicks **Start planning**, and creates an account (Issue #16: planning starts with sign-up).
+2. The registration form asks the class year, the expected graduation quarter and the intended programs; credits go in the dashboard's Academic background (or on the form for a transfer or later-year student). The dashboard agent's questions (goals, scheduling, learning preferences) can wait.
+3. The planner offers "set up a plan from your information": it opens with the student record's programs and the Core pre-placed as requirement slots ("HUMA sequence, quarter 1–3") instead of courses.
 4. Clicks **Generate plan** → popup with sliders and toggles → the agent returns 2–3 variants ("Exploratory CS", "Econ-leaning", "Balanced"), each verified, each with a one-line rationale per quarter.
 5. Accepts one, swaps a course by drag-and-drop; the verifier re-runs in under a second.
-6. Creates an account to save it.
+6. The plan is saved to the account.
 
 **B. Transfer student targeting CS BS + Math BS and Bx/MS**
 
@@ -173,11 +173,11 @@ Mockups of six key screens, with sample data, are on the design canvas: [QuadPla
 | --- | --- | --- | --- |
 | `/` | Home | No | Title "The Best of UChicago, *within your reach.*"; the question bar (an agent harness: typed text becomes a question for `/ask`; an exact course code opens the course; matching courses, a catalog search and "ask it in the Forum" are offered as the student types); "Start planning" and "Explore the feed"; behind them Rockefeller Chapel fills the first screen, drawn with the titles of real catalog courses (`/home/course-chapel.json`, built by `tools/course-chapel/build.py`); in maroon, black and white; letters have depth and follow the pointer, the sun moves over the carved stone, clouds and a soft glint drift across it on their own, a lens lifts and magnifies the letters under the pointer, the title under the mouse shows its code and opens its course page; still under reduced motion or without a GPU |
 | `/ask` | Ask Quarterly | No | The campus chatbot (`POST /agents/ask`): conversations kept in the browser, a live trace of the tools it uses, cited answers with course links and follow-up questions; a Gothic window drawn with course titles behind the title (docs/BEST-OF-UCHICAGO-PLAN.md) |
-| `/me` | Your dashboard | Yes | Class year, email (read from the account), interests, research areas, humanities goal and topics, career, future domains; the interviewing guide (`POST /agents/interview`) that proposes what to keep; what's new; **Routes** at the bottom (AI drafts via `POST /agents/routes`, kept by the student; choose one or keep all open) |
+| `/me` | Your dashboard | Yes | The student record (Issue #14, #16): a Profile card (name, class year, email read from the account, intended programs, program progress, "Complete your profile"); the General Information in four groups (Academic background, Goals, Scheduling, Learning preferences), each answer editable in place or through the dashboard agent (`POST /agents/interview`), which asks the step-2 questions one at a time with their options as buttons and proposes each answer for the student to accept; "Your plan", a read-only summary of the primary plan with a link to the planner; "Export my information (.md)" (`GET /me/profile/export.md`) |
 | `/feed` | The feed | No (personal when logged in) | Course spotlights with generated illustrations and related books, student comments, word clouds, programs and open questions; focus categories; For you / Explore / Following; floating words; AI notes (`POST /agents/feed-notes`) |
 | `/forum`, `/forum/new`, `/forum/t/{id}` | The Commons (Forum) | Read: no; write: yes | Course questions answered first by the AI (`POST /commons/threads/{id}/bot`), then by students: nested replies, votes, accept, edit, delete, report, follow, typing presence, a markdown composer with course mentions and drafts. Course x instructor reviews stay at `/instructors` |
 | (every page) | The companion | No (updates need login) | A floating orb opening a side panel: a chat that knows the page and, logged in, the student's profile; "For you" lists new forum posts, comments and reviews (`GET /me/updates`) |
-| `/onboarding` | Planner setup | No | Entry term, credits, programs, goals |
+| `/onboarding` | (redirect) | No | Redirects to `/me`: the registration form asks the entry term, credits and programs; the dashboard agent asks the scheduling questions |
 | `/plan` | Planner | No (local) / Yes (to save) | 4-year grid, requirements, verifier, generate, chat |
 | `/plans` | My plans | Yes | List, rename, duplicate, set primary |
 | `/plans/compare` | Compare plans | Yes | Side-by-side diff of two plans with metrics |
@@ -240,11 +240,24 @@ Programs grouped by type (major, minor, Bx/MS and joint degrees, specializations
 
 ### Onboarding (`/onboarding`)
 
-Five short steps: (1) entry term and status (first-year, transfer); (2) AP, placement and transfer credits, skippable; (3) programs, or "undecided" plus interest tags; (4) goals: career-wide chips, then drag chips onto quarters of a mini timeline; (5) review, with "Generate a starting plan" checked by default.
+Replaced by the two-step registration (Issue #16): `/onboarding` redirects to `/me`. Its entry term, credits and programs moved into the registration form; its goals became the dashboard agent's scheduling questions (quarters away, courses per quarter).
+
+### The General Information and `student.md` (Issue #14)
+
+The General Information questions are written once, in `data/profile/questions.yaml`: id, group, field, short label, text, type (single, multi, scale, list, table), options and step (1 = the registration form, 2 = the dashboard agent). The registration form, the dashboard and the dashboard agent read them from `GET /profile/questions`. The answers form the student record: `student_profile` plus `student_credit` and `student_course` (see Data model). There are no freeform fields, no resume and no GPA; each taken course keeps an optional grade.
+
+| Group | Questions |
+| --- | --- |
+| Academic background | Class year; expected graduation term; intended programs; and, for a student who transferred or is not in the first year, the entry term, the entry year level, credits and taken courses |
+| Goals | Plans after graduation (industry, graduate school, medical or law school, undecided); graduation pace (early, on time, flexible); interest in research and, if yes, research areas |
+| Scheduling | Courses per quarter; quarters away (study abroad, internship, leave) |
+| Learning preferences | Class formats (seminar, lecture, lab, online); theory or application (1 to 10) |
+
+`student.md` is generated from the record (`render_student_md()`): a "General Information" section with the four groups as headings, in this order, one line per question with its short label, "Not answered" for an empty answer; then, in the export and for the planner agent, "Working information": the Markdown notes the planner chat keeps per student (a line that applies to one plan only starts with the plan name; Issue #17 writes them). It never contains the email or the username. The agents read it instead of the old profile summary; the student downloads it from the dashboard (`GET /me/profile/export.md`) and it is part of `/account/export`.
 
 ### Sign-up and login
 
-Sign-up has three steps: enter a `@uchicago.edu` address → enter the 6-digit code → choose a username and password (passkey optional later). Login is username or email plus password; \"Forgot password\" sends a reset code by email. Nothing on either page asks for a name.
+Sign-up has four steps: enter a `@uchicago.edu` address → enter the 6-digit code → choose a username and password (passkey optional later) → "About you", the registration form: the step-1 General Information questions (class year, expected graduation term, intended programs) and the checkbox "I transferred, or I am not in my first year.", which adds the entry term, the entry year level, credits and taken courses. Then the student either answers the dashboard agent's questions now or skips them (they can start later from the dashboard with "Complete your profile"), and goes to the page they came from, or `/plan`. Login is username or email plus password; \"Forgot password\" sends a reset code by email. Nothing on either page asks for a name.
 
 ### Curator console (`/admin`)
 
@@ -336,6 +349,9 @@ The model has nine groups of tables; the catalog, schedule and program groups ar
 | Table | Key fields | Notes |
 | --- | --- | --- |
 | `account` | `id`, `username`, `email` (unique, lowercase), `email_verified_day`, `password_hash` (argon2id) or passkey credential, `role` (user, curator, admin), `status`, `created_day` | Email stored per decision 5; never logged or copied to other tables |
+| `student_profile` | `account_id`, the General Information answers (`class_year`, `expected_graduation_term`, `intended_programs`, `entry_term`, `entry_year_level`, `post_grad_plan`, `pace`, `wants_research`, `research_areas`, `courses_per_term`, `terms_away`, `class_formats`, `theory_vs_application`), `working_notes`, `interview` (the dashboard agent's memory), `feed_categories`, `follows`, `updates_seen` | The student record (Issue #14). NULL = not answered. Never holds the email |
+| `student_credit` | `account_id`, `kind` (AP, placement, transfer), `label`, `maps_to_course_id`, `units` | The record's credits; every saved plan reads them (they no longer belong to one plan) |
+| `student_course` | `account_id`, `course_id`, `term_id`, `status` (completed, in_progress), `grade` | Taken courses; every saved plan shows them as completed or in-progress items (id `t<id>`); saving a plan writes them back; a new plan never overwrites a record that already has some. The planner shows the record's credits and taken courses when it opens and, unless the student changed them in the planner, saves the record's current ones (so an old copy never undoes a change made on the dashboard); a save never removes taken courses from before the plan's first quarter |
 
 ## Data ingestion
 

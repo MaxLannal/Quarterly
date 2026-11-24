@@ -1,6 +1,6 @@
-"""The personal dashboard (`/me`): the student's profile, the interviewing guide's turns and the
-routes (docs/BEST-OF-UCHICAGO-PLAN.md). The email shown on the dashboard is read from
-`account.email` and never stored in `student_profile` (decision 5)."""
+"""The personal dashboard (`/me`): the student record (Issue #14), the dashboard agent's turns
+(Issue #16) and the routes. The email shown on the dashboard is read from `account.email` and
+never stored in `student_profile` (decision 5)."""
 
 from __future__ import annotations
 
@@ -14,29 +14,18 @@ from pydantic import BaseModel, Field, RootModel, field_validator
 from api.forum.scrub import scrub
 from api.schemas.agents import ErrorEvent
 
-HumanitiesGoal = Literal["pass", "balance", "enjoy", "deep"]
-Workload = Literal["light", "balanced", "intense"]
-#: The interview's topics, in the order the guide covers them.
-Topic = Literal[
-    "class_year",
-    "interests",
-    "humanities",
-    "research",
-    "career",
-    "future",
-    "constraints",
-    "wrapup",
-]
-TOPICS: tuple[Topic, ...] = (
-    "class_year",
-    "interests",
-    "humanities",
-    "research",
-    "career",
-    "future",
-    "constraints",
-    "wrapup",
-)
+PostGradPlan = Literal["industry", "grad_school", "med_law", "undecided"]
+Pace = Literal["early", "on_time", "flexible"]
+ClassFormat = Literal["seminar", "lecture", "lab", "online"]
+AwayKind = Literal["abroad", "internship", "leave"]
+CreditKind = Literal["AP", "placement", "transfer"]
+TakenStatus = Literal["completed", "in_progress"]
+#: A term id (`2026-AU`; planner_core.terms).
+TermId = Annotated[str, Field(pattern=r"^\d{4}-(AU|WI|SP|SU)$")]
+#: The dashboard agent's topics are the ids of the step-2 questions in
+#: data/profile/questions.yaml, then "wrapup".
+Topic = Annotated[str, Field(max_length=40, pattern=r"^[a-z_]+$")]
+WRAPUP = "wrapup"
 
 MAX_ITEMS = 24
 MAX_ITEM_CHARS = 60
@@ -45,6 +34,10 @@ MAX_FEED_CATEGORIES = 16
 MAX_TURNS = 24
 MAX_TURN_CHARS = 2000
 MAX_ROUTES = 12
+MAX_CREDITS = 40
+MAX_TAKEN = 80
+MAX_TERMS_AWAY = 12
+MAX_WORKING_NOTES_CHARS = 20_000
 
 
 def squash(text: str) -> str:
@@ -96,33 +89,53 @@ class ProgramRef(BaseModel):
     name: str
 
 
-class Portrait(BaseModel):
-    """The guide's portrait of the student, kept by the student (written by an AI)."""
+class TermAway(BaseModel):
+    """A quarter the student plans to spend away."""
 
-    headline: str = Field(default="", max_length=90)
-    summary: str = Field(default="", max_length=400)
-    themes: list[str] = Field(default=[], max_length=6)
+    term: TermId
+    kind: AwayKind
 
-    @field_validator("headline", "summary", mode="before")
+
+class RecordCredit(BaseModel):
+    """An AP, placement or transfer credit (planner_core `Credit`)."""
+
+    kind: CreditKind
+    label: str = Field(min_length=1, max_length=120)
+    #: The course code it counts as, if any (checked against the catalog).
+    maps_to: str | None = Field(default=None, max_length=16)
+    units: int = Field(default=0, ge=0, le=1000)
+
+    @field_validator("label", mode="before")
     @classmethod
-    def _text(cls, value: object) -> object:
+    def _label(cls, value: object) -> object:
         return squash(value) if isinstance(value, str) else value
 
-    @field_validator("themes")
-    @classmethod
-    def _themes(cls, value: list[str]) -> list[str]:
-        return clean_items(value, max_items=6)
+
+class TakenCourse(BaseModel):
+    """A UChicago course the student took or is taking."""
+
+    course: str = Field(min_length=1, max_length=16)
+    term: TermId
+    status: TakenStatus = "completed"
+    grade: str | None = Field(default=None, max_length=4)
+
+
+class TakenCourseOut(TakenCourse):
+    #: The course title, filled in by the server from the catalog.
+    title: str = ""
 
 
 class InterviewTurn(BaseModel):
     role: Literal["guide", "student"]
     text: str = Field(max_length=MAX_TURN_CHARS)
-    #: A guide turn's topic, so a resumed interview knows what the student was answering.
+    #: A guide turn's topic (a question id), so a resumed conversation knows what the student
+    #: was answering.
     topic: Topic | None = None
 
 
 class InterviewMemory(BaseModel):
-    """What the guide remembers between visits: topics covered and the last turns."""
+    """What the dashboard agent remembers between visits: the questions it covered (answered
+    or skipped) and the last turns."""
 
     covered: list[Topic] = []
     turns: list[InterviewTurn] = []
@@ -134,30 +147,42 @@ class Follows(BaseModel):
 
 
 class ProfileOut(BaseModel):
+    """The student record (Issue #14) as the dashboard shows it. `null` = not answered."""
+
     username: str
-    #: Read from the account (never copied into the profile).
+    #: Read from the account (never copied into the student record).
     email: str
     member_since: dt.date
+    # Academic background.
     class_year: int | None = None
+    expected_graduation_term: str | None = None
     intended_programs: list[str] = []
     #: The intended programs with their names (programs no longer in the catalog are left out).
     programs: list[ProgramRef] = []
-    interests: list[str] = []
+    entry_term: str | None = None
+    entry_year_level: int | None = None
+    credits: list[RecordCredit] = []
+    taken_courses: list[TakenCourseOut] = []
+    # Goals.
+    post_grad_plan: PostGradPlan | None = None
+    pace: Pace | None = None
+    wants_research: bool | None = None
     research_areas: list[str] = []
-    humanities_goal: HumanitiesGoal | None = None
-    humanities_topics: list[str] = []
-    humanities_note: str | None = None
-    career_plans: str | None = None
-    career_paths: list[str] = []
-    future_domains: list[str] = []
-    constraints: list[str] = []
-    workload: Workload | None = None
+    # Scheduling.
+    courses_per_term: int | None = None
+    terms_away: list[TermAway] | None = None
+    # Learning preferences.
+    class_formats: list[ClassFormat] | None = None
+    theory_vs_application: int | None = None
+    #: The ids of the General Information questions that have an answer.
+    answered: list[str] = []
+    #: True when the planner chat left working information (Issue #17).
+    has_working_notes: bool = False
     feed_categories: list[str] = []
-    portrait: Portrait = Portrait()
     interview: InterviewMemory = InterviewMemory()
     follows: Follows = Follows()
-    #: Share of the main sections filled in (class year, interests, research, humanities,
-    #: career, future domains, constraints or workload), 0..1.
+    #: Share of the General Information questions answered (the transfer-only questions are
+    #: left out), 0..1.
     completeness: float = 0.0
     updated_day: dt.date
 
@@ -169,7 +194,7 @@ class InterviewMemoryPatch(BaseModel):
 
     @field_validator("covered")
     @classmethod
-    def _covered(cls, value: list[Topic] | None) -> list[Topic] | None:
+    def _covered(cls, value: list[str] | None) -> list[str] | None:
         return None if value is None else list(dict.fromkeys(value))
 
     @field_validator("turns")
@@ -184,34 +209,32 @@ class InterviewMemoryPatch(BaseModel):
 
 
 class ProfilePatch(BaseModel):
-    """A partial update: only the fields sent are changed (`null` clears a field). The feed,
-    the Commons follow button and the companion also send these."""
+    """A partial update: only the fields sent are changed (`null` clears a field). `credits`
+    and `taken_courses` replace the whole list. The registration form, the dashboard, the
+    dashboard agent's accepted answers, the feed and the Commons follow button send these."""
 
     class_year: int | None = Field(default=None, ge=2020, le=2040)
+    expected_graduation_term: TermId | None = None
     intended_programs: Items | None = None
-    interests: Items | None = None
+    entry_term: TermId | None = None
+    entry_year_level: int | None = Field(default=None, ge=1, le=4)
+    credits: list[RecordCredit] | None = Field(default=None, max_length=MAX_CREDITS)
+    taken_courses: list[TakenCourse] | None = Field(default=None, max_length=MAX_TAKEN)
+    post_grad_plan: PostGradPlan | None = None
+    pace: Pace | None = None
+    wants_research: bool | None = None
     research_areas: Items | None = None
-    humanities_goal: HumanitiesGoal | None = None
-    humanities_topics: Items | None = None
-    humanities_note: str | None = Field(default=None, max_length=MAX_TEXT_CHARS * 2)
-    career_plans: str | None = Field(default=None, max_length=MAX_TEXT_CHARS * 2)
-    career_paths: Items | None = None
-    future_domains: Items | None = None
-    constraints: Items | None = None
-    workload: Workload | None = None
+    courses_per_term: int | None = Field(default=None, ge=1, le=6)
+    terms_away: list[TermAway] | None = Field(default=None, max_length=MAX_TERMS_AWAY)
+    class_formats: list[ClassFormat] | None = Field(default=None, max_length=4)
+    theory_vs_application: int | None = Field(default=None, ge=1, le=10)
+    #: The planner chat's working information (Markdown); `null` deletes it.
+    working_notes: str | None = Field(default=None, max_length=MAX_WORKING_NOTES_CHARS)
     feed_categories: Items | None = None
-    portrait: Portrait | None = None
     interview: InterviewMemoryPatch | None = None
     follows: Follows | None = None
 
-    @field_validator(
-        "interests",
-        "research_areas",
-        "humanities_topics",
-        "career_paths",
-        "future_domains",
-        "constraints",
-    )
+    @field_validator("research_areas")
     @classmethod
     def _items(cls, value: list[str] | None) -> list[str] | None:
         return None if value is None else clean_items(value)
@@ -221,15 +244,30 @@ class ProfilePatch(BaseModel):
     def _programs(cls, value: list[str] | None) -> list[str] | None:
         return None if value is None else clean_items(value, max_items=8, max_chars=64)
 
+    @field_validator("class_formats")
+    @classmethod
+    def _formats(cls, value: list[str] | None) -> list[str] | None:
+        return None if value is None else list(dict.fromkeys(value))
+
+    @field_validator("terms_away")
+    @classmethod
+    def _away(cls, value: list[TermAway] | None) -> list[TermAway] | None:
+        if value is None:
+            return None
+        seen: dict[str, TermAway] = {}
+        for item in value:
+            seen.setdefault(item.term, item)
+        return list(seen.values())
+
     @field_validator("feed_categories")
     @classmethod
     def _categories(cls, value: list[str] | None) -> list[str] | None:
         return None if value is None else clean_items(value, max_items=MAX_FEED_CATEGORIES)
 
-    @field_validator("humanities_note", "career_plans")
+    @field_validator("working_notes")
     @classmethod
-    def _text(cls, value: str | None) -> str | None:
-        return clean_text(value)
+    def _notes(cls, value: str | None) -> str | None:
+        return clean_text(value, MAX_WORKING_NOTES_CHARS)
 
     @field_validator("follows")
     @classmethod
@@ -243,6 +281,8 @@ class ProfilePatch(BaseModel):
 # ------------------------------------------------------------------------------ routes
 
 Quarter = Literal["AU", "WI", "SP", "SU"]
+#: A route's estimated load (routes only; the student record has `courses_per_term`).
+Workload = Literal["light", "balanced", "intense"]
 CourseRole = Literal["core", "major", "minor", "elective", "humanities", "research"]
 RouteKind = Literal["major", "double_major", "major_minor", "exploratory", "custom"]
 RouteStatus = Literal["open", "chosen", "archived"]
@@ -382,14 +422,21 @@ class DashboardStepEvent(BaseModel):
 
 
 class InterviewTurnEvent(BaseModel):
-    """The guide's next message. `proposed` holds only facts the student said in this
-    conversation (list fields already merged with the profile); the browser saves what the
-    student keeps with PATCH /me/profile."""
+    """The dashboard agent's next message (Issue #16). `topic` is the id of the question it
+    asks (data/profile/questions.yaml) or "wrapup". `quick_replies` are that question's option
+    labels, unchanged, then "Skip". `proposed` holds only the answer the student gave to the
+    previous question, mapped to its field (list fields already merged with the record); the
+    browser saves it with PATCH /me/profile once the student accepts it."""
 
     type: Literal["turn"] = "turn"
     text: str
     quick_replies: list[str] = []
     topic: Topic
+    #: The question whose answer `proposed` holds (None when the turn proposes nothing).
+    answered: Topic | None = None
+    #: True when the student's last message did not map to an answer and the question is
+    #: asked again.
+    retry: bool = False
     proposed: ProfilePatch = ProfilePatch()
     progress: float = 0.0
     done: bool = False

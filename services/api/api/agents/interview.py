@@ -1,17 +1,20 @@
-"""A6 the interviewing guide (`POST /agents/interview`, docs/BEST-OF-UCHICAGO-PLAN.md).
+"""A6 the dashboard agent (`POST /agents/interview`, Issue #16): it asks the step-2 General
+Information questions of data/profile/questions.yaml, one per turn.
 
-One turn: the student's profile (as data), the conversation so far and their newest answer go to
-the model with two catalog tools; each tool call streams as a `step`; the model ends with
-`submit_turn` {text, quick_replies, topic, facts, portrait, done}. The server then keeps only the
-facts the student actually said in this conversation (each list item must share a word with the
-student's own messages), merges list facts with the profile, checks that every course the text
-names exists, and computes the progress itself. Nothing is written: the browser saves what the
-student keeps with PATCH /me/profile.
+The server decides everything that matters: which questions are left (the first step-2 question
+not yet covered whose `when` applies), what the student's newest message answers (`read_reply`,
+a deterministic mapper from the reply to the question's field), the quick replies (the
+question's option labels exactly as written, then "Skip") and the progress. The model only
+writes the question in its own words, personal to the student's record (`student.md`), may pick
+the order among the remaining questions, and maps typed answers the rules cannot read into
+`facts`; the server checks those against the question (options, ranges) and the student's own
+words (`proposed_patch`). Nothing is written: the browser saves what the student keeps with
+PATCH /me/profile.
 
-Without a model (not configured, failed, over budget, over the daily limit) a deterministic guide
-asks the same questions in the same order, extracts facts from the answer with simple rules and
-writes a template portrait at the end. The `welcome_back` greeting is cached for a few hours per
-profile, so returning to the dashboard does not call the model each time.
+Without a model (not configured, failed, over budget, over the daily limit) the same questions
+are asked with the file's own text and the same mapper reads the answers. The `welcome_back`
+greeting is cached for a few hours per record, so returning to the dashboard does not call the
+model each time.
 """
 
 from __future__ import annotations
@@ -23,323 +26,389 @@ import logging
 import re
 from collections.abc import Iterator, Sequence
 from dataclasses import dataclass, field
-from typing import Any, cast, get_args
+from typing import Any, Literal
 
 from llm_gateway.api import AgentError, AgentResult, AgentSpec, Budget, Message, SubmitTool
-from pydantic import BaseModel, Field, ValidationError, field_validator
+from pydantic import BaseModel, Field, ValidationError
 from sqlalchemy.orm import Session
 
-from api.agents.campus_tools import CampusTools, label
-from api.agents.live import LiveStep, course_codes_in, run_live
+from api.agents.live import COURSE_CODE, known_courses, run_live
 from api.agents.prompts import load_prompt
 from api.agents.runtime import RunLog
 from api.agents.tools import untrusted
 from api.auth.store import Store
 from api.db import models as m
 from api.forum.scrub import scrub
-from api.profile_data import memory_of, portrait_of, profile_brief, sections_filled
+from api.profile_data import QUARTER_NAMES, answered_ids, memory_of, render_student_md
+from api.profile_data import terms_away_of as stored_terms_away
+from api.profile_questions import Question, agent_questions, question_set
 from api.schemas.profile import (
     MAX_ITEMS,
-    TOPICS,
+    MAX_TERMS_AWAY,
+    WRAPUP,
     CourseMention,
-    DashboardStepEvent,
-    HumanitiesGoal,
     InterviewRequest,
     InterviewTurn,
     InterviewTurnEvent,
-    Portrait,
     ProfileDoneEvent,
     ProfilePatch,
-    Topic,
-    Workload,
+    TermAway,
 )
 
 logger = logging.getLogger("api.agents")
 
 TASK = "a6_interview"
 PROMPT = "a6_interview"
-BUDGET = Budget(tool_calls=4, tokens=90_000, seconds=45)
-TOOLS = ("search_courses", "get_course")
+#: No tools: the agent reads the student's record and words (untrusted) and holds nothing.
+BUDGET = Budget(tool_calls=0, tokens=40_000, seconds=30)
 HISTORY_TURNS = 16
-MAX_WORDS = 160
+MAX_WORDS = 100
 WELCOME_TTL_S = 6 * 3600
 
-#: The topics with a section on the dashboard (wrap-up excluded), in interview order.
-MAIN: tuple[Topic, ...] = TOPICS[:-1]
-SECTION_OF: dict[str, Topic] = {
-    "class_year": "class_year",
-    "interests": "interests",
-    "humanities": "humanities",
-    "research": "research",
-    "career": "career",
-    "future": "future",
-    "constraints": "constraints",
-}
-TOPIC_LABELS: dict[Topic, str] = {
-    "class_year": "your class year",
-    "interests": "your interests",
-    "humanities": "the humanities",
-    "research": "research",
-    "career": "your career plans",
-    "future": "where you're heading",
-    "constraints": "workload and constraints",
-    "wrapup": "your portrait",
-}
-GOALS: tuple[str, ...] = get_args(HumanitiesGoal)
-WORKLOADS: tuple[str, ...] = get_args(Workload)
-
+SKIP = "Skip"
+NONE_REPLY = "None"
 NO_AI_NOTE = "Your guide is running without the AI right now; it asks the same questions."
 
 
-# ------------------------------------------------------------------------------ payloads
+# ------------------------------------------------------------------------------ questions
 
 
-def _clip(value: object, n: int) -> object:
-    return " ".join(value.split())[:n] if isinstance(value, str) else value
+def question_of(topic: str | None) -> Question | None:
+    """The step-2 question with this id (None for "wrapup", unknown or step-1 ids)."""
+    return next((q for q in agent_questions() if q.id == topic), None)
 
 
-def _clip_list(value: object, n: int, size: int) -> object:
-    if not isinstance(value, list):
-        return value
-    out = [" ".join(str(v).split())[:size] for v in value if str(v).strip()]
-    return out[:n]
+def quick_replies(question: Question | None) -> list[str]:
+    """The answers the student can tap: the option labels exactly as in the question file, in
+    order (the numbers for a scale, "None" for the quarters away, nothing for a free list),
+    then "Skip". The wrap-up has none."""
+    if question is None:
+        return []
+    if question.type in ("single", "multi"):
+        chips = [o.label for o in question.options]
+    elif question.type == "scale" and question.min is not None and question.max is not None:
+        chips = [str(n) for n in range(question.min, question.max + 1)]
+    elif question.field == "terms_away":
+        chips = [NONE_REPLY]
+    else:
+        chips = []
+    return [*chips, SKIP]
 
 
-class Facts(BaseModel):
-    """What the guide noted from the student's messages (lists: new items only)."""
-
-    class_year: int | None = None
-    interests: list[str] = []
-    research_areas: list[str] = []
-    humanities_goal: HumanitiesGoal | None = None
-    humanities_topics: list[str] = []
-    humanities_note: str | None = None
-    career_plans: str | None = None
-    career_paths: list[str] = []
-    future_domains: list[str] = []
-    constraints: list[str] = []
-    workload: Workload | None = None
-
-    @field_validator(
-        "interests",
-        "research_areas",
-        "humanities_topics",
-        "career_paths",
-        "future_domains",
-        "constraints",
-        mode="before",
-    )
-    @classmethod
-    def _lists(cls, value: object) -> object:
-        return _clip_list(value, 12, 60)
-
-    @field_validator("humanities_note", "career_plans", mode="before")
-    @classmethod
-    def _texts(cls, value: object) -> object:
-        return _clip(value, 600) or None
-
-    @field_validator("class_year", mode="before")
-    @classmethod
-    def _year(cls, value: object) -> object:
-        if isinstance(value, int | float) and not 2020 <= int(value) <= 2040:
-            return None
-        return value
-
-    @field_validator("humanities_goal", mode="before")
-    @classmethod
-    def _goal(cls, value: object) -> object:
-        return value if value in GOALS else None
-
-    @field_validator("workload", mode="before")
-    @classmethod
-    def _workload(cls, value: object) -> object:
-        return value if value in WORKLOADS else None
+def ask_text(question: Question) -> str:
+    """The question as the file writes it, with its help line."""
+    return f"{question.text} {question.help}" if question.help else question.text
 
 
-class PortraitDraft(BaseModel):
-    headline: str = ""
-    summary: str = ""
-    themes: list[str] = []
-
-    @field_validator("headline", mode="before")
-    @classmethod
-    def _headline(cls, value: object) -> object:
-        return _clip(value, 90)
-
-    @field_validator("summary", mode="before")
-    @classmethod
-    def _summary(cls, value: object) -> object:
-        return _clip(value, 400)
-
-    @field_validator("themes", mode="before")
-    @classmethod
-    def _themes(cls, value: object) -> object:
-        return _clip_list(value, 6, 40)
+# ------------------------------------------------------------------------------ the mapper
 
 
-class TurnPayload(BaseModel):
-    text: str = Field(min_length=1, max_length=2000)
-    quick_replies: list[str] = []
-    topic: Topic
-    facts: Facts = Facts()
-    portrait: PortraitDraft | None = None
-    done: bool = False
+@dataclass(frozen=True)
+class Reading:
+    """What a reply says about a question: an `answer` (`value`, in the field's type), a
+    `skip`, or `unclear` (ask again). `support` holds the values the student's words name
+    (option values, numbers or term ids); the model's reading must agree with them."""
 
-    @field_validator("quick_replies", mode="before")
-    @classmethod
-    def _chips(cls, value: object) -> object:
-        return _clip_list(value, 6, 48)
+    kind: Literal["answer", "skip", "unclear"]
+    value: Any = None
+    support: tuple[Any, ...] = ()
 
 
-def _obj(properties: dict[str, Any]) -> dict[str, Any]:
-    return {
-        "type": "object",
-        "properties": properties,
-        "required": list(properties),
-        "additionalProperties": False,
-    }
+UNCLEAR = Reading("unclear")
 
 
-def _nullable_enum(*values: str) -> dict[str, Any]:
-    return {"anyOf": [{"type": "string", "enum": list(values)}, {"type": "null"}]}
+def _norm(text: str) -> str:
+    text = text.replace("\u2019", "'").replace("\u2018", "'").casefold()
+    return " ".join(text.split()).strip(' .!?,;:"')
 
 
-_LIST = {"type": "array", "items": {"type": "string"}}
-_NULL_STR = {"type": ["string", "null"]}
-TURN_SCHEMA = _obj(
-    {
-        "text": {"type": "string", "description": "Your message: under 120 words, one question."},
-        "quick_replies": {
-            "type": "array",
-            "items": {"type": "string"},
-            "description": "Two to six short answers the student can tap (2-5 words each).",
-        },
-        "topic": {"type": "string", "enum": list(TOPICS)},
-        "facts": _obj(
-            {
-                "class_year": {"type": ["integer", "null"]},
-                "interests": _LIST,
-                "research_areas": _LIST,
-                "humanities_goal": _nullable_enum(*GOALS),
-                "humanities_topics": _LIST,
-                "humanities_note": _NULL_STR,
-                "career_plans": _NULL_STR,
-                "career_paths": _LIST,
-                "future_domains": _LIST,
-                "constraints": _LIST,
-                "workload": _nullable_enum(*WORKLOADS),
-            }
+def _find(text: str, phrase: str) -> list[re.Match[str]]:
+    return list(re.finditer(rf"(?<![a-z0-9']){re.escape(phrase)}(?![a-z0-9'])", text))
+
+
+_SKIP = re.compile(
+    r"^(?:pass|next|later|maybe later|move on|next question|no comment|rather not say|"
+    r"i'?d rather not(?: say)?|prefer not to say)$|\bskip\b"
+)
+_UNSURE = re.compile(
+    r"^(?:not sure(?: yet)?|unsure|idk|i don'?t know(?: yet)?|dunno|no idea|no clue|maybe|"
+    r"hard to say|it depends|depends)$"
+)
+#: Words that name each option of a single or multiple choice, besides its label and value.
+SYNONYMS: dict[str, dict[Any, tuple[str, ...]]] = {
+    "post_grad_plan": {
+        "industry": (
+            *("industry", "work", "working", "job", "a job", "company", "tech", "finance"),
+            *("consulting", "startup", "business", "corporate"),
         ),
-        "portrait": {
-            "anyOf": [
-                _obj(
-                    {
-                        "headline": {"type": "string"},
-                        "summary": {"type": "string"},
-                        "themes": _LIST,
-                    }
-                ),
-                {"type": "null"},
-            ]
-        },
-        "done": {"type": "boolean"},
-    }
+        "grad_school": (
+            *("grad school", "graduate school", "grad", "phd", "ph.d", "doctorate"),
+            *("masters", "master's", "academia", "professor"),
+        ),
+        "med_law": (
+            *("med school", "medical school", "law school", "medicine", "medical", "law"),
+            *("doctor", "lawyer", "md", "jd", "premed", "pre-med", "prelaw", "pre-law"),
+        ),
+        "undecided": (
+            *("undecided", "not sure", "unsure", "don't know", "dont know", "idk"),
+            *("no idea", "no clue", "not decided", "haven't decided"),
+        ),
+    },
+    "pace": {
+        "early": (
+            *("early", "earlier", "fast", "faster", "quickly", "asap", "as soon as possible"),
+            *("three years", "3 years", "accelerate", "ahead of time"),
+        ),
+        "on_time": (
+            *("on time", "on-time", "four years", "4 years", "normal", "standard"),
+            *("regular", "usual", "the usual"),
+        ),
+        "flexible": (
+            *("flexible", "no rush", "doesn't matter", "don't mind", "either way"),
+            *("whatever", "take my time", "slow", "slower"),
+        ),
+    },
+    "class_formats": {
+        "seminar": ("seminar", "seminars", "discussion", "discussions", "small classes"),
+        "lecture": ("lecture", "lectures"),
+        "lab": ("lab", "labs", "laboratory", "laboratories", "hands-on"),
+        "online": ("online", "remote", "virtual"),
+    },
+}
+_YES = re.compile(
+    r"\b(?:yes|yeah|yep|yup|ya|sure|definitely|absolutely|of course|certainly|for sure|"
+    r"i am|i'?m interested|i do|i would|i'?d (?:love|like) (?:to|that)|interested|very much)\b"
+)
+_NO = re.compile(
+    r"\b(?:(?:i'?m|i am) not(?: interested| really)?|i (?:do not|don'?t)(?: think so)?|"
+    r"no thanks|not (?:really|at all|interested|for me)|no|nope|nah|never|not)\b"
+)
+_ALL = re.compile(r"^(?:all|all of them|all of the above|any|any of them|everything|all four)$")
+_NONE = re.compile(r"^(?:none|none of them|neither|nothing|no)$")
+_NEGATED = re.compile(
+    r"\b(?:not|no|except|without|hate|dislike|avoid|don'?t like|do not like)\s+(?:\w+\s+)?$"
+)
+_NUMBER_WORDS = {
+    "one": 1,
+    "two": 2,
+    "three": 3,
+    "four": 4,
+    "five": 5,
+    "six": 6,
+    "seven": 7,
+    "eight": 8,
+    "nine": 9,
+    "ten": 10,
+}
+
+
+def _option_value(question: Question, text: str) -> Any:
+    """The option whose label (or value) the whole reply is, or None."""
+    for option in question.options:
+        if text in (_norm(option.label), _norm(str(option.value)).replace("_", " ")):
+            return option.value
+    return None
+
+
+def _named_options(question: Question, text: str, *, negation: bool = False) -> list[Any]:
+    """The option values the reply names (labels, values or synonyms), in option order."""
+    found: list[Any] = []
+    synonyms = SYNONYMS.get(question.field, {})
+    for option in question.options:
+        phrases = {
+            _norm(option.label),
+            _norm(str(option.value)).replace("_", " "),
+            *synonyms.get(option.value, ()),
+        }
+        for phrase in phrases:
+            hits = _find(text, phrase)
+            if negation:
+                hits = [h for h in hits if not _NEGATED.search(text[: h.start()])]
+            if hits:
+                found.append(option.value)
+                break
+    return found
+
+
+def _numbers(text: str, scale_max: int | None = None) -> list[int]:
+    """The whole numbers a reply names ("4", "four"), in order, each once. "7/10" and
+    "7 out of 10" name only 7 when the scale ends at 10."""
+    if scale_max is not None:
+        text = re.sub(rf"(?:/|\bout of\b|\bof\b)\s*{scale_max}\b", " ", text)
+    out: list[int] = []
+    for token in re.findall(r"\b(\d{1,4}|[a-z]+)\b", text):
+        value = int(token) if token.isdigit() else _NUMBER_WORDS.get(token)
+        if value is not None and value not in out:
+            out.append(value)
+    return out
+
+
+def _yes_no(text: str) -> list[bool]:
+    said: list[bool] = []
+    rest = text
+    if _NO.search(text):
+        said.append(False)
+        rest = _NO.sub(" ", text)
+    if _YES.search(rest):
+        said.append(True)
+    return said
+
+
+QUARTER_WORDS = {"autumn": "AU", "fall": "AU", "winter": "WI", "spring": "SP", "summer": "SU"}
+_QUARTER = re.compile(r"\b(?:autumn|fall|winter|spring|summer)\b")
+_TERM_WORDS = re.compile(
+    r"\b(autumn|fall|winter|spring|summer)\b(?:\s+(?:quarter|term))?(?:\s+(?:of|in))?"
+    r"\s+'?(\d{4}|\d{2})\b"
+)
+_TERM_ID = re.compile(r"\b(20\d\d)\s*-?\s*(au|wi|sp|su)\b")
+#: Words that name why a student is away, by `kind` (the labels in the file count too).
+AWAY_WORDS: dict[str, tuple[str, ...]] = {
+    "abroad": ("abroad", "study abroad", "exchange", "overseas"),
+    "internship": ("internship", "intern", "interning", "co-op", "coop", "job", "work"),
+    "leave": ("leave", "leave of absence", "time off", "gap", "break", "take off", "taking off"),
+}
+_STAY = re.compile(r"\b(?:none|no|nope|nah|never|stay|staying|nowhere)\b")
+
+
+def _terms_in(text: str) -> list[tuple[int, str]]:
+    """(position, term id) of every quarter with a year the reply names."""
+    out: list[tuple[int, str]] = []
+    for match in _TERM_WORDS.finditer(text):
+        year = match.group(2)
+        full = int(year) if len(year) == 4 else 2000 + int(year)
+        out.append((match.start(), f"{full}-{QUARTER_WORDS[match.group(1)]}"))
+    for match in _TERM_ID.finditer(text):
+        out.append((match.start(), f"{match.group(1)}-{match.group(2).upper()}"))
+    return sorted(out)
+
+
+def _kinds_in(text: str) -> list[str]:
+    labels = question_set().labels.get("away", {})
+    found = []
+    for kind, words in AWAY_WORDS.items():
+        if any(_find(text, p) for p in {*words, _norm(labels.get(kind, kind))}):
+            found.append(kind)
+    return found
+
+
+def read_terms_away(text: str) -> Reading:
+    """'autumn 2027 abroad and an internship in summer 2028' -> two quarters away; 'none' (or
+    'no, I'll stay') -> []. A quarter without a year, or without one reason, is unclear."""
+    terms = _terms_in(text)
+    support = tuple(dict.fromkeys(t for _, t in terms))
+    if not terms:
+        if not _QUARTER.search(text) and not _kinds_in(text) and _STAY.search(text):
+            return Reading("answer", [])
+        return UNCLEAR
+    if len(_QUARTER.findall(text)) > len(_TERM_WORDS.findall(text)):
+        return Reading("unclear", support=support)  # "autumn and winter 2027": which year?
+    everywhere = _kinds_in(text)
+    away: dict[str, str] = {}
+    for segment in re.split(r"[,;.]|\band\b|\bthen\b|\bplus\b|\balso\b", text):
+        here = [t for _, t in _terms_in(segment)]
+        if not here:
+            continue
+        kinds = _kinds_in(segment) or (everywhere if len(everywhere) == 1 else [])
+        if len(kinds) != 1:
+            return Reading("unclear", support=support)
+        for term in here:
+            away.setdefault(term, kinds[0])
+    if not away or len(away) > MAX_TERMS_AWAY:
+        return Reading("unclear", support=support)
+    if any(not 2020 <= int(t[:4]) <= 2040 for t in away):
+        return Reading("unclear", support=support)
+    return Reading("answer", [{"term": t, "kind": k} for t, k in away.items()], support)
+
+
+_LEAD = re.compile(
+    r"^(?:i(?:'m| am)?\s+(?:really\s+)?(?:like|love|into|interested in|enjoy|want(?: to)?|"
+    r"think|guess)|(?:things|stuff|something|areas|topics) like|maybe|probably|mostly|"
+    r"definitely)\s+",
+    re.IGNORECASE,
 )
 
 
-# ------------------------------------------------------------------------------ context
+def split_items(text: str) -> list[str]:
+    """An answer cut into short items: "physics, film and Greek tragedy" -> 3 items."""
+    text = _LEAD.sub("", text.strip())
+    parts = re.split(r"\s*(?:,|;|/|\n|\band\b|&|\bplus\b|\bor\b)\s*", text, flags=re.IGNORECASE)
+    out: list[str] = []
+    for part in parts:
+        part = part.strip(" .!?-\u2013\u2014\"'")
+        part = re.sub(r"^(?:also|some|a bit of|the)\s+", "", part, flags=re.IGNORECASE)
+        low = _norm(part)
+        if not part or len(part) > 60 or _UNSURE.match(low) or _NONE.match(low):
+            continue
+        item = part[0].upper() + part[1:]
+        if item.casefold() not in {o.casefold() for o in out}:
+            out.append(item)
+    return out[:6]
 
 
-def academic_start(today: dt.date | None = None) -> int:
-    """The calendar year the current academic year started in (Nov 2026 -> 2026)."""
-    day = today or dt.date.today()
-    return day.year if day.month >= 7 else day.year - 1
+def read_reply(question: Question, text: str) -> Reading:
+    """The deterministic reading of a reply to `question`: an exact option label (any case)
+    or an obvious synonym or value; "Skip" (or "pass", "next") skips; "not sure" skips unless
+    it is what an option means ("Undecided"). Integers must lie within the question's range."""
+    raw = scrub(" ".join(text.split()))
+    t = _norm(raw)
+    if not t:
+        return UNCLEAR
+    if _SKIP.search(t):
+        return Reading("skip")
+    reading = _read(question, t, raw)
+    if _UNSURE.match(t):
+        named = question.type == "single" and question.value not in ("boolean", "integer")
+        return reading if named and reading.kind == "answer" else Reading("skip")
+    if question.type == "list" and _NONE.match(t):
+        return Reading("skip")
+    return reading
 
 
-@dataclass
-class Context:
-    row: m.StudentProfile
-    username: str
-    req: InterviewRequest
-    message: str = ""
-    history: list[InterviewTurn] = field(default_factory=list)
-
-    @classmethod
-    def build(cls, row: m.StudentProfile, username: str, req: InterviewRequest) -> Context:
-        history = [
-            t.model_copy(update={"text": scrub(t.text.strip())})
-            for t in req.history[-HISTORY_TURNS:]
-            if t.text.strip()
-        ]
-        message = scrub(" ".join((req.message or "").split()))
-        return cls(row=row, username=username, req=req, message=message, history=history)
-
-    @property
-    def mode(self) -> str:
-        if self.req.mode == "reply" and not self.message:
-            return "start"
-        return self.req.mode
-
-    def student_text(self) -> str:
-        """Everything the student wrote in this conversation."""
-        said = [t.text for t in self.history if t.role == "student"]
-        if self.message:
-            said.append(self.message)
-        return "\n".join(said)
-
-    def answering(self) -> Topic | None:
-        """The topic of the guide's last question (what the newest message answers)."""
-        for turn in reversed(self.history):
-            if turn.role == "guide":
-                return turn.topic
-        return None
-
-    def asked(self, topic: Topic) -> int:
-        """How many times the guide asked about `topic` in this conversation."""
-        return sum(1 for t in self.history if t.role == "guide" and t.topic == topic)
-
-    def covered(self, patch: ProfilePatch | None = None) -> list[Topic]:
-        """Main topics with an answer: filled in the profile (or in `patch`), marked covered
-        earlier, or answered in this conversation."""
-        filled = sections_filled(self.row)
-        # The humanities count only once the goal is known (just to pass, or to enjoy what?).
-        filled["humanities"] = self.row.humanities_goal is not None
-        done: set[str] = {SECTION_OF[k] for k, v in filled.items() if v}
-        done |= set(memory_of(self.row).covered)
-        answered: Topic | None = None
-        for turn in self.history:
-            if turn.role == "guide":
-                answered = turn.topic
-            elif answered is not None:
-                done.add(answered)
-        if self.mode == "reply" and self.answering() is not None:
-            done.add(cast(str, self.answering()))
-        if patch is not None:
-            sent = patch.model_fields_set
-            pairs = {
-                "class_year": "class_year",
-                "interests": "interests",
-                "humanities_goal": "humanities",
-                "research_areas": "research",
-                "career_plans": "career",
-                "career_paths": "career",
-                "future_domains": "future",
-                "constraints": "constraints",
-                "workload": "constraints",
-            }
-            done |= {topic for name, topic in pairs.items() if name in sent}
-        return [t for t in MAIN if t in done]
-
-    def next_topic(self, patch: ProfilePatch | None = None) -> Topic:
-        covered = self.covered(patch)
-        return next((t for t in MAIN if t not in covered), "wrapup")
+def _read(question: Question, t: str, raw: str) -> Reading:
+    lo, hi = question.min, question.max
+    exact = _option_value(question, t)
+    if question.value == "boolean":
+        if exact is not None:
+            return Reading("answer", exact, (exact,))
+        said = _yes_no(t)
+        return Reading("answer", said[0], tuple(said)) if len(said) == 1 else UNCLEAR
+    if question.type in ("single", "scale") and question.value == "integer":
+        if exact is not None:
+            return Reading("answer", exact, (exact,))
+        numbers = _numbers(t, hi if question.type == "scale" else None)
+        if (
+            len(numbers) == 1
+            and (lo is None or lo <= numbers[0])
+            and (hi is None or numbers[0] <= hi)
+        ):
+            return Reading("answer", numbers[0], tuple(numbers))
+        return Reading("unclear", support=tuple(numbers))
+    if question.type == "single":
+        if exact is not None:
+            return Reading("answer", exact, (exact,))
+        named = _named_options(question, t)
+        if len(named) == 1:
+            return Reading("answer", named[0], tuple(named))
+        return Reading("unclear", support=tuple(named))
+    if question.type == "multi":
+        if exact is not None:
+            return Reading("answer", [exact], (exact,))
+        every = [o.value for o in question.options]
+        if _ALL.match(t):
+            return Reading("answer", every, tuple(every))
+        if _NONE.match(t):
+            return Reading("answer", [])
+        named = _named_options(question, t, negation=True)
+        return Reading("answer", named, tuple(named)) if named else UNCLEAR
+    if question.field == "terms_away":
+        return read_terms_away(t)
+    if question.type == "list":
+        items = split_items(raw)
+        return Reading("answer", items) if items else UNCLEAR
+    return UNCLEAR
 
 
-def progress_of(covered: Sequence[Topic], done: bool) -> float:
-    return 1.0 if done else round(len([t for t in covered if t in MAIN]) / len(MAIN), 3)
-
-
-# ------------------------------------------------------------------------------ facts
+# ------------------------------------------------------------------------------ grounding
 
 
 _STOP = frozenset(
@@ -373,645 +442,502 @@ def grounded(item: str, said: str) -> bool:
     return len(initials) >= 2 and re.search(rf"\b{re.escape(initials)}\b", text) is not None
 
 
-_YEAR_WORDS = re.compile(
-    r"\b(20[2-4]\d|'\d\d|first[- ]?year|second[- ]?year|third[- ]?year|fourth[- ]?year|"
-    r"freshman|sophomore|junior|senior|class of)\b",
-    re.IGNORECASE,
-)
+def _merge(existing: Sequence[Any], new: Sequence[Any]) -> list[Any]:
+    """`existing` plus the items of `new` it lacks (strings compared case-insensitively)."""
 
+    def key(v: Any) -> Any:
+        return v.casefold() if isinstance(v, str) else v
 
-def _merge(existing: Sequence[str], new: Sequence[str]) -> list[str] | None:
-    """`existing` plus the items of `new` it lacks (case-insensitive); None when nothing is new."""
-    have = {e.casefold() for e in existing}
-    added = [n for n in new if n.casefold() not in have]
-    if not added:
-        return None
     merged = list(existing)
-    for item in added:
-        if len(merged) >= MAX_ITEMS:
-            break
-        merged.append(item)
-        have.add(item.casefold())
+    have = {key(e) for e in existing}
+    for item in new:
+        if key(item) not in have and len(merged) < MAX_ITEMS:
+            merged.append(item)
+            have.add(key(item))
     return merged
 
 
-LIST_FACTS = (
-    "interests",
-    "research_areas",
-    "humanities_topics",
-    "career_paths",
-    "future_domains",
-    "constraints",
-)
+def _says_none(text: str) -> bool:
+    return bool(_NONE.match(text) or _STAY.search(text))
 
 
 def proposed_patch(
-    ctx: Context, facts: Facts, portrait: PortraitDraft | None = None
-) -> tuple[ProfilePatch, int]:
-    """The facts as a profile patch, keeping only what the student's own words support, with
-    list facts merged into the profile's lists. Returns the patch and how many facts were
-    dropped as unsupported."""
-    said = ctx.student_text()
-    topics_seen = {t.topic for t in ctx.history if t.role == "guide"} | {ctx.answering()}
-    data: dict[str, Any] = {}
-    dropped = 0
-    row = ctx.row
-    if facts.class_year is not None:
-        if _YEAR_WORDS.search(said) and facts.class_year != row.class_year:
-            data["class_year"] = facts.class_year
-        elif not _YEAR_WORDS.search(said):
-            dropped += 1
-    for name in LIST_FACTS:
-        new: list[str] = []
-        for item in getattr(facts, name):
-            item = scrub(item.strip())
-            if not item:
-                continue
-            if grounded(item, said):
-                new.append(item)
-            else:
-                dropped += 1
-        merged = _merge(list(getattr(row, name)), new)
-        if merged is not None:
-            data[name] = merged
-    if facts.humanities_goal is not None and facts.humanities_goal != row.humanities_goal:
-        if "humanities" in topics_seen or re.search(r"humanit|core", said, re.IGNORECASE):
-            data["humanities_goal"] = facts.humanities_goal
-        else:
-            dropped += 1
-    if facts.workload is not None and facts.workload != row.workload:
-        if "constraints" in topics_seen or re.search(
-            r"light|balanc|intense|heavy|easy|hard|chill|busy|manageable|workload",
-            said,
-            re.IGNORECASE,
-        ):
-            data["workload"] = facts.workload
-        else:
-            dropped += 1
-    for name, topic in (("humanities_note", "humanities"), ("career_plans", "career")):
-        value = getattr(facts, name)
-        if value and value != getattr(row, name):
-            if topic in topics_seen and said.strip():
-                data[name] = value[:1200]
-            else:
-                dropped += 1
-    if portrait is not None and (portrait.headline or portrait.summary):
-        data["portrait"] = Portrait(
-            headline=portrait.headline, summary=portrait.summary, themes=portrait.themes[:6]
-        )
+    question: Question, value: Any, said: str, row: m.StudentProfile
+) -> ProfilePatch | None:
+    """The answer to `question` as a profile patch, or None when the value is not a valid
+    answer or the student's own words (`said`) do not support it: option values must be real
+    options (and among those the reply names, when it names any), integers must lie within the
+    range and be a number the student wrote, every research area must share a word with the
+    reply, every quarter away must be one the reply names, and "none" needs a "none" or "no".
+    Research areas and class formats are merged with what the record already has."""
+    support = read_reply(question, said).support
+    text = _norm(said)
+    out: Any
+    if question.value == "boolean" or (question.type == "single" and question.value != "integer"):
+        if question.label_of(value) is None or (support and value not in support):
+            return None
+        out = value
+    elif question.value == "integer":
+        lo, hi = question.min or 0, question.max or 0
+        if not (isinstance(value, int) and not isinstance(value, bool) and lo <= value <= hi):
+            return None
+        if value not in support:
+            return None
+        out = value
+    elif question.type == "multi":
+        if not isinstance(value, list) or (not value and not _says_none(text)):
+            return None
+        if any(question.label_of(v) is None or (support and v not in support) for v in value):
+            return None
+        have = list(getattr(row, question.field) or []) if value else []
+        out = _merge(have, list(dict.fromkeys(value)))
+    elif question.field == "terms_away":
+        if not isinstance(value, list):
+            return None
+        try:
+            away = [TermAway.model_validate(t) for t in value]
+        except ValidationError:
+            return None
+        if not away and (support or _QUARTER.search(text) or not _STAY.search(text)):
+            return None
+        for item in away:
+            # A quarter the reply names; when the rules found none ("next fall abroad"), the
+            # reply must at least name a quarter.
+            if item.term not in support and (support or not _QUARTER.search(text)):
+                return None
+        out = [t.model_dump() for t in away]
+    elif question.type == "list":
+        if not isinstance(value, list):
+            return None
+        items = [i for i in (scrub(" ".join(str(v).split()))[:60] for v in value) if i]
+        kept = [i for i in items if grounded(i, said)]
+        if len(kept) < len(items):
+            logger.info(
+                "%s: dropped %d item(s) the student did not say", TASK, len(items) - len(kept)
+            )
+        if not kept:
+            return None
+        out = _merge(list(getattr(row, question.field) or []), kept)
+    else:
+        return None
     try:
-        return ProfilePatch.model_validate(data), dropped
+        return ProfilePatch.model_validate({question.field: out})
     except ValidationError:
-        logger.warning("%s: a proposed patch did not validate", TASK)
-        return ProfilePatch(), dropped + len(data)
+        logger.warning("%s: a proposed answer did not validate", TASK)
+        return None
+
+
+# ------------------------------------------------------------------------------ context
+
+
+@dataclass
+class Context:
+    row: m.StudentProfile
+    username: str
+    req: InterviewRequest
+    message: str = ""
+    history: list[InterviewTurn] = field(default_factory=list)
+
+    @classmethod
+    def build(cls, row: m.StudentProfile, username: str, req: InterviewRequest) -> Context:
+        history = [
+            t.model_copy(update={"text": scrub(t.text.strip())})
+            for t in req.history[-HISTORY_TURNS:]
+            if t.text.strip()
+        ]
+        message = scrub(" ".join((req.message or "").split()))
+        return cls(row=row, username=username, req=req, message=message, history=history)
+
+    @property
+    def mode(self) -> str:
+        if self.req.mode == "reply" and not self.message:
+            return "start"
+        return self.req.mode
+
+    def answering(self) -> Question | None:
+        """The question of the guide's last turn (what the newest message answers)."""
+        if self.mode != "reply":
+            return None
+        for turn in reversed(self.history):
+            if turn.role == "guide":
+                return question_of(turn.topic)
+        return None
+
+    def from_history(self) -> tuple[set[str], dict[str, Any]]:
+        """The questions this conversation already moved past (answered or skipped: the
+        student replied and the guide went on to another topic) and the answers the rules read
+        in those replies. A guide that went on to `research_areas` heard a yes to research."""
+        covered: set[str] = set()
+        values: dict[str, Any] = {}
+        asked: Question | None = None
+        reply: str | None = None
+        for turn in self.history:
+            if turn.role == "student":
+                if asked is not None:
+                    reply = turn.text
+                continue
+            if asked is not None and reply is not None and turn.topic != asked.id:
+                covered.add(asked.id)
+                reading = read_reply(asked, reply)
+                if reading.kind == "answer":
+                    values[asked.field] = reading.value
+                elif asked.field == "wants_research" and turn.topic == "research_areas":
+                    values["wants_research"] = True
+            asked, reply = question_of(turn.topic), None
+        return covered, values
+
+
+@dataclass
+class Step:
+    """The server's reading of one request: the answer to the previous question (if any) and
+    what is left to ask."""
+
+    answering: Question | None
+    reading: Reading | None
+    patch: ProfilePatch
+    covered: set[str]
+    remaining: list[Question]
+    progress: float
+
+    @property
+    def retry(self) -> bool:
+        return (
+            self.answering is not None
+            and self.reading is not None
+            and (self.reading.kind == "unclear")
+        )
+
+    @property
+    def answered(self) -> str | None:
+        """The question whose answer `patch` holds."""
+        return self.answering.id if self.answering and self.patch.model_fields_set else None
+
+    @property
+    def next_topic(self) -> str:
+        return self.allowed()[0]
+
+    def allowed(self) -> list[str]:
+        """The topics the next turn may ask about: the same question again after an unclear
+        reply, else any remaining question (file order first), else the wrap-up."""
+        if self.retry and self.answering is not None:
+            return [self.answering.id]
+        return [q.id for q in self.remaining] or [WRAPUP]
+
+
+def _applies(question: Question, values: dict[str, Any], row: m.StudentProfile) -> bool:
+    for name, wanted in (question.when or {}).items():
+        if name == "transfer_or_later":
+            continue
+        current = values[name] if name in values else getattr(row, name, None)
+        if bool(current) is not wanted:
+            return False
+    return True
+
+
+def settle(ctx: Context, reading: Reading | None) -> Step:
+    """Turn a reading of the newest message into the proposal (through `proposed_patch`; an
+    answer it refuses becomes unclear), the covered questions (the record's answers, the
+    memory, this conversation), the remaining questions in file order and the progress (the
+    share of the questions that apply to the student that are covered)."""
+    question = ctx.answering()
+    if question is None:
+        reading = None
+    patch = ProfilePatch()
+    if question is not None and reading is not None and reading.kind == "answer":
+        found = proposed_patch(question, reading.value, ctx.message, ctx.row)
+        if found is None:
+            reading = Reading("unclear", support=reading.support)
+        else:
+            patch = found
+    ids = {q.id for q in agent_questions()}
+    seen, values = ctx.from_history()
+    covered = (set(answered_ids(ctx.row)) | set(memory_of(ctx.row).covered) | seen) & ids
+    if question is not None and reading is not None and reading.kind != "unclear":
+        covered.add(question.id)
+    for name in patch.model_fields_set:
+        values[name] = getattr(patch, name)
+    applicable = [q for q in agent_questions() if _applies(q, values, ctx.row)]
+    remaining = [q for q in applicable if q.id not in covered]
+    done = sum(1 for q in applicable if q.id in covered)
+    progress = round(done / len(applicable), 3) if applicable else 1.0
+    return Step(question, reading, patch, covered, remaining, progress)
 
 
 # ------------------------------------------------------------------------------ the rules
 
 
-def _split(text: str) -> list[str]:
-    """An answer cut into short items: "physics, film and Greek tragedy" -> 3 items."""
-    text = re.sub(
-        r"^(i(?:'m| am)?\s+(?:really\s+)?(?:like|love|into|interested in|enjoy|want(?: to)?|"
-        r"think|guess)|maybe|probably|mostly|definitely)\s+",
-        "",
-        text.strip(),
-        flags=re.IGNORECASE,
-    )
-    parts = re.split(r"\s*(?:,|;|/|\n|\band\b|&|\bplus\b|\bor\b)\s*", text, flags=re.IGNORECASE)
-    out: list[str] = []
-    for part in parts:
-        part = part.strip(" .!?-\u2013\u2014\"'")
-        part = re.sub(r"^(?:also|some|a bit of|the)\s+", "", part, flags=re.IGNORECASE)
-        if not part or _nothing(part) or len(part) > 60:
-            continue
-        item = part[0].upper() + part[1:]
-        if item.casefold() not in {o.casefold() for o in out}:
-            out.append(item)
-    return out[:6]
+def answer_label(question: Question, value: Any) -> str:
+    """An answer in words: "Graduate school", "Seminar and Lab", "Autumn 2027 (Study abroad)"."""
+    if question.field == "terms_away":
+        if not value:
+            return NONE_REPLY
+        away = question_set().labels.get("away", {})
+        items = [TermAway.model_validate(t) for t in value]
+        return _join([f"{_term(t.term)} ({away.get(t.kind, t.kind)})" for t in items])
+    if isinstance(value, list):
+        return _join([question.label_of(v) or str(v) for v in value]) or NONE_REPLY
+    if question.type == "scale":
+        return f"{value} of {question.max}"
+    return question.label_of(value) or str(value)
 
 
-_NOTHING = re.compile(
-    r"^(?:no|nope|none|nothing|not (?:yet|really|sure)|n/?a|skip|idk|i don'?t know|"
-    r"not sure yet|unsure|pass|no idea|nothing yet|maybe later|later)[.!]*$",
-    re.IGNORECASE,
-)
+def _term(term: str) -> str:
+    year, _, quarter = term.partition("-")
+    return f"{QUARTER_NAMES.get(quarter, quarter)} {year}"
 
 
-def _nothing(text: str) -> bool:
-    return bool(_NOTHING.match(text.strip()))
-
-
-def class_year_from(text: str, today: dt.date | None = None) -> int | None:
-    start = academic_start(today)
-    if match := re.search(r"\b(20[2-4]\d)\b", text):
-        return int(match.group(1))
-    if match := re.search(r"(?:class of\s*)?'(\d\d)\b", text, re.IGNORECASE):
-        return 2000 + int(match.group(1))
-    low = text.casefold()
-    for words, years_left in (
-        (("first-year", "first year", "freshman", "1st year", "incoming"), 4),
-        (("second-year", "second year", "sophomore", "2nd year"), 3),
-        (("third-year", "third year", "junior", "3rd year"), 2),
-        (("fourth-year", "fourth year", "senior", "4th year"), 1),
-    ):
-        if any(w in low for w in words):
-            return start + years_left
-    return None
-
-
-def goal_from(text: str) -> HumanitiesGoal | None:
-    low = text.casefold()
-    if re.search(r"\b(deep|deeply|serious|seriously|major in|minor in|go far)\b", low):
-        return "deep"
-    if re.search(r"\b(enjoy|enjoying|fun|love|specific|explore|interesting)\b", low):
-        return "enjoy"
-    if re.search(r"\b(balance|balanced|mix|both|some of each)\b", low):
-        return "balance"
-    if re.search(r"\b(pass|get through|get it done|requirement|done with|check the box)\b", low):
-        return "pass"
-    return None
-
-
-_GOAL_CHIPS = re.compile(
-    r"^(?:just to pass|a balance|enjoy specific topics|to enjoy specific topics|go deep|"
-    r"to go deep)\b[ .,:;-]*",
-    re.IGNORECASE,
-)
-
-
-def workload_from(text: str) -> Workload | None:
-    low = text.casefold()
-    if re.search(r"\b(intense|heavy|hard|push|challenge|max)\b", low):
-        return "intense"
-    if re.search(r"\b(light|easy|chill|lighter|manageable|relaxed)\b", low):
-        return "light"
-    if re.search(r"\b(balanced|balance|medium|moderate|normal|average)\b", low):
-        return "balanced"
-    return None
-
-
-CAREER_WORDS: dict[str, str] = {
-    "phd": "Research / PhD",
-    "research": "Research / PhD",
-    "academ": "Research / PhD",
-    "professor": "Research / PhD",
-    "industry": "Industry",
-    "tech": "Tech",
-    "software": "Tech",
-    "engineer": "Engineering",
-    "startup": "Startups",
-    "medic": "Medicine",
-    "doctor": "Medicine",
-    "med school": "Medicine",
-    "law": "Law",
-    "lawyer": "Law",
-    "public service": "Public service",
-    "government": "Public service",
-    "policy": "Policy",
-    "nonprofit": "Nonprofits",
-    "finance": "Finance",
-    "bank": "Finance",
-    "consult": "Consulting",
-    "teach": "Teaching",
-    "journalism": "Journalism",
-    "writer": "Writing",
-    "art": "The arts",
-}
-
-#: Follow-ups that make a vague future domain specific (the user's example: quantum computing).
-FUTURE_FOLLOWUPS: tuple[tuple[str, str, list[str]], ...] = (
-    (
-        "quantum",
-        "Quantum computing is a wide field. Is it the physics side that draws you, the "
-        "algorithms, or the hardware?",
-        ["The physics", "The algorithms", "The hardware", "All of it"],
-    ),
-    (
-        r"\bai\b|artificial intelligence|machine learning|\bml\b",
-        "AI covers a lot of ground. Building the models, the mathematics underneath them, or "
-        "what they do to people and society?",
-        ["Building models", "The theory", "AI and society", "Not sure yet"],
-    ),
-    (
-        "climate|environment|energy|sustainab",
-        "Which side of it: the science, the policy, or the economics of it?",
-        ["The science", "The policy", "The economics", "All three"],
-    ),
-    (
-        "medic|health|biotech|neuro",
-        "The lab, the clinic, or public health?",
-        ["The lab", "The clinic", "Public health", "Not sure yet"],
-    ),
-    (
-        "financ|econom|market",
-        "Markets themselves, the policy that shapes them, or the mathematics behind them?",
-        ["Markets", "Policy", "The mathematics", "Not sure yet"],
-    ),
-)
-
-
-def _join(items: Sequence[str], limit: int = 3) -> str:
-    items = [i for i in items if i][:limit]
-    if not items:
-        return ""
-    if len(items) == 1:
-        return items[0]
+def _join(items: Sequence[str]) -> str:
+    items = [i for i in items if i]
+    if len(items) <= 1:
+        return "".join(items)
     return ", ".join(items[:-1]) + " and " + items[-1]
 
 
-#: Words that keep their capital inside a sentence.
-PROPER = frozenset(
-    {
-        *("greek", "roman", "latin", "english", "french", "german", "italian", "spanish"),
-        *("russian", "chinese", "japanese", "korean", "arabic", "hebrew", "persian"),
-        *("sanskrit", "american", "african", "european", "asian", "islamic", "jewish"),
-        *("christian", "buddhist", "chicago", "uchicago", "shakespeare", "plato"),
-        *("aristotle", "homer", "dante", "kant", "marx"),
-    }
-)
+def _patch_value(patch: ProfilePatch, name: str) -> Any:
+    value = getattr(patch, name)
+    if name == "terms_away" and value:
+        return [t.model_dump() for t in value]
+    return value
 
 
-def _low(text: str) -> str:
-    """An item lowercased for use inside a sentence ("Physics" -> "physics"), keeping proper
-    words ("Greek tragedy") and acronyms ("AI")."""
-    first = text.split(" ", 1)[0]
-    if not first or first.casefold() in PROPER or (len(first) > 1 and first.isupper()):
-        return text
-    return text[:1].lower() + text[1:]
-
-
-def _lows(items: Sequence[str], limit: int = 3) -> str:
-    return _join([_low(i) for i in items], limit)
-
-
-def rule_facts(topic: Topic | None, text: str, ctx: Context) -> Facts:
-    """The deterministic guide's reading of one answer to a question on `topic`."""
-    if not text or topic is None:
-        return Facts()
-    if topic == "class_year":
-        return Facts(class_year=class_year_from(text))
-    if topic == "interests":
-        return Facts(interests=_split(text))
-    if topic == "humanities":
-        goal = goal_from(text)
-        rest = _GOAL_CHIPS.sub("", text).strip()
-        topics = [] if goal and not rest else _split(rest)
-        if goal is None and topics and ctx.row.humanities_goal is None:
-            goal = "enjoy"  # named topics without a goal: they want to enjoy them
-        return Facts(humanities_goal=goal, humanities_topics=[t for t in topics if len(t) > 2])
-    if topic == "research":
-        return Facts(research_areas=_split(text))
-    if topic == "career":
-        low = text.casefold()
-        paths = list(dict.fromkeys(v for k, v in CAREER_WORDS.items() if k in low))
-        plans = None if _nothing(text) else text[:600]
-        return Facts(career_plans=plans, career_paths=paths[:4])
-    if topic == "future":
-        last = ctx.row.future_domains[-1] if ctx.row.future_domains else None
-        asked = ctx.asked("future")
-        items = _split(text)
-        if asked >= 2 and items and ctx.history:
-            # The follow-up answer: make the last domain specific ("Quantum computing: the
-            # algorithms").
-            base = _previous_domain(ctx) or last
-            if base:
-                return Facts(future_domains=[f"{base}: {_low(items[0])}"[:60]])
-        return Facts(future_domains=items)
-    if topic == "constraints":
-        workload = workload_from(text)
-        items = [
-            i
-            for i in _split(text)
-            if workload_from(i) is None and i.casefold() not in ("light", "balanced", "intense")
-        ]
-        return Facts(workload=workload, constraints=items)
-    return Facts()
-
-
-def _previous_domain(ctx: Context) -> str | None:
-    """The domain the student named before the guide's follow-up question."""
-    student = [t.text for t in ctx.history if t.role == "student"]
-    for text in reversed(student):
-        items = _split(text)
-        if items:
-            return items[0]
-    return None
-
-
-@dataclass(frozen=True)
-class Question:
-    text: str
-    chips: list[str]
-
-
-def question(topic: Topic, ctx: Context, patch: ProfilePatch) -> Question:
-    """The deterministic guide's question on `topic`, in the student's own words where it can."""
-    interests = patch.interests or list(ctx.row.interests)
-    start = academic_start()
-    if topic == "class_year":
-        return Question(
-            "Let's start simple: which class are you in? If you're still deciding, the year "
-            "you started is fine too.",
-            [f"Class of {start + y}" for y in (4, 3, 2, 1)] + ["Not sure yet"],
-        )
-    if topic == "interests":
-        return Question(
-            "What pulls at your attention? Name a few things you'd happily read about on a "
-            "free afternoon, from physics to film to political theory.",
-            ["Physics", "Computer science", "Philosophy", "Economics", "Film", "Biology"],
-        )
-    if topic == "humanities":
-        lead = f"You mentioned {_lows(interests, 2)}. " if interests else ""
-        return Question(
-            lead + "Every student also takes Humanities in the Core. What do you want from it: "
-            "just to pass, a balance, to enjoy specific topics, or to go deep?",
-            ["Just to pass", "A balance", "Enjoy specific topics", "Go deep"],
-        )
-    if topic == "research":
-        return Question(
-            "Is there a question you'd love to work on with a professor someday? A lab, an "
-            "archive, a dataset, a field site: anything counts, and 'not yet' is fine.",
-            ["Not yet", "Physics lab", "Machine learning", "Cognitive science", "Archives"],
-        )
-    if topic == "career":
-        return Question(
-            "Where do you picture yourself after the College? A direction is plenty; nobody "
-            "has to know yet.",
-            ["Research / PhD", "Tech", "Medicine", "Law", "Public service", "Not sure yet"],
-        )
-    if topic == "future":
-        return Question(
-            "Looking further out: which fields do you want to be heading toward in ten years? "
-            "Something like quantum computing, climate, or AI and society.",
-            ["Quantum computing", "Climate", "AI", "Global health", "Finance", "Not sure yet"],
-        )
-    if topic == "constraints":
-        return Question(
-            "Last practical bit: how heavy do you want your quarters to feel, and is there "
-            "anything to plan around, like a job, a sport, study abroad or a double major?",
-            ["Light", "Balanced", "Intense", "I work part-time", "Study abroad"],
-        )
-    return Question("", [])
-
-
-def _goal_phrase(goal: str | None, topics: Sequence[str]) -> str:
-    named = _join(topics, 2)
-    if goal == "pass":
-        return "to get through the Humanities Core efficiently"
-    if goal == "balance":
-        return "a balance in the Core" + (f", with some {named}" if named else "")
-    if goal == "deep":
-        return "to go deep in the humanities" + (f", especially {named}" if named else "")
-    if goal == "enjoy":
-        return "to enjoy the humanities" + (f", above all {named}" if named else "")
+def _ack(step: Step) -> str:
+    """A short echo of the student's last answer."""
+    if step.answering is None or step.reading is None:
+        return ""
+    if step.reading.kind == "skip":
+        return "No problem, let's skip that one."
+    if step.answered:
+        value = _patch_value(step.patch, step.answering.field)
+        return f"{answer_label(step.answering, value)}: noted."
     return ""
 
 
-def template_portrait(ctx: Context, patch: ProfilePatch) -> Portrait:
-    def get(name: str) -> Any:
-        return getattr(patch, name) if name in patch.model_fields_set else getattr(ctx.row, name)
-
-    interests = list(get("interests") or [])
-    futures = list(get("future_domains") or [])
-    research = list(get("research_areas") or [])
-    topics = list(get("humanities_topics") or [])
-    goal = get("humanities_goal")
-    workload = get("workload")
-    career = list(get("career_paths") or [])
-    lead = interests[0] if interests else "Curious"
-    if futures:
-        headline = f"{lead}, heading toward {_low(futures[0])}"
-    elif len(interests) > 1:
-        headline = f"{lead} with a feel for {_low(interests[1])}"
-    else:
-        headline = f"{lead}, finding your way"
-    parts = []
-    if interests:
-        parts.append(f"You came to UChicago for {_lows(interests)}.")
-    if phrase := _goal_phrase(goal, topics):
-        parts.append(f"In the Core you want {phrase}.")
-    if research:
-        parts.append(f"You'd like to research {_lows(research, 2)}.")
-    if career:
-        parts.append(f"After the College: {_lows(career, 2)}.")
-    if futures:
-        parts.append(f"Ten years out, {_lows(futures, 2)}.")
-    if workload:
-        parts.append(f"You like your quarters {workload}.")
-    summary = " ".join(parts) or "You're keeping your options open, and that is a fine start."
-    themes = list(dict.fromkeys([*interests[:3], *futures[:2], *research[:1]]))[:6]
-    return Portrait(headline=headline[:90], summary=summary[:400], themes=themes)
+def retry_text(question: Question) -> str:
+    """The brief second ask when a reply did not map to an answer."""
+    lead = "Sorry, I didn't catch that."
+    if question.type == "scale" and question.ends:
+        return (
+            f"{lead} Please give a number from {question.min} ({question.ends.min}) to "
+            f"{question.max} ({question.ends.max}), or skip it."
+        )
+    if question.value == "integer" and question.min is not None:
+        return f"{lead} {question.text} Please give a number from {question.min} to {question.max}."
+    if question.type == "single":
+        return f"{lead} {question.text} Please pick one of the answers below, or skip it."
+    if question.type == "multi":
+        labels = _join([o.label for o in question.options])
+        return f"{lead} {question.text} Pick one or more of {labels}, or skip it."
+    if question.field == "terms_away":
+        return (
+            f"{lead} Please name each quarter with its year and the reason, like “Autumn 2027, "
+            "study abroad”, or answer “None”."
+        )
+    return f"{lead} {question.text} Name one or more, separated by commas, or skip it."
 
 
-def _ack(topic: Topic | None, facts: Facts, text: str) -> str:
-    """A short echo of the student's last answer."""
-    if not text or topic is None:
-        return ""
-    if _nothing(text):
-        return "No problem, we can come back to that."
-    if topic == "class_year" and facts.class_year:
-        return f"Class of {facts.class_year}, noted."
-    if topic == "interests" and facts.interests:
-        return f"{_say(facts.interests)}: a good mix to build on."
-    if topic == "humanities":
-        if facts.humanities_topics:
-            return f"{_say(facts.humanities_topics)}. I'll keep those in mind."
-        if facts.humanities_goal == "pass":
-            return "Fair enough: we'll keep the Core efficient."
-        if facts.humanities_goal:
-            return "Lovely."
-    if topic == "research" and facts.research_areas:
-        return f"{facts.research_areas[0]} is a good question to carry around."
-    if topic == "career":
-        return "Good to know where you're heading."
-    if topic == "future" and facts.future_domains:
-        domain = facts.future_domains[0]
-        if ": " in domain:  # the answer to a follow-up ("Quantum computing: algorithms")
-            return f"{domain.split(': ', 1)[1].capitalize()} it is."
-        return f"{domain}, then."
-    return "Got it."
-
-
-def _say(items: Sequence[str], limit: int = 3) -> str:
-    """Items as the start of a sentence: "Physics, film and Greek tragedy"."""
-    items = [i for i in items if i][:limit]
-    return _join([items[0], *(_low(i) for i in items[1:])], limit) if items else ""
-
-
-TOPIC_WORDS: tuple[tuple[Topic, str], ...] = (
-    ("class_year", r"class year|\bclass\b|graduat"),
-    ("interests", r"interest"),
-    ("humanities", r"humanit|\bcore\b"),
-    ("research", r"research"),
-    ("career", r"career|\bjob|after college|after the college"),
-    ("future", r"future|domain|field|heading"),
-    ("constraints", r"workload|constraint|\bload\b|schedule|heavy|light"),
+DONE_TEXT = (
+    "That's all my questions. Your answers are on your dashboard, and you can change any of "
+    "them there."
 )
-#: "Update my interests", "I'd like to change my workload", "Can we revisit research?"
-_CHANGE = re.compile(
-    r"^\s*(?:i'?d like to |i want to |can we |could we |let'?s |please )?"
-    r"(?:update|change|redo|revisit|edit|fix|talk about|go back to)\b",
-    re.IGNORECASE,
-)
-_GO_ON = re.compile(r"^(keep going|continue|go on|next|let'?s go|sure|ok(ay)?|yes)[.!]*$", re.I)
 
 
-def requested_topic(text: str, loose: bool) -> Topic | None:
-    """The topic a student asks to revisit ("update my interests"); with `loose`, a bare topic
-    name counts too (after the portrait, "My interests")."""
-    if not (loose or _CHANGE.search(text)):
-        return None
-    for topic, pattern in TOPIC_WORDS:
-        if re.search(pattern, text, re.IGNORECASE):
-            return topic
-    return None
-
-
-def _ask_turn(ctx: Context, topic: Topic, lead: str, patch: ProfilePatch) -> InterviewTurnEvent:
-    q = question(topic, ctx, patch)
+def _event(
+    step: Step,
+    text: str,
+    topic: str,
+    *,
+    fallback: bool,
+    courses: list[CourseMention] | None = None,
+) -> InterviewTurnEvent:
+    done = topic == WRAPUP
     return InterviewTurnEvent(
-        text=f"{lead} {q.text}".strip(),
-        quick_replies=q.chips,
+        text=text.strip(),
+        quick_replies=quick_replies(question_of(topic)),
         topic=topic,
-        proposed=patch,
-        progress=progress_of(ctx.covered(patch), False),
-        fallback=True,
+        answered=step.answered,
+        retry=step.retry,
+        proposed=step.patch,
+        progress=1.0 if done else step.progress,
+        done=done,
+        courses=courses or [],
+        fallback=fallback,
     )
 
 
 def rule_turn(ctx: Context) -> InterviewTurnEvent:
-    """The deterministic guide (no AI): same topics, same order, simple rules."""
+    """The deterministic guide (no AI): the same questions with the file's own text, read by
+    the same mapper."""
     if ctx.mode == "welcome_back":
         return welcome_rule_turn(ctx)
-    topic_answered = ctx.answering() if ctx.mode == "reply" else None
-    if ctx.mode == "reply":
-        loose = topic_answered in (None, "wrapup")
-        if wanted := requested_topic(ctx.message, loose):
-            return _ask_turn(ctx, wanted, "Of course.", ProfilePatch())
-        if _GO_ON.match(ctx.message) and loose:
-            nxt = ctx.next_topic()
-            if nxt != "wrapup":
-                return _ask_turn(ctx, nxt, "Let's keep going.", ProfilePatch())
-        if topic_answered == "wrapup" and _CHANGE.search(ctx.message):
-            return InterviewTurnEvent(
-                text="Of course. What would you like to change?",
-                quick_replies=[
-                    "My interests",
-                    "The humanities",
-                    "Research",
-                    "Career plans",
-                    "Future fields",
-                    "Workload",
-                ],
-                topic="wrapup",
-                progress=progress_of(ctx.covered(), False),
-                fallback=True,
-            )
-    facts = rule_facts(topic_answered, ctx.message, ctx)
-    patch, _ = proposed_patch(ctx, facts)
-    ack = _ack(topic_answered, facts, ctx.message)
-
-    # One follow-up to make a vague answer specific.
-    follow: Question | None = None
-    if topic_answered == "humanities" and ctx.asked("humanities") < 2:
-        goal = patch.humanities_goal or ctx.row.humanities_goal
-        topics = patch.humanities_topics or ctx.row.humanities_topics
-        if goal in ("enjoy", "deep", "balance") and not topics:
-            follow = Question(
-                "Which topics, specifically? Greek tragedy, film, philosophy of mind, poetry, "
-                "the history of science…",
-                ["Greek tragedy", "Film", "Philosophy of mind", "Poetry", "Art history"],
-            )
-    if topic_answered == "future" and ctx.asked("future") < 2 and facts.future_domains:
-        for pattern, text, chips in FUTURE_FOLLOWUPS:
-            if re.search(pattern, facts.future_domains[0], re.IGNORECASE):
-                follow = Question(text, chips)
-                break
-    if follow is not None and topic_answered is not None:
-        covered = ctx.covered(patch)
-        return InterviewTurnEvent(
-            # A future-domain follow-up already names the domain: no echo before it.
-            text=(follow.text if topic_answered == "future" else f"{ack} {follow.text}").strip(),
-            quick_replies=follow.chips,
-            topic=topic_answered,
-            proposed=patch,
-            progress=progress_of(covered, False),
-            fallback=True,
-        )
-
-    nxt = ctx.next_topic(patch)
-    if nxt == "wrapup":
-        portrait = template_portrait(ctx, patch)
-        patch = ProfilePatch.model_validate(
-            {**patch.model_dump(exclude_unset=True), "portrait": portrait.model_dump()}
-        )
-        text = (
-            f"{ack} That's everything I wanted to ask. Here's how I'd sum you up: "
-            f"“{portrait.headline}.” Keep what rings true, and I can draft a few routes "
-            "through the College from it."
-        ).strip()
-        return InterviewTurnEvent(
-            text=text,
-            quick_replies=["Draft my routes", "Change something"],
-            topic="wrapup",
-            proposed=patch,
-            progress=1.0,
-            done=True,
-            fallback=True,
-        )
-    q = question(nxt, ctx, patch)
+    question = ctx.answering()
+    step = settle(ctx, read_reply(question, ctx.message) if question else None)
+    if step.retry and step.answering is not None:
+        return _event(step, retry_text(step.answering), step.answering.id, fallback=True)
+    topic = step.next_topic
+    nxt = question_of(topic)
     if ctx.mode == "start":
-        if any(sections_filled(ctx.row).values()):
-            opening = f"Welcome back. Let's pick up with {TOPIC_LABELS[nxt]}."
+        if step.covered:
+            lead = "Welcome back. Let's pick up where we left off."
         else:
-            opening = (
-                "Hi, I'm your guide. A few questions, one at a time, so your dashboard can "
-                "show what you want from UChicago. Nothing is saved unless you keep it."
+            lead = (
+                "Hi, I'm your guide. A few questions, one at a time, so your planner knows what "
+                "you want. Nothing is saved unless you keep it."
             )
-        text = f"{opening} {q.text}"
     else:
-        text = f"{ack} {q.text}".strip()
-    return InterviewTurnEvent(
-        text=text,
-        quick_replies=q.chips,
-        topic=nxt,
-        proposed=patch,
-        progress=progress_of(ctx.covered(patch), False),
-        fallback=True,
-    )
+        lead = _ack(step) or ("Let's keep going." if nxt is not None else "")
+    body = ask_text(nxt) if nxt is not None else DONE_TEXT
+    return _event(step, f"{lead} {body}", topic, fallback=True)
+
+
+def _recall(row: m.StudentProfile) -> str:
+    """One answer from the record, so the student feels remembered."""
+    for question in agent_questions():
+        if question.field == "terms_away":
+            away = stored_terms_away(row)
+            value: Any = None if away is None else [t.model_dump() for t in away]
+        else:
+            value = getattr(row, question.field, None)
+        if value is None or (value == [] and question.type == "list"):
+            continue
+        return f"Last time you told me: {question.label}, {answer_label(question, value)}."
+    return ""
 
 
 def welcome_rule_turn(ctx: Context) -> InterviewTurnEvent:
-    row = ctx.row
-    portrait = portrait_of(row)
-    nxt = ctx.next_topic()
-    bits = []
-    if row.interests:
-        bits.append(f"you're drawn to {_lows(row.interests, 2)}")
-    if phrase := _goal_phrase(row.humanities_goal, row.humanities_topics):
-        bits.append(f"that you want {phrase}")
-    if row.future_domains:
-        bits.append(f"that you're heading toward {_low(row.future_domains[0])}")
-    memory = f"Last time you told me {_join(bits, 2)}." if bits else ""
-    line = f" I still think of you as “{portrait.headline}”." if portrait.headline else ""
-    if nxt != "wrapup":
-        ask = f"Want to pick up with {TOPIC_LABELS[nxt]}, or draft a few routes?"
-        chips = ["Keep going", "Draft my routes", "Update my interests"]
-    else:
-        ask = "Anything changed since then? I can also draft a few routes from it."
-        chips = ["Draft my routes", "Update my interests", "Something changed"]
-    text = f"Welcome back, {ctx.username}. {memory}{line} {ask}".replace("  ", " ")
-    return InterviewTurnEvent(
-        text=text.strip(),
-        quick_replies=chips,
-        topic=nxt,
-        progress=progress_of(ctx.covered(), False),
-        fallback=True,
+    step = settle(ctx, None)
+    topic = step.next_topic
+    nxt = question_of(topic)
+    ask = f"Let's pick up where we left off. {ask_text(nxt)}" if nxt is not None else DONE_TEXT
+    text = " ".join(f"Welcome back, {ctx.username}. {_recall(ctx.row)} {ask}".split())
+    return _event(step, text, topic, fallback=True)
+
+
+# ------------------------------------------------------------------------------ the model
+
+
+class AwayFact(BaseModel):
+    term: str = ""
+    kind: str = ""
+
+
+class Facts(BaseModel):
+    """The model's reading of the student's newest message. Only the field of the question
+    the message answers is used, and the server checks it, so the types are loose here."""
+
+    post_grad_plan: str | None = None
+    pace: str | None = None
+    wants_research: bool | None = None
+    research_areas: list[str] = []
+    courses_per_term: int | None = None
+    terms_away: list[AwayFact] | None = None
+    class_formats: list[str] | None = None
+    theory_vs_application: int | None = None
+
+
+class TurnPayload(BaseModel):
+    text: str = Field(min_length=1, max_length=2000)
+    topic: str = Field(max_length=40)
+    skipped: bool = False
+    facts: Facts = Facts()
+
+
+def _obj(properties: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "type": "object",
+        "properties": properties,
+        "required": list(properties),
+        "additionalProperties": False,
+    }
+
+
+def _nullable(schema: dict[str, Any]) -> dict[str, Any]:
+    return {"anyOf": [schema, {"type": "null"}]}
+
+
+def turn_schema() -> dict[str, Any]:
+    """The `submit_turn` input; the option values come from the question file."""
+
+    def options(qid: str) -> list[Any]:
+        q = question_set().question(qid)
+        return [o.value for o in q.options] if q else []
+
+    away = question_set().question("terms_away")
+    kinds = next((c.options for c in away.columns if c.id == "kind"), []) if away else []
+    term = {"type": "string", "description": "A term id like 2027-AU (AU, WI, SP or SU)."}
+    return _obj(
+        {
+            "text": {
+                "type": "string",
+                "description": "Your message: under 80 words, ending with exactly one question.",
+            },
+            "topic": {"type": "string", "enum": [*(q.id for q in agent_questions()), WRAPUP]},
+            "skipped": {
+                "type": "boolean",
+                "description": "True only when the newest message declines to answer.",
+            },
+            "facts": _obj(
+                {
+                    "post_grad_plan": _nullable(
+                        {"type": "string", "enum": options("post_grad_plan")}
+                    ),
+                    "pace": _nullable({"type": "string", "enum": options("pace")}),
+                    "wants_research": {"type": ["boolean", "null"]},
+                    "research_areas": {"type": "array", "items": {"type": "string"}},
+                    "courses_per_term": {"type": ["integer", "null"]},
+                    "terms_away": _nullable(
+                        {
+                            "type": "array",
+                            "items": _obj(
+                                {"term": term, "kind": {"type": "string", "enum": kinds}}
+                            ),
+                        }
+                    ),
+                    "class_formats": _nullable(
+                        {
+                            "type": "array",
+                            "items": {"type": "string", "enum": options("class_formats")},
+                        }
+                    ),
+                    "theory_vs_application": {"type": ["integer", "null"]},
+                }
+            ),
+        }
     )
 
 
-# ------------------------------------------------------------------------------ the run
+def model_reading(
+    question: Question | None, rules: Reading | None, out: TurnPayload
+) -> Reading | None:
+    """The reading of the newest message with the model's help: the rules win when they read
+    an answer or a skip; otherwise the model's `skipped`, or its fact for the question's field
+    (which `settle` then checks with `proposed_patch`)."""
+    if question is None or rules is None:
+        return None
+    if rules.kind != "unclear":
+        return rules
+    if out.skipped:
+        return Reading("skip")
+    value: Any = getattr(out.facts, question.field, None)
+    if question.field == "terms_away" and value is not None:
+        value = [t.model_dump() for t in value]
+    if value is None or (value == [] and question.type == "list"):
+        return rules
+    return Reading("answer", value, rules.support)
+
+
+def _describe(question: Question) -> str:
+    line = f'- {question.id}: "{question.text}" ({question.type}'
+    if question.options:
+        line += "; options: " + " | ".join(o.label for o in question.options)
+    if question.type == "scale" and question.ends:
+        line += f"; {question.min} = {question.ends.min}, {question.max} = {question.ends.max}"
+    elif question.value == "integer" and question.min is not None:
+        line += f"; any whole number from {question.min} to {question.max}"
+    if question.field == "terms_away":
+        line += "; each quarter as a term id like 2027-AU with a reason: abroad, internship, leave"
+    if question.when:
+        line += "; asked only when " + ", ".join(f"{k} is {v}" for k, v in question.when.items())
+    return line + ")"
 
 
 def _transcript(history: Sequence[InterviewTurn]) -> str:
@@ -1022,25 +948,37 @@ def _transcript(history: Sequence[InterviewTurn]) -> str:
     return "\n".join(lines) or "(no turns yet)"
 
 
-def first_message(ctx: Context) -> str:
-    covered = ctx.covered()
-    nxt = ctx.next_topic()
-    answering = ctx.answering()
-    parts = [
-        f"Mode: {ctx.mode}",
-        f"Today: {dt.date.today().isoformat()} (academic year {academic_start()}-"
-        f"{(academic_start() + 1) % 100:02d})",
-        "Topics covered: " + (", ".join(covered) or "none"),
-        f"Suggested next topic: {nxt}",
-    ]
-    if answering and ctx.mode == "reply":
-        parts.append(
-            f"The newest message answers your question about: {answering} "
-            f"(asked {ctx.asked(answering)} time(s) so far)"
-        )
+def first_message(ctx: Context, step: Step, student_md: str) -> str:
+    """The turn's data for the model: what the server read, what is left, the record and the
+    conversation (the record and the student's words as untrusted data)."""
+    parts = [f"Mode: {ctx.mode}", f"Today: {dt.date.today().isoformat()}"]
+    question = step.answering
+    if question is not None and step.reading is not None:
+        parts.append(f"The newest message answers your question `{question.id}`: {question.text}")
+        if step.reading.kind == "skip":
+            parts.append("The server read it as: skipped. Move on to the next question.")
+        elif step.answered:
+            value = answer_label(question, _patch_value(step.patch, question.field))
+            parts.append(
+                f"The server read it as: {question.label} = {value}. Leave `facts` empty and "
+                "`skipped` false."
+            )
+        else:
+            parts.append(
+                "The server could not read it. If the student's words clearly give an answer, "
+                f"put it in facts.{question.field} (or set `skipped` if they decline) and ask "
+                f"the next question; otherwise ask `{question.id}` again, briefly, with topic "
+                f"`{question.id}`."
+            )
+    rest = [q for q in step.remaining if question is None or q.id != question.id]
+    if rest:
+        parts.append("Questions still to ask (file order; ask exactly one, `topic` is its id):")
+        parts += [_describe(q) for q in rest]
+    else:
+        parts.append("No questions are left after this one: write the wrap-up (topic `wrapup`).")
     parts += [
-        "The student's profile so far:",
-        untrusted("profile", json.dumps(profile_brief(ctx.row), ensure_ascii=False)),
+        "The student's record:",
+        untrusted("student_md", student_md),
         "The conversation so far (oldest first):",
         untrusted("conversation", _transcript(ctx.history)),
     ]
@@ -1050,14 +988,28 @@ def first_message(ctx: Context) -> str:
     return "\n".join(parts)
 
 
+def _codes(text: str) -> list[str]:
+    return list(dict.fromkeys(f"{a} {b}" for a, b in COURSE_CODE.findall(text.upper())))
+
+
+# ------------------------------------------------------------------------------ the run
+
+
 def _welcome_key(account: m.Account, row: m.StudentProfile) -> str:
-    brief = json.dumps(profile_brief(row), sort_keys=True, ensure_ascii=False)
-    digest = hashlib.sha256(f"{account.id}:{brief}".encode()).hexdigest()[:32]
+    """Changes whenever an answer or the covered questions change."""
+    answers: dict[str, Any] = {
+        q.field: getattr(row, q.field, None)
+        for q in question_set().questions
+        if q.field not in ("credits", "taken_courses")
+    }
+    answers["covered"] = memory_of(row).covered
+    blob = json.dumps(answers, sort_keys=True, ensure_ascii=False, default=str)
+    digest = hashlib.sha256(f"{account.id}:{blob}".encode()).hexdigest()[:32]
     return f"me:welcome:{digest}"
 
 
 def welcome_cached(store: Store, account: m.Account, row: m.StudentProfile) -> bool:
-    """Whether a welcome-back greeting for this profile is cached (it costs no model call)."""
+    """Whether a welcome-back greeting for this record is cached (it costs no model call)."""
     return store.get(_welcome_key(account, row)) is not None
 
 
@@ -1084,13 +1036,7 @@ class InterviewRun:
                 return
             except ValidationError:
                 self.store.delete(cached_key)
-        turn: InterviewTurnEvent | None = None
-        if self.use_ai:
-            for item in self._ask_model(ctx):
-                if isinstance(item, InterviewTurnEvent):
-                    turn = item
-                else:
-                    yield item
+        turn = self._ask_model(ctx) if self.use_ai else None
         if turn is None:
             turn = rule_turn(ctx)
         if cached_key is not None and not turn.fallback:
@@ -1098,35 +1044,43 @@ class InterviewRun:
         yield turn
         yield ProfileDoneEvent(fallback=turn.fallback, note=NO_AI_NOTE if turn.fallback else None)
 
-    def _ask_model(self, ctx: Context) -> Iterator[BaseModel]:
+    def _ask_model(self, ctx: Context) -> InterviewTurnEvent | None:
+        question = ctx.answering()
+        rules = read_reply(question, ctx.message) if question is not None else None
+        student_md = render_student_md(self.db, self.row)
+        record_codes = set(_codes(student_md))
         prompt = load_prompt(PROMPT)
-        db = self.db
 
         def check(payload: TurnPayload) -> None:
             words = len(payload.text.split())
             if words > MAX_WORDS:
-                raise ValueError(f"`text` has {words} words; keep it under 120")
-            mentioned = re.findall(r"\b[A-Z]{2,5} \d{5}\b", payload.text)
-            known = course_codes_in(db, payload.text)
-            unknown = [c for c in mentioned if c not in known]
-            if unknown:
+                raise ValueError(f"`text` has {words} words; keep it under 80")
+            if set(_codes(payload.text)) - record_codes:
+                raise ValueError("do not name courses: this conversation is only the questions")
+            step = settle(ctx, model_reading(question, rules, payload))
+            allowed = step.allowed()
+            if payload.topic in allowed:
+                return
+            if step.retry and question is not None:
                 raise ValueError(
-                    f"{', '.join(unknown)} is not a course in the catalog; mention only "
-                    "courses search_courses or get_course returned"
+                    f"the newest message gives no valid {question.field} the student's words "
+                    f"support (see the options and range): either put one in "
+                    f"facts.{question.field}, or ask `{question.id}` again with topic "
+                    f"`{question.id}`"
                 )
+            raise ValueError(f"`topic` must be one of: {', '.join(allowed)}")
 
-        tools = CampusTools(db, account=self.account, show_unpublished=self.show_unpublished)
         spec = AgentSpec(
             task=TASK,
             prompt_version=prompt.version_tag,
             system=prompt.text,
-            messages=[Message("user", first_message(ctx))],
-            tools=tools.tools(TOOLS),
+            messages=[Message("user", first_message(ctx, settle(ctx, rules), student_md))],
+            tools=[],
             submit=SubmitTool(
                 "submit_turn",
-                "Your next turn: the message, quick replies, its topic and the facts noted.",
+                "Your next turn: the message, the question it asks and the answer you read.",
                 TurnPayload,
-                input_schema=TURN_SCHEMA,
+                input_schema=turn_schema(),
                 check=check,
                 strict=True,
             ),
@@ -1134,36 +1088,22 @@ class InterviewRun:
         )
         result: AgentResult[TurnPayload] | None = None
         try:
-            for item in run_live(self.llm, spec, sink=self.log.sink, label=label):
-                if isinstance(item, LiveStep):
-                    yield DashboardStepEvent(tool=item.tool, label=item.label, status=item.status)
-                else:
+            for item in run_live(self.llm, spec, sink=self.log.sink):
+                if isinstance(item, AgentResult):
                     result = item
         except AgentError as exc:
             logger.warning("%s: no turn, the rules answered (%s)", TASK, exc.reason)
         finally:
             self._save_log()
-        if result is not None:
-            yield self._turn(ctx, result.output)
-
-    def _turn(self, ctx: Context, out: TurnPayload) -> InterviewTurnEvent:
-        welcome = ctx.mode == "welcome_back"
-        facts = Facts() if welcome else out.facts
-        portrait = out.portrait if out.topic == "wrapup" and not welcome else None
-        patch, dropped = proposed_patch(ctx, facts, portrait)
-        if dropped:
-            logger.info("%s: dropped %d fact(s) the student did not say", TASK, dropped)
-        done = bool(out.done and out.topic == "wrapup" and patch.portrait and not welcome)
-        mentions = course_codes_in(self.db, out.text, limit=3)
-        return InterviewTurnEvent(
-            text=out.text.strip(),
-            quick_replies=[q for q in out.quick_replies if q][:6],
-            topic=out.topic,
-            proposed=patch,
-            progress=progress_of(ctx.covered(patch), done),
-            done=done,
-            courses=[CourseMention(code=c, title=t) for c, t in mentions.items()],
-        )
+        if result is None:
+            return None
+        out = result.output
+        step = settle(ctx, model_reading(question, rules, out))
+        if out.topic not in step.allowed():  # check() refused this already
+            return None
+        mentions = known_courses(self.db, _codes(out.text))
+        courses = [CourseMention(code=c, title=t) for c, t in mentions.items()][:3]
+        return _event(step, out.text, out.topic, fallback=False, courses=courses)
 
     def _save_log(self) -> None:
         if not self.log.records:
