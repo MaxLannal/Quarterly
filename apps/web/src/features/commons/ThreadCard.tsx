@@ -26,7 +26,7 @@ function Badge({ tone, children }: { tone: "answered" | "accepted" | "ai" | "ope
  */
 function AiAnswer({ html, questionTitle }: { html: string; questionTitle: string }) {
   return (
-    <section aria-label={`Quarterly AI's answer to “${questionTitle}”`} className="rounded-lg border-l-2 border-primary bg-primary-wash/40 px-3 py-2.5">
+    <section aria-label={`Quarterly AI's answer to “${questionTitle}”`} className="rounded-lg border border-primary/15 bg-primary-wash/40 px-3 py-2.5">
       <p className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-caption">
         <span className="inline-flex items-center gap-1 font-semibold text-ink">
           <ArchGlyph size={14} className="text-primary" />
