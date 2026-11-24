@@ -76,7 +76,8 @@ export function CourseSpotlightCard({ item, rating }: { item: CourseItem; rating
           </dl>
         )}
         {item.commons_count > 0 && (
-          <Link to={`/forum?course=${encodeURIComponent(item.code)}`} className="text-caption text-primary underline underline-offset-2">
+          // type=discussion: since issue #20 /forum also lists reviews; this link counts questions only.
+          <Link to={`/forum?course=${encodeURIComponent(item.code)}&type=discussion`} className="text-caption text-primary underline underline-offset-2">
             {item.commons_count} {item.commons_count === 1 ? "question" : "questions"} about it in the Forum
           </Link>
         )}

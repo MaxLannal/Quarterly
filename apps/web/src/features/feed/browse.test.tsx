@@ -31,6 +31,11 @@ describe("the Catalog's browse rows (issue #19)", () => {
     expect(within(fresh).getByRole("link", { name: /Fake Introduction II/ })).toHaveAttribute("href", "/courses/TEST%2010100");
     const spotlights = screen.getByRole("region", { name: "Course spotlights" });
     expect(within(spotlights).getByRole("link", { name: "Fake Introduction I" })).toHaveAttribute("href", "/courses/TEST%2010000");
+    // Since issue #20, /forum lists reviews too: the "questions" link opens the discussions only.
+    expect(within(spotlights).getByRole("link", { name: "1 question about it in the Forum" })).toHaveAttribute(
+      "href",
+      "/forum?course=TEST%2010000&type=discussion",
+    );
     const quotes = screen.getByRole("region", { name: "What students say" });
     expect(within(quotes).getByText(/take the first course in Autumn/)).toBeInTheDocument();
     expect(within(quotes).queryByText(/hard but fair/)).toBeNull(); // forum posts need a login

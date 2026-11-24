@@ -38,7 +38,7 @@ function spotlights(): S["CourseItem"][] {
       illustration: { seed: 1000 + i * 7919, motif: cat.motif, palette: i % 6 },
       stats: c.hours != null ? { workload_hours: c.hours, difficulty: c.difficulty ?? null, n: c.n ?? 0 } : null,
       reason: `Best of UChicago: ${cat.label}`,
-      commons_count: 0,
+      commons_count: c.code === "TEST 10000" ? 1 : 0, // the mock Commons has a question on it
     };
   });
 }
