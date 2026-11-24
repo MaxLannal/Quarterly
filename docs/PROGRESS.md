@@ -1,12 +1,14 @@
 # Progress
 
-> **Hand-off for the integration run (branch `issue-15-19`, 2026-11-24).** This branch was built while another session used the shared Docker stack, so it did not run `make up`, `make e2e`, `make migrate`, `make seed` or `make screenshots`, and it did not rebase. Before merging:
+> **Current state (2026-11-24, integration).** Branch `integration/2026-11-24`, not pushed: `main` plus issues #15 and #19 (branch `issue-15-19`) and issue #20 (branch `issue-20`), with Richard's answers applied. See "Integration run · issues #15, #19 and #20" at the end of this file. It lists what each issue changed, the decisions from Richard's comments and answers, the fixes made during the integration, and the items that still wait for Richard.
+>
+> **Hand-off for the integration run (branch `issue-15-19`, 2026-11-24; done by the integration run above).** This branch was built while another session used the shared Docker stack, so it did not run `make up`, `make e2e`, `make migrate`, `make seed` or `make screenshots`, and it did not rebase. Before merging:
 > 1. Rebase on `main`. Migrations, in this order: `0005_drop_pathway` (issue #15, down_revision `0004`), then `0006_drop_feed_categories` (issue #19, down_revision `0005_drop_pathway`). If `main` already has another migration after `0004`, set `0005_drop_pathway`'s `down_revision` to the newest one there and keep `0006_drop_feed_categories` after `0005_drop_pathway`.
 > 2. `make api-client`, `make check`, `make migrate`, then `make e2e` (the browser suite and journeys A-D). Journey D's only change: the course search page's heading is now "Catalog" (`e2e-stack/journey-d.spec.ts`); the other journeys use none of the removed parts.
 > 3. `make up` to restore the real stack after `make e2e`.
 > 4. `make screenshots` (SCREENSHOTS_DIR=after) for the four-tab top bar, the homepage without its question bar ("Explore the catalog"), the dashboard without routes, and `/courses` with its browse rows (logged out and logged in). The README's `docs/screenshots/readme/home.png` and `feed.png` show removed parts (the question bar, the Feed): retake them.
 >
-> **Hand-off for the integration run: issue #20, branch `issue-20` (2026-11-24).** The forum page `/forum` now shows course reviews and Commons discussions in one list (newest first; filters for type, course and instructor) with rating statistics and rankings in the left third for logged-in students, a "New post" button instead of the ask box, and the AI's answer under each question cut to at most 60 words in Quarterly's own voice. Details: "Issue #20" at the end of this file.
+> **Hand-off for the integration run: issue #20, branch `issue-20` (2026-11-24; done by the integration run above).** The forum page `/forum` now shows course reviews and Commons discussions in one list (newest first; filters for type, course and instructor) with rating statistics and rankings in the left third for logged-in students, a "New post" button instead of the ask box, and the AI's answer under each question cut to at most 60 words in Quarterly's own voice. Details: "Issue #20" at the end of this file.
 >
 > - **Base.** The branch was fast-forwarded from local `main` (1f6cb0d, which had no Commons) to `github/main` (6c83d2d, PR #10, the campus companion), because the issue changes the Commons. Merge it onto a `main` that contains 6c83d2d.
 > - **Not run here** (the Docker stack was shared with the issue 15/19 session): `make up`, `make down`, `make e2e` (journeys A-D), `make migrate`, `make seed`, `make screenshots`. Run during integration: `make api-client` after merging (the generated `openapi.json` and `schema.d.ts` will conflict with any other API change: regenerate, do not hand-merge), `make check`, `make e2e`, then `make up`. No migration: the branch changes no table.
@@ -16,13 +18,13 @@
 > - **Files other work may also touch:** `services/api/api/commons/service.py` (`thread_filters` taken out of `list_threads`), `services/api/api/routers/forum.py`, `apps/web/src/pages/CommonsPage.tsx`, `apps/web/src/features/commons/ThreadCard.tsx`, `apps/web/src/mocks/forum.ts` (six more fake reviews on pages 4 and 10), `apps/web/src/mocks/commons.ts`, `apps/web/e2e/forum.spec.ts`, `apps/web/e2e/campus.spec.ts`, and the docs (SPEC, SPEC-CHANGES, CONTRACTS, OPEN_QUESTIONS, PROGRESS).
 > - **Needs Richard:** OPEN_QUESTIONS F20-1 (the word limit, 60 for now); F20-2 to F20-4 are defaults with suggestions.
 >
-> **Current state (2026-11-24).** Branch `issue-15-19`: issue #15 (four tabs, no Ask page, no companion, no routes) and issue #19 (the Feed moved into the Catalog page `/courses`; the list of new courses waits on Richard, OPEN_QUESTIONS S19-N1). The campus companion of 2026-11-20 is otherwise as below.
+> **Earlier state (2026-11-24).** Branch `issue-15-19`: issue #15 (four tabs, no Ask page, no companion, no routes) and issue #19 (the Feed moved into the Catalog page `/courses`; the list of new courses waits on Richard, OPEN_QUESTIONS S19-N1). The campus companion of 2026-11-20 is otherwise as below.
 >
 > **Earlier state (2026-11-20).** On branch `feature/best-of-uchicago`: the course-title chapel homepage, now titled "The Best of UChicago, within your reach." with a question bar for the new Ask chatbot, plus the campus companion (Ask, a companion on every page, the dashboard with the interviewing guide and routes, the feed, the Commons). See "Campus companion" at the end of this file, `docs/BEST-OF-UCHICAGO-PLAN.md`, and OPEN_QUESTIONS CC-1 to CC-8.
 >
 > **Earlier state (2026-11-16).** Every prompt (00-13) has been run (the schedule scraper stays switched off until the University allows scraping); the owner's FEEDBACK items are all resolved (index at the top of "Done" in `docs/FEEDBACK.md`). The latest work, at the end of this file: the design pass with Impeccable (D1-D11, `docs/DESIGN-REVIEW.md`), TRNC 10100 transfer credit, and the advisor's cut-off replies (output limit 800 to 4000; a cut-off reply now stops the run). The project moved from `quadplan-kit/` to the repository root for GitHub.
 >
-> `make check` and `make e2e` pass (journey C's preference check is flaky, OPEN_QUESTIONS E2E-2). AI features run only with `LLM_LIVE=true`. Open decisions: the "Start here" block of `docs/OPEN_QUESTIONS.md`. Suggested next steps: "Later" in `docs/FEEDBACK.md`.
+> `make check` and `make e2e` pass on `integration/2026-11-24` (the end-to-end stack gives the generator 20 s, and journey C records its year preference as a gap, OPEN_QUESTIONS E2E-2 and INT-1). AI features run only with `LLM_LIVE=true`. Open decisions: the "Start here" block of `docs/OPEN_QUESTIONS.md`. Suggested next steps: "Later" in `docs/FEEDBACK.md`.
 >
 > The log below is chronological, one section per prompt or goal.
 
@@ -746,3 +748,64 @@ Richard's answers on the issue: D1 option A (a short AI answer under each Common
     - Mock-data browser tests (`E2E_PORT=4175 npm --prefix apps/web run e2e`): 98 passed, 55 skipped (the screenshot specs, skipped as before), exit 0. Earlier runs failed only on timeouts while the other worktree kept the machine's load average at 30 to 120; the onboarding drag also failed in the baseline run before any change (now fixed as above), and the long `/forum` journey got a 60 s limit.
 
 **Not done:** an eval set for prompt `a9_commons_bot` version 2 (it needs paid model calls, so the owner's OK). No paid call was made.
+
+## Integration run · issues #15, #19 and #20 (2026-11-24, branch `integration/2026-11-24`)
+
+Richard asked for one branch that holds both overnight branches and his answers, with every check run. The branch is not pushed and has no pull request.
+
+**How this run merged the branches**
+- The branch starts at `main` (1f6cb0d). It merges `issue-15-19` (270d6b5), then `issue-20` (6c02035). Both branches start at `github/main` (6c83d2d), which contains `main`, so the first merge had no conflicts.
+- The second merge had conflicts. The resolution keeps the behaviour of both issues:
+  - SPEC sitemap: the rows for `/`, `/ask`, `/me` and `/feed` come from issue #15/#19. The `/forum` row comes from issue #20. The companion row is gone, because issue #15 removed the companion.
+  - SPEC-CHANGES, OPEN_QUESTIONS and PROGRESS keep the entries of both branches.
+  - `apps/web/e2e/onboarding.spec.ts`: issue #20's drag (two pointer drags, then the keyboard drag) replaces the three pointer drags of issue #15/#19. OPEN_QUESTIONS E2E-1 records this.
+  - `openapi.json`, `schema.d.ts` and `docs/schemas`: `make api-client` made them again. Nobody merged them by hand.
+- Alembic has one head. The chain is 0003 → 0004 → `0005_drop_pathway` (issue #15) → `0006_drop_feed_categories` (issue #19). Issue #20 adds no migration. `alembic heads` shows `0006_drop_feed_categories (head)`, and `make migrate` brought the development database to it.
+
+**What each issue changed** (the issue sections above give the details)
+- **Issue #15, site structure.** The top bar has four tabs: Dashboard, Planner, Catalog and Forum. The Ask page, the question bar on the homepage, the floating companion and the routes on the dashboard are gone. `/ask` opens the planner. Migration 0005 drops the `pathway` table.
+- **Issue #19, the Catalog.** The Feed page is gone, and `/feed` opens the Catalog (`/courses`). Before a search, the Catalog shows three rows: "Newly released courses", "Course spotlights" and "What students say". A logged-in student sees a rating summary for every course. Migration 0006 drops `student_profile.feed_categories`.
+- **Issue #20, the forum page.** `/forum` shows course reviews and Commons discussions in one list, newest first, with filters for type, course and instructor. A logged-in student also sees rating statistics and rankings in the left third. A "New post" button replaces the ask box. The AI answer under a question has 60 words at most and speaks as "Quarterly".
+
+**Decisions from Richard's comments and answers**
+- From the comments on the GitHub issues:
+  - Issue #15, D1: remove the companion ("agree with suggestion. Remove the orb."). OPEN_QUESTIONS S15-D1.
+  - Issue #19, D1 and D2: take the suggestions ("Agree with suggestions for now, see how the build turns out."). The spotlights and the quotes move to the Catalog. A person writes the list of new courses, with a quote for each course. OPEN_QUESTIONS S19-D1 and S19-D2.
+  - Issue #20, D1: option A, a short AI answer under each question, in the name "Quarterly", not "Phil the Phoenix". D2: as suggested, reviews and the Commons keep their own tables and show in one list.
+- From the answers in `docs/OPEN_QUESTIONS.md`. Each item now has a "Resolved in <commit>" line under Richard's text:
+  - **F20-1:** keep the 60-word limit for now and test it in use. Commit c3ef474 records the limit as confirmed in SPEC (A9) and `api/commons/words.py`.
+  - **S19-N1:** leave the list of new courses empty. Richard and Max add courses by hand, or the row waits for the next catalog. No code change. Commit c3ef474 records this in `data/catalog/new_courses.yaml`.
+  - **P12-2, P12-3 and P13-1:** these earlier answers (option (a) each) needed no new work. Their lines cite the commits that built them: b09f3f1, 57c6723 and 4049a63.
+  - Richard's answers start with "Richard's answer:", not "Answer (Richard):". This run took every "Richard's answer" line under a "Needs Richard" item as an answer.
+
+**Fixes made on the integration branch, and the issue each one belongs to**
+- **Issue #19 × issue #20** (f408428): the "N questions about it in the Forum" link on a Catalog spotlight now opens `/forum?course=…&type=discussion`. After issue #20, the plain link also listed that course's reviews. The integration spec review found this. A test in `browse.test.tsx` covers it.
+- **Issue #20, docs** (34feea7): the README describes `/forum` as one list of reviews and discussions.
+- **Neither issue: present on `github/main` since the full catalog import (PR #9, 11,301 courses).** Nobody ran `make e2e` after that import (its commit says so). Journeys A, B and C failed here before any fix, and the issue branches did not change the planner, the generator or the verifier. The fixes:
+  - 5dec817: every course page (`GET /courses/{code}`) built the whole catalog again for "counts toward". Each build took about 160 ms of CPU. After "Generate", the planner loads about 45 course cards, so the plan check waited behind them for more than 20 s. `load_catalog` now keeps one copy per API process, like the rules cache. A test in `test_rules_cache.py` covers it.
+  - 5dec817: uvicorn killed API workers that did not answer its health ping within 5 s, for example while a worker imported OR-Tools or loaded the catalog. Each kill started a new slow start-up. In one run the API never became healthy. The API image now waits 60 s (`WORKER_HEALTHCHECK_S`).
+  - 31a6b88: the end-to-end stack gives the plan generator 20 s (`GENERATE_SOLVER_SECONDS`). The app keeps 4 s. With 4 s this laptop found one variant or none, and journey B's infeasibility proof ran out of time (OPEN_QUESTIONS E2E-2, and INT-1 for the app).
+  - 31a6b88: journey A's drag. The cards are taller now, so two quarters a year apart do not fit on one screen, and the pointer dropped nowhere. The test now makes the window tall enough, tries the drag up to three times, and starts the "under a second" timer at the drop. After the second spec review, e4e6fa0 makes sure that a retry cannot hide a slow plan check.
+  - 7dc60fe: journey B, step B5. The test typed the confirmation while the advisor's reply still streamed, and the panel dropped it. The test now waits until the panel enables "Send".
+  - 7b11231: journey C's preference "the major's courses sit mostly in years 2-3" failed 2 of 2 runs with the 20 s solver. The test now records it as a gap, as OPEN_QUESTIONS E2E-2 suggested. The hard checks stay.
+  - 2a361f4: the screenshot spec waited for the old homepage and login headings ("Quarterly", "Log in"). The redesign of PR #10 changed them, so `make screenshots` failed on 4 of 55 pages.
+- **The test environment, not the code:** two Docker builds failed while they downloaded Python packages. A third build passed.
+
+**Checks on `integration/2026-11-24`** (in the order Richard asked for)
+- `make api-client`: exit 0 after the merge. It wrote 21 JSON Schemas, `openapi.json` and `schema.d.ts`. `make check` confirms that the generated client is current.
+- `alembic heads`: one head, `0006_drop_feed_categories`.
+- `make check`: exit 0 after the merge and again at 2a361f4. Results at 2a361f4: ruff, eslint, mypy and tsc clean, planner_core 184 passed (coverage 97.16%), API and services 691 passed, web 185 passed (22 files), golden PASS=115.
+- `make up`, `make migrate`, `make seed`: exit 0. The seed loaded 11,301 courses, 2,699 cross-list groups, 4,012 requisites, 27,513 offering patterns, 176 course lists, 11 programs and the College policy.
+- `make e2e`: 12 runs. Two stopped at a failed Docker build, and one at an API that never became healthy (before 5dec817). The mock-data browser tests gave 98 passed and 55 skipped (the screenshot specs) in every run but one, where `plans.spec.ts` timed out once. The journeys failed in 6 runs, and in 2 direct reruns, while the fixes above went in. At 7b11231 all four journeys passed and `make e2e` exited 0, with the gap "C3: more major courses in Y4 (8) than in Y2-Y3 (7)" recorded by journey C. The last run, at e4e6fa0, also exited 0: 98 browser tests and the four journeys passed, and journey C met its year preference.
+- `make up` after `make e2e`: exit 0, every service healthy, `LLM_FAKE` and `GENERATE_SOLVER_SECONDS` empty again (the real stack).
+- `SCREENSHOTS_DIR=after-1124 make screenshots`: exit 0, 55 files in `docs/screenshots/after-1124/` (2a361f4), each page at 1440 and 390 px. The dashboard (`/me`) is not in the screenshot spec.
+- Two `spec-reviewer` runs in a fresh context: the first reviewed the merge, the second the fixes. This run fixed every gap they found (see above).
+
+**Still waiting for Richard**
+- **INT-1** (new, OPEN_QUESTIONS): how long "Generate" may think in the app. It has 4 s now, and the end-to-end tests use 20 s. Suggested: measure on the real server first.
+- **F20-2 to F20-4** (issue #20): the ranking periods (the last 3 and 12 months) and the starting score of each course. Also, should "New post" offer "Review a course" too? Each item has a default and a suggestion.
+- **CC-1 to CC-8** (campus companion): each item has a suggested answer. CC-7 still asks whether a Commons removal counts towards a suspension.
+- **E2E-1 and E2E-2:** flaky drags and journey C's preference check. This run changed both tests (see above). In 3 of 4 runs with the 20 s solver, the generator put 8 CS courses in year 4 and 7 in years 2-3. This can be a gap in the generator against SPEC journey C step 3 ("moves heavy major courses into Y2-Y3"), not only a flaky test. Suggested: keep the check as a recorded gap for the demo, and look at the generator's year preference before launch.
+- **Before launch:** DF-A1 (the demo photo behind the chapel), DF-S1 (44 summer-only courses), the "Later (by Richard)" list, and the hand check of `data/seed/REVIEW.md`.
+- **`docs/FEEDBACK.md`:** "Course-title chapel on the homepage" (In progress) waits for Richard's OK. "Later" lists the suggestions from issues #15 and #19. They are a "Follow" button on the course page, a way to mark "What's new" as seen, and new README screenshots. `home.png`, `ask.png` and `feed.png` show removed parts.
+- **Phone homepage** (issue #15): the search row of the top bar now shows above the chapel on phones. Richard can ask to hide it again.
