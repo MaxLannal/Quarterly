@@ -6,6 +6,7 @@
 > - **Not run here** (the Docker stack was shared with the issue 15/19 session): `make up`, `make down`, `make e2e` (journeys A-D), `make migrate`, `make seed`, `make screenshots`. Run during integration: `make api-client` after merging (the generated `openapi.json` and `schema.d.ts` will conflict with any other API change: regenerate, do not hand-merge), `make check`, `make e2e`, then `make up`. No migration: the branch changes no table.
 > - **Run here:** `make check` and the mock-data browser tests (`E2E_PORT=4175 npm --prefix apps/web run e2e`); results at the end of this file.
 > - **To look at with real data:** `make seed-forum-demo` and `make seed-commons-demo`, then `/forum` logged in and logged out (rankings need 3 reviews in the last 91 days; the stats are cached per process for `PAGE_CACHE_TTL_S`).
+> - **A test outside the forum changed:** `apps/web/e2e/onboarding.spec.ts` now falls back to dnd-kit's keyboard drag when the pointer drag misses (OPEN_QUESTIONS E2E-1). It failed before any issue #20 change whenever the other worktree loaded the machine.
 > - **Files other work may also touch:** `services/api/api/commons/service.py` (`thread_filters` taken out of `list_threads`), `services/api/api/routers/forum.py`, `apps/web/src/pages/CommonsPage.tsx`, `apps/web/src/features/commons/ThreadCard.tsx`, `apps/web/src/mocks/forum.ts` (six more fake reviews on pages 4 and 10), `apps/web/src/mocks/commons.ts`, `apps/web/e2e/forum.spec.ts`, `apps/web/e2e/campus.spec.ts`, and the docs (SPEC, SPEC-CHANGES, CONTRACTS, OPEN_QUESTIONS, PROGRESS).
 > - **Needs Richard:** OPEN_QUESTIONS F20-1 (the word limit, 60 for now); F20-2 to F20-4 are defaults with suggestions.
 >
@@ -700,6 +701,9 @@ Richard's answers on the issue: D1 option A (a short AI answer under each Common
 16. On phones the statistics come above the list: done (e2e checks the boxes at 390 px; the notes go below the list).
 17. Change `forum.spec.ts` and `campus.spec.ts`; `make api-client` and `make check`: done. `make e2e` and `make up`: skipped in this session (the shared Docker stack); the mock-data browser tests ran instead, and the integration run does the rest (hand-off note at the top).
 18. SPEC ("The forum page", "A9", sitemap), SPEC-CHANGES, PROGRESS: done; also CONTRACTS and OPEN_QUESTIONS F20-1 to F20-4.
-19. "Finishing a task": the `spec-reviewer` review and the final checks are below.
+19. "Finishing a task": done.
+    - `spec-reviewer` found 3 gaps, all fixed: the period's average, recommend share and workload were shown below 3 reviews (now null below 3); top courses and majors did not pool the codes of a cross-listed course (now pooled, named by the code with the most reviews); a clipped answer could end inside a markdown link (now cut before it). Its re-check found that the link fix also moved the cut for a closed bracket such as "[sic]"; fixed, and the re-check of the other two found no gap.
+    - `make check` passed: ruff, eslint, mypy, tsc, the generated client is current, planner_core 184 passed, API and services 732 passed, web 197 passed, golden PASS=115.
+    - Mock-data browser tests (`E2E_PORT=4175 npm --prefix apps/web run e2e`): 98 passed, 55 skipped (the screenshot specs, skipped as before), exit 0. Earlier runs failed only on timeouts while the other worktree kept the machine's load average at 30 to 120; the onboarding drag also failed in the baseline run before any change (now fixed as above), and the long `/forum` journey got a 60 s limit.
 
 **Not done:** an eval set for prompt `a9_commons_bot` version 2 (it needs paid model calls, so the owner's OK). No paid call was made.
