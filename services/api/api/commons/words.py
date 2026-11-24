@@ -19,7 +19,7 @@ ANSWER_WORDS = 60
 _TOKEN = re.compile(r"\S+")
 _WORDLIKE = re.compile(r"[^\W_]")
 _SENTENCE_END = re.compile(r"[.!?](?:\*\*|\*|_)?(?=\s|$)")
-_TRAILING = " \t\n,;:-–—("
+_TRAILING = " \t\n,;:(-" + "\N{EN DASH}\N{EM DASH}"
 
 
 def count_words(text: str) -> int:
