@@ -175,7 +175,7 @@ Mockups of six key screens, with sample data, are on the design canvas: [QuadPla
 | `/ask` | Ask Quarterly | No | The campus chatbot (`POST /agents/ask`): conversations kept in the browser, a live trace of the tools it uses, cited answers with course links and follow-up questions; a Gothic window drawn with course titles behind the title (docs/BEST-OF-UCHICAGO-PLAN.md) |
 | `/me` | Your dashboard | Yes | Class year, email (read from the account), interests, research areas, humanities goal and topics, career, future domains; the interviewing guide (`POST /agents/interview`) that proposes what to keep; what's new; **Routes** at the bottom (AI drafts via `POST /agents/routes`, kept by the student; choose one or keep all open) |
 | `/feed` | The feed | No (personal when logged in) | Course spotlights with generated illustrations and related books, student comments, word clouds, programs and open questions; focus categories; For you / Explore / Following; floating words; AI notes (`POST /agents/feed-notes`) |
-| `/forum`, `/forum/new`, `/forum/t/{id}` | The Commons (Forum) | Read: no; write: yes | Course questions answered first by the AI (`POST /commons/threads/{id}/bot`), then by students: nested replies, votes, accept, edit, delete, report, follow, typing presence, a markdown composer with course mentions and drafts. Course x instructor reviews stay at `/instructors` |
+| `/forum`, `/forum/new`, `/forum/t/{id}` | The forum (reviews and the Commons) | Read: no (reviews and ratings: yes); write: yes | `/forum` (issue #20, see Forum, "The forum page"): ratings, statistics and rankings in the left third (logged-in students only), and course reviews and Commons discussions in one list, newest first, in the right two thirds; a "New post" button opens `/forum/new`. A discussion is a Commons question and its replies: a short AI answer first (at most 60 words, `POST /commons/threads/{id}/bot`), then students: nested replies, votes, accept, edit, delete, report, follow, typing presence, a markdown composer with course mentions and drafts. Reviews are still written on the course x instructor pages (`/instructors`) |
 | (every page) | The companion | No (updates need login) | A floating orb opening a side panel: a chat that knows the page and, logged in, the student's profile; "For you" lists new forum posts, comments and reviews (`GET /me/updates`) |
 | `/onboarding` | Planner setup | No | Entry term, credits, programs, goals |
 | `/plan` | Planner | No (local) / Yes (to save) | 4-year grid, requirements, verifier, generate, chat |
@@ -655,6 +655,13 @@ Their steps are in Data ingestion. Harness specifics for the formalizer (E3): to
 - **Cold start:** before any student data, Sonnet 5.5 estimates workload and difficulty from the description and course level with a fixed rubric. The value is labelled "estimate" and weighted as 2 ratings.
 - The numeric update itself is deterministic (see Forum).
 
+### A9. The AI's answer under a Commons question
+
+The Commons bot (`api/agents/commons_bot.py`, task `a9_commons_bot`, prompt `prompts/a9_commons_bot.md`) writes the first answer under a forum question, in Quarterly's own voice ("Quarterly", not a mascot; issue #20, D1 option A). Its read tools are the catalog, programs, other Commons questions and the campus guide, never the login-only reviews, because the answer is public (OPEN_QUESTIONS CC-1).
+
+- **At most 60 words** (OPEN_QUESTIONS F20-1: Richard set no number; 60 is the default until he decides). The prompt asks for it; `submit_answer` rejects a longer answer once with the word count, so the model gets its one repair turn; a second long answer ends the run and the deterministic search answers instead (also at most 60 words). The stored answer, and any answer stored before the limit, is clipped to 60 words when shown (`api/commons/words.py`: a word is a run of characters between spaces that holds a letter or digit).
+- The answer is always shown as written by an AI ("Quarterly AI", an "AI" badge, "Written by an AI and can be wrong"), on the thread page and in the `/forum` list.
+
 ### A4. Moderation
 
 Students' posts, comments and edits are **not** checked before they are published (Richard, 2026-11-14, P08-1): a regex pass strips emails and phone numbers, then the post appears at once; guideline breaks are taken down through reports and the admin queue. Haiku 5.5 labels only AI-written text: a "What students say" summary publishes only when A4 says `ok` (labels `ok`, `personal_attack`, `identifying_info`, `harassment`, `sexual`, `misconduct_claim`, `spam`, `off_topic`).
@@ -719,6 +726,21 @@ The forum follows theCourseForum's idea of one page per course × instructor ([t
 - No automatic check before publishing (P08-1): user reports and a human queue in the console take posts down.
 - Suspensions are always an admin's choice (P08-3): when removing an item, the admin may suspend its author for 7, 30 or 90 days without learning who the author is; an admin can end a suspension early from the console. Bans are per account. Because each verified email can hold one account, a ban cannot be dodged by signing up again with the same address; an account cannot be deleted while suspended or within 30 days of an upheld removal (P08-12, P08-14).
 - Instructors are not given a reply channel in v1; revisit with the University.
+
+### The forum page (`/forum`)
+
+Issue #20 (Richard, 2026-11-24: D1 option A, D2 as suggested) puts course ratings and discussions on one page, in the manner of IMDb and Reddit.
+
+- **One list, two tables (D2).** Reviews (`post` + `review_rating`) and Commons discussions (`commons_thread` + `commons_reply`) keep their own tables. `GET /forum/items` merges them, newest day first; on one day discussions come before reviews, then the newest id. The cursor is the sort key of the last item, so a page never repeats or skips an item. Filters: item type (review, discussion), course (a review matches every code of its cross-listed course), instructor (reviews only: a discussion has no instructor), subject, text, and the Commons tag and "my questions" (discussions only). Reviews are for logged-in readers: a logged-out reader gets the public discussions only (`reviews_hidden`) and a login card.
+- **The AI under each question (D1 option A).** Each discussion in the list shows the AI's first answer under the question, at most 60 words, labelled "Quarterly AI · AI · Written by an AI and can be wrong" (see A9 below).
+- **Layout.** The list fills the right two thirds; the left third holds the statistics and rankings, then the notes about the forum. On a phone the statistics come above the list and the notes below it. A "New post" button (a link to `/forum/new`) replaces the ask box, so students start discussions, not chatbot questions.
+- **Statistics and rankings** (`GET /forum/stats?period=quarter|year`, logged-in students only, the rule the course pages follow). Only structured ratings count: `review_rating.overall` of visible reviews posted in the period, the last 91 days (`quarter`, shown as "Last 3 months") or the last 365 days (`year`, "Last 12 months"), counted back from today. Statistics: the number of reviews and courses, the average overall rating, the share who would recommend, and the average workload. Rankings, each line with its score and review count:
+  - the top 10 courses (every instructor of a course pooled);
+  - for each major, its 5 best-rated courses (a course belongs to a major when it can fill one of the major's requirements, the "counts toward" rule);
+  - the Humanities sequences, the sublists of the Core list `core-huma-sequences`, each pooling the reviews of its courses and their cross-listed codes;
+  - the top 10 instructors (their courses pooled).
+
+  Every score is the Bayesian average below with prior weight k = 5 and, as the prior mean m, the average overall rating of every review in the period (one prior for all subjects, so courses of different departments compare). A subject needs at least 3 reviews in the period to be ranked (the n ≥ 3 rule below).
 
 ### Forum → course attributes
 

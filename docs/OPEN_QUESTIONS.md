@@ -5,6 +5,7 @@
 > - **Before launch** ("Deferred until before deployment" below): **DF-A1** replace the watermarked demo photo behind the homepage chapel; **DF-S1** 44 summer-only courses not yet in the planner; the **"Later (by Richard)"** list (email to real users, placement field, Econ specializations, more study-abroad programs, Econ items, the full hand check of `data/seed/REVIEW.md`).
 > - **Tests:** **E2E-1** (drawer drag test retries a missed drag) and **E2E-2** (journey C's preference checks depend on the solver's time limit), at the end of the file.
 > - **Campus companion** (2026-11-20, at the end of the file): **CC-1** to **CC-8**, decisions made while building the Ask chatbot, the dashboard, the feed and the Commons; each has a suggested answer.
+> - **Forum page, issue #20** (2026-11-24, at the end of the file): **F20-1 Needs Richard:** how many words the AI's answer under a forum question may have (60 for now). F20-2 to F20-4 are defaults taken while building, each with a suggested answer.
 > - **"Work these answers create (not started)"** below was listed on 2026-11-14; some of it was built since. Check `docs/PROGRESS.md` and the code before starting an item.
 >
 > New questions go at the end of the matching section, in plain language with a suggested answer (see `CLAUDE.md`, "Working with the owner").
@@ -561,3 +562,17 @@ Built in one overnight pass from Max's request. Each item is a decision taken so
 - **CC-6 What the dashboard stores.** The profile (interests, career plans, humanities goal...) and the guide's last 24 turns are stored with the account, exported by `/account/export` and deleted with the account; the email is never copied into it (a test checks this). Ask and companion conversations stay in the browser and are cleared on logout. Suggested: OK as built. Option: keep no interview turns on the server (the guide would not remember earlier conversations).
 - **CC-7 Commons reports.** Resolved (2026-11-20): `/admin/moderation` now has a "Commons reports" section (`GET /admin/commons-reports`, `POST /admin/commons-reports/{type}/{id}/decision`): Remove shows the item as "[removed]" (replies under it stay), Keep leaves it up; either way its reports close and a `moderation_action` is recorded. Still open: whether Commons removals should count towards suspensions like forum removals (suggested: not for now).
 - **CC-8 Demo questions.** `make seed-commons-demo` adds 14 questions (not experiences or reviews) on real courses, asked by refs that match no account, for development only. Suggested: remove them before launch (`make seed-commons-demo ARGS=--remove`).
+
+## Forum page, issue #20 (2026-11-24)
+
+Richard's answers on the issue: D1 is option A (a short AI answer under each forum question), written as "Quarterly", not "Phil the Phoenix"; D2 as suggested (reviews and Commons keep their own tables and show in one list). The items below came up while building it.
+
+- **F20-1 How long may the AI's answer under a question be? Needs Richard.** Option A needs a word limit and the issue comments set none, so the limit is **60 words** for now. The prompt asks for it, a longer answer is sent back to the AI once to shorten, and the site clips anything longer when it stores or shows it (older, longer answers are shown clipped too). 60 words is about three short sentences or one sentence and two bullets.
+  **Suggested:** keep 60. Options: **40** (one or two sentences; the AI gives a pointer, students give the detail); **100** (room for a short list of courses with prerequisites; the list on `/forum` gets longer to scroll).
+- **F20-2 What "this quarter" and "this year" mean in the rankings.** Built: the reviews posted in the last 91 days ("Last 3 months") and the last 365 days ("Last 12 months"), counted back from today. This always has recent reviews to rank.
+  **Suggested:** keep. Option: count the academic quarter or year in which students *took* the course ("Autumn 2026"); this matches how students think of a course, but early in a quarter almost nothing is ranked because reviews come after the course ends.
+- **F20-3 The starting point of each score.** SPEC's Bayesian average needs a starting average m (each course starts at m as if it had 5 reviews). Built: one m for everything, the average rating of all reviews in the period, so courses from different departments compare fairly in one ranking.
+  **Suggested:** keep. Option: each department's own average, as SPEC uses for course attributes; a course would then be compared with its department, which makes a single cross-department ranking less fair.
+- **F20-4 Writing a review from `/forum`.** "New post" opens the question form (as the issue asks). Reviews are still written on a course's instructor page (the forum's "Course reviews by instructor" link), because a review needs its course, instructor and term.
+  **Suggested:** later, let "New post" offer "Ask a question" or "Review a course" (the second asks for the course and instructor, then opens that page's review form). Option: keep as built.
+
