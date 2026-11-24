@@ -1,6 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 test("onboarding: five steps create a plan and open the generator", async ({ page }) => {
+  test.setTimeout(60_000); // a long journey; a busy machine (another worktree's tests) slows it
   await page.goto("/onboarding");
   await expect(page.getByRole("heading", { level: 1, name: "Planner setup" })).toBeVisible();
 
@@ -46,21 +47,37 @@ test("onboarding: five steps create a plan and open the generator", async ({ pag
   await page.setViewportSize({ width: 1280, height: 1000 });
   await target.scrollIntoViewIfNeeded();
   // A pointer drag can miss when the machine is busy (OPEN_QUESTIONS E2E-1; seen here while
-  // another worktree ran its tests): up to three attempts, each aimed after the drag starts;
-  // the chip must land in the end.
-  for (let attempt = 0; attempt < 3; attempt += 1) {
+  // another worktree ran its tests). So: up to two pointer drags, each aimed after the drag
+  // starts; if both missed, the same drag with dnd-kit's keyboard sensor (Space, arrows until
+  // the chip sits on the quarter, Space), which does not depend on timing.
+  const landed = async () => ((await target.textContent()) ?? "").includes("At most 4 courses");
+  for (let attempt = 0; attempt < 2 && !(await landed()); attempt += 1) {
     const a = await chip.boundingBox();
     if (!a) throw new Error("no chip box");
     await page.mouse.move(a.x + a.width / 2, a.y + a.height / 2);
     await page.mouse.down();
     await page.mouse.move(a.x + 20, a.y + 20, { steps: 5 });
-    await page.waitForTimeout(150); // let the drag overlay mount before aiming
+    await page.waitForTimeout(150); // let the drag start before aiming
     const b = await target.boundingBox();
     if (!b) throw new Error("no target box");
     await page.mouse.move(b.x + b.width / 2, b.y + b.height / 2, { steps: 10 });
     await page.mouse.move(b.x + b.width / 2 + 2, b.y + b.height / 2 + 2, { steps: 2 });
+    await page.waitForTimeout(200); // let dnd-kit see the quarter under the pointer
     await page.mouse.up();
-    if ((await target.textContent())?.includes("At most 4 courses")) break;
+  }
+  if (!(await landed())) {
+    await chip.focus();
+    await page.keyboard.press("Space");
+    for (let step = 0; step < 60; step += 1) {
+      const from = await chip.boundingBox();
+      const to = await target.boundingBox();
+      if (!from || !to) throw new Error("no boxes");
+      const dx = to.x + to.width / 2 - (from.x + from.width / 2);
+      const dy = to.y + to.height / 2 - (from.y + from.height / 2);
+      if (Math.abs(dx) < to.width / 3 && Math.abs(dy) < to.height / 3) break;
+      await page.keyboard.press(Math.abs(dy) > Math.abs(dx) ? (dy > 0 ? "ArrowDown" : "ArrowUp") : dx > 0 ? "ArrowRight" : "ArrowLeft");
+    }
+    await page.keyboard.press("Space");
   }
   await expect(target).toContainText("At most 4 courses");
   // dnd-kit swallows a click that lands within a few milliseconds of a drop (a person cannot
