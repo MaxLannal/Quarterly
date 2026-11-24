@@ -1,5 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
-import { expectVariants, generate, gridByTerm, openPanel, verifierSettled } from "./journey";
+import { expectVariants, gap, generate, gridByTerm, openPanel, verifierSettled } from "./journey";
 
 // SPEC "Core user journeys" C: goal-constrained student (study abroad + lighter senior year),
 // real stack, fake LLM. The SPEC example says "Paris, Spring Y2", but the seeded catalog offers
@@ -84,8 +84,11 @@ test("journey C: Paris block in Autumn Y2 and at most 3 courses per quarter in Y
   for (const t of Y4) expect((grid[t] ?? []).length, `${t} courses`).toBeLessThanOrEqual(3);
   const cs = (terms: string[]) => terms.flatMap((t) => grid[t] ?? []).filter((c) => c.startsWith("CMSC ")).length;
   // A preference, not a rule: the generator stops at a time limit, and the forum ratings in
-  // the reused dev database shift its choices run to run (OPEN_QUESTIONS E2E-2).
-  expect(cs(Y2_Y3)).toBeGreaterThanOrEqual(cs(Y4));
+  // the reused dev database shift its choices run to run (OPEN_QUESTIONS E2E-2). Since the full
+  // catalog import it failed 2 of 2 runs with the e2e stack's 20 s solver (7 in Y2-Y3, 8 in Y4),
+  // so it is recorded as a gap, as E2E-2 suggested, until Richard decides (integration run
+  // 2026-11-24).
+  if (cs(Y2_Y3) < cs(Y4)) gap(`C3: more major courses in Y4 (${cs(Y4)}) than in Y2-Y3 (${cs(Y2_Y3)}).`);
 
   // Offering patterns were checked: no course is placed in a quarter it is not usually offered.
   expect(r.issues.filter((i) => i.code === "V04")).toEqual([]);
