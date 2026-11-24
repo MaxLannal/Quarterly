@@ -348,8 +348,11 @@ _lock = threading.Lock()
 
 
 def clear_rules_cache() -> None:
+    from api.repo.catalog import clear_catalog_cache  # the course pages' copy of the catalog
+
     with _lock:
         _years.clear()
+    clear_catalog_cache()
 
 
 def _load_year(session: Session, year: str) -> _Year:

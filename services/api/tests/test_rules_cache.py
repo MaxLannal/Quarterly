@@ -74,3 +74,45 @@ def test_cached_inputs_equal_the_queried_ones(migrated_db_url: str) -> None:
         repo.clear_rules_cache()
         assert not repo._years
     engine.dispose()
+
+
+def test_course_pages_reuse_one_catalog_copy(migrated_db_url: str) -> None:
+    """`load_catalog` (every course page's `counts_toward`) is kept per year while the cache is
+    on, equal to a fresh read; a made-up year is never kept (integration run 2026-11-24)."""
+    from api.config import get_settings
+    from api.repo import catalog as catalog_repo
+
+    engine = sa.create_engine(migrated_db_url)
+    settings = get_settings()
+    saved = settings.rules_cache_ttl_s
+    with Session(engine) as db:
+        upsert_bundle(db, load_bundle(ROOT / "data" / "seed" / "2026-27"))
+        db.commit()
+        repo.clear_rules_cache()
+        fresh = catalog_repo.load_catalog(db, "2026-27")  # cache off: a new read each time
+        assert catalog_repo.load_catalog(db, "2026-27") is not fresh
+        assert not catalog_repo._catalogs
+        settings.rules_cache_ttl_s = 60.0
+        try:
+            first = catalog_repo.load_catalog(db, "2026-27")
+            assert catalog_repo.load_catalog(db, "2026-27") is first
+            assert first.model_dump(mode="json") == fresh.model_dump(mode="json")
+            assert not catalog_repo.load_catalog(db, "1999-00").courses
+            # A stale copy is served while one background thread builds the next.
+            key = next(iter(catalog_repo._catalogs))
+            catalog_repo._catalogs[key] = (time.monotonic() - 120.0, first)
+            assert catalog_repo.load_catalog(db, "2026-27") is first
+            for _ in range(200):
+                if not catalog_repo._catalogs_refreshing:
+                    break
+                time.sleep(0.05)
+            assert not catalog_repo._catalogs_refreshing
+            renewed = catalog_repo.load_catalog(db, "2026-27")
+            assert renewed is not first
+            assert renewed.model_dump(mode="json") == fresh.model_dump(mode="json")
+            assert not any(year == "1999-00" for _, year in catalog_repo._catalogs)
+            repo.clear_rules_cache()  # also clears the course pages' copy
+            assert not catalog_repo._catalogs
+        finally:
+            settings.rules_cache_ttl_s = saved
+    engine.dispose()

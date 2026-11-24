@@ -33,14 +33,19 @@ from api.routers import (
 async def lifespan(_: FastAPI) -> AsyncIterator[None]:
     """With RULES_CACHE_TTL_S > 0, load the catalog years before serving (prompt 12)."""
     if get_settings().rules_cache_ttl_s > 0:
+        import sqlalchemy as sa
         from sqlalchemy.orm import Session
 
+        from api.db import models as m
         from api.db.session import get_engine
+        from api.repo.catalog import load_catalog
         from api.repo.rules import preload_rules_cache
 
         try:
             with Session(get_engine()) as session:
                 preload_rules_cache(session)
+                for year in session.scalars(sa.select(m.CatalogYear.id)).all():
+                    load_catalog(session, year)  # the course pages' copy (counts_toward)
         except Exception as exc:  # a cold cache is only slower, never wrong
             logging.getLogger("api").warning("rules cache preload failed: %s", type(exc).__name__)
     yield

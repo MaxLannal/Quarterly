@@ -16,4 +16,9 @@ ENV GIT_SHA=$GIT_SHA
 WORKDIR /app/services/api
 EXPOSE 8000
 HEALTHCHECK --interval=5s --timeout=3s --retries=20 CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/health', timeout=2)"
-CMD ["sh", "-c", "if [ -f alembic.ini ]; then alembic upgrade head; fi && uvicorn api.main:app --host 0.0.0.0 --port 8000 --no-access-log --workers ${WEB_CONCURRENCY:-4}"]
+# A worker that does not answer uvicorn's health ping in time is killed. The default 5 s is too
+# short on a busy machine since the full catalog import (11,301 courses): importing OR-Tools and
+# loading the catalog year can block a starting worker longer, and each kill starts another
+# such start-up (integration run 2026-11-24). WORKER_HEALTHCHECK_S (default 60) still ends a
+# worker that is really hung.
+CMD ["sh", "-c", "if [ -f alembic.ini ]; then alembic upgrade head; fi && uvicorn api.main:app --host 0.0.0.0 --port 8000 --no-access-log --workers ${WEB_CONCURRENCY:-4} --timeout-worker-healthcheck ${WORKER_HEALTHCHECK_S:-60}"]
