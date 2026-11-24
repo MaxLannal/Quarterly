@@ -575,3 +575,4 @@ Richard answered each issue's open decisions in a comment on the issue. Each ans
   - **(Suggested) You or Max add courses** to `data/catalog/new_courses.yaml` from a department or College page that says the course is new, with that sentence as the quote. The row shows them at once.
   - Wait for the 2027-28 catalog: once it is loaded next to 2026-27, the row fills itself with the courses 2026-27 did not have.
   - Show the row anyway, with a short "No new courses listed yet" line.
+  Richard's Answer: leave it empty for now. Max and I will manually add new courses. If not, we wait for the new catalog. No actions needed.
