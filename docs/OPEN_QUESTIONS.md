@@ -8,6 +8,7 @@
 > - **Site structure and catalog** (GitHub issues #15 and #19, 2026-11-24, at the end of the file): the answers to both issues' decisions. **S19-N1** (the list of new courses) has an answer: the list stays empty until Richard or Max add courses with a source quote, or until the next catalog year fills it.
 > - **Forum page, issue #20** (2026-11-24, at the end of the file): **F20-1** has an answer: the AI's answer under a forum question keeps its 60-word limit, and the team can test how it works in use. Still open: **F20-2** to **F20-4**, defaults taken while building, each with a suggested answer.
 > - **Integration run** (2026-11-24, at the end of the file): **INT-1** (Needs Richard): how long the plan generator may think in the app (4 s now, 20 s in the end-to-end tests).
+> - **Student record and dashboard** (2026-11-24, at the end of the file): **SR-1** to **SR-6**, calls made while building Issues #14 and #16; each has a suggested answer.
 > - **"Work these answers create (not started)"** below was listed on 2026-11-14; some of it was built since. Check `docs/PROGRESS.md` and the code before starting an item.
 >
 > New questions go at the end of the matching section, in plain language with a suggested answer (see `CLAUDE.md`, "Working with the owner").
@@ -607,3 +608,14 @@ Richard's answers on the issue: D1 is option A (a short AI answer under each for
   - **(Suggested) Measure on the real server first.** It may be faster than this busy laptop. Run journeys A and B there with `GENERATE_SOLVER_SECONDS` unset (4 s), then decide.
   - **Raise the app's limit to 8 seconds.** Set `GENERATE_SOLVER_SECONDS=8` in the server's `.env`. Students wait up to about 4 seconds longer and get two or three plans more often.
   - **Keep 4 seconds.** Plans come faster, but a student sometimes gets one option, or no explanation of a conflict.
+
+## Student record and dashboard (Issues #14 and #16, 2026-11-24)
+
+Max answered the open decisions on the issues (#14: no GPA, no freeform fields, working notes per student; #16: the suggested answers, the portrait and "What's new" removed). These are the calls made while building; each waits for Max's or Richard's OK.
+
+- **SR-1. Credits at registration for first-year students.** Following #16 D1, the registration form asks for credits and taken courses only when "I transferred, or I am not in my first year" is checked. Many first-year students have AP credits; they add them later in the dashboard's Academic background, which shows those questions to every student. *Suggested:* show the credits box to every student at registration (taken courses stay transfer-only). *Options:* (a) keep as built; (b) credits for everyone.
+- **SR-2. A new plan does not overwrite the student record.** Credits and taken courses now belong to the student, not to a plan. When a plan is created (an import of a plan made before logging in, or a copy) and the record already has credits or taken courses, the record wins and the plan shows the record's; an empty record takes the new plan's. *Suggested:* keep.
+- **SR-3. What stays in a plan.** Only completed and in-progress courses move to the record. Plan items marked "transfer" or "exam" (placed in a quarter of the grid) stay in their plan, like planned courses. *Suggested:* keep for the demo; revisit with Issue #17.
+- **SR-4. A Summer start.** The entry term may be a Summer quarter (the planner already allows a transfer student to start with the summer before autumn, FEEDBACK 2026-11-14), although Issue #14 lists only Autumn, Winter and Spring. *Suggested:* keep.
+- **SR-5. "For you" in the feed.** The feed used the freeform interests to rank courses. With those gone it uses the research areas and the intended programs only, so a student who wants no research gets a less personal feed. *Suggested:* keep; Issue #19 (combining the feed and the catalog) can decide what personalises the catalog.
+- **SR-6. Setting up a first plan.** `/onboarding` is gone, so the planner shows "Set up your plan from your information" to a logged-in student whose plan is empty: it builds the plan from the record (first quarter, programs plus the Core, credits, taken courses) and opens the generator, as the wizard's last step did. Taken courses dated before the plan's first quarter are left off the plan. A logged-out student can still drag courses onto a local plan; the planner offers "Sign up to set up your plan". *Suggested:* keep until the planner agent (Issues #17, #18) takes this over.

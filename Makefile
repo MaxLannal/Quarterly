@@ -132,6 +132,7 @@ api-client:
 	$(UV) run python -m api.cli schemas --out docs/schemas
 	$(UV) run python -m api.openapi_dump > $(WEB)/src/api/openapi.json
 	cd $(WEB) && npx openapi-typescript src/api/openapi.json -o src/api/schema.d.ts
+	$(UV) run python -m api.profile_questions > $(WEB)/src/mocks/questions.json
 
 # Fails when the committed client is out of date with the API.
 api-client-check:

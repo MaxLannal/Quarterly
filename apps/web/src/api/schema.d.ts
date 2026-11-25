@@ -947,6 +947,23 @@ export interface paths {
         patch: operations["patch_profile_me_profile_patch"];
         trace?: never;
     };
+    "/me/profile/export.md": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Export Student Md */
+        get: operations["export_student_md_me_profile_export_md_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/me/updates": {
         parameters: {
             query?: never;
@@ -1180,6 +1197,23 @@ export interface paths {
         head?: never;
         /** Patch Items */
         patch: operations["patch_items_plans__plan_id__items_patch"];
+        trace?: never;
+    };
+    "/profile/questions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Questions */
+        get: operations["get_questions_profile_questions_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
     "/programs": {
@@ -3471,14 +3505,15 @@ export interface components {
         InterviewEvent: components["schemas"]["DashboardStepEvent"] | components["schemas"]["InterviewTurnEvent"] | components["schemas"]["ProfileDoneEvent"] | components["schemas"]["ErrorEvent"];
         /**
          * InterviewMemory
-         * @description What the guide remembers between visits: topics covered and the last turns.
+         * @description What the dashboard agent remembers between visits: the questions it covered (answered
+         *     or skipped) and the last turns.
          */
         InterviewMemory: {
             /**
              * Covered
              * @default []
              */
-            covered: ("class_year" | "interests" | "humanities" | "research" | "career" | "future" | "constraints" | "wrapup")[];
+            covered: string[];
             /**
              * Turns
              * @default []
@@ -3488,7 +3523,7 @@ export interface components {
         /** InterviewMemoryPatch */
         InterviewMemoryPatch: {
             /** Covered */
-            covered?: ("class_year" | "interests" | "humanities" | "research" | "career" | "future" | "constraints" | "wrapup")[] | null;
+            covered?: string[] | null;
             /** Turns */
             turns?: components["schemas"]["InterviewTurn"][] | null;
         };
@@ -3522,15 +3557,19 @@ export interface components {
             /** Text */
             text: string;
             /** Topic */
-            topic?: ("class_year" | "interests" | "humanities" | "research" | "career" | "future" | "constraints" | "wrapup") | null;
+            topic?: string | null;
         };
         /**
          * InterviewTurnEvent
-         * @description The guide's next message. `proposed` holds only facts the student said in this
-         *     conversation (list fields already merged with the profile); the browser saves what the
-         *     student keeps with PATCH /me/profile.
+         * @description The dashboard agent's next message (Issue #16). `topic` is the id of the question it
+         *     asks (data/profile/questions.yaml) or "wrapup". `quick_replies` are that question's option
+         *     labels, unchanged, then "Skip". `proposed` holds only the answer the student gave to the
+         *     previous question, mapped to its field (list fields already merged with the record); the
+         *     browser saves it with PATCH /me/profile once the student accepts it.
          */
         InterviewTurnEvent: {
+            /** Answered */
+            answered?: string | null;
             /**
              * Courses
              * @default []
@@ -3558,13 +3597,15 @@ export interface components {
              * @default []
              */
             quick_replies: string[];
+            /**
+             * Retry
+             * @default false
+             */
+            retry: boolean;
             /** Text */
             text: string;
-            /**
-             * Topic
-             * @enum {string}
-             */
-            topic: "class_year" | "interests" | "humanities" | "research" | "career" | "future" | "constraints" | "wrapup";
+            /** Topic */
+            topic: string;
             /**
              * @description discriminator enum property added by openapi-typescript
              * @enum {string}
@@ -4254,27 +4295,6 @@ export interface components {
             timing?: components["schemas"]["Timing"] | null;
         };
         /**
-         * Portrait
-         * @description The guide's portrait of the student, kept by the student (written by an AI).
-         */
-        Portrait: {
-            /**
-             * Headline
-             * @default
-             */
-            headline: string;
-            /**
-             * Summary
-             * @default
-             */
-            summary: string;
-            /**
-             * Themes
-             * @default []
-             */
-            themes: string[];
-        };
-        /**
          * PostCreate
          * @description A review requires structured ratings and the term taken; a discussion post has neither.
          */
@@ -4495,15 +4515,18 @@ export interface components {
              */
             type: "done";
         };
-        /** ProfileOut */
+        /**
+         * ProfileOut
+         * @description The student record (Issue #14) as the dashboard shows it. `null` = not answered.
+         */
         ProfileOut: {
             /**
-             * Career Paths
+             * Answered
              * @default []
              */
-            career_paths: string[];
-            /** Career Plans */
-            career_plans?: string | null;
+            answered: string[];
+            /** Class Formats */
+            class_formats?: ("seminar" | "lecture" | "lab" | "online")[] | null;
             /** Class Year */
             class_year?: number | null;
             /**
@@ -4511,13 +4534,21 @@ export interface components {
              * @default 0
              */
             completeness: number;
+            /** Courses Per Term */
+            courses_per_term?: number | null;
             /**
-             * Constraints
+             * Credits
              * @default []
              */
-            constraints: string[];
+            credits: components["schemas"]["RecordCredit"][];
             /** Email */
             email: string;
+            /** Entry Term */
+            entry_term?: string | null;
+            /** Entry Year Level */
+            entry_year_level?: number | null;
+            /** Expected Graduation Term */
+            expected_graduation_term?: string | null;
             /**
              * @default {
              *       "courses": [],
@@ -4526,29 +4557,15 @@ export interface components {
              */
             follows: components["schemas"]["Follows"];
             /**
-             * Future Domains
-             * @default []
+             * Has Working Notes
+             * @default false
              */
-            future_domains: string[];
-            /** Humanities Goal */
-            humanities_goal?: ("pass" | "balance" | "enjoy" | "deep") | null;
-            /** Humanities Note */
-            humanities_note?: string | null;
-            /**
-             * Humanities Topics
-             * @default []
-             */
-            humanities_topics: string[];
+            has_working_notes: boolean;
             /**
              * Intended Programs
              * @default []
              */
             intended_programs: string[];
-            /**
-             * Interests
-             * @default []
-             */
-            interests: string[];
             /**
              * @default {
              *       "covered": [],
@@ -4561,14 +4578,10 @@ export interface components {
              * Format: date
              */
             member_since: string;
-            /**
-             * @default {
-             *       "headline": "",
-             *       "summary": "",
-             *       "themes": []
-             *     }
-             */
-            portrait: components["schemas"]["Portrait"];
+            /** Pace */
+            pace?: ("early" | "on_time" | "flexible") | null;
+            /** Post Grad Plan */
+            post_grad_plan?: ("industry" | "grad_school" | "med_law" | "undecided") | null;
             /**
              * Programs
              * @default []
@@ -4580,48 +4593,65 @@ export interface components {
              */
             research_areas: string[];
             /**
+             * Taken Courses
+             * @default []
+             */
+            taken_courses: components["schemas"]["TakenCourseOut"][];
+            /** Terms Away */
+            terms_away?: components["schemas"]["TermAway"][] | null;
+            /** Theory Vs Application */
+            theory_vs_application?: number | null;
+            /**
              * Updated Day
              * Format: date
              */
             updated_day: string;
             /** Username */
             username: string;
-            /** Workload */
-            workload?: ("light" | "balanced" | "intense") | null;
+            /** Wants Research */
+            wants_research?: boolean | null;
         };
         /**
          * ProfilePatch
-         * @description A partial update: only the fields sent are changed (`null` clears a field). The Commons
-         *     follow button also sends these.
+         * @description A partial update: only the fields sent are changed (`null` clears a field). `credits`
+         *     and `taken_courses` replace the whole list. The registration form, the dashboard, the
+         *     dashboard agent's accepted answers and the Commons follow button send these.
          */
         ProfilePatch: {
-            /** Career Paths */
-            career_paths?: string[] | null;
-            /** Career Plans */
-            career_plans?: string | null;
+            /** Class Formats */
+            class_formats?: ("seminar" | "lecture" | "lab" | "online")[] | null;
             /** Class Year */
             class_year?: number | null;
-            /** Constraints */
-            constraints?: string[] | null;
+            /** Courses Per Term */
+            courses_per_term?: number | null;
+            /** Credits */
+            credits?: components["schemas"]["RecordCredit"][] | null;
+            /** Entry Term */
+            entry_term?: string | null;
+            /** Entry Year Level */
+            entry_year_level?: number | null;
+            /** Expected Graduation Term */
+            expected_graduation_term?: string | null;
             follows?: components["schemas"]["Follows"] | null;
-            /** Future Domains */
-            future_domains?: string[] | null;
-            /** Humanities Goal */
-            humanities_goal?: ("pass" | "balance" | "enjoy" | "deep") | null;
-            /** Humanities Note */
-            humanities_note?: string | null;
-            /** Humanities Topics */
-            humanities_topics?: string[] | null;
             /** Intended Programs */
             intended_programs?: string[] | null;
-            /** Interests */
-            interests?: string[] | null;
             interview?: components["schemas"]["InterviewMemoryPatch"] | null;
-            portrait?: components["schemas"]["Portrait"] | null;
+            /** Pace */
+            pace?: ("early" | "on_time" | "flexible") | null;
+            /** Post Grad Plan */
+            post_grad_plan?: ("industry" | "grad_school" | "med_law" | "undecided") | null;
             /** Research Areas */
             research_areas?: string[] | null;
-            /** Workload */
-            workload?: ("light" | "balanced" | "intense") | null;
+            /** Taken Courses */
+            taken_courses?: components["schemas"]["TakenCourse"][] | null;
+            /** Terms Away */
+            terms_away?: components["schemas"]["TermAway"][] | null;
+            /** Theory Vs Application */
+            theory_vs_application?: number | null;
+            /** Wants Research */
+            wants_research?: boolean | null;
+            /** Working Notes */
+            working_notes?: string | null;
         };
         /** ProgramDetail */
         ProgramDetail: {
@@ -4756,6 +4786,100 @@ export interface components {
              */
             weight: number;
         };
+        /** Question */
+        Question: {
+            /**
+             * Columns
+             * @default []
+             */
+            columns: components["schemas"]["QuestionColumn"][];
+            ends?: components["schemas"]["ScaleEnds"] | null;
+            /** Field */
+            field: string;
+            /** Group */
+            group: string;
+            /** Help */
+            help?: string | null;
+            /** Id */
+            id: string;
+            /** Label */
+            label: string;
+            /** Max */
+            max?: number | null;
+            /** Min */
+            min?: number | null;
+            /**
+             * Options
+             * @default []
+             */
+            options: components["schemas"]["QuestionOption"][];
+            /**
+             * Step
+             * @enum {integer}
+             */
+            step: 1 | 2;
+            /** Text */
+            text: string;
+            /**
+             * Type
+             * @enum {string}
+             */
+            type: "single" | "multi" | "scale" | "list" | "table";
+            /**
+             * Value
+             * @default text
+             * @enum {string}
+             */
+            value: "integer" | "boolean" | "term" | "program" | "text" | "course";
+            /** When */
+            when?: {
+                [key: string]: boolean;
+            } | null;
+        };
+        /** QuestionColumn */
+        QuestionColumn: {
+            /** Id */
+            id: string;
+            /** Label */
+            label: string;
+            /**
+             * Options
+             * @default []
+             */
+            options: string[];
+        };
+        /** QuestionGroup */
+        QuestionGroup: {
+            /** Id */
+            id: string;
+            /** Title */
+            title: string;
+        };
+        /** QuestionOption */
+        QuestionOption: {
+            /** Label */
+            label: string;
+            /** Value */
+            value: boolean | number | string;
+        };
+        /** QuestionSet */
+        QuestionSet: {
+            /** Groups */
+            groups: components["schemas"]["QuestionGroup"][];
+            /**
+             * Labels
+             * @default {}
+             */
+            labels: {
+                [key: string]: {
+                    [key: string]: string;
+                };
+            };
+            /** Questions */
+            questions: components["schemas"]["Question"][];
+            /** Version */
+            version: number;
+        };
         /**
          * RankedEntry
          * @description One line of a ranking. `score` is the Bayesian average of the overall rating
@@ -4803,6 +4927,26 @@ export interface components {
             recommend_rate?: number | null;
             /** Workload Hours */
             workload_hours?: number | null;
+        };
+        /**
+         * RecordCredit
+         * @description An AP, placement or transfer credit (planner_core `Credit`).
+         */
+        RecordCredit: {
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "AP" | "placement" | "transfer";
+            /** Label */
+            label: string;
+            /** Maps To */
+            maps_to?: string | null;
+            /**
+             * Units
+             * @default 0
+             */
+            units: number;
         };
         /** Register */
         Register: {
@@ -4969,6 +5113,13 @@ export interface components {
             workload_hours: number;
             /** Would Recommend */
             would_recommend: boolean;
+        };
+        /** ScaleEnds */
+        ScaleEnds: {
+            /** Max */
+            max: string;
+            /** Min */
+            min: string;
         };
         /** Section */
         Section: {
@@ -5200,6 +5351,72 @@ export interface components {
              */
             until: string;
         };
+        /**
+         * TakenCourse
+         * @description A UChicago course the student took or is taking. `grading`, `units` and `locked` are the
+         *     plan item's (planner_core `PlanItem`): a rule that needs a letter grade does not count a
+         *     Pass/Fail course, so every editor sends them back unchanged.
+         */
+        TakenCourse: {
+            /** Course */
+            course: string;
+            /** Grade */
+            grade?: string | null;
+            /**
+             * Grading
+             * @default letter
+             * @enum {string}
+             */
+            grading: "letter" | "pass_fail";
+            /**
+             * Locked
+             * @default false
+             */
+            locked: boolean;
+            /**
+             * Status
+             * @default completed
+             * @enum {string}
+             */
+            status: "completed" | "in_progress";
+            /** Term */
+            term: string;
+            /** Units */
+            units?: number | null;
+        };
+        /** TakenCourseOut */
+        TakenCourseOut: {
+            /** Course */
+            course: string;
+            /** Grade */
+            grade?: string | null;
+            /**
+             * Grading
+             * @default letter
+             * @enum {string}
+             */
+            grading: "letter" | "pass_fail";
+            /**
+             * Locked
+             * @default false
+             */
+            locked: boolean;
+            /**
+             * Status
+             * @default completed
+             * @enum {string}
+             */
+            status: "completed" | "in_progress";
+            /** Term */
+            term: string;
+            /**
+             * Title
+             * @default
+             */
+            title: string;
+            /** Units */
+            units?: number | null;
+        };
         /** Term */
         Term: {
             /** End */
@@ -5211,6 +5428,19 @@ export interface components {
             id: string;
             /** Start */
             start?: string | null;
+        };
+        /**
+         * TermAway
+         * @description A quarter the student plans to spend away.
+         */
+        TermAway: {
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "abroad" | "internship" | "leave";
+            /** Term */
+            term: string;
         };
         /** Timing */
         Timing: {
@@ -7710,13 +7940,43 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorOut"];
                 };
             };
-            /** @description Unknown program */
+            /** @description Unknown program or course */
             422: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+        };
+    };
+    export_student_md_me_profile_export_md_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description student.md */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/markdown": unknown;
+                    "text/plain": string;
+                };
+            };
+            /** @description Not logged in */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/plain": components["schemas"]["ErrorOut"];
                 };
             };
         };
@@ -8220,6 +8480,26 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_questions_profile_questions_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["QuestionSet"];
                 };
             };
         };

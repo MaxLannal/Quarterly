@@ -18,7 +18,6 @@ import InstructorPage from "./pages/InstructorPage";
 import InstructorsPage from "./pages/InstructorsPage";
 import LoginPage from "./pages/LoginPage";
 import NotFoundPage from "./pages/NotFoundPage";
-import OnboardingPage from "./pages/OnboardingPage";
 import PlanPage from "./pages/PlanPage";
 import PlansPage from "./pages/PlansPage";
 import PrivacyPage from "./pages/PrivacyPage";
@@ -42,7 +41,8 @@ export const routes: RouteObject[] = [
       { path: "/forum", element: <CommonsPage /> },
       { path: "/forum/new", element: <CommonsNewPage /> },
       { path: "/forum/t/:id", element: <CommonsThreadPage /> },
-      { path: "/onboarding", element: <OnboardingPage /> },
+      // The planner setup moved into the registration form and the dashboard (Issue #16).
+      { path: "/onboarding", element: <Navigate to="/me" replace /> },
       { path: "/plan", element: <PlanPage /> },
       { path: "/plans", element: <PlansPage /> },
       { path: "/plans/compare", element: <ComparePlansPage /> },

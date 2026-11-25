@@ -53,6 +53,7 @@ export function DashCard({
   children,
   className,
   tone = "paper",
+  level = 2,
 }: {
   id?: string;
   kicker?: ReactNode;
@@ -62,8 +63,11 @@ export function DashCard({
   children: ReactNode;
   className?: string;
   tone?: "paper" | "ink" | "soft";
+  /** The heading level of the title (3 for panels under a section heading). */
+  level?: 2 | 3;
 }) {
   const headingId = useId();
+  const Heading = level === 3 ? "h3" : "h2";
   return (
     <section
       id={id}
@@ -79,9 +83,9 @@ export function DashCard({
       <div className="mb-3 flex flex-wrap items-start justify-between gap-x-3 gap-y-1">
         <div className="min-w-0">
           {kicker && <p className={cn("mb-0.5 text-[12px] font-bold uppercase tracking-[0.08em]", tone === "ink" ? "text-on-dark-soft" : "text-primary")}>{kicker}</p>}
-          <h2 id={headingId} className={cn("font-display text-[21px] font-bold leading-tight tracking-[-0.02em]", tone === "ink" ? "text-on-dark" : "text-ink")}>
+          <Heading id={headingId} className={cn("font-display text-[21px] font-bold leading-tight tracking-[-0.02em]", tone === "ink" ? "text-on-dark" : "text-ink")}>
             {title}
-          </h2>
+          </Heading>
         </div>
         <div className="flex items-center gap-2">
           {status}
@@ -90,22 +94,6 @@ export function DashCard({
       </div>
       {children}
     </section>
-  );
-}
-
-/** An empty section's invitation to the guide. */
-export function AskGuide({ children, onAsk }: { children: ReactNode; onAsk: () => void }) {
-  return (
-    <div className="flex flex-wrap items-center gap-2 rounded-[16px] border border-dashed border-hairline-strong bg-canvas-soft px-3 py-2">
-      <p className="min-w-0 flex-1 basis-[15rem] text-body-sm text-body">{children}</p>
-      <button
-        type="button"
-        onClick={onAsk}
-        className="inline-flex min-h-11 items-center gap-2 rounded-pill px-4 text-button text-primary underline-offset-4 hover:bg-primary-wash hover:underline"
-      >
-        <GuideMark size={14} /> Ask me about this
-      </button>
-    </div>
   );
 }
 
@@ -278,14 +266,14 @@ export function Chip({ label, onRemove, tone = "paper", className }: { label: st
   );
 }
 
-/** The share of the portrait filled in, as a maroon ring. */
+/** The share of the General Information answered, as a maroon ring. */
 export function CompletenessRing({ value, size = 64 }: { value: number; size?: number }) {
   const r = size / 2 - 5;
   const c = 2 * Math.PI * r;
   const pct = Math.round(Math.max(0, Math.min(1, value)) * 100);
   return (
     <div className="inline-flex items-center gap-3">
-      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} role="img" aria-label={`Your portrait is ${pct}% complete`}>
+      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} role="img" aria-label={`Your profile is ${pct}% complete`}>
         <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="var(--color-hairline-strong)" strokeWidth="4" />
         <circle
           className="dash-ring-fill"
@@ -304,7 +292,7 @@ export function CompletenessRing({ value, size = 64 }: { value: number; size?: n
           {pct}%
         </text>
       </svg>
-      <span className="max-w-[11rem] text-caption text-body">{pct >= 100 ? "Your portrait is complete. Come back when something changes." : pct === 0 ? "Your portrait is a blank page so far." : "of your portrait is drawn."}</span>
+      <span className="max-w-[11rem] text-caption text-body">{pct >= 100 ? "Your profile is complete." : pct === 0 ? "Your profile is empty so far." : "of your profile is complete."}</span>
     </div>
   );
 }

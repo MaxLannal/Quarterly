@@ -102,6 +102,12 @@ export function catalogYearFor(date: Date): string {
   return `${start}-${String((start + 1) % 100).padStart(2, "0")}`;
 }
 
+/** The newest catalog year the API lists, or the current academic year if it lists none. */
+export function defaultCatalogYear(ids: string[] | undefined): string {
+  const sorted = [...(ids ?? [])].sort().reverse();
+  return sorted[0] ?? catalogYearFor(new Date());
+}
+
 /** "2026–27" for the academic year that starts in 2026. */
 export function academicYearLabel(start: number): string {
   return `${start}–${String((start + 1) % 100).padStart(2, "0")}`;

@@ -1,6 +1,12 @@
 """Saved plans: Postgres rows <-> planner_core `PlanState`, and change sets (SPEC "Plans and
 goals"). Day-level dates only. Every function takes an already authorised plan row; the
-router checks ownership with `owned_plan`."""
+router checks ownership with `owned_plan`.
+
+Credits and taken courses belong to the student record (Issue #14), not to one plan: every
+saved plan reads them from `student_credit` and `student_course`, and saving a plan writes
+them back there. A taken course appears in the plan as a completed or in-progress item with
+the id `t<student_course.id>`. The old per-plan copies (`credit`, and `plan_item` rows with
+those statuses, left by migration 0005) are ignored when read and removed on the next save."""
 
 from __future__ import annotations
 
@@ -12,6 +18,7 @@ import sqlalchemy as sa
 from planner_core.changes import ChangeOpError, apply_ops
 from planner_core.hashing import plan_hash
 from planner_core.models import ChangeOp, ChangeSet, Goal, PlanState, Report
+from planner_core.terms import term_key
 from pydantic import TypeAdapter
 from sqlalchemy.orm import Session
 
@@ -28,6 +35,11 @@ class PlanNotFoundError(Exception):
 
 class InvalidPlanError(Exception):
     """The state names courses or programs the catalog year does not have."""
+
+
+#: Item statuses kept in the student record (`student_course`) instead of the plan.
+TAKEN = frozenset({"completed", "in_progress"})
+_TAKEN_PREFIX = "t"
 
 
 class StalePlanError(Exception):
@@ -53,11 +65,17 @@ def read_state(db: Session, plan: m.Plan) -> PlanState:
         .where(m.PlanItem.plan_id == plan.id)
         .order_by(m.PlanItem.id)
     ).all()
+    taken_rows = db.execute(
+        sa.select(m.StudentCourse, m.Course.code)
+        .join(m.Course, m.Course.id == m.StudentCourse.course_id)
+        .where(m.StudentCourse.account_id == plan.account_id)
+        .order_by(m.StudentCourse.id)
+    ).all()
     credit_rows = db.execute(
-        sa.select(m.Credit, m.Course.code)
-        .outerjoin(m.Course, m.Course.id == m.Credit.maps_to_course_id)
-        .where(m.Credit.plan_id == plan.id)
-        .order_by(m.Credit.id)
+        sa.select(m.StudentCredit, m.Course.code)
+        .outerjoin(m.Course, m.Course.id == m.StudentCredit.maps_to_course_id)
+        .where(m.StudentCredit.account_id == plan.account_id)
+        .order_by(m.StudentCredit.id)
     ).all()
     program_rows = db.execute(
         sa.select(m.PlanProgram, m.ProgramVersion.program_id)
@@ -87,6 +105,22 @@ def read_state(db: Session, plan: m.Plan) -> PlanState:
                     "grade": item.grade,
                 }
                 for item, code in item_rows
+                # The old per-plan copies of taken courses: the record has them now.
+                if not (item.status in TAKEN and item.course_id is not None)
+            ]
+            + [
+                {
+                    "id": f"{_TAKEN_PREFIX}{taken.id}",
+                    "course": code,
+                    "slot_ref": None,
+                    "term": taken.term_id,
+                    "status": taken.status,
+                    "locked": taken.locked,
+                    "units": taken.units,
+                    "grading": taken.grading,
+                    "grade": taken.grade,
+                }
+                for taken, code in taken_rows
             ],
             "credits": [
                 {"kind": c.kind, "label": c.label, "maps_to": code, "units": c.units}
@@ -150,10 +184,31 @@ def _version_ids(db: Session, state: PlanState, show_unpublished: bool) -> list[
     return [found[p.program_id] if p.version_id is None else p.version_id for p in state.programs]
 
 
+def _is_taken(item: Any) -> bool:
+    return item.status in TAKEN and item.course is not None
+
+
+def record_has_data(db: Session, account_id: uuid.UUID) -> bool:
+    """Whether the student record already has credits or taken courses."""
+    for table in (m.StudentCredit, m.StudentCourse):
+        found = db.scalar(sa.select(table.id).where(table.account_id == account_id).limit(1))
+        if found is not None:
+            return True
+    return False
+
+
 def write_state(
-    db: Session, plan: m.Plan, state: PlanState, *, show_unpublished: bool, items: bool = True
+    db: Session,
+    plan: m.Plan,
+    state: PlanState,
+    *,
+    show_unpublished: bool,
+    items: bool = True,
+    record: bool = True,
 ) -> None:
-    """Replace the plan's rows with `state` (its items too unless `items` is False)."""
+    """Replace the plan's rows with `state` (its items too unless `items` is False). Its
+    credits and taken courses go to the student record, unless `record` is False (a new plan
+    when the record already has some: the record wins)."""
     if db.get(m.CatalogYear, state.catalog_year) is None:
         raise InvalidPlanError(f"Unknown catalog year: {state.catalog_year}")
     codes = {c.maps_to for c in state.credits if c.maps_to}
@@ -168,20 +223,26 @@ def write_state(
     plan.placements = list(state.placements)
     plan.overload_reasons = dict(state.overload_reasons)
     plan.updated_day = dt.date.today()
+    # `credit` rows are the old per-plan copies (migration 0005): removed, never written.
     for table in (m.Credit, m.Goal, m.PlanProgram):
         db.execute(sa.delete(table).where(table.plan_id == plan.id))
     if items:
         _write_items(db, plan, state, ids)
-    db.add_all(
-        m.Credit(
-            plan_id=plan.id,
-            kind=c.kind,
-            label=c.label,
-            maps_to_course_id=ids[c.maps_to] if c.maps_to else None,
-            units=c.units,
+        if record:
+            taken = [i for i in state.items if _is_taken(i)]
+            _write_taken(db, plan.account_id, taken, ids, state.entry_term)
+    if record:
+        db.execute(sa.delete(m.StudentCredit).where(m.StudentCredit.account_id == plan.account_id))
+        db.add_all(
+            m.StudentCredit(
+                account_id=plan.account_id,
+                kind=c.kind,
+                label=c.label,
+                maps_to_course_id=ids[c.maps_to] if c.maps_to else None,
+                units=c.units,
+            )
+            for c in state.credits
         )
-        for c in state.credits
-    )
     db.add_all(
         m.PlanProgram(plan_id=plan.id, program_version_id=vid, options=p.options)
         for p, vid in zip(state.programs, versions, strict=True)
@@ -213,6 +274,8 @@ def _write_items(db: Session, plan: m.Plan, state: PlanState, ids: dict[str, int
     }
     kept: set[str] = set()
     for item in state.items:
+        if _is_taken(item):
+            continue  # the student record keeps it (`_write_taken`)
         values = {
             "course_id": ids[item.course] if item.course else None,
             "slot_ref": item.slot_ref,
@@ -232,6 +295,47 @@ def _write_items(db: Session, plan: m.Plan, state: PlanState, ids: dict[str, int
             setattr(row, key, value)
     for key, row in rows.items():
         if key not in kept:
+            db.delete(row)
+
+
+def _write_taken(
+    db: Session, account_id: uuid.UUID, taken: list[Any], ids: dict[str, int], entry_term: str
+) -> None:
+    """Make the record's taken courses `taken`, updating rows in place (`t<id>` items) so their
+    ids stay stable, inserting new ones and deleting the rest. Courses before the plan's first
+    quarter are kept: the plan cannot show them, so leaving them out is not a deletion."""
+    rows = {
+        f"{_TAKEN_PREFIX}{row.id}": row
+        for row in db.scalars(
+            sa.select(m.StudentCourse).where(m.StudentCourse.account_id == account_id)
+        )
+    }
+    kept: set[str] = set()
+    seen: set[tuple[int, str]] = set()
+    for item in taken:
+        course_term = (ids[item.course], item.term)
+        if course_term in seen:
+            continue
+        seen.add(course_term)
+        values = {
+            "course_id": ids[item.course],
+            "term_id": item.term,
+            "status": item.status,
+            "locked": item.locked,
+            "units": item.units,
+            "grading": item.grading,
+            "grade": item.grade,
+        }
+        row = rows.get(item.id) if item.id is not None and item.id not in kept else None
+        if row is None:
+            db.add(m.StudentCourse(account_id=account_id, **values))
+            continue
+        kept.add(item.id)
+        for name, value in values.items():
+            setattr(row, name, value)
+    first = term_key(entry_term)
+    for key, row in rows.items():
+        if key not in kept and term_key(row.term_id) >= first:
             db.delete(row)
 
 
@@ -288,6 +392,9 @@ def create_plan(
     )
     if db.get(m.CatalogYear, state.catalog_year) is None:
         raise InvalidPlanError(f"Unknown catalog year: {state.catalog_year}")
+    # A new plan (an import from this browser, a copy) never overwrites a record that already
+    # has credits or taken courses (Issue #14 step 15): the plan shows the record's.
+    record = not record_has_data(db, account_id)
     plan = m.Plan(
         account_id=account_id,
         name=name,
@@ -299,7 +406,7 @@ def create_plan(
     )
     db.add(plan)
     db.flush()
-    write_state(db, plan, state, show_unpublished=show_unpublished)
+    write_state(db, plan, state, show_unpublished=show_unpublished, record=record)
     if is_primary or first:
         _make_primary(db, plan)
     return plan

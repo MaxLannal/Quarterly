@@ -236,9 +236,11 @@ def test_logged_in_readers_also_see_forum_quotes(env: Env, no_listed: Path) -> N
 def test_spotlights_follow_the_students_interest_and_follows(env: Env, no_listed: Path) -> None:
     math = sorted(c for c in codes_of(env) if c.startswith("MATH"))[0]
     env.signup("quiet-heron")
-    set_profile(env, "quiet-heron", interests=["quantum"], follows={"courses": [math]})
+    # The student record has no freeform interests (Issue #14 D2): research areas stand in, as
+    # PR #21 did in the Feed's test.
+    set_profile(env, "quiet-heron", research_areas=["quantum"], follows={"courses": [math]})
     spotlights = browse(env.client)["spotlights"]
-    assert spotlights[0]["reason"] == "Because you're into quantum"
+    assert spotlights[0]["reason"] == "Near your research interest: quantum"
     assert "quantum" in spotlights[0]["title"].lower()
     followed = [c for c in spotlights if c["code"] == math]
     assert followed and followed[0]["reason"] == "You follow this course"

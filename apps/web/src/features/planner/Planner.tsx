@@ -12,9 +12,10 @@ import {
   type CollisionDetection,
   type DragStartEvent,
 } from "@dnd-kit/core";
+import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useMemo, useReducer, useState } from "react";
 import { Link } from "react-router-dom";
-import { api } from "@/api/client";
+import { api, unwrap } from "@/api/client";
 import { useCourseMap, usePlanPrograms, usePrograms } from "@/api/hooks";
 import type { ChangeOp, Issue, PlanItem, ProgramSummary } from "@/api/types";
 import { Button } from "@/components/ui/button";
@@ -22,6 +23,7 @@ import { Dialog } from "@/components/ui/dialog";
 import { CloseIcon, SparkIcon } from "@/components/ui/icons";
 import { Notice } from "@/components/ui/misc";
 import { AdvisorSheet } from "@/features/advisor/AdvisorPanel";
+import { PROFILE_KEY, useProfile } from "@/features/dashboard/api";
 import { GenerateDialog } from "@/features/generate/GenerateDialog";
 import { ProgramPickerBody, StatusBadge } from "@/features/programs/ProgramPicker";
 import { useMediaQuery } from "@/lib/motion";
@@ -36,6 +38,8 @@ import { CreditsEditor } from "@/features/credits/CreditsEditor";
 import { DrawerButton, PlanDrawer, type DrawerTab } from "./PlanDrawer";
 import { PlanGrid } from "./PlanGrid";
 import { RequirementTree } from "./RequirementTree";
+import { planToSave, recordKey, withRecord } from "./setup";
+import { SetupCard } from "./SetupCard";
 import { TermPickerDialog } from "./TermPickerDialog";
 import { graduationTerm, planTerms, termLabel } from "./terms";
 import { useVerify } from "./useVerify";
@@ -85,9 +89,11 @@ function requirementTags(
 interface PlannerProps {
   initial: LocalPlan;
   autoGenerate?: boolean;
+  /** Replaces this (empty) plan with one set up from the student record, then reopens it. */
+  onSetUp?: (plan: LocalPlan, generate: boolean) => void;
 }
 
-export function Planner({ initial, autoGenerate = false }: PlannerProps) {
+export function Planner({ initial, autoGenerate = false, onSetUp }: PlannerProps) {
   const [state, dispatch] = useReducer(editorReducer, initial, (p) => initEditor(p.state, p.name));
   const [remoteId, setRemoteId] = useState(initial.remoteId);
   // The plan as last saved to the account; generation uses the saved plan only while equal.
@@ -105,6 +111,11 @@ export function Planner({ initial, autoGenerate = false }: PlannerProps) {
   const [dragging, setDragging] = useState<string | null>(null);
   const desktop = useMediaQuery("(min-width: 1024px)");
   const { data: session } = useSession();
+  const queryClient = useQueryClient();
+  const profile = useProfile(!!session);
+  // Credits and taken courses belong to the student record (Issue #14): `recordBase` is them as
+  // last read from (or saved to) the record, so Save can tell a planner edit from a stale copy.
+  const [recordBase, setRecordBase] = useState<string | null>(null);
 
   const plan = state.plan;
   const items = useMemo(() => plan.items ?? [], [plan.items]);
@@ -197,8 +208,31 @@ export function Planner({ initial, autoGenerate = false }: PlannerProps) {
     if (result) dispatch({ type: "edit", result });
   }
 
+  // Logged in: show the record's credits and taken courses (edited on the dashboard) once loaded.
+  // An empty plan is left alone: it shows the card that sets the whole plan up from the record.
+  const blank = (plan.items ?? []).length === 0 && (plan.programs ?? []).length === 0;
+  useEffect(() => {
+    if (!session || !profile.data || recordBase !== null || blank) return;
+    const next = withRecord(plan, profile.data);
+    if (recordKey(next) !== recordKey(plan)) dispatch({ type: "replace", plan: next });
+    setRecordBase(recordKey(next));
+  }, [session, profile.data, recordBase, plan, blank]);
+
   async function save() {
-    const ok = upsertPlan({ ...initial, remoteId, name: state.name, state: plan, years: undefined });
+    // Saving writes the plan's credits and taken courses to the record. Unless the student
+    // changed them here, send the record's current ones, so an old copy never undoes a change
+    // made on the dashboard.
+    let toSave = plan;
+    if (session) {
+      try {
+        const fresh = unwrap(await api.GET("/me/profile"));
+        toSave = planToSave(plan, fresh, recordBase);
+        if (recordKey(toSave) !== recordKey(plan)) dispatch({ type: "replace", plan: toSave });
+      } catch {
+        // Keep the plan as it is; the server keeps the taken courses a plan cannot show.
+      }
+    }
+    const ok = upsertPlan({ ...initial, remoteId, name: state.name, state: toSave, years: undefined });
     if (!session) {
       setSaveMsg(ok ? "Saved on this device. Log in to save it to your account." : "Could not save: this browser is blocking storage.");
       return;
@@ -207,13 +241,15 @@ export function Planner({ initial, autoGenerate = false }: PlannerProps) {
     const accountPlanId = remoteId ?? storedRemoteId(initial.localId);
     try {
       const res = accountPlanId
-        ? await api.PATCH("/plans/{plan_id}", { params: { path: { plan_id: accountPlanId } }, body: { name: state.name, state: plan } })
-        : await api.POST("/plans", { body: { name: state.name, is_primary: initial.isPrimary, state: plan } });
+        ? await api.PATCH("/plans/{plan_id}", { params: { path: { plan_id: accountPlanId } }, body: { name: state.name, state: toSave } })
+        : await api.POST("/plans", { body: { name: state.name, is_primary: initial.isPrimary, state: toSave } });
       if (res.response.status === 501) {
         setSaveMsg("Saving to your account is not available yet. Your plan is saved on this device.");
       } else if (res.data) {
         setRemoteId(res.data.id);
-        setSavedSnapshot(JSON.stringify(plan));
+        setSavedSnapshot(JSON.stringify(toSave));
+        setRecordBase(recordKey(toSave));
+        void queryClient.invalidateQueries({ queryKey: PROFILE_KEY });
         setSaveMsg("Saved to your account.");
       } else {
         setSaveMsg("Could not save to your account. Your plan is saved on this device.");
@@ -350,11 +386,14 @@ export function Planner({ initial, autoGenerate = false }: PlannerProps) {
             </div>
           </Notice>
         )}
-        {items.length === 0 && programIds.length === 0 && (
-          <Notice tone="info">
-            New here? <Link to="/onboarding" className="font-medium">Set up your plan</Link>, or open Requirements and drag courses onto the grid.
-          </Notice>
-        )}
+        {items.length === 0 && programIds.length === 0 &&
+          (session && onSetUp ? (
+            <SetupCard catalogYear={plan.catalog_year} onSetUp={(next, generate) => onSetUp({ ...initial, remoteId, name: state.name, state: next, years: undefined }, generate)} />
+          ) : (
+            <Notice tone="info">
+              New here? <Link to="/signup" className="font-medium">Sign up to set up your plan</Link> from your class year, programs and credits, or open Requirements and drag courses onto the grid.
+            </Notice>
+          ))}
 
         <DndContext sensors={sensors} collisionDetection={collision} onDragStart={onDragStart} onDragEnd={onDragEnd} onDragCancel={() => setDragging(null)} accessibility={{ announcements }}>
           <div className="mt-2 flex items-start gap-6">

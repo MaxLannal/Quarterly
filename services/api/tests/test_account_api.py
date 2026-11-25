@@ -67,16 +67,18 @@ def add_plan(env: Env, account_id: str, ids: dict[str, int], name: str = "Main p
         db.add_all(
             [
                 m.PlanItem(plan_id=plan.id, course_id=ids["course_a"], term_id="2099-AU"),
-                m.PlanItem(
-                    plan_id=plan.id,
+                # Taken courses and credits belong to the student record (Issue #14).
+                m.StudentCourse(
+                    account_id=plan.account_id,
                     course_id=ids["course_b"],
                     term_id="2100-WI",
                     status="completed",
-                    locked=True,
                     grade="A-",
                 ),
                 m.PlanItem(plan_id=plan.id, slot_ref="test-bs/electives/1", term_id="2100-SP"),
-                m.Credit(plan_id=plan.id, kind="AP", label="AP Calculus BC", units=100),
+                m.StudentCredit(
+                    account_id=plan.account_id, kind="AP", label="AP Calculus BC", units=100
+                ),
                 m.Goal(
                     plan_id=plan.id,
                     goal_key="light-first",
@@ -126,12 +128,13 @@ def test_export_returns_the_account_and_its_plans(env: Env) -> None:
     state = plan["state"]
     assert state["placements"] == ["TEST 10100"]
     items = [(i["course"], i["slot_ref"], i["term"], i["status"]) for i in state["items"]]
+    # The plan's own items, then the student record's taken courses (id `t<id>`).
     assert items == [
         ("TEST 10100", None, "2099-AU", "planned"),
-        ("TEST 10200", None, "2100-WI", "completed"),
         (None, "test-bs/electives/1", "2100-SP", "planned"),
+        ("TEST 10200", None, "2100-WI", "completed"),
     ]
-    assert state["items"][1]["locked"] is True and state["items"][1]["grade"] == "A-"
+    assert state["items"][2]["id"].startswith("t") and state["items"][2]["grade"] == "A-"
     assert state["credits"] == [
         {"kind": "AP", "label": "AP Calculus BC", "maps_to": None, "units": 100}
     ]

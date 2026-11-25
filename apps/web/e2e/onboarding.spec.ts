@@ -1,103 +1,50 @@
 import { expect, test } from "@playwright/test";
+import { logIn } from "./helpers";
 
-test("onboarding: five steps create a plan and open the generator", async ({ page }) => {
-  test.setTimeout(60_000); // a long journey; a busy machine (another worktree's tests) slows it
+// Issue #16 replaced the onboarding wizard: its entry, credits and programs steps are in the
+// registration form, and the planner sets up a plan from the student record.
+
+test("the old onboarding address opens the dashboard", async ({ page }) => {
   await page.goto("/onboarding");
-  await expect(page.getByRole("heading", { level: 1, name: "Planner setup" })).toBeVisible();
+  await expect(page).toHaveURL(/\/me$/);
+  await expect(page.getByRole("heading", { level: 1, name: "Tell Quarterly about you." })).toBeVisible();
+});
 
-  // 1. Entry term and status
-  await expect(page.getByRole("heading", { name: "Step 1 of 5: Entry term" })).toBeVisible();
-  await expect(page.getByLabel("Catalog year")).toHaveValue("2099-00");
-  await page.getByLabel("First quarter at UChicago").selectOption("2099-AU");
-  await page.getByRole("radio", { name: "First-year" }).check();
-  await page.getByRole("button", { name: "Next" }).click();
+test("logged out, the planner offers sign-up to set up a plan", async ({ page }) => {
+  await page.goto("/plan");
+  await expect(page.getByRole("link", { name: "Sign up to set up your plan" })).toHaveAttribute("href", "/signup");
+});
 
-  // 2. Credits. A code the catalog does not have is refused here (it used to make every
-  // generated plan fail: FEEDBACK "Generate Plan Failure").
-  await page.getByLabel("Kind").selectOption("AP");
-  await page.getByLabel("Description").fill("Fake AP exam");
-  // FEEDBACK 2026-11-16: the course is chosen from the catalog, never typed free.
-  await page.getByLabel("Counts as course (if known)").fill("NOPE 10000");
-  await expect(page.getByRole("listbox", { name: "Matching courses" })).toContainText("No course matches");
-  await page.getByRole("button", { name: "Add credit" }).click();
-  await expect(page.getByRole("alert")).toHaveText("Choose the course from the list, or clear the field if you are not sure.");
-  await page.getByLabel("Counts as course (if known)").fill("Fake Introduction I");
-  await page.getByRole("option", { name: /^TEST 10000/ }).click();
-  await expect(page.getByTestId("course-picked")).toContainText("TEST 10000");
-  await page.getByRole("button", { name: "Add credit" }).click();
-  await expect(page.getByText("AP exam: Fake AP exam → TEST 10000")).toBeVisible();
-  await page.getByRole("button", { name: "Next" }).click();
+test("a plan set up from the student record opens the generator", async ({ page }) => {
+  await logIn(page);
+  await page.goto("/plan");
+  // Without a first quarter or programs, the card sends the student to the dashboard first.
+  const setup = page.getByRole("region", { name: "Set up a plan from your information" });
+  await expect(setup.getByRole("link", { name: "Answer on your dashboard" })).toHaveAttribute("href", "/me");
 
-  // 3. Programs
-  await page.getByRole("checkbox", { name: "Fake Program" }).check();
-  await page.getByRole("checkbox", { name: "Fake Core" }).check();
-  await page.getByLabel(/Interests/).fill("ML");
-  await page.getByRole("button", { name: "Add", exact: true }).click();
-  await page.getByRole("button", { name: "Next" }).click();
+  await page.evaluate(async () => {
+    await fetch("/api/me/profile", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        entry_term: "2099-AU",
+        entry_year_level: 1,
+        expected_graduation_term: "2103-SP",
+        intended_programs: ["fake-major"],
+        credits: [{ kind: "AP", label: "Fake AP exam", maps_to: "TEST 10000", units: 100 }],
+        taken_courses: [{ course: "FAKE 13000", term: "2099-AU", status: "completed", grade: "A" }],
+      }),
+    });
+  });
+  await page.reload();
+  await expect(setup.getByText("Fake Program, Fake Core")).toBeVisible();
+  await expect(setup.getByText("Fake AP exam")).toBeVisible();
+  await expect(setup.getByRole("checkbox", { name: "Generate a starting plan" })).toBeChecked();
+  await setup.getByRole("button", { name: "Set up my plan" }).click();
 
-  // 4. Goals: a career chip, then a quarter chip (keyboard "Place" and drag)
-  await page.getByRole("button", { name: "Protect GPA" }).click();
-  await expect(page.getByRole("button", { name: "Protect GPA" })).toHaveAttribute("aria-pressed", "true");
-  await page.getByLabel("Quarter for Light quarter").selectOption("2100-WI");
-  await page.getByRole("listitem").filter({ hasText: "Light quarter" }).getByRole("button", { name: "Place" }).click();
-  await expect(page.getByTestId("timeline-2100-WI")).toContainText("Light quarter");
-  const chip = page.getByRole("button", { name: "Drag “At most 4 courses” onto a quarter" });
-  const target = page.getByTestId("timeline-2100-SP");
-  // Both ends of the drag on screen: a pointer near the window edge makes dnd-kit scroll the page.
-  await page.setViewportSize({ width: 1280, height: 1000 });
-  await target.scrollIntoViewIfNeeded();
-  // A pointer drag can miss when the machine is busy (OPEN_QUESTIONS E2E-1; seen here while
-  // another worktree ran its tests). So: up to two pointer drags, each aimed after the drag
-  // starts; if both missed, the same drag with dnd-kit's keyboard sensor (Space, arrows until
-  // the chip sits on the quarter, Space), which does not depend on timing.
-  const landed = async () => ((await target.textContent()) ?? "").includes("At most 4 courses");
-  for (let attempt = 0; attempt < 2 && !(await landed()); attempt += 1) {
-    const a = await chip.boundingBox();
-    if (!a) throw new Error("no chip box");
-    await page.mouse.move(a.x + a.width / 2, a.y + a.height / 2);
-    await page.mouse.down();
-    await page.mouse.move(a.x + 20, a.y + 20, { steps: 5 });
-    await page.waitForTimeout(150); // let the drag start before aiming
-    const b = await target.boundingBox();
-    if (!b) throw new Error("no target box");
-    await page.mouse.move(b.x + b.width / 2, b.y + b.height / 2, { steps: 10 });
-    await page.mouse.move(b.x + b.width / 2 + 2, b.y + b.height / 2 + 2, { steps: 2 });
-    await page.waitForTimeout(200); // let dnd-kit see the quarter under the pointer
-    await page.mouse.up();
-  }
-  if (!(await landed())) {
-    await chip.focus();
-    await page.keyboard.press("Space");
-    for (let step = 0; step < 60; step += 1) {
-      const from = await chip.boundingBox();
-      const to = await target.boundingBox();
-      if (!from || !to) throw new Error("no boxes");
-      const dx = to.x + to.width / 2 - (from.x + from.width / 2);
-      const dy = to.y + to.height / 2 - (from.y + from.height / 2);
-      if (Math.abs(dx) < to.width / 3 && Math.abs(dy) < to.height / 3) break;
-      await page.keyboard.press(Math.abs(dy) > Math.abs(dx) ? (dy > 0 ? "ArrowDown" : "ArrowUp") : dx > 0 ? "ArrowRight" : "ArrowLeft");
-    }
-    await page.keyboard.press("Space");
-  }
-  await expect(target).toContainText("At most 4 courses");
-  // dnd-kit swallows a click that lands within a few milliseconds of a drop (a person cannot
-  // click that fast; Playwright can), so press Next until the step changes.
-  const review = page.getByRole("heading", { name: "Step 5 of 5: Review" });
-  await expect(async () => {
-    if (!(await review.isVisible())) await page.getByRole("button", { name: "Next" }).click({ timeout: 1000 });
-    await expect(review).toBeVisible({ timeout: 1000 });
-  }).toPass();
-
-  // 5. Review
-  await expect(page.getByText("Fake Program, Fake Core")).toBeVisible();
-  await expect(page.getByRole("checkbox", { name: "Generate a starting plan" })).toBeChecked();
-  await page.getByRole("button", { name: "Create plan" }).click();
-
-  await expect(page).toHaveURL(/\/plan\?generate=1$/);
   await expect(page.getByRole("dialog", { name: "Generate plan" })).toBeVisible();
-  await expect(page.getByRole("dialog").getByRole("checkbox", { name: "Protect GPA" })).toBeChecked();
-  await expect(page.getByRole("dialog").getByRole("button", { name: "Remove interest ML" })).toBeVisible();
   await page.keyboard.press("Escape");
   await expect(page.getByRole("list", { name: "Programs on this plan" })).toContainText("Fake Program");
-  await expect(page.getByTestId("footer-2100-WI")).toContainText("Light quarter");
+  await expect(page.getByRole("list", { name: "Programs on this plan" })).toContainText("Fake Core");
+  await expect(page.locator('[data-testid="course-card"][data-course="FAKE 13000"]')).toBeAttached();
 });

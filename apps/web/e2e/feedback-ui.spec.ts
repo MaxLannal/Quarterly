@@ -5,6 +5,7 @@ import {
   card,
   closePanel,
   graduation,
+  logIn,
   openAdvisor,
   openPanel,
   setGraduation,
@@ -20,21 +21,23 @@ const quarterIds = (page: Page, year: number) =>
     .locator('[data-testid^="quarter-"]')
     .evaluateAll((els) => els.map((e) => e.getAttribute("data-testid")));
 
-/** Onboarding as a second-year transfer student, no programs, no generated plan. */
+/** A second-year transfer student's plan, set up from the student record (Issue #16 replaced
+ * the onboarding wizard), no generated plan. */
 async function transferPlan(page: Page) {
-  await page.goto("/onboarding");
-  await page.getByRole("radio", { name: "Transfer student" }).check();
-  await expect(page.getByLabel("Class standing at entry")).toHaveValue("2");
-  await page.getByRole("button", { name: "Next" }).click();
-  await page.getByRole("button", { name: "Skip" }).click();
-  await page.getByRole("button", { name: "Next" }).click();
-  await page.getByRole("button", { name: "Next" }).click();
-  await expect(page.getByText("3, graduating in Spring 2102.")).toBeVisible();
-  await page
-    .getByRole("checkbox", { name: "Generate a starting plan" })
-    .uncheck();
-  await page.getByRole("button", { name: "Create plan" }).click();
-  await expect(page).toHaveURL(/\/plan$/);
+  await logIn(page);
+  await page.evaluate(async () => {
+    await fetch("/api/me/profile", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ entry_term: "2099-AU", entry_year_level: 2, intended_programs: ["fake-major"] }),
+    });
+  });
+  await page.goto("/plan");
+  const setup = page.getByRole("region", { name: "Set up a plan from your information" });
+  await expect(setup.getByText("3, graduating in Spring 2102")).toBeVisible();
+  await setup.getByRole("checkbox", { name: "Generate a starting plan" }).uncheck();
+  await setup.getByRole("button", { name: "Set up my plan" }).click();
+  await expect(page.getByRole("list", { name: "Programs on this plan" })).toContainText("Fake Program");
 }
 
 test.describe("F2: Summer opens the academic year", () => {

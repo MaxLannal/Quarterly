@@ -147,8 +147,7 @@ def test_followed_courses_and_interest_matches(env: Env) -> None:
     profile(
         env,
         me,
-        interests=["Cross-listed things"],
-        future_domains=["quantum computing"],
+        research_areas=["Cross-listed things", "quantum computing"],
         follows={"courses": ["TEST 10100", "TEST 20000"]},
     )
     advanced = thread(env, "Advanced advice", code="TEST 20000")

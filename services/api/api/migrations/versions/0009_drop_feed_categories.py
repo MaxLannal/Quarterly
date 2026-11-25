@@ -1,10 +1,10 @@
 """Drop `student_profile.feed_categories` (issue #19: the Feed and its focus chips are gone)
 
-Revision ID: 0006_drop_feed_categories
-Revises: 0005_drop_pathway
+Revision ID: 0009
+Revises: 0008
 
-Other branches also add migrations after 0004: when they merge, set `down_revision` of the
-first migration of the later branch to the newest one (issue #19 checklist item 15).
+Issue #19 wrote this as 0006, after issue #15's migration. PR #21 merged first, so both follow
+its 0005 to 0007 (issue #19 checklist item 15).
 """
 
 from collections.abc import Sequence
@@ -13,8 +13,8 @@ import sqlalchemy as sa
 from alembic import op
 from sqlalchemy.dialects import postgresql
 
-revision: str = "0006_drop_feed_categories"
-down_revision: str | None = "0005_drop_pathway"
+revision: str = "0009"
+down_revision: str | None = "0008"
 branch_labels: str | Sequence[str] | None = None
 depends_on: str | Sequence[str] | None = None
 

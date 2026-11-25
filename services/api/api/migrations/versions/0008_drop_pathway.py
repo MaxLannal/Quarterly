@@ -1,10 +1,10 @@
 """Drop the dashboard routes table `pathway` (issue #15: "Your routes" removed)
 
-Revision ID: 0005_drop_pathway
-Revises: 0004
+Revision ID: 0008
+Revises: 0007
 
-Other branches also add migrations after 0004: when they merge, the later one sets its
-`down_revision` to the newest migration (issue #15 checklist item 21).
+Issue #15 wrote this as 0005 after 0004. PR #21 (issues #14 and #16) merged first with 0005 to
+0007, so this one follows them (issue #15 checklist item 21).
 """
 
 from collections.abc import Sequence
@@ -13,8 +13,8 @@ import sqlalchemy as sa
 from alembic import op
 from sqlalchemy.dialects import postgresql
 
-revision: str = "0005_drop_pathway"
-down_revision: str | None = "0004"
+revision: str = "0008"
+down_revision: str | None = "0007"
 branch_labels: str | Sequence[str] | None = None
 depends_on: str | Sequence[str] | None = None
 

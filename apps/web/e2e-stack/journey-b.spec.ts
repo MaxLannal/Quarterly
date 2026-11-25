@@ -1,5 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
-import { card, gap, verifierSettled } from "./journey";
+import { card, closePanel, gap, openPanel, setUpPlanFromRecord, signUp, verifierSettled } from "./journey";
 
 // SPEC "Core user journeys" B: transfer student targeting CS BS + Math BS and the Bx/MS
 // (real stack, fake LLM).
@@ -18,36 +18,36 @@ async function transferCredit(page: Page, label: string, code: string | null, un
 }
 
 test("journey B: transfer student with CS BS + Math BS + Bx/MS sees what cannot fit, then asks the advisor", async ({ page }) => {
-  await page.goto("/onboarding");
-  await page.getByLabel("First quarter at UChicago").selectOption("2026-AU");
-  await page.getByRole("radio", { name: "Transfer student" }).check();
-  await page.getByLabel("Class standing at entry").selectOption("2");
-  await page.getByRole("button", { name: "Next" }).click();
+  // B1-B2. Sign-up with "About you" (Issue #16 replaced the onboarding wizard): a transfer who
+  // started in Autumn 2026 in the second year (class of 2029). Transfer credits: a known
+  // equivalent is mapped, the others are flagged for manual mapping. Programs: CS BS, Math BS,
+  // CS Bx/MS (research option); the Core is required to graduate.
+  await signUp(page, "b", "/plan", {
+    classYear: "Class of 2029",
+    programs: ["Computer Science (BS)", "Mathematics (BS)", "Computer Science Bx/MS, Option 1: Research-Oriented Computer Science Majors", "The Core (general education)"],
+    transfer: {
+      entry: "2026-AU",
+      level: "Second year",
+      extra: async (p) => {
+        await transferCredit(p, "Calculus I at a community college", "MATH 15100", "100");
+        await transferCredit(p, "Intro to Programming at a community college", null, "100");
+        await transferCredit(p, "First-year coursework at a previous college", null, "900");
+      },
+    },
+  });
+  await setUpPlanFromRecord(page, ["Calculus I at a community college, Intro to Programming at a community college, First-year coursework at a previous college", "3, graduating in Spring 2029"]);
 
-  // B1. Transfer credits: a known equivalent is mapped, the others are flagged for manual mapping.
-  await transferCredit(page, "Calculus I at a community college", "MATH 15100", "100");
-  await transferCredit(page, "Intro to Programming at a community college", null, "100");
-  await transferCredit(page, "First-year coursework at a previous college", null, "900");
-  await page.getByRole("button", { name: "Next" }).click();
-
-  // B2. Programs: CS BS, Math BS, CS Bx/MS (research option); the Core is required to graduate.
-  await page.getByRole("checkbox", { name: "Computer Science (BS)" }).check();
-  await page.getByRole("checkbox", { name: "Mathematics (BS)" }).check();
-  await page.getByRole("checkbox", { name: "Computer Science Bx/MS, Option 1: Research-Oriented Computer Science Majors" }).check();
-  await page.getByRole("checkbox", { name: "The Core (general education)" }).check();
-  await page.getByRole("button", { name: "Next" }).click();
-
-  // B3. Goals: at most one very hard course per quarter.
-  await page.getByRole("button", { name: "At most one very hard course per quarter" }).click();
-  await expect(page.getByRole("button", { name: "At most one very hard course per quarter" })).toHaveAttribute("aria-pressed", "true");
+  // B3. Goals (the planner's Goals tab): at most one very hard course per quarter.
+  const goals = await openPanel(page, "Goals");
+  await goals.getByRole("button", { name: "+ At most one very hard course per quarter" }).click();
+  await expect(goals).toContainText("At most 1 very hard course");
   gap('B3: there is no chip or control for the "Bx/MS application in Winter of 3rd year" goal (the goal type exists in the model only).');
-  await page.getByRole("button", { name: "Next" }).click();
-  await expect(page.getByText("Calculus I at a community college, Intro to Programming at a community college, First-year coursework at a previous college")).toBeVisible();
-  await page.getByRole("button", { name: "Create plan" }).click();
+  await closePanel(page);
 
   // B4. Generate: with three programs in nine quarters nothing fits, and the answer is a precise
   // list of the rules in conflict: shared-course (double-count) limits, the College unit limit
   // (overload), and whether the quarters left are enough to graduate.
+  await page.getByRole("button", { name: "Generate plan" }).click();
   const dialog = page.getByRole("dialog", { name: "Generate plan" });
   await dialog.getByRole("checkbox", { name: "Allow a 500-unit quarter where the rules permit it" }).check();
   await dialog.getByRole("button", { name: "Generate", exact: true }).click();

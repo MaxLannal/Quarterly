@@ -3,7 +3,8 @@ import { expect, test } from "@playwright/test";
 // Every row of SPEC "Sitemap and every page" renders.
 const ROUTES: [string, string][] = [
   ["/", "The Best of UChicago, within your reach."],
-  ["/onboarding", "Planner setup"],
+  ["/onboarding", "Tell Quarterly about you."], // redirects to the dashboard (Issue #16)
+  ["/me", "Tell Quarterly about you."],
   ["/plan", "Planner"],
   ["/plans", "My plans"],
   ["/plans/compare", "Compare plans"],

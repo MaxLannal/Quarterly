@@ -79,7 +79,9 @@ EXPECTED = {
     ("get", "/me/updates"),
     ("post", "/me/updates/seen"),
     # -- me (dashboard)
+    ("get", "/profile/questions"),
     ("get", "/me/profile"),
+    ("get", "/me/profile/export.md"),
     ("patch", "/me/profile"),
     ("post", "/agents/interview"),  # the routes (/me/routes, /agents/routes) went in #15
     # -- the Catalog's browse rows and ratings (the Feed's endpoints went in #19)

@@ -150,7 +150,7 @@ def interests_of(db: Session, account: m.Account, profile: m.StudentProfile) -> 
     threads = {int(t) for t in follows.get("threads", []) if str(t).isdigit()}
     followed = _codes(follows.get("courses", []))
     terms: list[tuple[str, list[str]]] = []
-    for raw in [*profile.interests, *profile.future_domains, *profile.research_areas]:
+    for raw in profile.research_areas:
         term = " ".join(str(raw).split())[:60]
         if len(term) < 3 or any(term.lower() == t.lower() for t, _ in terms):
             continue

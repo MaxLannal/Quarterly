@@ -103,6 +103,6 @@ def delete_account(db: Session, account: m.Account, posts: Literal["delete", "ke
     from api.commons.account import forget_commons
 
     forget_chats(db, list(db.scalars(sa.select(m.Plan.id).where(m.Plan.account_id == account.id))))
-    # The Commons uses its own per-thread refs; the profile and routes go by FK cascade.
+    # The Commons uses its own per-thread refs; the student record goes by FK cascade.
     forget_commons(db, account.id, posts)
     db.delete(account)

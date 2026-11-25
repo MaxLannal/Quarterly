@@ -639,9 +639,11 @@ class Account(Base):
 
 
 class StudentProfile(Base):
-    """The dashboard's portrait of one student (`/me`). Keyed by the account like a plan: it is
-    the student's own data, exported with the account and deleted with it (cascade). The email is
-    never copied here (decision 5): the dashboard reads it from `account`."""
+    """The student record (Issue #14): the General Information answers of one student, plus
+    `student_credit` and `student_course`. Keyed by the account like a plan: it is the student's
+    own data, exported with the account and deleted with it (cascade). The email is never copied
+    here (decision 5): the dashboard reads it from `account`. The questions are in
+    data/profile/questions.yaml; NULL means "not answered"."""
 
     __tablename__ = "student_profile"
     __table_args__ = (
@@ -649,33 +651,55 @@ class StudentProfile(Base):
             "class_year IS NULL OR class_year BETWEEN 2020 AND 2040", name="class_year_range"
         ),
         sa.CheckConstraint(
-            "humanities_goal IS NULL OR humanities_goal IN ('pass', 'balance', 'enjoy', 'deep')",
-            name="humanities_goal",
+            "entry_year_level IS NULL OR entry_year_level BETWEEN 1 AND 4", name="entry_year_level"
         ),
         sa.CheckConstraint(
-            "workload IS NULL OR workload IN ('light', 'balanced', 'intense')", name="workload"
+            "post_grad_plan IS NULL OR post_grad_plan IN "
+            "('industry', 'grad_school', 'med_law', 'undecided')",
+            name="post_grad_plan",
+        ),
+        sa.CheckConstraint("pace IS NULL OR pace IN ('early', 'on_time', 'flexible')", name="pace"),
+        sa.CheckConstraint(
+            "courses_per_term IS NULL OR courses_per_term BETWEEN 1 AND 6", name="courses_per_term"
+        ),
+        sa.CheckConstraint(
+            "theory_vs_application IS NULL OR theory_vs_application BETWEEN 1 AND 10",
+            name="theory_vs_application",
         ),
     )
     account_id: Mapped[uuid.UUID] = mapped_column(
         sa.ForeignKey("account.id", ondelete="CASCADE"), primary_key=True
     )
+    # Academic background.
     class_year: Mapped[int | None] = mapped_column(sa.SmallInteger)
-    #: Program ids (program.id) the student is considering.
+    #: Last quarter, as a term id (`2029-SP`).
+    expected_graduation_term: Mapped[str | None] = mapped_column(sa.String(7))
+    #: Program ids (program.id) the student intends to take.
     intended_programs: Mapped[list[str]] = _texts()
-    interests: Mapped[list[str]] = _texts()
+    #: First quarter at UChicago (`2026-AU`).
+    entry_term: Mapped[str | None] = mapped_column(sa.String(7))
+    entry_year_level: Mapped[int | None] = mapped_column(sa.SmallInteger)
+    # Goals.
+    #: industry | grad_school | med_law | undecided.
+    post_grad_plan: Mapped[str | None] = mapped_column(sa.String(16))
+    #: early | on_time | flexible.
+    pace: Mapped[str | None] = mapped_column(sa.String(16))
+    wants_research: Mapped[bool | None]
     research_areas: Mapped[list[str]] = _texts()
-    #: pass ("just get through the Core") | balance | enjoy (specific topics) | deep.
-    humanities_goal: Mapped[str | None] = mapped_column(sa.String(16))
-    humanities_topics: Mapped[list[str]] = _texts()
-    humanities_note: Mapped[str | None] = mapped_column(sa.Text)
-    career_plans: Mapped[str | None] = mapped_column(sa.Text)
-    career_paths: Mapped[list[str]] = _texts()
-    future_domains: Mapped[list[str]] = _texts()
-    constraints: Mapped[list[str]] = _texts()
-    workload: Mapped[str | None] = mapped_column(sa.String(16))
-    #: {headline, summary, themes: [str]}: written by the interviewer, kept by the student.
-    portrait: Mapped[dict[str, Any]] = mapped_column(JSONB, server_default="{}")
-    #: The interviewer's memory: {covered: [topic], turns: [{role, text}] (last 24, scrubbed)}.
+    # Scheduling.
+    courses_per_term: Mapped[int | None] = mapped_column(sa.SmallInteger)
+    #: [{term, kind: abroad | internship | leave}]; NULL = not answered, [] = none.
+    terms_away: Mapped[list[dict[str, str]] | None] = mapped_column(JSONB)
+    # Learning preferences.
+    #: [seminar | lecture | lab | online]; NULL = not answered.
+    class_formats: Mapped[list[str] | None] = mapped_column(ARRAY(sa.Text))
+    #: 1 (theory) .. 10 (application).
+    theory_vs_application: Mapped[int | None] = mapped_column(sa.SmallInteger)
+    #: The working information from the planner chat (Markdown, Issue #14 D3: one per student;
+    #: a line that applies to one plan only starts with the plan name). Issue #17 writes it.
+    working_notes: Mapped[str | None] = mapped_column(sa.Text)
+    #: The dashboard agent's memory: {covered: [question id], turns: [{role, text}] (last 24,
+    #: scrubbed)}.
     interview: Mapped[dict[str, Any]] = mapped_column(JSONB, server_default="{}")
     #: {threads: [commons_thread.id], courses: [course code]}.
     follows: Mapped[dict[str, Any]] = mapped_column(JSONB, server_default="{}")
@@ -683,6 +707,41 @@ class StudentProfile(Base):
     updates_seen: Mapped[dict[str, Any]] = mapped_column(JSONB, server_default="{}")
     created_day: Mapped[dt.date] = mapped_column(server_default=TODAY)
     updated_day: Mapped[dt.date] = mapped_column(server_default=TODAY)
+
+
+class StudentCredit(Base):
+    """An AP, placement or transfer credit of the student record (Issue #14; the columns of
+    `credit`, keyed by the account instead of a plan). Every saved plan reads these."""
+
+    __tablename__ = "student_credit"
+    id: Mapped[int] = _id()
+    account_id: Mapped[uuid.UUID] = mapped_column(
+        sa.ForeignKey("account.id", ondelete="CASCADE"), index=True
+    )
+    kind: Mapped[str] = mapped_column(sa.String(16))  # AP | placement | transfer
+    label: Mapped[str] = mapped_column(sa.Text)
+    maps_to_course_id: Mapped[int | None] = mapped_column(sa.ForeignKey("course.id"))
+    units: Mapped[int] = mapped_column(server_default="0")
+
+
+class StudentCourse(Base):
+    """A UChicago course the student took or is taking (Issue #14). Every saved plan shows these
+    as its completed and in-progress items."""
+
+    __tablename__ = "student_course"
+    __table_args__ = (sa.CheckConstraint("status IN ('completed', 'in_progress')", name="status"),)
+    id: Mapped[int] = _id()
+    account_id: Mapped[uuid.UUID] = mapped_column(
+        sa.ForeignKey("account.id", ondelete="CASCADE"), index=True
+    )
+    course_id: Mapped[int] = mapped_column(sa.ForeignKey("course.id"))
+    term_id: Mapped[str] = mapped_column(sa.String(7))
+    status: Mapped[str] = mapped_column(sa.String(16), server_default="completed")
+    units: Mapped[int | None]
+    grading: Mapped[str] = mapped_column(sa.String(16), server_default="letter")
+    grade: Mapped[str | None] = mapped_column(sa.String(4))
+    #: Locked in the planner (migration 0007).
+    locked: Mapped[bool] = mapped_column(server_default=sa.false())
 
 
 class CommonsThread(Base):

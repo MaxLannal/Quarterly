@@ -350,20 +350,12 @@ class CampusTools:
         ids |= {f"program:{p}" for p in programs}
         facts = {
             "class_year": profile.class_year,
-            "workload": profile.workload,
-            "humanities_goal": profile.humanities_goal,
+            "post_grad_plan": profile.post_grad_plan,
+            "pace": profile.pace,
+            "courses_per_term": profile.courses_per_term,
             "intended_programs": programs,
         }
-        words = {
-            "interests": profile.interests,
-            "research_areas": profile.research_areas,
-            "humanities_topics": profile.humanities_topics,
-            "humanities_note": profile.humanities_note,
-            "career_plans": profile.career_plans,
-            "career_paths": profile.career_paths,
-            "future_domains": profile.future_domains,
-            "constraints": profile.constraints,
-        }
+        words = {"research_areas": profile.research_areas}
         words = {k: v for k, v in words.items() if v}
         parts = ["The student's dashboard profile:", to_json(facts)]
         if words:
@@ -440,9 +432,8 @@ _OWN_TOOLS: dict[str, Any] = {
     ),
     "get_profile": lambda t: Tool(
         "get_profile",
-        "The student's own dashboard profile: class year, interests, research areas, "
-        "humanities goal, career plans, future domains, constraints, workload and intended "
-        "programs.",
+        "The student's own dashboard profile: class year, intended programs, plan after "
+        "graduation, pace, courses per quarter and research areas.",
         _obj({}),
         t.get_profile,
     ),

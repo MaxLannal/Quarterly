@@ -35,6 +35,30 @@ async function fillPlanner(page: Page) {
   await closePanel(page);
 }
 
+/** Logged in, with a partly answered student record (fake data). */
+async function filledRecord(page: Page) {
+  await logIn(page);
+  await page.evaluate(async () => {
+    await fetch("/api/me/profile", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        class_year: 2030,
+        expected_graduation_term: "2030-SP",
+        intended_programs: ["fake-major"],
+        entry_term: "2099-AU",
+        entry_year_level: 1,
+        credits: [{ kind: "AP", label: "Fake AP exam", maps_to: "TEST 10000", units: 100 }],
+        post_grad_plan: "grad_school",
+        wants_research: true,
+        research_areas: ["Fake topology"],
+        courses_per_term: 4,
+        terms_away: [],
+      }),
+    });
+  });
+}
+
 /**
  * Waits for the page to settle, parks the mouse in the left gutter (no hover states), then saves
  * a PNG: the full page, or only the viewport for an open dialog (it is fixed to the viewport).
@@ -74,7 +98,7 @@ type Shot = {
 };
 
 const SHOTS: Shot[] = [
-  { name: "home", run: async (p) => (await p.goto("/"), h1(p, "The Best of UChicago, within your reach.")) },
+  { name: "home", run: async (p) => (await p.goto("/"), h1(p, /The Best of UChicago/)) },
   {
     name: "nav-menu",
     dialog: true,
@@ -91,8 +115,51 @@ const SHOTS: Shot[] = [
     },
   },
   {
-    name: "onboarding",
-    run: async (p) => (await p.goto("/onboarding"), h1(p, "Planner setup")),
+    name: "signup-about",
+    run: async (p) => {
+      await p.goto("/signup");
+      await p.getByLabel("Email address").fill("fake-student@uchicago.edu");
+      await p.getByRole("button", { name: "Send code" }).click();
+      await p.getByLabel("6-digit code").fill("123456");
+      await p.getByRole("button", { name: "Verify code" }).click();
+      await p.getByLabel("Username").fill("fake-student");
+      await p.getByLabel("Password", { exact: true }).fill("correct horse battery");
+      await p.getByLabel("Repeat password").fill("correct horse battery");
+      await p.getByRole("button", { name: "Create account" }).click();
+      await p.getByLabel("What is your class year?").selectOption({ label: "Class of 2030" });
+      await p.getByRole("checkbox", { name: "Fake Program" }).check();
+      await p.getByRole("checkbox", { name: "I transferred, or I am not in my first year." }).check();
+      await expect(p.getByLabel("Which year did you start in?")).toBeVisible();
+    },
+  },
+  {
+    name: "dashboard",
+    run: async (p) => {
+      await filledRecord(p);
+      await p.goto("/me");
+      await h1(p, /fake-user/);
+      await expect(p.getByRole("region", { name: "Goals" })).toContainText("Graduate school");
+    },
+  },
+  {
+    name: "dashboard-guide",
+    dialog: true,
+    run: async (p) => {
+      await filledRecord(p);
+      await p.goto("/me");
+      await p.getByRole("button", { name: /Complete your profile/ }).click();
+      const guide = p.getByRole("dialog", { name: "Your guide" });
+      await guide.getByRole("group", { name: "Quick answers" }).getByRole("button", { name: "On time" }).click();
+      await expect(guide.getByRole("button", { name: "Accept Graduation pace: On time" })).toBeVisible();
+    },
+  },
+  {
+    name: "plan-setup",
+    run: async (p) => {
+      await filledRecord(p);
+      await p.goto("/plan");
+      await expect(p.getByRole("region", { name: "Set up a plan from your information" })).toBeVisible();
+    },
   },
   {
     name: "plan",

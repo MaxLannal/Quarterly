@@ -1,48 +1,39 @@
 import { expect, test } from "@playwright/test";
-import { accountPlans, dragUntilChecked, expectVariants, gap, generate, gridByTerm, signUp, verifierSettled } from "./journey";
+import { accountPlans, addCreditOnDashboard, closePanel, dragUntilChecked, expectVariants, gap, generate, gridByTerm, openPanel, setUpPlanFromRecord, signUp, verifierSettled } from "./journey";
 
-// SPEC "Core user journeys" A: incoming first-year with no plan (real stack, fake LLM).
-test("journey A: first-year onboards, generates, drags a course and saves to a new account", async ({ page }) => {
-  // A1. Home -> Start planning, no login.
+// SPEC "Core user journeys" A: incoming first-year with no plan (real stack, fake LLM). Since
+// Issue #16 a new student signs up first: the registration form replaced the onboarding wizard.
+test("journey A: first-year signs up, sets up a plan from their information, generates, drags a course and saves", async ({ page }) => {
+  // A1. Home -> Start planning opens sign-up for a logged-out visitor.
   await page.goto("/");
   await page.getByRole("link", { name: "Start planning" }).click();
-  await expect(page.getByRole("heading", { level: 1, name: "Planner setup" })).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1, name: "Create an account" })).toBeVisible();
 
-  // A2. Onboarding: entry quarter, a placement result, an interest, career-goal chips.
-  await expect(page.getByLabel("Catalog year")).toHaveValue("2026-27");
-  await page.getByLabel("First quarter at UChicago").selectOption("2026-AU");
-  await page.getByRole("radio", { name: "First-year" }).check();
-  await page.getByRole("button", { name: "Next" }).click();
+  // A2. Sign-up with "About you": a first-year of the class of 2030 (first quarter Autumn 2026),
+  // CS and the Core. A first-year's form has no credits, so the placement result goes on the
+  // dashboard's Academic background.
+  await signUp(page, "a", "/plan", { classYear: "Class of 2030", programs: ["Computer Science (BS)", "The Core (general education)"] });
+  await expect(page).toHaveURL(/\/plan$/);
+  await addCreditOnDashboard(page, { kind: "placement", label: "Calculus placement", code: "MATH 15100", text: "Placement: Calculus placement → MATH 15100" });
 
-  await page.getByLabel("Kind").selectOption("placement");
-  await page.getByLabel("Description").fill("Calculus placement");
-  await page.getByLabel("Counts as course (if known)").fill("MATH 15100");
-  await page.getByRole("option", { name: /^MATH 15100/ }).click();
-  await page.getByRole("button", { name: "Add credit" }).click();
-  await expect(page.getByText("Placement: Calculus placement → MATH 15100")).toBeVisible();
-  await page.getByRole("button", { name: "Next" }).click();
-
-  await page.getByRole("checkbox", { name: "Computer Science (BS)" }).check();
-  await page.getByRole("checkbox", { name: "The Core (general education)" }).check();
-  await page.getByLabel(/Interests/).fill("machine learning");
-  await page.getByRole("button", { name: "Add", exact: true }).click();
-  await page.getByRole("button", { name: "Next" }).click();
-
-  await page.getByRole("button", { name: "Lighter first year" }).click();
-  await expect(page.getByRole("button", { name: "Lighter first year" })).toHaveAttribute("aria-pressed", "true");
-  await page.getByRole("button", { name: "Next" }).click();
-
-  await expect(page.getByRole("heading", { name: "Step 5 of 5: Review" })).toBeVisible();
-  await expect(page.getByText("Computer Science (BS), The Core (general education)")).toBeVisible();
-  await page.getByRole("button", { name: "Create plan" }).click();
-
-  // A3. The planner opens on the new plan, with the Generate popup.
-  await expect(page).toHaveURL(/\/plan\?generate=1$/);
+  // A3. The planner sets the plan up from the student record; then the career-goal chip.
+  await setUpPlanFromRecord(page, ["Computer Science (BS), The Core (general education)", "Autumn 2026", "Calculus placement"]);
+  await expect(page.getByText("Catalog 2026-27")).toBeVisible();
   await expect(page.getByRole("list", { name: "Programs on this plan" })).toContainText("Computer Science (BS)");
+  const goals = await openPanel(page, "Goals");
+  await goals.getByRole("button", { name: "+ Lighter first year" }).click();
+  await expect(goals).toContainText("Light quarter");
+  await closePanel(page);
   gap("A3: the Core is not pre-placed as requirement slots; the grid starts empty.");
 
-  // A4. Generate: 2-3 verified variants, a rationale line per quarter (from the fake LLM).
-  const { dialog, variants } = await generate(page);
+  // A4. Generate (the interest goes in the popup): 2-3 verified variants, a rationale line per
+  // quarter (from the fake LLM).
+  await page.getByRole("button", { name: "Generate plan" }).click();
+  const { dialog, variants } = await generate(page, async (d) => {
+    await d.getByLabel("Interest tag").fill("machine learning");
+    await d.getByRole("button", { name: "Add", exact: true }).click();
+    await expect(d.getByRole("button", { name: "Remove interest machine learning" })).toBeVisible();
+  });
   await expectVariants(variants);
   gap('A4: variants are named "Option A/B/C", not "Exploratory CS" / "Econ-leaning" / "Balanced".');
   await variants.first().getByRole("button", { name: "Apply", exact: true }).click();
@@ -60,10 +51,8 @@ test("journey A: first-year onboards, generates, drags a course and saves to a n
   expect((await gridByTerm(page))["2028-SP"]).toContain(moved);
   expect(elapsed, `drop to verified badge took ${elapsed} ms`).toBeLessThan(1000);
 
-  // A6. Create an account to save it: the local plan is imported, and Save updates that plan.
+  // A6. Save to the account: exactly one plan there, the one on the grid.
   const plan = await gridByTerm(page);
-  await signUp(page, "a", "/plan");
-  await expect.poll(() => accountPlans(page).then((p) => p.length)).toBe(1);
   await page.getByRole("button", { name: "Save", exact: true }).click();
   await expect(page.getByText("Saved to your account.")).toBeVisible();
   const saved = await accountPlans(page);

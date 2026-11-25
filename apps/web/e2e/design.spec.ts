@@ -7,7 +7,7 @@ import { addCourseViaTree, addProgram, card, closePanel, logIn, openAdvisor, ope
 
 const MAIN_PAGES = [
   "/",
-  "/onboarding",
+  "/me",
   "/plan",
   "/plans",
   "/courses",

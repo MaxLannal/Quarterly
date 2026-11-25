@@ -7,8 +7,8 @@ Everything here is deterministic: the same viewer on the same day gets the same 
 reason line is written by this code, never by a model.
 
 - **Course spotlights**, logged in: courses whose title or description match the student's
-  interests, research areas, future domains, humanities topics, career paths and intended
-  programs (whole words; a match in the title counts double), plus followed courses; then the
+  research areas and intended programs (whole words; a match in the title counts double; the
+  student record has no other free text, Issue #14 D2), plus followed courses; then the
   best of each category. Logged out (or nothing to go on): a curated "best of UChicago" mix
   across categories (Core courses, approachable levels, rich descriptions), rotated daily.
 - **What students say**: the newest Commons replies about a course (public), and for a
@@ -59,12 +59,10 @@ CURATED = (
     "math", "history", "society", "mind", "area", "environment", "languages", "more",
 )  # fmt: skip
 
+#: The student record's free-text answers the feed matches against (Issue #14 D2: only the
+#: research areas are free text; the intended programs are added below).
 _INTEREST_SOURCES: tuple[tuple[str, float, str], ...] = (
-    ("interests", 1.0, "Because you're into {}"),
-    ("future_domains", 1.0, "Because you're headed toward {}"),
     ("research_areas", 0.9, "Near your research interest: {}"),
-    ("humanities_topics", 0.9, "For the humanities you want to enjoy: {}"),
-    ("career_paths", 0.6, "Good for a path in {}"),
 )
 _PROGRAM_REASON = "Fits your {} plans"
 MAX_INTERESTS = 16

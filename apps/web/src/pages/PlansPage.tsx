@@ -60,9 +60,13 @@ export default function PlansPage() {
         {doc.plans.length === 0 ? (
           <EmptyState>
             No plans yet.{" "}
-            <Link to="/onboarding">
-              Start planning
-            </Link>
+            {session ? (
+              <Link to="/plan">Set up a plan from your information</Link>
+            ) : (
+              <>
+                <Link to="/plan">Start planning</Link>, or <Link to="/signup">sign up to set up your plan</Link>
+              </>
+            )}
           </EmptyState>
         ) : (
           <ul className="flex flex-col gap-3">
