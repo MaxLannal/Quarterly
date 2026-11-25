@@ -934,7 +934,7 @@ Richard chose the order. Max's PR #21 (issues #14 and #16) merged into `main` fi
   - **#20:** a renamed Commons test.
   - **#14 and #16:** the old guide's topics and portrait (test_interview_api, logic.test), and the freeform `test_patch_cleans_lists_and_scrubs_text`. Also the onboarding wizard test and its two screenshots. The sign-up and journey A tests were renamed.
 - No test that is new on either side is missing.
-- The table, with each issue step and each replacement, is `merge21/test-inventory.md` in the run's scratchpad. The merged branch has 679 pytest names, 214 vitest tests, 164 Playwright tests and 4 journeys.
+- `docs/merge-21-removed-tests.md` lists each of the 103 tests, with the side that removed it, its issue step and its replacement. The merged branch has 679 pytest names, 214 vitest tests, 164 Playwright tests and 4 journeys.
 
 **Reviews (fresh context)**
 - **`spec-reviewer` on the merge** found one must-fix: the SPEC `student_profile` row still listed `feed_categories`. It found two minor items: stale comments in `routers/updates.py` and `mocks/updates.ts`, and the course-chapel test (already fixed in 5420e03). All are fixed.
