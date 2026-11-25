@@ -79,12 +79,10 @@ CURATED = (
     "math", "history", "society", "mind", "area", "environment", "languages", "more",
 )  # fmt: skip
 
+#: The student record's free-text answers the feed matches against (Issue #14 D2: only the
+#: research areas are free text; the intended programs are added below).
 _INTEREST_SOURCES: tuple[tuple[str, float, str], ...] = (
-    ("interests", 1.0, "Because you're into {}"),
-    ("future_domains", 1.0, "Because you're headed toward {}"),
     ("research_areas", 0.9, "Near your research interest: {}"),
-    ("humanities_topics", 0.9, "For the humanities you want to enjoy: {}"),
-    ("career_paths", 0.6, "Good for a path in {}"),
 )
 _PROGRAM_REASON = "Fits your {} plans"
 _PROGRAM_ORDER = {"major": 0, "minor": 0, "core": 1, "bxms": 2, "study_abroad_block": 3}

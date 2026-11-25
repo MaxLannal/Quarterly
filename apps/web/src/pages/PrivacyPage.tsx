@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { inlineLinkClass, PageContainer, PageHeader } from "@/components/layout/page";
+import { useQuestions } from "@/features/profile/questions";
 
 /** SPEC "Accounts and anonymity": the "What is stored" table and the honest limits, verbatim in
  * substance. Change this page whenever that section changes. */
@@ -10,7 +11,7 @@ const STORED: { data: string; stored: string; linkable: string }[] = [
     linkable: "Yes, by anyone with access to the database.",
   },
   {
-    data: "Username, password hash (argon2id), plans",
+    data: "Username, password hash (argon2id), plans, your General Information and planner notes",
     stored: "Yes. We never store the password itself.",
     linkable: "Yes, through the email address on the same account.",
   },
@@ -32,6 +33,94 @@ const STORED: { data: string; stored: string; linkable: string }[] = [
     linkable: "Coarsely.",
   },
 ];
+
+/** The planning step that uses each General Information answer (Issue #14 step 22), by field. */
+const USED_FOR: Record<string, string> = {
+  class_year: "Sets the years of your plan and your first quarter when you start as a first-year.",
+  expected_graduation_term: "The last quarter of your plan.",
+  intended_programs: "The requirements your plan is checked against.",
+  entry_term: "The first quarter of your plan.",
+  entry_year_level: "How many years your plan has left.",
+  credits: "Requirements already met and units already earned, when your plan is checked.",
+  taken_courses: "Placed on your plan as completed or in progress. The grade is optional; no GPA is computed from it.",
+  post_grad_plan: "Read by the planner agent when it drafts or explains a plan.",
+  pace: "Read by the planner agent: whether to aim for an early, on-time or flexible graduation.",
+  wants_research: "Read by the planner agent when it suggests research courses.",
+  research_areas: "Read by the planner agent when it suggests courses and research.",
+  courses_per_term: "The course load the planner agent aims for each quarter.",
+  terms_away: "Quarters the planner agent leaves free.",
+  class_formats: "Read by the planner agent as a preference when it suggests courses.",
+  theory_vs_application: "Read by the planner agent as a preference when it suggests courses.",
+};
+
+/** Each stored General Information field, read from the question file, and what plans with it. */
+function GeneralInformation() {
+  const questions = useQuestions();
+  return (
+    <>
+      <h2 className="mt-6 font-display text-display-sm">Your General Information</h2>
+      <p>
+        When you are logged in, Quarterly keeps your answers to a short list of questions: the planner uses them for a first
+        plan. You can see and change every answer, and export them as one Markdown file, on your{" "}
+        <Link to="/me" className={inlineLinkClass}>
+          dashboard
+        </Link>
+        . <strong>Quarterly stores no resume and no GPA.</strong> What you tell the planner chat is kept as working notes on
+        your account (one set for all your plans), and is in the export too.
+      </p>
+      {questions.data ? (
+        <div className="overflow-x-auto rounded-xl border border-hairline bg-surface-card">
+          <table className="w-full border-collapse text-left text-body-sm">
+            <caption className="sr-only">The General Information Quarterly stores, and the planning step that uses each answer</caption>
+            <thead>
+              <tr className="border-b border-hairline">
+                <th scope="col" className="p-3 text-caption-uppercase uppercase text-muted">
+                  Answer
+                </th>
+                <th scope="col" className="p-3 text-caption-uppercase uppercase text-muted">
+                  Used for
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {questions.data.groups.flatMap((g) =>
+                questions.data.questions
+                  .filter((q) => q.group === g.id)
+                  .map((q) => (
+                    <tr key={q.id} className="border-b border-hairline align-top last:border-b-0">
+                      <th scope="row" className="p-3 font-medium text-ink">
+                        {q.label} <span className="block text-caption font-normal text-muted">{g.title}</span>
+                      </th>
+                      <td className="p-3">{USED_FOR[q.field] ?? "Read by the planner agent when it drafts or explains a plan."}</td>
+                    </tr>
+                  )),
+              )}
+            </tbody>
+          </table>
+        </div>
+      ) : questions.error ? (
+        <p className="text-body-sm text-muted">The list of questions could not be loaded. Your dashboard shows every answer.</p>
+      ) : null}
+      <p>Also kept with your account, and part of the account export:</p>
+      <ul className="list-disc pl-6">
+        <li>
+          <strong>Your guide&apos;s memory:</strong> which questions it has asked and the last 24 messages of your conversation
+          with it (emails and phone numbers removed), so it can pick up where you left off.
+        </li>
+        <li>
+          <strong>What you follow:</strong> the courses and Commons questions you follow, and the feed categories you chose,
+          for the feed and for alerts about new posts.
+        </li>
+        <li>
+          <strong>What you have seen:</strong> the newest post the update alerts already showed you, so they show only new ones.
+        </li>
+        <li>
+          <strong>Routes you kept</strong> from the dashboard&apos;s earlier versions.
+        </li>
+      </ul>
+    </>
+  );
+}
 
 export default function PrivacyPage() {
   return (
@@ -76,6 +165,8 @@ export default function PrivacyPage() {
           </tbody>
         </table>
       </div>
+
+      <GeneralInformation />
 
       <h2 className="mt-6 font-display text-display-sm">How your email is used</h2>
       <ul className="list-disc space-y-2 pl-6 marker:text-gray-dark">

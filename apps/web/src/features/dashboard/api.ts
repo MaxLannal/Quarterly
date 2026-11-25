@@ -1,18 +1,18 @@
 /**
- * The dashboard's data (docs/BEST-OF-UCHICAGO-PLAN.md): the profile (`/me/profile`), the routes
- * (`/me/routes`), the interviewing guide (`/agents/interview`) and the route drafter
- * (`/agents/routes`). Profile edits are optimistic: the cache changes at once and rolls back if
- * the server refuses.
+ * The dashboard's data (Issue #16): the student record (`/me/profile`), its Markdown export
+ * (`/me/profile/export.md`), the dashboard agent (`/agents/interview`), and the routes
+ * (`/me/routes`, `/agents/routes`; removed from the page, the code goes on another branch).
+ * Record edits are optimistic: the cache changes at once and rolls back if the server refuses.
  */
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api, ApiError, NotAvailableError, unwrap } from "@/api/client";
 import type { components } from "@/api/schema";
 import { checkStream, readSse } from "@/api/sse";
+import { completenessOf, QUESTIONS_KEY, type QuestionSet } from "@/features/profile/questions";
 
 type S = components["schemas"];
 export type Profile = S["ProfileOut"];
 export type ProfilePatch = S["ProfilePatch"];
-export type Topic = S["InterviewTurnEvent"]["topic"];
 export type InterviewTurn = S["InterviewTurn"];
 export type InterviewRequest = S["InterviewRequest"];
 export type InterviewEvent = S["InterviewEvent"];
@@ -27,7 +27,6 @@ export type RoutesRequest = S["RoutesRequest"];
 export type RoutesEvent = S["RoutesEvent"];
 export type RouteDraftEvent = S["RouteDraftEvent"];
 export type ProgramRef = S["ProgramRef"];
-export type UpdatesOut = S["UpdatesOut"];
 
 export const PROFILE_KEY = ["me", "profile"] as const;
 export const ROUTES_KEY = ["me", "routes"] as const;
@@ -42,9 +41,13 @@ export function useProfile(enabled: boolean) {
   });
 }
 
-/** Applies a patch to a profile the way the server will (lists replace, null clears). */
+/**
+ * Applies a patch to a profile the way the server will: lists replace, null clears, and the
+ * ids of answered questions follow (a question's id is its field's name in the question file).
+ */
 export function patched(profile: Profile, patch: ProfilePatch): Profile {
   const next: Profile = { ...profile };
+  const answered = new Set(profile.answered);
   for (const [key, value] of Object.entries(patch) as [keyof ProfilePatch, unknown][]) {
     if (value === undefined) continue;
     if (key === "interview") {
@@ -54,23 +57,39 @@ export function patched(profile: Profile, patch: ProfilePatch): Profile {
         : { covered: [], turns: [] };
       continue;
     }
-    if (key === "portrait") {
-      next.portrait = (value as Profile["portrait"] | null) ?? { headline: "", summary: "", themes: [] };
-      continue;
-    }
     if (key === "follows") {
       next.follows = (value as Profile["follows"] | null) ?? { threads: [], courses: [] };
       continue;
     }
-    const empty = Array.isArray(profile[key as keyof Profile]) ? [] : null;
-    (next as Record<string, unknown>)[key] = value ?? empty;
+    if (key === "working_notes") {
+      next.has_working_notes = !!value;
+      continue;
+    }
+    if (key === "taken_courses") {
+      // The server adds each course's title; keep the ones the page already knows.
+      const titles = new Map(profile.taken_courses.map((c) => [c.course, c.title]));
+      next.taken_courses = ((value as S["TakenCourse"][] | null) ?? []).map((c) => ({ ...c, title: titles.get(c.course) ?? "" }));
+    } else if (key === "intended_programs") {
+      const names = new Map(profile.programs.map((p) => [p.id, p.name]));
+      const ids = (value as string[] | null) ?? [];
+      next.intended_programs = ids;
+      next.programs = ids.map((id) => ({ id, name: names.get(id) ?? id }));
+    } else {
+      const empty = Array.isArray(profile[key as keyof Profile]) ? [] : null;
+      (next as Record<string, unknown>)[key] = value ?? empty;
+    }
+    const now = (next as Record<string, unknown>)[key];
+    const counts = key === "terms_away" || key === "class_formats" ? now != null : Array.isArray(now) ? now.length > 0 : now != null;
+    if (counts) answered.add(key);
+    else answered.delete(key);
   }
+  next.answered = [...answered];
   return next;
 }
 
 /**
- * PATCH /me/profile, optimistic. `onSaved` runs when the server confirmed; on failure the cache
- * goes back to what it was and the error is returned for the page to show.
+ * PATCH /me/profile, optimistic. On failure the cache goes back to what it was and the error is
+ * returned for the page to show.
  */
 export function usePatchProfile() {
   const client = useQueryClient();
@@ -79,7 +98,11 @@ export function usePatchProfile() {
     onMutate: async (patch) => {
       await client.cancelQueries({ queryKey: PROFILE_KEY });
       const before = client.getQueryData<Profile>(PROFILE_KEY);
-      if (before) client.setQueryData<Profile>(PROFILE_KEY, patched(before, patch));
+      if (before) {
+        const next = patched(before, patch);
+        next.completeness = completenessOf(client.getQueryData<QuestionSet>(QUESTIONS_KEY), next);
+        client.setQueryData<Profile>(PROFILE_KEY, next);
+      }
       return { before };
     },
     onError: (_error, _patch, context) => {
@@ -89,6 +112,21 @@ export function usePatchProfile() {
       client.setQueryData(PROFILE_KEY, profile);
     },
   });
+}
+
+/** Downloads `student.md` (GET /me/profile/export.md) through the browser's save dialog. */
+export async function downloadStudentMd(): Promise<void> {
+  const { data, response } = await api.GET("/me/profile/export.md", { parseAs: "blob" });
+  if (response.status === 501) throw new NotAvailableError();
+  if (!response.ok || !data) throw new ApiError(response.status, `Request failed (${response.status})`);
+  const url = URL.createObjectURL(data instanceof Blob ? data : new Blob([String(data)], { type: "text/markdown" }));
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "student.md";
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  window.setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
 export function useRoutes(enabled: boolean) {
@@ -159,21 +197,6 @@ export async function* streamInterview(body: InterviewRequest, signal?: AbortSig
 export async function* streamRoutes(body: RoutesRequest, signal?: AbortSignal): AsyncGenerator<RoutesEvent> {
   const { data, response } = await api.POST("/agents/routes", { body, parseAs: "stream", signal });
   yield* readSse<RoutesEvent>(checkStream(response, data));
-}
-
-/** The companion's updates (owned by the Ask work stream); a missing endpoint is just empty. */
-export function useDashboardUpdates(enabled: boolean) {
-  return useQuery({
-    queryKey: ["me", "updates", "dashboard"],
-    queryFn: async () => {
-      const result = await api.GET("/me/updates");
-      if (result.response.status === 404 || result.response.status === 501) return null;
-      return unwrap(result);
-    },
-    enabled,
-    staleTime: 60_000,
-    retry: false,
-  });
 }
 
 /** What to tell the student when a request failed. */

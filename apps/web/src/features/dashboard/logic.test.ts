@@ -1,34 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { optimisticRoutes, patched, type Profile, type Route, type RouteList } from "./api";
-import { answeredTopics, byYear, entryTermFor, keepAll, memberSince, memoryPatch, newFacts, ownWords, routePlanState, withItem } from "./logic";
-
-function profile(over: Partial<Profile> = {}): Profile {
-  return {
-    username: "fake-user",
-    email: "fake@example.invalid",
-    member_since: "2026-11-01",
-    class_year: null,
-    intended_programs: [],
-    programs: [],
-    interests: ["Physics"],
-    research_areas: [],
-    humanities_goal: null,
-    humanities_topics: [],
-    humanities_note: null,
-    career_plans: null,
-    career_paths: [],
-    future_domains: [],
-    constraints: [],
-    workload: null,
-    feed_categories: [],
-    portrait: { headline: "", summary: "", themes: [] },
-    interview: { covered: ["class_year"], turns: [] },
-    follows: { threads: [], courses: [] },
-    completeness: 0.14,
-    updated_day: "2026-11-20",
-    ...over,
-  };
-}
+import { TEST_QUESTIONS as SET, testProfile as profile, testQuestion as question } from "@/features/profile/fixtures";
+import { optimisticRoutes, patched, type Route, type RouteList } from "./api";
+import { byYear, skippedTopics, entryTermFor, memberSince, memoryPatch, multiReply, planSummary, programProgress, proposalFrom, questionTurn, quickRepliesFor, routePlanState, withItem } from "./logic";
 
 function route(over: Partial<Route> = {}): Route {
   return {
@@ -52,55 +25,89 @@ function route(over: Partial<Route> = {}): Route {
   };
 }
 
-describe("noted facts", () => {
-  it("lists only what is new, and keeping merges with the profile at that moment", () => {
-    const p = profile();
-    const facts = newFacts(p, { interests: ["Physics", "Greek tragedy", "Film"], class_year: 2029, humanities_goal: "enjoy" });
-    expect(facts.map((f) => f.value)).toEqual(["Class of 2029", "Greek tragedy", "Film", "To enjoy specific topics"]);
-    const film = facts.find((f) => f.value === "Film");
-    expect(film?.keep(profile({ interests: ["Physics", "Poetry"] }))).toEqual({ interests: ["Physics", "Poetry", "Film"] });
-    expect(keepAll(p, facts)).toEqual({ class_year: 2029, interests: ["Physics", "Greek tragedy", "Film"], humanities_goal: "enjoy" });
+describe("the dashboard agent's proposals", () => {
+  it("names the question it answers and how the answer will read", () => {
+    const p = proposalFrom({ proposed: { class_formats: ["seminar", "lab"] }, answered: "class_formats" }, SET, profile());
+    expect(p).toEqual({ id: "class_formats", label: "Class formats", value: "Seminar, Lab", patch: { class_formats: ["seminar", "lab"] } });
   });
 
-  it("offers the portrait once", () => {
-    const facts = newFacts(profile(), { portrait: { headline: "A physicist", summary: "s", themes: ["a"] } });
-    expect(facts).toHaveLength(1);
-    expect(facts[0]?.keep(profile())).toEqual({ portrait: { headline: "A physicist", summary: "s", themes: ["a"] } });
-    expect(newFacts(profile({ portrait: { headline: "A physicist", summary: "s", themes: [] } }), { portrait: { headline: "A physicist", summary: "", themes: [] } })).toEqual([]);
+  it("falls back to the question asked before when `answered` is missing", () => {
+    const p = proposalFrom({ proposed: { theory_vs_application: 7 }, answered: null }, SET, profile(), "theory_vs_application");
+    expect(p?.label).toBe("Theory or application");
+    expect(p?.value).toBe("7 of 10 (1 = Theory, 10 = Application)");
   });
 
-  it("dedupes items case-insensitively", () => {
+  it("offers nothing for an empty proposal or one the record already holds", () => {
+    expect(proposalFrom({ proposed: {}, answered: null }, SET, profile())).toBeNull();
+    expect(proposalFrom({ proposed: { pace: "early" }, answered: "pace" }, SET, profile({ pace: "early" }))).toBeNull();
+  });
+
+  it("reads 'None' for no quarters away", () => {
+    expect(proposalFrom({ proposed: { terms_away: [] }, answered: "terms_away" }, SET, profile())?.value).toBe("None");
+  });
+});
+
+describe("questions as turns", () => {
+  it("sends the option labels unchanged, then Skip", () => {
+    expect(quickRepliesFor(question("pace"))).toEqual(["Early", "On time", "Flexible", "Skip"]);
+    expect(quickRepliesFor(question("theory_vs_application"))).toEqual(["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Skip"]);
+    expect(quickRepliesFor(question("terms_away"))).toEqual(["None", "Skip"]);
+    const turn = questionTurn(question("courses_per_term"), 0.5);
+    expect(turn).toMatchObject({ type: "turn", topic: "courses_per_term", text: question("courses_per_term").text, progress: 0.5, retry: false });
+  });
+
+  it("joins picked chips in the options' order", () => {
+    expect(multiReply(["Lab", "Seminar"], ["Seminar", "Lecture", "Lab", "Online"])).toBe("Seminar, Lab");
+  });
+});
+
+describe("the guide's memory", () => {
+  it("keeps the last 24 turns and the questions skipped or accepted", () => {
+    const turns = [
+      { role: "guide" as const, text: "After graduation?", topic: "post_grad_plan" },
+      { role: "student" as const, text: "Graduate school" },
+      { role: "guide" as const, text: "How fast?", topic: "pace" },
+      { role: "student" as const, text: "Skip" },
+      { role: "guide" as const, text: "Research?", topic: "wants_research" },
+    ];
+    expect(skippedTopics(turns)).toEqual(["pace"]);
+    const many = Array.from({ length: 30 }, (_, i) => ({ role: "student" as const, text: `t${i}` }));
+    const patch = memoryPatch(profile({ interview: { covered: ["research_areas"], turns: [] } }), [...turns, ...many], ["post_grad_plan"]);
+    expect(patch.interview?.covered).toEqual(["research_areas", "pace", "post_grad_plan"]);
+    expect(patch.interview?.turns).toHaveLength(24);
+  });
+
+  it("leaves an answer the student did not accept open, so the guide asks again", () => {
+    const turns = [
+      { role: "guide" as const, text: "Formats?", topic: "class_formats" },
+      { role: "student" as const, text: "Lab" },
+      { role: "guide" as const, text: "Scale?", topic: "theory_vs_application" },
+    ];
+    expect(skippedTopics(turns)).toEqual([]);
+    expect(memoryPatch(profile({ interview: { covered: [], turns: [] } }), turns).interview?.covered).toEqual([]);
+  });
+
+  it("dedupes list items case-insensitively", () => {
     expect(withItem(["Physics"], " physics ")).toEqual(["Physics"]);
     expect(withItem(["Physics"], "Film")).toEqual(["Physics", "Film"]);
   });
 });
 
-describe("the guide's memory", () => {
-  it("keeps the last 24 turns and every answered topic", () => {
-    const turns = [
-      { role: "guide" as const, text: "Which class?", topic: "class_year" as const },
-      { role: "student" as const, text: "2029" },
-      { role: "guide" as const, text: "Interests?", topic: "interests" as const },
-    ];
-    expect(answeredTopics(turns)).toEqual(["class_year"]);
-    const many = Array.from({ length: 30 }, (_, i) => ({ role: "student" as const, text: `t${i}` }));
-    const patch = memoryPatch(profile({ interview: { covered: ["research"], turns: [] } }), [...turns, ...many]);
-    expect(patch.interview?.covered).toEqual(["class_year", "interests", "research"]);
-    expect(patch.interview?.turns).toHaveLength(24);
-  });
-
-  it("weaves the student's own words, once each", () => {
-    expect(ownWords(profile({ interests: ["Film", "film"], future_domains: ["Quantum computing"] }))).toEqual(["Film", "Quantum computing"]);
-  });
-});
-
 describe("patches", () => {
-  it("apply like the server: only sent fields, null clears", () => {
-    const next = patched(profile({ class_year: 2029 }), { class_year: null, research_areas: ["Lasers"], interests: null });
+  it("apply like the server: only sent fields, null clears, answered follows", () => {
+    const next = patched(profile({ class_year: 2029, answered: ["class_year"] }), { class_year: null, research_areas: ["Lasers"], terms_away: [] });
     expect(next.class_year).toBeNull();
     expect(next.research_areas).toEqual(["Lasers"]);
-    expect(next.interests).toEqual([]);
-    expect(next.interview.covered).toEqual(["class_year"]);
+    expect(next.terms_away).toEqual([]);
+    expect(next.answered.sort()).toEqual(["research_areas", "terms_away"]);
+    expect(next.interview.covered).toEqual(["pace"]);
+  });
+
+  it("keeps known course titles and program names", () => {
+    const before = profile({ taken_courses: [{ course: "MATH 15100", term: "2025-AU", status: "completed", grade: null, title: "Calculus I" }], programs: [{ id: "cs", name: "Computer Science" }], intended_programs: ["cs"] });
+    const next = patched(before, { taken_courses: [{ course: "MATH 15100", term: "2025-AU", status: "completed", grade: "A" }], intended_programs: ["cs", "math"] });
+    expect(next.taken_courses[0]).toMatchObject({ title: "Calculus I", grade: "A" });
+    expect(next.programs).toEqual([{ id: "cs", name: "Computer Science" }, { id: "math", name: "math" }]);
   });
 
   it("choosing a route opens the one chosen before", () => {
@@ -109,6 +116,36 @@ describe("patches", () => {
     expect(next.items.map((r) => r.status)).toEqual(["open", "chosen"]);
     expect(next.chosen_id).toBe("b");
     expect(optimisticRoutes(next, "b", { status: "open" }).chosen_id).toBeNull();
+  });
+});
+
+describe("the plan summary", () => {
+  it("lists each year's quarters with their courses, Summer only when used", () => {
+    const summary = planSummary({
+      entry_term: "2026-AU",
+      entry_year_level: 1,
+      graduation_term: null,
+      items: [
+        { course: "MATH 15100", term: "2026-AU", status: "planned", grading: "letter", locked: false },
+        { course: "CMSC 14100", term: "2026-AU", status: "planned", grading: "letter", locked: false },
+        { course: "PHYS 13100", term: "2028-SU", status: "planned", grading: "letter", locked: false },
+      ],
+    });
+    expect(summary.graduation).toBe("2030-SP");
+    expect(summary.courses).toBe(3);
+    expect(summary.years).toHaveLength(4);
+    expect(summary.years[0]?.terms.map((t) => t.term)).toEqual(["2026-AU", "2027-WI", "2027-SP"]);
+    expect(summary.years[0]?.terms[0]?.courses).toEqual(["MATH 15100", "CMSC 14100"]);
+    expect(summary.years[2]?.terms.map((t) => t.term)).toEqual(["2028-SU", "2028-AU", "2029-WI", "2029-SP"]);
+  });
+
+  it("finds a program's top requirement node", () => {
+    const progress = [
+      { program_id: "cs", node_id: "cs/intro", have: 1, need: 2, satisfied: false, unit: "courses" as const },
+      { program_id: "cs", node_id: "cs", have: 3, need: 10, satisfied: false, unit: "courses" as const },
+    ];
+    expect(programProgress(progress, "cs")?.need).toBe(10);
+    expect(programProgress(progress, "math")).toBeUndefined();
   });
 });
 

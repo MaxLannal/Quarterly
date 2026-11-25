@@ -5,18 +5,15 @@ import { LoadingState, PageContainer, PageHeader } from "@/components/layout/pag
 import { activePlan, newLocalId, today, upsertPlan, type LocalPlan } from "@/features/planner/localPlans";
 import { emptyPlan } from "@/features/planner/planModel";
 import { Planner } from "@/features/planner/Planner";
-import { catalogYearFor } from "@/features/planner/terms";
-
-/** The newest catalog year the API lists, or the current academic year if it lists none. */
-export function defaultCatalogYear(ids: string[] | undefined): string {
-  const sorted = [...(ids ?? [])].sort().reverse();
-  return sorted[0] ?? catalogYearFor(new Date());
-}
+import { defaultCatalogYear } from "@/features/planner/terms";
 
 export default function PlanPage() {
   const [params] = useSearchParams();
   const years = useCatalogYears();
   const [local, setLocal] = useState<LocalPlan | null>(() => activePlan());
+  // A plan set up from the student record reopens the planner (a new key), with the generator
+  // when the student kept "Generate a starting plan" (the onboarding wizard's last step).
+  const [setUp, setSetUp] = useState<{ version: number; generate: boolean }>({ version: 0, generate: false });
 
   useEffect(() => {
     if (local || years.isLoading) return;
@@ -39,5 +36,17 @@ export default function PlanPage() {
       </PageContainer>
     );
   }
-  return <Planner key={local.localId} initial={local} autoGenerate={params.get("generate") === "1"} />;
+  return (
+    <Planner
+      key={`${local.localId}:${setUp.version}`}
+      initial={local}
+      autoGenerate={setUp.version > 0 ? setUp.generate : params.get("generate") === "1"}
+      onSetUp={(plan, generate) => {
+        const next = { ...plan, updatedDay: today() };
+        upsertPlan(next);
+        setLocal(next);
+        setSetUp((s) => ({ version: s.version + 1, generate }));
+      }}
+    />
+  );
 }

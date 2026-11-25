@@ -43,6 +43,11 @@ Write down anything you notice: something broken, something confusing, or someth
 
 ## Later
 
+### Dashboard sections from Max's proposal, not in Issue #16
+- Date: 2026-11-24
+- Where: the dashboard (`/me`)
+- What: Max's dashboard proposal in discussion #12 also lists a calendar (important UChicago days and registration dates), saved or starred courses from the catalog, "your class reviews and your posts" (comments on your posts, your past reviews, your favourite courses) and a profile picture. Issue #16 (step 29) leaves them out of this round. "Suggested from your planner chat" comes after Issue #17.
+
 ### Follow-ups noticed while working (suggested by Claude, 2026-11-16; not yet asked for)
 - TRNC 10100's course page still offers "Add to plan" (the course API does not send tags yet); the plan check warns if it is added to a quarter.
 - Design review deferrals (`docs/DESIGN-REVIEW.md`): PL-4 merge the planner's panel buttons into one control; AD-2 advisor as a side panel on desktop; CS-3 department and Core lists in course search; FO-4 naming of untitled reviews; PL-6 an explanation of "Difficulty"; A-4 the 401 on the logged-out session check.

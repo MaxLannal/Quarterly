@@ -149,8 +149,7 @@ def test_courses_in_routes_and_follows_and_interest_matches(env: Env) -> None:
     profile(
         env,
         me,
-        interests=["Cross-listed things"],
-        future_domains=["quantum computing"],
+        research_areas=["Cross-listed things", "quantum computing"],
         follows={"courses": ["TEST 10100"]},
     )
     with env.db() as db:

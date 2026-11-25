@@ -5,6 +5,8 @@ import { inlineLinkClass } from "@/components/layout/page";
 import { Button } from "@/components/ui/button";
 import { api, attempt } from "@/features/auth/api";
 import { signedIn } from "@/features/auth/session";
+import { AboutYouForm } from "@/features/profile/AboutYouForm";
+import { useQuestions } from "@/features/profile/questions";
 import {
   AuthPage,
   OrDivider,
@@ -21,15 +23,16 @@ import {
 type Step =
   | { name: "email" }
   | { name: "code"; pendingId: string }
-  | { name: "account"; ticket: string };
+  | { name: "account"; ticket: string }
+  | { name: "about" }
+  | { name: "next" };
 
-const STEP_NUMBER = { email: 1, code: 2, account: 3 } as const;
+const STEP_NUMBER = { email: 1, code: 2, account: 3, about: 4, next: 4 } as const;
 const UCHICAGO = /^[^@\s]+@uchicago\.edu$/i;
 const USERNAME = /^[A-Za-z0-9_-]{3,32}$/;
 
-/** SPEC "Accounts and anonymity", protocol steps 1-3. */
+/** SPEC "Accounts and anonymity", protocol steps 1-3, then "About you" (Issue #16 step 1). */
 export default function SignupPage() {
-  const navigate = useNavigate();
   const [params] = useSearchParams();
   const [step, setStep] = useState<Step>({ name: "email" });
   const [email, setEmail] = useState("");
@@ -109,7 +112,8 @@ export default function SignupPage() {
       return;
     }
     signedIn(result.data);
-    navigate(safeNext(params.get("next")));
+    // Step 4: the registration form (Issue #16), then the choice to answer more questions.
+    setStep({ name: "about" });
   }
 
   function onSubmit(event: FormEvent) {
@@ -117,7 +121,7 @@ export default function SignupPage() {
     if (busy) return;
     if (step.name === "email") void sendCode(false);
     else if (step.name === "code") void submitCode(step.pendingId);
-    else void register(step.ticket);
+    else if (step.name === "account") void register(step.ticket);
   }
 
   function startOver() {
@@ -129,9 +133,14 @@ export default function SignupPage() {
   return (
     <AuthPage
       title="Create an account"
-      eyebrow={`Step ${STEP_NUMBER[step.name]} of 3`}
-      subline="Use your @uchicago.edu email. It stays private: the forum only ever shows a random handle."
+      eyebrow={`Step ${STEP_NUMBER[step.name]} of 4`}
+      subline={
+        STEP_NUMBER[step.name] === 4
+          ? "Your account is ready. A few answers let the planner set up your plan."
+          : "Use your @uchicago.edu email. It stays private: the forum only ever shows a random handle."
+      }
     >
+      {step.name === "email" || step.name === "code" || step.name === "account" ? (
       <form onSubmit={onSubmit} noValidate className="flex flex-col gap-5">
         {step.name === "email" ? (
           <>
@@ -242,13 +251,44 @@ export default function SignupPage() {
           </>
         ) : null}
       </form>
-      <OrDivider />
-      <p className="text-center text-body-sm text-body">
-        Already have an account?{" "}
-        <Link to={keepNext("/login", params.get("next"))} className={linkClass}>
-          Log in
-        </Link>
-      </p>
+      ) : step.name === "about" ? (
+        <AboutYouForm onSaved={() => setStep({ name: "next" })} />
+      ) : (
+        <MoreQuestions next={safeNext(params.get("next"))} />
+      )}
+      {step.name === "email" || step.name === "code" || step.name === "account" ? (
+        <>
+          <OrDivider />
+          <p className="text-center text-body-sm text-body">
+            Already have an account?{" "}
+            <Link to={keepNext("/login", params.get("next"))} className={linkClass}>
+              Log in
+            </Link>
+          </p>
+        </>
+      ) : null}
     </AuthPage>
+  );
+}
+
+/** After "About you": the dashboard agent's questions now, or later (step 2 is optional). */
+function MoreQuestions({ next }: { next: string }) {
+  const navigate = useNavigate();
+  const questions = useQuestions();
+  const count = (questions.data?.questions ?? []).filter((q) => q.step === 2).length;
+  return (
+    <div className="flex flex-col gap-5">
+      <StepHeading>A few more questions?</StepHeading>
+      <p className="text-body-sm text-body">
+        Your guide can ask {count ? `${count} short questions` : "a few short questions"} about your goals, your schedule and how you like to learn. The
+        planner uses them too. Skip them if you like: you can answer them later on your dashboard.
+      </p>
+      <Button type="button" onClick={() => navigate("/me?guide=1")}>
+        Answer a few more questions
+      </Button>
+      <Button type="button" variant="outline" onClick={() => navigate(next)}>
+        Skip for now
+      </Button>
+    </div>
   );
 }

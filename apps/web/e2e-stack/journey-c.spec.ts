@@ -1,5 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
-import { expectVariants, generate, gridByTerm, openPanel, verifierSettled } from "./journey";
+import { addCreditOnDashboard, closePanel, expectVariants, generate, gridByTerm, openPanel, setUpPlanFromRecord, signUp, verifierSettled } from "./journey";
 
 // SPEC "Core user journeys" C: goal-constrained student (study abroad + lighter senior year),
 // real stack, fake LLM. The SPEC example says "Paris, Spring Y2", but the seeded catalog offers
@@ -20,10 +20,14 @@ interface VerifyReport {
   progress: NodeProgress[];
 }
 
-async function placeGoal(page: Page, chip: string, term: string) {
-  await page.getByLabel(`Quarter for ${chip}`).selectOption(term);
-  await page.getByRole("listitem").filter({ hasText: chip }).getByRole("button", { name: "Place" }).click();
-  await expect(page.getByTestId(`timeline-${term}`)).toContainText(chip);
+/** A quarter goal from the planner's Goals tab (the onboarding wizard's timeline is gone). */
+async function placeGoal(page: Page, goal: string, term: string) {
+  const drawer = await openPanel(page, "Goals");
+  const before = await drawer.getByRole("button", { name: /^Remove goal:/ }).count();
+  await drawer.getByLabel("Goal", { exact: true }).selectOption({ label: goal });
+  await drawer.getByLabel("Quarter", { exact: true }).selectOption(term);
+  await drawer.getByRole("button", { name: "Add quarter goal" }).click();
+  await expect(drawer.getByRole("button", { name: /^Remove goal:/ })).toHaveCount(before + 1);
 }
 
 test("journey C: Paris block in Autumn Y2 and at most 3 courses per quarter in Y4", async ({ page }) => {
@@ -32,33 +36,27 @@ test("journey C: Paris block in Autumn Y2 and at most 3 courses per quarter in Y
     if (r.url().endsWith("/api/verify") && r.request().method() === "POST" && r.ok()) report = (await r.json()) as VerifyReport;
   });
 
-  await page.goto("/onboarding");
-  await page.getByLabel("First quarter at UChicago").selectOption("2026-AU");
-  await page.getByRole("radio", { name: "First-year" }).check();
-  await page.getByRole("button", { name: "Next" }).click();
-  await page.getByLabel("Kind").selectOption("placement");
-  await page.getByLabel("Description").fill("Calculus placement");
-  await page.getByLabel("Counts as course (if known)").fill("MATH 15100");
-  await page.getByRole("option", { name: /^MATH 15100/ }).click();
-  await page.getByRole("button", { name: "Add credit" }).click();
-  await expect(page.getByText("Placement: Calculus placement → MATH 15100")).toBeVisible();
-  await page.getByRole("button", { name: "Next" }).click();
+  // Sign-up with "About you" (Issue #16 replaced the onboarding wizard): a first-year of the
+  // class of 2030 (first quarter Autumn 2026), CS, the Core and the Paris civilization program.
+  // A first-year's form has no credits: the placement result goes on the dashboard.
+  await signUp(page, "c", "/plan", {
+    classYear: "Class of 2030",
+    programs: ["Computer Science (BS)", "The Core (general education)", "Paris: Migration, Decolonization, and Diaspora Civilization"],
+  });
+  await addCreditOnDashboard(page, { kind: "placement", label: "Calculus placement", code: "MATH 15100", text: "Placement: Calculus placement → MATH 15100" });
+  await setUpPlanFromRecord(page, ["Autumn 2026", "Calculus placement"]);
 
   // C1. Pin the Paris civilization program as a block in Autumn of the second year. The
-  // "Study abroad" chip uses the study-abroad program on the plan (Paris, not the first listed).
-  await page.getByRole("checkbox", { name: "Computer Science (BS)" }).check();
-  await page.getByRole("checkbox", { name: "The Core (general education)" }).check();
-  await page.getByRole("checkbox", { name: "Paris: Migration, Decolonization, and Diaspora Civilization" }).check();
-  await page.getByRole("button", { name: "Next" }).click();
+  // "Study abroad" goal uses the study-abroad program on the plan (Paris, not the first listed).
   await placeGoal(page, "Study abroad", "2027-AU");
 
   // C2. Y4 at most 3 courses per quarter.
   for (const t of Y4) await placeGoal(page, "Light quarter", t);
-  await page.getByRole("button", { name: "Next" }).click();
-  await expect(page.getByText("Study abroad: civ-abroad-paris-mdd, Autumn 2027")).toBeVisible();
-  await page.getByRole("button", { name: "Create plan" }).click();
+  await expect(page.getByTestId("plan-drawer")).toContainText("Study abroad: civ-abroad-paris-mdd, Autumn 2027");
+  await closePanel(page);
 
   // C3. Generate and apply a verified variant.
+  await page.getByRole("button", { name: "Generate plan" }).click();
   const { dialog, variants } = await generate(page);
   await expectVariants(variants);
   await variants.first().getByRole("button", { name: "Apply", exact: true }).click();

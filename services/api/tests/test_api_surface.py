@@ -78,7 +78,9 @@ EXPECTED = {
     ("get", "/me/updates"),
     ("post", "/me/updates/seen"),
     # -- me (dashboard)
+    ("get", "/profile/questions"),
     ("get", "/me/profile"),
+    ("get", "/me/profile/export.md"),
     ("patch", "/me/profile"),
     ("post", "/agents/interview"),
     ("get", "/me/routes"),

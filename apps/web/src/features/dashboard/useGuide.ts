@@ -1,7 +1,8 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { errorText, PROFILE_KEY, streamInterview, usePatchProfile, type InterviewRequest, type InterviewTurn, type Profile, type StepEvent, type TurnEvent } from "./api";
-import { keepAll, memoryPatch, newFacts, type Fact } from "./logic";
+import { QUESTIONS_KEY, type QuestionSet } from "@/features/profile/questions";
+import { errorText, PROFILE_KEY, streamInterview, usePatchProfile, type InterviewRequest, type InterviewTurn, type Profile, type ProfilePatch, type StepEvent, type TurnEvent } from "./api";
+import { memoryPatch, proposalFrom, type Proposal } from "./logic";
 
 export type GuideStatus = "idle" | "thinking" | "error";
 
@@ -13,23 +14,26 @@ export interface Guide {
   error: string | null;
   /** The student's message while it is being answered (or failed to be). */
   pending: string | null;
-  facts: Fact[];
-  kept: Fact[];
+  /** Answers the guide mapped to a field, waiting for Accept (one per question, newest first). */
+  proposals: Proposal[];
+  /** Answers accepted in this conversation. */
+  accepted: Proposal[];
   begin: (options?: { seed?: TurnEvent | null; message?: string }) => void;
   reply: (text: string) => void;
   retry: () => void;
-  keep: (fact: Fact) => void;
-  drop: (fact: Fact) => void;
-  keepEverything: () => void;
+  accept: (proposal: Proposal, patch?: ProfilePatch) => void;
+  dismiss: (proposal: Proposal) => void;
   stop: () => void;
 }
 
 const HISTORY = 16;
 
 /**
- * The interviewing guide's conversation (POST /agents/interview). Each turn's noted facts wait as
- * chips until the student keeps (PATCH /me/profile) or drops them; the conversation itself is
- * saved into the profile's `interview` memory after every turn, so the guide can resume.
+ * The dashboard agent's conversation (POST /agents/interview, Issue #16). Each turn asks one
+ * General Information question; the answer it mapped from the student's reply (`proposed`)
+ * waits as a card until the student accepts it (PATCH /me/profile with the interview memory) or
+ * changes it. The conversation is saved into the record's `interview` memory after every turn,
+ * so the guide can resume.
  */
 export function useGuide(): Guide {
   const client = useQueryClient();
@@ -40,14 +44,15 @@ export function useGuide(): Guide {
   const [status, setStatus] = useState<GuideStatus>("idle");
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState<string | null>(null);
-  const [facts, setFacts] = useState<Fact[]>([]);
-  const [kept, setKept] = useState<Fact[]>([]);
+  const [proposals, setProposals] = useState<Proposal[]>([]);
+  const [accepted, setAccepted] = useState<Proposal[]>([]);
   const turnsRef = useRef<InterviewTurn[]>([]);
   const abort = useRef<AbortController | null>(null);
   const lastRequest = useRef<InterviewRequest | null>(null);
   useEffect(() => () => abort.current?.abort(), []);
 
   const profile = useCallback(() => client.getQueryData<Profile>(PROFILE_KEY), [client]);
+  const questions = useCallback(() => client.getQueryData<QuestionSet>(QUESTIONS_KEY), [client]);
   const setAll = (next: InterviewTurn[]) => {
     turnsRef.current = next;
     setTurns(next);
@@ -59,6 +64,8 @@ export function useGuide(): Guide {
       const controller = new AbortController();
       abort.current = controller;
       lastRequest.current = body;
+      // The question the student is answering: the last guide turn of the history.
+      const asked = [...(body.history ?? [])].reverse().find((t) => t.role === "guide")?.topic ?? null;
       setStatus("thinking");
       setError(null);
       setSteps([]);
@@ -80,8 +87,8 @@ export function useGuide(): Guide {
         setPending(null);
         const p = profile();
         if (p) {
-          const noted = newFacts(p, turn.proposed);
-          setFacts((old) => [...old.filter((f) => !noted.some((n) => n.id === f.id)), ...noted]);
+          const proposal = turn.retry ? null : proposalFrom(turn, questions(), p, asked);
+          if (proposal) setProposals((old) => [proposal, ...old.filter((o) => o.id !== proposal.id)]);
           if (body.mode !== "welcome_back") patch.mutate(memoryPatch(p, next));
         }
       } catch (e) {
@@ -90,14 +97,16 @@ export function useGuide(): Guide {
         setError(e instanceof Error && e.constructor === Error ? e.message : errorText(e));
       }
     },
-    [patch, profile],
+    [patch, profile, questions],
   );
 
   const begin = useCallback(
     (options: { seed?: TurnEvent | null; message?: string } = {}) => {
       const memory = (profile()?.interview.turns ?? []).slice(-HISTORY);
-      setFacts([]);
-      setKept([]);
+      setProposals([]);
+      setAccepted([]);
+      setError(null);
+      setStatus("idle");
       if (options.seed) {
         const seeded = [...memory, { role: "guide" as const, text: options.seed.text, topic: options.seed.topic }];
         setAll(seeded);
@@ -127,31 +136,24 @@ export function useGuide(): Guide {
     if (body) void run(body, body.mode === "reply" ? (body.message ?? undefined) : undefined);
   }, [run]);
 
-  const keep = useCallback(
-    (fact: Fact) => {
+  /** Saves the proposal (or the student's changed version of it) with the guide's memory. */
+  const accept = useCallback(
+    (proposal: Proposal, changed?: ProfilePatch) => {
       const p = profile();
       if (!p) return;
-      patch.mutate(fact.keep(p));
-      setFacts((f) => f.filter((x) => x.id !== fact.id));
-      setKept((k) => [...k, fact]);
+      patch.mutate({ ...(changed ?? proposal.patch), ...memoryPatch(p, turnsRef.current, [proposal.id]) });
+      setProposals((list) => list.filter((x) => x.id !== proposal.id));
+      setAccepted((list) => [...list.filter((x) => x.id !== proposal.id), proposal]);
     },
     [patch, profile],
   );
 
-  const drop = useCallback((fact: Fact) => setFacts((f) => f.filter((x) => x.id !== fact.id)), []);
-
-  const keepEverything = useCallback(() => {
-    const p = profile();
-    if (!p || facts.length === 0) return;
-    patch.mutate(keepAll(p, facts));
-    setKept((k) => [...k, ...facts]);
-    setFacts([]);
-  }, [facts, patch, profile]);
+  const dismiss = useCallback((proposal: Proposal) => setProposals((list) => list.filter((x) => x.id !== proposal.id)), []);
 
   const stop = useCallback(() => {
     abort.current?.abort();
     setStatus((s) => (s === "thinking" ? "idle" : s));
   }, []);
 
-  return { turns, current, steps, status, error, pending, facts, kept, begin, reply, retry, keep, drop, keepEverything, stop };
+  return { turns, current, steps, status, error, pending, proposals, accepted, begin, reply, retry, accept, dismiss, stop };
 }

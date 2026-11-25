@@ -18,7 +18,6 @@ was assembled without the AI.
 from __future__ import annotations
 
 import datetime as dt
-import json
 import logging
 import re
 from collections.abc import Iterator, Sequence
@@ -36,7 +35,7 @@ from api.agents.prompts import load_prompt
 from api.agents.runtime import RunLog
 from api.agents.tools import untrusted
 from api.db import models as m
-from api.profile_data import clean_route, profile_brief, program_refs
+from api.profile_data import clean_route, program_refs, render_student_md
 from api.repo import catalog as catalog_repo
 from api.schemas.catalog import ProgramSummary
 from api.schemas.profile import (
@@ -269,11 +268,13 @@ ROUTES_SCHEMA = _obj(
 # ------------------------------------------------------------------------------ the run
 
 
-def first_message(row: m.StudentProfile, req: RoutesRequest, programs: list[str]) -> str:
+def first_message(
+    db: Session, row: m.StudentProfile, req: RoutesRequest, programs: list[str]
+) -> str:
     parts = [
         f"Draft {req.count} different route(s) for this student (catalog year {CAMPUS_YEAR}).",
-        "The student's profile:",
-        untrusted("profile", json.dumps(profile_brief(row), ensure_ascii=False)),
+        "The student's record (student.md):",
+        untrusted("profile", render_student_md(db, row)),
     ]
     if programs:
         parts.append("Their intended programs (ids): " + ", ".join(programs))
@@ -348,7 +349,9 @@ class RoutesRun:
             task=TASK,
             prompt_version=prompt.version_tag,
             system=prompt.text,
-            messages=[Message("user", first_message(self.row, self.req, self._programs()))],
+            messages=[
+                Message("user", first_message(self.db, self.row, self.req, self._programs()))
+            ],
             tools=tools.tools(TOOLS),
             submit=SubmitTool(
                 "submit_routes",
@@ -615,14 +618,15 @@ def rule_routes(
 ) -> list[RouteIn]:
     """Two to four routes assembled by rules from the profile (no AI)."""
     statuses = catalog_repo.ALL_STATUSES if show_unpublished else catalog_repo.PUBLISHED
-    interests = _keywords([*row.interests, *row.future_domains])
+    # The General Information has no freeform interests (Issue #14 D2): research areas stand in.
+    interests = _keywords(row.research_areas)
     research = _keywords(row.research_areas, 3)
-    topics = _keywords(row.humanities_topics, 4)
-    goal = row.humanities_goal
+    topics: list[str] = []
+    goal: str | None = None
     focus_text = (focus or "").casefold()
     if "humanit" in focus_text and goal in (None, "pass", "balance"):
         goal = "enjoy"
-    words = [*interests, *research, *row.career_paths]
+    words = [*interests, *research]
 
     programs = [
         p
@@ -737,20 +741,8 @@ def rule_routes(
                     text=f"Ask a professor about summer research in {research[0].lower()}."[:200],
                 )
             )
-        if row.career_paths:
-            out.append(
-                Milestone(
-                    when="Year 3, Summer",
-                    text=f"Look for an internship toward {row.career_paths[0].lower()}."[:200],
-                )
-            )
-        if row.future_domains:
-            out.append(
-                Milestone(
-                    when="Year 4, Autumn",
-                    text=f"Shape your last year around {row.future_domains[0].lower()}."[:200],
-                )
-            )
+        if row.post_grad_plan == "industry":
+            out.append(Milestone(when="Year 3, Summer", text="Look for an internship."))
         return out[:6]
 
     def fit(builder: RouteBuilder, matched: int) -> RouteFit:
@@ -762,9 +754,9 @@ def rule_routes(
             humanities = 0.85 if huma_matched else 0.55
         return RouteFit(
             interests=round(min(1.0, 0.35 + 0.65 * matched / total), 2),
-            career=0.6 if row.career_paths or row.career_plans else 0.5,
+            career=0.6 if row.post_grad_plan else 0.5,
             humanities=humanities,
-            workload=row.workload,
+            workload=None,
         )
 
     routes: list[RouteIn] = []

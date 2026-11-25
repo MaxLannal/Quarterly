@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page, type Route } from "@playwright/test";
 
@@ -11,6 +12,7 @@ const SESSION = {
   csrf_token: "csrf-token-1",
 };
 const PASSWORD = "correct horse battery";
+const QUESTIONS: unknown = JSON.parse(readFileSync(new URL("../src/mocks/questions.json", import.meta.url), "utf8"));
 
 type Reply = { status: number; body?: unknown };
 interface Call {
@@ -51,6 +53,8 @@ test("sign-up: email, code, then username and password", async ({ page }) => {
     "POST /auth/email": { status: 202, body: { pending_id: "pend-1" } },
     "POST /auth/verify-code": { status: 200, body: { ticket: "ticket-1" } },
     "POST /auth/register": { status: 201, body: SESSION },
+    "GET /profile/questions": { status: 200, body: QUESTIONS },
+    "PATCH /me/profile": { status: 200, body: {} },
   });
   await page.goto("/signup");
   await expect(page.getByRole("heading", { level: 1, name: "Create an account" })).toBeVisible();
@@ -64,11 +68,11 @@ test("sign-up: email, code, then username and password", async ({ page }) => {
 
   await page.getByLabel("Email address").fill("student@uchicago.edu");
   await page.getByRole("button", { name: "Send code" }).click();
-  await expect(page.getByText("Step 2 of 3")).toBeVisible();
+  await expect(page.getByText("Step 2 of 4")).toBeVisible();
   await page.getByLabel("6-digit code").fill("123456");
   await page.getByRole("button", { name: "Verify code" }).click();
 
-  await expect(page.getByText("Step 3 of 3")).toBeVisible();
+  await expect(page.getByText("Step 3 of 4")).toBeVisible();
   await expectAccessible(page);
   await page.getByLabel("Username").fill("quiet-heron");
   await page.getByLabel("Password", { exact: true }).fill(PASSWORD);
@@ -77,7 +81,18 @@ test("sign-up: email, code, then username and password", async ({ page }) => {
   expect(box?.height).toBeGreaterThanOrEqual(44);
   await page.getByRole("button", { name: "Create account" }).click();
 
+  // Step 4: About you (Issue #16), then the choice to answer more questions now or later.
+  await expect(page.getByText("Step 4 of 4")).toBeVisible();
+  await expect(page.getByRole("heading", { level: 2, name: "About you" })).toBeVisible();
+  await expectAccessible(page);
+  await page.getByLabel("What is your class year?").selectOption({ label: "Class of 2029" });
+  await page.getByRole("button", { name: "Save and continue" }).click();
+  await expect(page.getByRole("heading", { level: 2, name: "A few more questions?" })).toBeVisible();
+  await page.getByRole("button", { name: "Skip for now" }).click();
+
   await expect(page).toHaveURL(/\/plan$/);
+  const patch = calls.find((c) => c.key === "PATCH /me/profile");
+  expect(patch?.body).toEqual({ class_year: 2029, expected_graduation_term: "2029-SP", intended_programs: [], entry_term: "2025-AU", entry_year_level: 1 });
   const posts = authPosts(calls);
   expect(posts.map((c) => c.key)).toEqual(["POST /auth/email", "POST /auth/verify-code", "POST /auth/register"]);
   expect(posts[2]?.body).toEqual({ ticket: "ticket-1", username: "quiet-heron", password: PASSWORD });

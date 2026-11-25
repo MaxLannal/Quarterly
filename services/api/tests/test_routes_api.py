@@ -171,7 +171,7 @@ def test_ai_drafts_stream_steps_and_drop_unknown_codes(env: Env) -> None:
     headers = login(env)
     env.client.patch(
         "/me/profile",
-        json={"interests": ["Physics"], "future_domains": ["Quantum computing"]},
+        json={"research_areas": ["Physics", "Quantum computing"]},
         headers=headers,
     )
     fake = use_llm(
@@ -244,13 +244,9 @@ def test_without_a_model_routes_are_assembled_from_the_profile(env: Env) -> None
     env.client.patch(
         "/me/profile",
         json={
-            "interests": ["Physics", "Film"],
-            "future_domains": ["Quantum computing"],
-            "research_areas": ["Quantum hardware"],
-            "humanities_goal": "enjoy",
-            "humanities_topics": ["Greek tragedy"],
-            "career_paths": ["Research / PhD"],
-            "workload": "balanced",
+            # The student record has no freeform interests (Issue #14 D2): research areas only.
+            "research_areas": ["Physics", "Film", "Quantum computing", "Quantum hardware"],
+            "post_grad_plan": "grad_school",
         },
         headers=headers,
     )
@@ -268,17 +264,15 @@ def test_without_a_model_routes_are_assembled_from_the_profile(env: Env) -> None
         assert len({c["code"] for c in r["courses"]}) == len(r["courses"])
         assert "without the AI" in r["summary"]
         assert r["milestones"] and 0 <= r["fit"]["interests"] <= 1
-    # The Humanities Core follows the topics the student named (Greek tragedy -> Greece and Rome).
-    huma = [c for c in major["courses"] if c["role"] == "humanities"]
-    assert huma and huma[0]["code"] == "HUMA 12050" and huma[0]["quarter"] == "AU"
-    assert any(c["code"] == "CLAS 21000" for c in major["courses"])
+    # Without a humanities preference (no longer asked), a Humanities sequence is still placed.
+    assert any(c["role"] == "humanities" for c in major["courses"])
     explore = drafts[-1]["route"]
     assert explore["kind"] == "exploratory" and explore["program_ids"] == []
 
 
 def test_existing_titles_are_not_drafted_again(env: Env) -> None:
     headers = login(env)
-    env.client.patch("/me/profile", json={"interests": ["Physics"]}, headers=headers)
+    env.client.patch("/me/profile", json={"research_areas": ["Physics"]}, headers=headers)
     evs = draft(env, headers, {"count": 3, "keep_existing_titles": ["Keep your options open"]})
     titles = [d["route"]["title"] for d in of(evs, "route")]
     assert titles and "Keep your options open" not in titles

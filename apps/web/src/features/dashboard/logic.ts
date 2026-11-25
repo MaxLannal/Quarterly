@@ -1,59 +1,21 @@
 /**
- * Pure helpers of the dashboard (tested in logic.test.ts): what the guide noted that is new,
- * the patch that keeps one noted fact, the guide's memory, the words woven into the hero, the
- * route -> local plan conversion for "Open in planner", and small formatters.
+ * Pure helpers of the dashboard (tested in logic.test.ts): the dashboard agent's answers that
+ * wait for Accept, its memory, a question as a turn, the primary plan's summary, the route ->
+ * local plan conversion for "Open in planner" (routes are removed on another branch), and small
+ * formatters.
  */
-import type { PlanItem, PlanState } from "@/api/types";
+import type { NodeProgress, PlanItem, PlanState } from "@/api/types";
 import { emptyPlan } from "@/features/planner/planModel";
-import { termAt } from "@/features/planner/terms";
-import type { InterviewTurn, Profile, ProfilePatch, Route, RouteCourse, Topic } from "./api";
+import { compareTerms, graduationTerm, planTerms, termAt } from "@/features/planner/terms";
+import { answerText, questionById, type Question, type QuestionSet } from "@/features/profile/questions";
+import { patched, type InterviewTurn, type Profile, type ProfilePatch, type Route, type RouteCourse, type TurnEvent } from "./api";
 
 export const CAMPUS_YEAR = "2026-27";
-export const TOPICS: Topic[] = ["class_year", "interests", "humanities", "research", "career", "future", "constraints", "wrapup"];
-export const TOPIC_LABELS: Record<Topic, string> = {
-  class_year: "Class year",
-  interests: "Interests",
-  humanities: "Humanities",
-  research: "Research",
-  career: "Career",
-  future: "Horizons",
-  constraints: "Workload",
-  wrapup: "Portrait",
-};
 export const MAX_ITEMS = 24;
 export const MAX_ITEM_CHARS = 60;
 export const MAX_TURNS = 24;
-
-export type ListField = "interests" | "research_areas" | "humanities_topics" | "career_paths" | "future_domains" | "constraints";
-export const LIST_LABELS: Record<ListField, string> = {
-  interests: "Interest",
-  research_areas: "Research",
-  humanities_topics: "Humanities topic",
-  career_paths: "Career path",
-  future_domains: "Horizon",
-  constraints: "Constraint",
-};
-const LIST_FIELDS = Object.keys(LIST_LABELS) as ListField[];
-
-export const GOAL_LABELS = {
-  pass: "Just to pass",
-  balance: "A balance",
-  enjoy: "To enjoy specific topics",
-  deep: "To go deep",
-} as const;
-export type Goal = keyof typeof GOAL_LABELS;
-
-export const WORKLOAD_LABELS = { light: "Light", balanced: "Balanced", intense: "Intense" } as const;
-export type Workload = keyof typeof WORKLOAD_LABELS;
-
-/** One fact the guide noted, shown as a "Noted" chip the student keeps or drops. */
-export interface Fact {
-  id: string;
-  label: string;
-  value: string;
-  /** The patch that keeps it, given the profile at the moment it is kept. */
-  keep: (profile: Profile) => ProfilePatch;
-}
+/** The quick reply that passes a question (the server adds it to every question). */
+export const SKIP = "Skip";
 
 const fold = (s: string) => s.trim().toLocaleLowerCase();
 
@@ -72,112 +34,163 @@ export function withoutItem(items: readonly string[], item: string): string[] {
   return items.filter((i) => fold(i) !== fold(item));
 }
 
-/** The facts of a proposed patch that are not in the profile yet. */
-export function newFacts(profile: Profile, proposed: ProfilePatch | undefined): Fact[] {
-  if (!proposed) return [];
-  const facts: Fact[] = [];
-  if (proposed.class_year && proposed.class_year !== profile.class_year) {
-    const year = proposed.class_year;
-    facts.push({ id: `class_year:${year}`, label: "Class year", value: `Class of ${year}`, keep: () => ({ class_year: year }) });
-  }
-  for (const field of LIST_FIELDS) {
-    const items = proposed[field];
-    if (!items) continue;
-    for (const item of items) {
-      if (hasItem(profile[field], item)) continue;
-      facts.push({
-        id: `${field}:${fold(item)}`,
-        label: LIST_LABELS[field],
-        value: item,
-        keep: (p) => ({ [field]: withItem(p[field], item) }),
-      });
-    }
-  }
-  const goal = proposed.humanities_goal;
-  if (goal && goal !== profile.humanities_goal) {
-    facts.push({ id: `goal:${goal}`, label: "Humanities", value: GOAL_LABELS[goal], keep: () => ({ humanities_goal: goal }) });
-  }
-  const workload = proposed.workload;
-  if (workload && workload !== profile.workload) {
-    facts.push({ id: `workload:${workload}`, label: "Workload", value: WORKLOAD_LABELS[workload], keep: () => ({ workload }) });
-  }
-  const plans = proposed.career_plans;
-  if (plans && plans !== profile.career_plans) {
-    facts.push({ id: `career_plans:${plans.slice(0, 40)}`, label: "Career plans", value: plans, keep: () => ({ career_plans: plans }) });
-  }
-  const note = proposed.humanities_note;
-  if (note && note !== profile.humanities_note) {
-    facts.push({ id: `humanities_note:${note.slice(0, 40)}`, label: "Humanities note", value: note, keep: () => ({ humanities_note: note }) });
-  }
-  const portrait = proposed.portrait;
-  if (portrait && (portrait.headline || portrait.summary) && portrait.headline !== profile.portrait.headline) {
-    facts.push({
-      id: `portrait:${portrait.headline}`,
-      label: "Portrait",
-      value: portrait.headline || portrait.summary || "",
-      keep: () => ({ portrait: { headline: portrait.headline ?? "", summary: portrait.summary ?? "", themes: portrait.themes ?? [] } }),
-    });
-  }
-  return facts;
+// ------------------------------------------------------------------------- the dashboard agent
+
+/** An answer the dashboard agent mapped to a field, waiting for the student's Accept. */
+export interface Proposal {
+  /** The question it answers (the field names for an answer the question file does not know). */
+  id: string;
+  label: string;
+  value: string;
+  patch: ProfilePatch;
 }
 
-/** Several facts kept at once, in one patch. */
-export function keepAll(profile: Profile, facts: Fact[]): ProfilePatch {
-  let current = profile;
-  let patch: ProfilePatch = {};
-  for (const fact of facts) {
-    const one = fact.keep(current);
-    patch = { ...patch, ...one };
-    current = { ...current, ...(one as Partial<Profile>) };
-  }
-  return patch;
+const sentFields = (patch: ProfilePatch | undefined) => Object.keys(patch ?? {}).filter((k) => patch?.[k as keyof ProfilePatch] !== undefined);
+const read = (p: Profile, field: string) => (p as unknown as Record<string, unknown>)[field];
+
+/**
+ * The answer a turn proposes, as a card: the question it answers (`answered`, else the question
+ * asked before it), that question's label, and how the answer reads once accepted. Null when the
+ * turn proposes nothing, or only what the record already says.
+ */
+export function proposalFrom(turn: Pick<TurnEvent, "proposed" | "answered">, set: QuestionSet | undefined, profile: Profile, asked?: string | null): Proposal | null {
+  const patch = turn.proposed ?? {};
+  const fields = sentFields(patch).filter((f) => f !== "interview");
+  if (!fields.length) return null;
+  const after = patched(profile, patch);
+  if (fields.every((f) => JSON.stringify(read(after, f)) === JSON.stringify(read(profile, f)))) return null;
+  const question = questionById(set, turn.answered ?? asked) ?? set?.questions.find((q) => fields.includes(q.field));
+  if (!question) return { id: fields.join(","), label: fields.join(", "), value: fields.map((f) => JSON.stringify(read(after, f))).join("; "), patch };
+  return { id: question.id, label: question.label, value: answerText(question, after, set) ?? "Not answered", patch };
 }
 
-/** Topics the conversation answered (a guide turn followed by a student turn). */
-export function answeredTopics(turns: readonly InterviewTurn[]): Topic[] {
-  const out = new Set<Topic>();
-  let asked: Topic | null = null;
+/** The quick replies of a question as the server sends them: its option labels unchanged (1 to
+ * 10 for a scale, "None" for the quarters away), then "Skip". */
+export function quickRepliesFor(question: Pick<Question, "id" | "type" | "options" | "min" | "max">): string[] {
+  let replies = question.options.map((o) => o.label);
+  if (question.type === "scale") {
+    const min = question.min ?? 1;
+    replies = Array.from({ length: (question.max ?? 10) - min + 1 }, (_, i) => String(min + i));
+  }
+  if (question.id === "terms_away") replies = ["None"];
+  return [...replies, SKIP];
+}
+
+/** A question of the file as a guide turn: the dashboard opens the guide on it at once, without
+ * asking the server first (the server reads the asked question from the history's `topic`). */
+export function questionTurn(question: Question, progress = 0): TurnEvent {
+  return {
+    type: "turn",
+    text: question.text,
+    topic: question.id,
+    quick_replies: quickRepliesFor(question),
+    proposed: {},
+    answered: null,
+    retry: false,
+    progress,
+    done: false,
+    courses: [],
+    fallback: false,
+  };
+}
+
+/** Several chips of a multi-choice question, sent as one answer in the options' order. */
+export function multiReply(selected: readonly string[], order: readonly string[]): string {
+  return order.filter((o) => selected.includes(o)).join(", ");
+}
+
+/** A reply that skips the question (the "Skip" button, or the word typed alone). */
+const SKIP_REPLY = /^\s*skip\s*[.!]?\s*$/i;
+
+/**
+ * Topics this conversation moved past (a guide question, a reply, then a different question),
+ * for the guide's progress chips only. A retried question does not count. Not saved: see
+ * `skippedTopics`.
+ */
+export function discussedTopics(turns: readonly InterviewTurn[]): string[] {
+  const out: string[] = [];
+  let asked: string | null = null;
+  let replied = false;
+  const close = (next: string | null) => {
+    if (asked && replied && next !== asked && !out.includes(asked)) out.push(asked);
+  };
+  for (const t of turns) {
+    if (t.role === "guide") {
+      close(t.topic ?? null);
+      asked = t.topic ?? null;
+      replied = false;
+    } else if (asked) replied = true;
+  }
+  close(null);
+  return out;
+}
+
+/**
+ * Topics the student skipped in this conversation, in order: a guide question followed by a
+ * "Skip" reply. Only skipped and accepted questions count as covered (Issue #16 step 22): an
+ * answer the student never accepted leaves its question open, so the guide asks it again.
+ */
+export function skippedTopics(turns: readonly InterviewTurn[]): string[] {
+  const out: string[] = [];
+  let asked: string | null = null;
   for (const t of turns) {
     if (t.role === "guide") asked = t.topic ?? null;
-    else if (asked) out.add(asked);
+    else if (asked && SKIP_REPLY.test(t.text) && !out.includes(asked)) out.push(asked);
   }
-  return TOPICS.filter((t) => out.has(t));
+  return out;
 }
 
-/** The topics with something on the dashboard. */
-export function filledTopics(p: Profile): Topic[] {
-  const filled: Record<Topic, boolean> = {
-    class_year: p.class_year != null,
-    interests: p.interests.length > 0,
-    humanities: p.humanities_goal != null || p.humanities_topics.length > 0,
-    research: p.research_areas.length > 0,
-    career: !!p.career_plans || p.career_paths.length > 0,
-    future: p.future_domains.length > 0,
-    constraints: p.constraints.length > 0 || p.workload != null,
-    wrapup: !!p.portrait.headline,
-  };
-  return TOPICS.filter((t) => filled[t]);
-}
-
-/** The guide's memory to save: the last turns and every topic covered so far. */
-export function memoryPatch(profile: Profile, turns: readonly InterviewTurn[]): ProfilePatch {
-  const covered = new Set<Topic>([...profile.interview.covered, ...answeredTopics(turns)]);
+/** The guide's memory to save: the last turns, and every question skipped or accepted so far. */
+export function memoryPatch(profile: Profile, turns: readonly InterviewTurn[], accepted: readonly string[] = []): ProfilePatch {
+  const covered = [...profile.interview.covered];
+  for (const t of [...skippedTopics(turns), ...accepted]) if (!covered.includes(t)) covered.push(t);
   return {
     interview: {
-      covered: TOPICS.filter((t) => covered.has(t)),
+      covered,
       turns: turns.slice(-MAX_TURNS).map((t) => ({ role: t.role, text: t.text.slice(0, 2000), topic: t.topic ?? null })),
     },
   };
 }
 
-/** Words for the hero's drawing and the guide's background: the student's own words. */
-export function ownWords(p: Profile | undefined, extra: readonly string[] = []): string[] {
-  if (!p) return [...extra];
-  const words = [...p.interests, ...p.future_domains, ...p.research_areas, ...p.humanities_topics, ...p.portrait.themes, ...extra];
-  const out: string[] = [];
-  for (const w of words) if (w && !hasItem(out, w)) out.push(w);
-  return out.slice(0, 18);
+// ------------------------------------------------------------------------------ the plan
+
+export interface PlanSummary {
+  entry: string;
+  graduation: string;
+  /** Each plan year: its quarters (Summer only when it holds a course) and their courses. */
+  years: { year: number; terms: { term: string; courses: string[] }[] }[];
+  courses: number;
 }
+
+/** The primary plan, read-only, year by year (D3: the plan changes only on the planner). */
+export function planSummary(plan: Pick<PlanState, "entry_term" | "entry_year_level" | "graduation_term" | "items">): PlanSummary {
+  const graduation = graduationTerm(plan);
+  const items = plan.items ?? [];
+  const terms = planTerms(plan.entry_term, graduation);
+  const byTerm = new Map<string, string[]>();
+  for (const item of items) {
+    const code = item.course ?? item.slot_ref;
+    if (!code) continue;
+    byTerm.set(item.term, [...(byTerm.get(item.term) ?? []), code]);
+  }
+  const years: PlanSummary["years"] = [];
+  terms.forEach((term, i) => {
+    const year = Math.floor(i / 4) + 1;
+    if (term.endsWith("-SU") && !byTerm.has(term)) return;
+    let entry = years.find((y) => y.year === year);
+    if (!entry) years.push((entry = { year, terms: [] }));
+    entry.terms.push({ term, courses: byTerm.get(term) ?? [] });
+  });
+  for (const y of years) y.terms.sort((a, b) => compareTerms(a.term, b.term));
+  return { entry: plan.entry_term, graduation, years, courses: items.filter((i) => i.course).length };
+}
+
+/** A program's progress on the plan: its top requirement node (the node id is the program id). */
+export function programProgress(progress: readonly NodeProgress[] | undefined, programId: string): NodeProgress | undefined {
+  return progress?.find((p) => p.program_id === programId && p.node_id === programId);
+}
+
+// ------------------------------------------------------------------------------ formatting
 
 /** "today", "yesterday", "3 days ago", "in November 2026" (day-level dates only). */
 export function memberSince(day: string, now: Date = new Date()): string {
@@ -191,16 +204,6 @@ export function memberSince(day: string, now: Date = new Date()): string {
   if (days < 14) return `joined ${days} days ago`;
   const month = new Date(then).toLocaleString("en-US", { month: "long", timeZone: "UTC" });
   return `member since ${month} ${y}`;
-}
-
-/** A stable small hash of a word (seeds the horizon glyphs). */
-export function hashWord(word: string): number {
-  let h = 2166136261;
-  for (const ch of word.toLowerCase()) {
-    h ^= ch.codePointAt(0) ?? 0;
-    h = Math.imul(h, 16777619);
-  }
-  return h >>> 0;
 }
 
 /** A small deterministic random generator. */
