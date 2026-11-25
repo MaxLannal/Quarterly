@@ -981,3 +981,10 @@ Richard chose the order. Max's PR #21 (issues #14 and #16) merged into `main` fi
 - **M21-2:** `GET /me/updates` has no reader since "What's new" went. Keep it or remove it?
 - **M21-3:** the guide's resume can count an answer that the student did not accept as covered. This is from the review of #21.
 - **Migration 0010: Richard's answer is "keep" (2026-11-24, in the chat).** The goal named a chain that ends at 0009. The privacy review added 0010, which deletes hidden copies of grades that nothing reads. Its downgrade cannot bring them back. Richard chose to keep it.
+
+**Code review of the branch (2026-11-25).** `/code-review` found 11 problems in `integration/2026-11-24`: 1 important, 1 that existed before, and 9 small ones. Richard asked for the important one to be fixed first.
+- **Fixed:** a clipped AI answer under a Commons question could end at a period inside a link's text, for example "See [Intro.". The cause was in `services/api/api/commons/words.py`, from issue #20. `limit_words` now skips each sentence end inside a link's text or target. `test_a_sentence_end_inside_a_link_is_not_a_place_to_stop` failed before the fix.
+- **Not fixed yet:**
+  - Quotes from the same day in "What students say" can show in the wrong order. This existed before the merge.
+  - The nine small problems include: a clip that leaves a single `*` or a backtick open, abbreviations such as "e.g." read as a sentence end, extra instructor requests on `/forum`, no limit on `GENERATE_SOLVER_SECONDS`, and old greeting keys from before the per-account key.
+  - Also open: the privacy page row for intended programs, the planner Save that overwrites a dashboard edit from another tab after a lock toggle, the journey A window size, and the wording of M21-2 and M21-3.

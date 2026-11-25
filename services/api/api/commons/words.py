@@ -27,20 +27,35 @@ def count_words(text: str) -> int:
     return sum(1 for token in _TOKEN.finditer(text) if _WORDLIKE.search(token.group()))
 
 
+def _ends_inside_link(text: str) -> bool:
+    """Whether `text` stops inside a markdown link: in its text (`[Intro. to`) or in its target
+    (`[Intro](/cour`). A cut there shows a broken "[..." to the reader."""
+    start = text.rfind("[")
+    if start == -1:
+        return False
+    rest = text[start:]
+    close = rest.find("]")
+    if close == -1:
+        return True
+    target = rest[close + 1 :]
+    return target.startswith("(") and ")" not in target
+
+
 def limit_words(text: str, limit: int = ANSWER_WORDS) -> str:
     """`text` with at most `limit` words. A longer text ends at its last full sentence inside the
     limit when that keeps at least half of it; otherwise it is cut after the limit-th word (or
-    before a markdown link that the limit would split) and ends with "…". An open `**` is
-    closed."""
+    before a markdown link that the limit would split) and ends with "…". A sentence end inside
+    a link's text ("[Intro. to CS](...)") is not a place to stop. An open `**` is closed."""
     text = text.strip()
     words = [t for t in _TOKEN.finditer(text) if _WORDLIKE.search(t.group())]
     if len(words) <= limit:
         return text
     kept = text[: words[limit - 1].end()]
-    link = kept.rfind("[")
-    if link != -1 and "]" not in kept[link:]:
-        kept = kept[:link]  # never end inside a link's text: the link would show as "[..."
-    ends = [mt.end() for mt in _SENTENCE_END.finditer(kept)]
+    if _ends_inside_link(kept):
+        kept = kept[: kept.rfind("[")]  # never end inside a link: it would show as "[..."
+    ends = [
+        mt.end() for mt in _SENTENCE_END.finditer(kept) if not _ends_inside_link(kept[: mt.end()])
+    ]
     if ends and count_words(kept[: ends[-1]]) >= limit // 2:
         kept = kept[: ends[-1]].rstrip()
     else:

@@ -47,3 +47,21 @@ def test_a_link_is_never_split() -> None:
     # A closed bracket that is not a link ("[sic]", "[1]") does not move the cut.
     plain = "Take CMSC 14100 [the intro course] first. " + "word " * 70
     assert count_words(limit_words(plain)) >= 30
+
+
+def test_a_sentence_end_inside_a_link_is_not_a_place_to_stop() -> None:
+    """Code review of the merge (2026-11-25): a period inside a link's text ("[Intro. to CS]")
+    was taken as the last sentence end, so the answer ended with a broken "[Intro."."""
+    words = " ".join(f"word{i}" for i in range(35))
+    more = " ".join(f"more{i}" for i in range(40))
+    link = "[Intro. to CS](/courses/CMSC%2014100)"
+    out = limit_words(f"{words} See {link} {more}")
+    assert count_words(out) <= 60
+    assert link in out and out.endswith("…")
+    # With a full sentence before the link, the answer ends there, not inside the link.
+    first = " ".join(f"word{i}" for i in range(33)) + "."
+    out = limit_words(f"{first} See {link} {more}")
+    assert out.endswith("word32.") and "[" not in out
+    # A limit that falls inside a link's target (a title in quotes has spaces) cuts before it.
+    titled = " ".join(["word"] * 57) + ' See [CS](/courses/x "Intro to CS") after'
+    assert "[" not in limit_words(titled)
