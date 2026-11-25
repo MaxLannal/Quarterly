@@ -28,7 +28,7 @@
 >
 > **Earlier state (2026-11-16).** Every prompt (00-13) has been run (the schedule scraper stays switched off until the University allows scraping); the owner's FEEDBACK items are all resolved (index at the top of "Done" in `docs/FEEDBACK.md`). The latest work, at the end of this file: the design pass with Impeccable (D1-D11, `docs/DESIGN-REVIEW.md`), TRNC 10100 transfer credit, and the advisor's cut-off replies (output limit 800 to 4000; a cut-off reply now stops the run). The project moved from `quadplan-kit/` to the repository root for GitHub.
 >
-> `make check` and `make e2e` pass on `integration/2026-11-24` at 27410b3, after the merge of PR #21. The end-to-end stack gives the generator 20 s, and journey C can record its year preference as a gap (OPEN_QUESTIONS E2E-2 and INT-1). AI features run only with `LLM_LIVE=true`. Open decisions: the "Start here" block of `docs/OPEN_QUESTIONS.md`. Suggested next steps: "Later" in `docs/FEEDBACK.md`.
+> `make check` and `make e2e` pass on `integration/2026-11-24` at e436c67, after the merge of PR #21. The end-to-end stack gives the generator 20 s, and journey C can record its year preference as a gap (OPEN_QUESTIONS E2E-2 and INT-1). AI features run only with `LLM_LIVE=true`. Open decisions: the "Start here" block of `docs/OPEN_QUESTIONS.md`. Suggested next steps: "Later" in `docs/FEEDBACK.md`.
 >
 > The log below is chronological, one section per prompt or goal.
 
@@ -945,17 +945,19 @@ Richard chose the order. Max's PR #21 (issues #14 and #16) merged into `main` fi
   - Minor: `/catalog/browse` and `/course-ratings` had no `Cache-Control`. Both now send `private, no-store`.
   - Minor: the export and deletion text and two comments were out of date.
 - Both reviewers then checked the fix commits again. All earlier findings were resolved, and each found one more minor item. Both are fixed in the last commit.
-  - The spec review found that 0010 would delete the copies of an account that had plans but no primary plan when 0005 ran. 0005 never filled that account's record. Now 0010 first fills such an empty record from the account's most recently updated plan. `test_0010_fills_an_empty_record_before_it_removes_the_copies` covers it.
+  - The spec review found that 0010 would delete the copies of an account that had plans but no primary plan when 0005 ran. 0005 never filled that account's record. Now 0010 first fills such an empty record from the account's most recently updated plan. It also makes the profile row and copies the plan's quarters, as 0005 did. `test_0010_fills_an_empty_record_before_it_removes_the_copies` covers it.
+  - A third check by the privacy review found that this fill first preferred the primary plan. For such an account, an empty record means the student emptied it, so the fill would bring deleted grades back. The fill now takes only accounts with no primary plan. The same test checks that an emptied record stays empty.
+  - Left as designed: when an account's chosen plan has no copies, the copies of its older plans still go. No plan has read them since #14.
   - The privacy review found that the canned welcome-back text contains the username, so "the username is never sent" could become false. The page now says only that the email address is never sent, as before.
 
-**Checks on this branch** (the last code commit is 27410b3)
+**Checks on this branch** (the last code commit is e436c67)
 - **`make api-client`:** exit 0, after every API change. `make check`'s client check passes.
-- **`make check`:** all passed at 27410b3: ruff, eslint, mypy, tsc, planner_core 184, API and services 778, web 212 (25 files), golden PASS=115. It also passed at 0ce0ac4 (API 777) and 259eb7f.
+- **`make check`:** all passed at e436c67: ruff, eslint, mypy, tsc, planner_core 184, API and services 778, web 212 (25 files), golden PASS=115. It also passed at 0ce0ac4 (API 777), 259eb7f and 27410b3.
 - **`alembic heads`:** one head, 0010. `make migrate` took the local database from 0004 to 0007 (on the fix branch), then 0009, then 0010.
   - The local database had no old per-plan copies when 0010 first ran. So the later change to 0010 (fill an empty record first) changes nothing there.
-- **`make e2e`:** four runs.
+- **`make e2e`:** five runs.
   - At 0ce0ac4: the browser suite had 1 failure (`course-chapel.spec.ts`, fixed in 5420e03) and 102 passed, so the journeys did not run.
-  - At 5420e03, 259eb7f and 27410b3: the browser suite had 103 passed and 61 skipped (the screenshot specs), and journeys A to D passed. Exit 0 each time.
+  - At 5420e03, 259eb7f, 27410b3 and e436c67: the browser suite had 103 passed and 61 skipped (the screenshot specs), and journeys A to D passed. Exit 0 each time.
   - The journeys recorded only the known gaps A3, A4, B3, B4 and B5. Journey C met its year preference.
 - **`make up`:** all six services are healthy. `LLM_FAKE` and `GENERATE_SOLVER_SECONDS` are empty again, so the stack is the real one.
 - **`SCREENSHOTS_DIR=after-merge-21 make screenshots`:** 61 passed. `docs/screenshots/after-merge-21/` has each page at 1440 and 390 px.
