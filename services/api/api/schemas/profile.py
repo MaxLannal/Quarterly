@@ -94,14 +94,30 @@ class TermAway(BaseModel):
     kind: AwayKind
 
 
+MAX_CREDIT_LABEL = 120
+MAX_CREDIT_UNITS = 1000
+
+
+def fit_credit(label: str, units: int) -> tuple[str, int]:
+    """A credit's label and units as `RecordCredit` accepts them: scrubbed and clipped. A plan's
+    own credit (planner_core `Credit`) has no limits, so a plan save, and rows that migrations
+    0005 and 0010 copied from plans, go through this; otherwise one long label would make
+    every read of the record (the dashboard, student.md, the export) fail."""
+    # Scrub, clip, then scrub and clip again: a clip can leave digits that now read as a phone
+    # number, and the marker that replaces them is longer. The second clip can only cut inside
+    # a marker (no digits), so the result is stable when RecordCredit scrubs it again on read.
+    text = squash(squash(label)[:MAX_CREDIT_LABEL])[:MAX_CREDIT_LABEL].strip() or "Credit"
+    return text, min(max(units, 0), MAX_CREDIT_UNITS)
+
+
 class RecordCredit(BaseModel):
     """An AP, placement or transfer credit (planner_core `Credit`)."""
 
     kind: CreditKind
-    label: str = Field(min_length=1, max_length=120)
+    label: str = Field(min_length=1, max_length=MAX_CREDIT_LABEL)
     #: The course code it counts as, if any (checked against the catalog).
     maps_to: str | None = Field(default=None, max_length=16)
-    units: int = Field(default=0, ge=0, le=1000)
+    units: int = Field(default=0, ge=0, le=MAX_CREDIT_UNITS)
 
     @field_validator("label", mode="before")
     @classmethod

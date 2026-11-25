@@ -25,6 +25,7 @@ from sqlalchemy.orm import Session
 
 from api.db import models as m
 from api.schemas.plans import PlanOut, PlanSummary
+from api.schemas.profile import fit_credit
 
 _GOAL = TypeAdapter[Goal](Goal)
 _OPS = TypeAdapter[list[ChangeOp]](list[ChangeOp])
@@ -234,16 +235,17 @@ def write_state(
             _write_taken(db, plan.account_id, taken, ids, state.entry_term)
     if record:
         db.execute(sa.delete(m.StudentCredit).where(m.StudentCredit.account_id == plan.account_id))
-        db.add_all(
-            m.StudentCredit(
-                account_id=plan.account_id,
-                kind=c.kind,
-                label=c.label,
-                maps_to_course_id=ids[c.maps_to] if c.maps_to else None,
-                units=c.units,
+        for c in state.credits:
+            label, units = fit_credit(c.label, c.units)  # the record's limits (RecordCredit)
+            db.add(
+                m.StudentCredit(
+                    account_id=plan.account_id,
+                    kind=c.kind,
+                    label=label,
+                    maps_to_course_id=ids[c.maps_to] if c.maps_to else None,
+                    units=units,
+                )
             )
-            for c in state.credits
-        )
     db.add_all(
         m.PlanProgram(plan_id=plan.id, program_version_id=vid, options=p.options)
         for p, vid in zip(state.programs, versions, strict=True)

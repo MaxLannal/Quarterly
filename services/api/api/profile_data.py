@@ -36,6 +36,7 @@ from api.schemas.profile import (
     TakenCourse,
     TakenCourseOut,
     TermAway,
+    fit_credit,
 )
 
 #: The scalar columns a patch may set (`null` clears).
@@ -156,9 +157,11 @@ def record_credits(db: Session, account_id: uuid.UUID) -> list[RecordCredit]:
         .where(m.StudentCredit.account_id == account_id)
         .order_by(m.StudentCredit.id)
     ).all()
-    return [
-        RecordCredit(kind=c.kind, label=c.label, maps_to=code, units=c.units) for c, code in rows
-    ]
+    out = []
+    for c, code in rows:
+        label, units = fit_credit(c.label, c.units)
+        out.append(RecordCredit(kind=c.kind, label=label, maps_to=code, units=units))
+    return out
 
 
 def record_courses(db: Session, account_id: uuid.UUID) -> list[TakenCourseOut]:
