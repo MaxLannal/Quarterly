@@ -977,11 +977,13 @@ The merge of Max's PR #21 into `integration/2026-11-24` raised these questions. 
   - **Keep as built.** The guide can mention a course and its grade. It does not do this now.
 
 Richard's answer: I agree, leave the grades out of the copy.
+Resolved in 7fbc438: the copy of `student.md` for the guide has no grades and no Pass/Fail. The export keeps them. The privacy page says so.
 
 - **M21-2. `GET /me/updates` has no reader.** Issue #15 (step 13) kept the endpoint for the "What's new" card, and issue #16 (D5) removed that card. The server still computes the list, and the web app never asks for it.
   **Suggested:** keep it until the dashboard has a place for alerts, so that nobody must build it again. Option: remove it, its mock and its tests now, to have less code to maintain.
 
 Richard's answer: Delete it for now.
+Resolved in 7fbc438: `GET /me/updates` and `POST /me/updates/seen` are deleted, with their mock and tests. The column `student_profile.updates_seen` stays unused. A migration can delete it later.
 
 - **M21-3. The guide can skip a question that the student did not accept.** The review of PR #21 found this, and it is still true.
   - On the next visit, the browser sends the stored turns.
@@ -992,3 +994,4 @@ Richard's answer: Delete it for now.
   **Suggested:** a small fix in the next dashboard PR. A question counts as covered only when the student accepted or skipped it. `memoryPatch` in `features/dashboard/logic.ts` already tracks this. Option: keep it as it is for the demo.
 
 Richard's answer: Yes, we can implement a small fix in the next dashboard PR.
+Not done yet: planned for the next dashboard PR.

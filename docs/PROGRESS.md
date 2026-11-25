@@ -1451,3 +1451,32 @@ Richard asked for every file in `docs/` to be reworded and reorganized in strict
 - **Checks:**
   - The `ste-lint.py` linter of the skill found approximately 2,650 findings before and approximately 600 after. Most of the remaining findings are in human text, generated output, or lists of names in table cells.
   - A `spec-reviewer` run (fresh context) compared the old and new text. It found one reversed meaning, "should" changed to "must" in questions and rules, two changed "Answer" lines, four changed headings and broken nesting under 23 answers. All are fixed.
+
+## Dashboard guide: accepted answers were lost (2026-11-25, branch `integration/2026-11-24`)
+
+Richard's report: after sign-up, he answered all questions of the dashboard guide. The dashboard stayed empty.
+
+**Cause.**
+- Each turn of the guide sent `proposed` with every field of the profile patch. The fields that the turn did not set were null.
+- On Accept, the browser sends the proposal as it is. A null in `PATCH /me/profile` clears that field.
+- So each accepted answer cleared all other answers, also the sign-up answers. Richard's test account kept only the last answer.
+- The mock-data tests did not find the bug, because the mock sent only the answered field. The API tests did not find it, because their helper removed the nulls before the PATCH.
+
+**Fix (7fbc438).**
+- The server sends only the fields that a turn sets (`InterviewTurnEvent.proposed`). The API schema does not change.
+- The browser keeps only the fields that have a value (`proposalFrom`).
+- Journey E (new) runs the guide on the real API: at sign-up, and later from the dashboard. Each time, it makes sure that all earlier answers stay.
+- Journey E also found a second bug. A model failure that was not an `AgentError` stopped the stream, and the dialog of the guide closed. Now the rules write the turn after any model failure.
+
+**Richard's answers to OPEN_QUESTIONS M21 (7fbc438).**
+- M21-1: the copy of `student.md` for the guide has no grades and no Pass/Fail.
+- M21-2: `GET /me/updates` and `POST /me/updates/seen` are deleted, with their mock and tests. The column `student_profile.updates_seen` stays unused.
+- M21-3: planned for the next dashboard PR.
+
+**Tests that failed before the change:** `test_accepting_an_answer_keeps_every_other_answer`, the `logic.test.ts` test "keeps only the answered field when a proposal also lists other fields as null", `test_the_model_gets_no_grades` and `test_any_model_failure_falls_back_to_the_rules`. The run did not run journey E on the old code.
+
+**Checks.**
+- `make check` passed: planner_core 184, API 779, web 213, golden PASS=115.
+- `make e2e` passed: 103 browser tests, 61 skipped (the screenshot specs), and journeys A to E.
+- `spec-reviewer` (fresh context) found no gap in the code. It found three small items, and all three are fixed: the last check of journey E always passed, the follow message of a forum question named the removed updates, and the docs.
+
