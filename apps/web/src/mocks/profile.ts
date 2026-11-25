@@ -158,7 +158,7 @@ function applyPatch(patch: S["ProfilePatch"]): S["ProfileOut"] | { error: string
         const unknown = list.filter((c) => !findCourse(c.course)).map((c) => c.course);
         if (unknown.length) return { error: `Unknown course(s): ${unknown.join(", ")}` };
         if (list.some((c) => !TERM.test(c.term))) return { error: "taken course term is not a quarter" };
-        next.taken_courses = list.map((c) => ({ course: c.course, term: c.term, status: c.status ?? "completed", grade: c.grade ?? null, title: findCourse(c.course)?.title ?? "" }));
+        next.taken_courses = list.map((c) => ({ course: c.course, term: c.term, status: c.status ?? "completed", grade: c.grade ?? null, grading: c.grading ?? "letter", units: c.units ?? null, locked: c.locked ?? false, title: findCourse(c.course)?.title ?? "" }));
         break;
       }
       case "credits":

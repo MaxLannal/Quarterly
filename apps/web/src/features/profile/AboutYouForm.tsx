@@ -49,7 +49,7 @@ export function aboutPatch(d: AboutDraft, transferOrLater: boolean): ProfilePatc
     entry_term: d.entry_term,
     entry_year_level: d.entry_year_level,
     credits: d.credits.map((c) => ({ kind: c.kind, label: c.label, maps_to: c.maps_to ?? null, units: c.units ?? 0 })),
-    taken_courses: d.taken_courses.map((c) => ({ course: c.course, term: c.term, status: c.status ?? "completed", grade: c.grade ?? null })),
+    taken_courses: d.taken_courses.map((c) => ({ course: c.course, term: c.term, status: c.status ?? "completed", grade: c.grade ?? null, grading: c.grading ?? "letter", units: c.units ?? null, locked: c.locked ?? false })),
   };
 }
 

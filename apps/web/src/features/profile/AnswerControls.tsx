@@ -269,7 +269,7 @@ function TakenCoursesField({ question, set, value, onChange, catalogYear, classY
     if (rows.some((r) => r.course === course && r.term === term)) return setError(`${course} is already listed for ${termLabel(term)}.`);
     setError(null);
     setTitles((t) => ({ ...t, [course]: title }));
-    onChange([...rows.map(strip), { course, term, status, grade: grade.trim() || null }]);
+    onChange([...rows.map(strip), { course, term, status, grade: grade.trim() || null, grading: "letter", units: null, locked: false }]);
     setCourse("");
     setTitle("");
     setGrade("");
@@ -381,7 +381,18 @@ function TakenCoursesField({ question, set, value, onChange, catalogYear, classY
   );
 }
 
-const strip = (r: TakenCourse & { title?: string }): TakenCourse => ({ course: r.course, term: r.term, status: r.status ?? "completed", grade: r.grade ?? null });
+/** A row as the record stores it. The table shows four columns, but each row also keeps its
+ * grading, units and lock from the planner: the whole list is sent on every change, and a
+ * rule that needs a letter grade must not count a Pass/Fail course (Blocker 2). */
+const strip = (r: TakenCourse & { title?: string }): TakenCourse => ({
+  course: r.course,
+  term: r.term,
+  status: r.status ?? "completed",
+  grade: r.grade ?? null,
+  grading: r.grading ?? "letter",
+  units: r.units ?? null,
+  locked: r.locked ?? false,
+});
 
 /** Quarters away: "None", or a list of quarters with their reason. */
 function TermsAwayField({ question, set, value, onChange, classYear, label, hint }: AnswerControlProps & { label: string; hint: string | null }) {

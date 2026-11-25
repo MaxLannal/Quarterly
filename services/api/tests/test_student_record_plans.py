@@ -113,6 +113,37 @@ def test_saving_a_plan_keeps_taken_courses_before_its_first_quarter(env: Env) ->
     assert [c["term"] for c in profile(env)["taken_courses"]] == ["2099-AU"]
 
 
+def test_a_taken_course_keeps_pass_fail_units_and_lock_through_save_and_reload(env: Env) -> None:
+    """Blocker 2 (review of PR #21): a Pass/Fail course in the record stays Pass/Fail, with its
+    units and its lock, after a save and a reload, so the verifier still refuses it where a
+    rule needs a letter grade (V12)."""
+    headers = login(env)
+    pass_fail = {
+        "course": "TEST 20000",
+        "term": "2099-AU",
+        "status": "completed",
+        "grading": "pass_fail",
+        "units": 50,
+        "locked": True,
+    }
+    plan = create(env, headers, state={**STATE, "items": [pass_fail, *STATE["items"]]})
+
+    def kept(items: list[dict[str, Any]]) -> tuple[Any, Any, Any]:
+        item = next(i for i in items if i["course"] == "TEST 20000")
+        return item["grading"], item["units"], item["locked"]
+
+    assert kept(plan["state"]["items"]) == ("pass_fail", 50, True)
+    saved = env.client.patch(f"/plans/{plan['id']}", json={"state": plan["state"]}, headers=headers)
+    assert saved.status_code == 200, saved.text
+    again = env.client.get(f"/plans/{plan['id']}", headers=headers).json()
+    assert kept(again["state"]["items"]) == ("pass_fail", 50, True)
+    assert kept(profile(env)["taken_courses"]) == ("pass_fail", 50, True)
+    report = env.client.post("/verify", json={"plan": again["state"]}).json()
+    assert any(
+        i["code"] == "V12" and i["course_ids"] == ["TEST 20000"] for i in report["issues"]
+    ), report["issues"]
+
+
 def test_the_account_export_has_the_record_of_a_student_who_only_saved_a_plan(env: Env) -> None:
     headers = login(env)
     create(env, headers, state=with_taken())

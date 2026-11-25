@@ -38,7 +38,7 @@ import { CreditsEditor } from "@/features/credits/CreditsEditor";
 import { DrawerButton, PlanDrawer, type DrawerTab } from "./PlanDrawer";
 import { PlanGrid } from "./PlanGrid";
 import { RequirementTree } from "./RequirementTree";
-import { recordKey, withRecord } from "./setup";
+import { planToSave, recordKey, withRecord } from "./setup";
 import { SetupCard } from "./SetupCard";
 import { TermPickerDialog } from "./TermPickerDialog";
 import { graduationTerm, planTerms, termLabel } from "./terms";
@@ -226,10 +226,8 @@ export function Planner({ initial, autoGenerate = false, onSetUp }: PlannerProps
     if (session) {
       try {
         const fresh = unwrap(await api.GET("/me/profile"));
-        if (recordBase === null || recordKey(plan) === recordBase) {
-          toSave = withRecord(plan, fresh);
-          if (recordKey(toSave) !== recordKey(plan)) dispatch({ type: "replace", plan: toSave });
-        }
+        toSave = planToSave(plan, fresh, recordBase);
+        if (recordKey(toSave) !== recordKey(plan)) dispatch({ type: "replace", plan: toSave });
       } catch {
         // Keep the plan as it is; the server keeps the taken courses a plan cannot show.
       }

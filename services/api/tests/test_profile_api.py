@@ -138,6 +138,9 @@ def test_patch_saves_the_general_information(env: Env) -> None:
             "term": "2025-AU",
             "status": "completed",
             "grade": "A-",
+            "grading": "letter",
+            "units": None,
+            "locked": False,
         },
         {
             "course": "CMSC 14200",
@@ -145,6 +148,9 @@ def test_patch_saves_the_general_information(env: Env) -> None:
             "term": "2026-WI",
             "status": "in_progress",
             "grade": None,
+            "grading": "letter",
+            "units": None,
+            "locked": False,
         },
     ]
     assert body["research_areas"] == ["Quantum materials", "Machine learning theory"]
@@ -206,6 +212,39 @@ def test_patch_is_partial_and_null_clears(env: Env) -> None:
     ).json()
     assert body["follows"] == {"threads": [3, 4], "courses": ["PHYS 13100"]}
     assert len(body["taken_courses"]) == 2
+
+
+def test_taken_courses_keep_pass_fail_units_and_lock(env: Env) -> None:
+    """Blocker 2 (review of PR #21): the profile save keeps a taken course's grading, units and
+    lock, and a course sent without them gets the defaults (letter grade, catalog units, not
+    locked)."""
+    headers = login(env)
+    sent = [
+        {
+            "course": "CMSC 14100",
+            "term": "2025-AU",
+            "status": "completed",
+            "grading": "pass_fail",
+            "units": 50,
+            "locked": True,
+        },
+        {"course": "CMSC 14200", "term": "2026-WI", "status": "in_progress"},
+    ]
+    resp = patch(env, headers, {"taken_courses": sent})
+    assert resp.status_code == 200, resp.text
+    for body in (resp.json(), env.client.get("/me/profile").json()):
+        rows = [(c["course"], c["grading"], c["units"], c["locked"]) for c in body["taken_courses"]]
+        assert rows == [
+            ("CMSC 14100", "pass_fail", 50, True),
+            ("CMSC 14200", "letter", None, False),
+        ]
+    assert (
+        patch(env, headers, {"taken_courses": [{**sent[0], "grading": "audit"}]}).status_code == 422
+    )
+    # student.md says so too: a rule that needs a letter grade does not count the course.
+    lines = env.client.get("/me/profile/export.md").text.splitlines()
+    assert next(line for line in lines if "CMSC 14100" in line).endswith(", Pass/Fail")
+    assert not next(line for line in lines if "CMSC 14200" in line).endswith("Pass/Fail")
 
 
 def test_saying_no_to_research_clears_the_areas(env: Env) -> None:
@@ -270,6 +309,9 @@ def test_export_profile_has_the_record_without_the_email(env: Env) -> None:
         "term": "2025-AU",
         "status": "completed",
         "grade": "A-",
+        "grading": "letter",
+        "units": None,
+        "locked": False,
     }
     assert profile["student_md"].startswith("# Student record\n")
     assert "heron" not in repr(out) and "@" not in repr(out)

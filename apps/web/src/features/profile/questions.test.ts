@@ -90,8 +90,8 @@ describe("the registration form", () => {
       class_year: 2029,
       entry_term: "2026-AU",
       entry_year_level: 2,
-      taken_courses: [{ course: "MATH 15100", term: "2026-AU", status: "completed" as const, grade: "A", title: "Calculus I" }],
+      taken_courses: [{ course: "MATH 15100", term: "2026-AU", status: "completed" as const, grade: "A", grading: "pass_fail" as const, locked: true, title: "Calculus I" }],
     };
-    expect(aboutPatch(draft, true)).toMatchObject({ entry_term: "2026-AU", entry_year_level: 2, credits: [], taken_courses: [{ course: "MATH 15100", term: "2026-AU", status: "completed", grade: "A" }] });
+    expect(aboutPatch(draft, true)).toMatchObject({ entry_term: "2026-AU", entry_year_level: 2, credits: [], taken_courses: [{ course: "MATH 15100", term: "2026-AU", status: "completed", grade: "A", grading: "pass_fail", units: null, locked: true }] });
   });
 });

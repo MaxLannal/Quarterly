@@ -5722,13 +5722,26 @@ export interface components {
         };
         /**
          * TakenCourse
-         * @description A UChicago course the student took or is taking.
+         * @description A UChicago course the student took or is taking. `grading`, `units` and `locked` are the
+         *     plan item's (planner_core `PlanItem`): a rule that needs a letter grade does not count a
+         *     Pass/Fail course, so every editor sends them back unchanged.
          */
         TakenCourse: {
             /** Course */
             course: string;
             /** Grade */
             grade?: string | null;
+            /**
+             * Grading
+             * @default letter
+             * @enum {string}
+             */
+            grading: "letter" | "pass_fail";
+            /**
+             * Locked
+             * @default false
+             */
+            locked: boolean;
             /**
              * Status
              * @default completed
@@ -5737,6 +5750,8 @@ export interface components {
             status: "completed" | "in_progress";
             /** Term */
             term: string;
+            /** Units */
+            units?: number | null;
         };
         /** TakenCourseOut */
         TakenCourseOut: {
@@ -5744,6 +5759,17 @@ export interface components {
             course: string;
             /** Grade */
             grade?: string | null;
+            /**
+             * Grading
+             * @default letter
+             * @enum {string}
+             */
+            grading: "letter" | "pass_fail";
+            /**
+             * Locked
+             * @default false
+             */
+            locked: boolean;
             /**
              * Status
              * @default completed
@@ -5757,6 +5783,8 @@ export interface components {
              * @default
              */
             title: string;
+            /** Units */
+            units?: number | null;
         };
         /** Term */
         Term: {

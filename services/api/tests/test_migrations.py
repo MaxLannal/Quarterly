@@ -210,6 +210,65 @@ def test_0005_copies_the_primary_plan_into_the_student_record(fresh_db_url: str)
     engine.dispose()
 
 
+def test_0007_keeps_the_lock_of_a_taken_course(fresh_db_url: str) -> None:
+    """Blocker 2 (review of PR #21): 0005 copied grading and units into the record but not the
+    lock; 0007 adds `student_course.locked` and copies the lock from the primary plan's old
+    copies (they stay in `plan_item` until the plan is saved again)."""
+    cfg = alembic_config(fresh_db_url)
+    engine = create_engine(fresh_db_url)
+    command.upgrade(cfg, "0004")
+    with engine.begin() as conn:
+        conn.execute(
+            text(
+                "INSERT INTO account (id, username, email, email_verified_day) VALUES "
+                "('00000000-0000-0000-0000-000000000003', 'heron', 'h@uchicago.edu', CURRENT_DATE)"
+            )
+        )
+        conn.execute(text("INSERT INTO catalog_year (id) VALUES ('2026-27')"))
+        courses = [
+            conn.execute(
+                text(
+                    "INSERT INTO course (catalog_year, subject, number, code, title, source) "
+                    "VALUES ('2026-27', 'PHYS', :n, :code, 'Mechanics', '{}') RETURNING id"
+                ),
+                {"n": number, "code": f"PHYS {number}"},
+            ).scalar_one()
+            for number in ("13100", "13200")
+        ]
+        plan = conn.execute(
+            text(
+                "INSERT INTO plan (id, account_id, name, catalog_year, entry_term, is_primary) "
+                "VALUES (gen_random_uuid(), '00000000-0000-0000-0000-000000000003', 'Main', "
+                "'2026-27', '2025-AU', true) RETURNING id"
+            )
+        ).scalar_one()
+        for course, locked in zip(courses, (True, False), strict=True):
+            conn.execute(
+                text(
+                    "INSERT INTO plan_item (plan_id, course_id, term_id, status, locked, grading) "
+                    "VALUES (:plan, :course, '2025-AU', 'completed', :locked, 'pass_fail')"
+                ),
+                {"plan": plan, "course": course, "locked": locked},
+            )
+    command.upgrade(cfg, "head")
+    with engine.connect() as conn:
+        rows = conn.execute(
+            text(
+                "SELECT c.code, s.locked, s.grading FROM student_course s "
+                "JOIN course c ON c.id = s.course_id ORDER BY c.code"
+            )
+        ).all()
+        assert [tuple(r) for r in rows] == [
+            ("PHYS 13100", True, "pass_fail"),
+            ("PHYS 13200", False, "pass_fail"),
+        ]
+    command.downgrade(cfg, "0006")
+    with engine.connect() as conn:
+        columns = {c["name"] for c in inspect(conn).get_columns("student_course")}
+        assert "locked" not in columns and "grading" in columns
+    engine.dispose()
+
+
 def test_0005_downgrade_copies_the_record_back_into_the_primary_plan(fresh_db_url: str) -> None:
     cfg = alembic_config(fresh_db_url)
     engine = create_engine(fresh_db_url)

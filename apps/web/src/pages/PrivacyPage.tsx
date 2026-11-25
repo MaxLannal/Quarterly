@@ -42,7 +42,7 @@ const USED_FOR: Record<string, string> = {
   entry_term: "The first quarter of your plan.",
   entry_year_level: "How many years your plan has left.",
   credits: "Requirements already met and units already earned, when your plan is checked.",
-  taken_courses: "Placed on your plan as completed or in progress. The grade is optional; no GPA is computed from it.",
+  taken_courses: "Placed on your plan as completed or in progress. Pass/Fail and a planner lock are kept with each course, because some requirements need a letter grade. The grade is optional; no GPA is computed from it.",
   post_grad_plan: "Read by the planner agent when it drafts or explains a plan.",
   pace: "Read by the planner agent: whether to aim for an early, on-time or flexible graduation.",
   wants_research: "Read by the planner agent when it suggests research courses.",

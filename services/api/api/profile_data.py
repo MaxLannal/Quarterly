@@ -190,6 +190,9 @@ def record_courses(db: Session, account_id: uuid.UUID) -> list[TakenCourseOut]:
             term=c.term_id,
             status=c.status,
             grade=c.grade,
+            grading=c.grading,
+            units=c.units,
+            locked=c.locked,
         )
         for c, code, title in rows
     ]
@@ -259,6 +262,9 @@ def replace_courses(
                 term_id=c.term,
                 status=c.status,
                 grade=c.grade,
+                grading=c.grading,
+                units=c.units,
+                locked=c.locked,
             )
         )
 
@@ -442,7 +448,9 @@ def _value_line(
             status = labels.get("status", {}).get(c.status, c.status)
             title = f" {_md_text(c.title)}" if getattr(c, "title", "") else ""
             grade = f", grade {c.grade}" if c.grade else ""
-            lines.append(f"  - {c.term} {c.course}{title}: {status}{grade}")
+            # A rule that needs a letter grade does not count a Pass/Fail course.
+            grading = ", Pass/Fail" if c.grading == "pass_fail" else ""
+            lines.append(f"  - {c.term} {c.course}{title}: {status}{grade}{grading}")
         return lines
     if field == "terms_away":
         if not value:

@@ -11161,7 +11161,7 @@
         "type": "object"
       },
       "TakenCourse": {
-        "description": "A UChicago course the student took or is taking.",
+        "description": "A UChicago course the student took or is taking. `grading`, `units` and `locked` are the\nplan item's (planner_core `PlanItem`): a rule that needs a letter grade does not count a\nPass/Fail course, so every editor sends them back unchanged.",
         "properties": {
           "course": {
             "maxLength": 16,
@@ -11181,6 +11181,20 @@
             ],
             "title": "Grade"
           },
+          "grading": {
+            "default": "letter",
+            "enum": [
+              "letter",
+              "pass_fail"
+            ],
+            "title": "Grading",
+            "type": "string"
+          },
+          "locked": {
+            "default": false,
+            "title": "Locked",
+            "type": "boolean"
+          },
           "status": {
             "default": "completed",
             "enum": [
@@ -11194,6 +11208,18 @@
             "pattern": "^\\d{4}-(AU|WI|SP|SU)$",
             "title": "Term",
             "type": "string"
+          },
+          "units": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Units"
           }
         },
         "required": [
@@ -11223,6 +11249,20 @@
             ],
             "title": "Grade"
           },
+          "grading": {
+            "default": "letter",
+            "enum": [
+              "letter",
+              "pass_fail"
+            ],
+            "title": "Grading",
+            "type": "string"
+          },
+          "locked": {
+            "default": false,
+            "title": "Locked",
+            "type": "boolean"
+          },
           "status": {
             "default": "completed",
             "enum": [
@@ -11241,6 +11281,18 @@
             "default": "",
             "title": "Title",
             "type": "string"
+          },
+          "units": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Units"
           }
         },
         "required": [

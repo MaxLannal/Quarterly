@@ -104,8 +104,8 @@ describe("patches", () => {
   });
 
   it("keeps known course titles and program names", () => {
-    const before = profile({ taken_courses: [{ course: "MATH 15100", term: "2025-AU", status: "completed", grade: null, title: "Calculus I" }], programs: [{ id: "cs", name: "Computer Science" }], intended_programs: ["cs"] });
-    const next = patched(before, { taken_courses: [{ course: "MATH 15100", term: "2025-AU", status: "completed", grade: "A" }], intended_programs: ["cs", "math"] });
+    const before = profile({ taken_courses: [{ course: "MATH 15100", term: "2025-AU", status: "completed", grade: null, grading: "letter", locked: false, title: "Calculus I" }], programs: [{ id: "cs", name: "Computer Science" }], intended_programs: ["cs"] });
+    const next = patched(before, { taken_courses: [{ course: "MATH 15100", term: "2025-AU", status: "completed", grade: "A", grading: "letter", locked: false }], intended_programs: ["cs", "math"] });
     expect(next.taken_courses[0]).toMatchObject({ title: "Calculus I", grade: "A" });
     expect(next.programs).toEqual([{ id: "cs", name: "Computer Science" }, { id: "math", name: "math" }]);
   });

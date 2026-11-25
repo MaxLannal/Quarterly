@@ -9,6 +9,7 @@ import uuid
 from collections.abc import Iterable
 from typing import Annotated, Literal
 
+from planner_core.models import Grading
 from pydantic import BaseModel, Field, RootModel, field_validator
 
 from api.forum.scrub import scrub
@@ -112,12 +113,19 @@ class RecordCredit(BaseModel):
 
 
 class TakenCourse(BaseModel):
-    """A UChicago course the student took or is taking."""
+    """A UChicago course the student took or is taking. `grading`, `units` and `locked` are the
+    plan item's (planner_core `PlanItem`): a rule that needs a letter grade does not count a
+    Pass/Fail course, so every editor sends them back unchanged."""
 
     course: str = Field(min_length=1, max_length=16)
     term: TermId
     status: TakenStatus = "completed"
     grade: str | None = Field(default=None, max_length=4)
+    grading: Grading = "letter"
+    #: Overrides the catalog units (variable-unit courses); None = the catalog's.
+    units: int | None = Field(default=None, ge=0)
+    #: Locked in the planner (it cannot be dragged or removed there).
+    locked: bool = False
 
 
 class TakenCourseOut(TakenCourse):

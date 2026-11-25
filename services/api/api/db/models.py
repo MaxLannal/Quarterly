@@ -742,6 +742,8 @@ class StudentCourse(Base):
     units: Mapped[int | None]
     grading: Mapped[str] = mapped_column(sa.String(16), server_default="letter")
     grade: Mapped[str | None] = mapped_column(sa.String(4))
+    #: Locked in the planner (migration 0007).
+    locked: Mapped[bool] = mapped_column(server_default=sa.false())
 
 
 class Pathway(Base):

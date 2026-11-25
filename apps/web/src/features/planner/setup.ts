@@ -87,7 +87,7 @@ export function planFromRecord(profile: Profile, catalogYear: string, coreIds: s
   const graduation = profile.expected_graduation_term;
   const items: PlanItem[] = profile.taken_courses
     .filter((c) => !isBefore(c.term, state.entry_term))
-    .map((c) => ({ id: newItemId(), course: c.course, term: c.term, status: c.status === "in_progress" ? "in_progress" : "completed", grading: "letter", locked: false, grade: c.grade ?? null }));
+    .map((c) => takenItem(c, newItemId()));
   return {
     ...state,
     ...(graduation && isBefore(state.entry_term, graduation) ? { graduation_term: graduation } : {}),
@@ -96,6 +96,24 @@ export function planFromRecord(profile: Profile, catalogYear: string, coreIds: s
 }
 
 // ---------------------------------------------------------------- the record inside a plan
+
+/**
+ * A taken course from the record as a plan item. Its grading, units and lock come from the
+ * record too: a rule that needs a letter grade must not count a Pass/Fail course (Blocker 2,
+ * review of PR #21).
+ */
+function takenItem(c: Profile["taken_courses"][number], id: string): PlanItem {
+  return {
+    id,
+    course: c.course,
+    term: c.term,
+    status: c.status === "in_progress" ? "in_progress" : "completed",
+    grading: c.grading ?? "letter",
+    units: c.units ?? null,
+    locked: c.locked ?? false,
+    grade: c.grade ?? null,
+  };
+}
 
 /** A taken course as a plan holds it: a completed or in-progress item with a course. */
 function isTaken(item: PlanItem): boolean {
@@ -111,7 +129,7 @@ export function recordKey(plan: PlanState): string {
   const credits = (plan.credits ?? []).map((c) => [c.kind, c.label, c.maps_to ?? null, c.units ?? 0]);
   const taken = (plan.items ?? [])
     .filter(isTaken)
-    .map((i) => [i.course, i.term, i.status, i.grade ?? null])
+    .map((i) => [i.course, i.term, i.status, i.grade ?? null, i.grading ?? "letter", i.units ?? null, i.locked ?? false])
     .sort((a, b) => JSON.stringify(a).localeCompare(JSON.stringify(b)));
   return JSON.stringify({ credits, taken });
 }
@@ -126,6 +144,16 @@ export function withRecord(plan: PlanState, profile: Pick<Profile, "credits" | "
   const ids = new Map((plan.items ?? []).filter(isTaken).map((i) => [`${i.course} ${i.term}`, i.id]));
   const taken: PlanItem[] = profile.taken_courses
     .filter((c) => !isBefore(c.term, plan.entry_term))
-    .map((c) => ({ id: ids.get(`${c.course} ${c.term}`) ?? newItemId(), course: c.course, term: c.term, status: c.status === "in_progress" ? "in_progress" : "completed", grading: "letter", locked: false, grade: c.grade ?? null }));
+    .map((c) => takenItem(c, ids.get(`${c.course} ${c.term}`) ?? newItemId()));
   return { ...plan, credits: profile.credits as Credit[], items: [...kept, ...taken] };
+}
+
+/**
+ * What Save sends. Saving writes the plan's credits and taken courses to the record, so unless
+ * the student changed them in the planner since `base` (their `recordKey` when last read from or
+ * saved to the record; null = never read), Save sends the record's current ones: an old copy
+ * never undoes a change made on the dashboard.
+ */
+export function planToSave(plan: PlanState, fresh: Pick<Profile, "credits" | "taken_courses">, base: string | null): PlanState {
+  return base === null || recordKey(plan) === base ? withRecord(plan, fresh) : plan;
 }
