@@ -709,3 +709,13 @@ combined. Take inspiration from this and apply to every page and every detail").
   - Each row is a heading over cards that scroll sideways and snap, inside the page width.
   - For a logged-in student, each card and result has a rating line (overall, difficulty, number of reviews). A logged-out visitor sees one "Log in to see student ratings" line under the search.
   - The Feed page and its floating words, ticker, focus chips and AI headline are gone.
+
+## Sign-up step 4 and the credits editor (Richard, 2026-11-25, 2838c6a)
+
+- Step 4 ("About you") has a 36rem column. The other auth pages keep 30rem.
+- A credit is one line: kind, name and course (cut with "…", the full line in a tooltip), then the units, then two 44px icon buttons (edit, remove). In a list narrower than 24rem, only screen readers get the kind.
+- The add form of a credit is one box. Kind and Description are on the first row. Course, Units and "Add credit" are on the second row. In a narrow drawer, Course has its own row. In a panel wider than 42rem, all fields are on one row.
+- The button beside a compact field is 44px tall, the same as the field.
+- The transfer questions in step 4 have no box of their own. Their fields line up with the fields above.
+- The kind labels are "AP exam", "Placement" and "Transfer".
+

@@ -91,6 +91,7 @@ All items below are finished. The newest item is first. Each item keeps Richard'
 
 | Item | Date | Fixed in |
 |---|---|---|
+| Problems with the current version | 2026-11-25 | 2838c6a |
 | Minor design changes | 2026-11-16 | 6584a4a, 9e045fc, 60e867c, 75dfd83 ... |
 | Minor issues | 2026-11-16 | 784bdb1, b44c09a |
 | ASCII Scene | 2026-11-16 | 25e36f5 |
@@ -110,6 +111,22 @@ All items below are finished. The newest item is first. Each item keeps Richard'
 | Text | 2026-11-14 | 8faf56b |
 | GUI Polishing | 2026-11-14 | 8faf56b |
 | "End suspension" button for admins | 2026-11-14 | 6c07395 |
+
+### Problems with the current version
+*Richard sent this in the chat on 2026-11-25. Claude copied it here with the resolutions.*
+
+- Create an account step 4:
+    - entering transfer credit should not be exclusive to transfer students. Most first year student could also have placement, test or transfer credits.
+        - Resolved in 2838c6a: every student sees the credits question in step 4. Taken courses stay behind the transfer checkbox. The credits question does not count in the share of answered questions, because a student can have no credits.
+    - Adding transfer credit UI in general need to be much more compact. Keep most information one line (like “Transfer credit: General Transfer Credit → TRNC 10100 · 700 units” shouldn’t be two lines), and fix UI misalignment on this page.
+        - Resolved in 2838c6a: each credit is one line. A long name ends with "…", and the full line shows on hover. The units always show. Edit and remove are icon buttons. The add form has two rows. The fields of step 4 line up, and step 4 is a little wider. The kind "Transfer credit" is now "Transfer", so the example fits on one line. On a phone, the line leaves out the kind, so that the name shows.
+    - With “in progress” Uchicago classes, you should disable the field where student can enter the grades (since they are currently taking it)
+        - Resolved in 2838c6a: the grade field is disabled and empty for a course in progress. The server also drops such a grade. Migration 0011 removes the grades that were already stored on courses in progress.
+    - You should add a back arrow to the previous steps if a misclick happens
+        - Resolved in 2838c6a: steps 2 and 3 have "Back". It opens step 1 and keeps the email address, because a code works one time only. The screen after step 4 has "Back" to step 4, with the answers kept. Step 4 has no "Back", because step 3 made the account.
+- Onboarding guide conversation
+    - Courses per quarter is not an appropriate question. Student can only overload to 500 credits under a very specific set of rules (you can consult Uchicago course catalog for this), and most people take a mix of 300 to 400 credit quarters in the order to graduate. You should change it to conservative / normal / ambitious, where conservative plans tend to plan less and just enough to stay full time and complete the degree, and ambitous is maxing out 400 quarters every semester and overloading when condition is met.
+        - Resolved in 2838c6a: the question is now "Course load" with three options: Conservative, Normal and Ambitious. Its help text uses the College's rules in `data/seed/2026-27/college_policy.yaml`. Migration 0011 replaces the old answer, so old answers show "Not answered". The planner does not read the course load yet. The planner agent (issue #17) will read it.
 
 ### Minor design changes
 For every changes below, consult the installed plugin impeccable: https://github.com/pbakaus/impeccable

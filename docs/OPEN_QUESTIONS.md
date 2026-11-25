@@ -946,6 +946,7 @@ These are the decisions made during the build. Each waits for the OK of Max or R
   - Many first-year students have AP credits. They add them later in the Academic background of the dashboard, which shows those questions to every student.
 
   *Suggested:* show the credits box to every student at registration (taken courses stay transfer-only). *Options:* (a) keep as built. (b) Credits for everyone.
+  Richard's answer (2026-11-25, in chat): credits for everyone. Resolved in 2838c6a: (b). Taken courses stay behind the checkbox.
 - **SR-2. A new plan does not overwrite the student record.**
   - Credits and taken courses are now part of the student, not of a plan.
   - A plan can be created by an import of a plan made before login, or by a copy. If the record already has credits or taken courses, the record wins, and the plan shows the credits and courses of the record.

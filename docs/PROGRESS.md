@@ -1480,3 +1480,27 @@ Richard's report: after sign-up, he answered all questions of the dashboard guid
 - `make e2e` passed: 103 browser tests, 61 skipped (the screenshot specs), and journeys A to E.
 - `spec-reviewer` (fresh context) found no gap in the code. It found three small items, and all three are fixed: the last check of journey E always passed, the follow message of a forum question named the removed updates, and the docs.
 
+## Sign-up step 4 and the course load (2026-11-25, branch `integration/2026-11-24`, 2838c6a)
+
+Richard sent five problems in the chat. `docs/FEEDBACK.md` ("Problems with the current version") has his text and a resolution for each. Summary:
+1. Every student can add credits in step 4. The credits question is optional (`optional: true`), so it does not count in the share answered.
+2. The credits editor is compact: one line for each credit, and two rows for the add form. The fields of step 4 line up.
+3. A course in progress has no grade, in the form, in the API and in plans. Migration 0011 removes old grades on courses in progress.
+4. Sign-up has "Back" buttons on steps 2 and 3 and on the screen after step 4.
+5. "Courses per quarter" became "Course load" (conservative, normal, ambitious). Migration 0011 replaces `courses_per_term` with `course_load`. Old answers become "Not answered".
+
+**Found during the work.**
+- A credit line that never wraps made the page wider than a phone screen, and the "Add credit" button moved off the screen. The fix: the line asks for no width of its own (`w-0 flex-1`). I found this with screenshots at 390px.
+- The `spec-reviewer` found four items, and all four are fixed:
+  - The guide read "not too heavy" as "Ambitious". Now a named option after "not", "nothing" or "don't want" is not the answer. This applies to all single-choice questions.
+  - Older rows showed the grade of a course in progress in a plan.
+  - The help text did not say that the College must approve an overload.
+  - SPEC still had a mention of "courses per quarter".
+
+**Checks.**
+- `make check` passed: planner_core 184, API 793, web 215, golden PASS=115.
+- `make e2e` passed: 103 browser tests, 61 skipped (the screenshot specs), and journeys A to E.
+- Screenshots of step 4 at 1440px and 390px: the example credit is on one line on desktop, and the page is not wider than the phone screen.
+
+**Not done.** The planner does not read the course load yet. The planner agent (issue #17) will read it.
+
