@@ -272,6 +272,63 @@ def test_0007_keeps_the_lock_of_a_taken_course(fresh_db_url: str) -> None:
     engine.dispose()
 
 
+def test_0010_fills_an_empty_record_before_it_removes_the_copies(fresh_db_url: str) -> None:
+    """0005 filled the record from the primary plan only. For an account with plans but no
+    primary plan, 0010 first fills the empty record from the most recently updated plan, so
+    removing the per-plan copies loses nothing. An account that has a record keeps it."""
+    cfg = alembic_config(fresh_db_url)
+    engine = create_engine(fresh_db_url)
+    command.upgrade(cfg, "0004")
+    with engine.begin() as conn:
+        conn.execute(text("INSERT INTO catalog_year (id) VALUES ('2026-27')"))
+        course = conn.execute(
+            text(
+                "INSERT INTO course (catalog_year, subject, number, code, title, source) VALUES "
+                "('2026-27', 'PHYS', '13100', 'PHYS 13100', 'Mechanics', '{}') RETURNING id"
+            )
+        ).scalar_one()
+        account = "00000000-0000-0000-0000-000000000004"
+        conn.execute(
+            text(
+                "INSERT INTO account (id, username, email, email_verified_day) VALUES "
+                f"('{account}', 'heron', 'h@uchicago.edu', CURRENT_DATE)"
+            )
+        )
+        for name, day in (("Old", "2026-11-01"), ("Newer", "2026-11-20")):
+            plan = conn.execute(
+                text(
+                    "INSERT INTO plan (id, account_id, name, catalog_year, entry_term, "
+                    "is_primary, updated_day) VALUES (gen_random_uuid(), :account, :name, "
+                    "'2026-27', '2025-AU', false, :day) RETURNING id"
+                ),
+                {"account": account, "name": name, "day": day},
+            ).scalar_one()
+            conn.execute(
+                text(
+                    "INSERT INTO credit (plan_id, kind, label, units) "
+                    "VALUES (:plan, 'AP', :label, 100)"
+                ),
+                {"plan": plan, "label": f"AP from {name}"},
+            )
+            conn.execute(
+                text(
+                    "INSERT INTO plan_item (plan_id, course_id, term_id, status, grading, grade) "
+                    "VALUES (:plan, :course, '2025-AU', 'completed', 'pass_fail', :grade)"
+                ),
+                {"plan": plan, "course": course, "grade": "P" if name == "Newer" else "A"},
+            )
+    command.upgrade(cfg, "head")
+    with engine.connect() as conn:
+        assert conn.execute(text("SELECT label FROM student_credit")).scalars().all() == [
+            "AP from Newer"
+        ]
+        taken = conn.execute(text("SELECT grading, grade FROM student_course")).all()
+        assert [tuple(t) for t in taken] == [("pass_fail", "P")]
+        assert conn.execute(text("SELECT count(*) FROM credit")).scalar_one() == 0
+        assert conn.execute(text("SELECT count(*) FROM plan_item")).scalar_one() == 0
+    engine.dispose()
+
+
 def test_0005_downgrade_copies_the_record_back_into_the_primary_plan(fresh_db_url: str) -> None:
     cfg = alembic_config(fresh_db_url)
     engine = create_engine(fresh_db_url)

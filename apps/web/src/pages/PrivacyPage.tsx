@@ -215,7 +215,7 @@ export default function PrivacyPage() {
         General Information (including your credits and your taken courses with their grades) and
         your conversation with the guide are sent the same way, so it can choose and word its next
         question. Forum posts are sent too, to write the “What students say” summaries and when the
-        advisor looks them up. Your email address and username are never sent. Advisor chats are
+        advisor looks them up. Your email address is never sent. Advisor chats are
         kept for 30 days, and are deleted with their plan.
       </p>
 

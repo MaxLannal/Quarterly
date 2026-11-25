@@ -9,6 +9,7 @@
 > - **Forum page, issue #20** (2026-11-24, at the end of the file): **F20-1** has an answer: the AI's answer under a forum question keeps its 60-word limit, and the team can test how it works in use. Still open: **F20-2** to **F20-4**, defaults taken while building, each with a suggested answer.
 > - **Integration run** (2026-11-24, at the end of the file): **INT-1** (Needs Richard): how long the plan generator may think in the app (4 s now, 20 s in the end-to-end tests).
 > - **Student record and dashboard** (2026-11-24, at the end of the file): **SR-1** to **SR-6**, calls made while building Issues #14 and #16; each has a suggested answer.
+> - **Merge of PR #21** (2026-11-24, at the end of the file): **M21-1** to **M21-3**, questions found while merging Max's PR #21 into the integration branch. Each has a suggested answer.
 > - **"Work these answers create (not started)"** below was listed on 2026-11-14; some of it was built since. Check `docs/PROGRESS.md` and the code before starting an item.
 >
 > New questions go at the end of the matching section, in plain language with a suggested answer (see `CLAUDE.md`, "Working with the owner").
@@ -619,3 +620,17 @@ Max answered the open decisions on the issues (#14: no GPA, no freeform fields, 
 - **SR-4. A Summer start.** The entry term may be a Summer quarter (the planner already allows a transfer student to start with the summer before autumn, FEEDBACK 2026-11-14), although Issue #14 lists only Autumn, Winter and Spring. *Suggested:* keep.
 - **SR-5. "For you" in the feed.** The feed used the freeform interests to rank courses. With those gone it uses the research areas and the intended programs only, so a student who wants no research gets a less personal feed. *Suggested:* keep; Issue #19 (combining the feed and the catalog) can decide what personalises the catalog.
 - **SR-6. Setting up a first plan.** `/onboarding` is gone, so the planner shows "Set up your plan from your information" to a logged-in student whose plan is empty: it builds the plan from the record (first quarter, programs plus the Core, credits, taken courses) and opens the generator, as the wizard's last step did. Taken courses dated before the plan's first quarter are left off the plan. A logged-out student can still drag courses onto a local plan; the planner offers "Sign up to set up your plan". *Suggested:* keep until the planner agent (Issues #17, #18) takes this over.
+
+## Merge of PR #21 (2026-11-24)
+
+The merge of Max's PR #21 into `integration/2026-11-24` raised these. Nothing here blocks the demo.
+
+- **M21-1. Should the dashboard guide send grades to the AI?** Each time a student talks with the guide, the server sends the whole `student.md` to the AI provider. That includes the taken courses with their grades. The guide's questions (goals, scheduling, preferences) do not use grades. The privacy page now says that grades are sent.
+  **Suggested:** leave the grades out of the guide's copy of `student.md`. The export keeps them. Options:
+  - **Leave grades out (suggested).** Less personal data goes to the provider. The guide asks the same questions.
+  - **Keep as built.** The guide can mention a course and its grade. It does not do this now.
+- **M21-2. `GET /me/updates` has no reader.** Issue #15 (step 13) kept the endpoint for the "What's new" card, and issue #16 (D5) removed that card. The server still computes the list, and the web app never asks for it.
+  **Suggested:** keep it until the dashboard has a place for alerts, so nobody has to build it again. Option: remove it, its mock and its tests now, to have less code to look after.
+- **M21-3. The guide can skip a question that the student did not accept.** The review of PR #21 found this, and it still holds. On the next visit, the browser sends the stored turns. The server then counts a proposed but unaccepted answer as covered. The guide asks that question again only after the turn leaves its 16-turn history. The dashboard shows "Not answered", so no saved data is wrong.
+  **Suggested:** a small fix in the next dashboard PR. A question counts as covered only when the student accepted or skipped it, which `memoryPatch` in `features/dashboard/logic.ts` already tracks. Option: leave it as it is for the demo.
+
