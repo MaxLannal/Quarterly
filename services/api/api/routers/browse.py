@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from typing import Annotated, Any
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, Response
 from sqlalchemy.orm import Session
 
 from api.auth.sessions import SessionData, current_account, optional_session
@@ -32,11 +32,15 @@ Me = Annotated[m.Account, Depends(current_account)]
 #: The most codes one ratings request may ask for (a page of results plus the browse rows).
 MAX_CODES = 60
 AUTH: dict[int | str, dict[str, Any]] = {401: {"model": ErrorOut, "description": "Not logged in"}}
+#: Logged in, both answers hold login-only forum data and reasons from the student's record, and
+#: the browse rows depend on the session cookie: no shared cache may keep either.
+PRIVATE = "private, no-store"
 
 
 @router.get("/catalog/browse", response_model=CatalogBrowse)
-def browse(db: Db, session: MaybeSession) -> CatalogBrowse:
+def browse(db: Db, session: MaybeSession, response: Response) -> CatalogBrowse:
     # The rows shown before the student searches: new courses, spotlights, student quotes.
+    response.headers["Cache-Control"] = PRIVATE
     account_id = session.account_id if session is not None else None
     spotlights, quotes = service.browse_rows(db, account_id)
     return CatalogBrowse(
@@ -51,9 +55,11 @@ def browse(db: Db, session: MaybeSession) -> CatalogBrowse:
 def course_ratings(
     db: Db,
     _: Me,
+    response: Response,
     codes: Annotated[str, Query(max_length=1200, description="Comma-separated course codes")],
 ) -> CourseRatings:
     # Student ratings pooled over every instructor's page of each course (logged in only).
+    response.headers["Cache-Control"] = PRIVATE
     wanted: list[str] = []
     for raw in codes.split(","):
         code = catalog_repo.normalize_code(raw)

@@ -1,10 +1,11 @@
-"""What is new for the student (`/me/updates`), read by the dashboard's "What's new" card.
+"""What is new for the student (`/me/updates`). Issue #15 (step 13) keeps the endpoint; since
+issue #16 (D5) removed the dashboard's "What's new" card, nothing in the web app reads it.
 
 New Commons threads and replies and new forum reviews, discussions and comments, picked for the
 logged-in student: threads they follow or asked, courses they follow, and titles that match
-their interests, future domains or research areas. When nothing personal turns up, a few "New
-on Quarterly" items fill in. High-water marks in `student_profile.updates_seen` say what is new;
-POST /me/updates/seen moves them.
+their research areas (the record has no other free text, issue #14 D2). When nothing personal
+turns up, a few "New on Quarterly" items fill in. High-water marks in
+`student_profile.updates_seen` say what is new; POST /me/updates/seen moves them.
 
 The companion and its AI digest (task `a10_updates_digest`) were removed in issue #15; this list
 uses no model.

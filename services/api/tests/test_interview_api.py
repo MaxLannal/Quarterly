@@ -404,3 +404,9 @@ def test_welcome_back_is_cached_per_record(env: Env) -> None:
     assert first["text"] == second["text"] and first["fallback"] is False
     assert first["quick_replies"] == PACE_CHIPS and sent(first) == {}
     assert len(fake.calls) == 1
+    # One key per account (so deleting the account deletes it): a changed record misses it.
+    assert len(env.redis.keys("me:welcome:*")) == 1
+    env.client.patch("/me/profile", json={"post_grad_plan": "industry"}, headers=headers)
+    third = ask(env, headers, "welcome_back")
+    assert len(fake.calls) == 2 and third["fallback"] is True
+    assert len(env.redis.keys("me:welcome:*")) == 1

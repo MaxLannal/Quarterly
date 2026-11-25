@@ -6,6 +6,7 @@ from collections.abc import Iterator
 from typing import Any
 
 import pytest
+from api.agents.interview import welcome_key
 from api.auth.hashing import author_ref
 from api.db import models as m
 from auth_test_support import PASSWORD, Env, auth_env, csrf, migrated_database
@@ -393,6 +394,10 @@ def assert_account_erased(env: Env, forum: dict[str, Any]) -> None:
             db.scalars(select(m.Goal.plan_id).distinct()).all()
             == db.scalars(select(m.Plan.id)).all()
         )
+        # The student record goes too (FK cascade): only the other account's rows are left.
+        others = set(db.scalars(select(m.Account.id)).all())
+        for table in (m.StudentProfile, m.StudentCredit, m.StudentCourse):
+            assert set(db.scalars(select(table.account_id)).all()) <= others, table.__tablename__
         # Nothing in the forum can be tied to the account any more.
         refs = forum["my_refs"]
         assert not refs & set(db.scalars(select(m.Post.author_ref)).all())
@@ -427,11 +432,15 @@ def test_delete_account_keeping_posts_as_deleted_account(env: Env) -> None:
     me, them, forum = setup_two_accounts(env)
     phone = env.browser()
     assert phone.post("/auth/login", json={"login": EMAIL, "password": PASSWORD}).status_code == 200
+    # The dashboard agent's cached greeting restates the student's answers: it goes too.
+    greeting = welcome_key(uuid.UUID(me["account"]["id"]))
+    env.redis.set(greeting, '{"digest": "x", "turn": "{}"}')
 
     resp = env.client.post(
         "/account/delete", json={"password": PASSWORD, "posts": "keep"}, headers=csrf(me)
     )
     assert resp.status_code == 204, resp.text
+    assert env.redis.get(greeting) is None
     assert "max-age=0" in resp.headers["set-cookie"].lower()
     # Sessions are gone everywhere, and the login no longer exists.
     assert env.client.get("/auth/session").status_code == 401

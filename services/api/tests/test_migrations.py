@@ -205,6 +205,11 @@ def test_0005_copies_the_primary_plan_into_the_student_record(fresh_db_url: str)
         ]
         taken = conn.execute(text("SELECT term_id, status, grade FROM student_course")).all()
         assert [tuple(t) for t in taken] == [("2025-AU", "completed", "A")]
+        # 0010: the per-plan copies are gone from every plan (nothing read them, and a grade
+        # the student removed on the dashboard stayed in them); planned courses stay.
+        assert conn.execute(text("SELECT count(*) FROM credit")).scalar_one() == 0
+        items = conn.execute(text("SELECT status, count(*) FROM plan_item GROUP BY status")).all()
+        assert [tuple(i) for i in items] == [("planned", 2)]
     engine.dispose()
 
 

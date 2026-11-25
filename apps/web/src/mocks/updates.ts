@@ -1,6 +1,7 @@
 /**
- * MSW handlers for `/me/updates` (the dashboard's "What's new", logged in only) and
- * `/me/updates/seen`. Fake data; no model involved. (The Ask chatbot's `/agents/ask` mock went
+ * MSW handlers for `/me/updates` (logged in only) and `/me/updates/seen`. The endpoint stays
+ * (issue #15 step 13), but since issue #16 (D5) removed the dashboard's "What's new" card nothing
+ * in the app reads it. Fake data; no model involved. (The Ask chatbot's `/agents/ask` mock went
  * with the Ask page, issue #15.)
  */
 import { http, HttpResponse } from "msw";

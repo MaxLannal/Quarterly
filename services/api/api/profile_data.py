@@ -496,9 +496,9 @@ def render_student_md(db: Session, row: m.StudentProfile, *, working_notes: bool
 
 
 def export_profile(db: Session, account_id: uuid.UUID) -> dict[str, Any]:
-    """The account's dashboard data for `/account/export`: the student record (without the
-    email, which the export already has from the account) and `student.md` with the working
-    information. JSON-ready."""
+    """The account's dashboard data for `/account/export`: the student record and `student.md`
+    with the working information. No email address: the record never holds one (decision 5).
+    JSON-ready."""
     row = find_profile(db, account_id)
     if row is None and (record_credits(db, account_id) or record_courses(db, account_id)):
         # A plan save can fill the record's tables before the profile row exists.

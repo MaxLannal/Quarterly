@@ -174,6 +174,8 @@ def set_profile(env: Env, username: str, **fields: Any) -> None:
 def browse(client: TestClient) -> dict[str, Any]:
     resp = client.get("/catalog/browse")
     assert resp.status_code == 200, resp.text
+    # Logged in it holds login-only quotes and reasons from the record: never in a shared cache.
+    assert resp.headers["cache-control"] == "private, no-store"
     body: dict[str, Any] = resp.json()
     return body
 
@@ -366,6 +368,7 @@ def test_course_ratings_need_a_login_and_pool_the_reviews(env: Env) -> None:
     env.signup("quiet-heron")
     resp = env.client.get("/course-ratings", params={"codes": codes})
     assert resp.status_code == 200, resp.text
+    assert resp.headers["cache-control"] == "private, no-store"
     ratings = resp.json()["ratings"]
     assert set(ratings) == {reviewed, QUANTUM}
     assert ratings[reviewed]["n_reviews"] == 1 and ratings[reviewed]["overall"] == 4

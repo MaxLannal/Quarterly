@@ -43,14 +43,14 @@ const USED_FOR: Record<string, string> = {
   entry_year_level: "How many years your plan has left.",
   credits: "Requirements already met and units already earned, when your plan is checked.",
   taken_courses: "Placed on your plan as completed or in progress. Pass/Fail and a planner lock are kept with each course, because some requirements need a letter grade. The grade is optional; no GPA is computed from it.",
-  post_grad_plan: "Read by the planner agent when it drafts or explains a plan.",
-  pace: "Read by the planner agent: whether to aim for an early, on-time or flexible graduation.",
-  wants_research: "Read by the planner agent when it suggests research courses.",
-  research_areas: "Read by the planner agent when it suggests courses and research.",
-  courses_per_term: "The course load the planner agent aims for each quarter.",
-  terms_away: "Quarters the planner agent leaves free.",
-  class_formats: "Read by the planner agent as a preference when it suggests courses.",
-  theory_vs_application: "Read by the planner agent as a preference when it suggests courses.",
+  post_grad_plan: "Today your dashboard guide reads it to choose and word its next questions. The planner agent, not built yet, will read it when it drafts or explains a plan.",
+  pace: "Today your dashboard guide reads it. The planner agent, not built yet, will read it to aim for an early, on-time or flexible graduation.",
+  wants_research: "Today your dashboard guide reads it. The planner agent, not built yet, will read it when it suggests research courses.",
+  research_areas: "Today your dashboard guide reads it, and the Catalog uses it to pick course spotlights for you. The planner agent, not built yet, will read it when it suggests courses and research.",
+  courses_per_term: "Today your dashboard guide reads it. The planner agent, not built yet, will aim for this course load each quarter.",
+  terms_away: "Today your dashboard guide reads it. The planner agent, not built yet, will leave these quarters free.",
+  class_formats: "Today your dashboard guide reads it. The planner agent, not built yet, will read it as a preference when it suggests courses.",
+  theory_vs_application: "Today your dashboard guide reads it. The planner agent, not built yet, will read it as a preference when it suggests courses.",
 };
 
 /** Each stored General Information field, read from the question file, and what plans with it. */
@@ -91,7 +91,7 @@ function GeneralInformation() {
                       <th scope="row" className="p-3 font-medium text-ink">
                         {q.label} <span className="block text-caption font-normal text-muted">{g.title}</span>
                       </th>
-                      <td className="p-3">{USED_FOR[q.field] ?? "Read by the planner agent when it drafts or explains a plan."}</td>
+                      <td className="p-3">{USED_FOR[q.field] ?? "Today your dashboard guide reads it. The planner agent, not built yet, will read it when it drafts or explains a plan."}</td>
                     </tr>
                   )),
               )}
@@ -211,9 +211,12 @@ export default function PrivacyPage() {
       <p>
         When the AI features are on, what you type to the advisor and your plan are sent to an AI
         provider (Anthropic, with OpenRouter as a backup) to write the answer, after email
-        addresses and phone numbers are removed. Forum posts are sent too, to write the “What
-        students say” summaries and when the advisor looks them up. Your email address is never sent. Advisor chats are kept for 30
-        days, and are deleted with their plan.
+        addresses and phone numbers are removed. When you talk with your dashboard guide, your
+        General Information (including your credits and your taken courses with their grades) and
+        your conversation with the guide are sent the same way, so it can choose and word its next
+        question. Forum posts are sent too, to write the “What students say” summaries and when the
+        advisor looks them up. Your email address and username are never sent. Advisor chats are
+        kept for 30 days, and are deleted with their plan.
       </p>
 
       <h2 className="mt-6 font-display text-display-sm">Export and deletion</h2>
@@ -222,10 +225,13 @@ export default function PrivacyPage() {
         <Link to="/account" className={inlineLinkClass}>
           account page
         </Link>{" "}
-        you can download your account details and plans as JSON, and delete your account. Deleting
-        removes the account, its email address, your plans and your sessions. You choose whether your
-        forum posts are deleted or kept as “[deleted account]”. Encrypted backups of the database
-        are kept for 14 days, so a deleted account stays in them until they expire.
+        you can download your account details, your plans and your student record (your General
+        Information, credits and taken courses, your guide&apos;s memory, what you follow, and your{" "}
+        <code>student.md</code>) as JSON, and delete your account. Your dashboard also downloads{" "}
+        <code>student.md</code> on its own. Deleting removes the account, its email address, your
+        plans, your student record, your guide&apos;s memory and your sessions. You choose whether
+        your forum posts are deleted or kept as “[deleted account]”. Encrypted backups of the
+        database are kept for 14 days, so a deleted account stays in them until they expire.
       </p>
     </PageContainer>
   );

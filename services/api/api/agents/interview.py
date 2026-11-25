@@ -24,6 +24,7 @@ import hashlib
 import json
 import logging
 import re
+import uuid
 from collections.abc import Iterator, Sequence
 from dataclasses import dataclass, field
 from typing import Any, Literal
@@ -36,6 +37,7 @@ from api.agents.live import COURSE_CODE, known_courses, run_live
 from api.agents.prompts import load_prompt
 from api.agents.runtime import RunLog
 from api.agents.tools import untrusted
+from api.auth.ratelimit import account_subject
 from api.auth.store import Store
 from api.db import models as m
 from api.forum.scrub import scrub
@@ -995,7 +997,13 @@ def _codes(text: str) -> list[str]:
 # ------------------------------------------------------------------------------ the run
 
 
-def _welcome_key(account: m.Account, row: m.StudentProfile) -> str:
+def welcome_key(account_id: uuid.UUID) -> str:
+    """One cached greeting per account, so deleting the account can delete it too (it restates
+    the student's answers). The value holds the record's digest with the turn."""
+    return f"me:welcome:{account_subject(account_id)}"
+
+
+def _welcome_digest(account: m.Account, row: m.StudentProfile) -> str:
     """Changes whenever an answer or the covered questions change."""
     answers: dict[str, Any] = {
         q.field: getattr(row, q.field, None)
@@ -1004,13 +1012,27 @@ def _welcome_key(account: m.Account, row: m.StudentProfile) -> str:
     }
     answers["covered"] = memory_of(row).covered
     blob = json.dumps(answers, sort_keys=True, ensure_ascii=False, default=str)
-    digest = hashlib.sha256(f"{account.id}:{blob}".encode()).hexdigest()[:32]
-    return f"me:welcome:{digest}"
+    return hashlib.sha256(f"{account.id}:{blob}".encode()).hexdigest()[:32]
+
+
+def _cached_welcome(store: Store, account: m.Account, row: m.StudentProfile) -> str | None:
+    """The cached greeting's JSON when it was made for this state of the record."""
+    raw = store.get(welcome_key(account.id))
+    if raw is None:
+        return None
+    try:
+        cached = json.loads(raw)
+    except ValueError:
+        return None
+    if not isinstance(cached, dict) or cached.get("digest") != _welcome_digest(account, row):
+        return None
+    turn = cached.get("turn")
+    return turn if isinstance(turn, str) else None
 
 
 def welcome_cached(store: Store, account: m.Account, row: m.StudentProfile) -> bool:
     """Whether a welcome-back greeting for this record is cached (it costs no model call)."""
-    return store.get(_welcome_key(account, row)) is not None
+    return _cached_welcome(store, account, row) is not None
 
 
 @dataclass
@@ -1028,19 +1050,23 @@ class InterviewRun:
 
     def events(self) -> Iterator[BaseModel]:
         ctx = Context.build(self.row, self.account.username, self.req)
-        cached_key = _welcome_key(self.account, self.row) if ctx.mode == "welcome_back" else None
-        if cached_key is not None and (cached := self.store.get(cached_key)):
+        welcome = ctx.mode == "welcome_back"
+        if welcome and (cached := _cached_welcome(self.store, self.account, self.row)):
             try:
                 yield InterviewTurnEvent.model_validate_json(cached)
                 yield ProfileDoneEvent()
                 return
             except ValidationError:
-                self.store.delete(cached_key)
+                self.store.delete(welcome_key(self.account.id))
         turn = self._ask_model(ctx) if self.use_ai else None
         if turn is None:
             turn = rule_turn(ctx)
-        if cached_key is not None and not turn.fallback:
-            self.store.put(cached_key, turn.model_dump_json(), WELCOME_TTL_S)
+        if welcome and not turn.fallback:
+            value = {
+                "digest": _welcome_digest(self.account, self.row),
+                "turn": turn.model_dump_json(),
+            }
+            self.store.put(welcome_key(self.account.id), json.dumps(value), WELCOME_TTL_S)
         yield turn
         yield ProfileDoneEvent(fallback=turn.fallback, note=NO_AI_NOTE if turn.fallback else None)
 

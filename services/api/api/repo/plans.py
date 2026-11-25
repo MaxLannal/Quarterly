@@ -6,7 +6,8 @@ Credits and taken courses belong to the student record (Issue #14), not to one p
 saved plan reads them from `student_credit` and `student_course`, and saving a plan writes
 them back there. A taken course appears in the plan as a completed or in-progress item with
 the id `t<student_course.id>`. The old per-plan copies (`credit`, and `plan_item` rows with
-those statuses, left by migration 0005) are ignored when read and removed on the next save."""
+those statuses, left by migration 0005) were removed by migration 0010; any found are ignored when
+read and removed on the next save."""
 
 from __future__ import annotations
 
