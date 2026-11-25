@@ -660,7 +660,8 @@ class StudentProfile(Base):
         ),
         sa.CheckConstraint("pace IS NULL OR pace IN ('early', 'on_time', 'flexible')", name="pace"),
         sa.CheckConstraint(
-            "courses_per_term IS NULL OR courses_per_term BETWEEN 1 AND 6", name="courses_per_term"
+            "course_load IS NULL OR course_load IN ('conservative', 'normal', 'ambitious')",
+            name="course_load",
         ),
         sa.CheckConstraint(
             "theory_vs_application IS NULL OR theory_vs_application BETWEEN 1 AND 10",
@@ -687,7 +688,8 @@ class StudentProfile(Base):
     wants_research: Mapped[bool | None]
     research_areas: Mapped[list[str]] = _texts()
     # Scheduling.
-    courses_per_term: Mapped[int | None] = mapped_column(sa.SmallInteger)
+    #: conservative / normal / ambitious (0011 replaced the number of courses per quarter).
+    course_load: Mapped[str | None] = mapped_column(sa.String(16))
     #: [{term, kind: abroad | internship | leave}]; NULL = not answered, [] = none.
     terms_away: Mapped[list[dict[str, str]] | None] = mapped_column(JSONB)
     # Learning preferences.

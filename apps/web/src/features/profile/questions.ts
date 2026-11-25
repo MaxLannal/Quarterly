@@ -76,10 +76,10 @@ export function remainingQuestions(set: QuestionSet | undefined, profile: Profil
   return (set?.questions ?? []).filter((q) => q.step === 2 && applies(q, profile) && !hasAnswer(profile, q));
 }
 
-/** Share of the questions that apply and are answered, the transfer-only ones left out (the
- * server's `completeness`, for optimistic updates before the server answers). */
+/** Share of the questions that apply and are answered, the transfer-only and optional ones left
+ * out (the server's `completeness`, for optimistic updates before the server answers). */
 export function completenessOf(set: QuestionSet | undefined, profile: Profile): number {
-  const wanted = (set?.questions ?? []).filter((q) => !isTransferQuestion(q) && applies(q, profile));
+  const wanted = (set?.questions ?? []).filter((q) => !q.optional && !isTransferQuestion(q) && applies(q, profile));
   if (!wanted.length) return profile.completeness;
   return Math.round((wanted.filter((q) => hasAnswer(profile, q)).length / wanted.length) * 1000) / 1000;
 }

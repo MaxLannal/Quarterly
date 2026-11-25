@@ -418,3 +418,54 @@ def test_0005_downgrade_copies_the_record_back_into_the_primary_plan(fresh_db_ur
         ).all()
         assert [tuple(i) for i in items] == [("2026-AU", "completed", "A")]
     engine.dispose()
+
+
+def test_0011_replaces_courses_per_quarter_with_the_course_load(fresh_db_url: str) -> None:
+    """Richard (2026-11-25): "courses per quarter" became a course load (conservative, normal or
+    ambitious). A number of courses does not tell which load the student meant, so an old
+    answer becomes "not answered"; the student's other answers stay."""
+    cfg = alembic_config(fresh_db_url)
+    engine = create_engine(fresh_db_url)
+    command.upgrade(cfg, "0010")
+    account = "00000000-0000-0000-0000-000000000011"
+    with engine.begin() as conn:
+        conn.execute(
+            text(
+                "INSERT INTO account (id, username, email, email_verified_day) VALUES "
+                f"('{account}', 'heron', 'h@uchicago.edu', CURRENT_DATE)"
+            )
+        )
+        conn.execute(
+            text(
+                "INSERT INTO student_profile (account_id, pace, courses_per_term) "
+                f"VALUES ('{account}', 'early', 4)"
+            )
+        )
+        conn.execute(text("INSERT INTO catalog_year (id) VALUES ('2026-27')"))
+        for number, status in (("14100", "completed"), ("14200", "in_progress")):
+            course = conn.execute(
+                text(
+                    "INSERT INTO course (catalog_year, subject, number, code, title, source) "
+                    f"VALUES ('2026-27', 'CMSC', '{number}', 'CMSC {number}', 'x', '{{}}') "
+                    "RETURNING id"
+                )
+            ).scalar_one()
+            conn.execute(
+                text(
+                    "INSERT INTO student_course (account_id, course_id, term_id, status, grade) "
+                    f"VALUES ('{account}', :c, '2025-AU', '{status}', 'A')"
+                ),
+                {"c": course},
+            )
+    command.upgrade(cfg, "head")
+    with engine.connect() as conn:
+        row = conn.execute(text("SELECT pace, course_load FROM student_profile")).one()
+        assert tuple(row) == ("early", None)
+        # A course in progress has no grade (Richard, 2026-11-25): a grade stored before is gone.
+        grades = conn.execute(text("SELECT status, grade FROM student_course ORDER BY status"))
+        assert [tuple(g) for g in grades] == [("completed", "A"), ("in_progress", None)]
+        columns = {c["name"] for c in inspect(conn).get_columns("student_profile")}
+        assert "courses_per_term" not in columns
+    with engine.begin() as conn, pytest.raises(Exception, match="course_load"):
+        conn.execute(text("UPDATE student_profile SET course_load = 'heavy'"))
+    engine.dispose()

@@ -47,7 +47,7 @@ const USED_FOR: Record<string, string> = {
   pace: "Today your dashboard guide reads it. The planner agent, not built yet, will read it to aim for an early, on-time or flexible graduation.",
   wants_research: "Today your dashboard guide reads it. The planner agent, not built yet, will read it when it suggests research courses.",
   research_areas: "Today your dashboard guide reads it, and the Catalog uses it to pick course spotlights for you. The planner agent, not built yet, will read it when it suggests courses and research.",
-  courses_per_term: "Today your dashboard guide reads it. The planner agent, not built yet, will aim for this course load each quarter.",
+  course_load: "Today your dashboard guide reads it. The planner agent, not built yet, will plan your quarters to this load.",
   terms_away: "Today your dashboard guide reads it. The planner agent, not built yet, will leave these quarters free.",
   class_formats: "Today your dashboard guide reads it. The planner agent, not built yet, will read it as a preference when it suggests courses.",
   theory_vs_application: "Today your dashboard guide reads it. The planner agent, not built yet, will read it as a preference when it suggests courses.",

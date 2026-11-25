@@ -120,7 +120,8 @@ def read_state(db: Session, plan: m.Plan) -> PlanState:
                     "locked": taken.locked,
                     "units": taken.units,
                     "grading": taken.grading,
-                    "grade": taken.grade,
+                    # A course in progress has no grade, also on a row stored before the rule.
+                    "grade": taken.grade if taken.status == "completed" else None,
                 }
                 for taken, code in taken_rows
             ],
@@ -327,7 +328,8 @@ def _write_taken(
             "locked": item.locked,
             "units": item.units,
             "grading": item.grading,
-            "grade": item.grade,
+            # A course in progress has no grade yet.
+            "grade": item.grade if item.status == "completed" else None,
         }
         row = rows.get(item.id) if item.id is not None and item.id not in kept else None
         if row is None:

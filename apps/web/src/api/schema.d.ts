@@ -4500,8 +4500,8 @@ export interface components {
              * @default 0
              */
             completeness: number;
-            /** Courses Per Term */
-            courses_per_term?: number | null;
+            /** Course Load */
+            course_load?: ("conservative" | "normal" | "ambitious") | null;
             /**
              * Credits
              * @default []
@@ -4588,8 +4588,8 @@ export interface components {
             class_formats?: ("seminar" | "lecture" | "lab" | "online")[] | null;
             /** Class Year */
             class_year?: number | null;
-            /** Courses Per Term */
-            courses_per_term?: number | null;
+            /** Course Load */
+            course_load?: ("conservative" | "normal" | "ambitious") | null;
             /** Credits */
             credits?: components["schemas"]["RecordCredit"][] | null;
             /** Entry Term */
@@ -4774,6 +4774,11 @@ export interface components {
             max?: number | null;
             /** Min */
             min?: number | null;
+            /**
+             * Optional
+             * @default false
+             */
+            optional: boolean;
             /**
              * Options
              * @default []

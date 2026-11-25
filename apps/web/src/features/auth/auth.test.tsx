@@ -97,6 +97,49 @@ describe("sign-up", () => {
     expect(calls).toEqual([]);
   });
 
+  it("goes back a step after a misclick, and keeps what the student entered", async () => {
+    // Richard (2026-11-25): a Back button on each step that has a step before it.
+    mockApi({
+      "POST /auth/email": { status: 202, body: { pending_id: "pend-1" } },
+      "POST /auth/verify-code": { status: 200, body: { ticket: "ticket-1" } },
+      "POST /auth/register": { status: 201, body: SESSION },
+      "GET /profile/questions": { status: 200, body: questionFile },
+      "PATCH /me/profile": { status: 200, body: {} },
+    });
+    const user = userEvent.setup();
+    renderAt("/signup");
+    expect(screen.queryByRole("button", { name: "Back" })).not.toBeInTheDocument();
+    await user.type(screen.getByLabelText("Email address"), "student@uchicago.edu");
+    await user.click(screen.getByRole("button", { name: "Send code" }));
+    await screen.findByRole("heading", { level: 2, name: "Enter the code" });
+    await user.click(screen.getByRole("button", { name: "Back" }));
+    expect(await screen.findByLabelText("Email address")).toHaveValue("student@uchicago.edu");
+
+    await user.click(screen.getByRole("button", { name: "Send code" }));
+    await user.type(await screen.findByLabelText("6-digit code"), "123456");
+    await user.click(screen.getByRole("button", { name: "Verify code" }));
+    await screen.findByRole("heading", { level: 2, name: "Choose a username and password" });
+    // The code works once, so Back from step 3 opens step 1.
+    await user.click(screen.getByRole("button", { name: "Back" }));
+    expect(await screen.findByLabelText("Email address")).toHaveValue("student@uchicago.edu");
+
+    await user.click(screen.getByRole("button", { name: "Send code" }));
+    await user.type(await screen.findByLabelText("6-digit code"), "123456");
+    await user.click(screen.getByRole("button", { name: "Verify code" }));
+    await user.type(await screen.findByLabelText("Username"), "quiet-heron");
+    await user.type(screen.getByLabelText("Password"), PASSWORD);
+    await user.type(screen.getByLabelText("Repeat password"), PASSWORD);
+    await user.click(screen.getByRole("button", { name: "Create account" }));
+    // Step 4 has no Back: step 3 made the account.
+    await screen.findByRole("heading", { level: 2, name: "About you" });
+    expect(screen.queryByRole("button", { name: "Back" })).not.toBeInTheDocument();
+    await user.selectOptions(await screen.findByLabelText("What is your class year?"), "Class of 2029");
+    await user.click(screen.getByRole("button", { name: "Save and continue" }));
+    await screen.findByRole("heading", { level: 2, name: "A few more questions?" });
+    await user.click(screen.getByRole("button", { name: "Back" }));
+    expect(await screen.findByLabelText("What is your class year?")).toHaveDisplayValue("Class of 2029");
+  });
+
   it("walks email, code, username and password, then About you", async () => {
     const calls = mockApi({
       "POST /auth/email": { status: 202, body: { pending_id: "pend-1" } },
@@ -127,6 +170,9 @@ describe("sign-up", () => {
     // Step 4: the registration form, from the question file.
     expect(await screen.findByRole("heading", { level: 2, name: "About you" })).toHaveFocus();
     expect(screen.getByText("Step 4 of 4")).toBeInTheDocument();
+    // Credits are for every student; taken courses stay behind the transfer checkbox.
+    expect(screen.getByText("Which AP, placement or transfer credits do you have?")).toBeInTheDocument();
+    expect(screen.queryByText("Which UChicago courses have you taken, or are you taking now?")).not.toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: "Save and continue" }));
     expect(screen.getByText("Choose your class year.")).toBeInTheDocument();
     await user.selectOptions(await screen.findByLabelText("What is your class year?"), "Class of 2030");
@@ -141,7 +187,7 @@ describe("sign-up", () => {
       ["POST", "/auth/email", { email: "Student@uchicago.edu" }],
       ["POST", "/auth/verify-code", { pending_id: "pend-1", code: "123456" }],
       ["POST", "/auth/register", { ticket: "ticket-1", username: "quiet-heron", password: PASSWORD }],
-      ["PATCH", "/me/profile", { class_year: 2030, expected_graduation_term: "2030-SP", intended_programs: [], entry_term: "2026-AU", entry_year_level: 1 }],
+      ["PATCH", "/me/profile", { class_year: 2030, expected_graduation_term: "2030-SP", intended_programs: [], entry_term: "2026-AU", entry_year_level: 1, credits: [], taken_courses: [] }],
     ]);
     expect(calls.every((c) => c.credentials === "same-origin")).toBe(true);
   });

@@ -26,3 +26,22 @@ describe("the taken-courses table on the dashboard", () => {
     expect(onChange).toHaveBeenCalledWith([{ course: "PHYS 13100", term: "2025-AU", status: "completed", grade: null, grading: "pass_fail", units: 50, locked: true }]);
   });
 });
+
+// Richard (2026-11-25): a student who is taking a course has no grade for it yet.
+describe("a taken course in progress", () => {
+  it("has its grade field disabled and emptied", async () => {
+    const user = userEvent.setup();
+    render(
+      <QueryClientProvider client={newQueryClient()}>
+        <AnswerControl question={testQuestion("taken_courses")} set={TEST_QUESTIONS} value={[]} onChange={vi.fn()} classYear={2028} catalogYear="2026-27" />
+      </QueryClientProvider>,
+    );
+    const grade = screen.getByLabelText("Grade (optional)");
+    await user.type(grade, "A-");
+    await user.selectOptions(screen.getByLabelText("Status"), "in_progress");
+    expect(grade).toBeDisabled();
+    expect(grade).toHaveValue("");
+    await user.selectOptions(screen.getByLabelText("Status"), "completed");
+    expect(grade).toBeEnabled();
+  });
+});

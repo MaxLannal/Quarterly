@@ -17,12 +17,13 @@ pytestmark = pytest.mark.db
 
 PLAN_CHIPS = ["Work in industry", "Graduate school", "Medical or law school", "Undecided", "Skip"]
 PACE_CHIPS = ["Early", "On time", "Flexible", "Skip"]
+LOAD_CHIPS = ["Conservative", "Normal", "Ambitious", "Skip"]
 EMPTY_FACTS: dict[str, Any] = {
     "post_grad_plan": None,
     "pace": None,
     "wants_research": None,
     "research_areas": [],
-    "courses_per_term": None,
+    "course_load": None,
     "terms_away": None,
     "class_formats": None,
     "theory_vs_application": None,
@@ -139,11 +140,11 @@ def test_the_rule_guide_asks_every_question_in_order(env: Env, kept: bool) -> No
 
     t = talk.say("machine learning theory, condensed matter")
     assert sent(t) == {"research_areas": ["Machine learning theory", "Condensed matter"]}
-    assert t["topic"] == "courses_per_term"
-    assert t["quick_replies"] == ["3 courses", "4 courses", "5 courses", "Skip"]
+    assert t["topic"] == "course_load"
+    assert t["quick_replies"] == LOAD_CHIPS
 
-    t = talk.say("four")
-    assert sent(t) == {"courses_per_term": 4} and t["topic"] == "terms_away"
+    t = talk.say("a normal load")
+    assert sent(t) == {"course_load": "normal"} and t["topic"] == "terms_away"
     assert t["quick_replies"] == ["None", "Skip"]
 
     t = talk.say("autumn 2027 abroad")
@@ -175,7 +176,7 @@ def test_no_to_research_skips_the_research_areas(env: Env) -> None:
         *guide("pace"),
     ]
     t = ask(env, headers, "reply", "Flexible", history)
-    assert t["topic"] == "courses_per_term"  # research_areas never asked
+    assert t["topic"] == "course_load"  # research_areas never asked
     assert t["progress"] == pytest.approx(round(3 / 7, 3))
 
 
@@ -197,9 +198,6 @@ def test_an_unclear_answer_is_asked_again_and_skip_moves_on(env: Env) -> None:
 
 def test_integers_must_be_in_range(env: Env) -> None:
     headers = login(env)
-    t = ask(env, headers, "reply", "7", guide("courses_per_term"))
-    assert t["retry"] is True and t["topic"] == "courses_per_term" and sent(t) == {}
-    assert "from 1 to 6" in t["text"]
     t = ask(env, headers, "reply", "11", guide("theory_vs_application"))
     assert t["retry"] is True and "Theory" in t["text"]
 
@@ -247,7 +245,7 @@ def test_reply_after_the_wrapup_stays_done(env: Env) -> None:
             "post_grad_plan": "industry",
             "pace": "early",
             "wants_research": False,
-            "courses_per_term": 4,
+            "course_load": "ambitious",
             "terms_away": [],
             "class_formats": [],
             "theory_vs_application": 5,
@@ -345,15 +343,17 @@ def test_an_unsupported_answer_gets_a_repair_then_a_retry(env: Env) -> None:
     fake = use_llm(
         env,
         script(
-            # 4 is in range, but the student wrote no number: not grounded.
-            turn("Four it is. Any quarters away?", "terms_away", courses_per_term=4),
-            turn("Sorry, how many courses each quarter, as a number?", "courses_per_term"),
+            # Conservative is an option, but the student named two others: not grounded.
+            turn(
+                "Conservative it is. Any quarters away?", "terms_away", course_load="conservative"
+            ),
+            turn("Sorry, how heavy do you want your quarters to be?", "course_load"),
         ),
     )
-    t = ask(env, headers, "reply", "a normal load", guide("courses_per_term"))
+    t = ask(env, headers, "reply", "normal or ambitious", guide("course_load"))
     assert len(fake.calls) == 2
-    assert t["fallback"] is False and t["retry"] is True and t["topic"] == "courses_per_term"
-    assert sent(t) == {} and t["quick_replies"] == ["3 courses", "4 courses", "5 courses", "Skip"]
+    assert t["fallback"] is False and t["retry"] is True and t["topic"] == "course_load"
+    assert sent(t) == {} and t["quick_replies"] == LOAD_CHIPS
 
 
 def test_a_wrong_topic_twice_falls_back_to_the_rules(env: Env) -> None:
@@ -430,7 +430,7 @@ def test_the_wrapup_with_a_model(env: Env) -> None:
             "post_grad_plan": "industry",
             "pace": "early",
             "wants_research": False,
-            "courses_per_term": 4,
+            "course_load": "ambitious",
             "terms_away": [],
             "class_formats": ["lab"],
         },

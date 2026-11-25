@@ -48,7 +48,7 @@ SCALAR_FIELDS = (
     "post_grad_plan",
     "pace",
     "wants_research",
-    "courses_per_term",
+    "course_load",
     "theory_vs_application",
     "working_notes",
 )
@@ -304,11 +304,11 @@ def answered_ids(
 
 def completeness(row: m.StudentProfile, answered: Sequence[str]) -> float:
     """Share of the questions that apply to this student and are answered. The transfer-only
-    questions are left out: a first-year student has nothing to enter there."""
+    and the optional questions are left out: a student can have nothing to enter there."""
     wanted = [
         q.id
         for q in question_set().questions
-        if not (q.when and "transfer_or_later" in q.when) and applies(q, row)
+        if not (q.optional or (q.when and "transfer_or_later" in q.when)) and applies(q, row)
     ]
     if not wanted:
         return 0.0
@@ -336,7 +336,7 @@ def profile_out(db: Session, account: m.Account, row: m.StudentProfile) -> Profi
         pace=row.pace,
         wants_research=row.wants_research,
         research_areas=list(row.research_areas),
-        courses_per_term=row.courses_per_term,
+        course_load=row.course_load,
         terms_away=terms_away_of(row),
         class_formats=None if row.class_formats is None else list(row.class_formats),
         theory_vs_application=row.theory_vs_application,
@@ -532,7 +532,7 @@ def export_profile(db: Session, account_id: uuid.UUID) -> dict[str, Any]:
             "pace": row.pace,
             "wants_research": row.wants_research,
             "research_areas": list(row.research_areas),
-            "courses_per_term": row.courses_per_term,
+            "course_load": row.course_load,
             "terms_away": row.terms_away,
             "class_formats": None if row.class_formats is None else list(row.class_formats),
             "theory_vs_application": row.theory_vs_application,

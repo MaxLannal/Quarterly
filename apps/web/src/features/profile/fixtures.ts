@@ -27,7 +27,7 @@ export function testProfile(over: Partial<Profile> = {}): Profile {
     pace: null,
     wants_research: null,
     research_areas: [],
-    courses_per_term: null,
+    course_load: null,
     terms_away: null,
     class_formats: null,
     theory_vs_application: null,

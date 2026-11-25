@@ -12,7 +12,7 @@ describe("the dashboard agent's proposals", () => {
   it("keeps only the answered field when a proposal also lists other fields as null", () => {
     // Richard's report (2026-11-25): the server sent every field of the patch, the unasked ones
     // as null, and Accept saved them all, which cleared every other answer.
-    const proposed = { class_year: null, intended_programs: null, pace: "early", courses_per_term: null, terms_away: null } as const;
+    const proposed = { class_year: null, intended_programs: null, pace: "early", course_load: null, terms_away: null } as const;
     const p = proposalFrom({ proposed, answered: "pace" }, SET, profile({ class_year: 2029, intended_programs: ["cs"] }));
     expect(p?.patch).toEqual({ pace: "early" });
     expect(p?.label).toBe("Graduation pace");
@@ -39,8 +39,9 @@ describe("questions as turns", () => {
     expect(quickRepliesFor(question("pace"))).toEqual(["Early", "On time", "Flexible", "Skip"]);
     expect(quickRepliesFor(question("theory_vs_application"))).toEqual(["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Skip"]);
     expect(quickRepliesFor(question("terms_away"))).toEqual(["None", "Skip"]);
-    const turn = questionTurn(question("courses_per_term"), 0.5);
-    expect(turn).toMatchObject({ type: "turn", topic: "courses_per_term", text: question("courses_per_term").text, progress: 0.5, retry: false });
+    expect(quickRepliesFor(question("course_load"))).toEqual(["Conservative", "Normal", "Ambitious", "Skip"]);
+    const turn = questionTurn(question("course_load"), 0.5);
+    expect(turn).toMatchObject({ type: "turn", topic: "course_load", text: question("course_load").text, progress: 0.5, retry: false });
   });
 
   it("joins picked chips in the options' order", () => {

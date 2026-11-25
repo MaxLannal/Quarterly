@@ -56,7 +56,7 @@ function emptyProfile(): S["ProfileOut"] {
     pace: null,
     wants_research: null,
     research_areas: [],
-    courses_per_term: null,
+    course_load: null,
     terms_away: null,
     class_formats: null,
     theory_vs_application: null,
@@ -119,7 +119,7 @@ function answeredIds(p: S["ProfileOut"]): string[] {
 }
 
 function completeness(p: S["ProfileOut"]): number {
-  const wanted = QUESTIONS.questions.filter((q) => !(q.when && "transfer_or_later" in q.when) && applies(q, p));
+  const wanted = QUESTIONS.questions.filter((q) => !q.optional && !(q.when && "transfer_or_later" in q.when) && applies(q, p));
   if (!wanted.length) return 0;
   return Math.round((wanted.filter((q) => p.answered.includes(q.id)).length / wanted.length) * 1000) / 1000;
 }
@@ -153,7 +153,7 @@ function applyPatch(patch: S["ProfilePatch"]): S["ProfileOut"] | { error: string
         const unknown = list.filter((c) => !findCourse(c.course)).map((c) => c.course);
         if (unknown.length) return { error: `Unknown course(s): ${unknown.join(", ")}` };
         if (list.some((c) => !TERM.test(c.term))) return { error: "taken course term is not a quarter" };
-        next.taken_courses = list.map((c) => ({ course: c.course, term: c.term, status: c.status ?? "completed", grade: c.grade ?? null, grading: c.grading ?? "letter", units: c.units ?? null, locked: c.locked ?? false, title: findCourse(c.course)?.title ?? "" }));
+        next.taken_courses = list.map((c) => ({ course: c.course, term: c.term, status: c.status ?? "completed", grade: c.status === "in_progress" ? null : (c.grade ?? null), grading: c.grading ?? "letter", units: c.units ?? null, locked: c.locked ?? false, title: findCourse(c.course)?.title ?? "" }));
         break;
       }
       case "credits":

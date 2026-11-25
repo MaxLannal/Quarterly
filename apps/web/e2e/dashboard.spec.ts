@@ -40,7 +40,7 @@ test("registration: a transfer student enters credits and taken courses, then an
   await page.getByLabel("Kind").selectOption("transfer");
   await page.getByLabel("Description").fill("Fake transfer credit");
   await page.getByRole("button", { name: "Add credit" }).click();
-  await expect(page.getByText("Transfer credit: Fake transfer credit (not matched to a course yet) · 100 units")).toBeVisible();
+  await expect(page.getByText("Transfer: Fake transfer credit (not matched to a course yet) · 100 units")).toBeVisible();
 
   await page.getByLabel("Course", { exact: true }).fill("Fake Arts");
   await page.getByRole("option", { name: /^FAKE 13000/ }).click();
@@ -73,8 +73,8 @@ test("registration: a transfer student enters credits and taken courses, then an
   await guide.getByRole("group", { name: "Quick answers" }).getByRole("button", { name: "No" }).click();
   await guide.getByRole("button", { name: "Accept Interested in research: No" }).click();
 
-  await guide.getByRole("group", { name: "Quick answers" }).getByRole("button", { name: "4 courses" }).click();
-  await guide.getByRole("button", { name: "Accept Courses per quarter: 4 courses" }).click();
+  await guide.getByRole("group", { name: "Quick answers" }).getByRole("button", { name: "Normal" }).click();
+  await guide.getByRole("button", { name: "Accept Course load: Normal" }).click();
   await guide.getByRole("group", { name: "Quick answers" }).getByRole("button", { name: "None" }).click();
   await guide.getByRole("button", { name: "Accept Quarters away: None" }).click();
 
@@ -105,7 +105,7 @@ test("registration: a transfer student enters credits and taken courses, then an
   await expect(background).toContainText("1 course");
   await expect(page.getByRole("region", { name: "Goals" })).toContainText("Graduate school");
   await expect(page.getByRole("region", { name: "Goals" })).toContainText("Not answered");
-  await expect(page.getByRole("region", { name: "Scheduling" })).toContainText("4 courses");
+  await expect(page.getByRole("region", { name: "Scheduling" })).toContainText("Normal");
   await expect(page.getByRole("region", { name: "Learning preferences" })).toContainText("Seminar, Lab, Online");
   await expect(page.getByRole("region", { name: "Learning preferences" })).toContainText("7 of 10");
 });
@@ -125,11 +125,11 @@ test("the dashboard: profile card, answers changed in place, the plan summary an
 
   // Change in place: a select saves at once.
   const scheduling = page.getByRole("region", { name: "Scheduling" });
-  await scheduling.getByRole("button", { name: "Answer Courses per quarter" }).click();
-  await scheduling.getByLabel("Courses per quarter", { exact: true }).selectOption({ label: "5 courses" });
+  await scheduling.getByRole("button", { name: "Answer Course load" }).click();
+  await scheduling.getByLabel("Course load", { exact: true }).selectOption({ label: "Ambitious" });
   await expect(scheduling.getByText("Saved")).toBeVisible();
-  await scheduling.getByRole("button", { name: "Done with Courses per quarter" }).click();
-  await expect(scheduling).toContainText("5 courses");
+  await scheduling.getByRole("button", { name: "Done with Course load" }).click();
+  await expect(scheduling).toContainText("Ambitious");
 
   // A scale.
   const learning = page.getByRole("region", { name: "Learning preferences" });

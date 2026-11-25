@@ -123,16 +123,20 @@ export function AuthPage({
   eyebrow,
   subline,
   children,
+  wide = false,
 }: {
   title: string;
   eyebrow?: ReactNode;
   subline?: ReactNode;
   children: ReactNode;
+  /** A wider column (36rem, not 30rem) for the long sign-up form (step 4), so a credit fits on
+   * one line (Richard, 2026-11-25). */
+  wide?: boolean;
 }) {
   return (
     <section className="mx-auto grid w-full max-w-content gap-6 p-3 sm:p-5 lg:min-h-[760px] lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-8">
       <div className="flex flex-col justify-center px-3 py-10 sm:px-10 lg:py-16">
-        <div className="mx-auto flex w-full max-w-[30rem] flex-col gap-8">
+        <div className={cn("mx-auto flex w-full flex-col gap-8", wide ? "max-w-[36rem]" : "max-w-[30rem]")}>
           <div className="flex flex-col items-center gap-4 text-center">
             <ArchMark />
             {eyebrow && <Eyebrow>{eyebrow}</Eyebrow>}

@@ -185,6 +185,26 @@ def test_a_plan_credit_beyond_the_records_limits_does_not_break_the_record(env: 
     assert stored and not any("7735550101" in s for s in stored)
 
 
+def test_a_plan_shows_no_grade_for_a_course_in_progress(env: Env) -> None:
+    """A row stored before the rule (a grade on a course in progress) shows no grade in a plan."""
+    headers = login(env)
+    plan = create(env, headers, state=with_taken())
+    with env.db() as db:
+        db.execute(sa.update(m.StudentCourse).values(status="in_progress", grade="B"))
+        db.commit()
+    state = env.client.get(f"/plans/{plan['id']}", headers=headers).json()["state"]
+    item = next(i for i in state["items"] if i["course"] == "TEST 10000")
+    assert item["status"] == "in_progress" and item["grade"] is None
+
+
+def test_a_plan_save_keeps_no_grade_for_a_course_in_progress(env: Env) -> None:
+    headers = login(env)
+    taking = {**TAKEN, "status": "in_progress", "grade": "A"}
+    plan = create(env, headers, state=with_taken(items=[taking, STATE["items"][1]]))
+    item = next(i for i in plan["state"]["items"] if i["course"] == "TEST 10000")
+    assert item["status"] == "in_progress" and item["grade"] is None
+
+
 def test_the_account_export_has_the_record_of_a_student_who_only_saved_a_plan(env: Env) -> None:
     headers = login(env)
     create(env, headers, state=with_taken())

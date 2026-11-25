@@ -14,7 +14,7 @@ async function transferCredit(page: Page, label: string, code: string | null, un
   await page.getByLabel("Units").fill(units);
   await page.getByRole("button", { name: "Add credit" }).click();
   // Each add looks the code up in the catalog first: wait for it before the next one.
-  await expect(page.getByText(`Transfer credit: ${label}${code ? ` → ${code}` : " (not matched to a course yet)"} · ${units} units`)).toBeVisible();
+  await expect(page.getByText(`Transfer: ${label}${code ? ` → ${code}` : " (not matched to a course yet)"} · ${units} units`)).toBeVisible();
 }
 
 test("journey B: transfer student with CS BS + Math BS + Bx/MS sees what cannot fit, then asks the advisor", async ({ page }) => {

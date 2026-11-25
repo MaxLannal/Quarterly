@@ -116,7 +116,9 @@ questions:
       - {id: label, label: Credit}
       - {id: maps_to, label: Counts as course}
       - {id: units, label: Units}
-    when: {transfer_or_later: true}
+    # Asked of every student: a first-year can have AP, placement or transfer credits (Richard,
+    # 2026-11-25). Optional: a student with no credits has nothing to enter.
+    optional: true
     step: 1
 
   - id: taken_courses
@@ -185,19 +187,23 @@ questions:
     step: 2
 
   # ------------------------------------------------------------------- Scheduling (step 2)
-  - id: courses_per_term
+  # Richard (2026-11-25): a course load, not a number of courses. The College's rules are in
+  # data/seed/2026-27/college_policy.yaml (full time is 300 or 400 units; 500 units only with
+  # approval, for the overload_reasons listed there).
+  - id: course_load
     group: scheduling
-    field: courses_per_term
-    label: Courses per quarter
-    text: How many courses do you want to take each quarter?
+    field: course_load
+    label: Course load
+    text: How heavy do you want your quarters to be?
     type: single
-    value: integer
-    min: 1
-    max: 6
     options:
-      - {value: 3, label: "3 courses"}
-      - {value: 4, label: "4 courses"}
-      - {value: 5, label: "5 courses"}
+      - {value: conservative, label: Conservative}
+      - {value: normal, label: Normal}
+      - {value: ambitious, label: Ambitious}
+    help: >-
+      Conservative: only the units you need to stay full time and graduate on time. Normal: a mix
+      of 300-unit and 400-unit quarters. Ambitious: 400 units each quarter, and 500 units in a
+      quarter when the College approves an overload for one of its listed reasons.
     step: 2
 
   - id: terms_away

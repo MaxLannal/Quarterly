@@ -52,7 +52,7 @@ async function filledRecord(page: Page) {
         post_grad_plan: "grad_school",
         wants_research: true,
         research_areas: ["Fake topology"],
-        courses_per_term: 4,
+        course_load: "normal",
         terms_away: [],
       }),
     });

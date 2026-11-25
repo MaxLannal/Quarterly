@@ -322,7 +322,7 @@ A program page does these things:
 
 ### Onboarding (`/onboarding`)
 
-The two-step registration (Issue #16) replaced it. `/onboarding` redirects to `/me`. Its entry term, credits and programs moved into the registration form. Its goals became the scheduling questions of the dashboard agent (quarters away, courses per quarter).
+The two-step registration (Issue #16) replaced it. `/onboarding` redirects to `/me`. Its entry term, credits and programs moved into the registration form. Its goals became the scheduling questions of the dashboard agent (quarters away, course load).
 
 ### The General Information and `student.md` (Issue #14)
 
@@ -334,9 +334,9 @@ The General Information questions are written one time, in `data/profile/questio
 
 | Group | Questions |
 | --- | --- |
-| Academic background | Class year. Expected graduation term. Intended programs. For a student who transferred or is not in the first year: the entry term, the entry year level, credits and taken courses. |
+| Academic background | Class year. Expected graduation term. Intended programs. Credits (AP, placement and transfer), for every student. For a student who transferred or is not in the first year: the entry term, the entry year level and taken courses. A course in progress has no grade. |
 | Goals | Plans after graduation (industry, graduate school, medical or law school, undecided). Graduation pace (early, on time, flexible). Interest in research and, if yes, research areas. |
-| Scheduling | Courses per quarter. Quarters away (study abroad, internship, leave). |
+| Scheduling | Course load: conservative (only the units that keep the student full time and graduate them on time), normal (a mix of 300-unit and 400-unit quarters) or ambitious (400 units each quarter, and 500 units in a quarter when the College approves an overload for one of its listed reasons). Quarters away (study abroad, internship, leave). |
 | Learning preferences | Class formats (seminar, lecture, lab, online). Theory or application (1 to 10). |
 
 `student.md` is generated from the record (`render_student_md()`):
@@ -357,7 +357,9 @@ Sign-up has four steps:
 1. Enter a `@uchicago.edu` address.
 2. Enter the 6-digit code.
 3. Choose a username and password (passkey optional later).
-4. "About you", the registration form: the step-1 General Information questions (class year, expected graduation term, intended programs) and the checkbox "I transferred, or I am not in my first year.". The checkbox adds the entry term, the entry year level, credits and taken courses.
+4. "About you", the registration form: the step-1 General Information questions (class year, expected graduation term, intended programs, credits) and the checkbox "I transferred, or I am not in my first year.". The checkbox adds the entry term, the entry year level and taken courses. Every student can add AP, placement and transfer credits. The credits question is optional: it does not count in the share of answered questions.
+
+Steps 2 and 3 have a "Back" button. It opens step 1 and keeps the email address (a code works one time only). Step 4 has no "Back", because step 3 made the account. The screen after step 4 ("A few more questions?") has a "Back" button that opens step 4 with the saved answers.
 
 Then the student answers the questions of the dashboard agent now, or skips them. (The student can start them later from the dashboard with "Complete your profile".) Then the student goes to the page that they came from, or to `/plan`.
 
@@ -457,9 +459,9 @@ The model has nine groups of tables. The key of the catalog, schedule and progra
 | Table | Key fields | Notes |
 | --- | --- | --- |
 | `account` | `id`, `username`, `email` (unique, lowercase), `email_verified_day`, `password_hash` (argon2id) or passkey credential, `role` (user, curator, admin), `status`, `created_day` | The email is stored as decision 5 tells. It is never logged and never copied to other tables. |
-| `student_profile` | `account_id`, the General Information answers (`class_year`, `expected_graduation_term`, `intended_programs`, `entry_term`, `entry_year_level`, `post_grad_plan`, `pace`, `wants_research`, `research_areas`, `courses_per_term`, `terms_away`, `class_formats`, `theory_vs_application`), `working_notes`, `interview` (the memory of the dashboard agent), `follows`, `updates_seen` | The student record (Issue #14. `feed_categories` was dropped with the Feed, issue #19). NULL = not answered. It never holds the email. |
+| `student_profile` | `account_id`, the General Information answers (`class_year`, `expected_graduation_term`, `intended_programs`, `entry_term`, `entry_year_level`, `post_grad_plan`, `pace`, `wants_research`, `research_areas`, `course_load`, `terms_away`, `class_formats`, `theory_vs_application`), `working_notes`, `interview` (the memory of the dashboard agent), `follows`, `updates_seen` | The student record (Issue #14. `feed_categories` was dropped with the Feed, issue #19). NULL = not answered. It never holds the email. |
 | `student_credit` | `account_id`, `kind` (AP, placement, transfer), `label`, `maps_to_course_id`, `units` | The credits of the record. Every saved plan reads them (they are not part of one plan now). A label has a maximum of 120 characters (emails and phone numbers removed). A credit has a maximum of 1000 units. When a plan is saved, the app clips the credit of the plan to these limits. |
-| `student_course` | `account_id`, `course_id`, `term_id`, `status` (completed, in_progress), `grade`, `grading` (letter, pass_fail), `units`, `locked` | Taken courses. Each keeps the grading, units and lock of the plan item. Thus a Pass/Fail course never counts where a letter grade is required (V12), after an edit of the record on the dashboard or a save from the planner. Every saved plan shows them as completed or in-progress items (id `t<id>`). A plan save writes them back. A new plan never overwrites a record that already has taken courses. When the planner opens, it shows the credits and taken courses of the record. Unless the student changed them in the planner, a save writes the current ones of the record. (Thus an old copy never undoes a change made on the dashboard.) A save never removes taken courses from before the first quarter of the plan. |
+| `student_course` | `account_id`, `course_id`, `term_id`, `status` (completed, in_progress), `grade` (none for a course in progress), `grading` (letter, pass_fail), `units`, `locked` | Taken courses. Each keeps the grading, units and lock of the plan item. Thus a Pass/Fail course never counts where a letter grade is required (V12), after an edit of the record on the dashboard or a save from the planner. Every saved plan shows them as completed or in-progress items (id `t<id>`). A plan save writes them back. A new plan never overwrites a record that already has taken courses. When the planner opens, it shows the credits and taken courses of the record. Unless the student changed them in the planner, a save writes the current ones of the record. (Thus an old copy never undoes a change made on the dashboard.) A save never removes taken courses from before the first quarter of the plan. |
 
 ## Data ingestion
 

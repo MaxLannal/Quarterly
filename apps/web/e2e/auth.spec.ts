@@ -92,7 +92,7 @@ test("sign-up: email, code, then username and password", async ({ page }) => {
 
   await expect(page).toHaveURL(/\/plan$/);
   const patch = calls.find((c) => c.key === "PATCH /me/profile");
-  expect(patch?.body).toEqual({ class_year: 2029, expected_graduation_term: "2029-SP", intended_programs: [], entry_term: "2025-AU", entry_year_level: 1 });
+  expect(patch?.body).toEqual({ class_year: 2029, expected_graduation_term: "2029-SP", intended_programs: [], entry_term: "2025-AU", entry_year_level: 1, credits: [], taken_courses: [] });
   const posts = authPosts(calls);
   expect(posts.map((c) => c.key)).toEqual(["POST /auth/email", "POST /auth/verify-code", "POST /auth/register"]);
   expect(posts[2]?.body).toEqual({ ticket: "ticket-1", username: "quiet-heron", password: PASSWORD });

@@ -170,6 +170,22 @@ SYNONYMS: dict[str, dict[Any, tuple[str, ...]]] = {
             *("whatever", "take my time", "slow", "slower"),
         ),
     },
+    "course_load": {
+        "conservative": (
+            *("conservative", "light", "lighter", "just enough", "the minimum", "minimum"),
+            *("easy", "easier", "not too much", "as few as"),
+        ),
+        "normal": (
+            *("normal", "regular", "standard", "usual", "average", "moderate", "medium"),
+            *("balanced", "a mix", "mix of", "mixed"),
+        ),
+        "ambitious": (
+            # Not "max": "max 4 courses" is a limit, not a heavy load.
+            *("ambitious", "heavy", "heavier", "the maximum", "max out", "as much as"),
+            "as many as",
+            *("overload", "push myself"),
+        ),
+    },
     "class_formats": {
         "seminar": ("seminar", "seminars", "discussion", "discussions", "small classes"),
         "lecture": ("lecture", "lectures"),
@@ -188,7 +204,8 @@ _NO = re.compile(
 _ALL = re.compile(r"^(?:all|all of them|all of the above|any|any of them|everything|all four)$")
 _NONE = re.compile(r"^(?:none|none of them|neither|nothing|no)$")
 _NEGATED = re.compile(
-    r"\b(?:not|no|except|without|hate|dislike|avoid|don'?t like|do not like)\s+(?:\w+\s+)?$"
+    r"\b(?:not|no|nothing|except|without|hate|dislike|avoid|don'?t like|do not like|"
+    r"don'?t want|do not want)\s+(?:\w+\s+)?$"
 )
 _NUMBER_WORDS = {
     "one": 1,
@@ -388,7 +405,8 @@ def _read(question: Question, t: str, raw: str) -> Reading:
     if question.type == "single":
         if exact is not None:
             return Reading("answer", exact, (exact,))
-        named = _named_options(question, t)
+        # An option after "not" is not the answer: "not too heavy" is no ambitious load.
+        named = _named_options(question, t, negation=True)
         if len(named) == 1:
             return Reading("answer", named[0], tuple(named))
         return Reading("unclear", support=tuple(named))
@@ -830,7 +848,7 @@ class Facts(BaseModel):
     pace: str | None = None
     wants_research: bool | None = None
     research_areas: list[str] = []
-    courses_per_term: int | None = None
+    course_load: str | None = None
     terms_away: list[AwayFact] | None = None
     class_formats: list[str] | None = None
     theory_vs_application: int | None = None
@@ -885,7 +903,7 @@ def turn_schema() -> dict[str, Any]:
                     "pace": _nullable({"type": "string", "enum": options("pace")}),
                     "wants_research": {"type": ["boolean", "null"]},
                     "research_areas": {"type": "array", "items": {"type": "string"}},
-                    "courses_per_term": {"type": ["integer", "null"]},
+                    "course_load": _nullable({"type": "string", "enum": options("course_load")}),
                     "terms_away": _nullable(
                         {
                             "type": "array",

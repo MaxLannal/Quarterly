@@ -6,16 +6,24 @@ from __future__ import annotations
 
 import datetime as dt
 from collections.abc import Iterable
-from typing import Annotated, Literal
+from typing import Annotated, Literal, Self
 
 from planner_core.models import Grading
-from pydantic import BaseModel, Field, RootModel, field_serializer, field_validator
+from pydantic import (
+    BaseModel,
+    Field,
+    RootModel,
+    field_serializer,
+    field_validator,
+    model_validator,
+)
 
 from api.forum.scrub import scrub
 from api.schemas.agents import ErrorEvent
 
 PostGradPlan = Literal["industry", "grad_school", "med_law", "undecided"]
 Pace = Literal["early", "on_time", "flexible"]
+CourseLoad = Literal["conservative", "normal", "ambitious"]
 ClassFormat = Literal["seminar", "lecture", "lab", "online"]
 AwayKind = Literal["abroad", "internship", "leave"]
 CreditKind = Literal["AP", "placement", "transfer"]
@@ -140,6 +148,14 @@ class TakenCourse(BaseModel):
     #: Locked in the planner (it cannot be dragged or removed there).
     locked: bool = False
 
+    @model_validator(mode="after")
+    def _no_grade_in_progress(self) -> Self:
+        # A course in progress has no grade yet (Richard, 2026-11-25): a grade sent with it is
+        # dropped, also on read, so an older row cannot show one.
+        if self.status == "in_progress":
+            self.grade = None
+        return self
+
 
 class TakenCourseOut(TakenCourse):
     #: The course title, filled in by the server from the catalog.
@@ -190,7 +206,7 @@ class ProfileOut(BaseModel):
     wants_research: bool | None = None
     research_areas: list[str] = []
     # Scheduling.
-    courses_per_term: int | None = None
+    course_load: CourseLoad | None = None
     terms_away: list[TermAway] | None = None
     # Learning preferences.
     class_formats: list[ClassFormat] | None = None
@@ -244,7 +260,7 @@ class ProfilePatch(BaseModel):
     pace: Pace | None = None
     wants_research: bool | None = None
     research_areas: Items | None = None
-    courses_per_term: int | None = Field(default=None, ge=1, le=6)
+    course_load: CourseLoad | None = None
     terms_away: list[TermAway] | None = Field(default=None, max_length=MAX_TERMS_AWAY)
     class_formats: list[ClassFormat] | None = Field(default=None, max_length=4)
     theory_vs_application: int | None = Field(default=None, ge=1, le=10)

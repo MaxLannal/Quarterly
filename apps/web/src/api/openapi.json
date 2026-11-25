@@ -7922,16 +7922,21 @@
             "title": "Completeness",
             "type": "number"
           },
-          "courses_per_term": {
+          "course_load": {
             "anyOf": [
               {
-                "type": "integer"
+                "enum": [
+                  "conservative",
+                  "normal",
+                  "ambitious"
+                ],
+                "type": "string"
               },
               {
                 "type": "null"
               }
             ],
-            "title": "Courses Per Term"
+            "title": "Course Load"
           },
           "credits": {
             "default": [],
@@ -8159,18 +8164,21 @@
             ],
             "title": "Class Year"
           },
-          "courses_per_term": {
+          "course_load": {
             "anyOf": [
               {
-                "maximum": 6.0,
-                "minimum": 1.0,
-                "type": "integer"
+                "enum": [
+                  "conservative",
+                  "normal",
+                  "ambitious"
+                ],
+                "type": "string"
               },
               {
                 "type": "null"
               }
             ],
-            "title": "Courses Per Term"
+            "title": "Course Load"
           },
           "credits": {
             "anyOf": [
@@ -8857,6 +8865,11 @@
               }
             ],
             "title": "Min"
+          },
+          "optional": {
+            "default": false,
+            "title": "Optional",
+            "type": "boolean"
           },
           "options": {
             "default": [],

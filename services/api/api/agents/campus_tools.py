@@ -352,7 +352,7 @@ class CampusTools:
             "class_year": profile.class_year,
             "post_grad_plan": profile.post_grad_plan,
             "pace": profile.pace,
-            "courses_per_term": profile.courses_per_term,
+            "course_load": profile.course_load,
             "intended_programs": programs,
         }
         words = {"research_areas": profile.research_areas}
@@ -433,7 +433,7 @@ _OWN_TOOLS: dict[str, Any] = {
     "get_profile": lambda t: Tool(
         "get_profile",
         "The student's own dashboard profile: class year, intended programs, plan after "
-        "graduation, pace, courses per quarter and research areas.",
+        "graduation, pace, course load and research areas.",
         _obj({}),
         t.get_profile,
     ),
