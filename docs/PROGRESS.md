@@ -976,8 +976,8 @@ Richard chose the order. Max's PR #21 (issues #14 and #16) merged into `main` fi
   - The "forum" shot is an instructor page. `/forum` itself is covered by forum.spec.
 - **No push, no GitHub post and no paid model call.** The tests use FakeLLM, and the journeys use the e2e stack's fake LLM.
 
-**Waits for Richard** (OPEN_QUESTIONS M21-1 to M21-3, and migration 0010)
+**Waits for Richard** (OPEN_QUESTIONS M21-1 to M21-3)
 - **M21-1:** should the dashboard guide receive grades? It sends the whole `student.md` to the model, but the step-2 questions do not use grades.
 - **M21-2:** `GET /me/updates` has no reader since "What's new" went. Keep it or remove it?
 - **M21-3:** the guide's resume can count an answer that the student did not accept as covered. This is from the review of #21.
-- **Migration 0010 needs Richard's OK.** The goal named a chain that ends at 0009. The privacy review added 0010, which deletes hidden copies of grades that nothing reads. Its downgrade cannot bring them back. Suggested: keep it. The other choice is to delete 0010 and record the privacy finding in OPEN_QUESTIONS.
+- **Migration 0010: Richard's answer is "keep" (2026-11-24, in the chat).** The goal named a chain that ends at 0009. The privacy review added 0010, which deletes hidden copies of grades that nothing reads. Its downgrade cannot bring them back. Richard chose to keep it.
