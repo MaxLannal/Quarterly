@@ -1,6 +1,8 @@
 # Progress
 
-> **Current state (2026-11-24, integration).** Branch `integration/2026-11-24`, not pushed: `main` plus issues #15 and #19 (branch `issue-15-19`) and issue #20 (branch `issue-20`), with Richard's answers applied. See "Integration run · issues #15, #19 and #20" at the end of this file. It lists what each issue changed, the decisions from Richard's comments and answers, the fixes made during the integration, and the items that still wait for Richard.
+> **Current state (2026-11-24, after PR #21).** Branch `integration/2026-11-24`, not pushed. Max's PR #21 (issues #14 and #16) merged into `main` first (e2a3e67), as Richard chose. Then one merge commit (0ce0ac4) brought `main` and `fix/taken-course-grading` into this branch. The fix branch (41090c9) holds Blocker 2 from the review of #21: a taken course keeps its Pass/Fail grading, units and planner lock. Follow-up commits hold the fixes from the checks and the two reviews. The branch now holds issues #14, #15, #16, #19 and #20. The section "Merge of PR #21 into the integration branch" at the end of this file has the details. It gives the conflict resolutions, the feature checklist, the test inventory, the checks and what waits for Richard. The backup of the branch before the merge is `integration/2026-11-24-before-21` (9619786).
+>
+> **Earlier state (2026-11-24, integration).** Branch `integration/2026-11-24`, not pushed: `main` plus issues #15 and #19 (branch `issue-15-19`) and issue #20 (branch `issue-20`), with Richard's answers applied. See "Integration run · issues #15, #19 and #20" at the end of this file. It lists what each issue changed, the decisions from Richard's comments and answers, the fixes made during the integration, and the items that still wait for Richard.
 >
 > **Hand-off for the integration run (branch `issue-15-19`, 2026-11-24; done by the integration run above).** This branch was built while another session used the shared Docker stack, so it did not run `make up`, `make e2e`, `make migrate`, `make seed` or `make screenshots`, and it did not rebase. Before merging:
 > 1. Rebase on `main`. Migrations, in this order: `0005_drop_pathway` (issue #15, down_revision `0004`), then `0006_drop_feed_categories` (issue #19, down_revision `0005_drop_pathway`). If `main` already has another migration after `0004`, set `0005_drop_pathway`'s `down_revision` to the newest one there and keep `0006_drop_feed_categories` after `0005_drop_pathway`.
@@ -20,14 +22,13 @@
 >
 > **Earlier state (2026-11-24).** Branch `issue-15-19`: issue #15 (four tabs, no Ask page, no companion, no routes) and issue #19 (the Feed moved into the Catalog page `/courses`; the list of new courses waits on Richard, OPEN_QUESTIONS S19-N1). The campus companion of 2026-11-20 is otherwise as below.
 >
-> **Earlier state (2026-11-20).** On branch `feature/best-of-uchicago`: the course-title chapel homepage, now titled "The Best of UChicago, within your reach." with a question bar for the new Ask chatbot, plus the campus companion (Ask, a companion on every page, the dashboard with the interviewing guide and routes, the feed, the Commons). See "Campus companion" at the end of this file, `docs/BEST-OF-UCHICAGO-PLAN.md`, and OPEN_QUESTIONS CC-1 to CC-8.
-> **Current state (2026-11-24).** Issues #14 (the student record and `student.md`) and #16 (two-step registration and the changed dashboard agent) are built on branch `claude/open-decision-meaning-70518f`; see "Student record and dashboard" at the end of this file and OPEN_QUESTIONS SR-1 to SR-6. Issue #15 (site structure: four tabs, no Ask page, no companion, no routes) is Richard's, on another branch; the routes, Ask and companion code is still here until it lands.
+> **Earlier state (2026-11-24, PR #21).** Issues #14 (the student record and `student.md`) and #16 (two-step registration and the changed dashboard agent) are built on branch `claude/open-decision-meaning-70518f`; see "Student record and dashboard" at the end of this file and OPEN_QUESTIONS SR-1 to SR-6. Issue #15 (site structure: four tabs, no Ask page, no companion, no routes) is Richard's, on another branch; the routes, Ask and companion code is still here until it lands.
 >
-> **Before that (2026-11-20).** On branch `feature/best-of-uchicago`: the course-title chapel homepage, now titled "The Best of UChicago, within your reach." with a question bar for the new Ask chatbot, plus the campus companion (Ask, a companion on every page, the dashboard with the interviewing guide and routes, the feed, the Commons). See "Campus companion" at the end of this file, `docs/BEST-OF-UCHICAGO-PLAN.md`, and OPEN_QUESTIONS CC-1 to CC-8.
+> **Earlier state (2026-11-20).** On branch `feature/best-of-uchicago`: the course-title chapel homepage, now titled "The Best of UChicago, within your reach." with a question bar for the new Ask chatbot, plus the campus companion (Ask, a companion on every page, the dashboard with the interviewing guide and routes, the feed, the Commons). See "Campus companion" at the end of this file, `docs/BEST-OF-UCHICAGO-PLAN.md`, and OPEN_QUESTIONS CC-1 to CC-8.
 >
 > **Earlier state (2026-11-16).** Every prompt (00-13) has been run (the schedule scraper stays switched off until the University allows scraping); the owner's FEEDBACK items are all resolved (index at the top of "Done" in `docs/FEEDBACK.md`). The latest work, at the end of this file: the design pass with Impeccable (D1-D11, `docs/DESIGN-REVIEW.md`), TRNC 10100 transfer credit, and the advisor's cut-off replies (output limit 800 to 4000; a cut-off reply now stops the run). The project moved from `quadplan-kit/` to the repository root for GitHub.
 >
-> `make check` and `make e2e` pass on `integration/2026-11-24` (the end-to-end stack gives the generator 20 s, and journey C records its year preference as a gap, OPEN_QUESTIONS E2E-2 and INT-1). AI features run only with `LLM_LIVE=true`. Open decisions: the "Start here" block of `docs/OPEN_QUESTIONS.md`. Suggested next steps: "Later" in `docs/FEEDBACK.md`.
+> `make check` and `make e2e` pass on `integration/2026-11-24` at 27410b3, after the merge of PR #21. The end-to-end stack gives the generator 20 s, and journey C can record its year preference as a gap (OPEN_QUESTIONS E2E-2 and INT-1). AI features run only with `LLM_LIVE=true`. Open decisions: the "Start here" block of `docs/OPEN_QUESTIONS.md`. Suggested next steps: "Later" in `docs/FEEDBACK.md`.
 >
 > The log below is chronological, one section per prompt or goal.
 
@@ -828,3 +829,148 @@ Max answered the open decisions on the issues (#14: no GPA, no freeform fields, 
 - **Spec review fixes (same day):** the planner refreshes credits and taken courses from the record when it opens and on Save keeps its own version only if the student changed them there (`recordKey`, `withRecord` in `features/planner/setup.ts`); a plan save keeps taken courses from before the plan's first quarter; downgrading 0005 copies the record back into each primary plan; `/account/export` includes the record of a student who only saved a plan; the privacy page lists the guide's memory, follows, feed categories and routes; a question counts as covered only when the student accepts or skips it, so an answer left unaccepted is asked again.
 - **Journeys:** `make e2e`'s stack steps were run on an isolated Compose project (`quarterly-e2e`, other ports, its own database), so the running stack and its database were not touched or migrated.
 - **Checks (after the review fixes):** `make check` all passed (planner_core 184, the other Python suites 794, vitest 219, golden 115 PASS, ruff, mypy, tsc, eslint, api-client check); the MSW browser suite 101 passed (61 screenshot tests skipped); journeys A-D 4 passed on the Docker stack with the fake LLM.
+
+## Merge of PR #21 into the integration branch (2026-11-24, branch `integration/2026-11-24`)
+
+Richard chose the order. Max's PR #21 (issues #14 and #16) merged into `main` first (e2a3e67, unchanged since the review). Then this branch changed to fit it. The goal: keep every new feature of both sides, and bring back nothing that either side removed.
+
+**Steps**
+1. **Safety.** The branch `integration/2026-11-24-before-21` keeps 9619786. Before any branch switch, `alembic downgrade 0004` rolled the local database back from `0006_drop_feed_categories`. Otherwise Alembic would treat #21's migrations as applied and skip them.
+2. **Blocker 2 first**, on its own branch `fix/taken-course-grading` from `github/main` (41090c9). It is described below.
+3. **One merge commit** (0ce0ac4) brought that branch, and with it `main`, into this branch. A rebase would repeat the conflicts in each of the 32 commits, so the merge resolves them once.
+4. **Follow-up commits.** 5420e03 fixes an e2e test that `make e2e` found. 259eb7f has the fixes from the spec and privacy reviews.
+
+**Blocker 2 (41090c9).** On Save, the planner made every taken course letter-graded, unlocked and without its units. The dashboard table and the registration form also dropped those fields. A Pass/Fail course could then count toward a rule that needs a letter grade (V12).
+- `TakenCourse` has `grading`, `units` and `locked`. `PATCH` and `GET /me/profile`, the account export and every saved plan keep them. `student.md` marks a Pass/Fail course.
+- Migration 0007 adds `student_course.locked`. It copies the lock from the old primary-plan copies, because 0005 copied grading and units but not the lock.
+- In `features/planner/setup.ts`, `withRecord()` and `planFromRecord()` keep the three fields, and `recordKey()` compares them. The new `planToSave()` holds the Save rule.
+- The dashboard table, the registration form and the MSW mock keep the fields of rows that they do not show.
+- These tests were written first, and each failed before the fix:
+  - setup.test.ts: three tests (open, Save, a planner change)
+  - AnswerControls.test.tsx: the dashboard edit
+  - test_profile_api.py: `test_taken_courses_keep_pass_fail_units_and_lock` (the profile save)
+  - test_student_record_plans.py: `test_a_taken_course_keeps_pass_fail_units_and_lock_through_save_and_reload` (the lock, and V12 after the reload)
+  - test_migrations.py: `test_0007_keeps_the_lock_of_a_taken_course`
+- The registration-form case in questions.test.ts came in with the fix. It was not run against the old code.
+- `spec-reviewer` (fresh context) found no gaps in 41090c9.
+
+**How the 39 conflicts were resolved**
+- **Files that this branch deleted stay deleted:** `agents/routes.py`, `feed/notes.py`, and the Ask, Feed, feed-notes and routes tests. #21's edits in them only adapted the removed features to the record. `WhatsNew.tsx` stays deleted (#16 D5).
+- **Files that #21 rewrote start from main's version.** Then the merge applied this branch's removals again: the routes, `feed_categories`, the companion and the digest.
+  - API: the dashboard agent, `profile_data.py`, `schemas/profile.py`, `db/models.py`, `routers/profile.py` and `campus_tools.py`.
+  - Web: the dashboard page, the guide card and overlay, `dashboard/api.ts`, `logic.ts` and the mocks.
+  - Also the prompt `a6_interview` and the tests of these files.
+  - In `prompts/a6_interview.md`, both sides went from version 1 to 2. Main's text has no routes or portrait, so it replaces this branch's version 2.
+  - `useDashboardUpdates` went, as in main: its only reader was "What's new". `GET /me/updates` stays on the server (#15 step 13).
+- **Small mixed cases:**
+  - TopNav: four tabs, with the label "Planner" (#15) and no `/onboarding` path (#16).
+  - `routes.test.tsx` and `shell.spec.ts`: #16's targets with #15's tab names.
+  - `get_profile`: the record fields, without the chosen route. Its tool description now lists the fields it returns.
+  - `llm_routing.yaml`: no a5, a7, a8 or a10, and a6 has `max_tokens` 4000.
+- **The journeys:** main's sign-up flow and plan setup card, with this branch's fixes. These are `dragUntilChecked` (journey A), the wait for Send (B), the year-preference gap (C) and the Catalog heading (D).
+- **Generated files** (`openapi.json`, `schema.d.ts`, `questions.json`) came from `make api-client`. **Docs** keep the entries of both sides. The SPEC sitemap takes `/`, `/ask`, `/feed` and `/forum` from this branch, and `/me` and `/onboarding` from main.
+- **Places where git's automatic merge was wrong**, found by a sweep and the checks:
+  - `profile_data.py` lost main's `CAMPUS_YEAR` and `normalize_code` import. The lost import line went with the routes.
+  - The logged-out dashboard took this branch's two-card spans on main's three cards.
+  - The browse spotlight test set the removed `interests` column.
+  - The privacy page still named feed categories and kept routes.
+  - `fixtures.ts` kept `feed_categories`.
+  - `course-chapel.spec.ts` (#15) expected "Start planning" to open `/onboarding`. It opens `/signup` since #16.
+  - The SPEC `student_profile` row listed `feed_categories`.
+- The resolution log for each file and an audit of each of this branch's hunks are in the run's scratchpad (`merge21/resolution-log.md`, `merge21/hunk-audit.txt`).
+
+**Migrations.** One chain after 0004:
+1. 0005: the student record (PR #21).
+2. 0006: no freeform fields (PR #21).
+3. 0007: the taken-course lock (Blocker 2).
+4. 0008: drop `pathway` (issue #15, was `0005_drop_pathway`).
+5. 0009: drop `feed_categories` (issue #19, was `0006_drop_feed_categories`).
+6. 0010: fill an empty record from the latest plan, then remove the old per-plan copies (the privacy review).
+
+`alembic heads` shows one head, 0010. Renaming the revision ids was safe: the old ids were never pushed, and the local database was at 0004 when the chain changed. `make migrate` took the local database to 0010.
+
+**Feature checklist.** Each row is one new feature of the five issues, Blocker 2 or the integration fixes. "Test" is a test that runs in `make check` or `make e2e` on this branch. "Seen" is a check by eye on this run's screenshots (`docs/screenshots/after-merge-21/`).
+
+| Issue | Feature | Evidence |
+|---|---|---|
+| #14 | `data/profile/questions.yaml` is the only question source. `GET /profile/questions` serves it. The web mock copy is current | test_profile_api: `test_the_questions_are_public_and_come_from_the_question_file`, `test_the_mock_copy_of_the_question_file_is_current` |
+| #14 | The record has the answer columns and `working_notes`, plus `student_credit` and `student_course`. 0005 copies each primary plan into it | test_migrations: `test_0005_copies_the_primary_plan_into_the_student_record`, `test_0005_downgrade_copies_the_record_back_into_the_primary_plan`, `test_models_match_migration`, `test_upgrade_downgrade_upgrade` |
+| #14 | Saved plans read and write the record. A new plan does not overwrite a record that has data. A save keeps the courses from before the first quarter | test_student_record_plans (all 8 tests) |
+| #14 | The import on login fills an empty record | plans.spec "my plans: duplicate, compare, import on login" · `test_a_new_plan_fills_an_empty_record` |
+| #14 | `student.md` has four groups in a fixed order and "Not answered", with no email or username. The download is login only. `/account/export` includes it | test_profile_api: `test_student_md_is_a_download_without_the_email_or_username`, `test_student_md_has_a_fixed_order_and_says_not_answered`, `test_everything_needs_login`, `test_export_profile_has_the_record_without_the_email` · `test_the_account_export_has_the_record_of_a_student_who_only_saved_a_plan` |
+| #14 | The privacy page lists each stored answer and its use. It says no resume and no GPA | routes.spec "route /privacy" · Seen: privacy |
+| #16 | Sign-up step 4 "About you". The transfer checkbox opens the entry quarter, year, credits and taken courses. Then "Answer a few more questions" or "Skip for now" | auth.test "walks email, code, username and password, then About you" · dashboard.spec "registration: a transfer student enters credits and taken courses, then answers the guide" · Seen: signup-about |
+| #16 | "Start planning" opens `/signup` when logged out and `/plan` when logged in | shell.spec "home and app shell" · course-chapel.spec · journey A step A1 |
+| #16 | `/onboarding` opens `/me`. The planner shows the "Set up a plan from your information" card | onboarding.spec (3 tests) · routes.test "/onboarding" · journeys A and C (`setUpPlanFromRecord`) · Seen: plan-setup |
+| #16 | The dashboard agent asks the 8 step-2 questions, with the options plus Skip. It maps a typed answer or asks again. It saves only after Accept. It has the rule fallback, no portrait, the welcome-back cache, and `max_tokens` 4000 | test_interview_api (19 tests), test_interview_mapper (8 tests) · logic.test proposals and memory · dashboard.spec · `llm_routing.yaml` |
+| #16 | `/me` has the Profile card, the four General Information panels (each answer edited in place), "Complete your profile", "Ask the guide", a read-only "Your plan" and "Export my information (.md)". It has no freeform cards, no portrait and no "What's new" | dashboard.spec "the dashboard: profile card, answers changed in place, the plan summary and the export" · sweep · Seen: dashboard |
+| #16 | 0006 drops the freeform columns and keeps `interview` | `test_models_match_migration`, `test_old_freeform_fields_are_not_kept` |
+| #16 | The FEEDBACK "Later" items: the calendar, starred courses, posts and reviews, a picture | `docs/FEEDBACK.md` "Later" |
+| Blocker 2 | A taken course keeps Pass/Fail, units and its lock through the planner (open and Save), a dashboard edit, the profile save, the registration form and a reload. V12 still refuses it where a letter grade is needed | the tests listed under "Blocker 2" above |
+| #15 | Four tabs in order: Dashboard, Planner, Catalog, Forum. The wordmark opens `/` | routes.test "has four tabs in order..." · shell.spec |
+| #15 | The homepage has no question bar and no "Try" buttons. Phones show the top bar's search | campus.spec "the homepage has no question bar, and the old Ask page opens the planner" · shell.spec "phone width..." · Seen: home |
+| #15 | No Ask page and no companion. `/ask` opens `/plan`. `Citer` is in `agents/runtime.py`, and the Commons bot uses it | campus.spec "no page has the companion orb" · routes.test "sends the old Ask page to the planner" · test_citer · test_commons_bot |
+| #15 | `GET /me/updates` stays, without the digest | test_updates_api (6 tests) |
+| #15 | The routes are gone: UI, API, agent, task, model, export key, `get_profile` and `interests_of()`. The guide never offers routes | `test_the_routes_are_gone` · `test_export_profile_has_the_record_without_the_email` (no routes key) · `test_followed_courses_and_interest_matches` · sweep |
+| #15 | 0008 drops the `pathway` table | `test_models_match_migration` · local database checked |
+| #19 | `/courses` is "Catalog": the search, filters and the Courses/Programs switch, with browse rows before a search | courses.spec "the Catalog shows browse rows until a search..." · browse.test · Seen: courses |
+| #19 | Ratings show for logged-in students on the rows and the results (`GET /course-ratings`, keyed by account). Others see a login line | courses.spec "a logged-in student sees ratings..." · browse.test "hides the ratings at once when the student logs out" · `test_course_ratings_need_a_login_and_pool_the_reviews` |
+| #19 | The spotlight and quote rules. A spotlight's Forum link opens the discussions | test_browse_api spotlight and quote tests · browse.test |
+| #19 | `new_courses.yaml` needs a quote for each course. A second catalog year works. A broken file hides only its row | `test_new_courses_come_from_the_hand_written_list`, `test_a_listed_course_needs_a_quote`, `test_a_second_catalog_year_shows_what_is_new`, `test_a_small_or_empty_earlier_year_shows_nothing_as_new`, `test_the_new_courses_list_is_valid_and_quotes_every_source` |
+| #19 | The Feed is gone. `/feed` opens `/courses`. The homepage says "Explore the catalog" | `test_the_feed_endpoints_are_gone` · courses.spec "the old Feed opens the Catalog..." · browse.test "sends the old Feed page to the Catalog" |
+| #19 | 0009 drops `feed_categories`. It is also gone from the API, the record, the export and the privacy page | `test_models_match_migration` · sweep · local database checked |
+| #20 | `/forum` shows reviews and discussions in one list, newest first, with filters and a keyset cursor | test_forum_board · forum.spec "/forum: a New post button..." · commons.test |
+| #20 | `GET /forum/stats` gives rankings with the Bayesian average (k = 5, at least 3 reviews). It is login only, in the left third, and above the list on phones | test_forum_board ranking and statistics tests · forum.spec "/forum layout..." |
+| #20 | "New post" opens `/forum/new` | forum.spec |
+| #20 | The Commons bot answers as "Quarterly" in at most 60 words. It gets one repair turn. The clip never ends inside a link. The fallback also fits | test_commons_bot, test_commons_words |
+| Integration | `load_catalog` keeps one copy for each API process. `WORKER_HEALTHCHECK_S` is 60. The e2e stack's solver has 20 s, and the app's has 4 s | test_rules_cache "course pages reuse one catalog copy" · `services/api/Dockerfile` · `docker-compose.e2e.yml` · the journeys |
+| Integration | The journey fixes (A's drag, B's wait for Send, C's gap, D's heading) and the screenshot headings | the four journeys in `make e2e` · `make screenshots` |
+
+**Test inventory.** The run collected every test name at three points: `fix/taken-course-grading`, 9619786 and the merged branch. It used pytest `--collect-only`, `vitest list` and `playwright test --list` for both suites.
+- 103 tests from a parent are not in the merged branch: 66 pytest, 28 vitest, 8 Playwright and 1 journey.
+- Each of them was in the common base, and one side's issue removed or renamed it:
+  - **#15:** the Ask and companion tests, the routes tests, and the route and digest cases in test_updates_api. A renamed test (`test_followed_courses_and_interest_matches`) and `test_the_digest_option_is_gone` replace the last two.
+  - **#19:** the Feed, feed-notes and feed-unit tests for the parts that went. The courses.spec "lists nothing until a search" test became "shows browse rows until a search".
+  - **#20:** a renamed Commons test.
+  - **#14 and #16:** the old guide's topics and portrait (test_interview_api, logic.test), and the freeform `test_patch_cleans_lists_and_scrubs_text`. Also the onboarding wizard test and its two screenshots. The sign-up and journey A tests were renamed.
+- No test that is new on either side is missing.
+- The table, with each issue step and each replacement, is `merge21/test-inventory.md` in the run's scratchpad. The merged branch has 679 pytest names, 214 vitest tests, 164 Playwright tests and 4 journeys.
+
+**Reviews (fresh context)**
+- **`spec-reviewer` on the merge** found one must-fix: the SPEC `student_profile` row still listed `feed_categories`. It found two minor items: stale comments in `routers/updates.py` and `mocks/updates.ts`, and the course-chapel test (already fixed in 5420e03). All are fixed.
+- **`security-privacy-reviewer` on the merge** found two must-fix items and three minor ones. All are fixed in 259eb7f.
+  - Must-fix: 0005 left the old per-plan copies of credits and taken courses, with grades, in `credit` and `plan_item`. Nothing showed or exported them, and a grade that the student removed stayed there. Migration 0010 removes them.
+  - Must-fix: the privacy page did not say that the dashboard guide sends the General Information (with grades) and the conversation to the AI provider. Its step-2 rows also named a planner agent that is not built yet. The page now says what reads each answer today.
+  - Minor: the guide's cached greeting stayed in Redis for up to 6 hours after the account was deleted. Now there is one key for each account, and account deletion deletes it.
+  - Minor: `/catalog/browse` and `/course-ratings` had no `Cache-Control`. Both now send `private, no-store`.
+  - Minor: the export and deletion text and two comments were out of date.
+- Both reviewers then checked the fix commits again. All earlier findings were resolved, and each found one more minor item. Both are fixed in the last commit.
+  - The spec review found that 0010 would delete the copies of an account that had plans but no primary plan when 0005 ran. 0005 never filled that account's record. Now 0010 first fills such an empty record from the account's most recently updated plan. `test_0010_fills_an_empty_record_before_it_removes_the_copies` covers it.
+  - The privacy review found that the canned welcome-back text contains the username, so "the username is never sent" could become false. The page now says only that the email address is never sent, as before.
+
+**Checks on this branch** (the last code commit is 27410b3)
+- **`make api-client`:** exit 0, after every API change. `make check`'s client check passes.
+- **`make check`:** all passed at 27410b3: ruff, eslint, mypy, tsc, planner_core 184, API and services 778, web 212 (25 files), golden PASS=115. It also passed at 0ce0ac4 (API 777) and 259eb7f.
+- **`alembic heads`:** one head, 0010. `make migrate` took the local database from 0004 to 0007 (on the fix branch), then 0009, then 0010.
+  - The local database had no old per-plan copies when 0010 first ran. So the later change to 0010 (fill an empty record first) changes nothing there.
+- **`make e2e`:** four runs.
+  - At 0ce0ac4: the browser suite had 1 failure (`course-chapel.spec.ts`, fixed in 5420e03) and 102 passed, so the journeys did not run.
+  - At 5420e03, 259eb7f and 27410b3: the browser suite had 103 passed and 61 skipped (the screenshot specs), and journeys A to D passed. Exit 0 each time.
+  - The journeys recorded only the known gaps A3, A4, B3, B4 and B5. Journey C met its year preference.
+- **`make up`:** all six services are healthy. `LLM_FAKE` and `GENERATE_SOLVER_SECONDS` are empty again, so the stack is the real one.
+- **`SCREENSHOTS_DIR=after-merge-21 make screenshots`:** 61 passed. `docs/screenshots/after-merge-21/` has each page at 1440 and 390 px.
+  - Checked by eye:
+    - home: four tabs, no question bar, "Start planning" and "Explore the catalog"
+    - dashboard: the Profile card, the guide with options and Skip, the four panels, the export, "Your plan", and no routes or "What's new"
+    - signup-about: step 4 with the transfer fields
+    - plan-setup: the setup card, and no companion button
+    - courses: "Catalog", the rows and the login line for ratings
+    - privacy: the new text
+  - The "forum" shot is an instructor page. `/forum` itself is covered by forum.spec.
+- **No push, no GitHub post and no paid model call.** The tests use FakeLLM, and the journeys use the e2e stack's fake LLM.
+
+**Waits for Richard** (OPEN_QUESTIONS M21-1 to M21-3)
+- **M21-1:** should the dashboard guide receive grades? It sends the whole `student.md` to the model, but the step-2 questions do not use grades.
+- **M21-2:** `GET /me/updates` has no reader since "What's new" went. Keep it or remove it?
+- **M21-3:** the guide's resume can count an answer that the student did not accept as covered. This is from the review of #21.
+- The goal named a chain that ends at 0009. The privacy review added 0010, which removes data that nothing reads. Its downgrade cannot bring the rows back.
