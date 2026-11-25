@@ -275,7 +275,8 @@ def test_0007_keeps_the_lock_of_a_taken_course(fresh_db_url: str) -> None:
 def test_0010_fills_an_empty_record_before_it_removes_the_copies(fresh_db_url: str) -> None:
     """0005 filled the record from the primary plan only. For an account with plans but no
     primary plan, 0010 first fills the empty record from the most recently updated plan, so
-    removing the per-plan copies loses nothing. An account that has a record keeps it."""
+    removing the per-plan copies loses nothing. An account with a primary plan whose record the
+    student emptied stays empty: the old copies never bring deleted grades back."""
     cfg = alembic_config(fresh_db_url)
     engine = create_engine(fresh_db_url)
     command.upgrade(cfg, "0004")
@@ -317,13 +318,51 @@ def test_0010_fills_an_empty_record_before_it_removes_the_copies(fresh_db_url: s
                 ),
                 {"plan": plan, "course": course, "grade": "P" if name == "Newer" else "A"},
             )
+        # A second account with a primary plan: 0005 fills its record from it.
+        emptied = "00000000-0000-0000-0000-000000000005"
+        conn.execute(
+            text(
+                "INSERT INTO account (id, username, email, email_verified_day) VALUES "
+                f"('{emptied}', 'otter', 'o@uchicago.edu', CURRENT_DATE)"
+            )
+        )
+        primary = conn.execute(
+            text(
+                "INSERT INTO plan (id, account_id, name, catalog_year, entry_term, is_primary) "
+                f"VALUES (gen_random_uuid(), '{emptied}', 'Main', '2026-27', '2025-AU', true) "
+                "RETURNING id"
+            )
+        ).scalar_one()
+        conn.execute(
+            text("INSERT INTO credit (plan_id, kind, label, units) VALUES (:p, 'AP', 'Old', 100)"),
+            {"p": primary},
+        )
+        conn.execute(
+            text(
+                "INSERT INTO plan_item (plan_id, course_id, term_id, status, grade) "
+                "VALUES (:p, :course, '2025-AU', 'completed', 'B')"
+            ),
+            {"p": primary, "course": course},
+        )
+    command.upgrade(cfg, "0009")
+    with engine.begin() as conn:
+        # The student then empties the record on the dashboard.
+        for table in ("student_credit", "student_course"):
+            conn.execute(text(f"DELETE FROM {table} WHERE account_id = '{emptied}'"))
     command.upgrade(cfg, "head")
     with engine.connect() as conn:
         assert conn.execute(text("SELECT label FROM student_credit")).scalars().all() == [
             "AP from Newer"
         ]
-        taken = conn.execute(text("SELECT grading, grade FROM student_course")).all()
-        assert [tuple(t) for t in taken] == [("pass_fail", "P")]
+        taken = conn.execute(
+            text("SELECT account_id::text, grading, grade FROM student_course")
+        ).all()
+        assert [tuple(t) for t in taken] == [(account, "pass_fail", "P")]
+        # Its profile row now exists, with the plan's first quarter as the answer.
+        entry = conn.execute(
+            text("SELECT entry_term FROM student_profile WHERE account_id = :a"), {"a": account}
+        ).scalar_one()
+        assert entry == "2025-AU"
         assert conn.execute(text("SELECT count(*) FROM credit")).scalar_one() == 0
         assert conn.execute(text("SELECT count(*) FROM plan_item")).scalar_one() == 0
     engine.dispose()
