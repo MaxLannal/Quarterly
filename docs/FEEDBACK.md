@@ -82,7 +82,7 @@ Write down each thing that you see: something that is broken, something that is 
 
 ### Follow-ups noticed while doing GitHub issues #15 and #19 (suggested by Claude, 2026-11-24; not yet asked for)
 - No page lets a student follow a course now, because the routes and the buttons of the Feed are gone. But the spotlights of the Catalog and "What's new" on the dashboard still use followed courses. A "Follow" button on the course page would restore that function.
-- Since the companion is gone, nothing marks "What's new" as seen (`POST /me/updates/seen` has no caller). Thus its "New" dots show for one week. Issue #16 decides if the card stays.
+- Since the companion is gone, nothing marks "What's new" as seen (`POST /me/updates/seen` has no caller). Thus its "New" dots show for one week. Issue #16 decides if the card stays. (No longer applies: issue #16 removed the card, and `GET /me/updates` was removed on 2026-11-25, OPEN_QUESTIONS M21-2.)
 - The README screenshots of the homepage and the Feed show parts that are removed (the question bar, the Feed). Make these screenshots again after the integration run.
 
 ## Done

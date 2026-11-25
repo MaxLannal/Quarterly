@@ -1073,7 +1073,8 @@ class InterviewRun:
     def _ask_model(self, ctx: Context) -> InterviewTurnEvent | None:
         question = ctx.answering()
         rules = read_reply(question, ctx.message) if question is not None else None
-        student_md = render_student_md(self.db, self.row)
+        # No grades: the questions do not need them, and this goes to the AI provider (M21-1).
+        student_md = render_student_md(self.db, self.row, grades=False)
         record_codes = set(_codes(student_md))
         prompt = load_prompt(PROMPT)
 
@@ -1119,6 +1120,8 @@ class InterviewRun:
                     result = item
         except AgentError as exc:
             logger.warning("%s: no turn, the rules answered (%s)", TASK, exc.reason)
+        except Exception as exc:  # any other failure: the rules answer, the stream goes on
+            logger.warning("%s: no turn, the rules answered (%s)", TASK, type(exc).__name__)
         finally:
             self._save_log()
         if result is None:

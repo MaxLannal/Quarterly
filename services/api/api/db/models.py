@@ -703,7 +703,8 @@ class StudentProfile(Base):
     interview: Mapped[dict[str, Any]] = mapped_column(JSONB, server_default="{}")
     #: {threads: [commons_thread.id], courses: [course code]}.
     follows: Mapped[dict[str, Any]] = mapped_column(JSONB, server_default="{}")
-    #: High-water marks of what the student has seen (/me/updates): {thread, reply, post, comment}.
+    #: High-water marks of the removed update alerts ({thread, reply, post, comment}). Nothing
+    #: reads or writes them since GET /me/updates went (OPEN_QUESTIONS M21-2); still exported.
     updates_seen: Mapped[dict[str, Any]] = mapped_column(JSONB, server_default="{}")
     created_day: Mapped[dt.date] = mapped_column(server_default=TODAY)
     updated_day: Mapped[dt.date] = mapped_column(server_default=TODAY)

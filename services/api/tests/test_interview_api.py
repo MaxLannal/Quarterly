@@ -80,6 +80,30 @@ class Talk:
         return turn
 
 
+def test_accepting_an_answer_keeps_every_other_answer(env: Env) -> None:
+    """Richard's report (2026-11-25): after sign-up and the whole guide, the dashboard was empty.
+    Each turn sent `proposed` with every field of ProfilePatch, the unasked ones as null, and the
+    browser PATCHes it as it is when the student accepts, so each accepted answer cleared all the
+    others (the sign-up answers too). A turn now proposes only the answered field."""
+    headers = login(env)
+    about = {"class_year": 2029, "entry_term": "2025-AU", "intended_programs": ["phys-bs"]}
+    assert env.client.patch("/me/profile", json=about, headers=headers).status_code == 200
+    history: list[dict[str, Any]] = []
+    t = ask(env, headers, "start")
+    for reply in ("Graduate school", "On time"):
+        history.append({"role": "guide", "text": t["text"], "topic": t["topic"]})
+        t = ask(env, headers, "reply", reply, history)
+        history.append({"role": "student", "text": reply})
+        assert list(t["proposed"]) == [t["answered"]], t["proposed"]
+        # What the browser sends on Accept: the proposal exactly as the server sent it.
+        resp = env.client.patch("/me/profile", json=t["proposed"], headers=headers)
+        assert resp.status_code == 200, resp.text
+    record = env.client.get("/me/profile").json()
+    assert record["class_year"] == 2029 and record["entry_term"] == "2025-AU"
+    assert record["intended_programs"] == ["phys-bs"]
+    assert record["post_grad_plan"] == "grad_school" and record["pace"] == "on_time"
+
+
 def guide(topic: str, text: str = "A question?") -> list[dict[str, Any]]:
     return [{"role": "guide", "text": text, "topic": topic}]
 
@@ -267,6 +291,34 @@ def test_the_model_writes_the_question_and_the_server_reads_the_answer(env: Env)
     assert '<untrusted_source id="student_md">' in first and "# Student record" in first
     # The model never sees the email or the username.
     assert "quiet-heron" not in first and "uchicago.edu" not in first
+
+
+def test_the_model_gets_no_grades(env: Env) -> None:
+    """OPEN_QUESTIONS M21-1, Richard's answer: leave the grades out of the guide's copy of
+    student.md. The taken course is there, its grade and Pass/Fail are not; the export keeps
+    them."""
+    headers = login(env)
+    taken = {"course": "CMSC 14100", "term": "2025-AU", "grade": "A-", "grading": "pass_fail"}
+    resp = env.client.patch("/me/profile", json={"taken_courses": [taken]}, headers=headers)
+    assert resp.status_code == 200, resp.text
+    fake = use_llm(env, script(turn("How fast do you want to graduate?", "pace")))
+    ask(env, headers, "reply", "Graduate school", guide("post_grad_plan"))
+    first = fake.calls[0]["messages"][0]["content"]
+    assert "CMSC 14100" in first
+    assert "A-" not in first and "Pass/Fail" not in first
+    export = env.client.get("/me/profile/export.md").text
+    assert "grade A-, Pass/Fail" in export
+
+
+def test_any_model_failure_falls_back_to_the_rules(env: Env) -> None:
+    """Journey E (2026-11-25): a model error that is not an AgentError (here the e2e fake's
+    ValueError) ended the stream, so the guide's dialog closed with no answer to accept. Any
+    failure now leaves the turn to the rules, as SPEC asks of every harness."""
+    headers = login(env)
+    use_llm(env, FakeLLM(script={"a6_interview": [RuntimeError("provider exploded")]}))
+    t = ask(env, headers, "reply", "Graduate school", guide("post_grad_plan"))
+    assert t["fallback"] is True and t["topic"] == "pace"
+    assert t["proposed"] == {"post_grad_plan": "grad_school"}
 
 
 def test_the_model_maps_a_typed_answer_the_rules_cannot_read(env: Env) -> None:

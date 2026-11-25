@@ -288,7 +288,7 @@ export default function CommonsThreadPage() {
                         disabled={follow.isPending}
                         onClick={() =>
                           follow.mutate(!detail.following, {
-                            onSuccess: (o) => toast.show(o.following ? "Following: new replies show in your updates" : "Unfollowed"),
+                            onSuccess: (o) => toast.show(o.following ? "Following" : "Unfollowed"),
                           })
                         }
                         className={cn(detail.following && "text-primary")}

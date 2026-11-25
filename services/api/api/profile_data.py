@@ -408,9 +408,15 @@ def _md_text(text: str) -> str:
 
 
 def _value_line(
-    db: Session, question: Question, value: Any, labels: dict[str, dict[str, str]]
+    db: Session,
+    question: Question,
+    value: Any,
+    labels: dict[str, dict[str, str]],
+    *,
+    grades: bool = True,
 ) -> list[str]:
-    """The Markdown for one answer: one line, or a line and indented sub-items."""
+    """The Markdown for one answer: one line, or a line and indented sub-items. Without
+    `grades`, a taken course shows no grade and no Pass/Fail."""
     head = f"- {question.label}:"
     if not _has_answer(question, value):
         return [f"{head} {NOT_ANSWERED}"]
@@ -434,9 +440,9 @@ def _value_line(
         for c in value:
             status = labels.get("status", {}).get(c.status, c.status)
             title = f" {_md_text(c.title)}" if getattr(c, "title", "") else ""
-            grade = f", grade {c.grade}" if c.grade else ""
+            grade = f", grade {c.grade}" if grades and c.grade else ""
             # A rule that needs a letter grade does not count a Pass/Fail course.
-            grading = ", Pass/Fail" if c.grading == "pass_fail" else ""
+            grading = ", Pass/Fail" if grades and c.grading == "pass_fail" else ""
             lines.append(f"  - {c.term} {c.course}{title}: {status}{grade}{grading}")
         return lines
     if field == "terms_away":
@@ -460,11 +466,15 @@ def _value_line(
     return [f"{head} {question.label_of(value) or value}"]
 
 
-def render_student_md(db: Session, row: m.StudentProfile, *, working_notes: bool = False) -> str:
+def render_student_md(
+    db: Session, row: m.StudentProfile, *, working_notes: bool = False, grades: bool = True
+) -> str:
     """The student record as `student.md` (Issue #14): what the agents read about the student
     and what the student exports. The General Information comes first, in the question file's
     groups and order; every unanswered question says "Not answered". `working_notes` adds the
     working information from the planner chat (the export and the planner agent ask for it).
+    `grades=False` leaves each taken course's grade and Pass/Fail out: the dashboard agent's
+    copy, which goes to the AI provider and needs no grades (OPEN_QUESTIONS M21-1).
     Never contains the email or the username."""
     qs = question_set()
     credits = record_credits(db, row.account_id)
@@ -481,7 +491,7 @@ def render_student_md(db: Session, row: m.StudentProfile, *, working_notes: bool
         out += ["", f"### {group.title}", ""]
         for question in qs.in_group(group.id):
             value = _answer(row, question, credits, courses)
-            out += _value_line(db, question, value, qs.labels)
+            out += _value_line(db, question, value, qs.labels, grades=grades)
     if working_notes:
         out += [
             "",

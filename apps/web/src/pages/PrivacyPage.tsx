@@ -109,10 +109,11 @@ function GeneralInformation() {
         </li>
         <li>
           <strong>What you follow:</strong> the courses and Commons questions you follow, for the course spotlights on the
-          Catalog page and for alerts about new posts.
+          Catalog page.
         </li>
         <li>
-          <strong>What you have seen:</strong> the newest post the update alerts already showed you, so they show only new ones.
+          <strong>What you had seen:</strong> a mark kept from the old update alerts. Quarterly no longer shows those alerts,
+          and nothing reads or changes this mark.
         </li>
       </ul>
     </>
@@ -212,9 +213,9 @@ export default function PrivacyPage() {
         When the AI features are on, what you type to the advisor and your plan are sent to an AI
         provider (Anthropic, with OpenRouter as a backup) to write the answer, after email
         addresses and phone numbers are removed. When you talk with your dashboard guide, your
-        General Information (including your credits and your taken courses with their grades) and
-        your conversation with the guide are sent the same way, so it can choose and word its next
-        question. Forum posts are sent too, to write the “What students say” summaries and when the
+        General Information (including your credits and your taken courses, but not their grades)
+        and your conversation with the guide are sent the same way, so it can choose and word its
+        next question. Forum posts are sent too, to write the “What students say” summaries and when the
         advisor looks them up. Your email address is never sent. Advisor chats are
         kept for 30 days, and are deleted with their plan.
       </p>

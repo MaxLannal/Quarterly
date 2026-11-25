@@ -75,9 +75,6 @@ EXPECTED = {
     ("post", "/admin/moderation/{target_type}/{target_id}/end-suspension"),
     # homepage scene (FEEDBACK "ASCII Scene")
     ("get", "/weather"),
-    # campus companion (docs/BEST-OF-UCHICAGO-PLAN.md) -- what's new (POST /agents/ask went in #15)
-    ("get", "/me/updates"),
-    ("post", "/me/updates/seen"),
     # -- me (dashboard)
     ("get", "/profile/questions"),
     ("get", "/me/profile"),

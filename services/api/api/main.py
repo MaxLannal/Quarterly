@@ -23,7 +23,6 @@ from api.routers import (
     forum,
     plans,
     profile,
-    updates,
     verify,
     weather,
 )
@@ -74,7 +73,8 @@ def create_app() -> FastAPI:
         app.include_router(module.router)
     # Campus companion (docs/BEST-OF-UCHICAGO-PLAN.md); the Ask chatbot went in issue #15.
     # The Feed went in issue #19: its spotlights and quotes are the Catalog's rows (browse).
-    for module in (updates, profile, commons):
+    # What's new (/me/updates) went after issue #16 removed its card (OPEN_QUESTIONS M21-2).
+    for module in (profile, commons):
         app.include_router(module.router)
     return app
 

@@ -964,40 +964,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/me/updates": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Updates */
-        get: operations["updates_me_updates_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/me/updates/seen": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Updates Seen */
-        post: operations["updates_seen_me_updates_seen_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/plans": {
         parameters: {
             query?: never;
@@ -5475,65 +5441,6 @@ export interface components {
             /** Term */
             term?: string | null;
         };
-        /**
-         * UpdateItem
-         * @description One new thing on Quarterly that concerns the student. Text is plain (no markdown) and
-         *     scrubbed of emails and phone numbers; `href` is a path on this site.
-         */
-        UpdateItem: {
-            /** Course Code */
-            course_code?: string | null;
-            /**
-             * Day
-             * Format: date
-             */
-            day: string;
-            /** Href */
-            href: string;
-            /** Id */
-            id: number;
-            /** Is New */
-            is_new: boolean;
-            /**
-             * Kind
-             * @enum {string}
-             */
-            kind: "thread" | "reply" | "review" | "discussion" | "comment";
-            /** Reason */
-            reason: string;
-            /** Snippet */
-            snippet: string;
-            /** Title */
-            title: string;
-        };
-        /** UpdatesOut */
-        UpdatesOut: {
-            /**
-             * Items
-             * @default []
-             */
-            items: components["schemas"]["UpdateItem"][];
-            /**
-             * Unread
-             * @default 0
-             */
-            unread: number;
-        };
-        /**
-         * UpdatesSeen
-         * @description High-water marks: the newest id the student has seen of each kind of item. In a request
-         *     a missing mark means "the newest there is now"; marks never move backwards.
-         */
-        UpdatesSeen: {
-            /** Comment */
-            comment?: number | null;
-            /** Post */
-            post?: number | null;
-            /** Reply */
-            reply?: number | null;
-            /** Thread */
-            thread?: number | null;
-        };
         /** ValidationError */
         ValidationError: {
             /** Context */
@@ -7977,59 +7884,6 @@ export interface operations {
                 };
                 content: {
                     "text/plain": components["schemas"]["ErrorOut"];
-                };
-            };
-        };
-    };
-    updates_me_updates_get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["UpdatesOut"];
-                };
-            };
-        };
-    };
-    updates_seen_me_updates_seen_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": components["schemas"]["UpdatesSeen"] | null;
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["UpdatesSeen"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };

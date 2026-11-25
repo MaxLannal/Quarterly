@@ -19,7 +19,6 @@ import {
   summary,
 } from "./data";
 import { agentHandlers, generateVariants } from "./agents";
-import { resetUpdatesMock, updatesHandlers } from "./updates";
 import { commonsHandlers, resetCommonsMock } from "./commons";
 import { browseHandlers } from "./browse";
 import { profileHandlers, resetProfileMock } from "./profile";
@@ -116,7 +115,6 @@ export function resetMockState() {
   setLoggedIn(false);
   resetForumMock();
   resetReviewMock();
-  resetUpdatesMock();
   resetCommonsMock();
   resetProfileMock();
 }
@@ -127,7 +125,6 @@ export function resetMockState() {
 
 export const handlers = [
   // Campus companion (docs/BEST-OF-UCHICAGO-PLAN.md): one file per work stream.
-  ...updatesHandlers,
   ...profileHandlers,
   ...browseHandlers,
   ...commonsHandlers,

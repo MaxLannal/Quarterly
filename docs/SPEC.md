@@ -346,6 +346,10 @@ The General Information questions are written one time, in `data/profile/questio
 
 `student.md` never contains the email or the username. The agents read it, in place of the old profile summary. The student downloads it from the dashboard (`GET /me/profile/export.md`). It is also part of `/account/export`.
 
+The dashboard agent's copy of `student.md` has no grades and no Pass/Fail for the taken courses. This copy goes to the AI provider, and the agent's questions do not use grades (OPEN_QUESTIONS M21-1). The export keeps them.
+
+A turn of the dashboard agent proposes only the field of the question that the student answered (`proposed`). The browser saves that field and nothing else when the student accepts it.
+
 ### Sign-up and login
 
 Sign-up has four steps:

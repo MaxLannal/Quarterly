@@ -102,6 +102,8 @@ export interface About {
   /** "I transferred, or I am not in my first year.": first quarter, year started in, then any
    * credits or taken courses (`extra` fills them in the form). */
   transfer?: { entry: string; level: string; extra?: (page: Page) => Promise<void> };
+  /** Answer the guide's questions now ("Answer a few more questions") instead of "Skip for now". */
+  answerGuide?: boolean;
 }
 
 /**
@@ -146,7 +148,7 @@ export async function aboutYou(page: Page, about: About) {
   }
   await page.getByRole("button", { name: "Save and continue" }).click();
   await expect(page.getByRole("heading", { level: 2, name: "A few more questions?" })).toBeVisible();
-  await page.getByRole("button", { name: "Skip for now" }).click();
+  await page.getByRole("button", { name: about.answerGuide ? "Answer a few more questions" : "Skip for now" }).click();
 }
 
 /**

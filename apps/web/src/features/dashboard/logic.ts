@@ -52,7 +52,9 @@ const read = (p: Profile, field: string) => (p as unknown as Record<string, unkn
  * turn proposes nothing, or only what the record already says.
  */
 export function proposalFrom(turn: Pick<TurnEvent, "proposed" | "answered">, set: QuestionSet | undefined, profile: Profile, asked?: string | null): Proposal | null {
-  const patch = turn.proposed ?? {};
+  // Only the fields the turn sets: Accept PATCHes this patch as it is, and a null in a PATCH
+  // clears that field (an older server sent every other field as null, Richard's report 2026-11-25).
+  const patch = Object.fromEntries(Object.entries(turn.proposed ?? {}).filter(([, value]) => value !== null && value !== undefined)) as ProfilePatch;
   const fields = sentFields(patch).filter((f) => f !== "interview");
   if (!fields.length) return null;
   const after = patched(profile, patch);

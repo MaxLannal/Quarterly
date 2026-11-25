@@ -9,6 +9,15 @@ describe("the dashboard agent's proposals", () => {
     expect(p).toEqual({ id: "class_formats", label: "Class formats", value: "Seminar, Lab", patch: { class_formats: ["seminar", "lab"] } });
   });
 
+  it("keeps only the answered field when a proposal also lists other fields as null", () => {
+    // Richard's report (2026-11-25): the server sent every field of the patch, the unasked ones
+    // as null, and Accept saved them all, which cleared every other answer.
+    const proposed = { class_year: null, intended_programs: null, pace: "early", courses_per_term: null, terms_away: null } as const;
+    const p = proposalFrom({ proposed, answered: "pace" }, SET, profile({ class_year: 2029, intended_programs: ["cs"] }));
+    expect(p?.patch).toEqual({ pace: "early" });
+    expect(p?.label).toBe("Graduation pace");
+  });
+
   it("falls back to the question asked before when `answered` is missing", () => {
     const p = proposalFrom({ proposed: { theory_vs_application: 7 }, answered: null }, SET, profile(), "theory_vs_application");
     expect(p?.label).toBe("Theory or application");

@@ -9,7 +9,7 @@ from collections.abc import Iterable
 from typing import Annotated, Literal
 
 from planner_core.models import Grading
-from pydantic import BaseModel, Field, RootModel, field_validator
+from pydantic import BaseModel, Field, RootModel, field_serializer, field_validator
 
 from api.forum.scrub import scrub
 from api.schemas.agents import ErrorEvent
@@ -341,6 +341,14 @@ class InterviewTurnEvent(BaseModel):
     courses: list[CourseMention] = []
     #: True when the deterministic guide wrote this turn (no AI).
     fallback: bool = False
+
+    @field_serializer("proposed", mode="wrap")
+    def _only_the_answer(self, patch, handler):
+        """`proposed` without the fields it does not set. The browser PATCHes it as it is when the
+        student accepts it, and a null in a PATCH clears that field: with every field of
+        ProfilePatch sent as null, each accepted answer cleared all the others (Richard's
+        report, 2026-11-25). No return annotation, so the API schema stays ProfilePatch."""
+        return {key: value for key, value in handler(patch).items() if value is not None}
 
 
 class ProfileDoneEvent(BaseModel):

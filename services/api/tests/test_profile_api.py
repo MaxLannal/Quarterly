@@ -67,6 +67,13 @@ def test_everything_needs_login(env: Env) -> None:
     assert env.client.post("/agents/interview", json={"mode": "start"}).status_code == 401
 
 
+def test_the_updates_list_is_gone(env: Env) -> None:
+    # OPEN_QUESTIONS M21-2, Richard's answer: delete it for now (no page showed it since #16).
+    headers = login(env)
+    assert env.client.get("/me/updates", headers=headers).status_code == 404
+    assert env.client.post("/me/updates/seen", json={}, headers=headers).status_code == 404
+
+
 def test_the_routes_are_gone(env: Env) -> None:
     # Issue #15 removed "Your routes": the planner makes every plan proposal.
     headers = login(env)
