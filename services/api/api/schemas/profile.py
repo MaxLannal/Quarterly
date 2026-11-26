@@ -205,6 +205,7 @@ class ProfileOut(BaseModel):
     pace: Pace | None = None
     wants_research: bool | None = None
     research_areas: list[str] = []
+    interests: list[str] = []
     # Scheduling.
     course_load: CourseLoad | None = None
     terms_away: list[TermAway] | None = None
@@ -260,6 +261,7 @@ class ProfilePatch(BaseModel):
     pace: Pace | None = None
     wants_research: bool | None = None
     research_areas: Items | None = None
+    interests: Items | None = None
     course_load: CourseLoad | None = None
     terms_away: list[TermAway] | None = Field(default=None, max_length=MAX_TERMS_AWAY)
     class_formats: list[ClassFormat] | None = Field(default=None, max_length=4)
@@ -269,7 +271,7 @@ class ProfilePatch(BaseModel):
     interview: InterviewMemoryPatch | None = None
     follows: Follows | None = None
 
-    @field_validator("research_areas")
+    @field_validator("research_areas", "interests")
     @classmethod
     def _items(cls, value: list[str] | None) -> list[str] | None:
         return None if value is None else clean_items(value)

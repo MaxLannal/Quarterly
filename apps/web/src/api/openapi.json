@@ -8003,6 +8003,14 @@
             "title": "Intended Programs",
             "type": "array"
           },
+          "interests": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Interests",
+            "type": "array"
+          },
           "interview": {
             "$ref": "#/components/schemas/InterviewMemory",
             "default": {
@@ -8256,6 +8264,21 @@
               }
             ],
             "title": "Intended Programs"
+          },
+          "interests": {
+            "anyOf": [
+              {
+                "items": {
+                  "maxLength": 200,
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Interests"
           },
           "interview": {
             "anyOf": [

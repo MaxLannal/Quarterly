@@ -56,6 +56,7 @@ function emptyProfile(): S["ProfileOut"] {
     pace: null,
     wants_research: null,
     research_areas: [],
+    interests: [],
     course_load: null,
     terms_away: null,
     class_formats: null,
@@ -159,7 +160,8 @@ function applyPatch(patch: S["ProfilePatch"]): S["ProfileOut"] | { error: string
       case "credits":
         next.credits = ((value as S["RecordCredit"][] | null) ?? []).map((c) => ({ kind: c.kind, label: c.label, maps_to: c.maps_to ?? null, units: c.units ?? 0 }));
         break;
-      case "research_areas": {
+      case "research_areas":
+      case "interests": {
         const seen = new Set<string>();
         const items: string[] = [];
         for (const raw of (value as string[] | null) ?? []) {
@@ -170,7 +172,7 @@ function applyPatch(patch: S["ProfilePatch"]): S["ProfileOut"] | { error: string
           }
         }
         if (items.length > 24 || items.some((i) => i.length > 60)) return { error: "too many or too long" };
-        next.research_areas = items;
+        next[key] = items;
         break;
       }
       case "interview": {

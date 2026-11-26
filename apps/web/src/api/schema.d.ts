@@ -4533,6 +4533,11 @@ export interface components {
              */
             intended_programs: string[];
             /**
+             * Interests
+             * @default []
+             */
+            interests: string[];
+            /**
              * @default {
              *       "covered": [],
              *       "turns": []
@@ -4601,6 +4606,8 @@ export interface components {
             follows?: components["schemas"]["Follows"] | null;
             /** Intended Programs */
             intended_programs?: string[] | null;
+            /** Interests */
+            interests?: string[] | null;
             interview?: components["schemas"]["InterviewMemoryPatch"] | null;
             /** Pace */
             pace?: ("early" | "on_time" | "flexible") | null;
