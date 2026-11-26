@@ -104,3 +104,44 @@ describe("import on login", () => {
     expect(plansToImport(ACCOUNT)).toHaveLength(1);
   });
 });
+
+describe("planner state in a local plan", () => {
+  it("local plan keeps chat, proposals and history across save and load", () => {
+    const extra: Partial<LocalPlan> = {
+      chat: [{ kind: "user", text: "Hello" }],
+      proposals: [{ id: "r:g1", changeSetId: null, groupId: "g1", title: "Intro", kind: "major", ops: [], why: "x", citations: [], rules: [], status: "proposed", runId: "r" }],
+      history: [{ id: "h1", day: "2099-01-01", label: "Accepted Intro", ops: [], inverse: [] }],
+      workingNotes: "- 2099-01-01 · avoid · x [TEST 10000]",
+      profileAnswers: { interests: ["testing"] },
+    };
+    upsertPlan(local("a", extra));
+    const stored = loadPlans().plans[0]!;
+    expect(stored.chat).toEqual(extra.chat);
+    expect(stored.proposals?.[0]?.title).toBe("Intro");
+    expect(stored.history?.[0]?.label).toBe("Accepted Intro");
+    expect(stored.workingNotes).toBe(extra.workingNotes);
+    expect(stored.profileAnswers).toEqual({ interests: ["testing"] });
+  });
+
+  it("import on login copies working notes into an empty record and sends answers as proposals", async () => {
+    await fetch(`${window.location.origin}/api/auth/login`, { method: "POST", body: "{}" });
+    const sent: { patch: unknown[]; proposals: unknown[] } = { patch: [], proposals: [] };
+    server.use(
+      http.patch("*/api/me/profile", async ({ request }) => {
+        sent.patch.push(await request.json());
+        return HttpResponse.json({});
+      }),
+      http.post("*/api/me/profile/proposals", async ({ request }) => {
+        sent.proposals.push(await request.json());
+        return HttpResponse.json({}, { status: 201 });
+      }),
+    );
+    upsertPlan(local("a", { workingNotes: "- 2099-01-01 · prefer · mornings", profileAnswers: { interests: ["testing"], pace: "early" } }));
+    expect(await importLocalPlans("acct-1")).toBe("imported");
+    expect(sent.patch).toEqual([{ working_notes: "- 2099-01-01 · prefer · mornings" }]);
+    expect(sent.proposals).toEqual([
+      { field: "interests", value: ["testing"] },
+      { field: "pace", value: "early" },
+    ]);
+  });
+});

@@ -2,7 +2,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
 import { api } from "@/api/client";
 import { useSession } from "@/lib/session";
-import { loadPlans, markImported, plansToImport, toPlanCreate } from "./localPlans";
+import { loadPlans, markImported, plansToImport, toPlanCreate, type LocalPlan } from "./localPlans";
 
 export type ImportStatus = "idle" | "importing" | "imported" | "unavailable" | "failed";
 
@@ -20,9 +20,37 @@ export async function importLocalPlans(accountId: string): Promise<ImportStatus>
     // The server answers with the new plans in request order. They exist now, so every plan is
     // marked imported even if an id were missing (retrying would create them a second time).
     markImported(accountId, Object.fromEntries(pending.map((p, i) => [p.localId, data?.[i]?.id])));
+    await copyAnswers(pending);
     return "imported";
   } catch {
     return "failed";
+  }
+}
+
+const empty = (v: unknown) => v === null || v === undefined || v === "" || (Array.isArray(v) && v.length === 0);
+
+/**
+ * Issue #17 D2: what a logged-out student told the planner goes to the record at login, but
+ * only where the record is empty. The working information is copied; each General Information
+ * answer waits on the dashboard as a proposal for the student to accept. Best effort: a failure
+ * keeps the local copy and never blocks the plan import.
+ */
+export async function copyAnswers(plans: readonly LocalPlan[]): Promise<void> {
+  const notes = plans.map((p) => p.workingNotes?.trim()).filter((n): n is string => !!n);
+  const answers = Object.assign({}, ...plans.map((p) => p.profileAnswers ?? {})) as Record<string, unknown>;
+  if (!notes.length && !Object.keys(answers).length) return;
+  try {
+    const { data: record } = await api.GET("/me/profile");
+    if (!record) return;
+    if (notes.length && !record.has_working_notes) {
+      await api.PATCH("/me/profile", { body: { working_notes: notes.join("\n") } });
+    }
+    for (const [field, value] of Object.entries(answers)) {
+      if (empty(value) || !empty((record as Record<string, unknown>)[field])) continue;
+      await api.POST("/me/profile/proposals", { body: { field, value } });
+    }
+  } catch {
+    // Kept in the local plan; the student can still answer on the dashboard.
   }
 }
 

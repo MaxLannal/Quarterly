@@ -186,6 +186,10 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="A live run of the planner agent.")
     parser.add_argument("--student", choices=sorted(STUDENTS), required=True)
     parser.add_argument("--chat", help="after the plan, one chat message")
+    parser.add_argument(
+        "--chat-only", action="store_true", help="skip generation; chat on the plan"
+    )
+    parser.add_argument("--verbose", action="store_true", help="show the agents' log lines")
     parser.add_argument("--confirm-spend", action="store_true")
     parser.add_argument("--cap", type=float, default=15.0)
     parser.add_argument("--ledger", type=Path, default=Path("planner_live_ledger.json"))
@@ -206,6 +210,11 @@ def main(argv: list[str] | None = None) -> int:
     from planner_core.models import ChangeOp
     from pydantic import TypeAdapter
 
+    if args.verbose:
+        import logging
+
+        logging.basicConfig(level=logging.INFO, format="  log   %(name)s: %(message)s")
+        logging.getLogger("httpx2").setLevel(logging.WARNING)
     student = STUDENTS[args.student]
     llm = gateway()
     total = 0.0
@@ -222,7 +231,9 @@ def main(argv: list[str] | None = None) -> int:
         )  # fmt: skip
         print(f"== generate: {args.student}")
         ops: list[Any] = []
-        for _ in range(4):  # a run pauses for each question; answer it with its first option
+        for _ in range(
+            0 if args.chat_only else 4
+        ):  # a run pauses for each question; answer it with its first option
             question = None
             for event in run.generate_events():
                 data = event.model_dump(mode="json")

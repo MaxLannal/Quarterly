@@ -97,8 +97,8 @@ REQUIRED_FIELDS = ("interests",)
 REPLACE_TITLE = "Courses this plan replaces"
 REPLACE_WHY = "The new plan does not keep these courses. Reject this to keep them."
 SOLVER_SECONDS = 4.0
-WRITE_BUDGET = Budget(tool_calls=4, tokens=400_000, seconds=240)
-STEP_BUDGET = Budget(tool_calls=4, tokens=200_000, seconds=150)
+WRITE_TOKENS = 400_000
+STEP_TOKENS = 200_000
 #: The order of groups in the walkthrough and the proposal list.
 KIND_ORDER = {"major": 0, "core": 1, "minor": 2, "elective": 3, "other": 4, "replace": 5}
 READ_TOOLS = ["search_courses", "get_course", "get_forum_summary", "get_forum_posts"]
@@ -321,7 +321,7 @@ class PlannerRun:
         *,
         check: Callable[[T], None] | None = None,
         tools: bool = True,
-        budget: Budget = STEP_BUDGET,
+        tokens: int = STEP_TOKENS,
     ) -> AgentSpec[T]:
         name, description, model = submit
         return AgentSpec(
@@ -331,7 +331,11 @@ class PlannerRun:
             messages=[Message("user", user)],
             submit=SubmitTool(name, description, model, check=check),
             tools=self.box.tools(READ_TOOLS) if tools else [],
-            budget=budget,
+            budget=Budget(
+                tool_calls=self.config.tool_calls_per_step,
+                tokens=tokens,
+                seconds=self.config.run_seconds,
+            ),
             known_ids=self.known_ids(record),
         )
 
@@ -453,6 +457,12 @@ class PlannerRun:
         fixed = ", ".join(
             f"{i.course} {i.term} ({i.status})" for i in self.fixed_items() if i.course
         )
+        plan = self.req.plan
+        placements = ", ".join(plan.placements or []) or "none"
+        credits = "; ".join(
+            f"{c.label or c.kind}" + (f" = {c.maps_to}" if c.maps_to else "")
+            for c in plan.credits or []
+        )
         movable = ", ".join(f"{i.course} {i.term}" for i in self.open_items() if i.course)
         answers = []
         for a in state.asked:
@@ -466,7 +476,9 @@ class PlannerRun:
                 "# Quarters to plan\n\n" + ", ".join(self.terms()),
                 "# The plan now\n\n"
                 f"Completed, in progress or locked (keep): {fixed or 'none'}\n"
-                f"Planned, not locked (keep, move or drop): {movable or 'none'}",
+                f"Planned, not locked (keep, move or drop): {movable or 'none'}\n"
+                f"Placements (already decided by the College's tests): {placements}\n"
+                f"Credits: {credits or 'none'}",
                 "# Feasibility (Quarterly's solver as an oracle; its plan is not used)\n\n"
                 + feasibility,
                 "# Answers to questions\n\n" + ("\n".join(answers) or "None."),
@@ -635,7 +647,8 @@ class PlannerRun:
             "Fill every quarter of the plan in one submit_plan call, grouped by sequence (G45). "
             "Cover every requirement in the brief, check prerequisite order and the quarters "
             "each course is offered, keep to the student's standards and choose by their "
-            "interests. Use get_course when you are unsure."
+            "interests. Use get_course when you are unsure, at most "
+            f"{self.config.tool_calls_per_step} lookups in all; then call submit_plan."
         )
         fill = (
             "submit_plan",
@@ -649,7 +662,7 @@ class PlannerRun:
                 fill,
                 record,
                 check=self._fill_check(),
-                budget=WRITE_BUDGET,
+                tokens=WRITE_TOKENS,
             )
             sub = run_agent(self.llm, spec, sink=self.log.sink).output
         except AgentError as exc:
