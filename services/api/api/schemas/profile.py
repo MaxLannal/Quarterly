@@ -6,11 +6,12 @@ from __future__ import annotations
 
 import datetime as dt
 from collections.abc import Iterable
-from typing import Annotated, Literal, Self
+from typing import Annotated, Any, Literal, Self
 
 from planner_core.models import Grading
 from pydantic import (
     BaseModel,
+    ConfigDict,
     Field,
     RootModel,
     field_serializer,
@@ -385,3 +386,25 @@ class InterviewEvent(
     ]
 ):
     """One Server-Sent Event `data:` payload from /agents/interview."""
+
+
+class ProfileProposalOut(BaseModel):
+    """A General Information answer from the planner chat, waiting for the student's accept
+    (issue #17)."""
+
+    id: str
+    field: str
+    value: Any
+    #: planner_chat | import (an answer given while logged out, copied at login).
+    source: str
+    status: Literal["proposed", "accepted", "rejected"]
+    created_day: dt.date
+
+
+class ProfileProposalCreate(BaseModel):
+    """The import on login: a browser plan's answer for an empty field of the record."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    field: str = Field(max_length=48)
+    value: Any

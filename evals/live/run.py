@@ -1,4 +1,8 @@
-"""Prompt 13: live agent tests with real models, under the LiveBudgetGuard.
+"""NOTE (2026-11-26): this live suite still drives the removed A1/A2 endpoints
+(/agents/generate, /agents/chat) and routes. Port it to POST /agents/planner before the next
+paid live run (docs/PROGRESS.md, planner split screen).
+
+Prompt 13: live agent tests with real models, under the LiveBudgetGuard.
 
     uv run python evals/live/run.py --phase 0      # smoke: one tiny call per model id
     uv run python evals/live/run.py --phase 4      # forum AI and prerequisites

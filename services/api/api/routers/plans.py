@@ -19,11 +19,13 @@ from planner_core.changes import ChangeOpError, apply_ops
 from planner_core.generator import generate, horizon
 from planner_core.hashing import plan_hash
 from planner_core.models import (
+    AddOp,
     Catalog,
     ChangeOp,
     ChangeSet,
     GenerateOptions,
     Infeasibility,
+    LockOp,
     MoveOp,
     PlanState,
     RuleSet,
@@ -31,7 +33,7 @@ from planner_core.models import (
 )
 from sqlalchemy.orm import Session
 
-from api.agents.chat import confirmation_problem
+from api.agents.planner.chat import confirmation_problem
 from api.auth.ratelimit import DAY, Limit, account_subject, ip_limit
 from api.auth.sessions import current_account
 from api.auth.store import Store, get_store
@@ -266,7 +268,7 @@ def update_plan(plan_id: uuid.UUID, body: PlanUpdate, db: Db, me: Me) -> PlanOut
 
 @router.delete("/{plan_id}", status_code=204, response_class=Response)
 def delete_plan(plan_id: uuid.UUID, db: Db, me: Me) -> None:
-    from api.agents.chat import forget_chats
+    from api.agents.planner.chat import forget_chats
 
     plan = _plan(db, me, plan_id)
     forget_chats(db, [plan.id])
@@ -365,6 +367,8 @@ def apply_change_set(
         raise HTTPException(status_code=409, detail=f"This change set is {row.status}.")
     state = repo.read_state(db, plan)
     current = plan_hash(state)
+    if row.run_id is not None and body.confirmation_text is None:
+        return _apply_planner_proposal(db, plan, row, state, current, body.terms)
     if body.base_plan_hash != current and row.base_plan_hash == current:
         raise _stale(current)  # only the client's copy is old; the change set still fits
     if current != row.base_plan_hash:
@@ -386,6 +390,45 @@ def apply_change_set(
         raise HTTPException(status_code=422, detail="No changes in the selected quarters.")
     try:
         repo.apply_to_plan(db, plan, ops, current, show_unpublished=_unpublished())
+    except repo.InvalidPlanError as exc:
+        db.rollback()
+        raise _invalid(exc) from exc
+    row.status = "applied"
+    db.commit()
+    return repo.plan_out(db, plan)
+
+
+NO_LONGER_FITS = "This proposal no longer fits your plan."
+
+
+def _apply_planner_proposal(
+    db: Session,
+    plan: m.Plan,
+    row: m.ChangeSet,
+    state: PlanState,
+    current: str,
+    terms: list[str] | None,
+) -> PlanOut:
+    """A planner proposal (issue #17) re-bases onto later edits: the student accepts the
+    proposals of one run one by one, and they stay while other edits happen (#18 D1). It applies
+    while its ops still fit the current plan; otherwise it becomes stale. The courses it places
+    are locked (#18 step 13)."""
+    ops = repo.selected_ops(list(repo.change_set_model(row).ops), terms, state)
+    if not ops:
+        raise HTTPException(status_code=422, detail="No changes in the selected quarters.")
+    locks: list[ChangeOp] = [
+        LockOp(course=op.course, term=op.term if isinstance(op, AddOp) else op.to_term)
+        for op in ops
+        if isinstance(op, AddOp | MoveOp) and op.course
+    ]
+    try:
+        apply_ops(state, [*ops, *locks])
+    except ChangeOpError as exc:
+        row.status = "stale"
+        db.commit()
+        raise HTTPException(status_code=409, detail=NO_LONGER_FITS) from exc
+    try:
+        repo.apply_to_plan(db, plan, [*ops, *locks], current, show_unpublished=_unpublished())
     except repo.InvalidPlanError as exc:
         db.rollback()
         raise _invalid(exc) from exc

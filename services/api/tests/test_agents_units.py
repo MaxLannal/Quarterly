@@ -15,9 +15,8 @@ from llm_gateway.routing import load_routing
 from pydantic import SecretStr
 
 PROMPTS = (
-    "a1_preferences",
-    "a1_rationale",
-    "a2_chat",
+    "a1_planner",
+    "a1_planner_chat",
     "a2_scope",
     "a9_commons_bot",
     "a6_interview",
@@ -36,9 +35,9 @@ def test_prompts_carry_a_version_header_and_a_known_task(name: str) -> None:
 
 def test_a_prompt_without_a_header_is_refused() -> None:
     with pytest.raises(ValueError):
-        parse_prompt("You are an advisor.", "a2_chat")
+        parse_prompt("You are an advisor.", "a1_planner_chat")
     with pytest.raises(ValueError):
-        parse_prompt("---\nid: other\nversion: 1\n---\ntext", "a2_chat")
+        parse_prompt("---\nid: other\nversion: 1\n---\ntext", "a1_planner_chat")
 
 
 def test_untrusted_text_cannot_break_out_of_its_tag() -> None:

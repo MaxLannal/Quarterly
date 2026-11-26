@@ -177,49 +177,6 @@
         "title": "AddOp",
         "type": "object"
       },
-      "AgentEvent": {
-        "description": "One Server-Sent Event `data:` payload from /agents/generate or /agents/chat.",
-        "discriminator": {
-          "mapping": {
-            "confirm": "#/components/schemas/ConfirmEvent",
-            "done": "#/components/schemas/DoneEvent",
-            "error": "#/components/schemas/ErrorEvent",
-            "infeasible": "#/components/schemas/InfeasibleEvent",
-            "message": "#/components/schemas/MessageEvent",
-            "proposal": "#/components/schemas/ProposalEvent",
-            "step": "#/components/schemas/StepEvent",
-            "variant": "#/components/schemas/VariantEvent"
-          },
-          "propertyName": "type"
-        },
-        "oneOf": [
-          {
-            "$ref": "#/components/schemas/StepEvent"
-          },
-          {
-            "$ref": "#/components/schemas/VariantEvent"
-          },
-          {
-            "$ref": "#/components/schemas/InfeasibleEvent"
-          },
-          {
-            "$ref": "#/components/schemas/MessageEvent"
-          },
-          {
-            "$ref": "#/components/schemas/ProposalEvent"
-          },
-          {
-            "$ref": "#/components/schemas/ConfirmEvent"
-          },
-          {
-            "$ref": "#/components/schemas/DoneEvent"
-          },
-          {
-            "$ref": "#/components/schemas/ErrorEvent"
-          }
-        ],
-        "title": "AgentEvent"
-      },
       "Assignment": {
         "additionalProperties": false,
         "properties": {
@@ -858,6 +815,18 @@
             "title": "Citations",
             "type": "array"
           },
+          "meta": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Meta"
+          },
           "role": {
             "enum": [
               "user",
@@ -880,7 +849,7 @@
         "type": "object"
       },
       "ChatHistory": {
-        "description": "A saved plan's advisor conversation of the last 30 days, oldest first.",
+        "description": "A saved plan's planner conversation, oldest first (kept while the plan exists).",
         "properties": {
           "entries": {
             "default": [],
@@ -903,66 +872,6 @@
           }
         },
         "title": "ChatHistory",
-        "type": "object"
-      },
-      "ChatRequest": {
-        "properties": {
-          "history": {
-            "default": [],
-            "items": {
-              "$ref": "#/components/schemas/ChatTurn"
-            },
-            "maxItems": 12,
-            "title": "History",
-            "type": "array"
-          },
-          "latest_proposal": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/ChangeSet"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "message": {
-            "maxLength": 4000,
-            "minLength": 1,
-            "title": "Message",
-            "type": "string"
-          },
-          "plan": {
-            "$ref": "#/components/schemas/PlanState"
-          },
-          "plan_id": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Plan Id"
-          },
-          "run_id": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Run Id"
-          }
-        },
-        "required": [
-          "plan",
-          "message"
-        ],
-        "title": "ChatRequest",
         "type": "object"
       },
       "ChatTurn": {
@@ -1000,7 +909,9 @@
               "post",
               "course",
               "program",
-              "summary"
+              "summary",
+              "profile",
+              "guideline"
             ],
             "title": "Kind",
             "type": "string"
@@ -2448,6 +2359,35 @@
         "title": "CommonsVoteOut",
         "type": "object"
       },
+      "Compromise": {
+        "description": "A guideline rule the plan bends, with what was traded.",
+        "properties": {
+          "rule": {
+            "title": "Rule",
+            "type": "string"
+          },
+          "tier": {
+            "title": "Tier",
+            "type": "string"
+          },
+          "traded": {
+            "title": "Traded",
+            "type": "string"
+          },
+          "why": {
+            "title": "Why",
+            "type": "string"
+          }
+        },
+        "required": [
+          "rule",
+          "tier",
+          "why",
+          "traded"
+        ],
+        "title": "Compromise",
+        "type": "object"
+      },
       "ConfirmEvent": {
         "description": "The student's message was a typed confirmation of `change_set`. A saved plan applies\nit with POST /plans/{id}/changesets/{cs}/apply and `confirmation_text`; a plan that lives\nin the browser applies the operations itself.",
         "properties": {
@@ -3469,6 +3409,18 @@
       },
       "DoneEvent": {
         "properties": {
+          "profile_answers": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Profile Answers"
+          },
           "run_id": {
             "title": "Run Id",
             "type": "string"
@@ -3478,6 +3430,17 @@
             "default": "done",
             "title": "Type",
             "type": "string"
+          },
+          "working_notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Working Notes"
           }
         },
         "required": [
@@ -3545,6 +3508,24 @@
           "message": {
             "title": "Message",
             "type": "string"
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "enum": [
+                  "expired",
+                  "unavailable",
+                  "invalid_output",
+                  "budget",
+                  "invalid_plan"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reason"
           },
           "type": {
             "const": "error",
@@ -4433,175 +4414,6 @@
         "title": "GenerateOut",
         "type": "object"
       },
-      "GenerateRequest": {
-        "description": "The Generate-plan popup: a form, never free text (SPEC \"Generate-plan popup\").",
-        "properties": {
-          "allow_overload": {
-            "default": false,
-            "title": "Allow Overload",
-            "type": "boolean"
-          },
-          "goals": {
-            "default": [],
-            "items": {
-              "discriminator": {
-                "mapping": {
-                  "bxms": "#/components/schemas/BxmsGoal",
-                  "challenge": "#/components/schemas/ChallengeGoal",
-                  "course_load": "#/components/schemas/CourseLoadGoal",
-                  "difficulty_cap": "#/components/schemas/DifficultyCapGoal",
-                  "graduate_by": "#/components/schemas/GraduateByGoal",
-                  "interest": "#/components/schemas/InterestGoal",
-                  "language": "#/components/schemas/LanguageGoal",
-                  "light_quarter": "#/components/schemas/LightQuarterGoal",
-                  "premed": "#/components/schemas/PremedGoal",
-                  "protect_gpa": "#/components/schemas/ProtectGpaGoal",
-                  "study_abroad": "#/components/schemas/StudyAbroadGoal",
-                  "workload_hours": "#/components/schemas/WorkloadHoursGoal"
-                },
-                "propertyName": "type"
-              },
-              "oneOf": [
-                {
-                  "$ref": "#/components/schemas/CourseLoadGoal"
-                },
-                {
-                  "$ref": "#/components/schemas/WorkloadHoursGoal"
-                },
-                {
-                  "$ref": "#/components/schemas/DifficultyCapGoal"
-                },
-                {
-                  "$ref": "#/components/schemas/ChallengeGoal"
-                },
-                {
-                  "$ref": "#/components/schemas/ProtectGpaGoal"
-                },
-                {
-                  "$ref": "#/components/schemas/GraduateByGoal"
-                },
-                {
-                  "$ref": "#/components/schemas/StudyAbroadGoal"
-                },
-                {
-                  "$ref": "#/components/schemas/BxmsGoal"
-                },
-                {
-                  "$ref": "#/components/schemas/PremedGoal"
-                },
-                {
-                  "$ref": "#/components/schemas/InterestGoal"
-                },
-                {
-                  "$ref": "#/components/schemas/LightQuarterGoal"
-                },
-                {
-                  "$ref": "#/components/schemas/LanguageGoal"
-                }
-              ]
-            },
-            "title": "Goals",
-            "type": "array"
-          },
-          "interests": {
-            "default": [],
-            "items": {
-              "maxLength": 60,
-              "type": "string"
-            },
-            "maxItems": 12,
-            "title": "Interests",
-            "type": "array"
-          },
-          "load": {
-            "default": 0.0,
-            "maximum": 1.0,
-            "minimum": -1.0,
-            "title": "Load",
-            "type": "number"
-          },
-          "max_courses_per_term": {
-            "anyOf": [
-              {
-                "maximum": 6.0,
-                "minimum": 1.0,
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Max Courses Per Term"
-          },
-          "per_term_load": {
-            "additionalProperties": {
-              "type": "number"
-            },
-            "default": {},
-            "title": "Per Term Load",
-            "type": "object"
-          },
-          "plan": {
-            "$ref": "#/components/schemas/PlanState"
-          },
-          "plan_id": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Plan Id"
-          },
-          "scope": {
-            "default": "whole",
-            "enum": [
-              "whole",
-              "remaining",
-              "selected"
-            ],
-            "title": "Scope",
-            "type": "string"
-          },
-          "selected_terms": {
-            "default": [],
-            "items": {
-              "type": "string"
-            },
-            "title": "Selected Terms",
-            "type": "array"
-          },
-          "today_term": {
-            "anyOf": [
-              {
-                "examples": [
-                  "2026-AU"
-                ],
-                "pattern": "^\\d{4}-(AU|WI|SP|SU)$",
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Today Term"
-          },
-          "variants": {
-            "default": 2,
-            "maximum": 3.0,
-            "minimum": 1.0,
-            "title": "Variants",
-            "type": "integer"
-          }
-        },
-        "required": [
-          "plan"
-        ],
-        "title": "GenerateRequest",
-        "type": "object"
-      },
       "GeneratedVariant": {
         "description": "One generated plan: a proposed change set plus the verified plan it leads to.",
         "properties": {
@@ -4948,34 +4760,6 @@
           "message"
         ],
         "title": "Infeasibility",
-        "type": "object"
-      },
-      "InfeasibleEvent": {
-        "description": "No plan meets the request; `message` says why in plain English.",
-        "properties": {
-          "conflicts": {
-            "default": [],
-            "items": {
-              "$ref": "#/components/schemas/Conflict"
-            },
-            "title": "Conflicts",
-            "type": "array"
-          },
-          "message": {
-            "title": "Message",
-            "type": "string"
-          },
-          "type": {
-            "const": "infeasible",
-            "default": "infeasible",
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "message"
-        ],
-        "title": "InfeasibleEvent",
         "type": "object"
       },
       "InstructorCourse": {
@@ -5503,6 +5287,29 @@
           "message"
         ],
         "title": "Issue",
+        "type": "object"
+      },
+      "IssueBrief": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "string"
+          },
+          "level": {
+            "title": "Level",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "level",
+          "message"
+        ],
+        "title": "IssueBrief",
         "type": "object"
       },
       "ItemsPatch": {
@@ -6719,6 +6526,64 @@
         "title": "PasswordResetStart",
         "type": "object"
       },
+      "PendingProposal": {
+        "additionalProperties": false,
+        "description": "An open proposal of a plan that lives in the browser (\"apply it\" names the newest).",
+        "properties": {
+          "base_plan_hash": {
+            "maxLength": 80,
+            "title": "Base Plan Hash",
+            "type": "string"
+          },
+          "group_id": {
+            "maxLength": 48,
+            "title": "Group Id",
+            "type": "string"
+          },
+          "ops": {
+            "items": {
+              "discriminator": {
+                "mapping": {
+                  "add": "#/components/schemas/AddOp",
+                  "lock": "#/components/schemas/LockOp",
+                  "move": "#/components/schemas/MoveOp",
+                  "remove": "#/components/schemas/RemoveOp",
+                  "unlock": "#/components/schemas/UnlockOp"
+                },
+                "propertyName": "op"
+              },
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/AddOp"
+                },
+                {
+                  "$ref": "#/components/schemas/MoveOp"
+                },
+                {
+                  "$ref": "#/components/schemas/RemoveOp"
+                },
+                {
+                  "$ref": "#/components/schemas/LockOp"
+                },
+                {
+                  "$ref": "#/components/schemas/UnlockOp"
+                }
+              ]
+            },
+            "maxItems": 40,
+            "minItems": 1,
+            "title": "Ops",
+            "type": "array"
+          }
+        },
+        "required": [
+          "group_id",
+          "ops",
+          "base_plan_hash"
+        ],
+        "title": "PendingProposal",
+        "type": "object"
+      },
       "PlanComparison": {
         "properties": {
           "a": {
@@ -6804,6 +6669,56 @@
         "title": "PlanCreate",
         "type": "object"
       },
+      "PlanEvent": {
+        "description": "The whole proposed plan. `verdict` comes from Quarterly's verifier and certificate\nchecker only; the model never sets it.",
+        "properties": {
+          "compromises": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/Compromise"
+            },
+            "title": "Compromises",
+            "type": "array"
+          },
+          "issues": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/PlanIssue"
+            },
+            "title": "Issues",
+            "type": "array"
+          },
+          "run_id": {
+            "title": "Run Id",
+            "type": "string"
+          },
+          "summary": {
+            "default": "",
+            "title": "Summary",
+            "type": "string"
+          },
+          "type": {
+            "const": "plan",
+            "default": "plan",
+            "title": "Type",
+            "type": "string"
+          },
+          "verdict": {
+            "enum": [
+              "valid",
+              "invalid"
+            ],
+            "title": "Verdict",
+            "type": "string"
+          }
+        },
+        "required": [
+          "run_id",
+          "verdict"
+        ],
+        "title": "PlanEvent",
+        "type": "object"
+      },
       "PlanImport": {
         "description": "Logged-out plans from localStorage, imported at login.",
         "properties": {
@@ -6821,6 +6736,51 @@
           "plans"
         ],
         "title": "PlanImport",
+        "type": "object"
+      },
+      "PlanIssue": {
+        "description": "A problem in the plan: a verifier issue (V01-V12) or a standard of the student that the\nplanner checks itself (S01 a quarter away, S02 over the course load, S03 an avoided course).",
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "string"
+          },
+          "course_ids": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Course Ids",
+            "type": "array"
+          },
+          "level": {
+            "enum": [
+              "error",
+              "warning",
+              "info"
+            ],
+            "title": "Level",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          },
+          "term_ids": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Term Ids",
+            "type": "array"
+          }
+        },
+        "required": [
+          "code",
+          "level",
+          "message"
+        ],
+        "title": "PlanIssue",
         "type": "object"
       },
       "PlanItem": {
@@ -7251,6 +7211,283 @@
           }
         },
         "title": "PlanUpdate",
+        "type": "object"
+      },
+      "PlannerEvent": {
+        "description": "One Server-Sent Event `data:` payload from POST /agents/planner.",
+        "discriminator": {
+          "mapping": {
+            "confirm": "#/components/schemas/ConfirmEvent",
+            "done": "#/components/schemas/DoneEvent",
+            "error": "#/components/schemas/ErrorEvent",
+            "message": "#/components/schemas/MessageEvent",
+            "plan": "#/components/schemas/PlanEvent",
+            "proposal": "#/components/schemas/PlannerProposalEvent",
+            "question": "#/components/schemas/QuestionEvent",
+            "step": "#/components/schemas/StepEvent"
+          },
+          "propertyName": "type"
+        },
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/StepEvent"
+          },
+          {
+            "$ref": "#/components/schemas/QuestionEvent"
+          },
+          {
+            "$ref": "#/components/schemas/PlanEvent"
+          },
+          {
+            "$ref": "#/components/schemas/PlannerProposalEvent"
+          },
+          {
+            "$ref": "#/components/schemas/MessageEvent"
+          },
+          {
+            "$ref": "#/components/schemas/ConfirmEvent"
+          },
+          {
+            "$ref": "#/components/schemas/DoneEvent"
+          },
+          {
+            "$ref": "#/components/schemas/ErrorEvent"
+          }
+        ],
+        "title": "PlannerEvent"
+      },
+      "PlannerProposalEvent": {
+        "description": "One course or sequence, as an unsaved block on the grid. A saved plan has a\n`change_set_id` (Accept = POST /plans/{id}/changesets/{cs}/apply); a plan in the browser\napplies `ops` itself.",
+        "properties": {
+          "change_set_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Change Set Id"
+          },
+          "citations": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/Citation"
+            },
+            "title": "Citations",
+            "type": "array"
+          },
+          "group_id": {
+            "title": "Group Id",
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "major",
+              "core",
+              "elective",
+              "minor",
+              "replace",
+              "other"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "ops": {
+            "items": {
+              "discriminator": {
+                "mapping": {
+                  "add": "#/components/schemas/AddOp",
+                  "lock": "#/components/schemas/LockOp",
+                  "move": "#/components/schemas/MoveOp",
+                  "remove": "#/components/schemas/RemoveOp",
+                  "unlock": "#/components/schemas/UnlockOp"
+                },
+                "propertyName": "op"
+              },
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/AddOp"
+                },
+                {
+                  "$ref": "#/components/schemas/MoveOp"
+                },
+                {
+                  "$ref": "#/components/schemas/RemoveOp"
+                },
+                {
+                  "$ref": "#/components/schemas/LockOp"
+                },
+                {
+                  "$ref": "#/components/schemas/UnlockOp"
+                }
+              ]
+            },
+            "title": "Ops",
+            "type": "array"
+          },
+          "preview": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Verdict"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "rules": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/RuleRef"
+            },
+            "title": "Rules",
+            "type": "array"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "type": {
+            "const": "proposal",
+            "default": "proposal",
+            "title": "Type",
+            "type": "string"
+          },
+          "why": {
+            "title": "Why",
+            "type": "string"
+          }
+        },
+        "required": [
+          "group_id",
+          "title",
+          "kind",
+          "ops",
+          "why"
+        ],
+        "title": "PlannerProposalEvent",
+        "type": "object"
+      },
+      "PlannerRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "answer": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/QuestionAnswer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "history": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/ChatTurn"
+            },
+            "maxItems": 12,
+            "title": "History",
+            "type": "array"
+          },
+          "message": {
+            "anyOf": [
+              {
+                "maxLength": 4000,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Message"
+          },
+          "mode": {
+            "enum": [
+              "generate",
+              "chat"
+            ],
+            "title": "Mode",
+            "type": "string"
+          },
+          "pending": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/PendingProposal"
+            },
+            "maxItems": 40,
+            "title": "Pending",
+            "type": "array"
+          },
+          "plan": {
+            "$ref": "#/components/schemas/PlanState"
+          },
+          "plan_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Plan Id"
+          },
+          "profile_answers": {
+            "additionalProperties": true,
+            "default": {},
+            "maxProperties": 24,
+            "title": "Profile Answers",
+            "type": "object"
+          },
+          "run_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Run Id"
+          },
+          "today_term": {
+            "anyOf": [
+              {
+                "examples": [
+                  "2026-AU"
+                ],
+                "pattern": "^\\d{4}-(AU|WI|SP|SU)$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Today Term"
+          },
+          "working_notes": {
+            "anyOf": [
+              {
+                "maxLength": 20000,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Working Notes"
+          }
+        },
+        "required": [
+          "mode",
+          "plan"
+        ],
+        "title": "PlannerRequest",
         "type": "object"
       },
       "Policy": {
@@ -8408,6 +8645,70 @@
         "title": "ProfilePatch",
         "type": "object"
       },
+      "ProfileProposalCreate": {
+        "additionalProperties": false,
+        "description": "The import on login: a browser plan's answer for an empty field of the record.",
+        "properties": {
+          "field": {
+            "maxLength": 48,
+            "title": "Field",
+            "type": "string"
+          },
+          "value": {
+            "title": "Value"
+          }
+        },
+        "required": [
+          "field",
+          "value"
+        ],
+        "title": "ProfileProposalCreate",
+        "type": "object"
+      },
+      "ProfileProposalOut": {
+        "description": "A General Information answer from the planner chat, waiting for the student's accept\n(issue #17).",
+        "properties": {
+          "created_day": {
+            "format": "date",
+            "title": "Created Day",
+            "type": "string"
+          },
+          "field": {
+            "title": "Field",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "source": {
+            "title": "Source",
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "proposed",
+              "accepted",
+              "rejected"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "value": {
+            "title": "Value"
+          }
+        },
+        "required": [
+          "id",
+          "field",
+          "value",
+          "source",
+          "status",
+          "created_day"
+        ],
+        "title": "ProfileProposalOut",
+        "type": "object"
+      },
       "ProgramDetail": {
         "properties": {
           "catalog_year": {
@@ -8733,24 +9034,6 @@
         "title": "ProgramVersionOut",
         "type": "object"
       },
-      "ProposalEvent": {
-        "properties": {
-          "change_set": {
-            "$ref": "#/components/schemas/ChangeSet"
-          },
-          "type": {
-            "const": "proposal",
-            "default": "proposal",
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "change_set"
-        ],
-        "title": "ProposalEvent",
-        "type": "object"
-      },
       "ProtectGpaGoal": {
         "additionalProperties": false,
         "properties": {
@@ -8965,6 +9248,45 @@
         "title": "Question",
         "type": "object"
       },
+      "QuestionAnswer": {
+        "additionalProperties": false,
+        "properties": {
+          "option": {
+            "anyOf": [
+              {
+                "maxLength": 200,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Option"
+          },
+          "question_id": {
+            "maxLength": 48,
+            "title": "Question Id",
+            "type": "string"
+          },
+          "text": {
+            "anyOf": [
+              {
+                "maxLength": 1000,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Text"
+          }
+        },
+        "required": [
+          "question_id"
+        ],
+        "title": "QuestionAnswer",
+        "type": "object"
+      },
       "QuestionColumn": {
         "properties": {
           "id": {
@@ -8989,6 +9311,60 @@
           "label"
         ],
         "title": "QuestionColumn",
+        "type": "object"
+      },
+      "QuestionEvent": {
+        "description": "The run paused: the page shows the question with its options and an \"Other\" box, and\nsends the answer back with `run_id`.",
+        "properties": {
+          "allow_other": {
+            "default": true,
+            "title": "Allow Other",
+            "type": "boolean"
+          },
+          "field": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Field"
+          },
+          "options": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Options",
+            "type": "array"
+          },
+          "question_id": {
+            "title": "Question Id",
+            "type": "string"
+          },
+          "run_id": {
+            "title": "Run Id",
+            "type": "string"
+          },
+          "text": {
+            "title": "Text",
+            "type": "string"
+          },
+          "type": {
+            "const": "question",
+            "default": "question",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "run_id",
+          "question_id",
+          "text"
+        ],
+        "title": "QuestionEvent",
         "type": "object"
       },
       "QuestionGroup": {
@@ -9806,6 +10182,25 @@
           "would_recommend"
         ],
         "title": "ReviewRatingIn",
+        "type": "object"
+      },
+      "RuleRef": {
+        "description": "A guideline rule that a group follows, with its text for the chip.",
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "text": {
+            "title": "Text",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "text"
+        ],
+        "title": "RuleRef",
         "type": "object"
       },
       "ScaleEnds": {
@@ -10810,55 +11205,36 @@
         "title": "ValidationError",
         "type": "object"
       },
-      "VariantEvent": {
+      "Verdict": {
+        "description": "The verifier's result on the plan after this proposal alone.",
         "properties": {
-          "change_set": {
-            "$ref": "#/components/schemas/ChangeSet"
-          },
-          "citations": {
+          "new_issues": {
             "default": [],
             "items": {
-              "$ref": "#/components/schemas/Citation"
+              "$ref": "#/components/schemas/IssueBrief"
             },
-            "title": "Citations",
+            "title": "New Issues",
             "type": "array"
           },
-          "label": {
-            "title": "Label",
+          "resolved_issues": {
+            "default": 0,
+            "title": "Resolved Issues",
+            "type": "integer"
+          },
+          "status_after": {
+            "title": "Status After",
             "type": "string"
           },
-          "metrics": {
-            "additionalProperties": {
-              "type": "number"
-            },
-            "default": {},
-            "title": "Metrics",
-            "type": "object"
-          },
-          "rationale": {
-            "additionalProperties": {
-              "type": "string"
-            },
-            "default": {},
-            "title": "Rationale",
-            "type": "object"
-          },
-          "report": {
-            "$ref": "#/components/schemas/Report"
-          },
-          "type": {
-            "const": "variant",
-            "default": "variant",
-            "title": "Type",
+          "status_before": {
+            "title": "Status Before",
             "type": "string"
           }
         },
         "required": [
-          "label",
-          "change_set",
-          "report"
+          "status_after",
+          "status_before"
         ],
-        "title": "VariantEvent",
+        "title": "Verdict",
         "type": "object"
       },
       "VerifyCode": {
@@ -11815,133 +12191,6 @@
         ]
       }
     },
-    "/agents/chat": {
-      "post": {
-        "operationId": "chat_agents_chat_post",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ChatRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AgentEvent"
-                }
-              },
-              "text/event-stream": {}
-            },
-            "description": "Server-Sent Events; each `data:` line is one AgentEvent as JSON."
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "summary": "Chat",
-        "tags": [
-          "agents"
-        ]
-      }
-    },
-    "/agents/chat/history": {
-      "get": {
-        "operationId": "chat_history_agents_chat_history_get",
-        "parameters": [
-          {
-            "in": "query",
-            "name": "plan_id",
-            "required": true,
-            "schema": {
-              "format": "uuid",
-              "title": "Plan Id",
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ChatHistory"
-                }
-              }
-            },
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "summary": "Chat History",
-        "tags": [
-          "agents"
-        ]
-      }
-    },
-    "/agents/generate": {
-      "post": {
-        "operationId": "generate_agents_generate_post",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/GenerateRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AgentEvent"
-                }
-              },
-              "text/event-stream": {}
-            },
-            "description": "Server-Sent Events; each `data:` line is one AgentEvent as JSON."
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "summary": "Generate",
-        "tags": [
-          "agents"
-        ]
-      }
-    },
     "/agents/interview": {
       "post": {
         "operationId": "interview_agents_interview_post",
@@ -11991,6 +12240,126 @@
         "summary": "Interview",
         "tags": [
           "profile",
+          "agents"
+        ]
+      }
+    },
+    "/agents/planner": {
+      "post": {
+        "operationId": "planner_agents_planner_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PlannerRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlannerEvent"
+                }
+              },
+              "text/event-stream": {}
+            },
+            "description": "Server-Sent Events; each `data:` line is one PlannerEvent as JSON."
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Planner",
+        "tags": [
+          "agents"
+        ]
+      }
+    },
+    "/agents/planner/history": {
+      "delete": {
+        "description": "Clear chat (issue #18): the messages go; open proposals stay on the plan.",
+        "operationId": "clear_planner_history_agents_planner_history_delete",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "plan_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Plan Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Clear Planner History",
+        "tags": [
+          "agents"
+        ]
+      },
+      "get": {
+        "operationId": "planner_history_agents_planner_history_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "plan_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Plan Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChatHistory"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Planner History",
+        "tags": [
           "agents"
         ]
       }
@@ -14622,6 +14991,189 @@
           }
         },
         "summary": "Export Student Md",
+        "tags": [
+          "profile"
+        ]
+      }
+    },
+    "/me/profile/proposals": {
+      "get": {
+        "operationId": "list_profile_proposals_me_profile_proposals_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/ProfileProposalOut"
+                  },
+                  "title": "Response List Profile Proposals Me Profile Proposals Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Not logged in"
+          }
+        },
+        "summary": "List Profile Proposals",
+        "tags": [
+          "profile"
+        ]
+      },
+      "post": {
+        "operationId": "create_profile_proposal_me_profile_proposals_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProfileProposalCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProfileProposalOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Not logged in"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Profile Proposal",
+        "tags": [
+          "profile"
+        ]
+      }
+    },
+    "/me/profile/proposals/{proposal_id}/accept": {
+      "post": {
+        "operationId": "accept_profile_proposal_me_profile_proposals__proposal_id__accept_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "proposal_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Proposal Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProfileOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Not logged in"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Accept Profile Proposal",
+        "tags": [
+          "profile"
+        ]
+      }
+    },
+    "/me/profile/proposals/{proposal_id}/reject": {
+      "post": {
+        "operationId": "reject_profile_proposal_me_profile_proposals__proposal_id__reject_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "proposal_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Proposal Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Not logged in"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Reject Profile Proposal",
         "tags": [
           "profile"
         ]
