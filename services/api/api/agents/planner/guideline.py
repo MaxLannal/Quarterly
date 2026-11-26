@@ -116,7 +116,7 @@ class PlannerConfig(BaseModel):
     max_ops_per_round: int = 12
     fix_warning_codes: list[str] = ["V04", "V10", "V11"]
     max_polish_rounds: int = 2
-    tool_calls_per_step: int = 12
+    tool_calls_per_step: int = 6
     chat_proposals_max: int = 3
     working_info_chars: int = 4000
     run_seconds: int = 300

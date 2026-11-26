@@ -5,7 +5,7 @@ import { loadPlans, newLocalId, upsertPlan, type LocalPlan } from "@/features/pl
 import { renderRoute } from "@/test-utils";
 import type { Proposal } from "./proposals";
 
-const panel = () => screen.findByRole("heading", { name: "Planner", level: 2 });
+const panel = () => screen.findByRole("heading", { name: "Ask Quarterly", level: 2 });
 const proposal = (title: string) => screen.findByRole("article", { name: `Proposal: ${title}` });
 
 async function generateWithInterest(user: ReturnType<typeof userEvent.setup>) {
@@ -43,10 +43,11 @@ describe("the planner panel", () => {
     const user = userEvent.setup();
     renderRoute("/plan");
     const generate = await screen.findByRole("button", { name: "Generate plan" });
-    expect(screen.queryByRole("heading", { name: "Planner", level: 2 })).not.toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "Ask Quarterly", level: 2 })).not.toBeInTheDocument();
     await user.click(generate);
     expect(await panel()).toBeInTheDocument();
-    expect(screen.getByText("Generative AI")).toBeInTheDocument();
+    expect(screen.queryByText("Generative AI", { exact: true })).not.toBeInTheDocument(); // FEEDBACK 2026-11-16
+    expect(screen.getByText(/Answers are written by an AI/)).toBeInTheDocument();
   });
 
   it("focus moves into the panel and Escape hides it", async () => {
@@ -57,7 +58,7 @@ describe("the planner panel", () => {
     await panel();
     await waitFor(() => expect(screen.getByLabelText("Ask or tell the planner")).toHaveFocus());
     await user.keyboard("{Escape}");
-    await waitFor(() => expect(screen.queryByRole("heading", { name: "Planner", level: 2 })).not.toBeInTheDocument());
+    await waitFor(() => expect(screen.queryByRole("heading", { name: "Ask Quarterly", level: 2 })).not.toBeInTheDocument());
   });
 
   it("question shows options and Other, and its answer leads to proposals", async () => {
@@ -129,7 +130,7 @@ describe("the planner panel", () => {
     stored({ proposals: [pending()], chat: [{ kind: "proposal", proposalId: "r:g1" }] });
     renderRoute("/plan");
     expect(await panel()).toBeInTheDocument();
-    expect(await screen.findByRole("button", { name: "TEST 10000, proposed in Stored proposal" })).toBeInTheDocument();
+    expect(await screen.findByRole("button", { name: /^TEST 10000.*proposed in Stored proposal$/ })).toBeInTheDocument();
   });
 
   it("clear chat empties the thread after confirm", async () => {

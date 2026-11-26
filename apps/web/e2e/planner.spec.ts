@@ -1,6 +1,6 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
-import { addCourseViaTree, addProgram, card, closePanel, openAdvisor, openPanel, settle } from "./helpers";
+import { addCourseViaTree, addProgram, card, closePanel, generatePlan, openAdvisor, openPanel, settle } from "./helpers";
 
 // Runs against MSW mocks (fake catalog year 2099-00, TEST/FAKE courses, "Fake Program").
 
@@ -89,36 +89,26 @@ test("planner: drag and drop moves a card", async ({ page }) => {
   await expect(target).toContainText("TEST 10000");
 });
 
-test("planner: generate popup and advisor proposal", async ({ page }) => {
+test("planner: generate in the panel, then a chat proposal", async ({ page }) => {
   await page.goto("/plan");
-  await page.getByRole("button", { name: "Generate plan" }).click();
-  const dialog = page.getByRole("dialog", { name: "Generate plan" });
-  await dialog.getByRole("radio", { name: "Remaining quarters" }).check();
-  await dialog.getByLabel("Interest tag").fill("ML");
-  await dialog.getByRole("button", { name: "Add", exact: true }).click();
-  await dialog.getByRole("button", { name: "Generate" }).click();
-  const variant = dialog.getByRole("article", { name: "Variant Fake balanced" });
-  await expect(variant).toBeVisible();
-  await variant.getByRole("button", { name: "See changes" }).click();
-  await expect(variant).toContainText("Add TEST 10000 to Autumn 2099");
-  await variant.getByRole("button", { name: "Apply", exact: true }).click();
-  await expect(dialog).toBeHidden();
+  const panel = await generatePlan(page, "ML");
+  await panel.getByTestId("walkthrough").getByRole("button", { name: "Accept" }).click();
   await expect(card(page, "TEST 10000")).toBeVisible();
+  await expect(card(page, "TEST 10000").getByRole("button", { name: "TEST 10000 is locked" })).toBeVisible();
 
-  const sheet = await openAdvisor(page);
-  await sheet.getByLabel("Ask the advisor").fill("Please add a lighter elective");
-  await sheet.getByRole("button", { name: "Send" }).click();
-  await expect(sheet.getByRole("link", { name: "TEST 25200", exact: true })).toBeVisible();
-  const proposal = sheet.getByRole("article", { name: "Proposed change" });
-  await expect(proposal).toContainText("Add TEST 25200");
-  await proposal.getByRole("button", { name: "Apply" }).click();
-  await expect(proposal).toContainText("Applied.");
-  // The conversation survives closing and reopening the advisor.
-  await page.keyboard.press("Escape");
-  await expect(sheet).toBeHidden();
+  const input = panel.getByLabel("Ask or tell the planner");
+  await input.fill("Please add a lighter elective");
+  await panel.getByRole("button", { name: "Send" }).click();
+  await expect(panel.getByRole("link", { name: "TEST 25200", exact: true })).toBeVisible();
+  const proposal = panel.getByRole("article", { name: "Proposal: Add TEST 25200" });
+  await proposal.getByRole("button", { name: "Accept" }).click();
   await expect(card(page, "TEST 25200")).toBeVisible();
+  // The conversation and the open proposals survive closing and reopening the panel.
+  await page.keyboard.press("Escape");
+  await expect(panel).toBeHidden();
   await openAdvisor(page);
-  await expect(proposal).toContainText("Applied.");
+  await expect(panel.getByText("A proposal you accepted or rejected.").first()).toBeVisible();
+  await expect(page.getByTestId("proposal-block").first()).toBeVisible();
 });
 
 test("planner: no axe violations", async ({ page }) => {

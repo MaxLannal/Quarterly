@@ -544,7 +544,7 @@ export function Planner({ initial, autoGenerate = false, onSetUp }: PlannerProps
                 </span>
               )}
             </DrawerButton>
-            <Button variant="outline" aria-expanded={panelOpen} aria-controls={desktop ? "planner-panel" : undefined} onClick={() => (panelOpen ? closePanel() : openPanel(true))}>
+            <Button variant="outline" aria-expanded={panelOpen} aria-controls={desktop ? "planner-panel" : undefined} onClick={() => openPanel(true)}>
               <SparkIcon className="text-primary" />
               Ask Quarterly
             </Button>

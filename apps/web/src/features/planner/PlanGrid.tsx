@@ -393,7 +393,6 @@ export function PlanGrid({
                     <button
                       type="button"
                       onClick={() => setSummerOpen(y, true)}
-                      aria-label={`Show ${termLabel(summer)}`}
                       className="flex min-h-11 items-center rounded-lg border border-dashed border-hairline px-3 text-caption text-muted transition-colors hover:border-hairline-strong hover:text-ink"
                     >
                       + {termLabel(summer)}

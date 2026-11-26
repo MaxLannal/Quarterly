@@ -7,7 +7,7 @@ import type { Proposal } from "./proposals";
 import { walkOrder } from "./useWalkthrough";
 
 const lit = () => screen.queryAllByTestId("proposal-block").filter((b) => b.getAttribute("data-glow") === "true");
-const litTitles = () => [...new Set(lit().map((b) => b.getAttribute("aria-label")?.split(", proposed in ")[1]))];
+const litTitles = () => [...new Set(lit().map((b) => b.textContent?.split(", proposed in ")[1]))];
 
 async function generated(user: ReturnType<typeof userEvent.setup>) {
   renderRoute("/plan");

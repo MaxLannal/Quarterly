@@ -42,7 +42,9 @@ test("a plan set up from the student record opens the generator", async ({ page 
   await expect(setup.getByRole("checkbox", { name: "Generate a starting plan" })).toBeChecked();
   await setup.getByRole("button", { name: "Set up my plan" }).click();
 
-  await expect(page.getByRole("dialog", { name: "Generate plan" })).toBeVisible();
+  // The planner panel opens and starts a first plan (issue #18): it asks for interests first.
+  await expect(page.getByTestId("planner-question")).toBeVisible();
+  await page.getByLabel("Ask or tell the planner").focus();
   await page.keyboard.press("Escape");
   await expect(page.getByRole("list", { name: "Programs on this plan" })).toContainText("Fake Program");
   await expect(page.getByRole("list", { name: "Programs on this plan" })).toContainText("Fake Core");

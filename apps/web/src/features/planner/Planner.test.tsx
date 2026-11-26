@@ -22,7 +22,7 @@ describe("Planner with endpoints that are not built yet (501)", () => {
     expect(screen.getByText(/The verifier is not available yet/)).toBeInTheDocument();
 
     await user.click(screen.getByRole("button", { name: "Generate plan" }));
-    const planner = await screen.findByRole("heading", { name: "Planner", level: 2 });
+    const planner = await screen.findByRole("heading", { name: "Ask Quarterly", level: 2 });
     expect(planner).toBeInTheDocument();
     expect(await screen.findByText(/The planner is not available yet/)).toBeInTheDocument();
     expect(screen.getByText(/Answers are written by an AI/)).toBeInTheDocument();

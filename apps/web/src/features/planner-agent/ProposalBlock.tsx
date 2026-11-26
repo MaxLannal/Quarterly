@@ -20,7 +20,6 @@ export function ProposalBlock({ block }: { block: ProposedBlock }) {
         data-testid="proposal-block"
         data-proposal={block.proposalId}
         data-glow={lit ? "true" : undefined}
-        aria-label={`${block.course}, proposed in ${title}`}
         onClick={() => selectProposal(block.proposalId)}
         className={cn(
           "flex min-h-11 w-full animate-settle flex-col rounded-lg border-2 border-dashed border-primary/50 bg-primary-wash/60 px-3 py-1.5 text-left text-caption text-ink transition-shadow hover:shadow-hover",
@@ -34,6 +33,7 @@ export function ProposalBlock({ block }: { block: ProposedBlock }) {
           </Badge>
         </span>
         {course?.title && <span className="truncate text-body">{course.title}</span>}
+        <span className="sr-only">, proposed in {title}</span>
       </button>
     </li>
   );

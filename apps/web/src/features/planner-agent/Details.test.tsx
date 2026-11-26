@@ -25,7 +25,7 @@ describe("course details and history", () => {
     expect(await within(details).findByRole("heading", { name: /TEST 10000/ })).toBeInTheDocument();
     await user.click(within(details).getByRole("button", { name: "Back to the chat" }));
     await waitFor(() => expect(screen.queryByRole("region", { name: "Course details" })).not.toBeInTheDocument());
-    expect(screen.getByRole("heading", { name: "Planner", level: 2 })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Ask Quarterly", level: 2 })).toBeInTheDocument();
   });
 
   it("history lists edits newest first and revert applies the inverse", async () => {

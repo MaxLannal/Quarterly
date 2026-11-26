@@ -1,7 +1,7 @@
 /**
  * The planner agent's panel beside the plan (issue #18): the conversation (the student's
  * working information and questions, the agent's answers, questions, plans and proposals), the
- * walkthrough of a new plan, and a composer. It is labelled as generative AI.
+ * walkthrough of a new plan, and a composer. It says that an AI writes the answers.
  */
 import { useEffect, useId, useRef, useState, type FormEvent, type KeyboardEvent, type ReactNode, type RefObject } from "react";
 import { Button } from "@/components/ui/button";
@@ -99,18 +99,18 @@ export function PlannerPanel({ run, onClose, selected, walkthrough, onReplay, co
   const rootRef = useRef<HTMLDivElement>(null);
   const inputId = useId();
 
-  // Escape inside the panel hides it (issue #18 step 20); the clear-chat dialog handles its own.
+  // Escape hides the panel (issue #18 step 20), also when focus left it (an accepted card goes
+  // away); a dialog on top (clear chat, programs, the drawer on a phone) handles its own Escape.
   useEffect(() => {
-    const el = rootRef.current;
-    if (!el) return;
     const onKey = (e: globalThis.KeyboardEvent) => {
-      if (e.key === "Escape" && !confirmClear) {
-        e.stopPropagation();
-        onClose();
-      }
+      if (e.key !== "Escape" || e.defaultPrevented || confirmClear) return;
+      const target = e.target instanceof Element ? e.target : null;
+      const dialog = target?.closest('[role="dialog"]');
+      if (dialog && !rootRef.current?.closest('[role="dialog"]')?.isSameNode(dialog)) return;
+      onClose();
     };
-    el.addEventListener("keydown", onKey);
-    return () => el.removeEventListener("keydown", onKey);
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
   }, [confirmClear, onClose]);
   const open = run.proposals.filter((p) => p.status === "proposed");
 
@@ -143,10 +143,11 @@ export function PlannerPanel({ run, onClose, selected, walkthrough, onReplay, co
       <header className="flex items-start gap-3 border-b border-hairline px-4 py-3">
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
+            {/* FEEDBACK 2026-11-16: "Ask Quarterly", without the grey "Generative AI" badge; the
+                line below still says that an AI writes the answers. */}
             <h2 id={headingId} className="font-display text-title-lg">
-              Planner
+              Ask Quarterly
             </h2>
-            <span className="rounded-pill bg-primary-wash px-2 py-0.5 text-caption text-primary">Generative AI</span>
           </div>
           <p className="mt-1 text-caption text-muted">Answers are written by an AI and can be wrong. Not official advising.</p>
         </div>

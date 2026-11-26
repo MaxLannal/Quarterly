@@ -45,7 +45,7 @@ def test_routing_has_planner_tasks() -> None:
 
     routing = load_routing()
     agent = routing.route("a1_planner_agent")
-    assert (agent.model, agent.effort, agent.max_tokens) == ("claude-opus-5-5", "medium", 16000)
+    assert (agent.model, agent.effort, agent.max_tokens) == ("claude-opus-5-5", "medium", 32000)
     chat = routing.route("a1_planner_chat")
     assert (chat.model, chat.effort, chat.max_tokens) == ("claude-opus-5-5", "low", 6000)
     for route in (agent, chat):

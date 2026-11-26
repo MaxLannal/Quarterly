@@ -49,7 +49,7 @@ describe("PlanGrid as four year-columns", () => {
     const years = screen.getAllByTestId(/^year-\d$/);
     expect(years).toHaveLength(4);
     const first = within(years[0]!);
-    expect(first.getByRole("button", { name: /Show Summer 2099/ })).toBeInTheDocument();
+    expect(first.getByRole("button", { name: "+ Summer 2099" })).toBeInTheDocument();
     for (const t of ["2099-AU", "2100-WI", "2100-SP"]) expect(first.getByTestId(`quarter-${t}`)).toBeInTheDocument();
     expect(first.queryByTestId("quarter-2099-SU")).not.toBeInTheDocument();
   });
@@ -62,7 +62,7 @@ describe("PlanGrid as four year-columns", () => {
 
   it("opens one year's summer from its row", async () => {
     const ctx = setup(base());
-    await userEvent.click(screen.getByRole("button", { name: /Show Summer 2100/ }));
+    await userEvent.click(screen.getByRole("button", { name: "+ Summer 2100" }));
     expect(ctx.setSummerOpen).toHaveBeenCalledWith(2, true);
   });
 });
@@ -75,7 +75,7 @@ describe("proposal blocks", () => {
       proposals: blocks({ "2099-AU": [{ proposalId: "p1", course: "TEST 10000", action: "add" }] }),
       proposalTitles: new Map([["p1", "Test introductory sequence"]]),
     });
-    const block = screen.getByRole("button", { name: "TEST 10000, proposed in Test introductory sequence" });
+    const block = screen.getByRole("button", { name: /^TEST 10000.*proposed in Test introductory sequence$/ });
     expect(block).toHaveAttribute("data-testid", "proposal-block");
     expect(block.className).toContain("border-dashed");
     expect(within(block).getByText("Proposed")).toBeInTheDocument();
@@ -96,7 +96,7 @@ describe("proposal blocks", () => {
       proposals: blocks({ "2099-AU": [{ proposalId: "p1", course: "TEST 10000", action: "add" }] }),
       proposalTitles: new Map([["p1", "Intro"]]),
     });
-    await userEvent.click(screen.getByRole("button", { name: /TEST 10000, proposed/ }));
+    await userEvent.click(screen.getByRole("button", { name: /TEST 10000.*proposed in Intro/ }));
     expect(ctx.selectProposal).toHaveBeenCalledWith("p1");
   });
 

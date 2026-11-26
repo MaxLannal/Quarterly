@@ -7,6 +7,7 @@ Ported from `PlanTools.requirements_brief` of ZhihchengGao/degree-plan-agent (is
 
 from __future__ import annotations
 
+from planner_core.dsl import expr_to_text
 from planner_core.index import Index, PlanFacts, describe_selector
 from planner_core.models import Catalog, PlanState, Report, RuleSet, Selector
 from planner_core.programs import plan_programs
@@ -30,6 +31,27 @@ def offered(idx: Index, code: str) -> list[str]:
 def offered_text(idx: Index, code: str) -> str:
     qs = offered(idx, code)
     return "/".join(qs) if qs else "no offering data"
+
+
+PREREQ_CHARS = 90
+
+
+def prereq_text(idx: Index, code: str) -> str | None:
+    """The prerequisite in short words, from the requisite data (never from a model)."""
+    req = idx.requisite(code)
+    if req is None or req.prereq is None:
+        return None
+    try:
+        text = expr_to_text(req.prereq)
+    except Exception:
+        text = req.raw_text or ""
+    return text[:PREREQ_CHARS] or None
+
+
+def candidate_text(idx: Index, code: str) -> str:
+    """`CODE [quarters]`, then `(needs ...)` when the course has a prerequisite."""
+    needs = prereq_text(idx, code)
+    return f"{code} [{offered_text(idx, code)}]" + (f" (needs {needs})" if needs else "")
 
 
 def _tags(idx: Index, code: str) -> list[str]:
@@ -90,7 +112,7 @@ def requirements_brief(
             need = unit.need or (unit.need_units or 0) // 100
             desc = describe_selector(unit.selector, idx)
             cands = _candidates(idx, catalog, unit.selector, max_candidates)
-            cand_txt = "; ".join(f"{c} [{offered_text(idx, c)}]" for c in cands)
+            cand_txt = "; ".join(candidate_text(idx, c) for c in cands)
             flags = []
             if unit.no_pass_fail:
                 flags.append("letter grade")

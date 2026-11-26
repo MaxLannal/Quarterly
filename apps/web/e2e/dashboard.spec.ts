@@ -72,6 +72,8 @@ test("registration: a transfer student enters credits and taken courses, then an
   await expect(guide.getByText("I could not match that to an answer.").first()).toBeVisible();
   await guide.getByRole("group", { name: "Quick answers" }).getByRole("button", { name: "No" }).click();
   await guide.getByRole("button", { name: "Accept Interested in research: No" }).click();
+  // Interests (a list, issue #14) comes next: skipped here.
+  await guide.getByRole("button", { name: "Skip", exact: true }).click();
 
   await guide.getByRole("group", { name: "Quick answers" }).getByRole("button", { name: "Normal" }).click();
   await guide.getByRole("button", { name: "Accept Course load: Normal" }).click();

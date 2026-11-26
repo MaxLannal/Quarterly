@@ -50,10 +50,12 @@ tasks:
   # Max, 2026-11-26: Opus 5.5 for the planner agent (issues #17 and #18), through Teamorouter
   # (ANTHROPIC_BASE_URL in .env). Generation writes, checks and repairs a whole plan, so its cap
   # covers adaptive thinking plus the full submit_plan call. Chat turns propose 1-3 changes.
+  # Live, 2026-11-26: at 16000 the whole-plan submit_plan was cut off (stop_reason max_tokens)
+  # after Opus 5.5's adaptive thinking; 32000 leaves room for both.
   a1_planner_agent:
     model: claude-opus-5-5
     effort: medium
-    max_tokens: 16000
+    max_tokens: 32000
     refusal_fallback: true
     fallback: {provider: openrouter, model: anthropic/claude-opus-5.5}
   a1_planner_chat:

@@ -1,6 +1,6 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page } from "@playwright/test";
-import { addCourseViaTree, addProgram, card, closePanel, logIn, openAdvisor, openPanel, plannerWithCourses, settle } from "./helpers";
+import { addCourseViaTree, addProgram, card, closePanel, generatePlan, logIn, openPanel, plannerWithCourses, settle } from "./helpers";
 
 // Design foundation (docs/DESIGN.md, docs/DESIGN-IMPLEMENTATION.md): self-hosted fonts and assets,
 // accessible pages, 44px targets.
@@ -150,19 +150,15 @@ for (const size of [
       await closePanel(page);
       await expectNoSeriousAxeViolations(page);
 
-      await page.getByRole("button", { name: "Generate plan" }).click();
-      const dialog = page.getByRole("dialog", { name: "Generate plan" });
-      await expectNoSeriousAxeViolations(page, '[role="dialog"]');
-      await dialog.getByRole("button", { name: "Generate" }).click();
-      await expect(dialog.getByRole("article", { name: "Variant Fake balanced" })).toBeVisible();
-      await expectNoSeriousAxeViolations(page, '[role="dialog"]');
-      await page.keyboard.press("Escape");
-      await expect(dialog).toBeHidden();
+      const planner = await generatePlan(page);
+      await expect(planner.getByTestId("walkthrough")).toBeVisible();
+      await expectNoSeriousAxeViolations(page);
+      await planner.getByRole("button", { name: "Skip tour" }).click();
 
-      const sheet = await openAdvisor(page);
-      await sheet.getByLabel("Ask the advisor").fill("Please add a lighter elective");
+      const sheet = planner;
+      await sheet.getByLabel("Ask or tell the planner").fill("Please add a lighter elective");
       await sheet.getByRole("button", { name: "Send" }).click();
-      await expect(sheet.getByRole("article", { name: "Proposed change" })).toBeVisible();
+      await expect(sheet.getByRole("article", { name: "Proposal: Add TEST 25200" })).toBeVisible();
       // Forum citations become links once the post and its page load (forum reads need a login).
       await expect(sheet.getByRole("link", { name: "Student post #3" })).toHaveAttribute("href", `${FORUM}/t/3`);
       await expect(sheet.getByRole("link", { name: "What students say" })).toHaveAttribute("href", FORUM);

@@ -12,7 +12,7 @@ max_ops_per_round: 12     # add / move / remove operations in one repair round
 fix_warning_codes: [V04, V10, V11]   # warnings the agent also fixes once the errors are gone
 max_polish_rounds: 2      # rounds spent on those warnings
 
-tool_calls_per_step: 12   # catalog lookups in one step (live, 2026-11-26: 4 cut a whole-plan fill short)
+tool_calls_per_step: 6    # lookups in one step; the brief names prerequisites, and an exhausted fill is asked once more without tools
 chat_proposals_max: 3     # change sets in one chat answer (one per course or sequence)
 
 working_info_chars: 4000  # above this, only the related lines of the working information go in

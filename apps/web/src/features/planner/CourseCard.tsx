@@ -120,7 +120,7 @@ export function CourseCard({ item }: { item: PlanItem }) {
           <button
             type="button"
             onClick={() => item.course && openDetails(item.course)}
-            className={cn("block w-full truncate text-left text-body hover:underline", removal && "line-through")}
+            className={cn("-mx-3 flex min-h-11 w-[calc(100%+1.5rem)] items-center truncate px-3 text-left text-body hover:underline", removal && "line-through")}
             title={course?.title ?? undefined}
           >
             {course?.title || item.course}

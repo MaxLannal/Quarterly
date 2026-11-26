@@ -98,6 +98,7 @@ export function plannerGenerate(req: Req): PlannerEvent[] {
       ],
       rules: [g.rule],
       preview: VERDICT,
+      base_plan_hash: "mock",
     });
   });
   events.push(done(req.answer ? { profile_answers: { interests: [interest] } } : {}));
@@ -140,6 +141,10 @@ export function plannerChat(req: Req): PlannerEvent[] {
       citations: [
         { kind: "attribute", id: "TEST 25200:workload_hours", label: "TEST 25200 · workload 13 h/wk · n=34" },
         { kind: "course", id: "TEST 25200", label: "TEST 25200" },
+        // Forum sources name only an id, like the API: post 3 and page 1 are the fake discussion
+        // thread and page in mocks/forum.ts.
+        { kind: "post", id: "3", label: "Student post #3" },
+        { kind: "summary", id: "1", label: "What students say" },
         { kind: "guideline", id: "G22", label: "Guideline G22" },
       ],
     },
@@ -158,6 +163,7 @@ export function plannerChat(req: Req): PlannerEvent[] {
       citations: [],
       rules: [{ id: "G22", text: "Spend free electives and major electives on the student's interests, career plan and research areas." }],
       preview: { status_after: mockVerify(applyOps(req.plan, ops)).status, status_before: "warnings", new_issues: [], resolved_issues: 0 },
+      base_plan_hash: "mock",
     });
   }
   events.push(done());

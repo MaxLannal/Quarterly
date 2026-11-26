@@ -69,3 +69,12 @@ def test_known_codes_has_the_catalog_and_the_plan(seed: tuple[RuleSet, Catalog])
     _, catalog = seed
     codes = known_codes(cs_first_year(), catalog)
     assert {"CMSC 14100", "MATH 15100"} <= codes and "CMSC 99999" not in codes
+
+
+def test_brief_names_each_candidates_prerequisites(seed: tuple[RuleSet, Catalog]) -> None:
+    """Live (2026-11-26): without prerequisites in the brief, Opus 5.5 looked up course after
+    course before it wrote the plan (12 round trips, most of a 12-minute run)."""
+    text = brief_of(seed, cs_first_year())
+    line = next(ln for ln in text.splitlines() if "CMSC 14200 [" in ln)
+    after = line.split("CMSC 14200 [", 1)[1]
+    assert "] (needs " in after.split(";", 1)[0] and "CMSC 14100" in after.split(";", 1)[0]
