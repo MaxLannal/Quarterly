@@ -26,6 +26,7 @@ import { PROFILE_KEY, useProfile } from "@/features/dashboard/api";
 import { TopSheet } from "@/components/ui/sheet";
 import { inverseOps, HISTORY_LIMIT, newHistoryId, type HistoryEntry } from "@/features/planner-agent/history";
 import { PlannerPanel } from "@/features/planner-agent/PlannerPanel";
+import { DetailsPanel, HistoryPanel } from "@/features/planner-agent/SidePanels";
 import { proposedBlocks } from "@/features/planner-agent/proposals";
 import { usePlannerRun } from "@/features/planner-agent/usePlannerRun";
 import { Walkthrough } from "@/features/planner-agent/Walkthrough";
@@ -35,7 +36,7 @@ import { ProgramPickerBody, StatusBadge } from "@/features/programs/ProgramPicke
 import { useMediaQuery } from "@/lib/motion";
 import { useSession } from "@/lib/session";
 import { applyOps, ChangeOpError } from "./changes";
-import { highlightFor, PlannerContext, stripKind, type PlannerContextValue, type RequirementTag } from "./context";
+import { highlightFor, opText, PlannerContext, stripKind, type PlannerContextValue, type RequirementTag } from "./context";
 import { GoalsTab } from "./GoalsTab";
 import { IssuesTab } from "./IssuesTab";
 import { storedRemoteId, today, upsertPlan, type LocalPlan } from "./localPlans";
@@ -68,6 +69,18 @@ export function dropResult(data: DragData | undefined, toTerm: string | undefine
 }
 
 /** Requirement tag per course: the deepest progress node that counts it. */
+/** A history line for hand edits: ops name items by id, the student reads course codes. */
+function describe(ops: ChangeOp[], plan: PlanState): string {
+  const byId = new Map((plan.items ?? []).map((i) => [i.id, i]));
+  return ops
+    .map((op) => {
+      if (op.op === "add" || !op.item_id || op.course) return opText(op);
+      const item = byId.get(op.item_id);
+      return opText({ ...op, item_id: null, course: item?.course ?? null, slot_ref: item?.course ? null : (item?.slot_ref ?? null) });
+    })
+    .join("; ");
+}
+
 const PANEL_KEY = "quarterly.plannerPanel.v1";
 
 function readPanelOpen(): boolean {
@@ -135,6 +148,7 @@ export function Planner({ initial, autoGenerate = false, onSetUp }: PlannerProps
   const [panelOpen, setPanelOpen] = useState(() => readPanelOpen() || (initial.proposals ?? []).some((p) => p.status === "proposed"));
   const [selectedProposal, setSelectedProposal] = useState<string | null>(null);
   const [history, setHistory] = useState<HistoryEntry[]>(() => initial.history ?? []);
+  const [view, setView] = useState<{ kind: "chat" } | { kind: "details"; code: string } | { kind: "history" }>({ kind: "chat" });
   const panelHeadingId = useId();
   const composerRef = useRef<HTMLTextAreaElement>(null);
   const opener = useRef<HTMLElement | null>(null);
@@ -175,23 +189,44 @@ export function Planner({ initial, autoGenerate = false, onSetUp }: PlannerProps
     setHistory((h) => [entry, ...h].slice(0, HISTORY_LIMIT));
   }, []);
 
+  /** Applies ops in the browser and records them in the edit history (issue #18). */
+  function applyRecorded(ops: ChangeOp[], label: string): boolean {
+    let after: PlanState;
+    try {
+      after = applyOps(plan, ops);
+    } catch (e) {
+      if (e instanceof ChangeOpError) return false;
+      throw e;
+    }
+    dispatch({ type: "ops", ops });
+    record(label, plan, after, ops);
+    return true;
+  }
+
+  /** A hand edit (drag, card menu, quarter picker): applied by the reducer, recorded here. */
+  function edit(result: EditResult) {
+    if (result.ok) {
+      try {
+        record(describe(result.ops, plan), plan, applyOps(plan, result.ops), result.ops);
+      } catch {
+        // The reducer reports the error.
+      }
+    }
+    dispatch({ type: "edit", result });
+  }
+
+  function revert(entry: HistoryEntry) {
+    if (!applyRecorded(entry.inverse, `Reverted: ${entry.label}`)) {
+      dispatch({ type: "edit", result: { ok: false, error: "This edit cannot be reverted: the plan changed since." } });
+    }
+  }
+
   const agent = usePlannerRun({
     plan,
     planId: savedPlanId,
     loggedIn: !!session,
     initial,
-    applyLocal: (ops, label) => {
-      let after: PlanState;
-      try {
-        after = applyOps(plan, ops);
-      } catch (e) {
-        if (e instanceof ChangeOpError) return false;
-        throw e;
-      }
-      dispatch({ type: "ops", ops });
-      record(label, plan, after, ops);
-      return true;
-    },
+    applyLocal: applyRecorded,
     replaceFromServer: (next, label, ops) => {
       record(label, plan, next, ops);
       dispatch({ type: "replace", plan: next });
@@ -294,7 +329,7 @@ export function Planner({ initial, autoGenerate = false, onSetUp }: PlannerProps
     issues,
     highlight,
     tags,
-    edit: (result) => dispatch({ type: "edit", result }),
+    edit,
     applyOps: (ops) => void tryOps(ops),
     openMoveTo: setMoveTarget,
     openAddTo: setAddTarget,
@@ -305,7 +340,10 @@ export function Planner({ initial, autoGenerate = false, onSetUp }: PlannerProps
       setSelectedProposal(id);
       if (!panelOpen) openPanel(false);
     },
-    openDetails: () => {},
+    openDetails: (code) => {
+      setView({ kind: "details", code });
+      if (!panelOpen) openPanel(false);
+    },
     openSummers,
     setSummerOpen: (year, open) =>
       setOpenSummers((s) => {
@@ -339,7 +377,7 @@ export function Planner({ initial, autoGenerate = false, onSetUp }: PlannerProps
   function onDragEnd(e: DragEndEvent) {
     setDragging(null);
     const result = dropResult(e.active.data.current as DragData | undefined, e.over ? String(e.over.id) : undefined, items);
-    if (result) dispatch({ type: "edit", result });
+    if (result) edit(result);
   }
 
   // Logged in: show the record's credits and taken courses (edited on the dashboard) once loaded.
@@ -393,7 +431,13 @@ export function Planner({ initial, autoGenerate = false, onSetUp }: PlannerProps
     }
   }
 
-  const panel = (
+  const back = () => setView({ kind: "chat" });
+  const panel =
+    view.kind === "details" ? (
+      <DetailsPanel code={view.code} catalogYear={plan.catalog_year} onBack={back} />
+    ) : view.kind === "history" ? (
+      <HistoryPanel entries={history} onRevert={revert} onBack={back} />
+    ) : (
     <PlannerPanel
       run={agent}
       onClose={closePanel}
@@ -404,7 +448,7 @@ export function Planner({ initial, autoGenerate = false, onSetUp }: PlannerProps
       headingId={panelHeadingId}
       className="h-full"
     />
-  );
+    );
 
   const drawerTabs = [
     {
@@ -506,6 +550,15 @@ export function Planner({ initial, autoGenerate = false, onSetUp }: PlannerProps
             </Button>
           </div>
           <div className="flex flex-wrap items-center gap-2 sm:ml-auto">
+            <Button
+              variant="outline"
+              onClick={() => {
+                setView({ kind: "history" });
+                openPanel(false);
+              }}
+            >
+              History
+            </Button>
             <Button variant="outline" onClick={() => void save()}>
               Save
             </Button>
@@ -568,7 +621,7 @@ export function Planner({ initial, autoGenerate = false, onSetUp }: PlannerProps
             {desktop && panelOpen && (
               <aside
                 id="planner-panel"
-                aria-labelledby={panelHeadingId}
+                aria-label="Planner panel"
                 className="sticky top-4 flex h-[calc(100dvh-7rem)] w-1/3 min-w-[22rem] max-w-[38rem] shrink-0 animate-fade-in flex-col overflow-hidden rounded-xl border border-hairline bg-canvas shadow-overlay"
               >
                 {panel}
@@ -590,7 +643,7 @@ export function Planner({ initial, autoGenerate = false, onSetUp }: PlannerProps
         current={moveTarget?.term}
         onClose={() => setMoveTarget(null)}
         onPick={(term) => {
-          if (moveTarget) dispatch({ type: "edit", result: moveItemOps(moveTarget, term) });
+          if (moveTarget) edit(moveItemOps(moveTarget, term));
           setMoveTarget(null);
         }}
       />
@@ -600,7 +653,7 @@ export function Planner({ initial, autoGenerate = false, onSetUp }: PlannerProps
         plan={plan}
         onClose={() => setAddTarget(null)}
         onPick={(term) => {
-          if (addTarget) dispatch({ type: "edit", result: addCourseOps(addTarget, term) });
+          if (addTarget) edit(addCourseOps(addTarget, term));
           setAddTarget(null);
         }}
       />
