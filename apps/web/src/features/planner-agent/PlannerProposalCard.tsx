@@ -1,10 +1,27 @@
 import type { ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/misc";
+import type { ChangeOp } from "@/api/types";
 import { opText } from "@/features/planner/context";
+import { termLabel } from "@/features/planner/terms";
 import { cn } from "@/lib/utils";
 import { CitationChip } from "./CitationChip";
 import type { Proposal } from "./proposals";
+
+/**
+ * The sentence a student can type to confirm a proposal, when every operation names a course and
+ * its quarters (the server's parser reads exactly this form). Null otherwise: use Accept.
+ */
+export function confirmationPhrase(ops: ChangeOp[]): string | null {
+  const parts: string[] = [];
+  for (const op of ops) {
+    if (op.op === "add" && op.course && !op.locked && (op.status ?? "planned") === "planned") parts.push(`add ${op.course} to ${termLabel(op.term)}`);
+    else if (op.op === "move" && op.course && !op.item_id) parts.push(`move ${op.course}${op.from_term ? ` from ${termLabel(op.from_term)}` : ""} to ${termLabel(op.to_term)}`);
+    else if (op.op === "remove" && op.course && !op.item_id) parts.push(`remove ${op.course}${op.term ? ` from ${termLabel(op.term)}` : ""}`);
+    else return null;
+  }
+  return parts.length ? `I agree to ${parts.join(" and ")}` : null;
+}
 
 const KIND_LABEL: Record<Proposal["kind"], string> = {
   major: "Major",
@@ -40,6 +57,7 @@ export function PlannerProposalCard({
   footer?: ReactNode;
 }) {
   const rules = new Map(proposal.rules.map((r) => [r.id, r.text]));
+  const phrase = confirmationPhrase(proposal.ops);
   return (
     <article
       aria-label={label ?? `Proposal: ${proposal.title}`}
@@ -94,12 +112,15 @@ export function PlannerProposalCard({
           </div>
         </div>
       ) : (
-        <div className="mt-3 flex flex-wrap gap-2">
-          <Button onClick={onAccept}>Accept</Button>
-          <Button variant="outline" onClick={onReject}>
-            Reject
-          </Button>
-        </div>
+        <>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <Button onClick={onAccept}>Accept</Button>
+            <Button variant="outline" onClick={onReject}>
+              Reject
+            </Button>
+          </div>
+          <p className="mt-2 text-caption text-muted">{phrase ? <>Or type “{phrase}” or “apply it”.</> : <>Or type “apply it”.</>}</p>
+        </>
       )}
       {footer}
     </article>

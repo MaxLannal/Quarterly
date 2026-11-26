@@ -28,17 +28,12 @@ export async function accountPlans(page: Page): Promise<{ id: string; name: stri
  * 2-3 variants, each checked by the verifier (a report badge) and each with a rationale line per
  * quarter it explains ("Autumn 2026: ...").
  */
-export async function expectVariants(variants: Locator) {
-  const n = await variants.count();
-  expect(n).toBeGreaterThanOrEqual(2);
-  expect(n).toBeLessThanOrEqual(3);
+/** The planner agent's proposals (issue #17): one per group, each with a reason. */
+export async function expectProposals(proposals: Locator) {
+  const n = await proposals.count();
+  expect(n).toBeGreaterThanOrEqual(1);
   for (let i = 0; i < n; i++) {
-    const v = variants.nth(i);
-    await expect(v.getByRole("heading", { level: 3 })).toHaveText(/^Option [A-C]$/);
-    await expect(v.getByText(/^(Valid|\d+ warnings?|\d+ errors?)$/).first()).toBeVisible();
-    const lines = await v.locator("ul li:has(strong)").allInnerTexts();
-    expect(lines.length).toBeGreaterThan(0);
-    for (const line of lines) expect(line).toMatch(/^(Autumn|Winter|Spring|Summer) \d{4}: \S/);
+    await expect(proposals.nth(i).getByText("Why this for you:")).toBeVisible();
   }
 }
 
@@ -83,14 +78,24 @@ export async function closePanel(page: Page) {
 }
 
 /** Runs the agent generator from the open Generate popup; returns the variant cards. */
-export async function generate(page: Page, setup?: (dialog: Locator) => Promise<void>) {
-  const dialog = page.getByRole("dialog", { name: "Generate plan" });
-  await expect(dialog).toBeVisible();
-  if (setup) await setup(dialog);
-  await dialog.getByRole("button", { name: "Generate", exact: true }).click();
-  // The run streams its steps, then the verified variants (the solver can take a while).
-  await expect(dialog.getByRole("region", { name: "Generated variants" })).toBeVisible({ timeout: 150_000 });
-  return { dialog, variants: dialog.getByRole("article", { name: /^Variant / }) };
+/**
+ * Generate plan in the planner panel (issue #18): answer the interests question when the
+ * record has none, wait for the proposals (the fake model streams steps, then a plan), and
+ * return the panel and its proposal cards. Accept all applies them.
+ */
+export async function generate(page: Page, interest = "machine learning") {
+  await page.getByRole("button", { name: "Generate plan" }).click();
+  const panel = page.getByRole("complementary", { name: "Planner panel" }).or(page.getByRole("dialog", { name: "Ask Quarterly" }));
+  await expect(panel).toBeVisible();
+  const question = panel.getByTestId("planner-question");
+  const proposals = panel.getByRole("article", { name: /^Proposal: / });
+  await expect(question.or(proposals.first())).toBeVisible({ timeout: 150_000 });
+  if (await question.isVisible()) {
+    await question.getByLabel(/Your answer|Other/).fill(interest);
+    await question.getByRole("button", { name: "Send" }).click();
+  }
+  await expect(proposals.first()).toBeVisible({ timeout: 150_000 });
+  return { panel, proposals };
 }
 
 /** What a journey enters in sign-up step 4, "About you" (Issue #16). */

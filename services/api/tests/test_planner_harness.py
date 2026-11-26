@@ -374,3 +374,29 @@ def test_fill_submits_without_tools_after_the_lookups_run_out(
     assert retry["tools"] == ["submit_plan"] and "used all your catalog lookups" in str(
         retry["messages"]
     )
+
+
+def test_an_impossible_request_is_explained_before_the_plan(
+    env: Env, solved: list[tuple[str, str]], monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """SPEC journey B: when the solver proves that no plan fits, the student hears why, in the
+    rules that conflict, and still gets the closest plan to work from."""
+    from types import SimpleNamespace
+
+    import api.agents.planner.harness as harness
+    from planner_core.models import Conflict, Infeasibility
+
+    proof = Infeasibility(
+        message="Graduating by Spring 2030 needs 5 more courses than your quarters allow.",
+        conflicts=[Conflict(id="units", kind="load", label="Keeping every quarter full time")],
+    )
+    monkeypatch.setattr(
+        harness, "generate", lambda *a, **k: SimpleNamespace(variants=[], infeasible=proof)
+    )
+    fake = FakeLLM(script={TASK: [no_questions(), fill(solved), explain(solved)]})
+    events = run(env, fake, profile_answers=answers())
+    notice = of(events, "message")[0]["text"]
+    assert notice.startswith("No plan fits all of these rules.")
+    assert proof.message in notice and "Keeping every quarter full time" in notice
+    assert [e["type"] for e in events].index("message") < [e["type"] for e in events].index("plan")
+    assert proof.message in str(fake.calls[1]["messages"])  # the model hears it too

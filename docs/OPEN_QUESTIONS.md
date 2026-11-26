@@ -996,3 +996,18 @@ Resolved in 7fbc438: `GET /me/updates` and `POST /me/updates/seen` are deleted, 
 
 Richard's answer: Yes, we can implement a small fix in the next dashboard PR.
 Not done yet: planned for the next dashboard PR.
+
+## Planner split screen and planner agent (issues #17 and #18, 2026-11-26)
+
+Max answered the open decisions before the build: port the degree-plan-agent harness; #18 D1, proposals stay until accepted or rejected; #17 D1, keep the chat while the plan exists, with Clear chat; #17 D2, logged-out students can use the agent. The items below are defaults taken during the build. Each has a suggested answer.
+
+- **PL18-1. Where a saved plan's edit history lives.** Now on this device only, with the plan's local copy. *Suggested:* keep for the demo; store it on the server (a `plan_edit` table) if students switch devices.
+- **PL18-2. Course details as a third panel.** Issue #18 asks for a third panel on wide screens. Now the details are a view inside the right panel ("← Chat"), because a third column beside the panel leaves the four year-columns too narrow. *Suggested:* keep; or open details in place of the grid's last column.
+- **PL18-3. The walkthrough starts on its own** after each generation, with Skip tour and "Walk me through it" to replay. *Suggested:* keep.
+- **PL17-1. Time and cost of a first plan on Opus 5.5.** Live, a CS BS plan took about 12 minutes and $2.80 before the brief listed prerequisites (docs/LIVE-TEST-REPORT.md). *Options:* (a) keep Opus for both steps; (b) Opus for the plan, Sonnet 5.5 for the questions and the explanations (about half the cost); (c) a lower effort. *Suggested:* (b) after one more live comparison.
+- **PL17-2. `evals/live/run.py`** still drives the removed `/agents/generate` and `/agents/chat`. `evals/run.py` (the offline and the paid A1/A2 sets) moved to `/agents/planner`. *Suggested:* port the live suite before the next paid live run.
+- **PL17-3. Guideline rule G07** (Bx/MS students finish the Core and the other requirements before the last year) comes from the degree-plan-agent prototype without a source page. *Suggested:* Richard confirms it or gives the page; until then it is a hard rule only for Bx/MS plans.
+- **PL17-4. A plan without a major.** The planner says "use + Program" instead of asking for the intended programs, because its proposals cannot change the plan's programs. *Suggested:* keep; the setup card already fills the programs from the record.
+- **PL17-5. Interests in the dashboard guide** come after research areas (so the guide still opens with "After graduation"). *Suggested:* keep.
+- **PL17-6. The e2e journeys (`e2e-stack/`)** were not run in this build: `make e2e` replaces the Docker stack that other sessions on this machine use. *Suggested:* run `make e2e`, then `make up`, before the merge.
+

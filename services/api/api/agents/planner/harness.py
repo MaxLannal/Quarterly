@@ -485,21 +485,30 @@ class PlannerRun:
             ]
         )
 
-    def _feasibility(self) -> str:
+    def _feasibility(self) -> tuple[str, MessageEvent | None]:
+        """The solver as an oracle: a line for the model and, for an impossible request, a
+        message to the student naming the rules in conflict (SPEC journey B)."""
         try:
             seconds = get_settings().generate_solver_seconds or SOLVER_SECONDS
             options = GenerateOptions(
                 variants=1, time_limit_s=seconds, today_term=self.req.today_term
             )
             result = generate(self.req.plan, self.rules, self.catalog, options)
-        except Exception:
+        except Exception:  # the oracle is advice; the run goes on without it
             logger.exception("%s: feasibility oracle failed", TASK)
-            return "Not checked."
+            return "Not checked.", None
         if result.variants:
-            return "A valid plan exists for these programs in these quarters."
-        if result.infeasible is not None:
-            return f"No valid plan was found: {result.infeasible.message}"
-        return "Not settled within the time limit."
+            return "A valid plan exists for these programs in these quarters.", None
+        if result.infeasible is None:
+            return "Not settled within the time limit.", None
+        proof = result.infeasible
+        rules = "; ".join(c.label for c in proof.conflicts)
+        conflict = f" The rules in conflict: {rules}." if rules else ""
+        notice = MessageEvent(
+            text=f"No plan fits all of these rules. {proof.message}{conflict} I will still "
+            "write the closest plan; the plan check shows what is missing."
+        )
+        return f"No valid plan was found: {proof.message}{conflict}", notice
 
     def _fill_check(self) -> Callable[[PlanSubmission], None]:
         known = known_codes(self.req.plan, self.catalog)
@@ -619,10 +628,12 @@ class PlannerRun:
             return
 
         yield self.step(STEP_FIT, "started")
-        feasibility = self._feasibility()
+        feasibility, impossible = self._feasibility()
         report, _ = verify_checked(self.req.plan, self.rules, self.catalog)
         system = self.system(requirements_brief(self.req.plan, self.rules, self.catalog, report))
         yield self.step(STEP_FIT, "done")
+        if impossible is not None:
+            yield impossible
 
         if not state.model_asked:
             state.model_asked = True

@@ -643,6 +643,13 @@ Richard's FEEDBACK "Minor design changes" overrides the rules above only in thes
 - **Top-bar search.** A filled `surface-strong` field. It has no outline until the user hovers over it or focuses it. The icon and the placeholder identify it.
 - **Footer links.** 32px rows with a mouse. 44px targets on touch screens.
 
+## Planner split screen (Max, issue #18, 2026-11-26)
+
+- **Year columns.** The plan grid shows one column per academic year, each stacking Summer (a 44px dashed "+ Summer YYYY" row until used), Autumn, Winter and Spring. The columns follow the grid's own width (container queries), so they stay readable with the panel open: four columns of about 200px at 1440px.
+- **Panel.** The planner panel is the right third from 1024px (min 22rem, max 38rem), sticky, `bg-canvas` with a hairline border and `shadow-overlay`; a full-screen sheet below 1024px. It keeps the chat look of FEEDBACK F4 (bubbles, the AI avatar, the typing dots) and the title "Ask Quarterly" without a badge (FEEDBACK 2026-11-16).
+- **Proposals.** A proposed course is a dashed 2px `primary/50` block on `primary-wash`, with a "Proposed" badge; a proposed removal strikes the existing card through with a warning badge.
+- **Glow.** The walkthrough lights the current group with `glow-ring`: a maroon ring with a soft maroon halo that breathes over 1.8s. With reduced motion it is a static 3px maroon ring.
+
 ## Maroon and night (Max, 2026-11-20; branch `feature/best-of-uchicago`)
 
 Max requested this with a reference login card ("Have words bigger and background colors maroon and black

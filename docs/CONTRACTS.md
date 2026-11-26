@@ -531,10 +531,10 @@ One agent writes the first plan and changes it in the chat. Its rules are `data/
 | `step` | `name`, `status` (`started`, `done`, `failed`) | progress: "Reading your information", "Checking what can fit", "Writing your plan", "Checking the plan", "Fixing the plan (round n)", "Explaining each choice" |
 | `question` | `run_id`, `question_id`, `field` (a General Information field, or null), `text`, `options[]`, `allow_other` | the run paused; the page shows option buttons and an "Other" box, then sends `run_id` + `answer` |
 | `plan` | `run_id`, `verdict` (`valid`, `invalid`), `issues[]` (`PlanIssue`), `compromises[]`, `summary` | the whole proposed plan. `verdict` comes only from `verify_checked` + `check_certificate()` |
-| `proposal` | `change_set_id` (saved plan) or null, `group_id`, `title`, `kind` (`major`, `core`, `elective`, `minor`, `replace`, `other`), `ops[]`, `why`, `citations[]`, `rules[]` (`{id, text}`), `preview` (`Verdict`) | one course or sequence as unsaved blocks |
+| `proposal` | `change_set_id` (saved plan) or null, `group_id`, `title`, `kind` (`major`, `core`, `elective`, `minor`, `replace`, `other`), `ops[]`, `why`, `citations[]`, `rules[]` (`{id, text}`), `preview` (`Verdict`), `base_plan_hash` (a browser plan sends it back in `pending`) | one course or sequence as unsaved blocks |
 | `message` | `text`, `citations[]` | a chat answer |
 | `confirm` | `change_set`, `confirmation_text` | a typed confirmation (as before) |
-| `done` | `run_id`, `working_notes` (browser plans: the new working information) | the end of the stream |
+| `done` | `run_id`, `working_notes` and `profile_answers` (browser plans: the new working information, and this run's answers as their fields store them) | the end of the stream |
 | `error` | `message`, `reason` (`expired`, `unavailable`, `invalid_output`, `budget`, `invalid_plan`) | the run stopped; `expired` = start again |
 
 **Questions and resume.** Before planning, the agent asks for an empty General Information answer that planning needs (`intended_programs`, `interests`, `expected_graduation_term`), with the question and options from `data/profile/questions.yaml`, then at most 2 questions of its own. Before each question the server saves the run in `agent_run.state` and ends the stream. A resume does not count toward the rate limit. A state older than one day gives `error {reason: "expired"}`. A logged-in student's answer is stored as a `profile_proposal` (accepted on the dashboard); the run uses it at once.

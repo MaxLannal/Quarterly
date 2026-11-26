@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { accountPlans, addCreditOnDashboard, closePanel, dragUntilChecked, expectVariants, gap, generate, gridByTerm, openPanel, setUpPlanFromRecord, signUp, verifierSettled } from "./journey";
+import { accountPlans, addCreditOnDashboard, closePanel, dragUntilChecked, expectProposals, gap, generate, gridByTerm, openPanel, setUpPlanFromRecord, signUp, verifierSettled } from "./journey";
 
 // SPEC "Core user journeys" A: incoming first-year with no plan (real stack, fake LLM). Since
 // Issue #16 a new student signs up first: the registration form replaced the onboarding wizard.
@@ -26,18 +26,12 @@ test("journey A: first-year signs up, sets up a plan from their information, gen
   await closePanel(page);
   gap("A3: the Core is not pre-placed as requirement slots; the grid starts empty.");
 
-  // A4. Generate (the interest goes in the popup): 2-3 verified variants, a rationale line per
-  // quarter (from the fake LLM).
-  await page.getByRole("button", { name: "Generate plan" }).click();
-  const { dialog, variants } = await generate(page, async (d) => {
-    await d.getByLabel("Interest tag").fill("machine learning");
-    await d.getByRole("button", { name: "Add", exact: true }).click();
-    await expect(d.getByRole("button", { name: "Remove interest machine learning" })).toBeVisible();
-  });
-  await expectVariants(variants);
-  gap('A4: variants are named "Option A/B/C", not "Exploratory CS" / "Econ-leaning" / "Balanced".');
-  await variants.first().getByRole("button", { name: "Apply", exact: true }).click();
-  await expect(dialog).toBeHidden();
+  // A4. Generate in the planner panel (issue #18): the planner asks for interests, then
+  // proposes one group per sequence, each with a reason; Accept all applies them.
+  const { panel, proposals } = await generate(page, "machine learning");
+  await expectProposals(proposals);
+  await panel.getByRole("button", { name: "Accept all" }).click();
+  await expect(page.getByTestId("proposal-block")).toHaveCount(0);
   await verifierSettled(page);
 
   // A5. Swap a course by drag-and-drop; the verifier re-runs in under a second.
