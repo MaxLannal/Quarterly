@@ -140,23 +140,21 @@ export function PlannerPanel({ run, onClose, selected, walkthrough, onReplay, co
 
   return (
     <div ref={rootRef} className={cn("flex min-h-0 flex-col bg-canvas", className)}>
-      <header className="flex items-start gap-3 border-b border-hairline px-4 py-3">
-        <div className="min-w-0 flex-1">
-          <div className="flex flex-wrap items-center gap-2">
-            {/* FEEDBACK 2026-11-16: "Ask Quarterly", without the grey "Generative AI" badge; the
-                line below still says that an AI writes the answers. */}
-            <h2 id={headingId} className="font-display text-title-lg">
-              Ask Quarterly
-            </h2>
-          </div>
-          <p className="mt-1 text-caption text-muted">Answers are written by an AI and can be wrong. Not official advising.</p>
+      <header className="border-b border-hairline px-4 py-3">
+        <div className="flex items-center gap-2">
+          {/* FEEDBACK 2026-11-16: "Ask Quarterly", without the grey "Generative AI" badge; the
+              line below still says that an AI writes the answers. */}
+          <h2 id={headingId} className="min-w-0 flex-1 font-display text-title-lg">
+            Ask Quarterly
+          </h2>
+          <Button variant="ghost" onClick={() => setConfirmClear(true)} disabled={run.entries.length === 0}>
+            Clear chat
+          </Button>
+          <Button variant="ghost" size="icon" aria-label="Close planner" onClick={onClose} className="-mr-2">
+            <CloseIcon />
+          </Button>
         </div>
-        <Button variant="ghost" onClick={() => setConfirmClear(true)} disabled={run.entries.length === 0}>
-          Clear chat
-        </Button>
-        <Button variant="ghost" size="icon" aria-label="Close planner" onClick={onClose} className="-mr-2">
-          <CloseIcon />
-        </Button>
+        <p className="mt-1 text-caption text-muted">Answers are written by an AI and can be wrong. Not official advising.</p>
       </header>
 
       <div ref={scrollRef} className="min-h-0 flex-1 overflow-y-auto px-4 py-4" data-testid="planner-scroll">
