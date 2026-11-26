@@ -1,0 +1,866 @@
+"""The planner agent, generate mode (issue #17): a port of the degree-plan-agent harness
+(ZhihchengGao/degree-plan-agent, `src/qplan/harness.py`) onto `llm_gateway` and `planner_core`.
+
+    read -> ask (question file, then the model) -> fill -> check -> repair* -> explain -> return
+
+- Code owns the phases, the budgets, the state and the verdict. The model proposes questions,
+  a grouped plan, repairs and explanations through submit tools.
+- A plan is valid only when `verify_checked` reports no errors and the certificate checker
+  accepts it (CLAUDE.md hard rule); the student's own standards (S01-S03) are errors too.
+- Each group of the final plan becomes one proposal (a `change_set` for a saved plan). The
+  agent writes nothing else: answers to questions become `profile_proposal` rows.
+- Before a question the run state is saved in `agent_run.state` and the stream ends; the next
+  request with `run_id` + `answer` continues from it.
+"""
+
+from __future__ import annotations
+
+import datetime as dt
+import json
+import logging
+from collections.abc import Callable, Generator, Iterator
+from dataclasses import dataclass, field
+from typing import Any
+
+from llm_gateway.api import run_agent
+from llm_gateway.types import AgentError, AgentSpec, Budget, Message, SubmitTool
+from planner_core import verify_checked
+from planner_core.changes import ChangeOpError, apply_ops
+from planner_core.generator import generate, horizon
+from planner_core.hashing import plan_hash
+from planner_core.models import (
+    AddOp,
+    Catalog,
+    ChangeOp,
+    GenerateOptions,
+    MoveOp,
+    PlanItem,
+    PlanState,
+    RemoveOp,
+    RuleSet,
+)
+from planner_core.terms import term_key
+from pydantic import BaseModel
+from sqlalchemy.orm import Session
+
+from api.agents.interview import split_items
+from api.agents.planner.brief import known_codes, requirements_brief
+from api.agents.planner.guideline import PlannerConfig, load_guideline, load_planner_config
+from api.agents.planner.standards import standard_issues, standards_from
+from api.agents.planner.state import (
+    AskedQuestion,
+    ExplanationsSubmission,
+    PlanSubmission,
+    QuestionsSubmission,
+    RepairSubmission,
+    RunState,
+)
+from api.agents.prompts import load_prompt
+from api.agents.runtime import RunLog, checked_citations, citable_ids, new_run, split_ref
+from api.agents.tools import ToolBox
+from api.config import get_settings
+from api.db import models as m
+from api.profile_data import ensure_profile, profile_out, render_student_md
+from api.profile_questions import Question, question_set
+from api.repo import plans as plans_repo
+from api.repo.rules import load_verify_inputs
+from api.schemas.agents import DoneEvent, ErrorEvent, MessageEvent, StepEvent
+from api.schemas.planner import (
+    Compromise,
+    PlanEvent,
+    PlanIssue,
+    PlannerProposalEvent,
+    PlannerRequest,
+    QuestionAnswer,
+    QuestionEvent,
+    RuleRef,
+    Verdict,
+)
+
+logger = logging.getLogger("api.agents")
+
+TASK = "a1_planner_agent"
+KIND = "planner"
+STEP_READ = "Reading your information"
+STEP_FIT = "Checking what can fit"
+STEP_WRITE = "Writing your plan"
+STEP_CHECK = "Checking the plan"
+STEP_FIX = "Fixing the plan (round {n})"
+STEP_EXPLAIN = "Explaining each choice"
+
+NO_MAJOR = "Choose your major first: use + Program above your plan. Then press Generate plan again."
+UNAVAILABLE = "The planner can't write a plan right now. You can still build your plan by hand."
+EXPIRED = "This question has expired. Press Generate plan to start again."
+NO_RUN = "This run was not found. Press Generate plan to start again."
+#: General Information answers a first plan needs (a missing one is asked before planning).
+REQUIRED_FIELDS = ("interests",)
+REPLACE_TITLE = "Courses this plan replaces"
+REPLACE_WHY = "The new plan does not keep these courses. Reject this to keep them."
+SOLVER_SECONDS = 4.0
+WRITE_BUDGET = Budget(tool_calls=4, tokens=400_000, seconds=240)
+STEP_BUDGET = Budget(tool_calls=4, tokens=200_000, seconds=150)
+#: The order of groups in the walkthrough and the proposal list.
+KIND_ORDER = {"major": 0, "core": 1, "minor": 2, "elective": 3, "other": 4, "replace": 5}
+READ_TOOLS = ["search_courses", "get_course", "get_forum_summary", "get_forum_posts"]
+
+
+def _plain(model: BaseModel) -> dict[str, Any]:
+    return model.model_dump(mode="json")
+
+
+def coerce_answer(question: Question, value: Any) -> Any:
+    """A General Information answer from a question card ({option, text}) or a browser plan
+    (already a stored value), as the field stores it. None when it cannot be read."""
+    if isinstance(value, QuestionAnswer):
+        value = value.model_dump()
+    if isinstance(value, dict) and ("option" in value or "text" in value):
+        option, text = value.get("option"), value.get("text")
+        if question.type == "list":
+            items = split_items(" , ".join(x for x in (option, text) if x))
+            return [i[:1].upper() + i[1:] for i in items] or None
+        if question.options:
+            for o in question.options:
+                if option and option.strip().lower() in (o.label.lower(), str(o.value).lower()):
+                    return o.value
+            return None
+        return (text or option or "").strip() or None
+    return value
+
+
+def _answered(value: Any) -> bool:
+    return value not in (None, "", [], {})
+
+
+@dataclass
+class Group:
+    id: str
+    title: str
+    kind: str
+    why: str
+    rules: list[str]
+    placements: list[tuple[str, str]]  # (course, term)
+
+
+@dataclass
+class PlannerRun:
+    db: Session
+    llm: object
+    req: PlannerRequest
+    rules: RuleSet
+    catalog: Catalog
+    box: ToolBox
+    log: RunLog
+    account: m.Account | None = None
+    saved: m.Plan | None = None
+    config: PlannerConfig = field(default_factory=load_planner_config)
+    today: dt.date = field(default_factory=dt.date.today)
+
+    @classmethod
+    def build(
+        cls,
+        db: Session,
+        llm: object,
+        req: PlannerRequest,
+        *,
+        account: m.Account | None,
+        saved: m.Plan | None,
+        show_unpublished: bool,
+        statuses: tuple[str, ...],
+        log: RunLog,
+        config: PlannerConfig | None = None,
+    ) -> PlannerRun:
+        """Load the catalog and rules for the request's plan (raises UnknownProgramsError)."""
+        rules, catalog = load_verify_inputs(
+            db,
+            req.plan,
+            show_unpublished=show_unpublished,
+            whole_catalog=True,
+            section_terms=horizon(req.plan),
+        )
+        report, _ = verify_checked(req.plan, rules, catalog)
+        box = ToolBox(
+            db=db,
+            state=req.plan,
+            report=report,
+            statuses=statuses,
+            show_unpublished=show_unpublished,
+            logged_in=account is not None,
+        )
+        return cls(
+            db=db,
+            llm=llm,
+            req=req,
+            rules=rules,
+            catalog=catalog,
+            box=box,
+            log=log,
+            account=account,
+            saved=saved,
+            config=config or load_planner_config(),
+        )
+
+    # ------------------------------------------------------------------------ inputs
+
+    def step(self, name: str, status: str) -> StepEvent:
+        self.log.step(name, status)
+        return StepEvent.model_validate({"name": name, "status": status})
+
+    def record(self, state: RunState) -> dict[str, Any]:
+        """The General Information answers: the saved record, or the browser plan's answers,
+        plus the answers given in this run."""
+        qs = {q.field: q for q in question_set().questions}
+        if self.account is not None:
+            row = ensure_profile(self.db, self.account.id)
+            out = _plain(profile_out(self.db, self.account, row))
+        else:
+            out = {
+                f: coerce_answer(qs[f], v) for f, v in self.req.profile_answers.items() if f in qs
+            }
+        for asked in state.asked:
+            answer = state.answers.get(asked.question_id)
+            if asked.field and answer is not None and asked.field in qs:
+                value = coerce_answer(qs[asked.field], answer)
+                if value is not None:
+                    out[asked.field] = value
+        return out
+
+    def working_notes(self) -> str:
+        if self.account is not None:
+            row = ensure_profile(self.db, self.account.id)
+            return (row.working_notes or "").strip()
+        return (self.req.working_notes or "").strip()
+
+    def student_md(self, record: dict[str, Any]) -> str:
+        if self.account is not None:
+            row = ensure_profile(self.db, self.account.id)
+            with self.db.no_autoflush:
+                for f in REQUIRED_FIELDS:  # an answer of this run is not in the record yet
+                    if f in record and not getattr(row, f, None):
+                        setattr(row, f, record[f])
+                text = render_student_md(self.db, row, grades=False)
+            self.db.expire(row)  # never save the run's answers into the record
+            return text
+        row = m.StudentProfile()
+        for q in question_set().questions:
+            if q.type == "list":
+                setattr(row, q.field, list(record.get(q.field) or []))
+            elif q.type != "table" and hasattr(row, q.field):
+                setattr(row, q.field, record.get(q.field))
+        row.terms_away = record.get("terms_away")
+        with self.db.no_autoflush:
+            return render_student_md(self.db, row, grades=False)
+
+    def terms(self) -> list[str]:
+        terms = horizon(self.req.plan)
+        if self.req.today_term:
+            terms = [t for t in terms if term_key(t) >= term_key(self.req.today_term)]
+        return terms
+
+    def has_major(self) -> bool:
+        return any(p.program_id != "core" for p in self.req.plan.programs or [])
+
+    def fixed_items(self) -> list[PlanItem]:
+        """Items the agent never moves: completed, in progress and locked."""
+        return [i for i in self.req.plan.items or [] if i.status != "planned" or i.locked]
+
+    def open_items(self) -> list[PlanItem]:
+        return [i for i in self.req.plan.items or [] if i.status == "planned" and not i.locked]
+
+    def state_of(self, groups: list[Group]) -> PlanState:
+        fixed = self.fixed_items()
+        fixed_codes = {(i.course, i.term) for i in fixed}
+        items = list(fixed) + [
+            PlanItem(course=c, term=t)
+            for g in groups
+            for c, t in g.placements
+            if (c, t) not in fixed_codes
+        ]
+        return self.req.plan.model_copy(update={"items": items})
+
+    def check(self, state: PlanState, record: dict[str, Any]) -> tuple[bool, list[PlanIssue]]:
+        """Valid only with no verifier error, an accepted certificate and no broken standard."""
+        report, problems = verify_checked(state, self.rules, self.catalog)
+        extra = standard_issues(state, self.catalog, standards_from(record, self.working_notes()))
+        issues = [
+            PlanIssue(
+                code=i.code,
+                level=i.level,
+                message=i.message,
+                course_ids=list(i.course_ids),
+                term_ids=list(i.term_ids),
+            )
+            for i in report.issues
+            if i.level in ("error", "warning")
+        ] + extra
+        valid = (
+            not problems
+            and report.certificate is not None
+            and report.status != "errors"
+            and not extra
+        )
+        return valid, issues
+
+    def known_ids(self, record: dict[str, Any]) -> set[str]:
+        fields = {f for f, v in record.items() if _answered(v)}
+        ids = citable_ids(profile_fields=fields, guideline_ids=load_guideline().rules)
+        return ids | {f"course:{i.course}" for i in self.req.plan.items or [] if i.course}
+
+    def system(self, brief: str) -> str:
+        prompt = load_prompt("a1_planner")
+        return (
+            f"{prompt.text}\n\n# Plan guideline\n\n{load_guideline().text}\n\n"
+            f"# Requirements brief\n\n{brief}\n"
+        )
+
+    def spec[T: BaseModel](
+        self,
+        system: str,
+        user: str,
+        submit: tuple[str, str, type[T]],
+        record: dict[str, Any],
+        *,
+        check: Callable[[T], None] | None = None,
+        tools: bool = True,
+        budget: Budget = STEP_BUDGET,
+    ) -> AgentSpec[T]:
+        name, description, model = submit
+        return AgentSpec(
+            task=TASK,
+            prompt_version=load_prompt("a1_planner").version_tag,
+            system=system,
+            messages=[Message("user", user)],
+            submit=SubmitTool(name, description, model, check=check),
+            tools=self.box.tools(READ_TOOLS) if tools else [],
+            budget=budget,
+            known_ids=self.known_ids(record),
+        )
+
+    # ------------------------------------------------------------------------ run state
+
+    def _load_run(self) -> tuple[m.AgentRun, RunState] | ErrorEvent:
+        if self.req.run_id is None:
+            run = new_run(self.db, KIND, self.saved.id if self.saved else None)
+            return run, RunState(day=self.today)
+        found = self.db.get(m.AgentRun, self.req.run_id)
+        if found is None or found.kind != KIND or found.state is None:
+            return ErrorEvent(message=NO_RUN, reason="expired")
+        state = RunState.model_validate(found.state)
+        if (self.today - state.day).days > self.config.state_ttl_days:
+            found.state = None
+            self.db.commit()
+            return ErrorEvent(message=EXPIRED, reason="expired")
+        if self.req.answer is not None:
+            state.answers[self.req.answer.question_id] = self.req.answer
+            self._propose_profile_answer(state, self.req.answer)
+        return found, state
+
+    def _propose_profile_answer(self, state: RunState, answer: QuestionAnswer) -> None:
+        asked = next((a for a in state.asked if a.question_id == answer.question_id), None)
+        if asked is None or asked.field is None or self.account is None:
+            return
+        question = next(q for q in question_set().questions if q.field == asked.field)
+        value = coerce_answer(question, answer)
+        if value is None:
+            return
+        self.db.add(
+            m.ProfileProposal(
+                account_id=self.account.id,
+                field=asked.field,
+                value=value,
+                source="planner_chat",
+                status="proposed",
+                created_day=self.today,
+            )
+        )
+
+    def _pause(self, run: m.AgentRun, state: RunState, asked: AskedQuestion) -> Iterator[BaseModel]:
+        state.asked = [a for a in state.asked if a.question_id != asked.question_id] + [asked]
+        run.state = _plain(state)
+        run.status = "waiting"
+        self.log.save(self.db, run)
+        self.db.commit()
+        yield QuestionEvent(
+            run_id=str(run.id),
+            question_id=asked.question_id,
+            field=asked.field,
+            text=asked.text,
+            options=asked.options,
+        )
+        yield DoneEvent(run_id=str(run.id))
+
+    def _finish(
+        self,
+        run: m.AgentRun,
+        last: BaseModel | None,
+        *,
+        status: str,
+        profile_answers: dict[str, Any] | None = None,
+    ) -> Iterator[BaseModel]:
+        if last is not None:
+            yield last
+        run.state = None
+        run.status = status[:16]
+        self.log.save(self.db, run)
+        self.db.commit()
+        yield DoneEvent(run_id=str(run.id), profile_answers=profile_answers)
+
+    # ------------------------------------------------------------------------ phases
+
+    def _missing_question(self, state: RunState, record: dict[str, Any]) -> AskedQuestion | None:
+        for f in REQUIRED_FIELDS:
+            if _answered(record.get(f)) or f in state.answers:
+                continue  # answered, or asked and answered with nothing usable: ask once
+            q = next(q for q in question_set().questions if q.field == f)
+            return AskedQuestion(
+                question_id=q.id, field=q.field, text=q.text, options=[o.label for o in q.options]
+            )
+        return None
+
+    def _model_questions(
+        self, system: str, user: str, record: dict[str, Any]
+    ) -> list[AskedQuestion]:
+        if self.config.questions_max <= 0:
+            return []
+        task = (
+            "Before planning, decide what to ask this student. Ask only when the answer would "
+            "change a decision in the plan that the record cannot settle; name that decision. "
+            f"Write at most {self.config.questions_max} multiple-choice questions (zero is "
+            f"best when the record is enough), each with {self.config.min_options}-"
+            f"{self.config.max_options} options; the page adds an 'Other' box. "
+            "Call submit_questions."
+        )
+        submit = (
+            "submit_questions",
+            "Submit the questions to ask before planning (possibly none).",
+            QuestionsSubmission,
+        )
+        spec = self.spec(system, f"{user}\n\n# Task\n\n{task}", submit, record, tools=False)
+        out = run_agent(self.llm, spec, sink=self.log.sink).output
+        asked = []
+        for i, q in enumerate(out.questions[: self.config.questions_max], 1):
+            options = [o for o in q.options if o.strip()][: self.config.max_options]
+            if len(options) >= self.config.min_options:
+                asked.append(AskedQuestion(question_id=f"Q{i}", text=q.question, options=options))
+        return asked
+
+    def _user_text(self, record: dict[str, Any], state: RunState, feasibility: str) -> str:
+        notes = self.working_notes()
+        if len(notes) > self.config.working_info_chars:
+            words = {str(w).lower() for v in record.values() if isinstance(v, list) for w in v}
+            notes = "\n".join(
+                ln for ln in notes.splitlines() if any(w in ln.lower() for w in words)
+            )[: self.config.working_info_chars]
+        fixed = ", ".join(
+            f"{i.course} {i.term} ({i.status})" for i in self.fixed_items() if i.course
+        )
+        movable = ", ".join(f"{i.course} {i.term}" for i in self.open_items() if i.course)
+        answers = []
+        for a in state.asked:
+            given = state.answers.get(a.question_id)
+            if given is not None:
+                answers.append(f"- {a.question_id} {a.text}: {given.option or given.text or '-'}")
+        return "\n\n".join(
+            [
+                "# The student's record (student.md)\n\n" + self.student_md(record),
+                "# Working information (from earlier chats)\n\n" + (notes or "None yet."),
+                "# Quarters to plan\n\n" + ", ".join(self.terms()),
+                "# The plan now\n\n"
+                f"Completed, in progress or locked (keep): {fixed or 'none'}\n"
+                f"Planned, not locked (keep, move or drop): {movable or 'none'}",
+                "# Feasibility (Quarterly's solver as an oracle; its plan is not used)\n\n"
+                + feasibility,
+                "# Answers to questions\n\n" + ("\n".join(answers) or "None."),
+            ]
+        )
+
+    def _feasibility(self) -> str:
+        try:
+            seconds = get_settings().generate_solver_seconds or SOLVER_SECONDS
+            options = GenerateOptions(
+                variants=1, time_limit_s=seconds, today_term=self.req.today_term
+            )
+            result = generate(self.req.plan, self.rules, self.catalog, options)
+        except Exception:
+            logger.exception("%s: feasibility oracle failed", TASK)
+            return "Not checked."
+        if result.variants:
+            return "A valid plan exists for these programs in these quarters."
+        if result.infeasible is not None:
+            return f"No valid plan was found: {result.infeasible.message}"
+        return "Not settled within the time limit."
+
+    def _fill_check(self) -> Callable[[PlanSubmission], None]:
+        known = known_codes(self.req.plan, self.catalog)
+        terms = set(self.terms())
+        done = {i.course for i in self.req.plan.items or [] if i.status == "completed"}
+
+        def check(sub: PlanSubmission) -> None:
+            problems: set[str] = set()
+            seen: dict[str, str] = {}
+            for g in sub.groups:
+                for c in g.courses:
+                    if c.code not in known:
+                        problems.add(f"{c.code} is not a course in the catalog")
+                    if c.term not in terms:
+                        problems.add(f"{c.term} is not one of the quarters to plan")
+                    if c.code in done:
+                        problems.add(f"{c.code} is already completed")
+                    if c.code in seen and seen[c.code] != g.id:
+                        problems.add(f"{c.code} is in two groups ({seen[c.code]}, {g.id})")
+                    seen[c.code] = g.id
+            if problems:
+                raise ValueError("Fix these and submit again: " + "; ".join(sorted(problems)))
+
+        return check
+
+    def _apply_repair(self, groups: list[Group], sub: RepairSubmission) -> list[str]:
+        notes: list[str] = []
+        for op in sub.ops[: self.config.max_ops_per_round]:
+            owner = next((g for g in groups if any(c == op.course for c, _ in g.placements)), None)
+            if op.op == "add":
+                target = next((g for g in groups if g.id == op.group_id), None) or owner
+                if target is None:
+                    gid = op.group_id or f"r{len(groups) + 1}"
+                    target = Group(gid, "Other courses", "other", "", [], [])
+                    groups.append(target)
+                target.placements.append((op.course, op.term or op.to_term))
+            elif owner is None:
+                notes.append(f"skipped {op.op} {op.course}: it is not in the plan")
+            elif op.op == "move":
+                to, frm = op.to_term or op.term, op.from_term
+                owner.placements = [
+                    (c, to if c == op.course and (not frm or t == frm) else t)
+                    for c, t in owner.placements
+                ]
+            else:
+                owner.placements = [(c, t) for c, t in owner.placements if c != op.course]
+        for g in [g for g in groups if not g.placements]:
+            groups.remove(g)
+        return notes
+
+    def _grid(self, groups: list[Group]) -> str:
+        by_term: dict[str, list[str]] = {}
+        for g in groups:
+            for c, t in g.placements:
+                by_term.setdefault(t, []).append(f"{c} ({g.id})")
+        for i in self.fixed_items():
+            if i.course:
+                by_term.setdefault(i.term, []).append(f"{i.course} ({i.status}, fixed)")
+        rows = sorted(by_term.items(), key=lambda kv: term_key(kv[0]))
+        return "\n".join(f"- {t}: {', '.join(v)}" for t, v in rows)
+
+    @staticmethod
+    def _issues_text(issues: list[PlanIssue]) -> str:
+        rows = sorted(issues, key=lambda i: (i.level != "error", i.code))[:25]
+        return json.dumps([_plain(i) for i in rows], ensure_ascii=False)
+
+    def _ops_for(self, group: Group) -> list[ChangeOp]:
+        """The group as ops on the request plan: add new placements, move an unlocked item of
+        the same course."""
+        open_by_course = {i.course: i for i in self.open_items() if i.course}
+        fixed = {(i.course, i.term) for i in self.fixed_items()}
+        ops: list[ChangeOp] = []
+        for code, term in group.placements:
+            if (code, term) in fixed:
+                continue
+            current = open_by_course.get(code)
+            if current is None:
+                ops.append(AddOp(course=code, term=term))
+            elif current.term != term:
+                ops.append(MoveOp(course=code, from_term=current.term, to_term=term))
+        return ops
+
+    def _removals(self, groups: list[Group]) -> list[ChangeOp]:
+        kept = {c for g in groups for c, _ in g.placements}
+        return [
+            RemoveOp(course=i.course, term=i.term)
+            for i in self.open_items()
+            if i.course and i.course not in kept
+        ]
+
+    def _verdict(self, ops: list[ChangeOp]) -> Verdict | None:
+        try:
+            after = apply_ops(self.req.plan, ops)
+        except ChangeOpError:
+            return None
+        report, _ = verify_checked(after, self.rules, self.catalog)
+        return Verdict.model_validate(self.box._verdict(report))
+
+    # ------------------------------------------------------------------------ the run
+
+    def generate_events(self) -> Iterator[BaseModel]:
+        loaded = self._load_run()
+        if isinstance(loaded, ErrorEvent):
+            yield loaded
+            return
+        run, state = loaded
+        yield self.step(STEP_READ, "started")
+        record = self.record(state)
+        yield self.step(STEP_READ, "done")
+
+        if not self.has_major():
+            yield from self._finish(run, MessageEvent(text=NO_MAJOR), status="no_major")
+            return
+        missing = self._missing_question(state, record)
+        if missing is not None:
+            yield from self._pause(run, state, missing)
+            return
+
+        yield self.step(STEP_FIT, "started")
+        feasibility = self._feasibility()
+        report, _ = verify_checked(self.req.plan, self.rules, self.catalog)
+        system = self.system(requirements_brief(self.req.plan, self.rules, self.catalog, report))
+        yield self.step(STEP_FIT, "done")
+
+        if not state.model_asked:
+            state.model_asked = True
+            try:
+                user = self._user_text(record, state, feasibility)
+                asked = self._model_questions(system, user, record)
+            except AgentError as exc:
+                logger.info("%s: questions step failed (%s)", TASK, exc.reason)
+                asked = []
+            if asked:
+                state.asked += asked[1:]  # the rest wait their turn
+                yield from self._pause(run, state, asked[0])
+                return
+        pending = next((a for a in state.asked if a.question_id not in state.answers), None)
+        if pending is not None:
+            yield from self._pause(run, state, pending)
+            return
+
+        user = self._user_text(record, state, feasibility)
+        yield self.step(STEP_WRITE, "started")
+        task = (
+            "Fill every quarter of the plan in one submit_plan call, grouped by sequence (G45). "
+            "Cover every requirement in the brief, check prerequisite order and the quarters "
+            "each course is offered, keep to the student's standards and choose by their "
+            "interests. Use get_course when you are unsure."
+        )
+        fill = (
+            "submit_plan",
+            "Submit the whole plan as groups of courses with their quarters.",
+            PlanSubmission,
+        )
+        try:
+            spec = self.spec(
+                system,
+                f"{user}\n\n# Task\n\n{task}",
+                fill,
+                record,
+                check=self._fill_check(),
+                budget=WRITE_BUDGET,
+            )
+            sub = run_agent(self.llm, spec, sink=self.log.sink).output
+        except AgentError as exc:
+            logger.info("%s: fill failed (%s)", TASK, exc.reason)
+            yield self.step(STEP_WRITE, "failed")
+            error = ErrorEvent(message=UNAVAILABLE, reason="unavailable")
+            yield from self._finish(run, error, status="failed")
+            return
+        yield self.step(STEP_WRITE, "done")
+        groups = [
+            Group(
+                g.id, g.title, g.kind, g.why, list(g.rules), [(c.code, c.term) for c in g.courses]
+            )
+            for g in sub.groups
+        ]
+
+        yield self.step(STEP_CHECK, "started")
+        valid, issues = self.check(self.state_of(groups), record)
+        yield self.step(STEP_CHECK, "done")
+        compromises: list[Compromise] = []
+        valid, issues = yield from self._repair(
+            system, user, groups, record, valid, issues, compromises
+        )
+
+        cited, seen = yield from self._explain(system, user, groups, record)
+        summary = sub.notes.strip() or (
+            f"{sum(len(g.placements) for g in groups)} courses in {len(groups)} groups."
+        )
+        yield PlanEvent(
+            run_id=str(run.id),
+            verdict="valid" if valid else "invalid",
+            issues=issues,
+            compromises=compromises,
+            summary=summary,
+        )
+        yield from self._proposals(run, groups, cited, seen)
+        yield from self._finish(
+            run, None, status="ok" if valid else "invalid", profile_answers=self._answers(state)
+        )
+
+    def _repair(
+        self,
+        system: str,
+        user: str,
+        groups: list[Group],
+        record: dict[str, Any],
+        valid: bool,
+        issues: list[PlanIssue],
+        compromises: list[Compromise],
+    ) -> Generator[BaseModel, None, tuple[bool, list[PlanIssue]]]:
+        """Verify -> repair rounds, as in the prototype: stop when valid (after at most
+        `max_polish_rounds` on fixable warnings), on thrash, or after `repair_rounds`."""
+        history: list[str] = []
+        last: frozenset[tuple[str, str, str]] | None = None
+        repeats = rounds = polish = 0
+        submit = ("submit_repair", "Submit this round's repair.", RepairSubmission)
+        while rounds < self.config.repair_rounds:
+            errors = [i for i in issues if i.level == "error"]
+            codes = self.config.fix_warning_codes
+            fixable = [i for i in issues if i.level == "warning" and i.code in codes]
+            if valid and (not fixable or polish >= self.config.max_polish_rounds):
+                break
+            if not errors:
+                polish += 1
+            rounds += 1
+            name = STEP_FIX.format(n=rounds)
+            yield self.step(name, "started")
+            task = (
+                "Quarterly's verifier found problems. Repair the plan with the FEWEST changes "
+                f"(at most {self.config.max_ops_per_round} add, move or remove operations). Bend "
+                "the lowest tier first and list each rule you bend. If no errors are left, fix "
+                "the listed warnings only when that adds no error; otherwise submit no "
+                "operations. Do not undo an earlier round unless it caused a problem."
+            )
+            body = (
+                f"{user}\n\n# Current plan (quarter: course (group))\n\n{self._grid(groups)}\n\n"
+                f"# Verifier result (errors first)\n\n{self._issues_text(issues)}\n\n"
+                f"# Earlier rounds\n\n{chr(10).join(history) or 'None.'}\n\n# Task\n\n{task}"
+            )
+            try:
+                fix = run_agent(
+                    self.llm, self.spec(system, body, submit, record), sink=self.log.sink
+                ).output
+            except AgentError as exc:
+                logger.info("%s: repair failed (%s)", TASK, exc.reason)
+                yield self.step(name, "failed")
+                break
+            skipped = self._apply_repair(groups, fix)
+            compromises += [
+                Compromise(rule=b.rule, tier=b.tier, why=b.why, traded=b.traded) for b in fix.bent
+            ]
+            note = "; ".join(skipped)
+            history.append(f"- round {rounds}: {fix.summary} ({len(fix.ops)} ops) {note}".rstrip())
+            valid, issues = self.check(self.state_of(groups), record)
+            yield self.step(name, "done")
+            signature = frozenset(
+                (i.code, ",".join(sorted(i.course_ids)), ",".join(sorted(i.term_ids)))
+                for i in issues
+                if i.level == "error"
+            )
+            repeats = repeats + 1 if signature == last else 1
+            last = signature
+            if errors and repeats >= self.config.thrash_same_errors:
+                break
+            if not errors and not fix.ops:
+                break
+        return valid, issues
+
+    def _explain(
+        self, system: str, user: str, groups: list[Group], record: dict[str, Any]
+    ) -> Generator[BaseModel, None, tuple[dict[str, list[tuple[str, str, str]]], set[str]]]:
+        yield self.step(STEP_EXPLAIN, "started")
+        cited: dict[str, list[tuple[str, str, str]]] = {}
+        seen = self.known_ids(record)
+        task = (
+            "The plan is final. For each group, write why it suits this student (G46): two or "
+            "three short sentences that name an interest, goal or standard from the record or "
+            "the working information. Cite the ids you used (profile:<field>, course:CODE, "
+            "post:N, summary:N, guideline:Gnn). Call submit_explanations."
+        )
+        body = (
+            f"{user}\n\n# Final plan (quarter: course (group))\n\n{self._grid(groups)}\n\n"
+            f"# Task\n\n{task}"
+        )
+        submit = ("submit_explanations", "Submit one reason per group.", ExplanationsSubmission)
+        try:
+            written = run_agent(
+                self.llm, self.spec(system, body, submit, record), sink=self.log.sink
+            )
+        except AgentError as exc:
+            logger.info("%s: explanations failed (%s)", TASK, exc.reason)
+            yield self.step(STEP_EXPLAIN, "failed")
+            return cited, seen
+        seen |= written.seen_ids
+        by_id = {g.id: g for g in groups}
+        for e in written.output.groups:
+            if e.id in by_id and e.why.strip():
+                by_id[e.id].why = e.why.strip()
+                refs = (split_ref(c) for c in e.citations)
+                cited[e.id] = [(kind, ident, "") for kind, ident in (r for r in refs if r)]
+        yield self.step(STEP_EXPLAIN, "done")
+        return cited, seen
+
+    def _answers(self, state: RunState) -> dict[str, Any] | None:
+        """A browser plan stores the answers of this run itself (`done.profile_answers`)."""
+        if self.account is not None:
+            return None
+        qs = {q.field: q for q in question_set().questions}
+        out = {
+            a.field: coerce_answer(qs[a.field], state.answers[a.question_id])
+            for a in state.asked
+            if a.field and a.question_id in state.answers and a.field in qs
+        }
+        return {k: v for k, v in out.items() if v is not None} or None
+
+    def _proposals(
+        self,
+        run: m.AgentRun,
+        groups: list[Group],
+        cited: dict[str, list[tuple[str, str, str]]],
+        seen: set[str],
+    ) -> Iterator[BaseModel]:
+        rules = load_guideline().rules
+        base = plan_hash(self.req.plan)
+
+        def order(g: Group) -> tuple[int, tuple[int, int]]:
+            first = min((term_key(t) for _, t in g.placements), default=(0, 0))
+            return KIND_ORDER.get(g.kind, 9), first
+
+        rows: list[tuple[Group, list[ChangeOp]]] = [
+            (g, self._ops_for(g)) for g in sorted(groups, key=order)
+        ]
+        removal = self._removals(groups)
+        if removal:
+            rows.append((Group("replace", REPLACE_TITLE, "replace", REPLACE_WHY, [], []), removal))
+        for g, ops in rows:
+            if not ops:
+                continue
+            citations = checked_citations(TASK, cited.get(g.id, []), seen)
+            refs = [RuleRef(id=r, text=rules[r].text) for r in g.rules if r in rules]
+            change_set_id = None
+            if self.saved is not None:
+                row = plans_repo.store_change_set(
+                    self.db,
+                    self.saved,
+                    origin="generate",
+                    ops=ops,
+                    base_plan_hash=base,
+                    preview=None,
+                )
+                row.run_id = run.id
+                row.meta = {
+                    "group_id": g.id,
+                    "title": g.title,
+                    "kind": g.kind,
+                    "why": g.why,
+                    "citations": [_plain(c) for c in citations],
+                    "rules": [_plain(r) for r in refs],
+                }
+                self.db.flush()
+                change_set_id = str(row.id)
+            yield PlannerProposalEvent.model_validate(
+                {
+                    "change_set_id": change_set_id,
+                    "group_id": g.id,
+                    "title": g.title,
+                    "kind": g.kind,
+                    "ops": ops,
+                    "why": g.why,
+                    "citations": citations,
+                    "rules": refs,
+                    "preview": self._verdict(ops),
+                }
+            )

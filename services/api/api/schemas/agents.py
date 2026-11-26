@@ -1,4 +1,4 @@
-from typing import Annotated, Literal
+from typing import Annotated, Any, Literal
 
 from planner_core.models import ChangeSet, Conflict, Goal, PlanState, Report, TermId
 from pydantic import BaseModel, Field, RootModel
@@ -104,6 +104,9 @@ class DoneEvent(BaseModel):
     #: The planner chat noted a preference for a plan in the browser: its whole working
     #: information, to store with the plan (a saved plan's record is updated on the server).
     working_notes: str | None = None
+    #: A plan in the browser answered a General Information question in this run: the answers
+    #: as their fields store them, to keep with the plan (and copy to the record at login).
+    profile_answers: dict[str, Any] | None = None
 
 
 class ErrorEvent(BaseModel):
