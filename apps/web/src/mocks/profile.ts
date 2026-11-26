@@ -5,8 +5,8 @@
  * courses are refused with 422), `/me/profile/export.md` (a small fake student.md), and
  * `/agents/interview` (the dashboard agent without a model: it walks the step-2 questions in
  * order; an option or a value it can read becomes a proposal for that field, "Skip" moves on,
- * anything else asks the same question again with `retry`). The routes endpoints stay until
- * their removal (#15). No model involved; fake data only.
+ * anything else asks the same question again with `retry`). The routes went in issue #15. No
+ * model involved; fake data only.
  */
 import { http, HttpResponse, type HttpHandler } from "msw";
 import type { components } from "@/api/schema";
@@ -35,7 +35,7 @@ function sse(events: unknown[]) {
   return new HttpResponse(body, { headers: { "Content-Type": "text/event-stream" } });
 }
 
-/** Programs the routes mock knows besides the catalog's fake ones. */
+/** Programs the mock knows besides the catalog's fake ones. */
 const PROGRAM_NAMES: Record<string, string> = { "test-bs": "Test Studies BS (fake)", "cmsc-bs": "Computer Science (BS)" };
 const programName = (id: string) => PROGRAMS.find((p) => p.id === id)?.name ?? PROGRAM_NAMES[id];
 
@@ -56,14 +56,13 @@ function emptyProfile(): S["ProfileOut"] {
     pace: null,
     wants_research: null,
     research_areas: [],
-    courses_per_term: null,
+    course_load: null,
     terms_away: null,
     class_formats: null,
     theory_vs_application: null,
     answered: [],
     completeness: 0,
     has_working_notes: false,
-    feed_categories: [],
     interview: { covered: [], turns: [] },
     follows: { threads: [], courses: [] },
     updated_day: today(),
@@ -90,8 +89,6 @@ function storeProfile() {
 
 let profile = loadProfile();
 let workingNotes = "";
-let routes: S["RouteOut"][] = [];
-let routeSeq = 0;
 
 export function resetProfileMock() {
   profile = emptyProfile();
@@ -101,8 +98,6 @@ export function resetProfileMock() {
     // Nothing stored.
   }
   workingNotes = "";
-  routes = [];
-  routeSeq = 0;
 }
 
 // ------------------------------------------------------------------------------ the record
@@ -124,7 +119,7 @@ function answeredIds(p: S["ProfileOut"]): string[] {
 }
 
 function completeness(p: S["ProfileOut"]): number {
-  const wanted = QUESTIONS.questions.filter((q) => !(q.when && "transfer_or_later" in q.when) && applies(q, p));
+  const wanted = QUESTIONS.questions.filter((q) => !q.optional && !(q.when && "transfer_or_later" in q.when) && applies(q, p));
   if (!wanted.length) return 0;
   return Math.round((wanted.filter((q) => p.answered.includes(q.id)).length / wanted.length) * 1000) / 1000;
 }
@@ -158,7 +153,7 @@ function applyPatch(patch: S["ProfilePatch"]): S["ProfileOut"] | { error: string
         const unknown = list.filter((c) => !findCourse(c.course)).map((c) => c.course);
         if (unknown.length) return { error: `Unknown course(s): ${unknown.join(", ")}` };
         if (list.some((c) => !TERM.test(c.term))) return { error: "taken course term is not a quarter" };
-        next.taken_courses = list.map((c) => ({ course: c.course, term: c.term, status: c.status ?? "completed", grade: c.grade ?? null, title: findCourse(c.course)?.title ?? "" }));
+        next.taken_courses = list.map((c) => ({ course: c.course, term: c.term, status: c.status ?? "completed", grade: c.status === "in_progress" ? null : (c.grade ?? null), grading: c.grading ?? "letter", units: c.units ?? null, locked: c.locked ?? false, title: findCourse(c.course)?.title ?? "" }));
         break;
       }
       case "credits":
@@ -308,31 +303,6 @@ export function interviewReply(req: S["InterviewRequest"]): unknown[] {
   return [turn(next, { proposed, answered: Object.keys(proposed).length ? (question?.id ?? null) : null }, progress), { type: "done", fallback: true, note: null }];
 }
 
-// ------------------------------------------------------------------------------ routes
-
-function draftRoute(title: string, kind: S["RouteIn"]["kind"]): S["RouteIn"] {
-  return {
-    title,
-    tagline: "A fake route for tests",
-    summary: "Two fake courses and a milestone.",
-    kind,
-    program_ids: kind === "exploratory" ? [] : ["test-bs"],
-    courses: [
-      { code: "TEST 10000", title: "Fake Intro I", year: 1, quarter: "AU", role: "major", note: "Start here", offered: [] },
-      { code: "TEST 10100", title: "Fake Intro II", year: 1, quarter: "WI", role: "major", note: "", offered: [] },
-      { code: "TEST 20000", title: "Fake Advanced", year: 3, quarter: null, role: "elective", note: "", offered: [] },
-    ],
-    milestones: [{ when: "Year 2, Spring", text: "Ask a professor about summer research." }],
-    fit: { interests: 0.8, career: 0.6, humanities: 0.5, workload: "balanced" },
-    origin: "ai",
-  };
-}
-
-function routeList(): S["RouteList"] {
-  const chosen = routes.find((r) => r.status === "chosen");
-  return { items: routes, chosen_id: chosen?.id ?? null, max_routes: 12 };
-}
-
 export const profileHandlers: HttpHandler[] = [
   http.get(`${A}/profile/questions`, () => HttpResponse.json(QUESTIONS)),
   http.get(`${A}/me/profile`, () => (loggedIn() ? HttpResponse.json(profile) : unauthorized())),
@@ -349,65 +319,8 @@ export const profileHandlers: HttpHandler[] = [
       ? new HttpResponse(studentMd(profile), { headers: { "Content-Type": "text/markdown; charset=utf-8", "Content-Disposition": 'attachment; filename="student.md"' } })
       : unauthorized(),
   ),
-  http.get(`${A}/me/routes`, () => (loggedIn() ? HttpResponse.json(routeList()) : unauthorized())),
-  http.post(`${A}/me/routes`, async ({ request }) => {
-    if (!loggedIn()) return unauthorized();
-    if (routes.length >= 12) return HttpResponse.json({ detail: "You can keep up to 12 routes. Delete one to keep another." }, { status: 409 });
-    const body = (await request.json()) as S["RouteIn"];
-    routeSeq += 1;
-    const route: S["RouteOut"] = {
-      ...body,
-      courses: body.courses.filter((c) => c.code.startsWith("TEST")),
-      id: `00000000-0000-4000-8000-${String(routeSeq).padStart(12, "0")}`,
-      status: "open",
-      position: routes.length,
-      note: null,
-      created_day: today(),
-      updated_day: today(),
-      programs: body.program_ids.filter((id) => programName(id)).map((id) => ({ id, name: programName(id) ?? id })),
-    };
-    routes = [...routes, route];
-    return HttpResponse.json(route, { status: 201 });
-  }),
-  http.patch(`${A}/me/routes/:id`, async ({ params, request }) => {
-    if (!loggedIn()) return unauthorized();
-    const patch = (await request.json()) as S["RoutePatch"];
-    const target = routes.find((r) => r.id === params.id);
-    if (!target) return HttpResponse.json({ detail: "Route not found." }, { status: 404 });
-    routes = routes.map((r) => {
-      if (r.id === target.id) {
-        return {
-          ...r,
-          ...(patch.status ? { status: patch.status } : {}),
-          ...(patch.title ? { title: patch.title } : {}),
-          ...(patch.tagline !== undefined ? { tagline: patch.tagline ?? "" } : {}),
-          ...(patch.note !== undefined ? { note: patch.note } : {}),
-          updated_day: today(),
-        };
-      }
-      return patch.status === "chosen" && r.status === "chosen" ? { ...r, status: "open" } : r;
-    });
-    return HttpResponse.json(routes.find((r) => r.id === target.id));
-  }),
-  http.delete(`${A}/me/routes/:id`, ({ params }) => {
-    if (!loggedIn()) return unauthorized();
-    if (!routes.some((r) => r.id === params.id)) return HttpResponse.json({ detail: "Route not found." }, { status: 404 });
-    routes = routes.filter((r) => r.id !== params.id);
-    return new HttpResponse(null, { status: 204 });
-  }),
   http.post(`${A}/agents/interview`, async ({ request }) => {
     if (!loggedIn()) return unauthorized();
     return sse(interviewReply((await request.json()) as S["InterviewRequest"]));
-  }),
-  http.post(`${A}/agents/routes`, async ({ request }) => {
-    if (!loggedIn()) return unauthorized();
-    const body = (await request.json()) as S["RoutesRequest"];
-    const drafts = [draftRoute("Fake major route", "major"), draftRoute("Keep your options open", "exploratory")].filter((r) => !(body.keep_existing_titles ?? []).includes(r.title));
-    return sse([
-      { type: "step", tool: "list_programs", label: "Looking through majors and minors", status: "started" },
-      { type: "step", tool: "list_programs", label: "Looking through majors and minors", status: "done" },
-      ...drafts.map((route) => ({ type: "route", route, programs: route.program_ids.map((id) => ({ id, name: programName(id) ?? id })), fallback: false })),
-      { type: "done", fallback: false, note: null },
-    ]);
   }),
 ];

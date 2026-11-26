@@ -103,7 +103,7 @@ test("credits: see, edit, remove and add test, placement and transfer credits in
   await add.getByLabel("Description").fill("Community college statistics");
   await add.getByRole("button", { name: "Add credit" }).click();
   await expect(list).toContainText(
-    "Transfer credit: Community college statistics (not matched to a course yet) · 100 units",
+    "Transfer: Community college statistics (not matched to a course yet) · 100 units",
   );
 
   await list
@@ -115,7 +115,7 @@ test("credits: see, edit, remove and add test, placement and transfer credits in
   await edit.getByLabel("Units").fill("50");
   await edit.getByRole("button", { name: "Save credit" }).click();
   await expect(list).toContainText(
-    "Transfer credit: Community college statistics (not matched to a course yet) · 50 units",
+    "Transfer: Community college statistics (not matched to a course yet) · 50 units",
   );
   await shot(page, "credits");
 
@@ -189,7 +189,7 @@ test("catalog: one menu item, a switch between courses and programs, a centered 
 }) => {
   await page.goto("/courses");
   await expect(
-    page.getByRole("heading", { level: 1, name: "Course search" }),
+    page.getByRole("heading", { level: 1, name: "Catalog" }),
   ).toBeVisible();
   await expect(page.getByRole("region", { name: "Results" })).toHaveCount(0);
   await shot(page, "course-search-empty");

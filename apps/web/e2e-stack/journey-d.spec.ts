@@ -18,7 +18,7 @@ test("journey D: search a course, read the instructor forum, post a review and u
   await page.goto("/");
   await page.getByRole("searchbox", { name: "Search courses", exact: true }).fill(COURSE);
   await page.getByRole("button", { name: "Search", exact: true }).first().click();
-  await expect(page.getByRole("heading", { level: 1, name: "Course search" })).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1, name: "Catalog" })).toBeVisible();
   await page.getByRole("link", { name: /^CMSC 14100 · / }).first().click();
   await expect(page.getByRole("heading", { level: 1, name: "CMSC 14100 · Introduction to Computer Science I" })).toBeVisible();
   const main = page.getByRole("main");

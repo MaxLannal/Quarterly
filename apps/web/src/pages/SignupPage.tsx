@@ -3,9 +3,10 @@ import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { keepNext, safeNext } from "@/features/auth/next";
 import { inlineLinkClass } from "@/components/layout/page";
 import { Button } from "@/components/ui/button";
+import { ArrowIcon } from "@/components/ui/icons";
 import { api, attempt } from "@/features/auth/api";
 import { signedIn } from "@/features/auth/session";
-import { AboutYouForm } from "@/features/profile/AboutYouForm";
+import { AboutYouForm, type AboutSaved } from "@/features/profile/AboutYouForm";
 import { useQuestions } from "@/features/profile/questions";
 import {
   AuthPage,
@@ -44,6 +45,8 @@ export default function SignupPage() {
   const [formError, setFormError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  // What step 4 saved, so that "Back" on the next screen shows it again.
+  const [about, setAbout] = useState<AboutSaved | undefined>(undefined);
 
   function clearMessages() {
     setFieldError(null);
@@ -124,6 +127,8 @@ export default function SignupPage() {
     else if (step.name === "account") void register(step.ticket);
   }
 
+  // "Back" from step 2 or 3 opens step 1 with the email kept: a code works once, so step 3 has
+  // no way back to step 2 (Richard, 2026-11-25).
   function startOver() {
     clearMessages();
     setCode("");
@@ -134,6 +139,7 @@ export default function SignupPage() {
     <AuthPage
       title="Create an account"
       eyebrow={`Step ${STEP_NUMBER[step.name]} of 4`}
+      wide={step.name === "about"}
       subline={
         STEP_NUMBER[step.name] === 4
           ? "Your account is ready. A few answers let the planner set up your plan."
@@ -175,6 +181,7 @@ export default function SignupPage() {
 
         {step.name === "code" ? (
           <>
+            <BackButton disabled={busy} onClick={startOver} />
             <StepHeading>Enter the code</StepHeading>
             <p className="text-body-sm">
               If <span className="font-medium text-ink">{email.trim()}</span> can be used for a new account,
@@ -196,19 +203,15 @@ export default function SignupPage() {
             <Button type="submit" disabled={busy}>
               {busy ? "Checking…" : "Verify code"}
             </Button>
-            <div className="flex flex-wrap gap-2">
-              <Button type="button" variant="outline" disabled={busy} onClick={() => void sendCode(true)}>
-                Send a new code
-              </Button>
-              <Button type="button" variant="ghost" disabled={busy} onClick={startOver}>
-                Use a different email
-              </Button>
-            </div>
+            <Button type="button" variant="outline" disabled={busy} onClick={() => void sendCode(true)}>
+              Send a new code
+            </Button>
           </>
         ) : null}
 
         {step.name === "account" ? (
           <>
+            <BackButton disabled={busy} onClick={startOver} />
             <StepHeading>Choose a username and password</StepHeading>
             <TextField
               label="Username"
@@ -245,16 +248,19 @@ export default function SignupPage() {
             <Button type="submit" disabled={busy}>
               {busy ? "Creating…" : "Create account"}
             </Button>
-            <Button type="button" variant="ghost" disabled={busy} onClick={startOver}>
-              Start again
-            </Button>
           </>
         ) : null}
       </form>
       ) : step.name === "about" ? (
-        <AboutYouForm onSaved={() => setStep({ name: "next" })} />
+        <AboutYouForm
+          initial={about}
+          onSaved={(saved) => {
+            setAbout(saved);
+            setStep({ name: "next" });
+          }}
+        />
       ) : (
-        <MoreQuestions next={safeNext(params.get("next"))} />
+        <MoreQuestions next={safeNext(params.get("next"))} onBack={() => setStep({ name: "about" })} />
       )}
       {step.name === "email" || step.name === "code" || step.name === "account" ? (
         <>
@@ -272,12 +278,13 @@ export default function SignupPage() {
 }
 
 /** After "About you": the dashboard agent's questions now, or later (step 2 is optional). */
-function MoreQuestions({ next }: { next: string }) {
+function MoreQuestions({ next, onBack }: { next: string; onBack: () => void }) {
   const navigate = useNavigate();
   const questions = useQuestions();
   const count = (questions.data?.questions ?? []).filter((q) => q.step === 2).length;
   return (
     <div className="flex flex-col gap-5">
+      <BackButton onClick={onBack} />
       <StepHeading>A few more questions?</StepHeading>
       <p className="text-body-sm text-body">
         Your guide can ask {count ? `${count} short questions` : "a few short questions"} about your goals, your schedule and how you like to learn. The
@@ -290,5 +297,16 @@ function MoreQuestions({ next }: { next: string }) {
         Skip for now
       </Button>
     </div>
+  );
+}
+
+/** "Back" to the step before, after a misclick (Richard, 2026-11-25). Not on step 1, and not on
+ * step 4: step 3 made the account. */
+function BackButton({ onClick, disabled }: { onClick: () => void; disabled?: boolean }) {
+  return (
+    <Button type="button" variant="ghost" size="sm" className="-ml-3 self-start" disabled={disabled} onClick={onClick}>
+      <ArrowIcon className="rotate-180" />
+      Back
+    </Button>
   );
 }

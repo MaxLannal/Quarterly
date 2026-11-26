@@ -9,11 +9,15 @@ from collections.abc import Iterable
 from dataclasses import dataclass, field
 from decimal import Decimal
 from typing import Any, get_args
+from urllib.parse import quote
 
+import sqlalchemy as sa
 from llm_gateway.api import CallRecord
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
+from api.agents.campus_tools import guide_entry
+from api.agents.live import known_courses, normalize_code
 from api.db import models as m
 from api.schemas.agents import Citation
 
@@ -128,3 +132,124 @@ SSE_HEADERS = {"Cache-Control": "no-cache", "X-Accel-Buffering": "no"}
 
 def word_count(text: str) -> int:
     return len(text.split())
+
+
+# --------------------------------------------------------------------- source chips
+
+#: The kinds of source a campus agent can cite (the Commons bot's `CommonsCitation.kind`).
+SOURCE_KINDS: tuple[str, ...] = (
+    "course",
+    "program",
+    "post",
+    "summary",
+    "attribute",
+    "thread",
+    "guide",
+)
+MAX_SOURCES = 12
+
+
+@dataclass(frozen=True)
+class CitedSource:
+    """A source chip. `label` and `href` are built here from the id (never by the model):
+    `href` is a path on this site, or an https page on uchicago.edu for `guide`."""
+
+    kind: str
+    id: str
+    label: str
+    href: str
+
+
+def course_href(code: str) -> str:
+    return f"/courses/{quote(code, safe='')}"
+
+
+def page_href(code: str, slug: str) -> str:
+    return f"{course_href(code)}/i/{quote(slug, safe='')}"
+
+
+def clip(text: str, limit: int) -> str:
+    """`text` on one line, at most `limit` characters (an ellipsis marks a cut)."""
+    text = " ".join(text.split())
+    return text if len(text) <= limit else text[: limit - 1].rstrip() + "…"
+
+
+@dataclass
+class Citer:
+    """Checks citations against the ids the run saw and builds their chips from the database.
+    Used by the Commons bot (moved here from the removed Ask chatbot, issue #15)."""
+
+    db: Session
+    seen: set[str]
+    kept: list[CitedSource] = field(default_factory=list)
+    dropped: int = 0
+
+    def add(self, kind: str, ident: str) -> None:
+        ident = ident.strip()
+        if kind == "course":
+            ident = normalize_code(ident) or ident
+        if kind not in SOURCE_KINDS or f"{kind}:{ident}" not in self.seen:
+            self.dropped += 1
+            return
+        if any((c.kind, c.id) == (kind, ident) for c in self.kept):
+            return
+        chip = self._chip(kind, ident)
+        if chip is None:
+            self.dropped += 1
+        elif len(self.kept) < MAX_SOURCES:
+            self.kept.append(chip)
+
+    def _chip(self, kind: str, ident: str) -> CitedSource | None:
+        label: str | None = None
+        href: str | None = None
+        if kind == "course":
+            title = known_courses(self.db, [ident]).get(ident)
+            if title is not None:
+                label, href = f"{ident} · {title}", course_href(ident)
+        elif kind == "attribute":
+            code, _, key = ident.rpartition(":")
+            if code:
+                label, href = f"{code}: {key.replace('_', ' ')}", course_href(code)
+        elif kind == "program":
+            name = self.db.scalar(sa.select(m.Program.name).where(m.Program.id == ident))
+            if name is not None:
+                label, href = name, f"/programs/{quote(ident, safe='')}"
+        elif kind == "thread" and ident.isdigit():
+            title = self.db.scalar(
+                sa.select(m.CommonsThread.title).where(
+                    m.CommonsThread.id == int(ident), m.CommonsThread.status == "visible"
+                )
+            )
+            if title is not None:
+                label, href = f"Forum: {clip(title, 60)}", f"/forum/t/{ident}"
+        elif kind == "guide":
+            entry = guide_entry(ident)
+            if entry is not None:
+                label, href = entry.title, entry.source_url
+        elif kind in ("post", "summary") and ident.isdigit():
+            found = self._forum_page(kind, int(ident))
+            if found is not None:
+                code, slug = found
+                if kind == "post":
+                    label, href = f"Student post on {code}", f"{page_href(code, slug)}/t/{ident}"
+                else:
+                    label, href = f"What students say about {code}", page_href(code, slug)
+        if label is None or href is None:
+            return None
+        return CitedSource(kind=kind, id=ident, label=clip(label, 90), href=href)
+
+    def _forum_page(self, kind: str, ident: int) -> tuple[str, str] | None:
+        stmt = (
+            sa.select(m.Course.code, m.Instructor.slug)
+            .select_from(m.CourseInstructor)
+            .join(m.Course, m.Course.id == m.CourseInstructor.course_id)
+            .join(m.Instructor, m.Instructor.id == m.CourseInstructor.instructor_id)
+        )
+        if kind == "post":
+            stmt = stmt.join(m.Post, m.Post.course_instructor_id == m.CourseInstructor.id).where(
+                m.Post.id == ident, m.Post.status == "visible"
+            )
+        else:
+            stmt = stmt.where(m.CourseInstructor.id == ident)
+        row = self.db.execute(stmt.limit(1)).first()
+        return (row[0], row[1]) if row else None

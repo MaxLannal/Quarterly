@@ -21,9 +21,6 @@ PROMPTS = (
     "a2_scope",
     "a9_commons_bot",
     "a6_interview",
-    "a7_routes",
-    "a5_ask",
-    "a10_digest",
 )
 
 

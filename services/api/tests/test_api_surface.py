@@ -40,6 +40,8 @@ EXPECTED = {
     ("post", "/agents/chat"),
     ("get", "/agents/chat/history"),
     # forum
+    ("get", "/forum/items"),
+    ("get", "/forum/stats"),
     ("get", "/forum/pages"),
     ("get", "/forum/pages/{page_id}"),
     ("get", "/forum/pages/{page_id}/posts"),
@@ -73,25 +75,15 @@ EXPECTED = {
     ("post", "/admin/moderation/{target_type}/{target_id}/end-suspension"),
     # homepage scene (FEEDBACK "ASCII Scene")
     ("get", "/weather"),
-    # campus companion (docs/BEST-OF-UCHICAGO-PLAN.md) -- ask
-    ("post", "/agents/ask"),
-    ("get", "/me/updates"),
-    ("post", "/me/updates/seen"),
     # -- me (dashboard)
     ("get", "/profile/questions"),
     ("get", "/me/profile"),
     ("get", "/me/profile/export.md"),
     ("patch", "/me/profile"),
-    ("post", "/agents/interview"),
-    ("get", "/me/routes"),
-    ("post", "/me/routes"),
-    ("patch", "/me/routes/{route_id}"),
-    ("delete", "/me/routes/{route_id}"),
-    ("post", "/agents/routes"),
-    # -- feed
-    ("get", "/feed"),
-    ("get", "/feed/categories"),
-    ("post", "/agents/feed-notes"),
+    ("post", "/agents/interview"),  # the routes (/me/routes, /agents/routes) went in #15
+    # -- the Catalog's browse rows and ratings (the Feed's endpoints went in #19)
+    ("get", "/catalog/browse"),
+    ("get", "/course-ratings"),
     # -- commons
     ("get", "/commons/threads"),
     ("post", "/commons/threads"),

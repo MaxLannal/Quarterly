@@ -38,10 +38,10 @@ test("the homepage is Rockefeller Chapel drawn with real course titles, loaded f
   expect(data).toEqual(["/home/course-chapel.json"]);
   // the controls sit on the picture and still work
   await expect(page.getByRole("heading", { level: 1, name: "The Best of UChicago, within your reach." })).toBeVisible();
-  // the bar asks the Ask chatbot (docs/BEST-OF-UCHICAGO-PLAN.md)
-  await page.getByRole("combobox", { name: "Ask Quarterly a question about UChicago" }).fill("Which CMSC course first?");
-  await page.keyboard.press("Enter");
-  await expect(page).toHaveURL(/\/ask(\?q=|$)/);
+  // the buttons still work on the picture (the question bar went in issue #15); logged out,
+  // "Start planning" opens sign-up (issue #16)
+  await page.getByRole("link", { name: "Start planning" }).click();
+  await expect(page).toHaveURL(/\/signup$/);
 });
 
 test("hovering a title names its course, and a click opens that course", async ({ page }) => {

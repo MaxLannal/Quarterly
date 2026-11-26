@@ -1,8 +1,8 @@
 /**
  * The dashboard's data (Issue #16): the student record (`/me/profile`), its Markdown export
- * (`/me/profile/export.md`), the dashboard agent (`/agents/interview`), and the routes
- * (`/me/routes`, `/agents/routes`; removed from the page, the code goes on another branch).
- * Record edits are optimistic: the cache changes at once and rolls back if the server refuses.
+ * (`/me/profile/export.md`) and the dashboard agent (`/agents/interview`). Record edits are
+ * optimistic: the cache changes at once and rolls back if the server refuses. (The routes went in
+ * issue #15, the "What's new" card in issue #16.)
  */
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api, ApiError, NotAvailableError, unwrap } from "@/api/client";
@@ -18,18 +18,9 @@ export type InterviewRequest = S["InterviewRequest"];
 export type InterviewEvent = S["InterviewEvent"];
 export type TurnEvent = S["InterviewTurnEvent"];
 export type StepEvent = S["DashboardStepEvent"];
-export type Route = S["RouteOut"];
-export type RouteIn = S["RouteIn"];
-export type RouteCourse = S["RouteCourse"];
-export type RouteList = S["RouteList"];
-export type RoutePatch = S["RoutePatch"];
-export type RoutesRequest = S["RoutesRequest"];
-export type RoutesEvent = S["RoutesEvent"];
-export type RouteDraftEvent = S["RouteDraftEvent"];
 export type ProgramRef = S["ProgramRef"];
 
 export const PROFILE_KEY = ["me", "profile"] as const;
-export const ROUTES_KEY = ["me", "routes"] as const;
 
 export function useProfile(enabled: boolean) {
   return useQuery({
@@ -129,74 +120,9 @@ export async function downloadStudentMd(): Promise<void> {
   window.setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
-export function useRoutes(enabled: boolean) {
-  return useQuery({
-    queryKey: ROUTES_KEY,
-    queryFn: async () => unwrap(await api.GET("/me/routes")),
-    enabled,
-    staleTime: 30_000,
-    retry: false,
-  });
-}
-
-export function useRouteActions() {
-  const client = useQueryClient();
-  const refresh = () => client.invalidateQueries({ queryKey: ROUTES_KEY });
-  const create = useMutation({
-    mutationFn: async (route: RouteIn) => unwrap(await api.POST("/me/routes", { body: route })),
-    onSuccess: refresh,
-  });
-  const update = useMutation({
-    mutationFn: async ({ id, patch }: { id: string; patch: RoutePatch }) =>
-      unwrap(await api.PATCH("/me/routes/{route_id}", { params: { path: { route_id: id } }, body: patch })),
-    onMutate: async ({ id, patch }) => {
-      await client.cancelQueries({ queryKey: ROUTES_KEY });
-      const before = client.getQueryData<RouteList>(ROUTES_KEY);
-      if (before) client.setQueryData<RouteList>(ROUTES_KEY, optimisticRoutes(before, id, patch));
-      return { before };
-    },
-    onError: (_e, _v, context) => {
-      if (context?.before) client.setQueryData(ROUTES_KEY, context.before);
-    },
-    onSettled: refresh,
-  });
-  const remove = useMutation({
-    mutationFn: async (id: string) => {
-      const { response } = await api.DELETE("/me/routes/{route_id}", { params: { path: { route_id: id } } });
-      if (!response.ok) throw new ApiError(response.status, `Request failed (${response.status})`);
-    },
-    onSettled: refresh,
-  });
-  return { create, update, remove };
-}
-
-/** The route list after a patch, as the server will make it (one chosen route at most). */
-export function optimisticRoutes(list: RouteList, id: string, patch: RoutePatch): RouteList {
-  const items = list.items.map((r) => {
-    if (r.id === id) {
-      return {
-        ...r,
-        ...(patch.status ? { status: patch.status } : {}),
-        ...(patch.title ? { title: patch.title } : {}),
-        ...(patch.tagline !== undefined ? { tagline: patch.tagline ?? "" } : {}),
-        ...(patch.note !== undefined ? { note: patch.note } : {}),
-        ...(patch.position !== undefined && patch.position !== null ? { position: patch.position } : {}),
-      };
-    }
-    return patch.status === "chosen" && r.status === "chosen" ? { ...r, status: "open" as const } : r;
-  });
-  const chosen = items.find((r) => r.status === "chosen");
-  return { ...list, items, chosen_id: chosen?.id ?? null };
-}
-
 export async function* streamInterview(body: InterviewRequest, signal?: AbortSignal): AsyncGenerator<InterviewEvent> {
   const { data, response } = await api.POST("/agents/interview", { body, parseAs: "stream", signal });
   yield* readSse<InterviewEvent>(checkStream(response, data));
-}
-
-export async function* streamRoutes(body: RoutesRequest, signal?: AbortSignal): AsyncGenerator<RoutesEvent> {
-  const { data, response } = await api.POST("/agents/routes", { body, parseAs: "stream", signal });
-  yield* readSse<RoutesEvent>(checkStream(response, data));
 }
 
 /** What to tell the student when a request failed. */

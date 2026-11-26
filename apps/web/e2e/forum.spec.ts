@@ -176,6 +176,83 @@ test("instructors: public names; course page ratings need login", async ({ page 
   await expect(page.getByRole("heading", { level: 1, name: /with Fake Instructor A/ })).toBeVisible();
 });
 
+// Issue #20: ratings and discussions on one page. `/forum` shows reviews and Commons discussions
+// in one list (newest first) in the right two thirds, and the statistics and rankings (logged-in
+// students only) in the left third; on a phone the statistics come above the list.
+test("/forum: a New post button, discussions for everyone, reviews and ratings after login", async ({ page }) => {
+  test.setTimeout(60_000); // logged out, then logged in, with axe: long on a busy machine
+  await page.goto("/forum");
+  // The list's heading (its name) follows the filters ("Latest posts", "About TEST 20000").
+  const list = page.locator("section[aria-labelledby='commons-list-title']");
+  await expect(page.getByRole("region", { name: "Latest posts" })).toBeVisible();
+  await expect(list.getByRole("heading", { level: 3 }).first()).toHaveText("Fake question: which fake humanities sequence is discussion-heavy?");
+  // Logged out: no reviews, no ratings, and no ask box: a "New post" button instead.
+  await expect(list.getByText("Review", { exact: true })).toHaveCount(0);
+  await expect(page.getByText("Log in to see ratings, rankings and reviews.", { exact: false })).toBeVisible();
+  await expect(page.getByRole("search", { name: "Ask a question" })).toHaveCount(0);
+  // The AI's short answer sits under its question, labelled as AI.
+  const answer = list.getByRole("region", { name: /Quarterly AI's answer to “Fake question: is TEST 10000/ });
+  await expect(answer).toContainText("Written by an AI and can be wrong.");
+  await page.getByRole("link", { name: "New post" }).click();
+  await expect(page).toHaveURL(/\/forum\/new$/);
+
+  await logIn(page);
+  await page.goto("/forum");
+  const stats = page.getByRole("region", { name: "Ratings" });
+  const top = stats.getByRole("region", { name: "Top courses" });
+  // Ranked only from 3 reviews (TEST 10000 has 2); every line shows its review count.
+  await expect(top.getByRole("link", { name: /TEST 20000/ })).toContainText("3 reviews");
+  await expect(top.getByText("TEST 10000")).toHaveCount(0);
+  await expect(stats.getByRole("region", { name: "Humanities sequences" })).toContainText("FAKE 11000-11100-11200");
+  await expect(stats.getByRole("region", { name: "Instructors" })).toContainText("Fake Instructor A");
+  await expect(stats.getByText(/Bayesian averages/)).toContainText("as if it had 5 reviews");
+  await stats.getByRole("button", { name: "Last 12 months" }).click();
+  await expect(stats.getByRole("button", { name: "Last 12 months" })).toHaveAttribute("aria-pressed", "true");
+  // Reviews and discussions in one list, newest first.
+  await expect(list.getByText("Review", { exact: true }).first()).toBeVisible();
+  await expect(list.locator("article")).toHaveCount(10);
+
+  await expectNoSeriousAxeViolations(page);
+  await expect44pxTargets(page);
+
+  // Filters: item type, then a course from the ranking, then an instructor.
+  await page.getByRole("button", { name: "Discussions", exact: true }).click();
+  await expect(list.getByText("Review", { exact: true })).toHaveCount(0);
+  await expect(list.locator("article")).toHaveCount(2);
+  await page.getByRole("button", { name: "All", exact: true }).click();
+  await top.getByRole("link", { name: /TEST 20000/ }).click();
+  await expect(page).toHaveURL(/course=TEST\+20000/);
+  await expect(page.getByRole("heading", { level: 2, name: "About TEST 20000" })).toBeVisible();
+  await expect(list.locator("article")).toHaveCount(3);
+  await page.getByRole("button", { name: "Clear filters" }).click();
+  await page.getByRole("combobox", { name: "Filter by instructor" }).fill("Fake");
+  await page.getByRole("option", { name: /Fake Instructor A/ }).click();
+  const byInstructor = page.getByRole("region", { name: "Reviews of Fake Instructor A" });
+  await expect(byInstructor.locator("article")).toHaveCount(8);
+  await expect(byInstructor.getByText(/Fake question/)).toHaveCount(0);
+});
+
+test("/forum layout: statistics in the left third on a laptop, above the list on a phone", async ({ page }) => {
+  await logIn(page);
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await page.goto("/forum");
+  const stats = page.getByRole("region", { name: "Ratings" });
+  const list = page.getByRole("region", { name: "Latest posts" });
+  await expect(stats.getByRole("region", { name: "Top courses" })).toBeVisible();
+  const s = (await stats.boundingBox())!;
+  const l = (await list.boundingBox())!;
+  expect(s.x + s.width).toBeLessThanOrEqual(l.x);
+  expect(l.width / s.width).toBeGreaterThan(1.7);
+  expect(l.width / s.width).toBeLessThan(2.4);
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  await expect(stats).toBeVisible();
+  const sp = (await stats.boundingBox())!;
+  const lp = (await list.boundingBox())!;
+  expect(sp.y + sp.height).toBeLessThanOrEqual(lp.y);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+});
+
 test("guidelines page lists the community rules", async ({ page }) => {
   await page.goto("/guidelines");
   await expect(page.getByRole("heading", { level: 1, name: "Community guidelines" })).toBeVisible();

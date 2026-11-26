@@ -208,23 +208,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/agents/ask": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Ask */
-        post: operations["ask_agents_ask_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/agents/chat": {
         parameters: {
             query?: never;
@@ -259,23 +242,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/agents/feed-notes": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Post Feed Notes */
-        post: operations["post_feed_notes_agents_feed_notes_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/agents/generate": {
         parameters: {
             query?: never;
@@ -304,23 +270,6 @@ export interface paths {
         put?: never;
         /** Interview */
         post: operations["interview_agents_interview_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/agents/routes": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Draft Routes */
-        post: operations["draft_routes_agents_routes_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -472,6 +421,23 @@ export interface paths {
         };
         /** List Catalog Years */
         get: operations["list_catalog_years_catalog_years_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/catalog/browse": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Browse */
+        get: operations["browse_catalog_browse_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -688,6 +654,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/course-ratings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Course Ratings */
+        get: operations["course_ratings_course_ratings_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/courses": {
         parameters: {
             query?: never;
@@ -722,40 +705,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/feed": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get Feed */
-        get: operations["get_feed_feed_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/feed/categories": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get Categories */
-        get: operations["get_categories_feed_categories_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/forum/courses/{code}": {
         parameters: {
             query?: never;
@@ -765,6 +714,23 @@ export interface paths {
         };
         /** Course Forum */
         get: operations["course_forum_forum_courses__code__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/forum/items": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Items */
+        get: operations["list_items_forum_items_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -878,6 +844,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/forum/stats": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Forum Stats */
+        get: operations["forum_stats_forum_stats_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/forum/votes": {
         parameters: {
             query?: never;
@@ -975,76 +958,6 @@ export interface paths {
         get: operations["export_student_md_me_profile_export_md_get"];
         put?: never;
         post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/me/routes": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** List Routes */
-        get: operations["list_routes_me_routes_get"];
-        put?: never;
-        /** Create Route */
-        post: operations["create_route_me_routes_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/me/routes/{route_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        /** Delete Route */
-        delete: operations["delete_route_me_routes__route_id__delete"];
-        options?: never;
-        head?: never;
-        /** Patch Route */
-        patch: operations["patch_route_me_routes__route_id__patch"];
-        trace?: never;
-    };
-    "/me/updates": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Updates */
-        get: operations["updates_me_updates_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/me/updates/seen": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Updates Seen */
-        post: operations["updates_seen_me_updates_seen_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1491,149 +1404,6 @@ export interface components {
          * @description One Server-Sent Event `data:` payload from /agents/generate or /agents/chat.
          */
         AgentEvent: components["schemas"]["StepEvent"] | components["schemas"]["VariantEvent"] | components["schemas"]["InfeasibleEvent"] | components["schemas"]["MessageEvent"] | components["schemas"]["ProposalEvent"] | components["schemas"]["ConfirmEvent"] | components["schemas"]["DoneEvent"] | components["schemas"]["ErrorEvent"];
-        /** AskAnswerEvent */
-        AskAnswerEvent: {
-            /**
-             * Ai
-             * @default true
-             */
-            ai: boolean;
-            /**
-             * Citations
-             * @default []
-             */
-            citations: components["schemas"]["AskCitation"][];
-            /**
-             * Courses
-             * @default []
-             */
-            courses: components["schemas"]["AskCourse"][];
-            /**
-             * Followups
-             * @default []
-             */
-            followups: string[];
-            /** Text */
-            text: string;
-            /**
-             * @description discriminator enum property added by openapi-typescript
-             * @enum {string}
-             */
-            type: "answer";
-        };
-        /**
-         * AskCitation
-         * @description A source chip. `label` and `href` are built by the server from the id (never by the
-         *     model): `href` is a path on this site, or an https page on uchicago.edu for `guide`.
-         */
-        AskCitation: {
-            /** Href */
-            href: string;
-            /** Id */
-            id: string;
-            /**
-             * Kind
-             * @enum {string}
-             */
-            kind: "course" | "program" | "post" | "summary" | "attribute" | "thread" | "guide";
-            /** Label */
-            label: string;
-        };
-        /**
-         * AskContext
-         * @description Where the student asks from (the companion sends it; the Ask page usually does not).
-         */
-        AskContext: {
-            /** Course Code */
-            course_code?: string | null;
-            /** Page */
-            page?: string | null;
-            /** Thread Id */
-            thread_id?: number | null;
-        };
-        /**
-         * AskCourse
-         * @description A course the answer mentions; it exists in the catalog.
-         */
-        AskCourse: {
-            /** Code */
-            code: string;
-            /** Title */
-            title: string;
-        };
-        /** AskDoneEvent */
-        AskDoneEvent: {
-            /** Run Id */
-            run_id: string;
-            /**
-             * @description discriminator enum property added by openapi-typescript
-             * @enum {string}
-             */
-            type: "done";
-        };
-        /** AskErrorEvent */
-        AskErrorEvent: {
-            /** Message */
-            message: string;
-            /**
-             * @description discriminator enum property added by openapi-typescript
-             * @enum {string}
-             */
-            type: "error";
-        };
-        /**
-         * AskEvent
-         * @description One Server-Sent Event `data:` payload from /agents/ask.
-         */
-        AskEvent: components["schemas"]["AskStepEvent"] | components["schemas"]["AskAnswerEvent"] | components["schemas"]["AskDoneEvent"] | components["schemas"]["AskErrorEvent"];
-        /** AskRequest */
-        AskRequest: {
-            /** @default {} */
-            context: components["schemas"]["AskContext"];
-            /**
-             * History
-             * @default []
-             */
-            history: components["schemas"]["AskTurn"][];
-            /** Message */
-            message: string;
-            /**
-             * Mode
-             * @default ask
-             * @enum {string}
-             */
-            mode: "ask" | "companion";
-        };
-        /**
-         * AskStepEvent
-         * @description The agent called a tool ("Searching the catalog for “quantum”").
-         */
-        AskStepEvent: {
-            /** Label */
-            label: string;
-            /**
-             * Status
-             * @enum {string}
-             */
-            status: "started" | "done" | "failed";
-            /** Tool */
-            tool: string;
-            /**
-             * @description discriminator enum property added by openapi-typescript
-             * @enum {string}
-             */
-            type: "step";
-        };
-        /** AskTurn */
-        AskTurn: {
-            /**
-             * Role
-             * @enum {string}
-             */
-            role: "user" | "assistant";
-            /** Text */
-            text: string;
-        };
         /** Assignment */
         Assignment: {
             /** Courses */
@@ -1692,22 +1462,6 @@ export interface components {
             subject_type: "course" | "course_instructor";
             /** Value */
             value: number;
-        };
-        /** BookItem */
-        BookItem: {
-            book: components["schemas"]["ShelfBook"];
-            category: components["schemas"]["FeedCategoryRef"];
-            /** Courses */
-            courses: components["schemas"]["CourseRef"][];
-            /** Id */
-            id: string;
-            /**
-             * @description discriminator enum property added by openapi-typescript
-             * @enum {string}
-             */
-            kind: "book";
-            /** Reason */
-            reason: string;
         };
         /**
          * BoundedPartsNode
@@ -1774,6 +1528,29 @@ export interface components {
              * @default 1
              */
             weight: number;
+        };
+        /**
+         * CatalogBrowse
+         * @description The rows the Catalog page shows before the student searches. Any row may be empty.
+         */
+        CatalogBrowse: {
+            /** Catalog Year */
+            catalog_year: string | null;
+            /**
+             * New Courses
+             * @default []
+             */
+            new_courses: components["schemas"]["NewCourse"][];
+            /**
+             * Quotes
+             * @default []
+             */
+            quotes: components["schemas"]["CommentItem"][];
+            /**
+             * Spotlights
+             * @default []
+             */
+            spotlights: components["schemas"]["CourseItem"][];
         };
         /** CatalogYearOut */
         CatalogYearOut: {
@@ -1961,8 +1738,9 @@ export interface components {
             /** Id */
             id: string;
             /**
-             * @description discriminator enum property added by openapi-typescript
-             * @enum {string}
+             * Kind
+             * @default comment
+             * @constant
              */
             kind: "comment";
             /** Snippet */
@@ -2745,10 +2523,11 @@ export interface components {
             /** Page Id */
             page_id: number;
         };
-        /** CourseItem */
+        /**
+         * CourseItem
+         * @description A course spotlight.
+         */
         CourseItem: {
-            /** Books */
-            books: components["schemas"]["ShelfBook"][];
             category: components["schemas"]["FeedCategoryRef"];
             /** Code */
             code: string;
@@ -2765,8 +2544,9 @@ export interface components {
             id: string;
             illustration: components["schemas"]["Illustration"];
             /**
-             * @description discriminator enum property added by openapi-typescript
-             * @enum {string}
+             * Kind
+             * @default course
+             * @constant
              */
             kind: "course";
             /** Reason */
@@ -2778,8 +2558,6 @@ export interface components {
             title: string;
             /** Units */
             units: number;
-            /** Words */
-            words: string[];
         };
         /**
          * CourseList
@@ -2840,6 +2618,17 @@ export interface components {
             code: string;
             /** Title */
             title: string;
+        };
+        /**
+         * CourseRatings
+         * @description Student ratings pooled over every instructor's page of each course (logged in only).
+         *     A course with no visible review has `n_reviews` 0.
+         */
+        CourseRatings: {
+            /** Ratings */
+            ratings: {
+                [key: string]: components["schemas"]["RatingSummary"];
+            };
         };
         /** CourseRef */
         CourseRef: {
@@ -3048,29 +2837,10 @@ export interface components {
              */
             op: "all" | "any" | "n_of" | "atom";
         };
-        /** FeedCategories */
-        FeedCategories: {
-            /** Categories */
-            categories: components["schemas"]["FeedCategory"][];
-            /** Selected */
-            selected: string[];
-        };
-        /** FeedCategory */
-        FeedCategory: {
-            /** Blurb */
-            blurb: string;
-            /** Course Count */
-            course_count: number;
-            /** Key */
-            key: string;
-            /** Label */
-            label: string;
-            /** Motif */
-            motif: string;
-            /** Subjects */
-            subjects: string[];
-        };
-        /** FeedCategoryRef */
+        /**
+         * FeedCategoryRef
+         * @description A family of subjects (`api.feed.categories`), with the motif of its generated art.
+         */
         FeedCategoryRef: {
             /** Key */
             key: string;
@@ -3078,48 +2848,6 @@ export interface components {
             label: string;
             /** Motif */
             motif: string;
-        };
-        /** FeedNotes */
-        FeedNotes: {
-            /** Ai */
-            ai: boolean;
-            /** Headline */
-            headline: string;
-            /** Notes */
-            notes: {
-                [key: string]: string;
-            };
-        };
-        /** FeedNotesRequest */
-        FeedNotesRequest: {
-            /** Categories */
-            categories?: string | null;
-            /** Item Ids */
-            item_ids: string[];
-            /**
-             * Tab
-             * @default for_you
-             * @enum {string}
-             */
-            tab: "for_you" | "explore" | "following";
-        };
-        /** FeedPage */
-        FeedPage: {
-            /** Categories Applied */
-            categories_applied: string[];
-            /** Headline */
-            headline: string;
-            /** Items */
-            items: (components["schemas"]["CourseItem"] | components["schemas"]["CommentItem"] | components["schemas"]["BookItem"] | components["schemas"]["WordsItem"] | components["schemas"]["ProgramItem"] | components["schemas"]["QuestionItem"])[];
-            /** Next Cursor */
-            next_cursor: string | null;
-            /** Personalized */
-            personalized: boolean;
-            /**
-             * Tab
-             * @enum {string}
-             */
-            tab: "for_you" | "explore" | "following";
         };
         /** Follows */
         Follows: {
@@ -3133,6 +2861,34 @@ export interface components {
              * @default []
              */
             threads: number[];
+        };
+        /**
+         * ForumDiscussionItem
+         * @description A Commons question in the list, with the AI's short answer under it (D1 option A).
+         */
+        ForumDiscussionItem: {
+            /** Ai Answer Html */
+            ai_answer_html?: string | null;
+            thread: components["schemas"]["CommonsThreadSummary"];
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "discussion";
+        };
+        /** ForumItemList */
+        ForumItemList: {
+            /** Items */
+            items: (components["schemas"]["ForumReviewItem"] | components["schemas"]["ForumDiscussionItem"])[];
+            /** Next Cursor */
+            next_cursor?: string | null;
+            /**
+             * Reviews Hidden
+             * @default false
+             */
+            reviews_hidden: boolean;
+            /** Total */
+            total: number;
         };
         /** ForumPageOut */
         ForumPageOut: {
@@ -3211,6 +2967,111 @@ export interface components {
              * @enum {string}
              */
             status: "open" | "upheld" | "dismissed";
+        };
+        /**
+         * ForumReviewItem
+         * @description A course review in the list. Only logged-in readers get these.
+         */
+        ForumReviewItem: {
+            course: components["schemas"]["CommonsCourse"];
+            /**
+             * Created Day
+             * Format: date
+             */
+            created_day: string;
+            /** Difficulty */
+            difficulty: number;
+            /** Edited Day */
+            edited_day?: string | null;
+            /** Excerpt */
+            excerpt: string;
+            /** Handle */
+            handle: string;
+            /** Id */
+            id: number;
+            instructor: components["schemas"]["InstructorSummary"];
+            /**
+             * Is Mine
+             * @default false
+             */
+            is_mine: boolean;
+            /**
+             * My Vote
+             * @default 0
+             * @enum {integer}
+             */
+            my_vote: -1 | 0 | 1;
+            /** N Comments */
+            n_comments: number;
+            /** Overall */
+            overall: number;
+            /** Page Id */
+            page_id: number;
+            /** Score */
+            score: number;
+            /** Term Taken */
+            term_taken?: string | null;
+            /** Title */
+            title?: string | null;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "review";
+            /** Workload Hours */
+            workload_hours: number;
+            /** Would Recommend */
+            would_recommend: boolean;
+        };
+        /**
+         * ForumStats
+         * @description Ratings of reviews posted in the period, for logged-in students only.
+         */
+        ForumStats: {
+            /**
+             * Humanities
+             * @default []
+             */
+            humanities: components["schemas"]["RankedEntry"][];
+            /**
+             * Instructors
+             * @default []
+             */
+            instructors: components["schemas"]["RankedEntry"][];
+            /**
+             * Majors
+             * @default []
+             */
+            majors: components["schemas"]["MajorRanking"][];
+            /** Min Reviews */
+            min_reviews: number;
+            /** N Courses */
+            n_courses: number;
+            /** N Reviews */
+            n_reviews: number;
+            /**
+             * Period
+             * @enum {string}
+             */
+            period: "quarter" | "year";
+            /** Prior Mean */
+            prior_mean?: number | null;
+            /** Prior Weight */
+            prior_weight: number;
+            /** Recommend Rate */
+            recommend_rate?: number | null;
+            /**
+             * Since
+             * Format: date
+             */
+            since: string;
+            /**
+             * Top Courses
+             * @default []
+             */
+            top_courses: components["schemas"]["RankedEntry"][];
+            /** Workload Hours */
+            workload_hours?: number | null;
         };
         /** ForumSummaryOut */
         ForumSummaryOut: {
@@ -3854,6 +3715,18 @@ export interface components {
             /** Password */
             password: string;
         };
+        /** MajorRanking */
+        MajorRanking: {
+            /**
+             * Items
+             * @default []
+             */
+            items: components["schemas"]["RankedEntry"][];
+            /** Name */
+            name: string;
+            /** Program Id */
+            program_id: string;
+        };
         /**
          * MaxFrom
          * @description At most `n` of the node's courses may match `selector` ("at most 2 from outside CMSC").
@@ -3896,13 +3769,6 @@ export interface components {
              * @enum {string}
              */
             type: "message";
-        };
-        /** Milestone */
-        Milestone: {
-            /** Text */
-            text: string;
-            /** When */
-            when: string;
         };
         /** ModerationDecision */
         ModerationDecision: {
@@ -4023,6 +3889,41 @@ export interface components {
              * @example 2026-AU
              */
             to_term: string;
+        };
+        /**
+         * NewCourse
+         * @description A newly released course. `basis` says how it is known to be new: `listed` (a person put
+         *     it in `data/catalog/new_courses.yaml`, with the quote that says so) or `catalog` (it is in
+         *     this catalog year and was not in the one before).
+         */
+        NewCourse: {
+            /**
+             * Basis
+             * @enum {string}
+             */
+            basis: "listed" | "catalog";
+            /** Code */
+            code: string;
+            /**
+             * Core Tags
+             * @default []
+             */
+            core_tags: string[];
+            /**
+             * Excerpt
+             * @default
+             */
+            excerpt: string;
+            /** Reason */
+            reason: string;
+            /** Source Quote */
+            source_quote?: string | null;
+            /** Source Url */
+            source_url?: string | null;
+            /** Title */
+            title: string;
+            /** Units */
+            units: number;
         };
         /**
          * NodeProgress
@@ -4599,8 +4500,8 @@ export interface components {
              * @default 0
              */
             completeness: number;
-            /** Courses Per Term */
-            courses_per_term?: number | null;
+            /** Course Load */
+            course_load?: ("conservative" | "normal" | "ambitious") | null;
             /**
              * Credits
              * @default []
@@ -4614,11 +4515,6 @@ export interface components {
             entry_year_level?: number | null;
             /** Expected Graduation Term */
             expected_graduation_term?: string | null;
-            /**
-             * Feed Categories
-             * @default []
-             */
-            feed_categories: string[];
             /**
              * @default {
              *       "courses": [],
@@ -4685,15 +4581,15 @@ export interface components {
          * ProfilePatch
          * @description A partial update: only the fields sent are changed (`null` clears a field). `credits`
          *     and `taken_courses` replace the whole list. The registration form, the dashboard, the
-         *     dashboard agent's accepted answers, the feed and the Commons follow button send these.
+         *     dashboard agent's accepted answers and the Commons follow button send these.
          */
         ProfilePatch: {
             /** Class Formats */
             class_formats?: ("seminar" | "lecture" | "lab" | "online")[] | null;
             /** Class Year */
             class_year?: number | null;
-            /** Courses Per Term */
-            courses_per_term?: number | null;
+            /** Course Load */
+            course_load?: ("conservative" | "normal" | "ambitious") | null;
             /** Credits */
             credits?: components["schemas"]["RecordCredit"][] | null;
             /** Entry Term */
@@ -4702,8 +4598,6 @@ export interface components {
             entry_year_level?: number | null;
             /** Expected Graduation Term */
             expected_graduation_term?: string | null;
-            /** Feed Categories */
-            feed_categories?: string[] | null;
             follows?: components["schemas"]["Follows"] | null;
             /** Intended Programs */
             intended_programs?: string[] | null;
@@ -4767,26 +4661,6 @@ export interface components {
             verified_by?: string | null;
             /** Version Id */
             version_id: number;
-        };
-        /** ProgramItem */
-        ProgramItem: {
-            /** Department */
-            department: string | null;
-            /** Id */
-            id: string;
-            /**
-             * @description discriminator enum property added by openapi-typescript
-             * @enum {string}
-             */
-            kind: "program";
-            /** Name */
-            name: string;
-            /** Program Id */
-            program_id: string;
-            /** Reason */
-            reason: string;
-            /** Type */
-            type: string;
         };
         /** ProgramRef */
         ProgramRef: {
@@ -4901,6 +4775,11 @@ export interface components {
             /** Min */
             min?: number | null;
             /**
+             * Optional
+             * @default false
+             */
+            optional: boolean;
+            /**
              * Options
              * @default []
              */
@@ -4947,37 +4826,6 @@ export interface components {
             /** Title */
             title: string;
         };
-        /**
-         * QuestionItem
-         * @description A Commons question that is waiting for an answer, or a recent one.
-         */
-        QuestionItem: {
-            /** Answered */
-            answered: boolean;
-            course: components["schemas"]["CourseRef"] | null;
-            /**
-             * Day
-             * Format: date
-             */
-            day: string;
-            /** Href */
-            href: string;
-            /** Id */
-            id: string;
-            /**
-             * @description discriminator enum property added by openapi-typescript
-             * @enum {string}
-             */
-            kind: "question";
-            /** Reply Count */
-            reply_count: number;
-            /** Snippet */
-            snippet: string;
-            /** Thread Id */
-            thread_id: number;
-            /** Title */
-            title: string;
-        };
         /** QuestionOption */
         QuestionOption: {
             /** Label */
@@ -5002,6 +4850,28 @@ export interface components {
             questions: components["schemas"]["Question"][];
             /** Version */
             version: number;
+        };
+        /**
+         * RankedEntry
+         * @description One line of a ranking. `score` is the Bayesian average of the overall rating
+         *     (docs/SPEC.md "Forum -> course attributes", prior weight k = 5, prior mean the period's
+         *     average); only subjects with at least 3 reviews in the period are ranked.
+         */
+        RankedEntry: {
+            /** Detail */
+            detail?: string | null;
+            /** Id */
+            id: string;
+            /** Label */
+            label: string;
+            /** Mean */
+            mean: number;
+            /** N Reviews */
+            n_reviews: number;
+            /** Rank */
+            rank: number;
+            /** Score */
+            score: number;
         };
         /**
          * RatingSummary
@@ -5215,259 +5085,6 @@ export interface components {
             /** Would Recommend */
             would_recommend: boolean;
         };
-        /** RouteCourse */
-        RouteCourse: {
-            /** Code */
-            code: string;
-            /**
-             * Note
-             * @default
-             */
-            note: string;
-            /**
-             * Offered
-             * @default []
-             */
-            offered: ("AU" | "WI" | "SP" | "SU")[];
-            /** Quarter */
-            quarter?: ("AU" | "WI" | "SP" | "SU") | null;
-            /**
-             * Role
-             * @default elective
-             * @enum {string}
-             */
-            role: "core" | "major" | "minor" | "elective" | "humanities" | "research";
-            /**
-             * Title
-             * @default
-             */
-            title: string;
-            /** Year */
-            year: number;
-        };
-        /**
-         * RouteDraftEvent
-         * @description One drafted route (not saved: POST /me/routes keeps it).
-         */
-        RouteDraftEvent: {
-            /**
-             * Fallback
-             * @default false
-             */
-            fallback: boolean;
-            /**
-             * Programs
-             * @default []
-             */
-            programs: components["schemas"]["ProgramRef"][];
-            route: components["schemas"]["RouteIn"];
-            /**
-             * @description discriminator enum property added by openapi-typescript
-             * @enum {string}
-             */
-            type: "route";
-        };
-        /**
-         * RouteFit
-         * @description How well the route fits what the student said, 0..1 (an estimate, not a grade).
-         */
-        RouteFit: {
-            /**
-             * Career
-             * @default 0.5
-             */
-            career: number;
-            /**
-             * Humanities
-             * @default 0.5
-             */
-            humanities: number;
-            /**
-             * Interests
-             * @default 0.5
-             */
-            interests: number;
-            /** Workload */
-            workload?: ("light" | "balanced" | "intense") | null;
-        };
-        /** RouteIn */
-        RouteIn: {
-            /**
-             * Courses
-             * @default []
-             */
-            courses: components["schemas"]["RouteCourse"][];
-            /**
-             * @default {
-             *       "career": 0.5,
-             *       "humanities": 0.5,
-             *       "interests": 0.5
-             *     }
-             */
-            fit: components["schemas"]["RouteFit"];
-            /**
-             * Kind
-             * @default custom
-             * @enum {string}
-             */
-            kind: "major" | "double_major" | "major_minor" | "exploratory" | "custom";
-            /**
-             * Milestones
-             * @default []
-             */
-            milestones: components["schemas"]["Milestone"][];
-            /**
-             * Origin
-             * @default user
-             * @enum {string}
-             */
-            origin: "ai" | "user";
-            /**
-             * Program Ids
-             * @default []
-             */
-            program_ids: string[];
-            /**
-             * Summary
-             * @default
-             */
-            summary: string;
-            /**
-             * Tagline
-             * @default
-             */
-            tagline: string;
-            /** Title */
-            title: string;
-        };
-        /** RouteList */
-        RouteList: {
-            /** Chosen Id */
-            chosen_id?: string | null;
-            /** Items */
-            items: components["schemas"]["RouteOut"][];
-            /**
-             * Max Routes
-             * @default 12
-             */
-            max_routes: number;
-        };
-        /** RouteOut */
-        RouteOut: {
-            /**
-             * Courses
-             * @default []
-             */
-            courses: components["schemas"]["RouteCourse"][];
-            /**
-             * Created Day
-             * Format: date
-             */
-            created_day: string;
-            /**
-             * @default {
-             *       "career": 0.5,
-             *       "humanities": 0.5,
-             *       "interests": 0.5
-             *     }
-             */
-            fit: components["schemas"]["RouteFit"];
-            /**
-             * Id
-             * Format: uuid
-             */
-            id: string;
-            /**
-             * Kind
-             * @default custom
-             * @enum {string}
-             */
-            kind: "major" | "double_major" | "major_minor" | "exploratory" | "custom";
-            /**
-             * Milestones
-             * @default []
-             */
-            milestones: components["schemas"]["Milestone"][];
-            /** Note */
-            note?: string | null;
-            /**
-             * Origin
-             * @default user
-             * @enum {string}
-             */
-            origin: "ai" | "user";
-            /** Position */
-            position: number;
-            /**
-             * Program Ids
-             * @default []
-             */
-            program_ids: string[];
-            /**
-             * Programs
-             * @default []
-             */
-            programs: components["schemas"]["ProgramRef"][];
-            /**
-             * Status
-             * @enum {string}
-             */
-            status: "open" | "chosen" | "archived";
-            /**
-             * Summary
-             * @default
-             */
-            summary: string;
-            /**
-             * Tagline
-             * @default
-             */
-            tagline: string;
-            /** Title */
-            title: string;
-            /**
-             * Updated Day
-             * Format: date
-             */
-            updated_day: string;
-        };
-        /**
-         * RoutePatch
-         * @description `status: chosen` makes any other chosen route `open`; `open` on the chosen route keeps
-         *     the options open.
-         */
-        RoutePatch: {
-            /** Note */
-            note?: string | null;
-            /** Position */
-            position?: number | null;
-            /** Status */
-            status?: ("open" | "chosen" | "archived") | null;
-            /** Tagline */
-            tagline?: string | null;
-            /** Title */
-            title?: string | null;
-        };
-        /**
-         * RoutesEvent
-         * @description One Server-Sent Event `data:` payload from /agents/routes.
-         */
-        RoutesEvent: components["schemas"]["DashboardStepEvent"] | components["schemas"]["RouteDraftEvent"] | components["schemas"]["ProfileDoneEvent"] | components["schemas"]["ErrorEvent"];
-        /** RoutesRequest */
-        RoutesRequest: {
-            /**
-             * Count
-             * @default 3
-             */
-            count: number;
-            /** Focus */
-            focus?: string | null;
-            /**
-             * Keep Existing Titles
-             * @default []
-             */
-            keep_existing_titles: string[];
-        };
         /** ScaleEnds */
         ScaleEnds: {
             /** Max */
@@ -5580,21 +5197,6 @@ export interface components {
             source?: components["schemas"]["Source"] | null;
             /** With */
             with: string;
-        };
-        /** ShelfBook */
-        ShelfBook: {
-            /** Author */
-            author: string;
-            /** Id */
-            id: string;
-            /** Slug */
-            slug: string;
-            /** Title */
-            title: string;
-            /** When */
-            when: string;
-            /** Year */
-            year: number;
         };
         /**
          * SlotNode
@@ -5722,13 +5324,26 @@ export interface components {
         };
         /**
          * TakenCourse
-         * @description A UChicago course the student took or is taking.
+         * @description A UChicago course the student took or is taking. `grading`, `units` and `locked` are the
+         *     plan item's (planner_core `PlanItem`): a rule that needs a letter grade does not count a
+         *     Pass/Fail course, so every editor sends them back unchanged.
          */
         TakenCourse: {
             /** Course */
             course: string;
             /** Grade */
             grade?: string | null;
+            /**
+             * Grading
+             * @default letter
+             * @enum {string}
+             */
+            grading: "letter" | "pass_fail";
+            /**
+             * Locked
+             * @default false
+             */
+            locked: boolean;
             /**
              * Status
              * @default completed
@@ -5737,6 +5352,8 @@ export interface components {
             status: "completed" | "in_progress";
             /** Term */
             term: string;
+            /** Units */
+            units?: number | null;
         };
         /** TakenCourseOut */
         TakenCourseOut: {
@@ -5744,6 +5361,17 @@ export interface components {
             course: string;
             /** Grade */
             grade?: string | null;
+            /**
+             * Grading
+             * @default letter
+             * @enum {string}
+             */
+            grading: "letter" | "pass_fail";
+            /**
+             * Locked
+             * @default false
+             */
+            locked: boolean;
             /**
              * Status
              * @default completed
@@ -5757,6 +5385,8 @@ export interface components {
              * @default
              */
             title: string;
+            /** Units */
+            units?: number | null;
         };
         /** Term */
         Term: {
@@ -5815,72 +5445,6 @@ export interface components {
             slot_ref?: string | null;
             /** Term */
             term?: string | null;
-        };
-        /**
-         * UpdateItem
-         * @description One new thing on Quarterly that concerns the student. Text is plain (no markdown) and
-         *     scrubbed of emails and phone numbers; `href` is a path on this site.
-         */
-        UpdateItem: {
-            /** Course Code */
-            course_code?: string | null;
-            /**
-             * Day
-             * Format: date
-             */
-            day: string;
-            /** Href */
-            href: string;
-            /** Id */
-            id: number;
-            /** Is New */
-            is_new: boolean;
-            /**
-             * Kind
-             * @enum {string}
-             */
-            kind: "thread" | "reply" | "review" | "discussion" | "comment";
-            /** Reason */
-            reason: string;
-            /** Snippet */
-            snippet: string;
-            /** Title */
-            title: string;
-        };
-        /** UpdatesOut */
-        UpdatesOut: {
-            /** Digest */
-            digest?: string | null;
-            /**
-             * Digest Ai
-             * @default false
-             */
-            digest_ai: boolean;
-            /**
-             * Items
-             * @default []
-             */
-            items: components["schemas"]["UpdateItem"][];
-            /**
-             * Unread
-             * @default 0
-             */
-            unread: number;
-        };
-        /**
-         * UpdatesSeen
-         * @description High-water marks: the newest id the student has seen of each kind of item. In a request
-         *     a missing mark means "the newest there is now"; marks never move backwards.
-         */
-        UpdatesSeen: {
-            /** Comment */
-            comment?: number | null;
-            /** Post */
-            post?: number | null;
-            /** Reply */
-            reply?: number | null;
-            /** Thread */
-            thread?: number | null;
         };
         /** ValidationError */
         ValidationError: {
@@ -6009,28 +5573,6 @@ export interface components {
             cloud_cover: number | null;
             /** Weather Code */
             weather_code: number;
-        };
-        /** WeightedWord */
-        WeightedWord: {
-            /** Text */
-            text: string;
-            /** Weight */
-            weight: number;
-        };
-        /** WordsItem */
-        WordsItem: {
-            category: components["schemas"]["FeedCategoryRef"];
-            /** Id */
-            id: string;
-            /**
-             * @description discriminator enum property added by openapi-typescript
-             * @enum {string}
-             */
-            kind: "words";
-            /** Label */
-            label: string;
-            /** Words */
-            words: components["schemas"]["WeightedWord"][];
         };
         /** WorkloadHoursGoal */
         WorkloadHoursGoal: {
@@ -6547,40 +6089,6 @@ export interface operations {
             };
         };
     };
-    ask_agents_ask_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["AskRequest"];
-            };
-        };
-        responses: {
-            /** @description Server-Sent Events; each `data:` line is one AskEvent as JSON. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AskEvent"];
-                    "text/event-stream": unknown;
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
     chat_agents_chat_post: {
         parameters: {
             query?: never;
@@ -6633,39 +6141,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ChatHistory"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    post_feed_notes_agents_feed_notes_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["FeedNotesRequest"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["FeedNotes"];
                 };
             };
             /** @description Validation Error */
@@ -6733,49 +6208,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["InterviewEvent"];
-                    "text/event-stream": unknown;
-                };
-            };
-            /** @description Not logged in */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorOut"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    draft_routes_agents_routes_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["RoutesRequest"];
-            };
-        };
-        responses: {
-            /** @description Server-Sent Events; each `data:` line is one RoutesEvent as JSON. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["RoutesEvent"];
                     "text/event-stream": unknown;
                 };
             };
@@ -7130,6 +6562,26 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+        };
+    };
+    browse_catalog_browse_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CatalogBrowse"];
                 };
             };
         };
@@ -7673,6 +7125,47 @@ export interface operations {
             };
         };
     };
+    course_ratings_course_ratings_get: {
+        parameters: {
+            query: {
+                /** @description Comma-separated course codes */
+                codes: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CourseRatings"];
+                };
+            };
+            /** @description Not logged in */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     search_courses_courses_get: {
         parameters: {
             query?: {
@@ -7765,61 +7258,6 @@ export interface operations {
             };
         };
     };
-    get_feed_feed_get: {
-        parameters: {
-            query?: {
-                tab?: "for_you" | "explore" | "following";
-                /** @description Comma-separated category keys; absent = the profile's saved focus. */
-                categories?: string | null;
-                cursor?: string | null;
-                limit?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["FeedPage"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    get_categories_feed_categories_get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["FeedCategories"];
-                };
-            };
-        };
-    };
     course_forum_forum_courses__code__get: {
         parameters: {
             query?: never;
@@ -7838,6 +7276,45 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["CourseForumOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_items_forum_items_get: {
+        parameters: {
+            query?: {
+                type?: ("review" | "discussion") | null;
+                course?: string | null;
+                instructor?: string | null;
+                subject?: string | null;
+                tag?: string | null;
+                q?: string | null;
+                mine?: boolean;
+                cursor?: string | null;
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ForumItemList"];
                 };
             };
             /** @description Validation Error */
@@ -8149,6 +7626,37 @@ export interface operations {
             };
         };
     };
+    forum_stats_forum_stats_get: {
+        parameters: {
+            query?: {
+                period?: "quarter" | "year";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ForumStats"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     vote_forum_votes_post: {
         parameters: {
             query?: never;
@@ -8381,250 +7889,6 @@ export interface operations {
                 };
                 content: {
                     "text/plain": components["schemas"]["ErrorOut"];
-                };
-            };
-        };
-    };
-    list_routes_me_routes_get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["RouteList"];
-                };
-            };
-            /** @description Not logged in */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorOut"];
-                };
-            };
-        };
-    };
-    create_route_me_routes_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["RouteIn"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["RouteOut"];
-                };
-            };
-            /** @description Not logged in */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorOut"];
-                };
-            };
-            /** @description Too many routes */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorOut"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    delete_route_me_routes__route_id__delete: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                route_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not logged in */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorOut"];
-                };
-            };
-            /** @description Not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorOut"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    patch_route_me_routes__route_id__patch: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                route_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["RoutePatch"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["RouteOut"];
-                };
-            };
-            /** @description Not logged in */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorOut"];
-                };
-            };
-            /** @description Not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorOut"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    updates_me_updates_get: {
-        parameters: {
-            query?: {
-                digest?: boolean;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["UpdatesOut"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    updates_seen_me_updates_seen_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": components["schemas"]["UpdatesSeen"] | null;
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["UpdatesSeen"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };

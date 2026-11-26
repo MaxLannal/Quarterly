@@ -8,12 +8,13 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from types import SimpleNamespace
 from typing import Any
 
 import pytest
 import sqlalchemy as sa
 from api.db import models as m
-from api.profile_data import export_profile
+from api.profile_data import completeness, export_profile
 from api.profile_questions import question_set
 from auth_test_support import Env
 from test_profile_support import account_id, db_url_fixture, env_fixture, login  # noqa: F401
@@ -26,7 +27,7 @@ STEP_2 = [
     "pace",
     "wants_research",
     "research_areas",
-    "courses_per_term",
+    "course_load",
     "terms_away",
     "class_formats",
     "theory_vs_application",
@@ -49,7 +50,7 @@ FULL: dict[str, Any] = {
     "pace": "on_time",
     "wants_research": True,
     "research_areas": ["  Quantum materials ", "quantum materials", "Machine learning theory"],
-    "courses_per_term": 3,
+    "course_load": "normal",
     "terms_away": [{"term": "2027-AU", "kind": "abroad"}],
     "class_formats": ["seminar", "lab", "seminar"],
     "theory_vs_application": 7,
@@ -64,8 +65,21 @@ def test_everything_needs_login(env: Env) -> None:
     assert env.client.get("/me/profile").status_code == 401
     assert env.client.patch("/me/profile", json={"class_year": 2029}).status_code == 401
     assert env.client.get("/me/profile/export.md").status_code == 401
-    assert env.client.get("/me/routes").status_code == 401
     assert env.client.post("/agents/interview", json={"mode": "start"}).status_code == 401
+
+
+def test_the_updates_list_is_gone(env: Env) -> None:
+    # OPEN_QUESTIONS M21-2, Richard's answer: delete it for now (no page showed it since #16).
+    headers = login(env)
+    assert env.client.get("/me/updates", headers=headers).status_code == 404
+    assert env.client.post("/me/updates/seen", json={}, headers=headers).status_code == 404
+
+
+def test_the_routes_are_gone(env: Env) -> None:
+    # Issue #15 removed "Your routes": the planner makes every plan proposal.
+    headers = login(env)
+    assert env.client.get("/me/routes", headers=headers).status_code == 404
+    assert env.client.post("/agents/routes", json={}, headers=headers).status_code == 404
 
 
 def test_the_questions_are_public_and_come_from_the_question_file(env: Env) -> None:
@@ -138,6 +152,9 @@ def test_patch_saves_the_general_information(env: Env) -> None:
             "term": "2025-AU",
             "status": "completed",
             "grade": "A-",
+            "grading": "letter",
+            "units": None,
+            "locked": False,
         },
         {
             "course": "CMSC 14200",
@@ -145,6 +162,9 @@ def test_patch_saves_the_general_information(env: Env) -> None:
             "term": "2026-WI",
             "status": "in_progress",
             "grade": None,
+            "grading": "letter",
+            "units": None,
+            "locked": False,
         },
     ]
     assert body["research_areas"] == ["Quantum materials", "Machine learning theory"]
@@ -162,7 +182,7 @@ def test_patch_saves_the_general_information(env: Env) -> None:
         {"entry_year_level": 5},
         {"post_grad_plan": "astronaut"},
         {"pace": "slow"},
-        {"courses_per_term": 9},
+        {"course_load": "heavy"},
         {"theory_vs_application": 0},
         {"terms_away": [{"term": "2027-AU", "kind": "vacation"}]},
         {"class_formats": ["podcast"]},
@@ -170,7 +190,6 @@ def test_patch_saves_the_general_information(env: Env) -> None:
         {"credits": [{"kind": "AP", "label": "AP Fake", "maps_to": "NOPE 10000"}]},
         {"taken_courses": [{"course": "NOPE 10000", "term": "2025-AU"}]},
         {"research_areas": ["x" * 61]},
-        {"feed_categories": [f"cat{i}" for i in range(17)]},
         {"intended_programs": ["nope-ba"]},
         {"interview": {"turns": [{"role": "guide", "text": "z" * 2001}]}},
         # The old freeform fields are gone (Issue #14 D2): unknown fields are ignored, so check
@@ -186,6 +205,9 @@ def test_old_freeform_fields_are_not_kept(env: Env) -> None:
     headers = login(env)
     body = patch(env, headers, {"interests": ["Physics"], "portrait": {"headline": "x"}}).json()
     assert "interests" not in body and "portrait" not in body
+    # "Courses per quarter" became "course load" (Richard, 2026-11-25, migration 0011).
+    body = patch(env, headers, {"courses_per_term": 4}).json()
+    assert "courses_per_term" not in body and body["course_load"] is None
 
 
 def test_patch_is_partial_and_null_clears(env: Env) -> None:
@@ -206,6 +228,62 @@ def test_patch_is_partial_and_null_clears(env: Env) -> None:
     ).json()
     assert body["follows"] == {"threads": [3, 4], "courses": ["PHYS 13100"]}
     assert len(body["taken_courses"]) == 2
+
+
+def test_taken_courses_keep_pass_fail_units_and_lock(env: Env) -> None:
+    """Blocker 2 (review of PR #21): the profile save keeps a taken course's grading, units and
+    lock, and a course sent without them gets the defaults (letter grade, catalog units, not
+    locked)."""
+    headers = login(env)
+    sent = [
+        {
+            "course": "CMSC 14100",
+            "term": "2025-AU",
+            "status": "completed",
+            "grading": "pass_fail",
+            "units": 50,
+            "locked": True,
+        },
+        {"course": "CMSC 14200", "term": "2026-WI", "status": "in_progress"},
+    ]
+    resp = patch(env, headers, {"taken_courses": sent})
+    assert resp.status_code == 200, resp.text
+    for body in (resp.json(), env.client.get("/me/profile").json()):
+        rows = [(c["course"], c["grading"], c["units"], c["locked"]) for c in body["taken_courses"]]
+        assert rows == [
+            ("CMSC 14100", "pass_fail", 50, True),
+            ("CMSC 14200", "letter", None, False),
+        ]
+    assert (
+        patch(env, headers, {"taken_courses": [{**sent[0], "grading": "audit"}]}).status_code == 422
+    )
+    # student.md says so too: a rule that needs a letter grade does not count the course.
+    lines = env.client.get("/me/profile/export.md").text.splitlines()
+    assert next(line for line in lines if "CMSC 14100" in line).endswith(", Pass/Fail")
+    assert not next(line for line in lines if "CMSC 14200" in line).endswith("Pass/Fail")
+
+
+def test_credits_are_asked_of_everyone_and_need_no_answer() -> None:
+    """Richard (2026-11-25): a first-year student can have AP, placement or transfer credits, so
+    the registration form asks every student. A student with none is still complete."""
+    credits = next(q for q in question_set().questions if q.id == "credits")
+    assert credits.when is None and credits.optional
+    row = SimpleNamespace(wants_research=False)
+    others = [q.id for q in question_set().questions if q.id != "credits"]
+    assert completeness(row, others) == 1.0  # type: ignore[arg-type]
+
+
+def test_a_course_in_progress_has_no_grade(env: Env) -> None:
+    """Richard (2026-11-25): a student who is taking a course has no grade for it yet. A grade
+    sent with a course in progress is dropped; a completed course keeps its grade."""
+    headers = login(env)
+    sent = [
+        {"course": "CMSC 14100", "term": "2025-AU", "status": "completed", "grade": "A-"},
+        {"course": "CMSC 14200", "term": "2026-WI", "status": "in_progress", "grade": "B"},
+    ]
+    body = patch(env, headers, {"taken_courses": sent}).json()
+    grades = {c["course"]: c["grade"] for c in body["taken_courses"]}
+    assert grades == {"CMSC 14100": "A-", "CMSC 14200": None}
 
 
 def test_saying_no_to_research_clears_the_areas(env: Env) -> None:
@@ -259,7 +337,7 @@ def test_export_profile_has_the_record_without_the_email(env: Env) -> None:
     headers = login(env, "quiet-heron", email="heron.q@uchicago.edu")
     me = account_id(env, "quiet-heron")
     with env.db() as db:
-        assert export_profile(db, me) == {"profile": None, "routes": []}
+        assert export_profile(db, me) == {"profile": None}
     patch(env, headers, FULL)
     with env.db() as db:
         out = export_profile(db, me)
@@ -270,6 +348,10 @@ def test_export_profile_has_the_record_without_the_email(env: Env) -> None:
         "term": "2025-AU",
         "status": "completed",
         "grade": "A-",
+        "grading": "letter",
+        "units": None,
+        "locked": False,
     }
     assert profile["student_md"].startswith("# Student record\n")
+    assert set(out) == {"profile"}  # the routes went in issue #15
     assert "heron" not in repr(out) and "@" not in repr(out)

@@ -254,7 +254,8 @@ def presence(db: SessionDep, viewer: ViewerDep, store: StoreDep, thread_id: int)
     return service.presence(db, store, viewer, thread_id)
 
 
-# Follow a question: its new replies show in the companion's updates. Stored in the profile.
+# Follow a question (stored in the profile). The update alerts that listed its new replies went
+# with GET /me/updates (OPEN_QUESTIONS M21-2).
 @router.post(
     "/threads/{thread_id}/follow", response_model=CommonsFollowOut, dependencies=[WRITE_IP]
 )

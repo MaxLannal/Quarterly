@@ -20,8 +20,9 @@ function canRun(): boolean {
 /**
  * A figure drawn with the titles of real courses (docs/BEST-OF-UCHICAGO-PLAN.md "Shared look"),
  * in the homepage chapel's manner: maroon and ink on paper, rows like courses of stone. `shape`:
- * `arch` (a Gothic window, Ask), `orbit` (rings around a sun, the dashboard), `river` (flowing
- * bands, the feed), `arcade` (a cloister, the forum). Point at a title to see its course; click
+ * `arch` (a Gothic window, drawn for the Ask page), `orbit` (rings around a sun, the dashboard),
+ * `river` (flowing bands, drawn for the Feed), `arcade` (a cloister, the forum). The Ask page and
+ * the Feed went in issues #15 and #19; their shapes are kept for later pages. Point at a title to see its course; click
  * to open it. Decorative: the page's own links and buttons do everything it does.
  */
 export function TypeScape({

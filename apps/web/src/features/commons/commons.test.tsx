@@ -1,4 +1,5 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it } from "vitest";
 import { resetCommonsMock } from "@/mocks/commons";
 import { renderRoute } from "@/test-utils";
@@ -135,12 +136,44 @@ describe("helpers", () => {
 describe("Commons pages (mock API)", () => {
   afterEach(() => resetCommonsMock());
 
-  it("lists questions to logged-out readers", async () => {
+  it("lists questions to logged-out readers, with the AI's short answer and no reviews or ratings", async () => {
     renderRoute("/forum");
     const title = await screen.findByText(/is TEST 10000 fine without background/);
     expect(title.closest("a")).toHaveAttribute("href", "/forum/t/1");
-    expect(screen.getByText("Hot").closest("[role=tab]")).toHaveAttribute("aria-selected", "true");
+    expect(screen.getByRole("button", { name: "All" })).toHaveAttribute("aria-pressed", "true");
     expect(screen.getAllByText("AI answered").length).toBeGreaterThan(0);
+    // Issue #20: the AI's answer sits under its question, labelled as written by an AI.
+    const answer = screen.getByRole("region", { name: /Quarterly AI's answer to “Fake question: is TEST 10000/ });
+    expect(answer).toHaveTextContent("Fake AI answer: TEST 10000 has no prerequisite.");
+    expect(answer).toHaveTextContent("Written by an AI and can be wrong.");
+    // A "New post" button, not an ask box.
+    expect(screen.getByRole("link", { name: "New post" })).toHaveAttribute("href", "/forum/new");
+    expect(screen.queryByRole("search", { name: "Ask a question" })).toBeNull();
+    // Reviews and ratings are for logged-in students.
+    expect(screen.getByText(/Log in to see ratings, rankings and reviews/)).toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "Top courses" })).toBeNull();
+    expect(screen.queryByText("Review")).toBeNull();
+  });
+
+  it("shows logged-in students reviews and discussions newest first, and the rankings with review counts", async () => {
+    window.sessionStorage.setItem("quarterly.mock.session", "1");
+    renderRoute("/forum");
+    const top = await screen.findByRole("region", { name: "Top courses" });
+    // Only subjects with at least 3 reviews are ranked: TEST 10000 has 2.
+    expect(within(top).getByRole("link", { name: /TEST 20000/ })).toHaveTextContent("3 reviews");
+    expect(within(top).queryByText(/TEST 10000/)).toBeNull();
+    expect(within(top).getByRole("link", { name: /TEST 20000/ })).toHaveAttribute("href", "/forum?course=TEST+20000");
+    expect(screen.getByRole("region", { name: "Humanities sequences" })).toHaveTextContent("FAKE 11000-11100-11200");
+    expect(screen.getByRole("region", { name: "Instructors" })).toHaveTextContent("Fake Instructor A");
+    const list = screen.getByRole("region", { name: "Latest posts" });
+    const titles = within(list)
+      .getAllByRole("heading", { level: 3 })
+      .map((h) => h.textContent);
+    expect(titles[0]).toBe("Fake question: which fake humanities sequence is discussion-heavy?"); // 1 day ago
+    expect(titles).toContain("Fake: hard but fair");
+    await userEvent.click(screen.getByRole("button", { name: "Reviews" }));
+    await waitFor(() => expect(within(list).queryByText(/Fake question/)).toBeNull());
+    expect(within(list).getAllByText("Review").length).toBeGreaterThan(0);
   });
 
   it("shows a thread with the AI's answer, its sources and the reply tree", async () => {

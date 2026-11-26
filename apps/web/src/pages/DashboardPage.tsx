@@ -103,7 +103,7 @@ function Preview() {
     ["Class year", "Class of 2030"],
     ["Intended programs", "Computer Science, Mathematics"],
     ["Graduation pace", "On time"],
-    ["Courses per quarter", "4 courses"],
+    ["Course load", "Normal"],
   ];
   return (
     <div aria-hidden="true" className="relative overflow-hidden rounded-[22px] border border-hairline bg-canvas-soft p-4 sm:p-6">

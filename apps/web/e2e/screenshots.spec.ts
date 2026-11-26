@@ -52,7 +52,7 @@ async function filledRecord(page: Page) {
         post_grad_plan: "grad_school",
         wants_research: true,
         research_areas: ["Fake topology"],
-        courses_per_term: 4,
+        course_load: "normal",
         terms_away: [],
       }),
     });
@@ -105,7 +105,7 @@ const SHOTS: Shot[] = [
     phoneOnly: true,
     run: async (p) => {
       await p.goto("/courses");
-      await h1(p, "Course search");
+      await h1(p, "Catalog");
       await p.getByRole("button", { name: "Menu" }).click();
       await expect(
         p
@@ -284,7 +284,7 @@ const SHOTS: Shot[] = [
   },
   {
     name: "courses",
-    run: async (p) => (await p.goto("/courses"), h1(p, "Course search")),
+    run: async (p) => (await p.goto("/courses"), h1(p, "Catalog")),
   },
   {
     name: "course",

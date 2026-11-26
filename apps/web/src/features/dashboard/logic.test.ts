@@ -1,34 +1,21 @@
 import { describe, expect, it } from "vitest";
 import { TEST_QUESTIONS as SET, testProfile as profile, testQuestion as question } from "@/features/profile/fixtures";
-import { optimisticRoutes, patched, type Route, type RouteList } from "./api";
-import { byYear, skippedTopics, entryTermFor, memberSince, memoryPatch, multiReply, planSummary, programProgress, proposalFrom, questionTurn, quickRepliesFor, routePlanState, withItem } from "./logic";
-
-function route(over: Partial<Route> = {}): Route {
-  return {
-    id: "r1",
-    title: "Physics first",
-    tagline: "",
-    summary: "",
-    kind: "major",
-    program_ids: ["phys-bs"],
-    courses: [],
-    milestones: [],
-    fit: { interests: 0.5, career: 0.5, humanities: 0.5, workload: null },
-    origin: "ai",
-    status: "open",
-    position: 0,
-    note: null,
-    created_day: "2026-11-20",
-    updated_day: "2026-11-20",
-    programs: [],
-    ...over,
-  };
-}
+import { patched } from "./api";
+import { skippedTopics, memberSince, memoryPatch, multiReply, planSummary, programProgress, proposalFrom, questionTurn, quickRepliesFor, withItem } from "./logic";
 
 describe("the dashboard agent's proposals", () => {
   it("names the question it answers and how the answer will read", () => {
     const p = proposalFrom({ proposed: { class_formats: ["seminar", "lab"] }, answered: "class_formats" }, SET, profile());
     expect(p).toEqual({ id: "class_formats", label: "Class formats", value: "Seminar, Lab", patch: { class_formats: ["seminar", "lab"] } });
+  });
+
+  it("keeps only the answered field when a proposal also lists other fields as null", () => {
+    // Richard's report (2026-11-25): the server sent every field of the patch, the unasked ones
+    // as null, and Accept saved them all, which cleared every other answer.
+    const proposed = { class_year: null, intended_programs: null, pace: "early", course_load: null, terms_away: null } as const;
+    const p = proposalFrom({ proposed, answered: "pace" }, SET, profile({ class_year: 2029, intended_programs: ["cs"] }));
+    expect(p?.patch).toEqual({ pace: "early" });
+    expect(p?.label).toBe("Graduation pace");
   });
 
   it("falls back to the question asked before when `answered` is missing", () => {
@@ -52,8 +39,9 @@ describe("questions as turns", () => {
     expect(quickRepliesFor(question("pace"))).toEqual(["Early", "On time", "Flexible", "Skip"]);
     expect(quickRepliesFor(question("theory_vs_application"))).toEqual(["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Skip"]);
     expect(quickRepliesFor(question("terms_away"))).toEqual(["None", "Skip"]);
-    const turn = questionTurn(question("courses_per_term"), 0.5);
-    expect(turn).toMatchObject({ type: "turn", topic: "courses_per_term", text: question("courses_per_term").text, progress: 0.5, retry: false });
+    expect(quickRepliesFor(question("course_load"))).toEqual(["Conservative", "Normal", "Ambitious", "Skip"]);
+    const turn = questionTurn(question("course_load"), 0.5);
+    expect(turn).toMatchObject({ type: "turn", topic: "course_load", text: question("course_load").text, progress: 0.5, retry: false });
   });
 
   it("joins picked chips in the options' order", () => {
@@ -104,18 +92,10 @@ describe("patches", () => {
   });
 
   it("keeps known course titles and program names", () => {
-    const before = profile({ taken_courses: [{ course: "MATH 15100", term: "2025-AU", status: "completed", grade: null, title: "Calculus I" }], programs: [{ id: "cs", name: "Computer Science" }], intended_programs: ["cs"] });
-    const next = patched(before, { taken_courses: [{ course: "MATH 15100", term: "2025-AU", status: "completed", grade: "A" }], intended_programs: ["cs", "math"] });
+    const before = profile({ taken_courses: [{ course: "MATH 15100", term: "2025-AU", status: "completed", grade: null, grading: "letter", locked: false, title: "Calculus I" }], programs: [{ id: "cs", name: "Computer Science" }], intended_programs: ["cs"] });
+    const next = patched(before, { taken_courses: [{ course: "MATH 15100", term: "2025-AU", status: "completed", grade: "A", grading: "letter", locked: false }], intended_programs: ["cs", "math"] });
     expect(next.taken_courses[0]).toMatchObject({ title: "Calculus I", grade: "A" });
     expect(next.programs).toEqual([{ id: "cs", name: "Computer Science" }, { id: "math", name: "math" }]);
-  });
-
-  it("choosing a route opens the one chosen before", () => {
-    const list: RouteList = { items: [route({ id: "a", status: "chosen" }), route({ id: "b" })], chosen_id: "a", max_routes: 12 };
-    const next = optimisticRoutes(list, "b", { status: "chosen" });
-    expect(next.items.map((r) => r.status)).toEqual(["open", "chosen"]);
-    expect(next.chosen_id).toBe("b");
-    expect(optimisticRoutes(next, "b", { status: "open" }).chosen_id).toBeNull();
   });
 });
 
@@ -146,60 +126,6 @@ describe("the plan summary", () => {
     ];
     expect(programProgress(progress, "cs")?.need).toBe(10);
     expect(programProgress(progress, "math")).toBeUndefined();
-  });
-});
-
-describe("open in planner", () => {
-  it("places courses by year and quarter from the class year", () => {
-    expect(entryTermFor(2029)).toBe("2025-AU");
-    expect(entryTermFor(null)).toBe("2026-AU");
-    const { state, skipped } = routePlanState(
-      {
-        program_ids: ["phys-bs"],
-        courses: [
-          { code: "PHYS 13100", title: "Mechanics", year: 1, quarter: "AU", role: "major", note: "", offered: [] },
-          { code: "PHYS 13200", title: "E&M", year: 1, quarter: "WI", role: "major", note: "", offered: [] },
-          { code: "HUMA 12050", title: "Greece", year: 1, quarter: null, role: "humanities", note: "", offered: [] },
-          { code: "PHYS 23410", title: "QM", year: 3, quarter: "SP", role: "major", note: "", offered: [] },
-          { code: "PHYS 29000", title: "Summer", year: 4, quarter: "SU", role: "research", note: "", offered: [] },
-        ],
-      },
-      2030,
-    );
-    expect(state.entry_term).toBe("2026-AU");
-    expect(state.catalog_year).toBe("2026-27");
-    expect(state.items?.map((i) => [i.course, i.term])).toEqual([
-      ["PHYS 13100", "2026-AU"],
-      ["PHYS 13200", "2027-WI"],
-      ["HUMA 12050", "2027-SP"],
-      ["PHYS 23410", "2029-SP"],
-    ]);
-    expect(skipped).toEqual(["PHYS 29000"]);
-    expect(state.programs?.[0]?.program_id).toBe("phys-bs");
-  });
-
-  it("puts a course without a quarter in a quarter it is usually offered in", () => {
-    const { state } = routePlanState(
-      {
-        program_ids: [],
-        courses: [
-          { code: "A 10000", title: "", year: 1, quarter: "AU", role: "major", note: "", offered: ["AU"] },
-          { code: "B 10000", title: "", year: 1, quarter: null, role: "major", note: "", offered: ["AU", "SP"] },
-          { code: "C 10000", title: "", year: 1, quarter: null, role: "major", note: "", offered: ["AU", "SP"] },
-        ],
-      },
-      2030,
-    );
-    expect(state.items?.map((i) => i.term)).toEqual(["2026-AU", "2027-SP", "2026-AU"]);
-  });
-
-  it("groups by year", () => {
-    const years = byYear([
-      { code: "B", title: "", year: 2, quarter: "SP", role: "elective", note: "", offered: [] },
-      { code: "A", title: "", year: 2, quarter: "AU", role: "elective", note: "", offered: [] },
-    ]);
-    expect(years.get(2)?.map((c) => c.code)).toEqual(["A", "B"]);
-    expect(years.get(1)).toEqual([]);
   });
 });
 

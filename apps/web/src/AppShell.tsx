@@ -2,7 +2,6 @@ import { Outlet } from "react-router-dom";
 import { Footer } from "@/components/layout/Footer";
 import { TopNav } from "@/components/layout/TopNav";
 import { Notice } from "@/components/ui/misc";
-import { Companion } from "@/features/companion/Companion";
 import { useImportOnLogin } from "@/features/planner/importOnLogin";
 
 export function AppShell() {
@@ -32,7 +31,6 @@ export function AppShell() {
         <Outlet />
       </main>
       <Footer />
-      <Companion />
     </div>
   );
 }

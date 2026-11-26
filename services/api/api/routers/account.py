@@ -6,6 +6,7 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException, Response
 from sqlalchemy.orm import Session
 
+from api.agents.interview import welcome_key
 from api.auth import account_data
 from api.auth.account_data import account_out, export_plans
 from api.auth.passwords import hash_password, verify_password
@@ -118,4 +119,6 @@ def delete_account(
     account_data.delete_account(db, account, body.posts)
     db.commit()
     destroy_account_sessions(store, account_id)
+    # The dashboard agent's cached greeting restates the student's answers.
+    store.delete(welcome_key(account_id))
     clear_session_cookie(response)

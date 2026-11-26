@@ -269,7 +269,8 @@ function TakenCoursesField({ question, set, value, onChange, catalogYear, classY
     if (rows.some((r) => r.course === course && r.term === term)) return setError(`${course} is already listed for ${termLabel(term)}.`);
     setError(null);
     setTitles((t) => ({ ...t, [course]: title }));
-    onChange([...rows.map(strip), { course, term, status, grade: grade.trim() || null }]);
+    const kept = status === "in_progress" ? null : grade.trim() || null;
+    onChange([...rows.map(strip), { course, term, status, grade: kept, grading: "letter", units: null, locked: false }]);
     setCourse("");
     setTitle("");
     setGrade("");
@@ -319,60 +320,81 @@ function TakenCoursesField({ question, set, value, onChange, catalogYear, classY
           </table>
         </div>
       )}
-      <div className="grid gap-3 rounded-lg border border-hairline bg-canvas-soft p-4 sm:grid-cols-2" role="group" aria-label="Add a course">
-        <div className="sm:col-span-2">
-          <label htmlFor={`${id}-course`} className={labelClass}>
-            {col("course")?.label ?? "Course"}
-          </label>
-          <CoursePicker
-            id={`${id}-course`}
-            catalogYear={catalogYear}
-            value={course}
-            onChange={(code, t) => {
-              setCourse(code);
-              setTitle(t ?? "");
-            }}
-            onPendingChange={setPending}
-            compact
-          />
-        </div>
-        <div>
-          <label htmlFor={`${id}-term`} className={labelClass}>
-            {col("term")?.label ?? "Quarter"}
-          </label>
-          <select id={`${id}-term`} className={compact} value={term} onChange={(e) => setTerm(e.target.value)}>
-            {terms.map((t) => (
-              <option key={t} value={t}>
-                {termLabel(t)}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div>
-          <label htmlFor={`${id}-status`} className={labelClass}>
-            {col("status")?.label ?? "Status"}
-          </label>
-          <select id={`${id}-status`} className={compact} value={status} onChange={(e) => setStatus(e.target.value as TakenCourse["status"])}>
-            {statuses.map((s) => (
-              <option key={s} value={s}>
-                {columnLabel(set, "status", s)}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div>
-          <label htmlFor={`${id}-grade`} className={labelClass}>
-            {col("grade")?.label ?? "Grade (optional)"}
-          </label>
-          <input id={`${id}-grade`} className={compact} maxLength={4} value={grade} onChange={(e) => setGrade(e.target.value)} placeholder="e.g. A-" />
-        </div>
-        <div className="flex items-end">
-          <Button type="button" variant="outline" className="w-full" onClick={add}>
-            Add course
-          </Button>
+      {/* The same box, insets and 44px row button as the credits form (Richard, 2026-11-25). */}
+      <div className="@container rounded-lg border border-hairline bg-canvas-soft p-3" role="group" aria-label="Add a course">
+        <div className="grid gap-3 @sm:grid-cols-2">
+          <div className="@sm:col-span-2">
+            <label htmlFor={`${id}-course`} className={labelClass}>
+              {col("course")?.label ?? "Course"}
+            </label>
+            <CoursePicker
+              id={`${id}-course`}
+              catalogYear={catalogYear}
+              value={course}
+              onChange={(code, t) => {
+                setCourse(code);
+                setTitle(t ?? "");
+              }}
+              onPendingChange={setPending}
+              compact
+            />
+          </div>
+          <div>
+            <label htmlFor={`${id}-term`} className={labelClass}>
+              {col("term")?.label ?? "Quarter"}
+            </label>
+            <select id={`${id}-term`} className={compact} value={term} onChange={(e) => setTerm(e.target.value)}>
+              {terms.map((t) => (
+                <option key={t} value={t}>
+                  {termLabel(t)}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label htmlFor={`${id}-status`} className={labelClass}>
+              {col("status")?.label ?? "Status"}
+            </label>
+            <select
+              id={`${id}-status`}
+              className={compact}
+              value={status}
+              onChange={(e) => {
+                const next = e.target.value as TakenCourse["status"];
+                setStatus(next);
+                // A course in progress has no grade yet (Richard, 2026-11-25).
+                if (next === "in_progress") setGrade("");
+              }}
+            >
+              {statuses.map((s) => (
+                <option key={s} value={s}>
+                  {columnLabel(set, "status", s)}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label htmlFor={`${id}-grade`} className={labelClass}>
+              {col("grade")?.label ?? "Grade (optional)"}
+            </label>
+            <input
+              id={`${id}-grade`}
+              className={compact}
+              maxLength={4}
+              value={grade}
+              onChange={(e) => setGrade(e.target.value)}
+              placeholder={status === "in_progress" ? "No grade yet" : "e.g. A-"}
+              disabled={status === "in_progress"}
+            />
+          </div>
+          <div className="flex items-end">
+            <Button type="button" variant="outline" className="min-h-11 w-full border-0 px-4" onClick={add}>
+              Add course
+            </Button>
+          </div>
         </div>
         {error && (
-          <p role="alert" className="text-caption font-medium text-error sm:col-span-2">
+          <p role="alert" className="mt-3 text-caption font-medium text-error">
             {error}
           </p>
         )}
@@ -381,7 +403,18 @@ function TakenCoursesField({ question, set, value, onChange, catalogYear, classY
   );
 }
 
-const strip = (r: TakenCourse & { title?: string }): TakenCourse => ({ course: r.course, term: r.term, status: r.status ?? "completed", grade: r.grade ?? null });
+/** A row as the record stores it. The table shows four columns, but each row also keeps its
+ * grading, units and lock from the planner: the whole list is sent on every change, and a
+ * rule that needs a letter grade must not count a Pass/Fail course (Blocker 2). */
+const strip = (r: TakenCourse & { title?: string }): TakenCourse => ({
+  course: r.course,
+  term: r.term,
+  status: r.status ?? "completed",
+  grade: r.status === "in_progress" ? null : (r.grade ?? null),
+  grading: r.grading ?? "letter",
+  units: r.units ?? null,
+  locked: r.locked ?? false,
+});
 
 /** Quarters away: "None", or a list of quarters with their reason. */
 function TermsAwayField({ question, set, value, onChange, classYear, label, hint }: AnswerControlProps & { label: string; hint: string | null }) {

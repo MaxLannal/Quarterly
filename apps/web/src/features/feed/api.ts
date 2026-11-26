@@ -1,82 +1,49 @@
-/** Feed data: react-query hooks over the generated client (types come from the OpenAPI schema). */
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+/**
+ * The Catalog page's browse rows (`GET /catalog/browse`) and the student ratings of a set of
+ * courses (`GET /course-ratings`, logged in only), issue #19. Types come from the OpenAPI schema.
+ */
+import { useQuery } from "@tanstack/react-query";
 import { api, unwrap } from "@/api/client";
 import type { components } from "@/api/schema";
 
 type S = components["schemas"];
-export type FeedPage = S["FeedPage"];
-export type FeedItem = FeedPage["items"][number];
-export type FeedTab = FeedPage["tab"];
+export type CatalogBrowse = S["CatalogBrowse"];
 export type CourseItem = S["CourseItem"];
 export type CommentItem = S["CommentItem"];
-export type BookItem = S["BookItem"];
-export type WordsItem = S["WordsItem"];
-export type ProgramItem = S["ProgramItem"];
-export type QuestionItem = S["QuestionItem"];
-export type ShelfBook = S["ShelfBook"];
-export type FeedCategory = S["FeedCategory"];
-export type FeedCategories = S["FeedCategories"];
-export type FeedNotes = S["FeedNotes"];
+export type NewCourse = S["NewCourse"];
+export type RatingSummary = S["RatingSummary"];
 
-/** One page is also one batch of AI notes (the notes endpoint takes at most 12 ids). */
-export const PAGE_SIZE = 12;
-
-export const feedKeys = {
-  categories: (who: string) => ["feed", "categories", who] as const,
-  feed: (who: string, tab: FeedTab, categories: string) => ["feed", "items", who, tab, categories] as const,
-  notes: (who: string, tab: FeedTab, categories: string, ids: string[]) =>
-    ["feed", "notes", who, tab, categories, ids.join("|")] as const,
+export const browseKeys = {
+  rows: (who: string) => ["catalog", "browse", who] as const,
+  ratings: (who: string, codes: string) => ["catalog", "ratings", who, codes] as const,
 };
 
-export function useFeedCategories(who: string, enabled = true) {
+/** The rows for this viewer (`who`: the account id, or "anon"; a login gives other rows). */
+export function useCatalogBrowse(who: string, enabled = true) {
   return useQuery({
-    queryKey: feedKeys.categories(who),
-    queryFn: async () => unwrap(await api.GET("/feed/categories")),
+    queryKey: browseKeys.rows(who),
+    queryFn: async () => unwrap(await api.GET("/catalog/browse")),
     enabled,
     staleTime: 5 * 60_000,
     retry: false,
   });
 }
 
-/** The feed, page by page. `categories` is a comma list ("" = no filter). */
-export function useFeed(who: string, tab: FeedTab, categories: string, enabled = true) {
-  return useInfiniteQuery({
-    queryKey: feedKeys.feed(who, tab, categories),
-    initialPageParam: undefined as string | undefined,
-    queryFn: async ({ pageParam }) =>
-      unwrap(
-        await api.GET("/feed", {
-          params: { query: { tab, categories, cursor: pageParam, limit: PAGE_SIZE } },
-        }),
-      ),
-    getNextPageParam: (last) => last.next_cursor ?? undefined,
-    enabled,
-    staleTime: 5 * 60_000,
+/**
+ * Student ratings by course code, for a logged-in student only (the course page's rule). `who`
+ * (the account id) is part of the key, so a later visitor never reads another student's cache.
+ */
+export function useCourseRatings(who: string | null, codes: readonly string[]) {
+  const key = [...new Set(codes)].sort().join(",");
+  return useQuery({
+    queryKey: browseKeys.ratings(who ?? "anon", key),
+    queryFn: async () => unwrap(await api.GET("/course-ratings", { params: { query: { codes: key } } })).ratings,
+    enabled: who !== null && key.length > 0,
+    staleTime: 60_000,
     retry: false,
   });
-}
-
-/** The AI curator's notes and headline for one page of items (deterministic when the AI is off). */
-export function feedNotesQuery(who: string, tab: FeedTab, categories: string, ids: string[]) {
-  return {
-    queryKey: feedKeys.notes(who, tab, categories, ids),
-    queryFn: async (): Promise<FeedNotes> =>
-      unwrap(await api.POST("/agents/feed-notes", { body: { item_ids: ids, tab, categories } })),
-    enabled: ids.length > 0,
-    staleTime: 60 * 60_000,
-    retry: false,
-  };
-}
-
-/** Save the focus categories to the profile (the dashboard's PATCH /me/profile). */
-export async function saveFocusToProfile(categories: string[]): Promise<void> {
-  unwrap(await api.PATCH("/me/profile", { body: { feed_categories: categories } }));
 }
 
 export function courseHref(code: string): string {
   return `/courses/${encodeURIComponent(code)}`;
-}
-
-export function searchHref(word: string): string {
-  return `/courses?q=${encodeURIComponent(word)}`;
 }

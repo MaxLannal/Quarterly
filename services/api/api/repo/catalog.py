@@ -18,8 +18,10 @@ so the requirement rail and the trusted verifier can never disagree.
 from __future__ import annotations
 
 import re
+import threading
+import time
 from collections.abc import Collection, Iterator, Sequence
-from typing import get_args
+from typing import Any, get_args
 
 import sqlalchemy as sa
 from planner_core.dsl import expr_courses, expr_to_text, iter_nodes
@@ -557,8 +559,74 @@ def course_list(session: Session, catalog_year: str, name: str) -> CourseList:
     return _course_list(row, _codes_by_id(session, row.course_ids))
 
 
+#: Per-process copies of `load_catalog`, by (database URL, catalog year): (loaded at, catalog).
+_catalogs: dict[tuple[str, str], tuple[float, Catalog]] = {}
+_catalogs_lock = threading.Lock()
+_catalogs_cold = threading.Lock()  # one cold build at a time; other requests wait for it
+_catalogs_refreshing: set[tuple[str, str]] = set()
+
+
+def clear_catalog_cache() -> None:
+    with _catalogs_lock:
+        _catalogs.clear()
+
+
 def load_catalog(session: Session, catalog_year: str) -> Catalog:
-    """The catalog facts selector matching reads: courses, cross-list groups, course lists."""
+    """The catalog facts selector matching reads: courses, cross-list groups, course lists.
+
+    Every course page calls this (`counts_toward`). Since the full catalog import (11,301
+    courses) one build took about 160 ms, so a planner page that loads 45 course cards kept the
+    API busy for many seconds and its plan check waited behind them (integration run
+    2026-11-24). With RULES_CACHE_TTL_S > 0 (the Docker API) each process keeps one copy per
+    catalog year, like the rules cache in `api.repo.rules`: a cold year is built once while
+    the other requests wait; a copy older than the TTL is still served while one background
+    thread builds the next. An empty year (a made-up name) is never kept."""
+    from api.config import get_settings
+
+    ttl = get_settings().rules_cache_ttl_s
+    if ttl <= 0:
+        return _load_catalog(session, catalog_year)
+    bind = session.get_bind()
+    key = (str(getattr(bind, "url", "")), catalog_year)
+    with _catalogs_lock:
+        hit = _catalogs.get(key)
+        start = (
+            hit is not None and time.monotonic() - hit[0] >= ttl and key not in _catalogs_refreshing
+        )
+        if start:
+            _catalogs_refreshing.add(key)
+    if hit is not None:
+        if start:
+            threading.Thread(
+                target=_refresh_catalog, args=(key, bind, catalog_year), daemon=True
+            ).start()
+        return hit[1]
+    with _catalogs_cold:
+        with _catalogs_lock:
+            hit = _catalogs.get(key)
+        if hit is not None:  # built while this request waited
+            return hit[1]
+        catalog = _load_catalog(session, catalog_year)
+        if catalog.courses:
+            with _catalogs_lock:
+                _catalogs[key] = (time.monotonic(), catalog)
+        return catalog
+
+
+def _refresh_catalog(key: tuple[str, str], bind: Any, catalog_year: str) -> None:
+    """Rebuild one year's copy in the background; requests keep the old copy meanwhile."""
+    try:
+        with Session(bind) as fresh:
+            catalog = _load_catalog(fresh, catalog_year)
+        if catalog.courses:
+            with _catalogs_lock:
+                _catalogs[key] = (time.monotonic(), catalog)
+    finally:
+        with _catalogs_lock:
+            _catalogs_refreshing.discard(key)
+
+
+def _load_catalog(session: Session, catalog_year: str) -> Catalog:
     rows = session.execute(
         sa.select(
             m.Course.id,

@@ -50,6 +50,7 @@
       "max": 2040,
       "ends": null,
       "when": null,
+      "optional": false,
       "columns": [],
       "help": null
     },
@@ -67,6 +68,7 @@
       "max": null,
       "ends": null,
       "when": null,
+      "optional": false,
       "columns": [],
       "help": "Usually the spring of your class year."
     },
@@ -84,6 +86,7 @@
       "max": null,
       "ends": null,
       "when": null,
+      "optional": false,
       "columns": [],
       "help": "Choose from the catalog. You can change them at any time."
     },
@@ -103,6 +106,7 @@
       "when": {
         "transfer_or_later": true
       },
+      "optional": false,
       "columns": [],
       "help": null
     },
@@ -139,6 +143,7 @@
       "when": {
         "transfer_or_later": true
       },
+      "optional": false,
       "columns": [],
       "help": null
     },
@@ -155,9 +160,8 @@
       "min": null,
       "max": null,
       "ends": null,
-      "when": {
-        "transfer_or_later": true
-      },
+      "when": null,
+      "optional": true,
       "columns": [
         {
           "id": "kind",
@@ -202,6 +206,7 @@
       "when": {
         "transfer_or_later": true
       },
+      "optional": false,
       "columns": [
         {
           "id": "course",
@@ -260,6 +265,7 @@
       "max": null,
       "ends": null,
       "when": null,
+      "optional": false,
       "columns": [],
       "help": null
     },
@@ -290,6 +296,7 @@
       "max": null,
       "ends": null,
       "when": null,
+      "optional": false,
       "columns": [],
       "help": null
     },
@@ -316,6 +323,7 @@
       "max": null,
       "ends": null,
       "when": null,
+      "optional": false,
       "columns": [],
       "help": null
     },
@@ -335,38 +343,40 @@
       "when": {
         "wants_research": true
       },
+      "optional": false,
       "columns": [],
       "help": "Add as many as you like, for example machine learning theory, ancient Mediterranean trade or condensed matter."
     },
     {
-      "id": "courses_per_term",
+      "id": "course_load",
       "group": "scheduling",
-      "field": "courses_per_term",
-      "label": "Courses per quarter",
-      "text": "How many courses do you want to take each quarter?",
+      "field": "course_load",
+      "label": "Course load",
+      "text": "How heavy do you want your quarters to be?",
       "type": "single",
       "options": [
         {
-          "value": 3,
-          "label": "3 courses"
+          "value": "conservative",
+          "label": "Conservative"
         },
         {
-          "value": 4,
-          "label": "4 courses"
+          "value": "normal",
+          "label": "Normal"
         },
         {
-          "value": 5,
-          "label": "5 courses"
+          "value": "ambitious",
+          "label": "Ambitious"
         }
       ],
       "step": 2,
-      "value": "integer",
-      "min": 1,
-      "max": 6,
+      "value": "text",
+      "min": null,
+      "max": null,
       "ends": null,
       "when": null,
+      "optional": false,
       "columns": [],
-      "help": null
+      "help": "Conservative: only the units you need to stay full time and graduate on time. Normal: a mix of 300-unit and 400-unit quarters. Ambitious: 400 units each quarter, and 500 units in a quarter when the College approves an overload for one of its listed reasons."
     },
     {
       "id": "terms_away",
@@ -382,6 +392,7 @@
       "max": null,
       "ends": null,
       "when": null,
+      "optional": false,
       "columns": [
         {
           "id": "term",
@@ -431,6 +442,7 @@
       "max": null,
       "ends": null,
       "when": null,
+      "optional": false,
       "columns": [],
       "help": null
     },
@@ -451,6 +463,7 @@
         "max": "Application"
       },
       "when": null,
+      "optional": false,
       "columns": [],
       "help": null
     }

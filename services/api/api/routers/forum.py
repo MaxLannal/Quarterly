@@ -6,11 +6,15 @@ from fastapi import APIRouter, Depends, HTTPException, Query, Response
 from sqlalchemy.orm import Session
 
 from api.auth.ratelimit import DAY, HOUR, Limit, account_subject, ip_limit
-from api.auth.sessions import current_account
+from api.auth.sessions import SessionData, current_account, optional_session
 from api.auth.store import Store, get_store
+from api.commons.service import Viewer
+from api.config import get_settings
 from api.db.models import Account
 from api.db.session import get_session
-from api.forum import pages, service
+from api.forum import board, pages, service, stats
+from api.repo import catalog as catalog_repo
+from api.schemas.board import ForumItemList, ForumStats, ItemType, Period
 from api.schemas.common import Page
 from api.schemas.forum import (
     CommentCreate,
@@ -28,7 +32,8 @@ from api.schemas.forum import (
 )
 
 # Route functions carry comments, not docstrings: FastAPI copies docstrings into the frozen
-# OpenAPI document. Every forum route needs a login (SPEC sitemap).
+# OpenAPI document. Every forum route needs a login (SPEC sitemap), except the `/forum` page's
+# list (`GET /forum/items`), which shows a logged-out reader the public Commons discussions only.
 
 
 def _private(response: Response) -> None:
@@ -41,6 +46,7 @@ router = APIRouter(prefix="/forum", tags=["forum"], dependencies=[Depends(_priva
 SessionDep = Annotated[Session, Depends(get_session)]
 AccountDep = Annotated[Account, Depends(current_account)]
 StoreDep = Annotated[Store, Depends(get_store)]
+MaybeSession = Annotated[SessionData | None, Depends(optional_session)]
 
 # Per-account limits (Redis only, keyed by a hash of the account id). The per-IP limits on
 # the routes are loose, because a campus network shares addresses.
@@ -59,6 +65,51 @@ def _not_found() -> Iterator[None]:
         yield
     except pages.PageNotFoundError as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
+
+
+# The `/forum` page's list (issue #20): course reviews and Commons discussions, newest first.
+# Reviews only for logged-in readers; `tag` and `mine` are Commons filters (reviews left out);
+# `instructor` leaves discussions out.
+@router.get("/items", response_model=ForumItemList)
+def list_items(
+    db: SessionDep,
+    session: MaybeSession,
+    item_type: Annotated[ItemType | None, Query(alias="type")] = None,
+    course: Annotated[str | None, Query(max_length=16)] = None,
+    instructor: Annotated[str | None, Query(max_length=128)] = None,
+    subject: Annotated[str | None, Query(max_length=8)] = None,
+    tag: Annotated[str | None, Query(max_length=24)] = None,
+    q: Annotated[str | None, Query(max_length=120)] = None,
+    mine: bool = False,
+    cursor: Annotated[str | None, Query(max_length=32)] = None,
+    limit: Annotated[int, Query(ge=1, le=30)] = 20,
+) -> ForumItemList:
+    account = db.get(Account, session.account_id) if session is not None else None
+    return board.list_items(
+        db,
+        Viewer(account),
+        item_type=item_type,
+        course=course,
+        instructor=instructor,
+        subject=subject,
+        tag=tag,
+        q=q,
+        mine=mine,
+        cursor=cursor,
+        limit=limit,
+    )
+
+
+# Ratings statistics and rankings for the `/forum` page (issue #20): Bayesian averages of the
+# overall rating (k = 5), subjects with at least 3 reviews, over the last quarter or year.
+@router.get("/stats", response_model=ForumStats)
+def forum_stats(db: SessionDep, _: AccountDep, period: Period = "quarter") -> ForumStats:
+    statuses = (
+        catalog_repo.ALL_STATUSES
+        if get_settings().show_unpublished_programs
+        else catalog_repo.PUBLISHED
+    )
+    return stats.cached_stats(db, period, statuses=statuses)
 
 
 @router.get("/pages", response_model=ForumPageOut)

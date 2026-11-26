@@ -10,6 +10,8 @@ from __future__ import annotations
 from typing import Any
 
 import pytest
+import sqlalchemy as sa
+from api.db import models as m
 from auth_test_support import Env
 from test_plans_api import STATE, create, db_url, env, login  # noqa: F401
 
@@ -113,11 +115,101 @@ def test_saving_a_plan_keeps_taken_courses_before_its_first_quarter(env: Env) ->
     assert [c["term"] for c in profile(env)["taken_courses"]] == ["2099-AU"]
 
 
+def test_a_taken_course_keeps_pass_fail_units_and_lock_through_save_and_reload(env: Env) -> None:
+    """Blocker 2 (review of PR #21): a Pass/Fail course in the record stays Pass/Fail, with its
+    units and its lock, after a save and a reload, so the verifier still refuses it where a
+    rule needs a letter grade (V12)."""
+    headers = login(env)
+    pass_fail = {
+        "course": "TEST 20000",
+        "term": "2099-AU",
+        "status": "completed",
+        "grading": "pass_fail",
+        "units": 50,
+        "locked": True,
+    }
+    plan = create(env, headers, state={**STATE, "items": [pass_fail, *STATE["items"]]})
+
+    def kept(items: list[dict[str, Any]]) -> tuple[Any, Any, Any]:
+        item = next(i for i in items if i["course"] == "TEST 20000")
+        return item["grading"], item["units"], item["locked"]
+
+    assert kept(plan["state"]["items"]) == ("pass_fail", 50, True)
+    saved = env.client.patch(f"/plans/{plan['id']}", json={"state": plan["state"]}, headers=headers)
+    assert saved.status_code == 200, saved.text
+    again = env.client.get(f"/plans/{plan['id']}", headers=headers).json()
+    assert kept(again["state"]["items"]) == ("pass_fail", 50, True)
+    assert kept(profile(env)["taken_courses"]) == ("pass_fail", 50, True)
+    report = env.client.post("/verify", json={"plan": again["state"]}).json()
+    assert any(
+        i["code"] == "V12" and i["course_ids"] == ["TEST 20000"] for i in report["issues"]
+    ), report["issues"]
+
+
+def test_student_md_scrubs_a_credit_label_saved_through_a_plan(env: Env) -> None:
+    """A plan's credit label is free text stored as sent; the record reads it through
+    `RecordCredit`, which scrubs it, so student.md (which the dashboard agent sends to the AI
+    provider) has no email address or phone number (privacy page, "The AI features")."""
+    headers = login(env)
+    label = "AP from jane.doe@example.edu, call 773-555-0101"
+    create(env, headers, state={**STATE, "credits": [{"kind": "AP", "label": label, "units": 100}]})
+    md = env.client.get("/me/profile/export.md").text
+    assert "AP from [email removed]" in md
+    assert "jane.doe@" not in md and "555-0101" not in md
+
+
+def test_a_plan_credit_beyond_the_records_limits_does_not_break_the_record(env: Env) -> None:
+    """A plan's own credit has no length or unit limit; the record's has (120 characters, 1000
+    units). A save stores it clipped, so the dashboard, student.md and the export still work."""
+    headers = login(env)
+    long_label = "Transfer credit " + "x" * 200
+    credits = [{"kind": "transfer", "label": long_label, "units": 1500}]
+    create(env, headers, state={**STATE, "credits": credits})
+    record = profile(env)["credits"][0]
+    assert record["label"] == long_label[:120] and record["units"] == 1000
+    assert env.client.get("/me/profile/export.md").status_code == 200
+    assert env.client.get("/account/export").status_code == 200
+    # A clip that leaves digits reading as a phone number is scrubbed again, and still fits.
+    phone_tail = "x" * 109 + " 77355501019999"
+    saved = env.client.patch(
+        f"/plans/{create(env, headers)['id']}",
+        json={"state": {**STATE, "credits": [{"kind": "AP", "label": phone_tail, "units": 0}]}},
+        headers=headers,
+    )
+    assert saved.status_code == 200, saved.text
+    label = profile(env)["credits"][0]["label"]
+    assert len(label) <= 120 and "7735550101" not in label
+    assert env.client.get("/me/profile/export.md").status_code == 200
+    with env.db() as db:  # stored scrubbed too, not only on read
+        stored = db.scalars(sa.select(m.StudentCredit.label)).all()
+    assert stored and not any("7735550101" in s for s in stored)
+
+
+def test_a_plan_shows_no_grade_for_a_course_in_progress(env: Env) -> None:
+    """A row stored before the rule (a grade on a course in progress) shows no grade in a plan."""
+    headers = login(env)
+    plan = create(env, headers, state=with_taken())
+    with env.db() as db:
+        db.execute(sa.update(m.StudentCourse).values(status="in_progress", grade="B"))
+        db.commit()
+    state = env.client.get(f"/plans/{plan['id']}", headers=headers).json()["state"]
+    item = next(i for i in state["items"] if i["course"] == "TEST 10000")
+    assert item["status"] == "in_progress" and item["grade"] is None
+
+
+def test_a_plan_save_keeps_no_grade_for_a_course_in_progress(env: Env) -> None:
+    headers = login(env)
+    taking = {**TAKEN, "status": "in_progress", "grade": "A"}
+    plan = create(env, headers, state=with_taken(items=[taking, STATE["items"][1]]))
+    item = next(i for i in plan["state"]["items"] if i["course"] == "TEST 10000")
+    assert item["status"] == "in_progress" and item["grade"] is None
+
+
 def test_the_account_export_has_the_record_of_a_student_who_only_saved_a_plan(env: Env) -> None:
     headers = login(env)
     create(env, headers, state=with_taken())
     body = env.client.get("/account/export").json()
-    profile = body["profile"]["profile"]  # {"profile": the record, "routes": [...]}
+    profile = body["profile"]["profile"]  # {"profile": the record} (no routes since issue #15)
     assert profile is not None and profile["credits"][0]["maps_to"] == "TEST 20300"
     assert profile["taken_courses"][0]["course"] == "TEST 10000"
     assert "## General Information" in profile["student_md"]

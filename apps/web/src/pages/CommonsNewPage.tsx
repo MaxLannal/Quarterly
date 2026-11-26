@@ -91,7 +91,7 @@ function Tips() {
           <ArchGlyph size={18} />
         </span>
         <p>
-          <strong className="font-medium text-ink">Quarterly AI answers first,</strong> from the catalog, the programs and what students wrote. It can be wrong;
+          <strong className="font-medium text-ink">Quarterly AI answers first, briefly</strong> (60 words at most), from the catalog, the programs and earlier questions. It can be wrong;
           students answer below it. You appear under a random handle that is new on every question.
         </p>
       </section>

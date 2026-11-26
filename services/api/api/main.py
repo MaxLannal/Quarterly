@@ -16,15 +16,13 @@ from api.routers import (
     account,
     admin,
     agents,
-    ask,
     auth,
+    browse,
     catalog,
     commons,
-    feed,
     forum,
     plans,
     profile,
-    updates,
     verify,
     weather,
 )
@@ -34,14 +32,19 @@ from api.routers import (
 async def lifespan(_: FastAPI) -> AsyncIterator[None]:
     """With RULES_CACHE_TTL_S > 0, load the catalog years before serving (prompt 12)."""
     if get_settings().rules_cache_ttl_s > 0:
+        import sqlalchemy as sa
         from sqlalchemy.orm import Session
 
+        from api.db import models as m
         from api.db.session import get_engine
+        from api.repo.catalog import load_catalog
         from api.repo.rules import preload_rules_cache
 
         try:
             with Session(get_engine()) as session:
                 preload_rules_cache(session)
+                for year in session.scalars(sa.select(m.CatalogYear.id)).all():
+                    load_catalog(session, year)  # the course pages' copy (counts_toward)
         except Exception as exc:  # a cold cache is only slower, never wrong
             logging.getLogger("api").warning("rules cache preload failed: %s", type(exc).__name__)
     yield
@@ -66,10 +69,12 @@ def create_app() -> FastAPI:
         lifespan=lifespan,
     )
     app.include_router(health_router)
-    for module in (catalog, plans, verify, agents, forum, auth, account, admin, weather):
+    for module in (catalog, browse, plans, verify, agents, forum, auth, account, admin, weather):
         app.include_router(module.router)
-    # Campus companion (docs/BEST-OF-UCHICAGO-PLAN.md).
-    for module in (ask, updates, profile, feed, commons):
+    # Campus companion (docs/BEST-OF-UCHICAGO-PLAN.md); the Ask chatbot went in issue #15.
+    # The Feed went in issue #19: its spotlights and quotes are the Catalog's rows (browse).
+    # What's new (/me/updates) went after issue #16 removed its card (OPEN_QUESTIONS M21-2).
+    for module in (profile, commons):
         app.include_router(module.router)
     return app
 

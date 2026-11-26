@@ -8,6 +8,9 @@ x-e2e-env: &e2e-env
   LLM_LIVE: "false"
   # Sign-up codes are printed to the API log; the tests read them from `docker compose logs api`.
   EMAIL_BACKEND: console
+  # The plan generator's solve time (the app has 4 s): with the full catalog a busy test machine
+  # needs longer for the second variant and for journey B's infeasibility proof (E2E-2).
+  GENERATE_SOLVER_SECONDS: "20"
   # Every seeded program version is still in review.
   SHOW_UNPUBLISHED_PROGRAMS: "true"
   # The stack is served over plain http on localhost.

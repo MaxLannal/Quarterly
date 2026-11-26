@@ -54,6 +54,8 @@ class Question(BaseModel):
     #: Asked only when every named field has this value (`transfer_or_later` is the
     #: registration form's checkbox, not a stored field).
     when: dict[str, bool] | None = None
+    #: Left out of the share answered: a student can have nothing to enter (credits).
+    optional: bool = False
     columns: list[QuestionColumn] = []
     help: str | None = None
 

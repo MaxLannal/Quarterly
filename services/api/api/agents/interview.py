@@ -24,6 +24,7 @@ import hashlib
 import json
 import logging
 import re
+import uuid
 from collections.abc import Iterator, Sequence
 from dataclasses import dataclass, field
 from typing import Any, Literal
@@ -36,6 +37,7 @@ from api.agents.live import COURSE_CODE, known_courses, run_live
 from api.agents.prompts import load_prompt
 from api.agents.runtime import RunLog
 from api.agents.tools import untrusted
+from api.auth.ratelimit import account_subject
 from api.auth.store import Store
 from api.db import models as m
 from api.forum.scrub import scrub
@@ -168,6 +170,22 @@ SYNONYMS: dict[str, dict[Any, tuple[str, ...]]] = {
             *("whatever", "take my time", "slow", "slower"),
         ),
     },
+    "course_load": {
+        "conservative": (
+            *("conservative", "light", "lighter", "just enough", "the minimum", "minimum"),
+            *("easy", "easier", "not too much", "as few as"),
+        ),
+        "normal": (
+            *("normal", "regular", "standard", "usual", "average", "moderate", "medium"),
+            *("balanced", "a mix", "mix of", "mixed"),
+        ),
+        "ambitious": (
+            # Not "max": "max 4 courses" is a limit, not a heavy load.
+            *("ambitious", "heavy", "heavier", "the maximum", "max out", "as much as"),
+            "as many as",
+            *("overload", "push myself"),
+        ),
+    },
     "class_formats": {
         "seminar": ("seminar", "seminars", "discussion", "discussions", "small classes"),
         "lecture": ("lecture", "lectures"),
@@ -186,7 +204,8 @@ _NO = re.compile(
 _ALL = re.compile(r"^(?:all|all of them|all of the above|any|any of them|everything|all four)$")
 _NONE = re.compile(r"^(?:none|none of them|neither|nothing|no)$")
 _NEGATED = re.compile(
-    r"\b(?:not|no|except|without|hate|dislike|avoid|don'?t like|do not like)\s+(?:\w+\s+)?$"
+    r"\b(?:not|no|nothing|except|without|hate|dislike|avoid|don'?t like|do not like|"
+    r"don'?t want|do not want)\s+(?:\w+\s+)?$"
 )
 _NUMBER_WORDS = {
     "one": 1,
@@ -386,7 +405,8 @@ def _read(question: Question, t: str, raw: str) -> Reading:
     if question.type == "single":
         if exact is not None:
             return Reading("answer", exact, (exact,))
-        named = _named_options(question, t)
+        # An option after "not" is not the answer: "not too heavy" is no ambitious load.
+        named = _named_options(question, t, negation=True)
         if len(named) == 1:
             return Reading("answer", named[0], tuple(named))
         return Reading("unclear", support=tuple(named))
@@ -828,7 +848,7 @@ class Facts(BaseModel):
     pace: str | None = None
     wants_research: bool | None = None
     research_areas: list[str] = []
-    courses_per_term: int | None = None
+    course_load: str | None = None
     terms_away: list[AwayFact] | None = None
     class_formats: list[str] | None = None
     theory_vs_application: int | None = None
@@ -883,7 +903,7 @@ def turn_schema() -> dict[str, Any]:
                     "pace": _nullable({"type": "string", "enum": options("pace")}),
                     "wants_research": {"type": ["boolean", "null"]},
                     "research_areas": {"type": "array", "items": {"type": "string"}},
-                    "courses_per_term": {"type": ["integer", "null"]},
+                    "course_load": _nullable({"type": "string", "enum": options("course_load")}),
                     "terms_away": _nullable(
                         {
                             "type": "array",
@@ -995,7 +1015,13 @@ def _codes(text: str) -> list[str]:
 # ------------------------------------------------------------------------------ the run
 
 
-def _welcome_key(account: m.Account, row: m.StudentProfile) -> str:
+def welcome_key(account_id: uuid.UUID) -> str:
+    """One cached greeting per account, so deleting the account can delete it too (it restates
+    the student's answers). The value holds the record's digest with the turn."""
+    return f"me:welcome:{account_subject(account_id)}"
+
+
+def _welcome_digest(account: m.Account, row: m.StudentProfile) -> str:
     """Changes whenever an answer or the covered questions change."""
     answers: dict[str, Any] = {
         q.field: getattr(row, q.field, None)
@@ -1004,13 +1030,27 @@ def _welcome_key(account: m.Account, row: m.StudentProfile) -> str:
     }
     answers["covered"] = memory_of(row).covered
     blob = json.dumps(answers, sort_keys=True, ensure_ascii=False, default=str)
-    digest = hashlib.sha256(f"{account.id}:{blob}".encode()).hexdigest()[:32]
-    return f"me:welcome:{digest}"
+    return hashlib.sha256(f"{account.id}:{blob}".encode()).hexdigest()[:32]
+
+
+def _cached_welcome(store: Store, account: m.Account, row: m.StudentProfile) -> str | None:
+    """The cached greeting's JSON when it was made for this state of the record."""
+    raw = store.get(welcome_key(account.id))
+    if raw is None:
+        return None
+    try:
+        cached = json.loads(raw)
+    except ValueError:
+        return None
+    if not isinstance(cached, dict) or cached.get("digest") != _welcome_digest(account, row):
+        return None
+    turn = cached.get("turn")
+    return turn if isinstance(turn, str) else None
 
 
 def welcome_cached(store: Store, account: m.Account, row: m.StudentProfile) -> bool:
     """Whether a welcome-back greeting for this record is cached (it costs no model call)."""
-    return store.get(_welcome_key(account, row)) is not None
+    return _cached_welcome(store, account, row) is not None
 
 
 @dataclass
@@ -1028,26 +1068,31 @@ class InterviewRun:
 
     def events(self) -> Iterator[BaseModel]:
         ctx = Context.build(self.row, self.account.username, self.req)
-        cached_key = _welcome_key(self.account, self.row) if ctx.mode == "welcome_back" else None
-        if cached_key is not None and (cached := self.store.get(cached_key)):
+        welcome = ctx.mode == "welcome_back"
+        if welcome and (cached := _cached_welcome(self.store, self.account, self.row)):
             try:
                 yield InterviewTurnEvent.model_validate_json(cached)
                 yield ProfileDoneEvent()
                 return
             except ValidationError:
-                self.store.delete(cached_key)
+                self.store.delete(welcome_key(self.account.id))
         turn = self._ask_model(ctx) if self.use_ai else None
         if turn is None:
             turn = rule_turn(ctx)
-        if cached_key is not None and not turn.fallback:
-            self.store.put(cached_key, turn.model_dump_json(), WELCOME_TTL_S)
+        if welcome and not turn.fallback:
+            value = {
+                "digest": _welcome_digest(self.account, self.row),
+                "turn": turn.model_dump_json(),
+            }
+            self.store.put(welcome_key(self.account.id), json.dumps(value), WELCOME_TTL_S)
         yield turn
         yield ProfileDoneEvent(fallback=turn.fallback, note=NO_AI_NOTE if turn.fallback else None)
 
     def _ask_model(self, ctx: Context) -> InterviewTurnEvent | None:
         question = ctx.answering()
         rules = read_reply(question, ctx.message) if question is not None else None
-        student_md = render_student_md(self.db, self.row)
+        # No grades: the questions do not need them, and this goes to the AI provider (M21-1).
+        student_md = render_student_md(self.db, self.row, grades=False)
         record_codes = set(_codes(student_md))
         prompt = load_prompt(PROMPT)
 
@@ -1093,6 +1138,8 @@ class InterviewRun:
                     result = item
         except AgentError as exc:
             logger.warning("%s: no turn, the rules answered (%s)", TASK, exc.reason)
+        except Exception as exc:  # any other failure: the rules answer, the stream goes on
+            logger.warning("%s: no turn, the rules answered (%s)", TASK, type(exc).__name__)
         finally:
             self._save_log()
         if result is None:

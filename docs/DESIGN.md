@@ -290,41 +290,46 @@ components:
 
 ## Overview
 
-The UChicago Course Forum should read like a **quiet, editorial print magazine** that happens to be a course forum. This file merges three sources, each with a fixed job:
+The UChicago Course Forum should read like a **quiet, editorial print magazine** that is also a course forum. This file merges three sources. Each source has a fixed job:
 
 | Source | Governs | Does NOT govern |
 |---|---|---|
 | ElevenLabs DESIGN.md | Typography, spacing, layout, radii, elevation, component geometry, overall restraint | Any color value |
-| UChicago Identity Guidelines (2020) | Every color: accent, neutrals, atmosphere, semantic, data | Fonts (do **not** switch to Gotham/Garamond from that guide) |
-| Rare UI (rareui.com) | Interaction ideas and animated components | Colors, fonts, radii — restyle every component to the tokens here |
+| UChicago Identity Guidelines (2020) | Every color: accent, neutrals, atmosphere, semantic, data | Fonts (do **not** change to Gotham/Garamond from that guide) |
+| Rare UI (rareui.com) | Interaction ideas and animated components | Colors, fonts, radii. Restyle every component to the tokens here. |
 
-When the sources pull in different directions, the priority is: **accessibility → this file → Rare UI defaults.**
+When the sources do not agree, use this priority: **accessibility → this file → Rare UI defaults.**
 
 **Key characteristics**
-- Off-white canvas (`{colors.canvas}`), near-black ink, white cards with 1px hairlines.
-- **Maroon is the single accent** and takes the role ElevenLabs gives its ink pill: primary CTAs, inline links, the active nav/selection state, focus rings. Used scarcely, so it carries weight.
-- Display type is a **light serif at weight 300** — never bold. Body is Inter 400/500 with slightly loose tracking.
-- Pill geometry for every button and badge; 16px radius for cards; 96px between page sections.
-- Color "voltage" comes from soft atmospheric orbs in UChicago's warm, nature-based secondary hues (lake blue, goldenrod, ivy, terracotta, rose), never from saturated fills.
+- An off-white canvas (`{colors.canvas}`), near-black ink, and white cards with 1px hairlines.
+- **Maroon is the single accent.** It has the role that ElevenLabs gives its ink pill: primary CTAs, inline links, the active nav/selection state, focus rings. Use it rarely, so that it has weight.
+- Display type is a **light serif at weight 300**. It is never bold. Body is Inter 400/500 with slightly loose tracking.
+- Every button and badge has the pill geometry. Cards have a 16px radius. Page sections have 96px between them.
+- Color "voltage" comes from soft atmospheric orbs in the warm, nature-based secondary hues of UChicago (lake blue, goldenrod, ivy, terracotta, rose). It never comes from saturated fills.
 
 ## Colors
 
-All values trace back to the UChicago Identity Guidelines. Values marked **derived** in the YAML are tints or shades mixed from a guideline color (the guide groups its palette as Core Hues, Shades, and Tints); nothing comes from outside the palette.
+All values come from the UChicago Identity Guidelines. In the YAML, values with the mark **derived** are tints or shades mixed from a guideline color. (The guide groups its palette as Core Hues, Shades, and Tints.) No value comes from outside the palette.
 
 ### Brand & action
-- **Maroon** (`{colors.primary}` — #800000, PMS 202): the university's signature color. Primary buttons, inline links, active nav indicator, focus ring, selected state. One primary button per view.
+- **Maroon** (`{colors.primary}` — #800000, PMS 202): the signature color of the university. Use it for primary buttons, inline links, the active nav indicator, the focus ring and the selected state. Use one primary button in each view.
 - **Maroon hover / active** (`{colors.primary-hover}` #6C0000, `{colors.primary-active}` #5A0000).
-- **Maroon wash** (`{colors.primary-wash}` #F5EBEB): background for the selected thread row, active sidebar item, current tab.
+- **Maroon wash** (`{colors.primary-wash}` #F5EBEB): the background for the selected thread row, the active sidebar item and the current tab.
 
 ### Neutrals
-- **Ink** (`{colors.ink}` #111111): headings, primary text. The guide lists black without a value; this is softened slightly.
+- **Ink** (`{colors.ink}` #111111): headings, primary text. The guide lists black without a value. This value is slightly softer.
 - **Body** (`{colors.body}` #4D4D4D): running text in posts and reviews.
 - **Muted** (`{colors.muted}` #6B6B6B): timestamps, counts, course codes, metadata.
-- **Dark Gray** (`{colors.gray-dark}` #767676, Warm Gray 11): icons and dividers. It fails AA for small text on the canvas (4.23:1), so do not use it for text — use `{colors.muted}`.
-- **Light Gray** (`{colors.hairline-strong}` #D6D6CE, Cool Gray 3) and its tints form the canvas, hairlines and badge plates.
+- **Dark Gray** (`{colors.gray-dark}` #767676, Warm Gray 11): icons and dividers. It fails AA for small text on the canvas (4.23:1). Thus do not use it for text. Use `{colors.muted}`.
+- **Light Gray** (`{colors.hairline-strong}` #D6D6CE, Cool Gray 3) and its tints make the canvas, the hairlines and the badge plates.
 
 ### Atmospheric orbs
-`orb-lake`, `orb-goldenrod`, `orb-ivy`, `orb-terracotta`, `orb-rose` replace ElevenLabs' pastel orbs. They are mid-tones, so render them as **soft radial gradients at 35–45% opacity at the center, fading to transparent**, blurred 60–80px. That yields the same pastel, atmospheric feel. Never use them as button fills, text colors or card backgrounds. One orb color per section.
+`orb-lake`, `orb-goldenrod`, `orb-ivy`, `orb-terracotta` and `orb-rose` replace the pastel orbs of ElevenLabs. They are mid-tones. Thus render them as follows:
+
+- Use **soft radial gradients at 35–45% opacity at the center, which fade to transparent**.
+- Blur them by 60–80px.
+
+The result has the same pastel, atmospheric feel. Never use them as button fills, text colors or card backgrounds. Use one orb color in each section.
 
 ### Semantic
 | Role | Text/icon | Wash background |
@@ -334,10 +339,14 @@ All values trace back to the UChicago Identity Guidelines. Values marked **deriv
 | Warning | `{colors.semantic-warning}` #9A5324 (icon #C68220) | `{colors.semantic-warning-wash}` |
 | Info | `{colors.semantic-info}` #155F83 | `{colors.semantic-info-wash}` |
 
-Error red and maroon are close (1.46:1 between them). Always pair errors with an icon and a message; never fill a button with the error color.
+Error red and maroon are near each other (1.46:1 between them). Always show an error with an icon and a message. Never fill a button with the error color.
 
 ### Data visualization
-For ratings, workload and grade distributions: single series = maroon; multiple categories = `data-1` … `data-6` in order; sequential scales = `{colors.primary-wash}` → `{colors.primary}`.
+For ratings, workload and grade distributions:
+
+- Single series: maroon.
+- Multiple categories: `data-1` … `data-6`, in this order.
+- Sequential scales: `{colors.primary-wash}` → `{colors.primary}`.
 
 ### Contrast (WCAG AA verified)
 | Foreground | on card #FFF | on canvas | on surface-strong |
@@ -349,16 +358,16 @@ For ratings, workload and grade distributions: single series = maroon; multiple 
 | white on maroon | 11.0 | — | — |
 
 ### Color don'ts
-- Don't use the guide's violator colors (cyan #47B5FF, magenta #FF3399).
-- Don't introduce any hex not in this file. If something new is needed, derive a tint/shade from an existing token and add it here.
-- Don't use more than one saturated element per view besides the primary button.
+- Do not use the violator colors of the guide (cyan #47B5FF, magenta #FF3399).
+- Do not add a hex value that is not in this file. If you need a new color, derive a tint/shade from an existing token and add it here.
+- Do not use more than one saturated element in a view, in addition to the primary button.
 
 ## Typography
 
 ### Font families
-- **Display: Newsreader, weight 300.** ElevenLabs uses Waldenburg Light, which is licensed. Newsreader (free, Google Fonts / `@fontsource/newsreader`) has a true 300 weight and the same contemporary editorial feel. (EB Garamond, the substitute the ElevenLabs file suggests, has no 300 weight.)
-- **Body/UI: Inter** (`@fontsource-variable/inter`), the same family ElevenLabs uses.
-- Do not use the UChicago guide's fonts (Gotham, Adobe Garamond, Fette Fraktur). Typography follows ElevenLabs by design.
+- **Display: Newsreader, weight 300.** ElevenLabs uses Waldenburg Light, which has a license. Newsreader (free, Google Fonts / `@fontsource/newsreader`) has a true 300 weight and the same contemporary editorial feel. (EB Garamond, the substitute that the ElevenLabs file suggests, has no 300 weight.)
+- **Body/UI: Inter** (`@fontsource-variable/inter`). ElevenLabs uses the same family.
+- Do not use the fonts of the UChicago guide (Gotham, Adobe Garamond, Fette Fraktur). Typography follows ElevenLabs by design.
 
 ### Hierarchy
 | Token | Size | Weight | Line height | Tracking | Forum use |
@@ -379,24 +388,26 @@ For ratings, workload and grade distributions: single series = maroon; multiple 
 | `nav-link` | 15px | 500 | 1.4 | 0 | Top nav |
 
 ### Principles
-- **Display stays at weight 300.** Never bold a display headline.
-- Negative tracking on display sizes; slightly positive tracking (+0.15–0.18px) on Inter body.
-- Body never drops below 400.
-- Course codes (e.g. "CMSC 14300") use `caption-uppercase` or tabular Inter; never the serif.
+- **Display stays at weight 300.** Never make a display headline bold.
+- Use negative tracking on display sizes. Use slightly positive tracking (+0.15–0.18px) on Inter body.
+- Body is never below 400.
+- Course codes (for example, "CMSC 14300") use `caption-uppercase` or tabular Inter. They never use the serif.
 
 ## Layout
 
 ### Spacing
-Base unit 4px. Tokens: 4 · 8 · 12 · 16 · 20 · 24 · 32 · 48 · 96. Section padding 96px.
+The base unit is 4px. Tokens: 4 · 8 · 12 · 16 · 20 · 24 · 32 · 48 · 96. Section padding is 96px.
 
 ### Grid & container
-- Max content width ~1200px on a 12-column grid.
-- **Reading column for posts and reviews: max 720px** (~70 characters), so long discussions stay comfortable to read.
-- Card grids: 3-up for course browsing, 2-up for splits; 16–24px gaps.
-- Footer: up to 5 columns at desktop.
+- The maximum content width is approximately 1200px, on a 12-column grid.
+- **Reading column for posts and reviews: maximum 720px** (approximately 70 characters). Thus long discussions stay comfortable to read.
+- Card grids: 3-up for course browsing, 2-up for splits. Gaps are 16–24px.
+- Footer: a maximum of 5 columns at desktop.
 
 ### Whitespace
-Generous, editorial pacing between bands (96px); tight inside them (16–24px between cards). Lists of threads are dense and hairline-divided; pages around them are airy.
+- Between bands, the pacing is generous and editorial (96px).
+- Inside bands, the pacing is tight (16–24px between cards).
+- Lists of threads are dense, with hairline dividers. The pages around them have much space.
 
 ## Elevation & Depth
 
@@ -404,9 +415,9 @@ Generous, editorial pacing between bands (96px); tight inside them (16–24px be
 |---|---|---|
 | Flat | `{colors.canvas}` | Page bands, footer |
 | Card | `{colors.surface-card}` + 1px `{colors.hairline}` | Course cards, post cards |
-| Hover | `0 4px 16px rgba(0, 0, 0, 0.04)` | Hovered cards — the only shadow tier |
-| Overlay | `0 8px 32px rgba(0, 0, 0, 0.08)` | Menus, drawers, toasts (added; ElevenLabs has none) |
-| Orb | Radial gradient of one `orb-*` token | Atmosphere only, never a surface |
+| Hover | `0 4px 16px rgba(0, 0, 0, 0.04)` | Hovered cards. This is the only shadow tier. |
+| Overlay | `0 8px 32px rgba(0, 0, 0, 0.08)` | Menus, drawers, toasts (added. ElevenLabs has no overlay tier.) |
+| Orb | Radial gradient of one `orb-*` token | Only for atmosphere, never a surface |
 
 ## Shapes
 
@@ -424,106 +435,121 @@ Generous, editorial pacing between bands (96px); tight inside them (16–24px be
 ## Components
 
 ### Navigation
-**`top-nav`**: canvas background, 64px tall. Text wordmark left, primary links center/left (e.g. Courses / Departments / Discussions), search + sign-in + primary pill right. The active link gets a 2px maroon underline or a `primary-wash` pill, not a color change alone.
+**`top-nav`**: canvas background, 64px tall.
+
+- Left: the text wordmark.
+- Center/left: the primary links (for example, Courses / Departments / Discussions).
+- Right: search, sign-in and the primary pill.
+- The active link gets a 2px maroon underline or a `primary-wash` pill. A color change alone is not sufficient.
 
 ### Buttons
-- **`button-primary`**: maroon pill, white text, 40px tall, 10×20px padding. Hover `primary-hover`, press `primary-active`. One per view (e.g. "Write a review", "Post").
+- **`button-primary`**: maroon pill, white text, 40px tall, 10×20px padding. Hover `primary-hover`, press `primary-active`. Use one in each view (for example, "Write a review", "Post").
 - **`button-outline`**: transparent pill, 1px `{colors.hairline-strong}` border, ink text.
 - **`button-tertiary-text`**: ink text, no chrome.
-- **`button-destructive`**: outline pill with error-colored text; confirm in place (see Rare UI Delete Button), no modal.
+- **`button-destructive`**: outline pill with error-colored text. It asks for confirmation in place (see the Rare UI Delete Button), not in a modal.
 - **Focus (all interactive elements)**: 2px `{colors.primary}` ring, 2px offset.
 
 ### Hero & atmosphere
-- **`hero-band`**: canvas background, `display-mega` headline, `body-md` subhead, search input and/or one primary pill, one orb blooming behind the headline.
-- **`orb-card`**: canvas-soft, 24px radius, 32px padding, one orb color per card.
+- **`hero-band`**: canvas background, `display-mega` headline, `body-md` subhead, a search input and/or one primary pill, and one orb that blooms behind the headline.
+- **`orb-card`**: canvas-soft, 24px radius, 32px padding, one orb color for each card.
 
 ### Content
-- **`course-card`**: white, 16px radius, 24px padding, 1px hairline. Course code (`caption-uppercase`, muted) → title (`title-md`) → one line of meta (`caption`, muted). Hover = single soft drop.
-- **`post-card`**: white, 16px radius, 32px padding. Avatar + name (`body-strong`) + timestamp (`caption`, muted) header; body in `body-md`/`{colors.body}` within the 720px reading column.
-- **`thread-row`**: transparent row, 12px vertical padding, 1px hairline divider. 32px avatar left, title (`title-sm`) + meta stack, reply count right. Selected = `thread-row-selected`.
-- **`avatar`**: 32px circle on `surface-strong` with initials; padded row gives a 48px tap zone.
-- **`featured-card`**: the maroon inversion (like ElevenLabs' dark featured pricing tier). White text, `on-inverse-soft` for secondary text. At most one per page.
-- **`link-inline`**: maroon text, underlined, in post bodies.
+- **`course-card`**: white, 16px radius, 24px padding, 1px hairline.
+  - Order: course code (`caption-uppercase`, muted) → title (`title-md`) → one line of meta (`caption`, muted).
+  - Hover = one soft drop shadow.
+- **`post-card`**: white, 16px radius, 32px padding.
+  - Header: avatar + name (`body-strong`) + timestamp (`caption`, muted).
+  - Body: `body-md`/`{colors.body}`, within the 720px reading column.
+- **`thread-row`**: transparent row, 12px vertical padding, 1px hairline divider.
+  - Left: 32px avatar. Then the title (`title-sm`) over the meta. Right: the reply count.
+  - Selected = `thread-row-selected`.
+- **`avatar`**: a 32px circle on `surface-strong` with initials. The padded row gives a 48px tap zone.
+- **`featured-card`**: the maroon inversion (the same as the dark featured pricing tier of ElevenLabs). White text, with `on-inverse-soft` for secondary text. A maximum of one on each page.
+- **`link-inline`**: maroon text with an underline, in post bodies.
 
 ### Forms & tags
-- **`text-input`**: white, 8px radius, 44px tall, 12×16px padding, 1px `{colors.border-input}` border; on focus the border becomes 2px maroon. Errors: error-colored border + icon + message below.
+- **`text-input`**: white, 8px radius, 44px tall, 12×16px padding, 1px `{colors.border-input}` border.
+  - On focus, the border becomes 2px maroon.
+  - Errors: an error-colored border, an icon, and a message below.
 - **`badge-pill`**: `surface-strong` plate, `caption-uppercase`, pill. Department and quarter tags use this neutral badge, not colored chips.
 
 ### CTA & footer
-- **`cta-band`**: canvas, centered `display-lg` line, one primary pill, optional orb. 96px padding.
-- **`footer`**: canvas, `body-sm` in `{colors.body}`, link columns, 64×48px padding. Includes the Rare UI credit if any Rare UI component ships (see below).
+- **`cta-band`**: canvas, a centered `display-lg` line, one primary pill, an optional orb. 96px padding.
+- **`footer`**: canvas, `body-sm` in `{colors.body}`, link columns, 64×48px padding. If a Rare UI component ships, the footer includes the Rare UI credit (see below).
 
 ## Motion
 
-ElevenLabs leaves motion undocumented; these rules fill the gap.
-- Durations: 150ms (hover/press), 200–250ms (menus, drawers), 400ms max (page-level reveals).
-- Easing: ease-out for entrances; gentle springs (Motion `type: "spring", bounce ≤ 0.2`) for indicators and counters.
-- **One signature animated moment per screen.** Reading surfaces (post bodies, review text) stay still.
-- Respect `prefers-reduced-motion`: replace springs/drifts with instant or opacity-only transitions; orbs stop drifting.
+ElevenLabs does not document motion. These rules fill the gap.
+- Durations: 150ms (hover/press), 200–250ms (menus, drawers), a maximum of 400ms (page-level reveals).
+- Easing: ease-out for entrances. Gentle springs (Motion `type: "spring", bounce ≤ 0.2`) for indicators and counters.
+- **One signature animated moment on each screen.** Reading surfaces (post bodies, review text) do not move.
+- Obey `prefers-reduced-motion`:
+  - Replace springs/drifts with instant or opacity-only transitions.
+  - Orbs stop their drift.
 
 ## Rare UI components
 
-Rare UI components are single-file React components built with Tailwind CSS and Motion, installed with the shadcn CLI, e.g. `npx shadcn@latest add swamimalode07/rare-ui/<name>`. If the project is not React + Tailwind, treat them as interaction references and rebuild the behavior natively.
+Rare UI components are single-file React components, made with Tailwind CSS and Motion. The shadcn CLI installs them, for example `npx shadcn@latest add swamimalode07/rare-ui/<name>`. If the project is not React + Tailwind, use them as interaction references, and build the behavior again natively.
 
 **Rules**
-1. After installing, **restyle every component to the tokens in this file**: replace its colors, fonts, radii and shadows. No Rare UI default color should survive.
-2. Keep each component's copyright notice in the source file.
-3. **License:** shipping any Rare UI component requires a visible link to https://rareui.com (footer, about page or README). Components may not be resold or redistributed on their own.
-4. Motion rules above still apply, including reduced motion.
+1. After the installation, **restyle every component to the tokens in this file**. Replace its colors, fonts, radii and shadows. No Rare UI default color should stay.
+2. Keep the copyright notice of each component in the source file.
+3. **License:** If you ship a Rare UI component, you must show a visible link to https://rareui.com (footer, about page or README). You must not resell or redistribute the components on their own.
+4. The motion rules above also apply, including reduced motion.
 
 **Where they fit in the forum**
 | Forum need | Rare UI component | Notes |
 |---|---|---|
-| Hero atmosphere | `fluid-orb` | Use as the hero orb with an `orb-*` color; hero only (WebGL). |
-| Long course pages (overview, reviews, discussion) | `rail-toc` or `scroll-progress` | Pick one per page type. |
+| Hero atmosphere | `fluid-orb` | Use it as the hero orb, with an `orb-*` color. Hero only (WebGL). |
+| Long course pages (overview, reviews, discussion) | `rail-toc` or `scroll-progress` | Select one for each page type. |
 | Department / filter sidebar | `hook-sidebar` or `bounce-sidebar` | Active indicator in maroon. |
 | Vote / like / view counts | `animated-counter` | Inter, tabular numbers. |
-| Reacting to posts | `emoji-reaction` | Uses Apple emoji artwork via `react-apple-emojis`; swap for native emoji if that's a concern. |
+| Reactions to posts | `emoji-reaction` | It uses Apple emoji artwork through `react-apple-emojis`. If that is a concern, use native emoji. |
 | Reply notifications | `notification-bell` | Badge in maroon. |
-| Post success / errors | `toast` | Overlay shadow tier; semantic colors. |
-| Deleting own post | `delete-button` | In-place confirm; error-colored text. |
-| Code in CS course posts | `code-block` | Pass `#800000` as its accent. |
-| Mobile filters / composer | `family-drawer` | Bottom sheet on mobile only. |
+| Post success / errors | `toast` | Overlay shadow tier. Semantic colors. |
+| Delete of own post | `delete-button` | Confirmation in place. Error-colored text. |
+| Code in CS course posts | `code-block` | Give it `#800000` as its accent. |
+| Mobile filters / composer | `family-drawer` | Bottom sheet, on mobile only. |
 | Email-code sign-in (if used) | `otp-input` | — |
-| Forum FAQ / About | `faq` | Message-thread style fits a forum. |
+| Forum FAQ / About | `faq` | The message-thread style fits a forum. |
 
-Skip purely decorative pieces (`gravity-letters`, `matrix-orb`, `grid-reveal`, `folder-component`) unless there's a clear reason.
+Do not use the purely decorative components (`gravity-letters`, `matrix-orb`, `grid-reveal`, `folder-component`) without a clear reason.
 
 ## Brand & logo
 
-- Do **not** use the official University shield, wordmark, phoenix or Gothic "UChicago" mark unless the project has university approval. The guidelines restrict how those marks are used.
-- Use a **text wordmark**: "UChicago Course Forum" in Newsreader 300 (or Inter 500 at small sizes), ink or maroon.
+- Do **not** use the official University shield, wordmark, phoenix or Gothic "UChicago" mark, unless the project has university approval. The guidelines restrict the use of those marks.
+- Use a **text wordmark**: "UChicago Course Forum" in Newsreader 300 (or Inter 500 at small sizes), in ink or maroon.
 
 ## Do's and Don'ts
 
 ### Do
-- Use maroon for exactly one primary action per view, plus links, focus and selection.
-- Use Newsreader 300 for every display headline; Inter 400/500 for everything else.
-- Keep cards white on the off-white canvas with 1px hairlines; use one shadow tier on hover.
-- Use pills for every button and badge, and 16px radii for cards.
+- Use maroon for exactly one primary action in each view, and for links, focus and selection.
+- Use Newsreader 300 for every display headline. Use Inter 400/500 for all other text.
+- Keep cards white on the off-white canvas, with 1px hairlines. Use one shadow tier on hover.
+- Use pills for every button and badge. Use 16px radii for cards.
 - Keep post and review text in a 720px reading column.
-- Reference tokens (`{colors.*}`, CSS variables), never inline hex.
+- Refer to tokens (`{colors.*}`, CSS variables). Never use inline hex.
 
 ### Don't
-- Don't add a second accent color or use secondary hues as fills for buttons, cards or text.
-- Don't bold display headlines.
-- Don't use `{colors.gray-dark}` (#767676) for small text on the canvas.
-- Don't use sharp corners on buttons.
-- Don't stack multiple animated components in the same view.
-- Don't import UChicago's fonts or official marks.
+- Do not add a second accent color. Do not use secondary hues as fills for buttons, cards or text.
+- Do not make display headlines bold.
+- Do not use `{colors.gray-dark}` (#767676) for small text on the canvas.
+- Do not use sharp corners on buttons.
+- Do not put more than one animated component in the same view.
+- Do not import the fonts or official marks of UChicago.
 
 ## Responsive Behavior
 
 | Name | Width | Key changes |
 |---|---|---|
-| Mobile | < 640px | Hero h1 64→32px; course cards 1-up; nav → hamburger; orbs shrink; filters move to a bottom drawer. |
-| Tablet | 640–1024px | Hero h1 48px; cards 2-up; sidebar collapses. |
-| Desktop | 1024–1280px | Hero h1 64px; cards 3-up; sidebar visible. |
-| Wide | > 1280px | Content caps at 1200px. |
+| Mobile | < 640px | Hero h1 64→32px. Course cards 1-up. Nav → hamburger. Orbs become smaller. Filters move to a bottom drawer. |
+| Tablet | 640–1024px | Hero h1 48px. Cards 2-up. The sidebar collapses. |
+| Desktop | 1024–1280px | Hero h1 64px. Cards 3-up. The sidebar is visible. |
+| Wide | > 1280px | The maximum content width is 1200px. |
 
-- Top nav switches to hamburger below 768px.
-- Primary pill stays 40px tall; padded rows give ≥48px tap targets.
-- Orbs reduce in size at each breakpoint but never disappear.
+- Below 768px, the top nav changes to a hamburger.
+- The primary pill stays 40px tall. Padded rows give tap targets of 48px or more.
+- At each breakpoint, the orbs become smaller, but they never disappear.
 
 ## Implementation tokens
 
@@ -596,77 +622,100 @@ Skip purely decorative pieces (`gravity-letters`, `matrix-orb`, `grid-reveal`, `
 }
 ```
 
-If the project uses Tailwind v4, mirror these in an `@theme` block so utilities like `bg-primary` and `rounded-xl` resolve to these values.
+If the project uses Tailwind v4, copy these values into an `@theme` block. Then utilities such as `bg-primary` and `rounded-xl` resolve to these values.
 
 ## Known gaps
 
-- Dark mode is not defined. Don't invent one; ask first.
-- ElevenLabs' letter-spacing was tuned for Waldenburg. If Newsreader looks cramped at 64px, loosen display tracking by up to 0.5px; change nothing else.
-- Form validation beyond focus/error, empty states and loading skeletons are not specified. Build them from existing tokens (hairlines, muted text, surface-strong plates).
+- Dark mode has no definition. Do not invent one. Ask first.
+- The letter-spacing of ElevenLabs was tuned for Waldenburg. If Newsreader looks cramped at 64px, make the display tracking looser by a maximum of 0.5px. Change nothing else.
+- This file does not specify form validation beyond focus/error, empty states or loading skeletons. Build them from existing tokens (hairlines, muted text, surface-strong plates).
+
 ## Changes approved in FEEDBACK (2026-11-16, design pass)
 
-Richard's FEEDBACK "Minor design changes" overrides the rules above in these places only:
+Richard's FEEDBACK "Minor design changes" overrides the rules above only in these places:
 
-- **Wordmark weight.** The home page's "Quarterly" headline is 96px Newsreader **400** (`text-display-hero`, 64px on a phone), and the top bar's and footer's wordmark is Newsreader **500**. Every other display heading stays at 300.
-- **Hero orb.** The home hero's orb is `orb-maroon` (#A44A4A, derived: maroon at 70% on the canvas), so the page's one atmospheric colour matches the accent. Other orbs keep the secondary hues.
-- **Catalog switch.** Courses/Programs is a small segmented control: `surface-strong` track, the current side on a white pill with maroon text; the pill slides 200ms ease-out between sides (still under reduced motion).
-- **Top-bar search.** A filled `surface-strong` field without an outline until it is hovered or focused; the icon and placeholder identify it.
-- **Footer links.** 32px rows with a mouse; 44px targets on touch screens.
+- **Wordmark weight.** The "Quarterly" headline of the home page is 96px Newsreader **400** (`text-display-hero`, 64px on a phone). The wordmark in the top bar and in the footer is Newsreader **500**. All other display headings stay at 300.
+- **Hero orb.** The orb of the home hero is `orb-maroon` (#A44A4A, derived: maroon at 70% on the canvas). Thus the one atmospheric colour of the page agrees with the accent. Other orbs keep the secondary hues.
+- **Catalog switch.** Courses/Programs is a small segmented control:
+  - A `surface-strong` track.
+  - The current side is on a white pill with maroon text.
+  - The pill slides 200ms ease-out between sides. With reduced motion, the pill stays still.
+- **Top-bar search.** A filled `surface-strong` field. It has no outline until the user hovers over it or focuses it. The icon and the placeholder identify it.
+- **Footer links.** 32px rows with a mouse. 44px targets on touch screens.
 
 ## Maroon and night (Max, 2026-11-20; branch `feature/best-of-uchicago`)
 
-Requested with a reference login card ("Have words bigger and background colors maroon and black
-combined. Take inspiration from this and apply to every page and every detail"). Not yet confirmed by
-Richard: where it conflicts with the sections above, this section describes what is built now.
+Max requested this with a reference login card ("Have words bigger and background colors maroon and black
+combined. Take inspiration from this and apply to every page and every detail"). Richard has not confirmed it yet. Where it conflicts with the sections above, this section describes what is built now.
 
-- **The night.** Every page sits on a fixed maroon-and-black background (`body`, `index.css`): deep
-  maroon `#5c0a1d` to near black `#12040a`, with crimson light. The top bar and the footer live on it
-  in white (`on-night`, `on-night-soft`, `on-night-muted`); the wordmark stays Newsreader, white.
-- **The sheet.** Page content is one white sheet with large rounded corners (`rounded-sheet`, 44px;
-  28px on phones) and a deep shadow, like the reference's card. Notices that belong to a page sit
-  inside it.
-- **Bigger words.** Body 17px, small 16px, captions 15px, buttons and nav 16px. Headlines are bold
-  Inter (650-800, tight tracking, like "Welcome home"); their `<em>` words are Newsreader italic in
-  maroon ("within your reach.", "Ask *anything*"). Voices and quotes (the guide, student quotes, the
-  ticker, book covers) keep the serif.
-- **Pills.** Buttons are 46px pills in a 52px box, semibold; `light` and `night` variants for the
-  dark background. Inputs and selects are 52px pills (26px radius) with a soft maroon halo on focus;
-  email fields carry an envelope, password fields an eye that shows or hides the characters.
+- **The night.** Every page is on a fixed maroon-and-black background (`body`, `index.css`): deep maroon `#5c0a1d` to near black `#12040a`, with crimson light. The top bar and the footer are on it, in white (`on-night`, `on-night-soft`, `on-night-muted`). The wordmark stays Newsreader, in white.
+- **The sheet.** The page content is one white sheet with large rounded corners (`rounded-sheet`, 44px, 28px on phones) and a deep shadow, the same as the card of the reference. Notices that are part of a page are inside the sheet.
+- **Bigger words.**
+  - Body 17px, small 16px, captions 15px, buttons and nav 16px.
+  - Headlines are bold Inter (650-800, tight tracking, the same as "Welcome home").
+  - The `<em>` words of headlines are Newsreader italic in maroon ("within your reach.", "Ask *anything*").
+  - Voices and quotes (the guide, student quotes, the ticker, book covers) keep the serif.
+- **Pills.**
+  - Buttons are 46px pills in a 52px box, semibold. There are `light` and `night` variants for the dark background.
+  - Inputs and selects are 52px pills (26px radius), with a soft maroon halo on focus.
+  - Email fields have an envelope. Password fields have an eye that shows or hides the characters.
 - **Radii.** Cards 18-24px, panels 32px, art panels 36px (`rounded-art`).
-- **Art panels.** `GradientArt` (generated SVG: crimson and coral folds of light over maroon and
-  black, slowly drifting, still under reduced motion) is the reference's right panel. Page headers
-  (`TypeHero`) are split like the reference card: title and controls on the left, an art panel on the
-  right (on top on phones) with the page's TypeScape figure of real course titles glowing on it
-  (`theme="night"`). Sign-in and sign-up are the reference itself: a maroon arch emblem, a big bold
-  title, pill fields, an "or" rule, and the art panel.
-- **The homepage** keeps the chapel drawn with course titles, on the white sheet; its title is bold
-  Inter with the Newsreader accent line.
-- **Wider pages** (Max, 2026-11-20, "widen everything horizontally in every page"): content 1560px
-  (was 1200), reading 960 (720), forms 560 (448), the planner 1920 (1600); the Ask conversation
-  1040px.
-- **The menu bar** is a frosted white glass bar the width of the page sheet, floating on the maroon
-  frame and sticky at the top: ink serif wordmark, 18px links, the current page a soft rose wash (not
-  solid red), a quiet filled search pill. On a phone the account shows as its avatar only, so the bar
-  keeps to two rows. (A dark "glass and flowing red" theme was tried and withdrawn the same day.)
-- **Day and night on the homepage** (Max, 2026-11-20): a Day / Night switch at the top right of the
-  hero (remembered on the device). Everything is painted in the chapel's course titles by the shader,
-  with no separate layers and no enlarged type: two slim street lamps (about two letters wide)
-  flank the chapel by day and night (iron letters, a gold lantern by day); at night the sky's titles
-  turn a dim navy with a few twinkling gold star letters and a moon of gold letters, small snowflakes
-  drift down as bright letters, the stone is a deep moonlit blue, the lawn and paths are under snow,
-  and the lanterns glow orange, warming the snow and the letters near them. Texture comes from the
-  letters' own colour and transparency: drifting night clouds (darker, denser banks; thin clear
-  patches where the stars show; lavender edges near the moon), a darker zenith, moonlit and shadowed
-  carving on the side facing the moon, weathered patches in the stone, mottled trees, and snow
-  drifts. Reduced motion: a still night (no falling snow, no twinkle, the clouds stay put). The day
-  scene has the same kind of texture, gentler: soft grey cloud banks drifting across the sky with
-  thin clear patches and a deeper zenith, weathered patches and grain in the maroon stone (darker
-  low down, lighter at the spires), mottled trees and lawn, and transparency that varies with them.
+- **Art panels.**
+  - `GradientArt` is the right panel of the reference. It is generated SVG: crimson and coral folds of light over maroon and black, with a slow drift. With reduced motion, it stays still.
+  - Page headers (`TypeHero`) have two parts, the same as the reference card. The title and the controls are on the left. An art panel is on the right (on top on phones). On the panel, the TypeScape figure of the page glows, made of real course titles (`theme="night"`).
+  - Sign-in and sign-up are the reference itself: a maroon arch emblem, a big bold title, pill fields, an "or" rule, and the art panel.
+- **The homepage** keeps the chapel drawn with course titles, on the white sheet. Its title is bold Inter, with the Newsreader accent line.
+- **Wider pages** (Max, 2026-11-20, "widen everything horizontally in every page"):
+  - Content 1560px (before: 1200).
+  - Reading 960 (before: 720).
+  - Forms 560 (before: 448).
+  - The planner 1920 (before: 1600).
+  - The Ask conversation 1040px. (Issue #15 removed the Ask page on 2026-11-24.)
+- **The menu bar** is a frosted white glass bar, as wide as the page sheet. It floats on the maroon frame and is sticky at the top.
+  - It has an ink serif wordmark, 18px links, a soft rose wash for the current page (not solid red), and a quiet filled search pill.
+  - On a phone, the account shows only as its avatar. Thus the bar stays at two rows.
+  - (We tried a dark "glass and flowing red" theme and withdrew it on the same day.)
+- **Day and night on the homepage** (Max, 2026-11-20):
+  - A Day / Night switch is at the top right of the hero. The device remembers the choice.
+  - The shader paints everything in the course titles of the chapel. There are no separate layers and no enlarged type.
+  - By day and by night, two slim street lamps (approximately two letters wide) are on the two sides of the chapel. They have iron letters, and by day a gold lantern.
+  - At night:
+    - The titles of the sky become a dim navy, with a few twinkling gold star letters and a moon of gold letters.
+    - Small snowflakes fall as bright letters.
+    - The stone is a deep moonlit blue. The lawn and the paths are under snow.
+    - The lanterns glow orange. They make the snow and the letters near them warmer.
+  - The texture comes from the colour and transparency of the letters:
+    - Night clouds that drift: darker, denser banks, thin clear patches where the stars show, and lavender edges near the moon.
+    - A darker zenith.
+    - Moonlit and shadowed carving on the side that faces the moon.
+    - Weathered patches in the stone, mottled trees, and snow drifts.
+  - With reduced motion: a still night. No snow falls, nothing twinkles, and the clouds do not move.
+  - The day scene has the same kind of texture, but gentler:
+    - Soft grey cloud banks drift across the sky, with thin clear patches and a deeper zenith.
+    - Weathered patches and grain in the maroon stone (darker low down, lighter at the spires).
+    - Mottled trees and lawn, and transparency that changes with them.
 
-- **The dashboard (`/me`)** is a tight grid of panels the full width of the page sheet (12 columns,
-  12px gaps; 6 on tablets, one column on phones), with no orbit animations (the orrery header and
-  the orbiting interests were removed, Max 2026-11-20). Top left: the student (name and class year,
-  email, the portrait with its themes, class year and programs, "Talk with your guide" and "Draft my
-  routes", the completeness ring). Top right: the guide. Below: interests, research areas and
-  what's new; the humanities compass, career and horizons; workload and an "at a glance" panel;
-  then the routes, two side by side, each laid out for its own width.
+- **The dashboard (`/me`)** is a tight grid of panels, as wide as the page sheet. It has 12 columns with 12px gaps (6 on tablets, one column on phones). It has no orbit animations. (Max removed the orrery header and the orbiting interests on 2026-11-20.)
+  - Top left: the student (name and class year, email, the portrait with its themes, class year and programs, "Talk with your guide" and "Draft my routes", the completeness ring).
+  - Top right: the guide.
+  - Below: interests, research areas and what's new. Then the humanities compass, career and horizons. Then workload and an "at a glance" panel. Then the routes, two side by side, each with a layout for its own width.
+  - Issue #15 (2026-11-24) removed "Draft my routes", the "at a glance" panel and the routes. Workload now goes across the row.
+- **The menu bar has four tabs** (issue #15, 2026-11-24): Dashboard, Planner, Catalog, Forum. The homepage is not a tab (the wordmark links to it). No page has the floating companion orb.
+- **The Catalog page** (`/courses`, issue #19, 2026-11-24) keeps the centred search and its filters.
+  - Before a search, browse rows are below the search:
+    - "Newly released courses" (when the app knows of new courses).
+    - "Course spotlights": the illustrated cards of the Feed, without the flying words, the book shelf, the AI note and the Save / Less buttons.
+    - "What students say": the quote cards of the Feed.
+  - Each row is a heading over cards that scroll sideways and snap, inside the page width.
+  - For a logged-in student, each card and result has a rating line (overall, difficulty, number of reviews). A logged-out visitor sees one "Log in to see student ratings" line under the search.
+  - The Feed page and its floating words, ticker, focus chips and AI headline are gone.
+
+## Sign-up step 4 and the credits editor (Richard, 2026-11-25, 2838c6a)
+
+- Step 4 ("About you") has a 36rem column. The other auth pages keep 30rem.
+- A credit is one line: kind, name and course (cut with "…", the full line in a tooltip), then the units, then two 44px icon buttons (edit, remove). In a list narrower than 24rem, only screen readers get the kind.
+- The add form of a credit is one box. Kind and Description are on the first row. Course, Units and "Add credit" are on the second row. In a narrow drawer, Course has its own row. In a panel wider than 42rem, all fields are on one row.
+- The button beside a compact field is 44px tall, the same as the field.
+- The transfer questions in step 4 have no box of their own. Their fields line up with the fields above.
+- The kind labels are "AP exam", "Placement" and "Transfer".
+

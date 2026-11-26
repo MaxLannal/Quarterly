@@ -17,12 +17,13 @@ pytestmark = pytest.mark.db
 
 PLAN_CHIPS = ["Work in industry", "Graduate school", "Medical or law school", "Undecided", "Skip"]
 PACE_CHIPS = ["Early", "On time", "Flexible", "Skip"]
+LOAD_CHIPS = ["Conservative", "Normal", "Ambitious", "Skip"]
 EMPTY_FACTS: dict[str, Any] = {
     "post_grad_plan": None,
     "pace": None,
     "wants_research": None,
     "research_areas": [],
-    "courses_per_term": None,
+    "course_load": None,
     "terms_away": None,
     "class_formats": None,
     "theory_vs_application": None,
@@ -80,6 +81,30 @@ class Talk:
         return turn
 
 
+def test_accepting_an_answer_keeps_every_other_answer(env: Env) -> None:
+    """Richard's report (2026-11-25): after sign-up and the whole guide, the dashboard was empty.
+    Each turn sent `proposed` with every field of ProfilePatch, the unasked ones as null, and the
+    browser PATCHes it as it is when the student accepts, so each accepted answer cleared all the
+    others (the sign-up answers too). A turn now proposes only the answered field."""
+    headers = login(env)
+    about = {"class_year": 2029, "entry_term": "2025-AU", "intended_programs": ["phys-bs"]}
+    assert env.client.patch("/me/profile", json=about, headers=headers).status_code == 200
+    history: list[dict[str, Any]] = []
+    t = ask(env, headers, "start")
+    for reply in ("Graduate school", "On time"):
+        history.append({"role": "guide", "text": t["text"], "topic": t["topic"]})
+        t = ask(env, headers, "reply", reply, history)
+        history.append({"role": "student", "text": reply})
+        assert list(t["proposed"]) == [t["answered"]], t["proposed"]
+        # What the browser sends on Accept: the proposal exactly as the server sent it.
+        resp = env.client.patch("/me/profile", json=t["proposed"], headers=headers)
+        assert resp.status_code == 200, resp.text
+    record = env.client.get("/me/profile").json()
+    assert record["class_year"] == 2029 and record["entry_term"] == "2025-AU"
+    assert record["intended_programs"] == ["phys-bs"]
+    assert record["post_grad_plan"] == "grad_school" and record["pace"] == "on_time"
+
+
 def guide(topic: str, text: str = "A question?") -> list[dict[str, Any]]:
     return [{"role": "guide", "text": text, "topic": topic}]
 
@@ -115,11 +140,11 @@ def test_the_rule_guide_asks_every_question_in_order(env: Env, kept: bool) -> No
 
     t = talk.say("machine learning theory, condensed matter")
     assert sent(t) == {"research_areas": ["Machine learning theory", "Condensed matter"]}
-    assert t["topic"] == "courses_per_term"
-    assert t["quick_replies"] == ["3 courses", "4 courses", "5 courses", "Skip"]
+    assert t["topic"] == "course_load"
+    assert t["quick_replies"] == LOAD_CHIPS
 
-    t = talk.say("four")
-    assert sent(t) == {"courses_per_term": 4} and t["topic"] == "terms_away"
+    t = talk.say("a normal load")
+    assert sent(t) == {"course_load": "normal"} and t["topic"] == "terms_away"
     assert t["quick_replies"] == ["None", "Skip"]
 
     t = talk.say("autumn 2027 abroad")
@@ -151,7 +176,7 @@ def test_no_to_research_skips_the_research_areas(env: Env) -> None:
         *guide("pace"),
     ]
     t = ask(env, headers, "reply", "Flexible", history)
-    assert t["topic"] == "courses_per_term"  # research_areas never asked
+    assert t["topic"] == "course_load"  # research_areas never asked
     assert t["progress"] == pytest.approx(round(3 / 7, 3))
 
 
@@ -173,9 +198,6 @@ def test_an_unclear_answer_is_asked_again_and_skip_moves_on(env: Env) -> None:
 
 def test_integers_must_be_in_range(env: Env) -> None:
     headers = login(env)
-    t = ask(env, headers, "reply", "7", guide("courses_per_term"))
-    assert t["retry"] is True and t["topic"] == "courses_per_term" and sent(t) == {}
-    assert "from 1 to 6" in t["text"]
     t = ask(env, headers, "reply", "11", guide("theory_vs_application"))
     assert t["retry"] is True and "Theory" in t["text"]
 
@@ -223,7 +245,7 @@ def test_reply_after_the_wrapup_stays_done(env: Env) -> None:
             "post_grad_plan": "industry",
             "pace": "early",
             "wants_research": False,
-            "courses_per_term": 4,
+            "course_load": "ambitious",
             "terms_away": [],
             "class_formats": [],
             "theory_vs_application": 5,
@@ -269,6 +291,34 @@ def test_the_model_writes_the_question_and_the_server_reads_the_answer(env: Env)
     assert "quiet-heron" not in first and "uchicago.edu" not in first
 
 
+def test_the_model_gets_no_grades(env: Env) -> None:
+    """OPEN_QUESTIONS M21-1, Richard's answer: leave the grades out of the guide's copy of
+    student.md. The taken course is there, its grade and Pass/Fail are not; the export keeps
+    them."""
+    headers = login(env)
+    taken = {"course": "CMSC 14100", "term": "2025-AU", "grade": "A-", "grading": "pass_fail"}
+    resp = env.client.patch("/me/profile", json={"taken_courses": [taken]}, headers=headers)
+    assert resp.status_code == 200, resp.text
+    fake = use_llm(env, script(turn("How fast do you want to graduate?", "pace")))
+    ask(env, headers, "reply", "Graduate school", guide("post_grad_plan"))
+    first = fake.calls[0]["messages"][0]["content"]
+    assert "CMSC 14100" in first
+    assert "A-" not in first and "Pass/Fail" not in first
+    export = env.client.get("/me/profile/export.md").text
+    assert "grade A-, Pass/Fail" in export
+
+
+def test_any_model_failure_falls_back_to_the_rules(env: Env) -> None:
+    """Journey E (2026-11-25): a model error that is not an AgentError (here the e2e fake's
+    ValueError) ended the stream, so the guide's dialog closed with no answer to accept. Any
+    failure now leaves the turn to the rules, as SPEC asks of every harness."""
+    headers = login(env)
+    use_llm(env, FakeLLM(script={"a6_interview": [RuntimeError("provider exploded")]}))
+    t = ask(env, headers, "reply", "Graduate school", guide("post_grad_plan"))
+    assert t["fallback"] is True and t["topic"] == "pace"
+    assert t["proposed"] == {"post_grad_plan": "grad_school"}
+
+
 def test_the_model_maps_a_typed_answer_the_rules_cannot_read(env: Env) -> None:
     headers = login(env)
     use_llm(
@@ -293,15 +343,17 @@ def test_an_unsupported_answer_gets_a_repair_then_a_retry(env: Env) -> None:
     fake = use_llm(
         env,
         script(
-            # 4 is in range, but the student wrote no number: not grounded.
-            turn("Four it is. Any quarters away?", "terms_away", courses_per_term=4),
-            turn("Sorry, how many courses each quarter, as a number?", "courses_per_term"),
+            # Conservative is an option, but the student named two others: not grounded.
+            turn(
+                "Conservative it is. Any quarters away?", "terms_away", course_load="conservative"
+            ),
+            turn("Sorry, how heavy do you want your quarters to be?", "course_load"),
         ),
     )
-    t = ask(env, headers, "reply", "a normal load", guide("courses_per_term"))
+    t = ask(env, headers, "reply", "normal or ambitious", guide("course_load"))
     assert len(fake.calls) == 2
-    assert t["fallback"] is False and t["retry"] is True and t["topic"] == "courses_per_term"
-    assert sent(t) == {} and t["quick_replies"] == ["3 courses", "4 courses", "5 courses", "Skip"]
+    assert t["fallback"] is False and t["retry"] is True and t["topic"] == "course_load"
+    assert sent(t) == {} and t["quick_replies"] == LOAD_CHIPS
 
 
 def test_a_wrong_topic_twice_falls_back_to_the_rules(env: Env) -> None:
@@ -378,7 +430,7 @@ def test_the_wrapup_with_a_model(env: Env) -> None:
             "post_grad_plan": "industry",
             "pace": "early",
             "wants_research": False,
-            "courses_per_term": 4,
+            "course_load": "ambitious",
             "terms_away": [],
             "class_formats": ["lab"],
         },
@@ -404,3 +456,9 @@ def test_welcome_back_is_cached_per_record(env: Env) -> None:
     assert first["text"] == second["text"] and first["fallback"] is False
     assert first["quick_replies"] == PACE_CHIPS and sent(first) == {}
     assert len(fake.calls) == 1
+    # One key per account (so deleting the account deletes it): a changed record misses it.
+    assert len(env.redis.keys("me:welcome:*")) == 1
+    env.client.patch("/me/profile", json={"post_grad_plan": "industry"}, headers=headers)
+    third = ask(env, headers, "welcome_back")
+    assert len(fake.calls) == 2 and third["fallback"] is True
+    assert len(env.redis.keys("me:welcome:*")) == 1

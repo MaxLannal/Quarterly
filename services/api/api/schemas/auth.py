@@ -72,7 +72,8 @@ class PasswordChange(BaseModel):
 class AccountExport(BaseModel):
     account: AccountOut
     plans: list[PlanOut] = []
-    #: The dashboard: profile (without the email, which `account` covers) and routes.
+    #: The dashboard: the student record and `student.md`. The export holds no email address
+    #: (`AccountOut` has none, decision 5).
     profile: dict[str, Any] = {}
     #: The Commons: the account's questions, replies, votes and reports.
     commons: dict[str, Any] = {}

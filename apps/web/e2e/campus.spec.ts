@@ -1,44 +1,27 @@
 import { expect, test } from "@playwright/test";
 import { logIn } from "./helpers";
 
-// The campus companion's pages on mock data (docs/BEST-OF-UCHICAGO-PLAN.md): Ask, the companion,
-// the feed, the Commons and the dashboard, in the "Maroon and night" design (docs/DESIGN.md).
+// The campus companion's pages on mock data (docs/BEST-OF-UCHICAGO-PLAN.md): the Commons and the
+// dashboard, in the "Maroon and night" design (docs/DESIGN.md). The Ask page, the homepage's
+// question bar and the companion went in issue #15; the Feed moved into the Catalog in issue #19
+// (e2e/courses.spec.ts).
 
-test("the homepage question bar asks the chatbot, which answers with course links", async ({ page }) => {
+test("the homepage has no question bar, and the old Ask page opens the planner (issue #15)", async ({ page }) => {
   await page.goto("/");
-  await page
-    .getByRole("combobox", { name: "Ask Quarterly a question about UChicago" })
-    .fill("Which intro course should I take?");
-  await page.keyboard.press("Enter");
-  await expect(page).toHaveURL(/\/ask/);
-  await expect(page.getByText("Written by an AI and can be wrong.").first()).toBeVisible();
-  await expect(page.getByRole("link", { name: /TEST 10000/ }).first()).toHaveAttribute(
-    "href",
-    "/courses/TEST%2010000",
-  );
+  await expect(page.getByRole("heading", { level: 1, name: "The Best of UChicago, within your reach." })).toBeVisible();
+  await expect(page.getByRole("combobox", { name: /Ask Quarterly a question/ })).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "CS BA or BS?" })).toHaveCount(0); // a "Try" question
+  await expect(page.getByText("Try", { exact: true })).toHaveCount(0);
+  await page.goto("/ask?q=Which%20intro%20course");
+  await expect(page).toHaveURL(/\/plan$/);
 });
 
-test("the Ask page has the split header with a course-title art panel", async ({ page }) => {
-  await page.goto("/ask");
-  await expect(page.getByRole("heading", { level: 1, name: "Ask anything about UChicago." })).toBeVisible();
-  await expect(page.getByRole("img", { name: /Gothic window/ })).toBeVisible();
-});
-
-test("the companion opens from its orb and closes with Escape", async ({ page }) => {
-  await page.goto("/courses");
-  const orb = page.getByRole("button", { name: /Open Quarterly companion/ });
-  await orb.click();
-  await expect(page.getByRole("dialog")).toBeVisible();
-  await page.keyboard.press("Escape");
-  await expect(page.getByRole("dialog")).toHaveCount(0);
-  await expect(orb).toBeFocused();
-});
-
-test("the feed lists course spotlights that open their course", async ({ page }) => {
-  await page.goto("/feed");
-  await expect(page.getByRole("heading", { level: 1, name: /A river of ideas/ })).toBeVisible();
-  const course = page.locator('main a[href^="/courses/TEST"]').first();
-  await expect(course).toBeVisible();
+test("no page has the companion orb (issue #15)", async ({ page }) => {
+  for (const path of ["/", "/courses", "/me", "/forum"]) {
+    await page.goto(path);
+    await expect(page.getByRole("heading", { level: 1 }).first()).toBeVisible();
+    await expect(page.getByRole("button", { name: /companion/i })).toHaveCount(0);
+  }
 });
 
 test("a Commons question shows the AI's answer and the replies; a logged-in student can answer", async ({
@@ -46,6 +29,11 @@ test("a Commons question shows the AI's answer and the replies; a logged-in stud
 }) => {
   await page.goto("/forum");
   await expect(page.getByRole("heading", { level: 1, name: /Ask the quad/ })).toBeVisible();
+  // Issue #20: discussions start from a "New post" button, not a chatbot-like ask box.
+  await expect(page.getByRole("link", { name: "New post" })).toHaveAttribute("href", "/forum/new");
+  await expect(page.getByRole("textbox", { name: "Your question" })).toHaveCount(0);
+  await page.getByRole("link", { name: "Fake question: is TEST 10000 fine without background?", exact: true }).click();
+  await expect(page).toHaveURL(/\/forum\/t\/1$/);
   await page.goto("/forum/t/1");
   await expect(
     page.getByRole("heading", { level: 1, name: "Fake question: is TEST 10000 fine without background?" }),

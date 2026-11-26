@@ -1,14 +1,12 @@
 /**
  * Pure helpers of the dashboard (tested in logic.test.ts): the dashboard agent's answers that
- * wait for Accept, its memory, a question as a turn, the primary plan's summary, the route ->
- * local plan conversion for "Open in planner" (routes are removed on another branch), and small
- * formatters.
+ * wait for Accept, its memory, a question as a turn, the primary plan's summary, and small
+ * formatters. (The route helpers went with "Your routes", issue #15.)
  */
-import type { NodeProgress, PlanItem, PlanState } from "@/api/types";
-import { emptyPlan } from "@/features/planner/planModel";
-import { compareTerms, graduationTerm, planTerms, termAt } from "@/features/planner/terms";
+import type { NodeProgress, PlanState } from "@/api/types";
+import { compareTerms, graduationTerm, planTerms } from "@/features/planner/terms";
 import { answerText, questionById, type Question, type QuestionSet } from "@/features/profile/questions";
-import { patched, type InterviewTurn, type Profile, type ProfilePatch, type Route, type RouteCourse, type TurnEvent } from "./api";
+import { patched, type InterviewTurn, type Profile, type ProfilePatch, type TurnEvent } from "./api";
 
 export const CAMPUS_YEAR = "2026-27";
 export const MAX_ITEMS = 24;
@@ -54,7 +52,9 @@ const read = (p: Profile, field: string) => (p as unknown as Record<string, unkn
  * turn proposes nothing, or only what the record already says.
  */
 export function proposalFrom(turn: Pick<TurnEvent, "proposed" | "answered">, set: QuestionSet | undefined, profile: Profile, asked?: string | null): Proposal | null {
-  const patch = turn.proposed ?? {};
+  // Only the fields the turn sets: Accept PATCHes this patch as it is, and a null in a PATCH
+  // clears that field (an older server sent every other field as null, Richard's report 2026-11-25).
+  const patch = Object.fromEntries(Object.entries(turn.proposed ?? {}).filter(([, value]) => value !== null && value !== undefined)) as ProfilePatch;
   const fields = sentFields(patch).filter((f) => f !== "interview");
   if (!fields.length) return null;
   const after = patched(profile, patch);
@@ -214,84 +214,6 @@ export function seeded(seed: number): () => number {
     s ^= s >>> 13;
     return (s >>> 0) / 4294967296;
   };
-}
-
-// ------------------------------------------------------------------------------ routes
-
-export const ROLE_LABELS: Record<RouteCourse["role"], string> = {
-  major: "Major",
-  minor: "Minor",
-  core: "Core",
-  humanities: "Humanities",
-  research: "Research",
-  elective: "Elective",
-};
-export const KIND_LABELS: Record<Route["kind"], string> = {
-  major: "Major",
-  double_major: "Double major",
-  major_minor: "Major + minor",
-  exploratory: "Exploratory",
-  custom: "Custom",
-};
-
-/** The entering Autumn for a class year (class of 2030 entered in Autumn 2026). */
-export function entryTermFor(classYear: number | null | undefined): string {
-  const start = Number(CAMPUS_YEAR.slice(0, 4));
-  if (!classYear) return `${start}-AU`;
-  return `${classYear - 4}-AU`;
-}
-
-/**
- * A local plan state from a route: the catalog year Quarterly holds, the entry term from the
- * class year, the route's programs, and each course in its year and quarter (a course without
- * a quarter goes to the lightest of that year's quarters it is usually offered in). Returns the
- * state and the courses that could not be placed.
- */
-export function routePlanState(route: Pick<Route, "courses" | "program_ids">, classYear: number | null | undefined): { state: PlanState; skipped: string[] } {
-  const entry = entryTermFor(classYear);
-  const state = emptyPlan(CAMPUS_YEAR, entry);
-  const items: PlanItem[] = [];
-  const skipped: string[] = [];
-  const load = new Map<string, number>();
-  const sorted = [...route.courses].sort((a, b) => a.year - b.year || (a.quarter ? 0 : 1) - (b.quarter ? 0 : 1));
-  for (const course of sorted) {
-    let term: string;
-    try {
-      if (course.quarter === "SU") {
-        if (course.year >= 4) {
-          skipped.push(course.code);
-          continue;
-        }
-        term = termAt(entry, course.year + 1, "SU");
-      } else if (course.quarter) {
-        term = termAt(entry, course.year, course.quarter);
-      } else {
-        // The lightest of the quarters it is usually offered in (any of the three if unknown).
-        const usual = (course.offered ?? []).filter((q): q is "AU" | "WI" | "SP" => q !== "SU");
-        const options = (usual.length ? usual : (["AU", "WI", "SP"] as const)).map((q) => termAt(entry, course.year, q));
-        term = options.reduce((best, t) => ((load.get(t) ?? 0) < (load.get(best) ?? 0) ? t : best), options[0] as string);
-      }
-    } catch {
-      skipped.push(course.code);
-      continue;
-    }
-    if (items.some((i) => i.course === course.code)) continue;
-    load.set(term, (load.get(term) ?? 0) + 1);
-    items.push({ course: course.code, term, status: "planned", grading: "letter", locked: false });
-  }
-  return {
-    state: { ...state, items, programs: route.program_ids.map((program_id) => ({ program_id, options: {}, version_id: null })) },
-    skipped,
-  };
-}
-
-/** Courses of a route grouped by year, then quarter (null last). */
-export function byYear(courses: readonly RouteCourse[]): Map<number, RouteCourse[]> {
-  const order: Record<string, number> = { AU: 0, WI: 1, SP: 2, SU: 3 };
-  const out = new Map<number, RouteCourse[]>([[1, []], [2, []], [3, []], [4, []]]);
-  for (const c of courses) out.get(Math.min(4, Math.max(1, c.year)))?.push(c);
-  for (const list of out.values()) list.sort((a, b) => (order[a.quarter ?? ""] ?? 9) - (order[b.quarter ?? ""] ?? 9));
-  return out;
 }
 
 export const courseHref = (code: string) => `/courses/${encodeURIComponent(code)}`;

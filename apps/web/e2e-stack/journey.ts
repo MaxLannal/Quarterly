@@ -102,6 +102,8 @@ export interface About {
   /** "I transferred, or I am not in my first year.": first quarter, year started in, then any
    * credits or taken courses (`extra` fills them in the form). */
   transfer?: { entry: string; level: string; extra?: (page: Page) => Promise<void> };
+  /** Answer the guide's questions now ("Answer a few more questions") instead of "Skip for now". */
+  answerGuide?: boolean;
 }
 
 /**
@@ -146,7 +148,7 @@ export async function aboutYou(page: Page, about: About) {
   }
   await page.getByRole("button", { name: "Save and continue" }).click();
   await expect(page.getByRole("heading", { level: 2, name: "A few more questions?" })).toBeVisible();
-  await page.getByRole("button", { name: "Skip for now" }).click();
+  await page.getByRole("button", { name: about.answerGuide ? "Answer a few more questions" : "Skip for now" }).click();
 }
 
 /**
@@ -181,8 +183,44 @@ export async function setUpPlanFromRecord(page: Page, expectText: string[] = [])
   await expect(setup).toBeHidden();
 }
 
+/**
+ * Drags the card of `code` onto `to` until the plan check runs, and returns the time of the drop
+ * (the mouse button's release) that started it. A pointer drag can miss on a busy machine
+ * (OPEN_QUESTIONS E2E-1), so up to three drags. A missed drag changes nothing, so no plan check
+ * starts. When 5 s pass without a check but the card did move, the check is slow: wait for it
+ * and return the first drop's time, so the caller's timing still fails.
+ */
+export async function dragUntilChecked(page: Page, code: string, to: Locator): Promise<number> {
+  const from = page.getByRole("button", { name: `Drag ${code}`, exact: true });
+  // Both ends must be on screen at once (a pointer outside the window drops nowhere). Since the
+  // full catalog import the cards are taller, so two quarters a year apart may not fit.
+  const size = page.viewportSize();
+  const a = await from.boundingBox();
+  const b = await to.boundingBox();
+  if (size && a && b) {
+    const span = Math.abs(b.y - a.y) + Math.max(a.height, b.height) + 200;
+    if (span > size.height) await page.setViewportSize({ width: size.width, height: Math.ceil(span) });
+  }
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    const checked = page
+      .waitForResponse((r) => r.url().endsWith("/api/verify") && r.request().method() === "POST", { timeout: 60_000 })
+      .then(
+        () => true,
+        () => false,
+      );
+    const dropped = await drag(page, from, to);
+    const quick = await Promise.race([checked, page.waitForTimeout(5_000).then(() => false)]);
+    if (quick) return dropped;
+    if ((await to.getByRole("button", { name: `Drag ${code}`, exact: true }).count()) > 0) {
+      if (await checked) return dropped; // moved, but the check was slow
+      throw new Error("drag: the card moved but no plan check ran");
+    }
+  }
+  throw new Error("drag: the card did not move after three drags");
+}
+
 /** Drags with the mouse in small steps (dnd-kit's pointer sensor needs a few pixels to start). */
-export async function drag(page: Page, from: Locator, to: Locator) {
+export async function drag(page: Page, from: Locator, to: Locator): Promise<number> {
   await to.scrollIntoViewIfNeeded();
   await from.scrollIntoViewIfNeeded();
   const a = await from.boundingBox();
@@ -193,4 +231,5 @@ export async function drag(page: Page, from: Locator, to: Locator) {
   await page.mouse.move(a.x + a.width / 2 + 12, a.y + a.height / 2 + 12, { steps: 5 });
   await page.mouse.move(b.x + b.width / 2, b.y + b.height / 2, { steps: 15 });
   await page.mouse.up();
+  return Date.now();
 }

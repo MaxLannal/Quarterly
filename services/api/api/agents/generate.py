@@ -46,6 +46,7 @@ from sqlalchemy.orm import Session
 from api.agents.prompts import load_prompt
 from api.agents.runtime import RunLog, checked_citations, split_ref, word_count
 from api.agents.tools import A1_RATIONALE_TOOLS, A1_TOOLS, ToolBox
+from api.config import get_settings
 from api.db import models as m
 from api.repo import plans as plans_repo
 from api.schemas.agents import (
@@ -429,7 +430,7 @@ class GenerateRun:
             interests=list(r.interests),
             variants=r.variants,
             preferences=preferences,
-            time_limit_s=SOLVER_SECONDS,
+            time_limit_s=get_settings().generate_solver_seconds or SOLVER_SECONDS,
         )
 
     def step(self, name: str, status: str) -> StepEvent:

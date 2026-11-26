@@ -74,10 +74,15 @@ def test_every_quick_reply_maps_to_an_answer_or_a_skip() -> None:
         ("wants_research", "yeah, definitely", True),
         ("wants_research", "no", False),
         ("wants_research", "I'm not interested", False),
-        ("courses_per_term", "4 courses", 4),
-        ("courses_per_term", "four", 4),
-        ("courses_per_term", "usually 5 classes", 5),
-        ("courses_per_term", "2", 2),
+        ("course_load", "Conservative", "conservative"),
+        ("course_load", "just enough to stay full time", "conservative"),
+        ("course_load", "a normal load", "normal"),
+        ("course_load", "a mix of 3 and 4 courses", "normal"),
+        ("course_load", "Ambitious", "ambitious"),
+        ("course_load", "as heavy as I can", "ambitious"),
+        # A named option after "not" is not the answer (spec review, 2026-11-25).
+        ("course_load", "not ambitious, just normal", "normal"),
+        ("pace", "on time, not early", "on_time"),
         ("theory_vs_application", "7", 7),
         ("theory_vs_application", "7/10", 7),
         ("theory_vs_application", "seven out of 10", 7),
@@ -115,8 +120,13 @@ def test_read_reply_maps_answers(question_id: str, reply: str, value: Any) -> No
         ("post_grad_plan", "pizza"),
         ("post_grad_plan", "grad school or industry"),  # two options: ask again
         ("wants_research", "yes, no"),
-        ("courses_per_term", "7"),  # out of range (1-6)
-        ("courses_per_term", "3 or 4"),
+        ("course_load", "pizza"),
+        ("course_load", "normal or ambitious"),  # two options: ask again
+        ("course_load", "not too heavy"),
+        ("course_load", "nothing too heavy please"),
+        ("course_load", "I don't want to overload"),
+        ("course_load", "not ambitious"),
+        ("course_load", "max 4 courses"),
         ("theory_vs_application", "11"),
         ("theory_vs_application", "mostly theory"),  # not a number
         ("class_formats", "pizza"),
@@ -168,11 +178,11 @@ def test_proposed_patch_keeps_only_supported_answers() -> None:
     patch = iv.proposed_patch(plan, "industry", "grad school or industry", row())
     assert patch is not None and patch.post_grad_plan == "industry"
 
-    load = q("courses_per_term")
-    assert iv.proposed_patch(load, 4, "a normal load", row()) is None  # no number said
-    assert iv.proposed_patch(load, 9, "9", row()) is None  # out of range
-    patch = iv.proposed_patch(load, 4, "3 or 4, probably 4", row())
-    assert patch is not None and patch.courses_per_term == 4
+    load = q("course_load")
+    assert iv.proposed_patch(load, "heavy", "heavy", row()) is None  # not an option
+    assert iv.proposed_patch(load, "ambitious", "a normal load", row()) is None
+    patch = iv.proposed_patch(load, "normal", "a normal load", row())
+    assert patch is not None and patch.course_load == "normal"
 
     away = q("terms_away")
     said = "next fall abroad"

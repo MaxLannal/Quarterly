@@ -383,7 +383,7 @@ test.describe("F5: text", () => {
 
     await page.goto("/courses");
     await expect(
-      page.getByRole("heading", { level: 1, name: "Course search" }),
+      page.getByRole("heading", { level: 1, name: "Catalog" }),
     ).toBeVisible();
     await expect(
       page.getByText("Filter by department, level, quarter"),

@@ -660,7 +660,8 @@ class StudentProfile(Base):
         ),
         sa.CheckConstraint("pace IS NULL OR pace IN ('early', 'on_time', 'flexible')", name="pace"),
         sa.CheckConstraint(
-            "courses_per_term IS NULL OR courses_per_term BETWEEN 1 AND 6", name="courses_per_term"
+            "course_load IS NULL OR course_load IN ('conservative', 'normal', 'ambitious')",
+            name="course_load",
         ),
         sa.CheckConstraint(
             "theory_vs_application IS NULL OR theory_vs_application BETWEEN 1 AND 10",
@@ -687,7 +688,8 @@ class StudentProfile(Base):
     wants_research: Mapped[bool | None]
     research_areas: Mapped[list[str]] = _texts()
     # Scheduling.
-    courses_per_term: Mapped[int | None] = mapped_column(sa.SmallInteger)
+    #: conservative / normal / ambitious (0011 replaced the number of courses per quarter).
+    course_load: Mapped[str | None] = mapped_column(sa.String(16))
     #: [{term, kind: abroad | internship | leave}]; NULL = not answered, [] = none.
     terms_away: Mapped[list[dict[str, str]] | None] = mapped_column(JSONB)
     # Learning preferences.
@@ -698,14 +700,13 @@ class StudentProfile(Base):
     #: The working information from the planner chat (Markdown, Issue #14 D3: one per student;
     #: a line that applies to one plan only starts with the plan name). Issue #17 writes it.
     working_notes: Mapped[str | None] = mapped_column(sa.Text)
-    #: Feed category keys the student focuses on (api.feed categories).
-    feed_categories: Mapped[list[str]] = _texts()
     #: The dashboard agent's memory: {covered: [question id], turns: [{role, text}] (last 24,
     #: scrubbed)}.
     interview: Mapped[dict[str, Any]] = mapped_column(JSONB, server_default="{}")
     #: {threads: [commons_thread.id], courses: [course code]}.
     follows: Mapped[dict[str, Any]] = mapped_column(JSONB, server_default="{}")
-    #: High-water marks of what the companion already showed: {thread, reply, post, comment}.
+    #: High-water marks of the removed update alerts ({thread, reply, post, comment}). Nothing
+    #: reads or writes them since GET /me/updates went (OPEN_QUESTIONS M21-2); still exported.
     updates_seen: Mapped[dict[str, Any]] = mapped_column(JSONB, server_default="{}")
     created_day: Mapped[dt.date] = mapped_column(server_default=TODAY)
     updated_day: Mapped[dt.date] = mapped_column(server_default=TODAY)
@@ -742,46 +743,8 @@ class StudentCourse(Base):
     units: Mapped[int | None]
     grading: Mapped[str] = mapped_column(sa.String(16), server_default="letter")
     grade: Mapped[str | None] = mapped_column(sa.String(4))
-
-
-class Pathway(Base):
-    """A route through the College (dashboard "Routes"): AI-drafted (kept by the student) or
-    made by hand. `courses` items: {code, title, year 1-4, quarter AU|WI|SP|SU|null, role, note};
-    every code was checked against `course` when the route was saved. At most one route per
-    account is `chosen`; the others stay `open` (options kept open) or `archived`."""
-
-    __tablename__ = "pathway"
-    __table_args__ = (
-        sa.CheckConstraint("status IN ('open', 'chosen', 'archived')", name="status"),
-        sa.CheckConstraint("origin IN ('ai', 'user')", name="origin"),
-        sa.Index(
-            "uq_pathway_one_chosen",
-            "account_id",
-            unique=True,
-            postgresql_where=sa.text("status = 'chosen'"),
-        ),
-    )
-    id: Mapped[uuid.UUID] = _uuid()
-    account_id: Mapped[uuid.UUID] = mapped_column(
-        sa.ForeignKey("account.id", ondelete="CASCADE"), index=True
-    )
-    title: Mapped[str] = mapped_column(sa.Text)
-    tagline: Mapped[str | None] = mapped_column(sa.Text)
-    summary: Mapped[str] = mapped_column(sa.Text, server_default="")
-    #: major | double_major | major_minor | exploratory | custom
-    kind: Mapped[str] = mapped_column(sa.String(16), server_default="major")
-    program_ids: Mapped[list[str]] = _texts()
-    courses: Mapped[list[dict[str, Any]]] = mapped_column(JSONB, server_default="[]")
-    #: [{when, text}], e.g. {"when": "Year 2, Spring", "text": "Ask a lab about summer research"}
-    milestones: Mapped[list[dict[str, Any]]] = mapped_column(JSONB, server_default="[]")
-    #: {interests, career, humanities: 0..1, workload: light|balanced|intense}
-    fit: Mapped[dict[str, Any]] = mapped_column(JSONB, server_default="{}")
-    status: Mapped[str] = mapped_column(sa.String(16), server_default="open")
-    origin: Mapped[str] = mapped_column(sa.String(8), server_default="ai")
-    position: Mapped[int] = mapped_column(sa.SmallInteger, server_default="0")
-    note: Mapped[str | None] = mapped_column(sa.Text)
-    created_day: Mapped[dt.date] = mapped_column(server_default=TODAY)
-    updated_day: Mapped[dt.date] = mapped_column(server_default=TODAY)
+    #: Locked in the planner (migration 0007).
+    locked: Mapped[bool] = mapped_column(server_default=sa.false())
 
 
 class CommonsThread(Base):

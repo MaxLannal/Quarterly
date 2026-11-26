@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { accountPlans, addCreditOnDashboard, closePanel, drag, expectVariants, gap, generate, gridByTerm, openPanel, setUpPlanFromRecord, signUp, verifierSettled } from "./journey";
+import { accountPlans, addCreditOnDashboard, closePanel, dragUntilChecked, expectVariants, gap, generate, gridByTerm, openPanel, setUpPlanFromRecord, signUp, verifierSettled } from "./journey";
 
 // SPEC "Core user journeys" A: incoming first-year with no plan (real stack, fake LLM). Since
 // Issue #16 a new student signs up first: the registration form replaced the onboarding wizard.
@@ -45,10 +45,7 @@ test("journey A: first-year signs up, sets up a plan from their information, gen
   const moved = before["2027-SP"]?.[0];
   if (!moved) throw new Error("no course in Spring 2027 after applying the variant");
   const target = page.getByTestId("quarter-2028-SP");
-  const verified = page.waitForResponse((r) => r.url().endsWith("/api/verify") && r.request().method() === "POST");
-  const dropped = Date.now();
-  await drag(page, page.getByRole("button", { name: `Drag ${moved}`, exact: true }), target);
-  await verified;
+  const dropped = await dragUntilChecked(page, moved, target);
   await verifierSettled(page);
   const elapsed = Date.now() - dropped;
   expect((await gridByTerm(page))["2028-SP"]).toContain(moved);

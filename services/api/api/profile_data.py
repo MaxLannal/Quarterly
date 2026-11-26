@@ -1,13 +1,12 @@
-"""The dashboard's data (`/me`): the student record (Issue #14) and the routes, read and written
-for the profile router, the dashboard agent and the route drafter, plus `render_student_md()`
-(what the agents read and the student exports) and `export_profile` for `/account/export`.
+"""The dashboard's data (`/me`): the student record (Issue #14), read and written for the
+profile router and the dashboard agent, plus `render_student_md()` (what the agents read and the
+student exports) and `export_profile` for `/account/export`. (The routes were removed in issue
+#15.)
 
 The student record is `student_profile` (the General Information answers) plus
 `student_credit` and `student_course`. The profile row is created lazily (the first read or
 write). The email is never stored here (decision 5): `ProfileOut.email` is read from
 `account.email` each time, and `render_student_md()` never writes the email or the username.
-Routes keep only course codes that exist in the catalog (`api.agents.live.known_courses`) and
-program ids that exist.
 """
 
 from __future__ import annotations
@@ -22,11 +21,10 @@ from pydantic import TypeAdapter, ValidationError
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy.orm import Session
 
-from api.agents.live import CAMPUS_YEAR, known_courses, normalize_code
+from api.agents.live import CAMPUS_YEAR, normalize_code
 from api.db import models as m
 from api.profile_questions import Question, question_set
 from api.schemas.profile import (
-    MAX_ROUTES,
     MAX_TURNS,
     WRAPUP,
     Follows,
@@ -35,14 +33,10 @@ from api.schemas.profile import (
     ProfilePatch,
     ProgramRef,
     RecordCredit,
-    RouteCourse,
-    RouteIn,
-    RouteList,
-    RouteOut,
-    RoutePatch,
     TakenCourse,
     TakenCourseOut,
     TermAway,
+    fit_credit,
 )
 
 #: The scalar columns a patch may set (`null` clears).
@@ -54,12 +48,12 @@ SCALAR_FIELDS = (
     "post_grad_plan",
     "pace",
     "wants_research",
-    "courses_per_term",
+    "course_load",
     "theory_vs_application",
     "working_notes",
 )
 #: The list columns a patch may set (`null` empties them).
-LIST_FIELDS = ("intended_programs", "research_areas", "feed_categories")
+LIST_FIELDS = ("intended_programs", "research_areas")
 #: Answers kept in their own tables.
 TABLE_FIELDS = ("credits", "taken_courses")
 
@@ -80,14 +74,6 @@ class UnknownCourseError(ValueError):
         self.codes = list(codes)
 
 
-class RouteLimitError(RuntimeError):
-    pass
-
-
-class RouteNotFoundError(LookupError):
-    pass
-
-
 def today() -> dt.date:
     return dt.date.today()
 
@@ -101,7 +87,7 @@ def find_profile(db: Session, account_id: uuid.UUID) -> m.StudentProfile | None:
 
 def ensure_profile(db: Session, account_id: uuid.UUID) -> m.StudentProfile:
     """The account's profile, created on first use. Safe when two requests create it at once
-    (the dashboard and the feed load together): the insert does nothing on a conflict."""
+    (two dashboard requests load together): the insert does nothing on a conflict."""
     row = db.get(m.StudentProfile, account_id)
     if row is None:
         db.execute(
@@ -171,9 +157,11 @@ def record_credits(db: Session, account_id: uuid.UUID) -> list[RecordCredit]:
         .where(m.StudentCredit.account_id == account_id)
         .order_by(m.StudentCredit.id)
     ).all()
-    return [
-        RecordCredit(kind=c.kind, label=c.label, maps_to=code, units=c.units) for c, code in rows
-    ]
+    out = []
+    for c, code in rows:
+        label, units = fit_credit(c.label, c.units)
+        out.append(RecordCredit(kind=c.kind, label=label, maps_to=code, units=units))
+    return out
 
 
 def record_courses(db: Session, account_id: uuid.UUID) -> list[TakenCourseOut]:
@@ -190,6 +178,9 @@ def record_courses(db: Session, account_id: uuid.UUID) -> list[TakenCourseOut]:
             term=c.term_id,
             status=c.status,
             grade=c.grade,
+            grading=c.grading,
+            units=c.units,
+            locked=c.locked,
         )
         for c, code, title in rows
     ]
@@ -259,6 +250,9 @@ def replace_courses(
                 term_id=c.term,
                 status=c.status,
                 grade=c.grade,
+                grading=c.grading,
+                units=c.units,
+                locked=c.locked,
             )
         )
 
@@ -310,11 +304,11 @@ def answered_ids(
 
 def completeness(row: m.StudentProfile, answered: Sequence[str]) -> float:
     """Share of the questions that apply to this student and are answered. The transfer-only
-    questions are left out: a first-year student has nothing to enter there."""
+    and the optional questions are left out: a student can have nothing to enter there."""
     wanted = [
         q.id
         for q in question_set().questions
-        if not (q.when and "transfer_or_later" in q.when) and applies(q, row)
+        if not (q.optional or (q.when and "transfer_or_later" in q.when)) and applies(q, row)
     ]
     if not wanted:
         return 0.0
@@ -342,13 +336,12 @@ def profile_out(db: Session, account: m.Account, row: m.StudentProfile) -> Profi
         pace=row.pace,
         wants_research=row.wants_research,
         research_areas=list(row.research_areas),
-        courses_per_term=row.courses_per_term,
+        course_load=row.course_load,
         terms_away=terms_away_of(row),
         class_formats=None if row.class_formats is None else list(row.class_formats),
         theory_vs_application=row.theory_vs_application,
         answered=answered,
         has_working_notes=bool(row.working_notes),
-        feed_categories=list(row.feed_categories),
         interview=memory_of(row),
         follows=follows_of(row),
         completeness=completeness(row, answered),
@@ -415,9 +408,15 @@ def _md_text(text: str) -> str:
 
 
 def _value_line(
-    db: Session, question: Question, value: Any, labels: dict[str, dict[str, str]]
+    db: Session,
+    question: Question,
+    value: Any,
+    labels: dict[str, dict[str, str]],
+    *,
+    grades: bool = True,
 ) -> list[str]:
-    """The Markdown for one answer: one line, or a line and indented sub-items."""
+    """The Markdown for one answer: one line, or a line and indented sub-items. Without
+    `grades`, a taken course shows no grade and no Pass/Fail."""
     head = f"- {question.label}:"
     if not _has_answer(question, value):
         return [f"{head} {NOT_ANSWERED}"]
@@ -441,8 +440,10 @@ def _value_line(
         for c in value:
             status = labels.get("status", {}).get(c.status, c.status)
             title = f" {_md_text(c.title)}" if getattr(c, "title", "") else ""
-            grade = f", grade {c.grade}" if c.grade else ""
-            lines.append(f"  - {c.term} {c.course}{title}: {status}{grade}")
+            grade = f", grade {c.grade}" if grades and c.grade else ""
+            # A rule that needs a letter grade does not count a Pass/Fail course.
+            grading = ", Pass/Fail" if grades and c.grading == "pass_fail" else ""
+            lines.append(f"  - {c.term} {c.course}{title}: {status}{grade}{grading}")
         return lines
     if field == "terms_away":
         if not value:
@@ -465,11 +466,15 @@ def _value_line(
     return [f"{head} {question.label_of(value) or value}"]
 
 
-def render_student_md(db: Session, row: m.StudentProfile, *, working_notes: bool = False) -> str:
+def render_student_md(
+    db: Session, row: m.StudentProfile, *, working_notes: bool = False, grades: bool = True
+) -> str:
     """The student record as `student.md` (Issue #14): what the agents read about the student
     and what the student exports. The General Information comes first, in the question file's
     groups and order; every unanswered question says "Not answered". `working_notes` adds the
     working information from the planner chat (the export and the planner agent ask for it).
+    `grades=False` leaves each taken course's grade and Pass/Fail out: the dashboard agent's
+    copy, which goes to the AI provider and needs no grades (OPEN_QUESTIONS M21-1).
     Never contains the email or the username."""
     qs = question_set()
     credits = record_credits(db, row.account_id)
@@ -486,7 +491,7 @@ def render_student_md(db: Session, row: m.StudentProfile, *, working_notes: bool
         out += ["", f"### {group.title}", ""]
         for question in qs.in_group(group.id):
             value = _answer(row, question, credits, courses)
-            out += _value_line(db, question, value, qs.labels)
+            out += _value_line(db, question, value, qs.labels, grades=grades)
     if working_notes:
         out += [
             "",
@@ -500,180 +505,13 @@ def render_student_md(db: Session, row: m.StudentProfile, *, working_notes: bool
     return "\n".join(out) + "\n"
 
 
-# ------------------------------------------------------------------------------ routes
-
-
-QUARTER_ORDER = {"SU": 0, "AU": 1, "WI": 2, "SP": 3}
-#: A quarter counts as "usually offered" from this predicted probability (as the catalog search).
-OFFERED_MIN = 0.3
-
-
-def offered_quarters(db: Session, codes: Sequence[str]) -> dict[str, list[Any]]:
-    """{code: [AU, WI, SP...]}: the quarters each course is usually offered in."""
-    if not codes:
-        return {}
-    rows = db.execute(
-        sa.select(m.Course.code, m.OfferingPattern.quarter)
-        .join(m.OfferingPattern, m.OfferingPattern.course_id == m.Course.id)
-        .where(
-            m.Course.catalog_year == CAMPUS_YEAR,
-            m.Course.code.in_(list(codes)),
-            m.OfferingPattern.p_offered >= OFFERED_MIN,
-        )
-    ).all()
-    out: dict[str, list[Any]] = {}
-    for code, quarter in rows:
-        out.setdefault(code, []).append(quarter)
-    return {c: sorted(set(q), key=lambda x: QUARTER_ORDER.get(x, 9)) for c, q in out.items()}
-
-
-def clean_route(db: Session, route: RouteIn) -> RouteIn:
-    """The route with unknown course codes and program ids dropped, codes normalised, each
-    course once, and titles filled in from the catalog."""
-    codes = [normalize_code(c.code) or "" for c in route.courses]
-    titles = known_courses(db, [c for c in codes if c])
-    offered = offered_quarters(db, list(titles))
-    courses: list[RouteCourse] = []
-    seen: set[str] = set()
-    for course, code in zip(route.courses, codes, strict=True):
-        if code in titles and code not in seen:
-            seen.add(code)
-            courses.append(
-                course.model_copy(
-                    update={"code": code, "title": titles[code], "offered": offered.get(code, [])}
-                )
-            )
-    courses.sort(key=lambda c: (c.year, QUARTER_ORDER.get(c.quarter or "", 9)))
-    return route.model_copy(
-        update={"courses": courses, "program_ids": existing_programs(db, route.program_ids)}
-    )
-
-
-def _route_in(row: m.Pathway) -> RouteIn:
-    try:
-        return RouteIn.model_validate(
-            {
-                "title": row.title or "Untitled route",
-                "tagline": row.tagline or "",
-                "summary": row.summary or "",
-                "kind": row.kind,
-                "program_ids": list(row.program_ids),
-                "courses": row.courses or [],
-                "milestones": row.milestones or [],
-                "fit": row.fit or {},
-                "origin": row.origin,
-            }
-        )
-    except ValidationError:
-        return RouteIn(title=row.title[:80] or "Untitled route", origin="user")
-
-
-def route_out(db: Session, row: m.Pathway) -> RouteOut:
-    base = _route_in(row)
-    offered = offered_quarters(db, [c.code for c in base.courses])
-    base.courses = [c.model_copy(update={"offered": offered.get(c.code, [])}) for c in base.courses]
-    return RouteOut(
-        **base.model_dump(),
-        id=row.id,
-        status=row.status,
-        position=row.position,
-        note=row.note,
-        created_day=row.created_day,
-        updated_day=row.updated_day,
-        programs=program_refs(db, base.program_ids),
-    )
-
-
-def _routes(db: Session, account_id: uuid.UUID) -> list[m.Pathway]:
-    return list(
-        db.scalars(
-            sa.select(m.Pathway)
-            .where(m.Pathway.account_id == account_id)
-            .order_by(m.Pathway.position, m.Pathway.created_day, m.Pathway.id)
-        )
-    )
-
-
-def list_routes(db: Session, account_id: uuid.UUID) -> RouteList:
-    rows = _routes(db, account_id)
-    chosen = next((r.id for r in rows if r.status == "chosen"), None)
-    return RouteList(items=[route_out(db, r) for r in rows], chosen_id=chosen)
-
-
-def create_route(db: Session, account_id: uuid.UUID, route: RouteIn) -> m.Pathway:
-    """Raises `RouteLimitError` when the account already has MAX_ROUTES routes."""
-    rows = _routes(db, account_id)
-    if len(rows) >= MAX_ROUTES:
-        raise RouteLimitError(f"at most {MAX_ROUTES} routes")
-    clean = clean_route(db, route)
-    row = m.Pathway(
-        account_id=account_id,
-        title=clean.title,
-        tagline=clean.tagline or None,
-        summary=clean.summary,
-        kind=clean.kind,
-        program_ids=clean.program_ids,
-        courses=[c.model_dump() for c in clean.courses],
-        milestones=[ms.model_dump() for ms in clean.milestones],
-        fit=clean.fit.model_dump(),
-        status="open",
-        origin=clean.origin,
-        position=max((r.position for r in rows), default=-1) + 1,
-        created_day=today(),
-        updated_day=today(),
-    )
-    db.add(row)
-    db.flush()
-    return row
-
-
-def owned_route(db: Session, account_id: uuid.UUID, route_id: uuid.UUID) -> m.Pathway:
-    row = db.get(m.Pathway, route_id)
-    if row is None or row.account_id != account_id:
-        raise RouteNotFoundError(str(route_id))
-    return row
-
-
-def patch_route(db: Session, row: m.Pathway, patch: RoutePatch) -> None:
-    sent = patch.model_fields_set
-    if "status" in sent and patch.status is not None and patch.status != row.status:
-        if patch.status == "chosen":
-            # One chosen route per account (index uq_pathway_one_chosen): the others go back
-            # to open first, in the same transaction. Locking the account's routes first makes
-            # two "choose" clicks at once wait for each other instead of failing on the index.
-            mine = sa.select(m.Pathway.id).where(m.Pathway.account_id == row.account_id)
-            db.execute(mine.with_for_update())
-            db.execute(
-                sa.update(m.Pathway)
-                .where(
-                    m.Pathway.account_id == row.account_id,
-                    m.Pathway.status == "chosen",
-                    m.Pathway.id != row.id,
-                )
-                .values(status="open", updated_day=today())
-                .execution_options(synchronize_session="fetch")
-            )
-            db.flush()
-        row.status = patch.status
-    if "title" in sent and patch.title:
-        row.title = patch.title
-    if "tagline" in sent:
-        row.tagline = patch.tagline or None
-    if "note" in sent:
-        row.note = patch.note
-    if "position" in sent and patch.position is not None:
-        row.position = patch.position
-    row.updated_day = today()
-    db.flush()
-
-
 # ------------------------------------------------------------------------------ export
 
 
 def export_profile(db: Session, account_id: uuid.UUID) -> dict[str, Any]:
-    """The account's dashboard data for `/account/export`: the student record (without the
-    email, which the export already has from the account), `student.md` with the working
-    information, and every route. JSON-ready."""
+    """The account's dashboard data for `/account/export`: the student record and `student.md`
+    with the working information. No email address: the record never holds one (decision 5).
+    JSON-ready."""
     row = find_profile(db, account_id)
     if row is None and (record_credits(db, account_id) or record_courses(db, account_id)):
         # A plan save can fill the record's tables before the profile row exists.
@@ -694,12 +532,11 @@ def export_profile(db: Session, account_id: uuid.UUID) -> dict[str, Any]:
             "pace": row.pace,
             "wants_research": row.wants_research,
             "research_areas": list(row.research_areas),
-            "courses_per_term": row.courses_per_term,
+            "course_load": row.course_load,
             "terms_away": row.terms_away,
             "class_formats": None if row.class_formats is None else list(row.class_formats),
             "theory_vs_application": row.theory_vs_application,
             "working_notes": row.working_notes,
-            "feed_categories": list(row.feed_categories),
             "interview": memory_of(row).model_dump(mode="json"),
             "follows": follows_of(row).model_dump(mode="json"),
             "updates_seen": dict(row.updates_seen or {}),
@@ -707,8 +544,4 @@ def export_profile(db: Session, account_id: uuid.UUID) -> dict[str, Any]:
             "updated_day": row.updated_day.isoformat(),
             "student_md": render_student_md(db, row, working_notes=True),
         }
-    routes = [
-        route_out(db, r).model_dump(mode="json", exclude={"programs"})
-        for r in _routes(db, account_id)
-    ]
-    return {"profile": profile, "routes": routes}
+    return {"profile": profile}

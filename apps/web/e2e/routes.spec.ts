@@ -8,7 +8,7 @@ const ROUTES: [string, string][] = [
   ["/plan", "Planner"],
   ["/plans", "My plans"],
   ["/plans/compare", "Compare plans"],
-  ["/courses", "Course search"],
+  ["/courses", "Catalog"],
   ["/courses/TEST%2010000", "TEST 10000 · Fake Introduction I"],
   ["/courses/MATH%2020700/i/jane-doe", "Course × instructor forum"],
   ["/courses/MATH%2020700/i/jane-doe/t/1", "Thread"],

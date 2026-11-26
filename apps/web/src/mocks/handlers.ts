@@ -19,9 +19,8 @@ import {
   summary,
 } from "./data";
 import { agentHandlers, generateVariants } from "./agents";
-import { askHandlers, resetAskMock } from "./ask";
 import { commonsHandlers, resetCommonsMock } from "./commons";
-import { feedHandlers } from "./feed";
+import { browseHandlers } from "./browse";
 import { profileHandlers, resetProfileMock } from "./profile";
 import { forumHandlers, resetForumMock } from "./forum";
 import { resetReviewMock, reviewHandlers } from "./review";
@@ -116,7 +115,6 @@ export function resetMockState() {
   setLoggedIn(false);
   resetForumMock();
   resetReviewMock();
-  resetAskMock();
   resetCommonsMock();
   resetProfileMock();
 }
@@ -127,9 +125,8 @@ export function resetMockState() {
 
 export const handlers = [
   // Campus companion (docs/BEST-OF-UCHICAGO-PLAN.md): one file per work stream.
-  ...askHandlers,
   ...profileHandlers,
-  ...feedHandlers,
+  ...browseHandlers,
   ...commonsHandlers,
   ...forumHandlers, // forum, instructors and moderation: src/mocks/forum.ts (prompt 08)
   http.get(`${A}/health`, () =>

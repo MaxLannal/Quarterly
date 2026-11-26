@@ -1,21 +1,29 @@
-"""The personal dashboard (`/me`): the student record (Issue #14), the dashboard agent's turns
-(Issue #16) and the routes. The email shown on the dashboard is read from `account.email` and
-never stored in `student_profile` (decision 5)."""
+"""The personal dashboard (`/me`): the student record (Issue #14) and the dashboard agent's
+turns (Issue #16; the routes were removed in issue #15). The email shown on the dashboard is read
+from `account.email` and never stored in `student_profile` (decision 5)."""
 
 from __future__ import annotations
 
 import datetime as dt
-import uuid
 from collections.abc import Iterable
-from typing import Annotated, Literal
+from typing import Annotated, Literal, Self
 
-from pydantic import BaseModel, Field, RootModel, field_validator
+from planner_core.models import Grading
+from pydantic import (
+    BaseModel,
+    Field,
+    RootModel,
+    field_serializer,
+    field_validator,
+    model_validator,
+)
 
 from api.forum.scrub import scrub
 from api.schemas.agents import ErrorEvent
 
 PostGradPlan = Literal["industry", "grad_school", "med_law", "undecided"]
 Pace = Literal["early", "on_time", "flexible"]
+CourseLoad = Literal["conservative", "normal", "ambitious"]
 ClassFormat = Literal["seminar", "lecture", "lab", "online"]
 AwayKind = Literal["abroad", "internship", "leave"]
 CreditKind = Literal["AP", "placement", "transfer"]
@@ -30,10 +38,8 @@ WRAPUP = "wrapup"
 MAX_ITEMS = 24
 MAX_ITEM_CHARS = 60
 MAX_TEXT_CHARS = 1200
-MAX_FEED_CATEGORIES = 16
 MAX_TURNS = 24
 MAX_TURN_CHARS = 2000
-MAX_ROUTES = 12
 MAX_CREDITS = 40
 MAX_TAKEN = 80
 MAX_TERMS_AWAY = 12
@@ -96,14 +102,30 @@ class TermAway(BaseModel):
     kind: AwayKind
 
 
+MAX_CREDIT_LABEL = 120
+MAX_CREDIT_UNITS = 1000
+
+
+def fit_credit(label: str, units: int) -> tuple[str, int]:
+    """A credit's label and units as `RecordCredit` accepts them: scrubbed and clipped. A plan's
+    own credit (planner_core `Credit`) has no limits, so a plan save, and rows that migrations
+    0005 and 0010 copied from plans, go through this; otherwise one long label would make
+    every read of the record (the dashboard, student.md, the export) fail."""
+    # Scrub, clip, then scrub and clip again: a clip can leave digits that now read as a phone
+    # number, and the marker that replaces them is longer. The second clip can only cut inside
+    # a marker (no digits), so the result is stable when RecordCredit scrubs it again on read.
+    text = squash(squash(label)[:MAX_CREDIT_LABEL])[:MAX_CREDIT_LABEL].strip() or "Credit"
+    return text, min(max(units, 0), MAX_CREDIT_UNITS)
+
+
 class RecordCredit(BaseModel):
     """An AP, placement or transfer credit (planner_core `Credit`)."""
 
     kind: CreditKind
-    label: str = Field(min_length=1, max_length=120)
+    label: str = Field(min_length=1, max_length=MAX_CREDIT_LABEL)
     #: The course code it counts as, if any (checked against the catalog).
     maps_to: str | None = Field(default=None, max_length=16)
-    units: int = Field(default=0, ge=0, le=1000)
+    units: int = Field(default=0, ge=0, le=MAX_CREDIT_UNITS)
 
     @field_validator("label", mode="before")
     @classmethod
@@ -112,12 +134,27 @@ class RecordCredit(BaseModel):
 
 
 class TakenCourse(BaseModel):
-    """A UChicago course the student took or is taking."""
+    """A UChicago course the student took or is taking. `grading`, `units` and `locked` are the
+    plan item's (planner_core `PlanItem`): a rule that needs a letter grade does not count a
+    Pass/Fail course, so every editor sends them back unchanged."""
 
     course: str = Field(min_length=1, max_length=16)
     term: TermId
     status: TakenStatus = "completed"
     grade: str | None = Field(default=None, max_length=4)
+    grading: Grading = "letter"
+    #: Overrides the catalog units (variable-unit courses); None = the catalog's.
+    units: int | None = Field(default=None, ge=0)
+    #: Locked in the planner (it cannot be dragged or removed there).
+    locked: bool = False
+
+    @model_validator(mode="after")
+    def _no_grade_in_progress(self) -> Self:
+        # A course in progress has no grade yet (Richard, 2026-11-25): a grade sent with it is
+        # dropped, also on read, so an older row cannot show one.
+        if self.status == "in_progress":
+            self.grade = None
+        return self
 
 
 class TakenCourseOut(TakenCourse):
@@ -169,7 +206,7 @@ class ProfileOut(BaseModel):
     wants_research: bool | None = None
     research_areas: list[str] = []
     # Scheduling.
-    courses_per_term: int | None = None
+    course_load: CourseLoad | None = None
     terms_away: list[TermAway] | None = None
     # Learning preferences.
     class_formats: list[ClassFormat] | None = None
@@ -178,7 +215,6 @@ class ProfileOut(BaseModel):
     answered: list[str] = []
     #: True when the planner chat left working information (Issue #17).
     has_working_notes: bool = False
-    feed_categories: list[str] = []
     interview: InterviewMemory = InterviewMemory()
     follows: Follows = Follows()
     #: Share of the General Information questions answered (the transfer-only questions are
@@ -211,7 +247,7 @@ class InterviewMemoryPatch(BaseModel):
 class ProfilePatch(BaseModel):
     """A partial update: only the fields sent are changed (`null` clears a field). `credits`
     and `taken_courses` replace the whole list. The registration form, the dashboard, the
-    dashboard agent's accepted answers, the feed and the Commons follow button send these."""
+    dashboard agent's accepted answers and the Commons follow button send these."""
 
     class_year: int | None = Field(default=None, ge=2020, le=2040)
     expected_graduation_term: TermId | None = None
@@ -224,13 +260,12 @@ class ProfilePatch(BaseModel):
     pace: Pace | None = None
     wants_research: bool | None = None
     research_areas: Items | None = None
-    courses_per_term: int | None = Field(default=None, ge=1, le=6)
+    course_load: CourseLoad | None = None
     terms_away: list[TermAway] | None = Field(default=None, max_length=MAX_TERMS_AWAY)
     class_formats: list[ClassFormat] | None = Field(default=None, max_length=4)
     theory_vs_application: int | None = Field(default=None, ge=1, le=10)
     #: The planner chat's working information (Markdown); `null` deletes it.
     working_notes: str | None = Field(default=None, max_length=MAX_WORKING_NOTES_CHARS)
-    feed_categories: Items | None = None
     interview: InterviewMemoryPatch | None = None
     follows: Follows | None = None
 
@@ -259,11 +294,6 @@ class ProfilePatch(BaseModel):
             seen.setdefault(item.term, item)
         return list(seen.values())
 
-    @field_validator("feed_categories")
-    @classmethod
-    def _categories(cls, value: list[str] | None) -> list[str] | None:
-        return None if value is None else clean_items(value, max_items=MAX_FEED_CATEGORIES)
-
     @field_validator("working_notes")
     @classmethod
     def _notes(cls, value: str | None) -> str | None:
@@ -278,113 +308,6 @@ class ProfilePatch(BaseModel):
         return Follows(threads=list(dict.fromkeys(value.threads)), courses=courses)
 
 
-# ------------------------------------------------------------------------------ routes
-
-Quarter = Literal["AU", "WI", "SP", "SU"]
-#: A route's estimated load (routes only; the student record has `courses_per_term`).
-Workload = Literal["light", "balanced", "intense"]
-CourseRole = Literal["core", "major", "minor", "elective", "humanities", "research"]
-RouteKind = Literal["major", "double_major", "major_minor", "exploratory", "custom"]
-RouteStatus = Literal["open", "chosen", "archived"]
-
-
-class RouteCourse(BaseModel):
-    code: str = Field(max_length=16)
-    #: Filled in by the server from the catalog (whatever is sent is replaced).
-    title: str = ""
-    year: int = Field(ge=1, le=4)
-    quarter: Quarter | None = None
-    role: CourseRole = "elective"
-    note: str = Field(default="", max_length=240)
-    #: The quarters the course is usually offered in (AU, WI, SP), filled by the server from
-    #: the catalog's offering patterns (whatever is sent is replaced).
-    offered: list[Quarter] = []
-
-    @field_validator("note", mode="before")
-    @classmethod
-    def _note(cls, value: object) -> object:
-        return squash(value)[:240] if isinstance(value, str) else value
-
-
-class Milestone(BaseModel):
-    when: str = Field(max_length=40)
-    text: str = Field(max_length=200)
-
-    @field_validator("when", "text", mode="before")
-    @classmethod
-    def _clean(cls, value: object) -> object:
-        return squash(value) if isinstance(value, str) else value
-
-
-class RouteFit(BaseModel):
-    """How well the route fits what the student said, 0..1 (an estimate, not a grade)."""
-
-    interests: float = Field(default=0.5, ge=0, le=1)
-    career: float = Field(default=0.5, ge=0, le=1)
-    humanities: float = Field(default=0.5, ge=0, le=1)
-    workload: Workload | None = None
-
-
-class RouteIn(BaseModel):
-    title: str = Field(min_length=1, max_length=80)
-    tagline: str = Field(default="", max_length=140)
-    summary: str = Field(default="", max_length=MAX_TEXT_CHARS)
-    kind: RouteKind = "custom"
-    program_ids: list[Annotated[str, Field(max_length=64)]] = Field(default=[], max_length=6)
-    courses: list[RouteCourse] = Field(default=[], max_length=40)
-    milestones: list[Milestone] = Field(default=[], max_length=12)
-    fit: RouteFit = RouteFit()
-    origin: Literal["ai", "user"] = "user"
-
-    @field_validator("title", "tagline", mode="before")
-    @classmethod
-    def _line(cls, value: object) -> object:
-        return squash(value) if isinstance(value, str) else value
-
-    @field_validator("summary", mode="before")
-    @classmethod
-    def _summary(cls, value: object) -> object:
-        return (clean_text(value, MAX_TEXT_CHARS * 2) or "") if isinstance(value, str) else value
-
-
-class RouteOut(RouteIn):
-    id: uuid.UUID
-    status: RouteStatus
-    position: int
-    note: str | None = None
-    created_day: dt.date
-    updated_day: dt.date
-    programs: list[ProgramRef] = []
-
-
-class RouteList(BaseModel):
-    items: list[RouteOut]
-    #: The chosen route, if the student chose one ("keeping options open" otherwise).
-    chosen_id: uuid.UUID | None = None
-    max_routes: int = MAX_ROUTES
-
-
-class RoutePatch(BaseModel):
-    """`status: chosen` makes any other chosen route `open`; `open` on the chosen route keeps
-    the options open."""
-
-    status: RouteStatus | None = None
-    title: str | None = Field(default=None, min_length=1, max_length=80)
-    tagline: str | None = Field(default=None, max_length=140)
-    note: str | None = Field(default=None, max_length=MAX_TEXT_CHARS * 2)
-    position: int | None = Field(default=None, ge=0, le=999)
-
-    @field_validator("title", "tagline", mode="before")
-    @classmethod
-    def _line(cls, value: object) -> object:
-        return squash(value) if isinstance(value, str) else value
-
-    @field_validator("note")
-    @classmethod
-    def _note(cls, value: str | None) -> str | None:
-        return clean_text(value)
-
-
 # ------------------------------------------------------------------------------ agents
 
 
@@ -395,16 +318,6 @@ class InterviewRequest(BaseModel):
     mode: Literal["start", "reply", "welcome_back"] = "start"
     message: str | None = Field(default=None, max_length=MAX_TURN_CHARS)
     history: list[InterviewTurn] = Field(default=[], max_length=30)
-
-
-class RoutesRequest(BaseModel):
-    count: int = Field(default=3, ge=1, le=4)
-    #: e.g. "more humanities", "a lighter load".
-    focus: str | None = Field(default=None, max_length=200)
-    #: Titles of routes the student already has, so the drafts differ from them.
-    keep_existing_titles: list[Annotated[str, Field(max_length=80)]] = Field(
-        default=[], max_length=MAX_ROUTES
-    )
 
 
 class CourseMention(BaseModel):
@@ -445,14 +358,13 @@ class InterviewTurnEvent(BaseModel):
     #: True when the deterministic guide wrote this turn (no AI).
     fallback: bool = False
 
-
-class RouteDraftEvent(BaseModel):
-    """One drafted route (not saved: POST /me/routes keeps it)."""
-
-    type: Literal["route"] = "route"
-    route: RouteIn
-    programs: list[ProgramRef] = []
-    fallback: bool = False
+    @field_serializer("proposed", mode="wrap")
+    def _only_the_answer(self, patch, handler):
+        """`proposed` without the fields it does not set. The browser PATCHes it as it is when the
+        student accepts it, and a null in a PATCH clears that field: with every field of
+        ProfilePatch sent as null, each accepted answer cleared all the others (Richard's
+        report, 2026-11-25). No return annotation, so the API schema stays ProfilePatch."""
+        return {key: value for key, value in handler(patch).items() if value is not None}
 
 
 class ProfileDoneEvent(BaseModel):
@@ -471,14 +383,3 @@ class InterviewEvent(
     ]
 ):
     """One Server-Sent Event `data:` payload from /agents/interview."""
-
-
-class RoutesEvent(
-    RootModel[
-        Annotated[
-            DashboardStepEvent | RouteDraftEvent | ProfileDoneEvent | ErrorEvent,
-            Field(discriminator="type"),
-        ]
-    ]
-):
-    """One Server-Sent Event `data:` payload from /agents/routes."""

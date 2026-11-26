@@ -220,314 +220,6 @@
         ],
         "title": "AgentEvent"
       },
-      "AskAnswerEvent": {
-        "properties": {
-          "ai": {
-            "default": true,
-            "title": "Ai",
-            "type": "boolean"
-          },
-          "citations": {
-            "default": [],
-            "items": {
-              "$ref": "#/components/schemas/AskCitation"
-            },
-            "title": "Citations",
-            "type": "array"
-          },
-          "courses": {
-            "default": [],
-            "items": {
-              "$ref": "#/components/schemas/AskCourse"
-            },
-            "title": "Courses",
-            "type": "array"
-          },
-          "followups": {
-            "default": [],
-            "items": {
-              "type": "string"
-            },
-            "title": "Followups",
-            "type": "array"
-          },
-          "text": {
-            "title": "Text",
-            "type": "string"
-          },
-          "type": {
-            "const": "answer",
-            "default": "answer",
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "text"
-        ],
-        "title": "AskAnswerEvent",
-        "type": "object"
-      },
-      "AskCitation": {
-        "description": "A source chip. `label` and `href` are built by the server from the id (never by the\nmodel): `href` is a path on this site, or an https page on uchicago.edu for `guide`.",
-        "properties": {
-          "href": {
-            "title": "Href",
-            "type": "string"
-          },
-          "id": {
-            "title": "Id",
-            "type": "string"
-          },
-          "kind": {
-            "enum": [
-              "course",
-              "program",
-              "post",
-              "summary",
-              "attribute",
-              "thread",
-              "guide"
-            ],
-            "title": "Kind",
-            "type": "string"
-          },
-          "label": {
-            "title": "Label",
-            "type": "string"
-          }
-        },
-        "required": [
-          "kind",
-          "id",
-          "label",
-          "href"
-        ],
-        "title": "AskCitation",
-        "type": "object"
-      },
-      "AskContext": {
-        "description": "Where the student asks from (the companion sends it; the Ask page usually does not).",
-        "properties": {
-          "course_code": {
-            "anyOf": [
-              {
-                "maxLength": 16,
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Course Code"
-          },
-          "page": {
-            "anyOf": [
-              {
-                "maxLength": 200,
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Page"
-          },
-          "thread_id": {
-            "anyOf": [
-              {
-                "minimum": 1.0,
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Thread Id"
-          }
-        },
-        "title": "AskContext",
-        "type": "object"
-      },
-      "AskCourse": {
-        "description": "A course the answer mentions; it exists in the catalog.",
-        "properties": {
-          "code": {
-            "title": "Code",
-            "type": "string"
-          },
-          "title": {
-            "title": "Title",
-            "type": "string"
-          }
-        },
-        "required": [
-          "code",
-          "title"
-        ],
-        "title": "AskCourse",
-        "type": "object"
-      },
-      "AskDoneEvent": {
-        "properties": {
-          "run_id": {
-            "title": "Run Id",
-            "type": "string"
-          },
-          "type": {
-            "const": "done",
-            "default": "done",
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "run_id"
-        ],
-        "title": "AskDoneEvent",
-        "type": "object"
-      },
-      "AskErrorEvent": {
-        "properties": {
-          "message": {
-            "title": "Message",
-            "type": "string"
-          },
-          "type": {
-            "const": "error",
-            "default": "error",
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "message"
-        ],
-        "title": "AskErrorEvent",
-        "type": "object"
-      },
-      "AskEvent": {
-        "description": "One Server-Sent Event `data:` payload from /agents/ask.",
-        "discriminator": {
-          "mapping": {
-            "answer": "#/components/schemas/AskAnswerEvent",
-            "done": "#/components/schemas/AskDoneEvent",
-            "error": "#/components/schemas/AskErrorEvent",
-            "step": "#/components/schemas/AskStepEvent"
-          },
-          "propertyName": "type"
-        },
-        "oneOf": [
-          {
-            "$ref": "#/components/schemas/AskStepEvent"
-          },
-          {
-            "$ref": "#/components/schemas/AskAnswerEvent"
-          },
-          {
-            "$ref": "#/components/schemas/AskDoneEvent"
-          },
-          {
-            "$ref": "#/components/schemas/AskErrorEvent"
-          }
-        ],
-        "title": "AskEvent"
-      },
-      "AskRequest": {
-        "properties": {
-          "context": {
-            "$ref": "#/components/schemas/AskContext",
-            "default": {}
-          },
-          "history": {
-            "default": [],
-            "items": {
-              "$ref": "#/components/schemas/AskTurn"
-            },
-            "maxItems": 12,
-            "title": "History",
-            "type": "array"
-          },
-          "message": {
-            "maxLength": 4000,
-            "minLength": 1,
-            "title": "Message",
-            "type": "string"
-          },
-          "mode": {
-            "default": "ask",
-            "enum": [
-              "ask",
-              "companion"
-            ],
-            "title": "Mode",
-            "type": "string"
-          }
-        },
-        "required": [
-          "message"
-        ],
-        "title": "AskRequest",
-        "type": "object"
-      },
-      "AskStepEvent": {
-        "description": "The agent called a tool (\"Searching the catalog for \u201cquantum\u201d\").",
-        "properties": {
-          "label": {
-            "title": "Label",
-            "type": "string"
-          },
-          "status": {
-            "enum": [
-              "started",
-              "done",
-              "failed"
-            ],
-            "title": "Status",
-            "type": "string"
-          },
-          "tool": {
-            "title": "Tool",
-            "type": "string"
-          },
-          "type": {
-            "const": "step",
-            "default": "step",
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "tool",
-          "label",
-          "status"
-        ],
-        "title": "AskStepEvent",
-        "type": "object"
-      },
-      "AskTurn": {
-        "properties": {
-          "role": {
-            "enum": [
-              "user",
-              "assistant"
-            ],
-            "title": "Role",
-            "type": "string"
-          },
-          "text": {
-            "maxLength": 4000,
-            "title": "Text",
-            "type": "string"
-          }
-        },
-        "required": [
-          "role",
-          "text"
-        ],
-        "title": "AskTurn",
-        "type": "object"
-      },
       "Assignment": {
         "additionalProperties": false,
         "properties": {
@@ -670,46 +362,6 @@
           "value"
         ],
         "title": "AttributeValue",
-        "type": "object"
-      },
-      "BookItem": {
-        "properties": {
-          "book": {
-            "$ref": "#/components/schemas/ShelfBook"
-          },
-          "category": {
-            "$ref": "#/components/schemas/FeedCategoryRef"
-          },
-          "courses": {
-            "items": {
-              "$ref": "#/components/schemas/CourseRef"
-            },
-            "title": "Courses",
-            "type": "array"
-          },
-          "id": {
-            "title": "Id",
-            "type": "string"
-          },
-          "kind": {
-            "const": "book",
-            "default": "book",
-            "title": "Kind",
-            "type": "string"
-          },
-          "reason": {
-            "title": "Reason",
-            "type": "string"
-          }
-        },
-        "required": [
-          "id",
-          "book",
-          "category",
-          "courses",
-          "reason"
-        ],
-        "title": "BookItem",
         "type": "object"
       },
       "BoundedPartsNode": {
@@ -858,6 +510,51 @@
           "apply_by"
         ],
         "title": "BxmsGoal",
+        "type": "object"
+      },
+      "CatalogBrowse": {
+        "description": "The rows the Catalog page shows before the student searches. Any row may be empty.",
+        "properties": {
+          "catalog_year": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Catalog Year"
+          },
+          "new_courses": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/NewCourse"
+            },
+            "title": "New Courses",
+            "type": "array"
+          },
+          "quotes": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/CommentItem"
+            },
+            "title": "Quotes",
+            "type": "array"
+          },
+          "spotlights": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/CourseItem"
+            },
+            "title": "Spotlights",
+            "type": "array"
+          }
+        },
+        "required": [
+          "catalog_year"
+        ],
+        "title": "CatalogBrowse",
         "type": "object"
       },
       "CatalogYearOut": {
@@ -3190,14 +2887,8 @@
         "type": "object"
       },
       "CourseItem": {
+        "description": "A course spotlight.",
         "properties": {
-          "books": {
-            "items": {
-              "$ref": "#/components/schemas/ShelfBook"
-            },
-            "title": "Books",
-            "type": "array"
-          },
           "category": {
             "$ref": "#/components/schemas/FeedCategoryRef"
           },
@@ -3259,13 +2950,6 @@
           "units": {
             "title": "Units",
             "type": "integer"
-          },
-          "words": {
-            "items": {
-              "type": "string"
-            },
-            "title": "Words",
-            "type": "array"
           }
         },
         "required": [
@@ -3277,9 +2961,7 @@
           "units",
           "excerpt",
           "core_tags",
-          "words",
           "illustration",
-          "books",
           "reason"
         ],
         "title": "CourseItem",
@@ -3442,6 +3124,23 @@
           "title"
         ],
         "title": "CourseMention",
+        "type": "object"
+      },
+      "CourseRatings": {
+        "description": "Student ratings pooled over every instructor's page of each course (logged in only).\nA course with no visible review has `n_reviews` 0.",
+        "properties": {
+          "ratings": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/RatingSummary"
+            },
+            "title": "Ratings",
+            "type": "object"
+          }
+        },
+        "required": [
+          "ratings"
+        ],
+        "title": "CourseRatings",
         "type": "object"
       },
       "CourseRef": {
@@ -3922,72 +3621,8 @@
         "title": "Expr",
         "type": "object"
       },
-      "FeedCategories": {
-        "properties": {
-          "categories": {
-            "items": {
-              "$ref": "#/components/schemas/FeedCategory"
-            },
-            "title": "Categories",
-            "type": "array"
-          },
-          "selected": {
-            "items": {
-              "type": "string"
-            },
-            "title": "Selected",
-            "type": "array"
-          }
-        },
-        "required": [
-          "categories",
-          "selected"
-        ],
-        "title": "FeedCategories",
-        "type": "object"
-      },
-      "FeedCategory": {
-        "properties": {
-          "blurb": {
-            "title": "Blurb",
-            "type": "string"
-          },
-          "course_count": {
-            "title": "Course Count",
-            "type": "integer"
-          },
-          "key": {
-            "title": "Key",
-            "type": "string"
-          },
-          "label": {
-            "title": "Label",
-            "type": "string"
-          },
-          "motif": {
-            "title": "Motif",
-            "type": "string"
-          },
-          "subjects": {
-            "items": {
-              "type": "string"
-            },
-            "title": "Subjects",
-            "type": "array"
-          }
-        },
-        "required": [
-          "key",
-          "label",
-          "motif",
-          "blurb",
-          "subjects",
-          "course_count"
-        ],
-        "title": "FeedCategory",
-        "type": "object"
-      },
       "FeedCategoryRef": {
+        "description": "A family of subjects (`api.feed.categories`), with the motif of its generated art.",
         "properties": {
           "key": {
             "title": "Key",
@@ -4008,160 +3643,6 @@
           "motif"
         ],
         "title": "FeedCategoryRef",
-        "type": "object"
-      },
-      "FeedNotes": {
-        "properties": {
-          "ai": {
-            "title": "Ai",
-            "type": "boolean"
-          },
-          "headline": {
-            "title": "Headline",
-            "type": "string"
-          },
-          "notes": {
-            "additionalProperties": {
-              "type": "string"
-            },
-            "title": "Notes",
-            "type": "object"
-          }
-        },
-        "required": [
-          "headline",
-          "notes",
-          "ai"
-        ],
-        "title": "FeedNotes",
-        "type": "object"
-      },
-      "FeedNotesRequest": {
-        "properties": {
-          "categories": {
-            "anyOf": [
-              {
-                "maxLength": 400,
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Categories"
-          },
-          "item_ids": {
-            "items": {
-              "maxLength": 96,
-              "minLength": 3,
-              "type": "string"
-            },
-            "maxItems": 12,
-            "minItems": 1,
-            "title": "Item Ids",
-            "type": "array"
-          },
-          "tab": {
-            "default": "for_you",
-            "enum": [
-              "for_you",
-              "explore",
-              "following"
-            ],
-            "title": "Tab",
-            "type": "string"
-          }
-        },
-        "required": [
-          "item_ids"
-        ],
-        "title": "FeedNotesRequest",
-        "type": "object"
-      },
-      "FeedPage": {
-        "properties": {
-          "categories_applied": {
-            "items": {
-              "type": "string"
-            },
-            "title": "Categories Applied",
-            "type": "array"
-          },
-          "headline": {
-            "title": "Headline",
-            "type": "string"
-          },
-          "items": {
-            "items": {
-              "discriminator": {
-                "mapping": {
-                  "book": "#/components/schemas/BookItem",
-                  "comment": "#/components/schemas/CommentItem",
-                  "course": "#/components/schemas/CourseItem",
-                  "program": "#/components/schemas/ProgramItem",
-                  "question": "#/components/schemas/QuestionItem",
-                  "words": "#/components/schemas/WordsItem"
-                },
-                "propertyName": "kind"
-              },
-              "oneOf": [
-                {
-                  "$ref": "#/components/schemas/CourseItem"
-                },
-                {
-                  "$ref": "#/components/schemas/CommentItem"
-                },
-                {
-                  "$ref": "#/components/schemas/BookItem"
-                },
-                {
-                  "$ref": "#/components/schemas/WordsItem"
-                },
-                {
-                  "$ref": "#/components/schemas/ProgramItem"
-                },
-                {
-                  "$ref": "#/components/schemas/QuestionItem"
-                }
-              ]
-            },
-            "title": "Items",
-            "type": "array"
-          },
-          "next_cursor": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Next Cursor"
-          },
-          "personalized": {
-            "title": "Personalized",
-            "type": "boolean"
-          },
-          "tab": {
-            "enum": [
-              "for_you",
-              "explore",
-              "following"
-            ],
-            "title": "Tab",
-            "type": "string"
-          }
-        },
-        "required": [
-          "tab",
-          "items",
-          "next_cursor",
-          "categories_applied",
-          "headline",
-          "personalized"
-        ],
-        "title": "FeedPage",
         "type": "object"
       },
       "Follows": {
@@ -4187,6 +3668,87 @@
           }
         },
         "title": "Follows",
+        "type": "object"
+      },
+      "ForumDiscussionItem": {
+        "description": "A Commons question in the list, with the AI's short answer under it (D1 option A).",
+        "properties": {
+          "ai_answer_html": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ai Answer Html"
+          },
+          "thread": {
+            "$ref": "#/components/schemas/CommonsThreadSummary"
+          },
+          "type": {
+            "const": "discussion",
+            "default": "discussion",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "thread"
+        ],
+        "title": "ForumDiscussionItem",
+        "type": "object"
+      },
+      "ForumItemList": {
+        "properties": {
+          "items": {
+            "items": {
+              "discriminator": {
+                "mapping": {
+                  "discussion": "#/components/schemas/ForumDiscussionItem",
+                  "review": "#/components/schemas/ForumReviewItem"
+                },
+                "propertyName": "type"
+              },
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/ForumReviewItem"
+                },
+                {
+                  "$ref": "#/components/schemas/ForumDiscussionItem"
+                }
+              ]
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Cursor"
+          },
+          "reviews_hidden": {
+            "default": false,
+            "title": "Reviews Hidden",
+            "type": "boolean"
+          },
+          "total": {
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "total"
+        ],
+        "title": "ForumItemList",
         "type": "object"
       },
       "ForumPageOut": {
@@ -4345,6 +3907,243 @@
           "status"
         ],
         "title": "ForumReportOut",
+        "type": "object"
+      },
+      "ForumReviewItem": {
+        "description": "A course review in the list. Only logged-in readers get these.",
+        "properties": {
+          "course": {
+            "$ref": "#/components/schemas/CommonsCourse"
+          },
+          "created_day": {
+            "format": "date",
+            "title": "Created Day",
+            "type": "string"
+          },
+          "difficulty": {
+            "title": "Difficulty",
+            "type": "integer"
+          },
+          "edited_day": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Edited Day"
+          },
+          "excerpt": {
+            "title": "Excerpt",
+            "type": "string"
+          },
+          "handle": {
+            "title": "Handle",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "instructor": {
+            "$ref": "#/components/schemas/InstructorSummary"
+          },
+          "is_mine": {
+            "default": false,
+            "title": "Is Mine",
+            "type": "boolean"
+          },
+          "my_vote": {
+            "default": 0,
+            "enum": [
+              -1,
+              0,
+              1
+            ],
+            "title": "My Vote",
+            "type": "integer"
+          },
+          "n_comments": {
+            "title": "N Comments",
+            "type": "integer"
+          },
+          "overall": {
+            "title": "Overall",
+            "type": "integer"
+          },
+          "page_id": {
+            "title": "Page Id",
+            "type": "integer"
+          },
+          "score": {
+            "title": "Score",
+            "type": "integer"
+          },
+          "term_taken": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Term Taken"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          },
+          "type": {
+            "const": "review",
+            "default": "review",
+            "title": "Type",
+            "type": "string"
+          },
+          "workload_hours": {
+            "title": "Workload Hours",
+            "type": "number"
+          },
+          "would_recommend": {
+            "title": "Would Recommend",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "page_id",
+          "course",
+          "instructor",
+          "excerpt",
+          "handle",
+          "overall",
+          "difficulty",
+          "workload_hours",
+          "would_recommend",
+          "score",
+          "n_comments",
+          "created_day"
+        ],
+        "title": "ForumReviewItem",
+        "type": "object"
+      },
+      "ForumStats": {
+        "description": "Ratings of reviews posted in the period, for logged-in students only.",
+        "properties": {
+          "humanities": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/RankedEntry"
+            },
+            "title": "Humanities",
+            "type": "array"
+          },
+          "instructors": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/RankedEntry"
+            },
+            "title": "Instructors",
+            "type": "array"
+          },
+          "majors": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/MajorRanking"
+            },
+            "title": "Majors",
+            "type": "array"
+          },
+          "min_reviews": {
+            "title": "Min Reviews",
+            "type": "integer"
+          },
+          "n_courses": {
+            "title": "N Courses",
+            "type": "integer"
+          },
+          "n_reviews": {
+            "title": "N Reviews",
+            "type": "integer"
+          },
+          "period": {
+            "enum": [
+              "quarter",
+              "year"
+            ],
+            "title": "Period",
+            "type": "string"
+          },
+          "prior_mean": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Prior Mean"
+          },
+          "prior_weight": {
+            "title": "Prior Weight",
+            "type": "integer"
+          },
+          "recommend_rate": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Recommend Rate"
+          },
+          "since": {
+            "format": "date",
+            "title": "Since",
+            "type": "string"
+          },
+          "top_courses": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/RankedEntry"
+            },
+            "title": "Top Courses",
+            "type": "array"
+          },
+          "workload_hours": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Workload Hours"
+          }
+        },
+        "required": [
+          "period",
+          "since",
+          "prior_weight",
+          "min_reviews",
+          "n_reviews",
+          "n_courses"
+        ],
+        "title": "ForumStats",
         "type": "object"
       },
       "ForumSummaryOut": {
@@ -6021,6 +5820,32 @@
         "title": "Login",
         "type": "object"
       },
+      "MajorRanking": {
+        "properties": {
+          "items": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/RankedEntry"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "program_id": {
+            "title": "Program Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "program_id",
+          "name"
+        ],
+        "title": "MajorRanking",
+        "type": "object"
+      },
       "MaxFrom": {
         "additionalProperties": false,
         "description": "At most `n` of the node's courses may match `selector` (\"at most 2 from outside CMSC\").\n\nWith `as_enrolled`, a course counts only when the code the student enrolled under matches\nthe selector's subject, number range and tags: a course cross-listed as CMSC 23500 /\nCMSC 33550 and taken as CMSC 33550 is not \"from the 20000 level\".",
@@ -6120,26 +5945,6 @@
           "text"
         ],
         "title": "MessageEvent",
-        "type": "object"
-      },
-      "Milestone": {
-        "properties": {
-          "text": {
-            "maxLength": 200,
-            "title": "Text",
-            "type": "string"
-          },
-          "when": {
-            "maxLength": 40,
-            "title": "When",
-            "type": "string"
-          }
-        },
-        "required": [
-          "when",
-          "text"
-        ],
-        "title": "Milestone",
         "type": "object"
       },
       "ModerationDecision": {
@@ -6442,6 +6247,79 @@
           "to_term"
         ],
         "title": "MoveOp",
+        "type": "object"
+      },
+      "NewCourse": {
+        "description": "A newly released course. `basis` says how it is known to be new: `listed` (a person put\nit in `data/catalog/new_courses.yaml`, with the quote that says so) or `catalog` (it is in\nthis catalog year and was not in the one before).",
+        "properties": {
+          "basis": {
+            "enum": [
+              "listed",
+              "catalog"
+            ],
+            "title": "Basis",
+            "type": "string"
+          },
+          "code": {
+            "title": "Code",
+            "type": "string"
+          },
+          "core_tags": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Core Tags",
+            "type": "array"
+          },
+          "excerpt": {
+            "default": "",
+            "title": "Excerpt",
+            "type": "string"
+          },
+          "reason": {
+            "title": "Reason",
+            "type": "string"
+          },
+          "source_quote": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Quote"
+          },
+          "source_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Url"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "units": {
+            "title": "Units",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "code",
+          "title",
+          "units",
+          "basis",
+          "reason"
+        ],
+        "title": "NewCourse",
         "type": "object"
       },
       "NodeProgress": {
@@ -8044,16 +7922,21 @@
             "title": "Completeness",
             "type": "number"
           },
-          "courses_per_term": {
+          "course_load": {
             "anyOf": [
               {
-                "type": "integer"
+                "enum": [
+                  "conservative",
+                  "normal",
+                  "ambitious"
+                ],
+                "type": "string"
               },
               {
                 "type": "null"
               }
             ],
-            "title": "Courses Per Term"
+            "title": "Course Load"
           },
           "credits": {
             "default": [],
@@ -8099,14 +7982,6 @@
               }
             ],
             "title": "Expected Graduation Term"
-          },
-          "feed_categories": {
-            "default": [],
-            "items": {
-              "type": "string"
-            },
-            "title": "Feed Categories",
-            "type": "array"
           },
           "follows": {
             "$ref": "#/components/schemas/Follows",
@@ -8253,7 +8128,7 @@
         "type": "object"
       },
       "ProfilePatch": {
-        "description": "A partial update: only the fields sent are changed (`null` clears a field). `credits`\nand `taken_courses` replace the whole list. The registration form, the dashboard, the\ndashboard agent's accepted answers, the feed and the Commons follow button send these.",
+        "description": "A partial update: only the fields sent are changed (`null` clears a field). `credits`\nand `taken_courses` replace the whole list. The registration form, the dashboard, the\ndashboard agent's accepted answers and the Commons follow button send these.",
         "properties": {
           "class_formats": {
             "anyOf": [
@@ -8289,18 +8164,21 @@
             ],
             "title": "Class Year"
           },
-          "courses_per_term": {
+          "course_load": {
             "anyOf": [
               {
-                "maximum": 6.0,
-                "minimum": 1.0,
-                "type": "integer"
+                "enum": [
+                  "conservative",
+                  "normal",
+                  "ambitious"
+                ],
+                "type": "string"
               },
               {
                 "type": "null"
               }
             ],
-            "title": "Courses Per Term"
+            "title": "Course Load"
           },
           "credits": {
             "anyOf": [
@@ -8353,21 +8231,6 @@
               }
             ],
             "title": "Expected Graduation Term"
-          },
-          "feed_categories": {
-            "anyOf": [
-              {
-                "items": {
-                  "maxLength": 200,
-                  "type": "string"
-                },
-                "type": "array"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Feed Categories"
           },
           "follows": {
             "anyOf": [
@@ -8677,57 +8540,6 @@
           "checksum"
         ],
         "title": "ProgramDetail",
-        "type": "object"
-      },
-      "ProgramItem": {
-        "properties": {
-          "department": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Department"
-          },
-          "id": {
-            "title": "Id",
-            "type": "string"
-          },
-          "kind": {
-            "const": "program",
-            "default": "program",
-            "title": "Kind",
-            "type": "string"
-          },
-          "name": {
-            "title": "Name",
-            "type": "string"
-          },
-          "program_id": {
-            "title": "Program Id",
-            "type": "string"
-          },
-          "reason": {
-            "title": "Reason",
-            "type": "string"
-          },
-          "type": {
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "id",
-          "program_id",
-          "name",
-          "type",
-          "department",
-          "reason"
-        ],
-        "title": "ProgramItem",
         "type": "object"
       },
       "ProgramRef": {
@@ -9054,6 +8866,11 @@
             ],
             "title": "Min"
           },
+          "optional": {
+            "default": false,
+            "title": "Optional",
+            "type": "boolean"
+          },
           "options": {
             "default": [],
             "items": {
@@ -9169,73 +8986,6 @@
         "title": "QuestionGroup",
         "type": "object"
       },
-      "QuestionItem": {
-        "description": "A Commons question that is waiting for an answer, or a recent one.",
-        "properties": {
-          "answered": {
-            "title": "Answered",
-            "type": "boolean"
-          },
-          "course": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/CourseRef"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "day": {
-            "format": "date",
-            "title": "Day",
-            "type": "string"
-          },
-          "href": {
-            "title": "Href",
-            "type": "string"
-          },
-          "id": {
-            "title": "Id",
-            "type": "string"
-          },
-          "kind": {
-            "const": "question",
-            "default": "question",
-            "title": "Kind",
-            "type": "string"
-          },
-          "reply_count": {
-            "title": "Reply Count",
-            "type": "integer"
-          },
-          "snippet": {
-            "title": "Snippet",
-            "type": "string"
-          },
-          "thread_id": {
-            "title": "Thread Id",
-            "type": "integer"
-          },
-          "title": {
-            "title": "Title",
-            "type": "string"
-          }
-        },
-        "required": [
-          "id",
-          "thread_id",
-          "title",
-          "snippet",
-          "course",
-          "reply_count",
-          "answered",
-          "href",
-          "day"
-        ],
-        "title": "QuestionItem",
-        "type": "object"
-      },
       "QuestionOption": {
         "properties": {
           "label": {
@@ -9302,6 +9052,56 @@
           "questions"
         ],
         "title": "QuestionSet",
+        "type": "object"
+      },
+      "RankedEntry": {
+        "description": "One line of a ranking. `score` is the Bayesian average of the overall rating\n(docs/SPEC.md \"Forum -> course attributes\", prior weight k = 5, prior mean the period's\naverage); only subjects with at least 3 reviews in the period are ranked.",
+        "properties": {
+          "detail": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Detail"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "mean": {
+            "title": "Mean",
+            "type": "number"
+          },
+          "n_reviews": {
+            "title": "N Reviews",
+            "type": "integer"
+          },
+          "rank": {
+            "title": "Rank",
+            "type": "integer"
+          },
+          "score": {
+            "title": "Score",
+            "type": "number"
+          }
+        },
+        "required": [
+          "rank",
+          "id",
+          "label",
+          "score",
+          "mean",
+          "n_reviews"
+        ],
+        "title": "RankedEntry",
         "type": "object"
       },
       "RatingSummary": {
@@ -9985,546 +9785,6 @@
         "title": "ReviewRatingIn",
         "type": "object"
       },
-      "RouteCourse": {
-        "properties": {
-          "code": {
-            "maxLength": 16,
-            "title": "Code",
-            "type": "string"
-          },
-          "note": {
-            "default": "",
-            "maxLength": 240,
-            "title": "Note",
-            "type": "string"
-          },
-          "offered": {
-            "default": [],
-            "items": {
-              "enum": [
-                "AU",
-                "WI",
-                "SP",
-                "SU"
-              ],
-              "type": "string"
-            },
-            "title": "Offered",
-            "type": "array"
-          },
-          "quarter": {
-            "anyOf": [
-              {
-                "enum": [
-                  "AU",
-                  "WI",
-                  "SP",
-                  "SU"
-                ],
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Quarter"
-          },
-          "role": {
-            "default": "elective",
-            "enum": [
-              "core",
-              "major",
-              "minor",
-              "elective",
-              "humanities",
-              "research"
-            ],
-            "title": "Role",
-            "type": "string"
-          },
-          "title": {
-            "default": "",
-            "title": "Title",
-            "type": "string"
-          },
-          "year": {
-            "maximum": 4.0,
-            "minimum": 1.0,
-            "title": "Year",
-            "type": "integer"
-          }
-        },
-        "required": [
-          "code",
-          "year"
-        ],
-        "title": "RouteCourse",
-        "type": "object"
-      },
-      "RouteDraftEvent": {
-        "description": "One drafted route (not saved: POST /me/routes keeps it).",
-        "properties": {
-          "fallback": {
-            "default": false,
-            "title": "Fallback",
-            "type": "boolean"
-          },
-          "programs": {
-            "default": [],
-            "items": {
-              "$ref": "#/components/schemas/ProgramRef"
-            },
-            "title": "Programs",
-            "type": "array"
-          },
-          "route": {
-            "$ref": "#/components/schemas/RouteIn"
-          },
-          "type": {
-            "const": "route",
-            "default": "route",
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "route"
-        ],
-        "title": "RouteDraftEvent",
-        "type": "object"
-      },
-      "RouteFit": {
-        "description": "How well the route fits what the student said, 0..1 (an estimate, not a grade).",
-        "properties": {
-          "career": {
-            "default": 0.5,
-            "maximum": 1.0,
-            "minimum": 0.0,
-            "title": "Career",
-            "type": "number"
-          },
-          "humanities": {
-            "default": 0.5,
-            "maximum": 1.0,
-            "minimum": 0.0,
-            "title": "Humanities",
-            "type": "number"
-          },
-          "interests": {
-            "default": 0.5,
-            "maximum": 1.0,
-            "minimum": 0.0,
-            "title": "Interests",
-            "type": "number"
-          },
-          "workload": {
-            "anyOf": [
-              {
-                "enum": [
-                  "light",
-                  "balanced",
-                  "intense"
-                ],
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Workload"
-          }
-        },
-        "title": "RouteFit",
-        "type": "object"
-      },
-      "RouteIn": {
-        "properties": {
-          "courses": {
-            "default": [],
-            "items": {
-              "$ref": "#/components/schemas/RouteCourse"
-            },
-            "maxItems": 40,
-            "title": "Courses",
-            "type": "array"
-          },
-          "fit": {
-            "$ref": "#/components/schemas/RouteFit",
-            "default": {
-              "career": 0.5,
-              "humanities": 0.5,
-              "interests": 0.5
-            }
-          },
-          "kind": {
-            "default": "custom",
-            "enum": [
-              "major",
-              "double_major",
-              "major_minor",
-              "exploratory",
-              "custom"
-            ],
-            "title": "Kind",
-            "type": "string"
-          },
-          "milestones": {
-            "default": [],
-            "items": {
-              "$ref": "#/components/schemas/Milestone"
-            },
-            "maxItems": 12,
-            "title": "Milestones",
-            "type": "array"
-          },
-          "origin": {
-            "default": "user",
-            "enum": [
-              "ai",
-              "user"
-            ],
-            "title": "Origin",
-            "type": "string"
-          },
-          "program_ids": {
-            "default": [],
-            "items": {
-              "maxLength": 64,
-              "type": "string"
-            },
-            "maxItems": 6,
-            "title": "Program Ids",
-            "type": "array"
-          },
-          "summary": {
-            "default": "",
-            "maxLength": 1200,
-            "title": "Summary",
-            "type": "string"
-          },
-          "tagline": {
-            "default": "",
-            "maxLength": 140,
-            "title": "Tagline",
-            "type": "string"
-          },
-          "title": {
-            "maxLength": 80,
-            "minLength": 1,
-            "title": "Title",
-            "type": "string"
-          }
-        },
-        "required": [
-          "title"
-        ],
-        "title": "RouteIn",
-        "type": "object"
-      },
-      "RouteList": {
-        "properties": {
-          "chosen_id": {
-            "anyOf": [
-              {
-                "format": "uuid",
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Chosen Id"
-          },
-          "items": {
-            "items": {
-              "$ref": "#/components/schemas/RouteOut"
-            },
-            "title": "Items",
-            "type": "array"
-          },
-          "max_routes": {
-            "default": 12,
-            "title": "Max Routes",
-            "type": "integer"
-          }
-        },
-        "required": [
-          "items"
-        ],
-        "title": "RouteList",
-        "type": "object"
-      },
-      "RouteOut": {
-        "properties": {
-          "courses": {
-            "default": [],
-            "items": {
-              "$ref": "#/components/schemas/RouteCourse"
-            },
-            "maxItems": 40,
-            "title": "Courses",
-            "type": "array"
-          },
-          "created_day": {
-            "format": "date",
-            "title": "Created Day",
-            "type": "string"
-          },
-          "fit": {
-            "$ref": "#/components/schemas/RouteFit",
-            "default": {
-              "career": 0.5,
-              "humanities": 0.5,
-              "interests": 0.5
-            }
-          },
-          "id": {
-            "format": "uuid",
-            "title": "Id",
-            "type": "string"
-          },
-          "kind": {
-            "default": "custom",
-            "enum": [
-              "major",
-              "double_major",
-              "major_minor",
-              "exploratory",
-              "custom"
-            ],
-            "title": "Kind",
-            "type": "string"
-          },
-          "milestones": {
-            "default": [],
-            "items": {
-              "$ref": "#/components/schemas/Milestone"
-            },
-            "maxItems": 12,
-            "title": "Milestones",
-            "type": "array"
-          },
-          "note": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Note"
-          },
-          "origin": {
-            "default": "user",
-            "enum": [
-              "ai",
-              "user"
-            ],
-            "title": "Origin",
-            "type": "string"
-          },
-          "position": {
-            "title": "Position",
-            "type": "integer"
-          },
-          "program_ids": {
-            "default": [],
-            "items": {
-              "maxLength": 64,
-              "type": "string"
-            },
-            "maxItems": 6,
-            "title": "Program Ids",
-            "type": "array"
-          },
-          "programs": {
-            "default": [],
-            "items": {
-              "$ref": "#/components/schemas/ProgramRef"
-            },
-            "title": "Programs",
-            "type": "array"
-          },
-          "status": {
-            "enum": [
-              "open",
-              "chosen",
-              "archived"
-            ],
-            "title": "Status",
-            "type": "string"
-          },
-          "summary": {
-            "default": "",
-            "maxLength": 1200,
-            "title": "Summary",
-            "type": "string"
-          },
-          "tagline": {
-            "default": "",
-            "maxLength": 140,
-            "title": "Tagline",
-            "type": "string"
-          },
-          "title": {
-            "maxLength": 80,
-            "minLength": 1,
-            "title": "Title",
-            "type": "string"
-          },
-          "updated_day": {
-            "format": "date",
-            "title": "Updated Day",
-            "type": "string"
-          }
-        },
-        "required": [
-          "title",
-          "id",
-          "status",
-          "position",
-          "created_day",
-          "updated_day"
-        ],
-        "title": "RouteOut",
-        "type": "object"
-      },
-      "RoutePatch": {
-        "description": "`status: chosen` makes any other chosen route `open`; `open` on the chosen route keeps\nthe options open.",
-        "properties": {
-          "note": {
-            "anyOf": [
-              {
-                "maxLength": 2400,
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Note"
-          },
-          "position": {
-            "anyOf": [
-              {
-                "maximum": 999.0,
-                "minimum": 0.0,
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Position"
-          },
-          "status": {
-            "anyOf": [
-              {
-                "enum": [
-                  "open",
-                  "chosen",
-                  "archived"
-                ],
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Status"
-          },
-          "tagline": {
-            "anyOf": [
-              {
-                "maxLength": 140,
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Tagline"
-          },
-          "title": {
-            "anyOf": [
-              {
-                "maxLength": 80,
-                "minLength": 1,
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Title"
-          }
-        },
-        "title": "RoutePatch",
-        "type": "object"
-      },
-      "RoutesEvent": {
-        "description": "One Server-Sent Event `data:` payload from /agents/routes.",
-        "discriminator": {
-          "mapping": {
-            "done": "#/components/schemas/ProfileDoneEvent",
-            "error": "#/components/schemas/ErrorEvent",
-            "route": "#/components/schemas/RouteDraftEvent",
-            "step": "#/components/schemas/DashboardStepEvent"
-          },
-          "propertyName": "type"
-        },
-        "oneOf": [
-          {
-            "$ref": "#/components/schemas/DashboardStepEvent"
-          },
-          {
-            "$ref": "#/components/schemas/RouteDraftEvent"
-          },
-          {
-            "$ref": "#/components/schemas/ProfileDoneEvent"
-          },
-          {
-            "$ref": "#/components/schemas/ErrorEvent"
-          }
-        ],
-        "title": "RoutesEvent"
-      },
-      "RoutesRequest": {
-        "properties": {
-          "count": {
-            "default": 3,
-            "maximum": 4.0,
-            "minimum": 1.0,
-            "title": "Count",
-            "type": "integer"
-          },
-          "focus": {
-            "anyOf": [
-              {
-                "maxLength": 200,
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Focus"
-          },
-          "keep_existing_titles": {
-            "default": [],
-            "items": {
-              "maxLength": 80,
-              "type": "string"
-            },
-            "maxItems": 12,
-            "title": "Keep Existing Titles",
-            "type": "array"
-          }
-        },
-        "title": "RoutesRequest",
-        "type": "object"
-      },
       "ScaleEnds": {
         "properties": {
           "max": {
@@ -10846,44 +10106,6 @@
         "title": "ShareLimit",
         "type": "object"
       },
-      "ShelfBook": {
-        "properties": {
-          "author": {
-            "title": "Author",
-            "type": "string"
-          },
-          "id": {
-            "title": "Id",
-            "type": "string"
-          },
-          "slug": {
-            "title": "Slug",
-            "type": "string"
-          },
-          "title": {
-            "title": "Title",
-            "type": "string"
-          },
-          "when": {
-            "title": "When",
-            "type": "string"
-          },
-          "year": {
-            "title": "Year",
-            "type": "integer"
-          }
-        },
-        "required": [
-          "id",
-          "slug",
-          "title",
-          "author",
-          "year",
-          "when"
-        ],
-        "title": "ShelfBook",
-        "type": "object"
-      },
       "SlotNode": {
         "additionalProperties": false,
         "description": "One specific course or alternatives.",
@@ -11161,7 +10383,7 @@
         "type": "object"
       },
       "TakenCourse": {
-        "description": "A UChicago course the student took or is taking.",
+        "description": "A UChicago course the student took or is taking. `grading`, `units` and `locked` are the\nplan item's (planner_core `PlanItem`): a rule that needs a letter grade does not count a\nPass/Fail course, so every editor sends them back unchanged.",
         "properties": {
           "course": {
             "maxLength": 16,
@@ -11181,6 +10403,20 @@
             ],
             "title": "Grade"
           },
+          "grading": {
+            "default": "letter",
+            "enum": [
+              "letter",
+              "pass_fail"
+            ],
+            "title": "Grading",
+            "type": "string"
+          },
+          "locked": {
+            "default": false,
+            "title": "Locked",
+            "type": "boolean"
+          },
           "status": {
             "default": "completed",
             "enum": [
@@ -11194,6 +10430,18 @@
             "pattern": "^\\d{4}-(AU|WI|SP|SU)$",
             "title": "Term",
             "type": "string"
+          },
+          "units": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Units"
           }
         },
         "required": [
@@ -11223,6 +10471,20 @@
             ],
             "title": "Grade"
           },
+          "grading": {
+            "default": "letter",
+            "enum": [
+              "letter",
+              "pass_fail"
+            ],
+            "title": "Grading",
+            "type": "string"
+          },
+          "locked": {
+            "default": false,
+            "title": "Locked",
+            "type": "boolean"
+          },
           "status": {
             "default": "completed",
             "enum": [
@@ -11241,6 +10503,18 @@
             "default": "",
             "title": "Title",
             "type": "string"
+          },
+          "units": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Units"
           }
         },
         "required": [
@@ -11471,164 +10745,6 @@
           }
         },
         "title": "UnlockOp",
-        "type": "object"
-      },
-      "UpdateItem": {
-        "description": "One new thing on Quarterly that concerns the student. Text is plain (no markdown) and\nscrubbed of emails and phone numbers; `href` is a path on this site.",
-        "properties": {
-          "course_code": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Course Code"
-          },
-          "day": {
-            "format": "date",
-            "title": "Day",
-            "type": "string"
-          },
-          "href": {
-            "title": "Href",
-            "type": "string"
-          },
-          "id": {
-            "title": "Id",
-            "type": "integer"
-          },
-          "is_new": {
-            "title": "Is New",
-            "type": "boolean"
-          },
-          "kind": {
-            "enum": [
-              "thread",
-              "reply",
-              "review",
-              "discussion",
-              "comment"
-            ],
-            "title": "Kind",
-            "type": "string"
-          },
-          "reason": {
-            "title": "Reason",
-            "type": "string"
-          },
-          "snippet": {
-            "title": "Snippet",
-            "type": "string"
-          },
-          "title": {
-            "title": "Title",
-            "type": "string"
-          }
-        },
-        "required": [
-          "kind",
-          "id",
-          "title",
-          "snippet",
-          "href",
-          "day",
-          "reason",
-          "is_new"
-        ],
-        "title": "UpdateItem",
-        "type": "object"
-      },
-      "UpdatesOut": {
-        "properties": {
-          "digest": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Digest"
-          },
-          "digest_ai": {
-            "default": false,
-            "title": "Digest Ai",
-            "type": "boolean"
-          },
-          "items": {
-            "default": [],
-            "items": {
-              "$ref": "#/components/schemas/UpdateItem"
-            },
-            "title": "Items",
-            "type": "array"
-          },
-          "unread": {
-            "default": 0,
-            "title": "Unread",
-            "type": "integer"
-          }
-        },
-        "title": "UpdatesOut",
-        "type": "object"
-      },
-      "UpdatesSeen": {
-        "description": "High-water marks: the newest id the student has seen of each kind of item. In a request\na missing mark means \"the newest there is now\"; marks never move backwards.",
-        "properties": {
-          "comment": {
-            "anyOf": [
-              {
-                "minimum": 0.0,
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Comment"
-          },
-          "post": {
-            "anyOf": [
-              {
-                "minimum": 0.0,
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Post"
-          },
-          "reply": {
-            "anyOf": [
-              {
-                "minimum": 0.0,
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Reply"
-          },
-          "thread": {
-            "anyOf": [
-              {
-                "minimum": 0.0,
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Thread"
-          }
-        },
-        "title": "UpdatesSeen",
         "type": "object"
       },
       "ValidationError": {
@@ -11918,62 +11034,6 @@
           "cloud_cover"
         ],
         "title": "WeatherOut",
-        "type": "object"
-      },
-      "WeightedWord": {
-        "properties": {
-          "text": {
-            "title": "Text",
-            "type": "string"
-          },
-          "weight": {
-            "maximum": 5.0,
-            "minimum": 1.0,
-            "title": "Weight",
-            "type": "integer"
-          }
-        },
-        "required": [
-          "text",
-          "weight"
-        ],
-        "title": "WeightedWord",
-        "type": "object"
-      },
-      "WordsItem": {
-        "properties": {
-          "category": {
-            "$ref": "#/components/schemas/FeedCategoryRef"
-          },
-          "id": {
-            "title": "Id",
-            "type": "string"
-          },
-          "kind": {
-            "const": "words",
-            "default": "words",
-            "title": "Kind",
-            "type": "string"
-          },
-          "label": {
-            "title": "Label",
-            "type": "string"
-          },
-          "words": {
-            "items": {
-              "$ref": "#/components/schemas/WeightedWord"
-            },
-            "title": "Words",
-            "type": "array"
-          }
-        },
-        "required": [
-          "id",
-          "category",
-          "label",
-          "words"
-        ],
-        "title": "WordsItem",
         "type": "object"
       },
       "WorkloadHoursGoal": {
@@ -12732,48 +11792,6 @@
         ]
       }
     },
-    "/agents/ask": {
-      "post": {
-        "operationId": "ask_agents_ask_post",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AskRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AskEvent"
-                }
-              },
-              "text/event-stream": {}
-            },
-            "description": "Server-Sent Events; each `data:` line is one AskEvent as JSON."
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "summary": "Ask",
-        "tags": [
-          "ask"
-        ]
-      }
-    },
     "/agents/chat": {
       "post": {
         "operationId": "chat_agents_chat_post",
@@ -12856,47 +11874,6 @@
         "summary": "Chat History",
         "tags": [
           "agents"
-        ]
-      }
-    },
-    "/agents/feed-notes": {
-      "post": {
-        "operationId": "post_feed_notes_agents_feed_notes_post",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/FeedNotesRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FeedNotes"
-                }
-              }
-            },
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "summary": "Post Feed Notes",
-        "tags": [
-          "feed"
         ]
       }
     },
@@ -12989,59 +11966,6 @@
           }
         },
         "summary": "Interview",
-        "tags": [
-          "profile",
-          "agents"
-        ]
-      }
-    },
-    "/agents/routes": {
-      "post": {
-        "operationId": "draft_routes_agents_routes_post",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RoutesRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RoutesEvent"
-                }
-              },
-              "text/event-stream": {}
-            },
-            "description": "Server-Sent Events; each `data:` line is one RoutesEvent as JSON."
-          },
-          "401": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorOut"
-                }
-              }
-            },
-            "description": "Not logged in"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "summary": "Draft Routes",
         "tags": [
           "profile",
           "agents"
@@ -13432,6 +12356,27 @@
           }
         },
         "summary": "List Catalog Years",
+        "tags": [
+          "catalog"
+        ]
+      }
+    },
+    "/catalog/browse": {
+      "get": {
+        "operationId": "browse_catalog_browse_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CatalogBrowse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Browse",
         "tags": [
           "catalog"
         ]
@@ -14279,6 +13224,61 @@
         ]
       }
     },
+    "/course-ratings": {
+      "get": {
+        "operationId": "course_ratings_course_ratings_get",
+        "parameters": [
+          {
+            "description": "Comma-separated course codes",
+            "in": "query",
+            "name": "codes",
+            "required": true,
+            "schema": {
+              "description": "Comma-separated course codes",
+              "maxLength": 1200,
+              "title": "Codes",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CourseRatings"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Not logged in"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Course Ratings",
+        "tags": [
+          "catalog"
+        ]
+      }
+    },
     "/courses": {
       "get": {
         "operationId": "search_courses_courses_get",
@@ -14551,123 +13551,6 @@
         ]
       }
     },
-    "/feed": {
-      "get": {
-        "operationId": "get_feed_feed_get",
-        "parameters": [
-          {
-            "in": "query",
-            "name": "tab",
-            "required": false,
-            "schema": {
-              "default": "for_you",
-              "enum": [
-                "for_you",
-                "explore",
-                "following"
-              ],
-              "title": "Tab",
-              "type": "string"
-            }
-          },
-          {
-            "description": "Comma-separated category keys; absent = the profile's saved focus.",
-            "in": "query",
-            "name": "categories",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "maxLength": 400,
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "description": "Comma-separated category keys; absent = the profile's saved focus.",
-              "title": "Categories"
-            }
-          },
-          {
-            "in": "query",
-            "name": "cursor",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "maxLength": 200,
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Cursor"
-            }
-          },
-          {
-            "in": "query",
-            "name": "limit",
-            "required": false,
-            "schema": {
-              "default": 12,
-              "maximum": 24,
-              "minimum": 1,
-              "title": "Limit",
-              "type": "integer"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FeedPage"
-                }
-              }
-            },
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "summary": "Get Feed",
-        "tags": [
-          "feed"
-        ]
-      }
-    },
-    "/feed/categories": {
-      "get": {
-        "operationId": "get_categories_feed_categories_get",
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FeedCategories"
-                }
-              }
-            },
-            "description": "Successful Response"
-          }
-        },
-        "summary": "Get Categories",
-        "tags": [
-          "feed"
-        ]
-      }
-    },
     "/forum/courses/{code}": {
       "get": {
         "operationId": "course_forum_forum_courses__code__get",
@@ -14705,6 +13588,183 @@
           }
         },
         "summary": "Course Forum",
+        "tags": [
+          "forum"
+        ]
+      }
+    },
+    "/forum/items": {
+      "get": {
+        "operationId": "list_items_forum_items_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "type",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "review",
+                    "discussion"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Type"
+            }
+          },
+          {
+            "in": "query",
+            "name": "course",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 16,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Course"
+            }
+          },
+          {
+            "in": "query",
+            "name": "instructor",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 128,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Instructor"
+            }
+          },
+          {
+            "in": "query",
+            "name": "subject",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 8,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Subject"
+            }
+          },
+          {
+            "in": "query",
+            "name": "tag",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 24,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Tag"
+            }
+          },
+          {
+            "in": "query",
+            "name": "q",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 120,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Q"
+            }
+          },
+          {
+            "in": "query",
+            "name": "mine",
+            "required": false,
+            "schema": {
+              "default": false,
+              "title": "Mine",
+              "type": "boolean"
+            }
+          },
+          {
+            "in": "query",
+            "name": "cursor",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 32,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Cursor"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 20,
+              "maximum": 30,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForumItemList"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "List Items",
         "tags": [
           "forum"
         ]
@@ -15189,6 +14249,53 @@
         ]
       }
     },
+    "/forum/stats": {
+      "get": {
+        "operationId": "forum_stats_forum_stats_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "period",
+            "required": false,
+            "schema": {
+              "default": "quarter",
+              "enum": [
+                "quarter",
+                "year"
+              ],
+              "title": "Period",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForumStats"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Forum Stats",
+        "tags": [
+          "forum"
+        ]
+      }
+    },
     "/forum/votes": {
       "post": {
         "operationId": "vote_forum_votes_post",
@@ -15494,314 +14601,6 @@
         "summary": "Export Student Md",
         "tags": [
           "profile"
-        ]
-      }
-    },
-    "/me/routes": {
-      "get": {
-        "operationId": "list_routes_me_routes_get",
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RouteList"
-                }
-              }
-            },
-            "description": "Successful Response"
-          },
-          "401": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorOut"
-                }
-              }
-            },
-            "description": "Not logged in"
-          }
-        },
-        "summary": "List Routes",
-        "tags": [
-          "profile"
-        ]
-      },
-      "post": {
-        "operationId": "create_route_me_routes_post",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RouteIn"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "201": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RouteOut"
-                }
-              }
-            },
-            "description": "Successful Response"
-          },
-          "401": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorOut"
-                }
-              }
-            },
-            "description": "Not logged in"
-          },
-          "409": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorOut"
-                }
-              }
-            },
-            "description": "Too many routes"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "summary": "Create Route",
-        "tags": [
-          "profile"
-        ]
-      }
-    },
-    "/me/routes/{route_id}": {
-      "delete": {
-        "operationId": "delete_route_me_routes__route_id__delete",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "route_id",
-            "required": true,
-            "schema": {
-              "format": "uuid",
-              "title": "Route Id",
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Successful Response"
-          },
-          "401": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorOut"
-                }
-              }
-            },
-            "description": "Not logged in"
-          },
-          "404": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorOut"
-                }
-              }
-            },
-            "description": "Not found"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "summary": "Delete Route",
-        "tags": [
-          "profile"
-        ]
-      },
-      "patch": {
-        "operationId": "patch_route_me_routes__route_id__patch",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "route_id",
-            "required": true,
-            "schema": {
-              "format": "uuid",
-              "title": "Route Id",
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RoutePatch"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RouteOut"
-                }
-              }
-            },
-            "description": "Successful Response"
-          },
-          "401": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorOut"
-                }
-              }
-            },
-            "description": "Not logged in"
-          },
-          "404": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorOut"
-                }
-              }
-            },
-            "description": "Not found"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "summary": "Patch Route",
-        "tags": [
-          "profile"
-        ]
-      }
-    },
-    "/me/updates": {
-      "get": {
-        "operationId": "updates_me_updates_get",
-        "parameters": [
-          {
-            "in": "query",
-            "name": "digest",
-            "required": false,
-            "schema": {
-              "default": false,
-              "title": "Digest",
-              "type": "boolean"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UpdatesOut"
-                }
-              }
-            },
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "summary": "Updates",
-        "tags": [
-          "updates"
-        ]
-      }
-    },
-    "/me/updates/seen": {
-      "post": {
-        "operationId": "updates_seen_me_updates_seen_post",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "anyOf": [
-                  {
-                    "$ref": "#/components/schemas/UpdatesSeen"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ],
-                "title": "Body"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UpdatesSeen"
-                }
-              }
-            },
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "summary": "Updates Seen",
-        "tags": [
-          "updates"
         ]
       }
     },

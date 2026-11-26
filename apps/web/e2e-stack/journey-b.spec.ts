@@ -14,7 +14,7 @@ async function transferCredit(page: Page, label: string, code: string | null, un
   await page.getByLabel("Units").fill(units);
   await page.getByRole("button", { name: "Add credit" }).click();
   // Each add looks the code up in the catalog first: wait for it before the next one.
-  await expect(page.getByText(`Transfer credit: ${label}${code ? ` → ${code}` : " (not matched to a course yet)"} · ${units} units`)).toBeVisible();
+  await expect(page.getByText(`Transfer: ${label}${code ? ` → ${code}` : " (not matched to a course yet)"} · ${units} units`)).toBeVisible();
 }
 
 test("journey B: transfer student with CS BS + Math BS + Bx/MS sees what cannot fit, then asks the advisor", async ({ page }) => {
@@ -85,6 +85,9 @@ test("journey B: transfer student with CS BS + Math BS + Bx/MS sees what cannot 
   const phrase = (await proposal.innerText()).match(/Or type “(I agree to [^”]+)”/)?.[1];
   expect(phrase, "the card shows the typed confirmation sentence").toBeTruthy();
   await input.fill(phrase!);
+  // The panel drops a message sent while the previous reply still streams (Send stays disabled
+  // until it ends); the card can show before that (integration run 2026-11-24).
+  await expect(sheet.getByRole("button", { name: "Send", exact: true })).toBeEnabled();
   await input.press("Enter");
   await expect(proposal).toContainText("Applied.");
   await expect(card(page, "MATH 20700")).toBeAttached();

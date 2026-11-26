@@ -4,7 +4,6 @@ import AboutPage from "./pages/AboutPage";
 import AccountPage from "./pages/AccountPage";
 import AdminModerationPage from "./pages/AdminModerationPage";
 import AdminReviewPage from "./pages/AdminReviewPage";
-import AskPage from "./pages/AskPage";
 import CommonsNewPage from "./pages/CommonsNewPage";
 import CommonsPage from "./pages/CommonsPage";
 import CommonsThreadPage from "./pages/CommonsThreadPage";
@@ -13,7 +12,6 @@ import CourseInstructorPage from "./pages/CourseInstructorPage";
 import CoursePage from "./pages/CoursePage";
 import CoursesPage from "./pages/CoursesPage";
 import DashboardPage from "./pages/DashboardPage";
-import FeedPage from "./pages/FeedPage";
 import GuidelinesPage from "./pages/GuidelinesPage";
 import HomePage from "./pages/HomePage";
 import InstructorPage from "./pages/InstructorPage";
@@ -34,10 +32,12 @@ export const routes: RouteObject[] = [
     element: <AppShell />,
     children: [
       { path: "/", element: <HomePage /> },
-      // Campus companion (docs/BEST-OF-UCHICAGO-PLAN.md)
-      { path: "/ask", element: <AskPage /> },
+      // The Ask page went with the homepage's question bar (issue #15): the planner is where a
+      // student talks to the planner agent.
+      { path: "/ask", element: <Navigate to="/plan" replace /> },
       { path: "/me", element: <DashboardPage /> },
-      { path: "/feed", element: <FeedPage /> },
+      // The Feed moved into the Catalog page (issue #19).
+      { path: "/feed", element: <Navigate to="/courses" replace /> },
       { path: "/forum", element: <CommonsPage /> },
       { path: "/forum/new", element: <CommonsNewPage /> },
       { path: "/forum/t/:id", element: <CommonsThreadPage /> },

@@ -5,7 +5,7 @@ const CASES: [string, string][] = [
   ["/", "The Best of UChicago, within your reach."],
   ["/plan", "Planner"],
   ["/onboarding", "Tell Quarterly about you."],
-  ["/courses", "Course search"],
+  ["/courses", "Catalog"],
   ["/courses/TEST%2010000", "TEST 10000 · Fake Introduction I"],
   ["/programs", "Program explorer"],
   ["/programs/fake-major", "Fake Program"],
@@ -23,8 +23,25 @@ describe("routes", () => {
 });
 
 describe("top nav", () => {
+  it("has four tabs in order: Dashboard, Planner, Catalog, Forum (issue #15)", async () => {
+    renderRoute("/courses");
+    const nav = await screen.findByRole("navigation", { name: "Main" });
+    const links = [...nav.querySelectorAll("a")].map((a) => [a.textContent, a.getAttribute("href")]);
+    expect(links).toEqual([
+      ["Dashboard", "/me"],
+      ["Planner", "/plan"],
+      ["Catalog", "/courses"],
+      ["Forum", "/forum"],
+    ]);
+  });
+
+  it("sends the old Ask page to the planner (issue #15)", async () => {
+    const { router } = renderRoute("/ask?q=hello");
+    await waitFor(() => expect(router.state.location.pathname).toBe("/plan"));
+  });
+
   it.each([
-    ["/plans", "Plan"],
+    ["/plans", "Planner"],
     ["/onboarding", "Dashboard"],
     ["/courses/TEST%2010000", "Catalog"],
     ["/programs", "Catalog"], // courses and programs share one item (FEEDBACK 2026-11-16)

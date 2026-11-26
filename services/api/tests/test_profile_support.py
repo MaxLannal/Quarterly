@@ -1,4 +1,4 @@
-"""Shared set-up for the dashboard tests (test_profile_*, test_routes_*, test_interview_*): a
+"""Shared set-up for the dashboard tests (test_profile_*, test_interview_*): a
 small FAKE 2026-27 catalog (the campus agents read that year), two programs, the Core's course
 lists and offering patterns. No tests here."""
 
