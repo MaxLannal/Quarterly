@@ -18,7 +18,7 @@ import {
   PROGRAMS,
   summary,
 } from "./data";
-import {agentHandlers} from "./agents";
+import { agentHandlers } from "./agents";
 import { commonsHandlers, resetCommonsMock } from "./commons";
 import { browseHandlers } from "./browse";
 import { profileHandlers, resetProfileMock } from "./profile";

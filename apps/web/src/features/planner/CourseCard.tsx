@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import type { PlanItem } from "@/api/types";
 import { Menu, type MenuItem } from "@/components/ui/menu";
 import { ErrorIcon, GripIcon, LockIcon, MoreIcon, WarningIcon } from "@/components/ui/icons";
-import { Badge, Dots } from "@/components/ui/misc";
+import { Badge } from "@/components/ui/misc";
 import { inlineLinkClass } from "@/components/layout/page";
 import { cn } from "@/lib/utils";
 import { issuesForItem, STRIP_CLASSES, usePlanner } from "./context";
@@ -13,7 +13,7 @@ import { summarizeIssue } from "./issueText";
 import { itemLabel, removeItemOps, setCompletedOps, toggleLockOps } from "./planModel";
 
 export function CourseCard({ item }: { item: PlanItem }) {
-  const { courses, tags, issues, highlight, edit, openMoveTo } = usePlanner();
+  const { courses, tags, issues, highlight, edit, openMoveTo, proposals, glow, openDetails } = usePlanner();
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const id = item.id ?? `${item.course}-${item.term}`;
@@ -32,6 +32,10 @@ export function CourseCard({ item }: { item: PlanItem }) {
   const label = itemLabel(item);
   const isSlot = !item.course;
   const completed = item.status === "completed";
+  // Issue #18: a course the planner proposes to drop stays visible, struck through, until the
+  // student accepts or rejects that proposal.
+  const removal = (proposals.get(item.term) ?? []).find((b) => b.action === "remove" && b.course === item.course);
+  const facts = [hours && `${isEstimate(hours) ? "~" : ""}${round1(hours.value)} h/wk`, difficulty && `difficulty ${round1(difficulty.value)} of 5`].filter(Boolean).join(" · ");
 
   const items: MenuItem[] = [
     { label: "Move to…", onSelect: () => openMoveTo(item), disabled: item.locked },
@@ -53,6 +57,8 @@ export function CourseCard({ item }: { item: PlanItem }) {
       data-term={item.term}
       data-kind={isSlot ? undefined : (tag?.kind ?? "none")}
       data-highlighted={item.id && highlight.items.has(item.id) ? "true" : undefined}
+      data-proposed-remove={removal ? "true" : undefined}
+      title={facts || undefined}
       onContextMenu={(e) => {
         e.preventDefault();
         setMenuOpen(true);
@@ -69,6 +75,8 @@ export function CourseCard({ item }: { item: PlanItem }) {
         // further down would paint over this card's open menu: lift the card while it is open
         // (FEEDBACK "Minor issues", 2026-11-16).
         menuOpen && "z-30",
+        removal && "opacity-70",
+        removal && glow.has(removal.proposalId) && "glow-ring",
       )}
     >
       {/* Header row: drag handle, code and units, actions menu (each control a 44px target).
@@ -88,8 +96,13 @@ export function CourseCard({ item }: { item: PlanItem }) {
           {item.locked ? <LockIcon size={14} /> : <GripIcon size={14} />}
         </button>
         <div className="flex min-w-0 flex-1 flex-wrap items-baseline gap-x-2 py-1">
-          <span className="font-medium tabular-nums">{isSlot ? "Requirement slot" : item.course}</span>
+          <span className={cn("font-medium tabular-nums", removal && "line-through")}>{isSlot ? "Requirement slot" : item.course}</span>
           {units != null && <span className="text-muted">{units} units</span>}
+          {removal && (
+            <Badge tone="warning" casing="normal" className="px-2 py-0">
+              Proposed: remove
+            </Badge>
+          )}
           {completed && (
             <Badge tone="success" casing="normal" className="px-2 py-0">
               Completed
@@ -99,22 +112,22 @@ export function CourseCard({ item }: { item: PlanItem }) {
         <Menu label={`Actions for ${label}`} trigger={<MoreIcon />} items={items} open={menuOpen} onOpenChange={setMenuOpen} />
       </div>
       <div className="min-w-0 px-3 pb-2">
-        <div className="truncate text-body" title={course?.title ?? item.slot_ref ?? undefined}>
-          {isSlot ? item.slot_ref : (course?.title ?? "")}
-        </div>
-        {tag && <div className="truncate text-muted">{tag.label}</div>}
-        {(hours || difficulty) && (
-          <div className="mt-1 flex flex-wrap items-center gap-x-2 tabular-nums text-muted">
-            {hours && (
-              <span>
-                {isEstimate(hours) ? "~" : ""}
-                {round1(hours.value)} h/wk
-                {isEstimate(hours) && <span className="sr-only"> (estimate)</span>}
-              </span>
-            )}
-            {difficulty && <Dots value={difficulty.value} label="Difficulty" />}
+        {isSlot ? (
+          <div className="truncate text-body" title={item.slot_ref ?? undefined}>
+            {item.slot_ref}
           </div>
+        ) : (
+          <button
+            type="button"
+            onClick={() => item.course && openDetails(item.course)}
+            className={cn("block w-full truncate text-left text-body hover:underline", removal && "line-through")}
+            title={course?.title ?? undefined}
+          >
+            {course?.title || item.course}
+            <span className="sr-only">: details</span>
+          </button>
         )}
+        {tag && <div className="truncate text-muted">{tag.label}</div>}
         {mine.length > 0 && (
           <ul className="mt-1.5 space-y-1">
             {mine.map((i, n) => {

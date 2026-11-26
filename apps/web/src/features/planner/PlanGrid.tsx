@@ -11,6 +11,7 @@ import {
 import { Badge } from "@/components/ui/misc";
 import { cn } from "@/lib/utils";
 import { usePlanner } from "./context";
+import { ProposalBlock } from "@/features/planner-agent/ProposalBlock";
 import { CourseCard } from "./CourseCard";
 import { goalLabel, quarterMetrics, round1 } from "./metrics";
 import { planYears, removeYear } from "./planModel";
@@ -40,7 +41,8 @@ function termGoals(goals: Goal[], term: string, entryTerm: string): Goal[] {
 }
 
 function QuarterCell({ term, items }: { term: string; items: PlanItem[] }) {
-  const { plan, courses, highlight } = usePlanner();
+  const { plan, courses, highlight, proposals } = usePlanner();
+  const proposed = (proposals.get(term) ?? []).filter((b) => b.action !== "remove");
   const { setNodeRef, isOver } = useDroppable({ id: term, data: { term } });
   const m = quarterMetrics(items, courses);
   const goals = termGoals(plan.goals ?? [], term, plan.entry_term);
@@ -63,7 +65,7 @@ function QuarterCell({ term, items }: { term: string; items: PlanItem[] }) {
       >
         {termLabel(term)}
       </h4>
-      {items.length === 0 ? (
+      {items.length === 0 && proposed.length === 0 ? (
         // PL-3 (D11): say what is there, not only how to drag.
         <p className="flex flex-1 items-center justify-center rounded-lg border border-dashed border-hairline-strong p-3 text-center text-caption text-muted">
           No courses yet
@@ -75,6 +77,9 @@ function QuarterCell({ term, items }: { term: string; items: PlanItem[] }) {
               key={item.id ?? `${item.course}-${item.term}`}
               item={item}
             />
+          ))}
+          {proposed.map((b) => (
+            <ProposalBlock key={`${b.proposalId}-${b.course}`} block={b} />
           ))}
         </ul>
       )}
@@ -300,7 +305,7 @@ export function PlanGrid({
   onGraduation,
   onAddYear,
 }: PlanGridProps) {
-  const { plan } = usePlanner();
+  const { plan, proposals, openSummers, setSummerOpen } = usePlanner();
   const [yearMsg, setYearMsg] = useState<string | null>(null);
   const items = plan.items ?? [];
   const last = graduationTerm(plan);
@@ -347,55 +352,62 @@ export function PlanGrid({
           </Button>
         </div>
       </div>
-      {Array.from({ length: years }, (_, i) => i + 1).map((y) => {
-        const start = academicYear(termAt(plan.entry_term, y, "AU"));
-        const summer = termAt(plan.entry_term, y, "SU");
-        const summerItems = byTerm.get(summer) ?? [];
-        const yearTerms = QUARTERS.map((q) =>
-          termAt(plan.entry_term, y, q),
-        ).filter((t) => shown.has(t));
-        const visible = yearTerms.filter(
-          (t) => showSummer || !t.endsWith("-SU"),
-        );
-        return (
-          <section
-            key={y}
-            aria-labelledby={`year-${y}`}
-            data-testid={`year-${y}`}
-          >
-            <h3
-              id={`year-${y}`}
-              className="mb-3 flex flex-wrap items-baseline gap-x-2 font-display text-display-sm"
-            >
-              {classYearLabel(y, level)}{" "}
-              <span className="font-sans text-caption tabular-nums text-muted">
-                {academicYearLabel(start)}
-              </span>
-              {!showSummer && summerItems.length > 0 && (
-                <span className="font-sans text-caption text-muted">
-                  {" "}
-                  · {termLabel(summer)}: {summerItems.length} course
-                  {summerItems.length === 1 ? "" : "s"} (hidden)
-                </span>
-              )}
-            </h3>
-            <div
-              className={cn(
-                "grid grid-cols-1 gap-3 sm:grid-cols-3",
-                showSummer && "xl:grid-cols-4",
-              )}
-            >
-              {visible.map((term) => (
-                <QuarterCell
-                  key={term}
-                  term={term}
-                  items={byTerm.get(term) ?? []}
-                />
-              ))}
-            </div>
-          </section>
-        );
-      })}
+      {/* Issue #18: one column per academic year, each stacking its quarters (Summer, collapsed
+          unless it is used, then Autumn, Winter and Spring). The columns follow the space the
+          grid has (the planner panel takes a third of a wide screen), and a fifth year scrolls
+          sideways. */}
+      <div className="@container">
+        <div
+          data-testid="year-columns"
+          className="grid grid-cols-1 gap-4 @lg:grid-cols-2 @3xl:auto-cols-[minmax(11rem,1fr)] @3xl:grid-flow-col @3xl:grid-cols-none @3xl:overflow-x-auto @3xl:pb-2"
+        >
+          {Array.from({ length: years }, (_, i) => i + 1).map((y) => {
+            const start = academicYear(termAt(plan.entry_term, y, "AU"));
+            const summer = termAt(plan.entry_term, y, "SU");
+            const summerUsed =
+              (byTerm.get(summer) ?? []).length > 0 || (proposals.get(summer) ?? []).length > 0;
+            const summerShown = shown.has(summer) && (showSummer || summerUsed || openSummers.has(y));
+            const yearTerms = QUARTERS.map((q) => termAt(plan.entry_term, y, q)).filter(
+              (t) => shown.has(t) && !t.endsWith("-SU"),
+            );
+            return (
+              <section
+                key={y}
+                aria-labelledby={`year-${y}`}
+                data-testid={`year-${y}`}
+                className="flex min-w-0 flex-col gap-3"
+              >
+                <h3
+                  id={`year-${y}`}
+                  className="flex flex-wrap items-baseline gap-x-2 font-display text-title-md"
+                >
+                  {classYearLabel(y, level)}{" "}
+                  <span className="font-sans text-caption tabular-nums text-muted">
+                    {academicYearLabel(start)}
+                  </span>
+                </h3>
+                {summerShown ? (
+                  <QuarterCell term={summer} items={byTerm.get(summer) ?? []} />
+                ) : (
+                  shown.has(summer) && (
+                    <button
+                      type="button"
+                      onClick={() => setSummerOpen(y, true)}
+                      aria-label={`Show ${termLabel(summer)}`}
+                      className="flex min-h-11 items-center rounded-lg border border-dashed border-hairline px-3 text-caption text-muted transition-colors hover:border-hairline-strong hover:text-ink"
+                    >
+                      + {termLabel(summer)}
+                    </button>
+                  )
+                )}
+                {yearTerms.map((term) => (
+                  <QuarterCell key={term} term={term} items={byTerm.get(term) ?? []} />
+                ))}
+              </section>
+            );
+          })}
+        </div>
+      </div>
       <div className="flex flex-col gap-2">
         <div className="flex flex-wrap gap-2">
           <Button

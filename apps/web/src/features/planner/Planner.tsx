@@ -109,6 +109,7 @@ export function Planner({ initial, autoGenerate = false, onSetUp }: PlannerProps
   const [drawer, setDrawer] = useState<{ open: boolean; tab: DrawerTab }>({ open: false, tab: "requirements" });
   const [advisorOpen, setAdvisorOpen] = useState(false);
   const [dragging, setDragging] = useState<string | null>(null);
+  const [openSummers, setOpenSummers] = useState<Set<number>>(() => new Set());
   const desktop = useMediaQuery("(min-width: 1024px)");
   const { data: session } = useSession();
   const queryClient = useQueryClient();
@@ -180,6 +181,19 @@ export function Planner({ initial, autoGenerate = false, onSetUp }: PlannerProps
     applyOps: (ops) => void tryOps(ops),
     openMoveTo: setMoveTarget,
     openAddTo: setAddTarget,
+    proposals: new Map(),
+    proposalTitles: new Map(),
+    glow: new Set(),
+    selectProposal: () => {},
+    openDetails: () => {},
+    openSummers,
+    setSummerOpen: (year, open) =>
+      setOpenSummers((s) => {
+        const next = new Set(s);
+        if (open) next.add(year);
+        else next.delete(year);
+        return next;
+      }),
   };
 
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 4 } }), useSensor(KeyboardSensor));
