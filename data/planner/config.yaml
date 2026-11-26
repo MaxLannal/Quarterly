@@ -1,0 +1,20 @@
+# Limits of the planner agent (issue #17: "Keep the limits on the number of questions in
+# data/planner/config.yaml"). Read by services/api/api/agents/planner/guideline.py. The rules
+# themselves are in plan-guideline.md.
+
+questions_max: 2          # model questions before planning (fields from the question file come first)
+min_options: 2
+max_options: 5            # an "Other" text box is always added by the page
+
+repair_rounds: 5          # verify -> repair rounds for one plan
+thrash_same_errors: 3     # stop when the same errors come back this many rounds in a row
+max_ops_per_round: 12     # add / move / remove operations in one repair round
+fix_warning_codes: [V04, V10, V11]   # warnings the agent also fixes once the errors are gone
+max_polish_rounds: 2      # rounds spent on those warnings
+
+tool_calls_per_step: 4    # catalog lookups in one step before the step must submit
+chat_proposals_max: 3     # change sets in one chat answer (one per course or sequence)
+
+working_info_chars: 4000  # above this, only the related lines of the working information go in
+run_seconds: 300          # a generation stops cleanly after this
+state_ttl_days: 1         # a paused run (waiting for an answer) expires after this
