@@ -7259,6 +7259,17 @@
       "PlannerProposalEvent": {
         "description": "One course or sequence, as an unsaved block on the grid. A saved plan has a\n`change_set_id` (Accept = POST /plans/{id}/changesets/{cs}/apply); a plan in the browser\napplies `ops` itself.",
         "properties": {
+          "base_plan_hash": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Base Plan Hash"
+          },
           "change_set_id": {
             "anyOf": [
               {

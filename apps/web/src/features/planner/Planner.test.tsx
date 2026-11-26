@@ -10,9 +10,7 @@ describe("Planner with endpoints that are not built yet (501)", () => {
   beforeEach(() => {
     server.use(
       http.post("*/api/verify", notBuilt),
-      http.post("*/api/agents/generate", notBuilt),
-      http.post("*/api/plans/generate", notBuilt),
-      http.post("*/api/agents/chat", notBuilt),
+      http.post("*/api/agents/planner", notBuilt),
       http.get("*/api/catalog-years", notBuilt),
     );
   });
@@ -24,18 +22,10 @@ describe("Planner with endpoints that are not built yet (501)", () => {
     expect(screen.getByText(/The verifier is not available yet/)).toBeInTheDocument();
 
     await user.click(screen.getByRole("button", { name: "Generate plan" }));
-    const dialog = screen.getByRole("dialog", { name: "Generate plan" });
-    await user.click(within(dialog).getByRole("button", { name: "Generate" }));
-    expect(await within(dialog).findByText(/Plan generation is not available yet/)).toBeInTheDocument();
-    await user.click(within(dialog).getByRole("button", { name: "Close" }));
-
-    await user.click(screen.getByRole("button", { name: "Ask Quarterly" }));
-    const advisor = screen.getByRole("dialog", { name: "Ask Quarterly" });
-    expect(within(advisor).queryByText("Generative AI")).not.toBeInTheDocument();
-    expect(within(advisor).getByText(/Answers are written by an AI/)).toBeInTheDocument();
-    await user.type(within(advisor).getByLabelText("Ask the advisor"), "Is TEST 20000 hard?");
-    await user.click(within(advisor).getByRole("button", { name: "Send" }));
-    expect(await within(advisor).findByText(/The advisor is not available yet/)).toBeInTheDocument();
+    const planner = await screen.findByRole("heading", { name: "Planner", level: 2 });
+    expect(planner).toBeInTheDocument();
+    expect(await screen.findByText(/The planner is not available yet/)).toBeInTheDocument();
+    expect(screen.getByText(/Answers are written by an AI/)).toBeInTheDocument();
   });
 
   it("falls back to the current academic year when catalog years are unavailable", async () => {

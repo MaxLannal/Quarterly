@@ -345,3 +345,32 @@ def test_plan_without_a_major_asks_to_add_one(env: Env) -> None:
     )
     assert [e["type"] for e in events][-2:] == ["message", "done"]
     assert "+ Program" in of(events, "message")[0]["text"]
+
+
+def test_fill_submits_without_tools_after_the_lookups_run_out(
+    env: Env, solved: list[tuple[str, str]]
+) -> None:
+    """Live finding (2026-11-26): Opus 5.5 looked up more courses than the step allowed and the
+    run ended (budget_tool_calls). The harness now asks once more, with no tools."""
+    from api.agents.planner.guideline import load_planner_config
+
+    lookups = [
+        ToolCall("get_course", {"code": "CMSC 14100"}),
+        ToolCall("get_course", {"code": "CMSC 14200"}),
+    ]
+    fake = FakeLLM(script={TASK: [no_questions(), lookups, fill(solved), explain(solved)]})
+    body = PlannerRequest.model_validate(
+        {"mode": "generate", "plan": STATE, "profile_answers": answers()}
+    )
+    config = load_planner_config().model_copy(update={"tool_calls_per_step": 1})
+    with env.db() as db:
+        planner = PlannerRun.build(
+            db, fake, body, account=None, saved=None, show_unpublished=True,
+            statuses=catalog_repo.ALL_STATUSES, log=RunLog(), config=config,
+        )  # fmt: skip
+        events = [e.model_dump(mode="json") for e in planner.generate_events()]
+    assert of(events, "plan")[0]["verdict"] == "valid"
+    retry = fake.calls[-2]
+    assert retry["tools"] == ["submit_plan"] and "used all your catalog lookups" in str(
+        retry["messages"]
+    )

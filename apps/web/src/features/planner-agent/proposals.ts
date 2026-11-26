@@ -19,6 +19,8 @@ export interface Proposal {
   rules: RuleRef[];
   status: "proposed" | "stale";
   runId: string;
+  /** The plan hash the proposal was made for ("apply it" in the chat checks it). */
+  basePlanHash?: string | null;
 }
 
 export interface ProposedBlock {
@@ -40,6 +42,7 @@ export function fromEvent(e: PlannerProposalEvent, runId: string): Proposal {
     rules: e.rules,
     status: "proposed",
     runId,
+    basePlanHash: e.base_plan_hash ?? null,
   };
 }
 

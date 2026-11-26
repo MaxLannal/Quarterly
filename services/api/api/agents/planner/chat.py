@@ -669,6 +669,7 @@ class PlannerChat:
                     "citations": [],
                     "rules": refs,
                     "preview": Verdict.model_validate(tools.box._verdict(d.report)),
+                    "base_plan_hash": d.base_plan_hash,
                 }
             )
 

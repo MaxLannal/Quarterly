@@ -4310,6 +4310,8 @@ export interface components {
          *     applies `ops` itself.
          */
         PlannerProposalEvent: {
+            /** Base Plan Hash */
+            base_plan_hash?: string | null;
             /** Change Set Id */
             change_set_id?: string | null;
             /**

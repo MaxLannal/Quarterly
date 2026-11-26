@@ -647,7 +647,8 @@ class PlannerRun:
             "Fill every quarter of the plan in one submit_plan call, grouped by sequence (G45). "
             "Cover every requirement in the brief, check prerequisite order and the quarters "
             "each course is offered, keep to the student's standards and choose by their "
-            "interests. Use get_course when you are unsure, at most "
+            "interests. Give each group a why of ONE short sentence here; a later step writes "
+            "the full reasons. Use get_course when you are unsure, at most "
             f"{self.config.tool_calls_per_step} lookups in all; then call submit_plan."
         )
         fill = (
@@ -656,15 +657,7 @@ class PlannerRun:
             PlanSubmission,
         )
         try:
-            spec = self.spec(
-                system,
-                f"{user}\n\n# Task\n\n{task}",
-                fill,
-                record,
-                check=self._fill_check(),
-                tokens=WRITE_TOKENS,
-            )
-            sub = run_agent(self.llm, spec, sink=self.log.sink).output
+            sub = self._fill(system, f"{user}\n\n# Task\n\n{task}", fill, record)
         except AgentError as exc:
             logger.info("%s: fill failed (%s)", TASK, exc.reason)
             yield self.step(STEP_WRITE, "failed")
@@ -702,6 +695,31 @@ class PlannerRun:
         yield from self._finish(
             run, None, status="ok" if valid else "invalid", profile_answers=self._answers(state)
         )
+
+    def _fill(
+        self,
+        system: str,
+        body: str,
+        fill: tuple[str, str, type[PlanSubmission]],
+        record: dict[str, Any],
+    ) -> PlanSubmission:
+        """The whole plan in one submit. Live (2026-11-26), Opus 5.5 checked course after course
+        until the lookups ran out, which ended the run: then it is asked once more, with no
+        tools, to submit what it has; the checker and the repair rounds catch the rest."""
+        check = self._fill_check()
+        spec = self.spec(system, body, fill, record, check=check, tokens=WRITE_TOKENS)
+        try:
+            return run_agent(self.llm, spec, sink=self.log.sink).output
+        except AgentError as exc:
+            if exc.reason != "budget_tool_calls":
+                raise
+            logger.info("%s: lookups ran out; asking for the plan without tools", TASK)
+        again = (
+            f"{body}\n\nYou have used all your catalog lookups. Submit the whole plan now with "
+            "what you know; Quarterly's checker will report any problem and you can repair it."
+        )
+        spec = self.spec(system, again, fill, record, check=check, tools=False, tokens=WRITE_TOKENS)
+        return run_agent(self.llm, spec, sink=self.log.sink).output
 
     def _repair(
         self,
@@ -875,5 +893,6 @@ class PlannerRun:
                     "citations": citations,
                     "rules": refs,
                     "preview": self._verdict(ops),
+                    "base_plan_hash": base,
                 }
             )

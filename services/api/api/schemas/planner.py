@@ -148,6 +148,9 @@ class PlannerProposalEvent(BaseModel):
     citations: list[Citation] = []
     rules: list[RuleRef] = []
     preview: Verdict | None = None
+    #: The hash of the plan the proposal was made for: a browser plan sends it back with
+    #: `pending`, so "apply it" can tell whether the plan changed since.
+    base_plan_hash: str | None = None
 
 
 PlannerEventItem = Annotated[

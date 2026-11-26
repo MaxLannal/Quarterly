@@ -13,18 +13,24 @@ import {
   type DragStartEvent,
 } from "@dnd-kit/core";
 import { useQueryClient } from "@tanstack/react-query";
-import { useEffect, useMemo, useReducer, useState } from "react";
+import { useCallback, useEffect, useId, useMemo, useReducer, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { api, unwrap } from "@/api/client";
 import { useCourseMap, usePlanPrograms, usePrograms } from "@/api/hooks";
-import type { ChangeOp, Issue, PlanItem, ProgramSummary } from "@/api/types";
+import type { ChangeOp, Issue, PlanItem, PlanState, ProgramSummary } from "@/api/types";
 import { Button } from "@/components/ui/button";
 import { Dialog } from "@/components/ui/dialog";
 import { CloseIcon, SparkIcon } from "@/components/ui/icons";
 import { Notice } from "@/components/ui/misc";
-import { AdvisorSheet } from "@/features/advisor/AdvisorPanel";
 import { PROFILE_KEY, useProfile } from "@/features/dashboard/api";
-import { GenerateDialog } from "@/features/generate/GenerateDialog";
+import { TopSheet } from "@/components/ui/sheet";
+import { inverseOps, HISTORY_LIMIT, newHistoryId, type HistoryEntry } from "@/features/planner-agent/history";
+import { PlannerPanel } from "@/features/planner-agent/PlannerPanel";
+import { proposedBlocks } from "@/features/planner-agent/proposals";
+import { usePlannerRun } from "@/features/planner-agent/usePlannerRun";
+import { Walkthrough } from "@/features/planner-agent/Walkthrough";
+import { useWalkthrough, type Walkthrough as Walk } from "@/features/planner-agent/useWalkthrough";
+import { prefersReducedMotion } from "@/lib/motion";
 import { ProgramPickerBody, StatusBadge } from "@/features/programs/ProgramPicker";
 import { useMediaQuery } from "@/lib/motion";
 import { useSession } from "@/lib/session";
@@ -32,7 +38,7 @@ import { applyOps, ChangeOpError } from "./changes";
 import { highlightFor, PlannerContext, stripKind, type PlannerContextValue, type RequirementTag } from "./context";
 import { GoalsTab } from "./GoalsTab";
 import { IssuesTab } from "./IssuesTab";
-import { storedRemoteId, upsertPlan, type LocalPlan } from "./localPlans";
+import { storedRemoteId, today, upsertPlan, type LocalPlan } from "./localPlans";
 import { addCourseOps, editorReducer, initEditor, itemLabel, moveItemOps, type EditResult } from "./planModel";
 import { CreditsEditor } from "@/features/credits/CreditsEditor";
 import { DrawerButton, PlanDrawer, type DrawerTab } from "./PlanDrawer";
@@ -62,6 +68,24 @@ export function dropResult(data: DragData | undefined, toTerm: string | undefine
 }
 
 /** Requirement tag per course: the deepest progress node that counts it. */
+const PANEL_KEY = "quarterly.plannerPanel.v1";
+
+function readPanelOpen(): boolean {
+  try {
+    return window.localStorage.getItem(PANEL_KEY) === "open";
+  } catch {
+    return false;
+  }
+}
+
+function writePanelOpen(open: boolean) {
+  try {
+    window.localStorage.setItem(PANEL_KEY, open ? "open" : "closed");
+  } catch {
+    // Storage blocked: the panel just starts closed next time.
+  }
+}
+
 function requirementTags(
   progress: { node_id: string; program_id: string; label?: string | null; courses?: string[] }[],
   programIds: string[],
@@ -105,9 +129,15 @@ export function Planner({ initial, autoGenerate = false, onSetUp }: PlannerProps
   const [moveTarget, setMoveTarget] = useState<PlanItem | null>(null);
   const [addTarget, setAddTarget] = useState<string | null>(null);
   const [pickPrograms, setPickPrograms] = useState(false);
-  const [generateOpen, setGenerateOpen] = useState(autoGenerate);
   const [drawer, setDrawer] = useState<{ open: boolean; tab: DrawerTab }>({ open: false, tab: "requirements" });
-  const [advisorOpen, setAdvisorOpen] = useState(false);
+  // Issue #18: the planner panel is hidden by default and opens from Generate plan or Ask; it
+  // reopens on this device while proposals are pending (decision D1).
+  const [panelOpen, setPanelOpen] = useState(() => readPanelOpen() || (initial.proposals ?? []).some((p) => p.status === "proposed"));
+  const [selectedProposal, setSelectedProposal] = useState<string | null>(null);
+  const [history, setHistory] = useState<HistoryEntry[]>(() => initial.history ?? []);
+  const panelHeadingId = useId();
+  const composerRef = useRef<HTMLTextAreaElement>(null);
+  const opener = useRef<HTMLElement | null>(null);
   const [dragging, setDragging] = useState<string | null>(null);
   const [openSummers, setOpenSummers] = useState<Set<number>>(() => new Set());
   const desktop = useMediaQuery("(min-width: 1024px)");
@@ -140,10 +170,97 @@ export function Planner({ initial, autoGenerate = false, onSetUp }: PlannerProps
   const highlight = useMemo(() => highlightFor(selectedIssue, items), [selectedIssue, items]);
   const savedPlanId = remoteId && savedSnapshot === JSON.stringify(plan) ? remoteId : null;
 
+  const record = useCallback((label: string, before: PlanState, after: PlanState, ops: ChangeOp[]) => {
+    const entry: HistoryEntry = { id: newHistoryId(), day: today(), label, ops, inverse: inverseOps(before, after) };
+    setHistory((h) => [entry, ...h].slice(0, HISTORY_LIMIT));
+  }, []);
+
+  const agent = usePlannerRun({
+    plan,
+    planId: savedPlanId,
+    loggedIn: !!session,
+    initial,
+    applyLocal: (ops, label) => {
+      let after: PlanState;
+      try {
+        after = applyOps(plan, ops);
+      } catch (e) {
+        if (e instanceof ChangeOpError) return false;
+        throw e;
+      }
+      dispatch({ type: "ops", ops });
+      record(label, plan, after, ops);
+      return true;
+    },
+    replaceFromServer: (next, label, ops) => {
+      record(label, plan, next, ops);
+      dispatch({ type: "replace", plan: next });
+      setSavedSnapshot(JSON.stringify(next));
+    },
+    onGenerated: (fresh) => walkRef.current?.start(fresh.map((p) => p.id)),
+  });
+  const walk = useWalkthrough(agent.proposals);
+  const walkRef = useRef<Walk | null>(null);
+  walkRef.current = walk;
+  const current = walk.current;
+  // The walkthrough lights its group; otherwise the group of the block the student clicked.
+  const glow = useMemo(() => new Set(current ? [current.id] : selectedProposal ? [selectedProposal] : []), [current, selectedProposal]);
+  // Bring the current group into view (a Summer that holds a proposal is always shown).
+  useEffect(() => {
+    if (current) {
+      requestAnimationFrame(() =>
+        document
+          .querySelector(`[data-testid="proposal-block"][data-proposal="${CSS.escape(current.id)}"]`)
+          ?.scrollIntoView?.({ block: "nearest", behavior: prefersReducedMotion() ? "auto" : "smooth" }),
+      );
+    }
+  }, [current]);
+  const blocks = useMemo(() => proposedBlocks(plan, agent.proposals), [plan, agent.proposals]);
+  const proposalTitles = useMemo(() => new Map(agent.proposals.map((p) => [p.id, p.title])), [agent.proposals]);
+
+  function openPanel(focusComposer: boolean) {
+    opener.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    setPanelOpen(true);
+    writePanelOpen(true);
+    setDrawer((d) => ({ ...d, open: false }));
+    if (focusComposer) requestAnimationFrame(() => composerRef.current?.focus());
+  }
+
+  function closePanel() {
+    setPanelOpen(false);
+    writePanelOpen(false);
+    setSelectedProposal(null);
+    opener.current?.focus();
+  }
+
+  function generatePlan() {
+    openPanel(false);
+    agent.generate();
+  }
+
+  useEffect(() => {
+    if (autoGenerate) generatePlan();
+    // Once, when the page opens with ?generate=1 or after the setup card.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // Autosave every edit to this device (localStorage, never throws).
   useEffect(() => {
-    setStored(upsertPlan({ ...initial, remoteId, name: state.name, state: plan, years: undefined }));
-  }, [initial, remoteId, plan, state.name]);
+    setStored(
+      upsertPlan({
+        ...initial,
+        remoteId,
+        name: state.name,
+        state: plan,
+        years: undefined,
+        chat: agent.entries,
+        proposals: agent.proposals,
+        history,
+        workingNotes: agent.workingNotes || undefined,
+        profileAnswers: agent.profileAnswers,
+      }),
+    );
+  }, [initial, remoteId, plan, state.name, agent.entries, agent.proposals, agent.workingNotes, agent.profileAnswers, history]);
 
   useEffect(() => {
     if (highlight.items.size || highlight.terms.size) {
@@ -153,7 +270,7 @@ export function Planner({ initial, autoGenerate = false, onSetUp }: PlannerProps
 
   function tryOps(ops: ChangeOp[]): boolean {
     try {
-      applyOps(plan, ops);
+      record("Edited the plan", plan, applyOps(plan, ops), ops);
     } catch (e) {
       if (e instanceof ChangeOpError) {
         dispatch({ type: "edit", result: { ok: false, error: `Could not apply the change: ${e.message}` } });
@@ -181,10 +298,13 @@ export function Planner({ initial, autoGenerate = false, onSetUp }: PlannerProps
     applyOps: (ops) => void tryOps(ops),
     openMoveTo: setMoveTarget,
     openAddTo: setAddTarget,
-    proposals: new Map(),
-    proposalTitles: new Map(),
-    glow: new Set(),
-    selectProposal: () => {},
+    proposals: blocks,
+    proposalTitles,
+    glow,
+    selectProposal: (id) => {
+      setSelectedProposal(id);
+      if (!panelOpen) openPanel(false);
+    },
     openDetails: () => {},
     openSummers,
     setSummerOpen: (year, open) =>
@@ -272,6 +392,19 @@ export function Planner({ initial, autoGenerate = false, onSetUp }: PlannerProps
       setSaveMsg("Could not reach the server. Your plan is saved on this device.");
     }
   }
+
+  const panel = (
+    <PlannerPanel
+      run={agent}
+      onClose={closePanel}
+      selected={selectedProposal}
+      walkthrough={walk.step !== null ? <Walkthrough walk={walk} run={agent} /> : undefined}
+      onReplay={() => walk.start()}
+      composerRef={composerRef}
+      headingId={panelHeadingId}
+      className="h-full"
+    />
+  );
 
   const drawerTabs = [
     {
@@ -367,7 +500,7 @@ export function Planner({ initial, autoGenerate = false, onSetUp }: PlannerProps
                 </span>
               )}
             </DrawerButton>
-            <Button variant="outline" aria-haspopup="dialog" onClick={() => setAdvisorOpen(true)}>
+            <Button variant="outline" aria-expanded={panelOpen} aria-controls={desktop ? "planner-panel" : undefined} onClick={() => (panelOpen ? closePanel() : openPanel(true))}>
               <SparkIcon className="text-primary" />
               Ask Quarterly
             </Button>
@@ -376,7 +509,9 @@ export function Planner({ initial, autoGenerate = false, onSetUp }: PlannerProps
             <Button variant="outline" onClick={() => void save()}>
               Save
             </Button>
-            <Button onClick={() => setGenerateOpen(true)}>Generate plan</Button>
+            <Button onClick={generatePlan} disabled={agent.running}>
+              Generate plan
+            </Button>
           </div>
         </div>
 
@@ -430,6 +565,15 @@ export function Planner({ initial, autoGenerate = false, onSetUp }: PlannerProps
               tabs={drawerTabs}
               fullScreen={!desktop}
             />
+            {desktop && panelOpen && (
+              <aside
+                id="planner-panel"
+                aria-labelledby={panelHeadingId}
+                className="sticky top-4 flex h-[calc(100dvh-7rem)] w-1/3 min-w-[22rem] max-w-[38rem] shrink-0 animate-fade-in flex-col overflow-hidden rounded-xl border border-hairline bg-canvas shadow-overlay"
+              >
+                {panel}
+              </aside>
+            )}
           </div>
           <DragOverlay dropAnimation={null}>
             {dragging ? (
@@ -472,19 +616,11 @@ export function Planner({ initial, autoGenerate = false, onSetUp }: PlannerProps
           }}
         />
       </Dialog>
-      <GenerateDialog
-        open={generateOpen}
-        onClose={() => setGenerateOpen(false)}
-        plan={plan}
-        planId={savedPlanId}
-        onApply={(ops) => {
-          // GE-2 (D11): confirm the change in the planner once the popup closes.
-          const ok = tryOps(ops);
-          if (ok) setSaveMsg("Applied the generated plan. The plan check beside your plan's name shows the result.");
-          return ok;
-        }}
-      />
-      <AdvisorSheet open={advisorOpen} onClose={() => setAdvisorOpen(false)} plan={plan} planId={savedPlanId} onApply={tryOps} currentReport={verify.report ?? null} />
+      {!desktop && (
+        <TopSheet open={panelOpen} onClose={closePanel} labelledBy={panelHeadingId} initialFocus={composerRef}>
+          {panel}
+        </TopSheet>
+      )}
     </PlannerContext.Provider>
   );
 }
