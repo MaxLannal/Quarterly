@@ -8,6 +8,7 @@ import logging
 from collections.abc import Iterable
 from dataclasses import dataclass, field
 from decimal import Decimal
+from functools import lru_cache
 from typing import Any, get_args
 from urllib.parse import quote
 
@@ -101,7 +102,25 @@ def citation_label(kind: str, ident: str) -> str:
         return f"Student post #{ident}"
     if kind == "summary":
         return "What students say"
+    if kind == "profile":
+        label = _field_labels().get(ident)
+        return f"Your {label[0].lower()}{label[1:]}" if label else "Your record"
+    if kind == "guideline":
+        return f"Guideline {ident}"
     return ident  # a course code or a program id
+
+
+@lru_cache(maxsize=1)
+def _field_labels() -> dict[str, str]:
+    from api.profile_questions import question_set
+
+    return {q.field: q.label for q in question_set().questions}
+
+
+def citable_ids(*, profile_fields: Iterable[str], guideline_ids: Iterable[str]) -> set[str]:
+    """The `profile:` and `guideline:` ids a planner answer may cite: the student's answered
+    General Information fields and the rules that exist. Add them to the run's known ids."""
+    return {f"profile:{f}" for f in profile_fields} | {f"guideline:{g}" for g in guideline_ids}
 
 
 def checked_citations(

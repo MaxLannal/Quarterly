@@ -45,7 +45,9 @@ class ChatRequest(BaseModel):
 
 
 class Citation(BaseModel):
-    kind: Literal["attribute", "post", "course", "program", "summary"]
+    #: `profile` = a General Information field of the student (the chip links to it on the
+    #: dashboard); `guideline` = a rule of data/planner/plan-guideline.md (issue #17).
+    kind: Literal["attribute", "post", "course", "program", "summary", "profile", "guideline"]
     id: str
     label: str
 
@@ -99,11 +101,18 @@ class ConfirmEvent(BaseModel):
 class DoneEvent(BaseModel):
     type: Literal["done"] = "done"
     run_id: str
+    #: The planner chat noted a preference for a plan in the browser: its whole working
+    #: information, to store with the plan (a saved plan's record is updated on the server).
+    working_notes: str | None = None
 
 
 class ErrorEvent(BaseModel):
     type: Literal["error"] = "error"
     message: str
+    #: `expired`: the paused run is gone (start again); `unavailable`: the AI is off or failed.
+    reason: Literal["expired", "unavailable", "invalid_output", "budget", "invalid_plan"] | None = (
+        None
+    )
 
 
 class AgentEvent(
