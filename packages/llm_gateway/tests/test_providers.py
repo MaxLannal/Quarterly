@@ -194,3 +194,27 @@ def test_openrouter_errors_become_provider_errors() -> None:
     error = openai.APIConnectionError(request=req)  # type: ignore[arg-type]
     with pytest.raises(ProviderError):
         OpenRouterBackend("k", client=StubOpenAI(error=error)).complete(request())
+
+
+def test_anthropic_backend_passes_base_url(monkeypatch: pytest.MonkeyPatch) -> None:
+    seen: dict[str, Any] = {}
+
+    def fake_client(**kw: Any) -> object:
+        seen.update(kw)
+        return object()
+
+    monkeypatch.setattr(anthropic, "Anthropic", fake_client)
+    AnthropicBackend("k", base_url="https://api.teamorouter.com")
+    assert seen == {"api_key": "k", "max_retries": 0, "base_url": "https://api.teamorouter.com"}
+
+
+def test_anthropic_backend_no_base_url_by_default(monkeypatch: pytest.MonkeyPatch) -> None:
+    seen: dict[str, Any] = {}
+
+    def fake_client(**kw: Any) -> object:
+        seen.update(kw)
+        return object()
+
+    monkeypatch.setattr(anthropic, "Anthropic", fake_client)
+    AnthropicBackend("k")
+    assert "base_url" not in seen  # the SDK's own ANTHROPIC_BASE_URL lookup still applies
