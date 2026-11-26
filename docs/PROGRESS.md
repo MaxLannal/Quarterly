@@ -1,5 +1,11 @@
 # Progress
 
+> **Current state (2026-11-26, issues #17 and #18).** Branch `claude/planner-page-course-design-2a45cb`, not pushed, on top of `main` (3bbb12f, PR #22).
+> - One planner agent (`POST /agents/planner`, Opus 5.5 through Teamorouter) writes the first plan from the student record and `data/planner/plan-guideline.md`, verifies and repairs it, explains each group, and changes it in the chat. It replaced the A1 generator and the A2 advisor.
+> - The planner page has four year-columns and the planner panel ("Ask Quarterly") in the right third: proposals as unsaved blocks, a glowing walkthrough of each sequence, course details, and an edit history with Revert.
+> - Design: `docs/superpowers/specs/2026-11-26-planner-split-screen-design.md`; plan: `docs/superpowers/plans/2026-11-26-planner-split-screen.md`. Section "Planner split screen and planner agent" at the end of this file has the details. Open defaults: OPEN_QUESTIONS PL17-1 to PL17-6 and PL18-1 to PL18-3.
+> - Not run here: `make e2e` (journeys A-D on the shared Docker stack) and `make migrate` on that stack (migration 0012).
+>
 > **Current state (2026-11-24, after PR #21).** Branch `integration/2026-11-24`, not pushed.
 > - Max's PR #21 (issues #14 and #16) was merged into `main` first (e2a3e67), as Richard chose.
 > - Then one merge commit (0ce0ac4) brought `main` and `fix/taken-course-grading` into this branch.
@@ -1503,4 +1509,22 @@ Richard sent five problems in the chat. `docs/FEEDBACK.md` ("Problems with the c
 - Screenshots of step 4 at 1440px and 390px: the example credit is on one line on desktop, and the page is not wider than the phone screen.
 
 **Not done.** The planner does not read the course load yet. The planner agent (issue #17) will read it.
+
+## Planner split screen and planner agent (issues #17 and #18, 2026-11-26)
+
+Max (the human builder on both issues) answered before the build: port the degree-plan-agent harness; #18 D1, proposals stay until accepted or rejected; #17 D1, keep the chat while the plan exists, with Clear chat; #17 D2, logged-out students can use the agent; live calls approved (about 5-10 plans, up to $15).
+
+**What changed**
+- `data/planner/plan-guideline.md`: 55 tiered rules (hard, strong, preference, tiebreak) in nine sections: program completion, offerings and sequences, the student's standards, interests, the shape of a good plan, CS major facts, explaining choices, changing the plan in chat. Ported from the prototype's principles and planning facts, with catalog quotes from the seed. `data/planner/config.yaml` holds the limits.
+- `services/api/api/agents/planner/`: `guideline.py`, `brief.py` (unmet requirements with candidates, usual quarters and prerequisites), `standards.py` (S01 quarter away, S02 course load, S03 avoid list), `state.py`, `harness.py` (generate mode), `chat.py` (the former advisor chat, now the planner chat with `note_preference`).
+- `POST /agents/planner` replaced `/agents/generate` and `/agents/chat`; `GET`/`DELETE /agents/planner/history`; `GET`/`POST /me/profile/proposals` and accept/reject. Planner change sets re-base on apply while their ops fit, else they go stale; accepted courses are locked.
+- Migration 0012: `student_profile.interests` (the General Information question #14 asked for), `agent_run.state`, `change_set.run_id`/`meta`, `profile_proposal`.
+- `llm_routing.yaml`: `a1_planner_agent` (Opus 5.5, effort medium, 32000 tokens) and `a1_planner_chat` (Opus 5.5, effort low); the A1/A2 routes are gone. The Anthropic backend takes `ANTHROPIC_BASE_URL` (Teamorouter).
+- Web: `features/planner-agent/` (panel, proposals, walkthrough, history, details, citation chips); `PlanGrid` in year columns; `GenerateDialog` and the advisor sheet removed.
+
+**Live runs (Teamorouter, Opus 5.5).** Results and costs in `docs/LIVE-TEST-REPORT.md` ("Planner agent"). The runs found and fixed: the tool budget ended the fill (now 6 lookups, prerequisites in the brief, and one more ask without tools), the 16000-token cap cut the whole plan off (now 32000), the scope gate refused a "why" question (prompt v2), and placements were missing from the agent's input.
+
+**Checks.** See the end of this section (make check output).
+
+**Not done here.** `make e2e` and `make up` (the Docker stack is shared with other sessions); `evals/live/run.py` still drives the removed endpoints (PL17-2).
 

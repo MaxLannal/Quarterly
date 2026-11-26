@@ -231,3 +231,44 @@ def test_another_accounts_plan_is_not_found(env: Env) -> None:
     body = {"mode": "chat", "plan": STATE, "plan_id": plan["id"], "message": "hi"}
     assert browser.post("/agents/planner", json=body, headers=them).status_code == 404
     assert env.browser().post("/agents/planner", json=body).status_code == 404  # logged out
+
+
+def test_planner_add_goes_stale_when_the_course_is_in_another_quarter(env: Env) -> None:
+    """Final review 1: a re-based add must not put a course in the plan twice."""
+    headers, plan = saved(env)
+    (cs,) = chat_proposals(env, headers, plan, "TEST 20200")
+    by_hand = {"op": "add", "course": "TEST 20200", "term": "2100-WI"}
+    moved = env.client.patch(
+        f"/plans/{plan['id']}/items",
+        json={"base_plan_hash": plan["plan_hash"], "ops": [by_hand]},
+        headers=headers,
+    )
+    assert moved.status_code == 200, moved.text
+    resp = apply(env, headers, plan, cs, moved.json()["plan_hash"])
+    assert resp.status_code == 409
+    courses = [
+        i["course"]
+        for i in env.client.get(f"/plans/{plan['id']}", headers=headers).json()["state"]["items"]
+    ]
+    assert courses.count("TEST 20200") == 1
+
+
+def test_an_abandoned_question_does_not_keep_its_state(env: Env) -> None:
+    """Final review 3: a paused run's state (a logged-out student's answers) goes after a day,
+    even when nobody resumes it."""
+    import datetime as dt
+
+    from api.agents.planner.chat import purge_old_history
+
+    with env.db() as db:
+        old = m.AgentRun(kind="planner", plan_id=None, model="x", status="waiting",
+                         created_day=dt.date.today() - dt.timedelta(days=3),
+                         state={"phase": "ask", "day": "2000-01-01"})  # fmt: skip
+        new = m.AgentRun(kind="planner", plan_id=None, model="x", status="waiting",
+                         created_day=dt.date.today(), state={"phase": "ask", "day": "2099-01-01"})  # fmt: skip
+        db.add_all([old, new])
+        db.commit()
+        purge_old_history(db)
+        db.commit()
+        assert db.get(m.AgentRun, old.id).state is None
+        assert db.get(m.AgentRun, new.id).state is not None

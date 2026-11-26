@@ -163,6 +163,18 @@ def purge_old_history(db: Session) -> int:
         m.AgentRun.kind == "chat", m.AgentRun.plan_id.is_(None)
     )
     gone = db.execute(sa.delete(m.ChatMessage).where(m.ChatMessage.run_id.in_(orphans)))
+    # A paused planner run holds the answers given so far (a logged-out student's too): it goes
+    # after `state_ttl_days`, also when nobody resumes it (final review).
+    ttl = dt.date.today() - dt.timedelta(days=load_planner_config().state_ttl_days)
+    db.execute(
+        sa.update(m.AgentRun)
+        .where(
+            m.AgentRun.kind == "planner",
+            m.AgentRun.state.is_not(None),
+            m.AgentRun.created_day < ttl,
+        )
+        .values(state=None)
+    )
     cutoff = dt.date.today() - dt.timedelta(days=USAGE_DAYS)
     db.execute(
         sa.delete(m.AgentRun).where(

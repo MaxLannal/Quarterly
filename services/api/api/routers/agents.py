@@ -155,6 +155,7 @@ def planner(
         return _stream(db, chat.events())
     if body.run_id is None:  # a resume answers a question; it is not a new generation
         _limit(store, request, account, GENERATE_PER_ACCOUNT, GENERATE_PER_IP)
+    purge_old_history(db)
     try:
         run = PlannerRun.build(
             db,

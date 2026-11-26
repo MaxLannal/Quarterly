@@ -514,12 +514,19 @@ class PlannerRun:
         known = known_codes(self.req.plan, self.catalog)
         terms = set(self.terms())
         done = {i.course for i in self.req.plan.items or [] if i.status == "completed"}
+        fixed = {
+            i.course: i.term for i in self.fixed_items() if i.course and i.status != "completed"
+        }
 
         def check(sub: PlanSubmission) -> None:
             problems: set[str] = set()
             seen: dict[str, str] = {}
             for g in sub.groups:
                 for c in g.courses:
+                    if c.code in fixed and fixed[c.code] != c.term:
+                        problems.add(
+                            f"{c.code} is locked or in progress in {fixed[c.code]}; leave it"
+                        )
                     if c.code not in known:
                         problems.add(f"{c.code} is not a course in the catalog")
                     if c.term not in terms:
@@ -529,6 +536,28 @@ class PlannerRun:
                     if c.code in seen and seen[c.code] != g.id:
                         problems.add(f"{c.code} is in two groups ({seen[c.code]}, {g.id})")
                     seen[c.code] = g.id
+            if problems:
+                raise ValueError("Fix these and submit again: " + "; ".join(sorted(problems)))
+
+        return check
+
+    def _repair_check(self) -> Callable[[RepairSubmission], None]:
+        """A repair is checked like a fill: real codes, quarters of the plan, nothing completed,
+        locked or in progress moved (final review: an unchecked op crashed the run)."""
+        known = known_codes(self.req.plan, self.catalog)
+        terms = set(self.terms())
+        fixed = {i.course for i in self.fixed_items() if i.course}
+
+        def check(sub: RepairSubmission) -> None:
+            problems: set[str] = set()
+            for op in sub.ops:
+                if op.course not in known:
+                    problems.add(f"{op.course} is not a course in the catalog")
+                if op.course in fixed:
+                    problems.add(f"{op.course} is completed, locked or in progress; leave it")
+                target = op.term or op.to_term
+                if op.op in ("add", "move") and target not in terms:
+                    problems.add(f"{op.op} {op.course}: give one of the quarters to plan")
             if problems:
                 raise ValueError("Fix these and submit again: " + "; ".join(sorted(problems)))
 
@@ -579,10 +608,10 @@ class PlannerRun:
         """The group as ops on the request plan: add new placements, move an unlocked item of
         the same course."""
         open_by_course = {i.course: i for i in self.open_items() if i.course}
-        fixed = {(i.course, i.term) for i in self.fixed_items()}
+        fixed = {i.course for i in self.fixed_items() if i.course}
         ops: list[ChangeOp] = []
         for code, term in group.placements:
-            if (code, term) in fixed:
+            if code in fixed:  # completed, locked or in progress: never added again
                 continue
             current = open_by_course.get(code)
             if current is None:
@@ -773,7 +802,9 @@ class PlannerRun:
             )
             try:
                 fix = run_agent(
-                    self.llm, self.spec(system, body, submit, record), sink=self.log.sink
+                    self.llm,
+                    self.spec(system, body, submit, record, check=self._repair_check()),
+                    sink=self.log.sink,
                 ).output
             except AgentError as exc:
                 logger.info("%s: repair failed (%s)", TASK, exc.reason)

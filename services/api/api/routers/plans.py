@@ -421,6 +421,11 @@ def _apply_planner_proposal(
         for op in ops
         if isinstance(op, AddOp | MoveOp) and op.course
     ]
+    have = {i.course for i in state.items or [] if i.course}
+    if any(isinstance(op, AddOp) and op.course in have for op in ops):
+        row.status = "stale"  # the course is already in the plan (added by hand or by another run)
+        db.commit()
+        raise HTTPException(status_code=409, detail=NO_LONGER_FITS)
     try:
         apply_ops(state, [*ops, *locks])
     except ChangeOpError as exc:

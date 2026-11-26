@@ -400,3 +400,72 @@ def test_an_impossible_request_is_explained_before_the_plan(
     assert proof.message in notice and "Keeping every quarter full time" in notice
     assert [e["type"] for e in events].index("message") < [e["type"] for e in events].index("plan")
     assert proof.message in str(fake.calls[1]["messages"])  # the model hears it too
+
+
+def test_a_bad_repair_gets_its_repair_turn_instead_of_crashing(
+    env: Env, solved: list[tuple[str, str]]
+) -> None:
+    """Final review 2: a repair op with no quarter or an unknown code is checked like a fill."""
+    broken, t1, t2 = swapped(solved)
+    bad = ToolCall(
+        "submit_repair",
+        {
+            "summary": "x",
+            "ops": [
+                {
+                    "op": "add",
+                    "course": "CMSC 99999",
+                    "term": "",
+                    "from_term": "",
+                    "to_term": "",
+                    "why": "",
+                    "group_id": "",
+                }
+            ],
+            "bent": [],
+        },
+    )
+    good = ToolCall(
+        "submit_repair",
+        {
+            "summary": "Back in order.",
+            "ops": [
+                {
+                    "op": "move",
+                    "course": "CMSC 14100",
+                    "term": "",
+                    "from_term": t2,
+                    "to_term": t1,
+                    "why": "",
+                    "group_id": "",
+                },
+                {
+                    "op": "move",
+                    "course": "CMSC 14200",
+                    "term": "",
+                    "from_term": t1,
+                    "to_term": t2,
+                    "why": "",
+                    "group_id": "",
+                },
+            ],
+            "bent": [],
+        },
+    )
+    fake = FakeLLM(script={TASK: [no_questions(), fill(broken), bad, good, explain(solved)]})
+    events = run(env, fake, profile_answers=answers())
+    assert of(events, "plan")[0]["verdict"] == "valid"
+    assert "CMSC 99999 is not a course in the catalog" in str(fake.calls[3]["messages"])
+
+
+def test_a_locked_course_cannot_be_placed_again(env: Env, solved: list[tuple[str, str]]) -> None:
+    """Final review 5: the plan the model writes may not place a locked course a second time."""
+    code, term = solved[0]
+    other = next(t for _, t in solved if t != term)
+    locked = {**STATE, "items": [{"course": code, "term": term, "locked": True}]}
+    twice = fill([(code, other), *solved[1:]])
+    fake = FakeLLM(script={TASK: [no_questions(), twice, fill(solved), explain(solved)]})
+    events = run(env, fake, profile_answers=answers(), plan=locked)
+    assert f"{code} is locked or in progress" in str(fake.calls[2]["messages"])
+    touched = [o.get("course") for p in of(events, "proposal") for o in p["ops"]]
+    assert code not in touched
