@@ -7,7 +7,7 @@ import { Notice } from "@/components/ui/misc";
 import { useImportOnLogin } from "@/features/planner/importOnLogin";
 
 /** Pages that sit straight on the night, with the light at full strength and no pane of glass. */
-const BARE_PAGES = new Set(["/"]);
+const BARE_PAGES = new Set(["/", "/login", "/signup"]);
 /** Pages whose own glass card floats on the night at full light (docs/DESIGN.md "Dark glass"). */
 const BRIGHT_PAGES = new Set(["/", "/login", "/signup"]);
 

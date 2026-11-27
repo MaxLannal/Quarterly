@@ -3,14 +3,6 @@
    the stage's corners (decorative, aria-hidden). Every animation here is a transform or an angle
    on a small layer; with reduced motion (index.css) everything holds still in its final state. */
 
-/* These pages have no pane of smoked glass: the card floats straight on the night, where the
-   light is at full strength (AppShell already lights it "bright" on /login and /signup). */
-main.page-sheet:has(> .page-enter > .auth-stage) {
-  background: transparent;
-  border-color: transparent;
-  box-shadow: none;
-}
-
 @property --auth-angle {
   syntax: "<angle>";
   initial-value: 0deg;
@@ -256,10 +248,7 @@ main.page-sheet:has(> .page-enter > .auth-stage) {
 
 /* The card rises out of the night when the page opens. Only opacity and transform: a `filter` left
    on the card or an ancestor (even blur(0)) would make it a backdrop root and switch off the glass
-   blur. For the same reason the shell's page entrance (which animates a filter) is off here. */
-.page-enter:has(> .auth-stage) {
-  animation: none;
-}
+   blur. (These pages have no pane: AppShell lists /login and /signup as bare pages.) */
 .auth-rise {
   animation: auth-rise 820ms var(--ease-out) both;
 }
