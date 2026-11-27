@@ -51,7 +51,7 @@ export default function InstructorPage() {
           <Link to="/instructors" className={cn("hover:text-ink", tallTargetClass)}>
             Forum
           </Link>{" "}
-          <span className="text-muted-soft">//</span> Instructor
+          <span aria-hidden="true" className="text-muted-soft">//</span> Instructor
         </Kicker>
         <h1 className="font-display text-display-lg text-ink [text-shadow:0_0_60px_rgb(255_92_112/0.22)] sm:text-display-mega">{i.display_name}</h1>
         <FactChips label="About this instructor" className="mt-8">
@@ -65,7 +65,7 @@ export default function InstructorPage() {
       <section id="courses" aria-labelledby="courses-heading" className="scroll-mt-24">
         <div className="mb-6 flex flex-wrap items-end justify-between gap-3 border-b border-hairline pb-4">
           <div className="flex flex-col gap-2">
-            <Kicker>01 <span className="text-muted-soft">//</span> Teaching</Kicker>
+            <Kicker>01 <span aria-hidden="true" className="text-muted-soft">//</span> Teaching</Kicker>
             <h2 id="courses-heading" className="font-display text-display-sm text-ink sm:text-display-md">
               Courses taught
             </h2>

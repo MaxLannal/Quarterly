@@ -32,7 +32,7 @@ function Row({ index, kicker, title, hint, children }: { index: number; kicker: 
       <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-3 border-b border-hairline pb-5">
         <div className="flex min-w-0 flex-col gap-2">
           <Kicker>
-            {String(index).padStart(2, "0")} <span className="text-muted-soft">//</span> {kicker}
+            {String(index).padStart(2, "0")} <span aria-hidden="true" className="text-muted-soft">//</span> {kicker}
           </Kicker>
           <h2 id={id} className="font-display text-display-sm text-ink sm:text-display-md">
             {title}

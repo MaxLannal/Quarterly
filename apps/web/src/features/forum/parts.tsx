@@ -20,7 +20,7 @@ export function LoginRequired({ title, eyebrow }: { title: string; eyebrow?: Rea
     <PageContainer width="reading" as="section" className="sm:pt-16">
       <PageHeader eyebrow={eyebrow} title={title} size="md" />
       <div className="qg-tile qg-edge flex flex-col gap-6 p-7 sm:p-9">
-        <p className="qg-kicker">Members only <span className="text-muted-soft">//</span> anonymous inside</p>
+        <p className="qg-kicker">Members only <span aria-hidden="true" className="text-muted-soft">//</span> anonymous inside</p>
         <p className="text-body-md text-body [&_a]:text-primary [&_a]:underline [&_a]:underline-offset-2">
           Reviews and discussion are for logged-in students. <Link to={authLinks.login}>Log in</Link> or{" "}
           <Link to={authLinks.signup}>create an account</Link> with your uchicago.edu address. Other readers only ever see a

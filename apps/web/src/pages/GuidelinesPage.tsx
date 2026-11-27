@@ -34,7 +34,7 @@ export default function GuidelinesPage() {
       <div className="mt-6 flex flex-col gap-14 text-body-md text-body">
         <section id="rules" aria-labelledby="rules-heading">
           <div className="mb-6 flex flex-col gap-2 border-b border-hairline pb-4">
-            <Kicker>01 <span className="text-muted-soft">//</span> Before you post</Kicker>
+            <Kicker>01 <span aria-hidden="true" className="text-muted-soft">//</span> Before you post</Kicker>
             <h2 id="rules-heading" className="font-display text-display-sm text-ink sm:text-display-md">
               The rules
             </h2>

@@ -40,7 +40,7 @@ export default function ProgramsPage() {
                 <div className="mb-6 flex flex-wrap items-end justify-between gap-3 border-b border-hairline pb-4">
                   <div className="flex flex-col gap-2">
                     <Kicker>
-                      {String(n + 1).padStart(2, "0")} <span className="text-muted-soft">//</span> {programs.length} {programs.length === 1 ? "program" : "programs"}
+                      {String(n + 1).padStart(2, "0")} <span aria-hidden="true" className="text-muted-soft">//</span> {programs.length} {programs.length === 1 ? "program" : "programs"}
                     </Kicker>
                     <h2 id={`type-${type}-heading`} className="font-display text-display-sm text-ink sm:text-display-md">
                       {TYPE_LABELS[type]}

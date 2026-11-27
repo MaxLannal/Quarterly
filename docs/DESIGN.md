@@ -779,3 +779,29 @@ Max asked for this with three reference pictures: floating glass tool panels ove
   - A file (`.glass-file`) is a sheet of light glass with a folded top-right corner. It is painted by pseudo-elements, so the element keeps a normal box for focus rings and dragging.
   - The planner draws each quarter as a folder and each class as a file in it.
 - **Motion.** The ease is `cubic-bezier(0.16, 1, 0.3, 1)`: long and soft. Hover and press take 150-300 ms, entrances 400-520 ms. Reduced motion stops all of it.
+- **Pages** (built by three parallel agents on 2026-11-27, merged into this branch):
+  - **Sign-in and sign-up** are the reference itself, with Quarterly's own words:
+    - One large dark glass card floats centred on the light, with no pane. A lit arc travels round its edge.
+    - Inside the card: a mono chip ("QUARTERLY.ACCOUNT"), a big serif title, mono capital field labels, pill fields, a mono divider, and a full-width white pill.
+    - Mono captions sit in the page corners (`aria-hidden`). Sign-up has a glass step strip ("Step N of 4") over a glowing progress line. There are no social buttons, because Quarterly has no social login.
+  - **The dashboard** is a bento of glass panels:
+    - A hero panel: a serif greeting, a mono stats strip, and the completeness ring as red light.
+    - The guide as a separate card of red glass.
+    - The questions as quiet numbered rows, whose actions light up on hover.
+  - **About, Privacy and Account** share an editorial reading layout (`features/auth/editorial.tsx`): a mono eyebrow, a serif title and lede, a narrow column, numbered sections, and glass tables. Privacy and Account have a sticky "On this page" index at 1200px and wider. The 404 page is a lone glass folder, "ERROR // 404", lit by a breathing red light.
+  - **The Catalog** is a centred cover:
+    - The glass Courses/Programs switch, a large serif "Catalog", and a glass command field with a ring of light travelling round its edge.
+    - A mono hint, and filter chips.
+    - Browse rows as magazine sections ("01 // NEW THIS YEAR").
+    - The shared kit is in `features/courses/Glass.tsx` and `glass.css`: two-line fact chips, a mono kicker, a rating ring, meters, and luminous reply guide lines.
+  - **Course, instructor and program pages** are magazine covers:
+    - A mono code chip, a huge serif title, the course number faintly in outline behind it, and facts as two-line glass chips.
+    - A two-column body with numbered sections, and a sticky glass side card (rating ring, meters, Add to plan).
+    - A program's requirements are a glass folder with one file per part.
+  - **The Forum** has editorial glass cards, the AI answer lit by a thin red line, and the composer as a floating raised pane.
+  - **The planner**:
+    - A composed headline: a mono eyebrow, the plan name in serif, the verdict as a luminous glass chip, and a mono line of facts.
+    - One floating glass tool bar; the drawer's tab that is open lights up as red glass.
+    - Each year is a shelf of folders. The current or next quarter is `ember`, summer is `frost`, and past quarters are dimmed.
+    - The drag overlay is a file held up, tilted 2.5°. My plans is a grid of glass folders.
+  - **One trap:** a finite CSS animation inside a closed `<details>` never ends, and `settle()` in `e2e/helpers.ts` waits for every animation. Keep entrance animations out of collapsed `<details>`.

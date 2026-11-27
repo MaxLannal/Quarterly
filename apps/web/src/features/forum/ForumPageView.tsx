@@ -49,7 +49,7 @@ function PostList({ page, kind }: { page: ForumPage; kind: PostKind }) {
         // The composer floats: a raised pane of frosted glass with a lit edge.
         <div className="glass-raised qg-rise relative rounded-[28px] p-5 sm:p-8">
           <span aria-hidden="true" className="pointer-events-none absolute inset-x-10 -top-px h-px bg-[linear-gradient(90deg,transparent,rgb(255_120_140/0.8),transparent)]" />
-          <p className="qg-kicker mb-2">{kind === "review" ? "New review" : "New discussion"} <span className="text-muted-soft">//</span> under a pseudonym</p>
+          <p className="qg-kicker mb-2">{kind === "review" ? "New review" : "New discussion"} <span aria-hidden="true" className="text-muted-soft">//</span> under a pseudonym</p>
           <h3 className="mb-6 font-display text-display-sm text-ink">{kind === "review" ? "Write a review" : "Start a discussion"}</h3>
           <Composer page={page} kind={kind} onCancel={() => setComposing(false)} onDone={(p) => p.status === "visible" && setComposing(false)} />
         </div>
@@ -119,7 +119,7 @@ function SummarySlot({ page }: { page: ForumPage }) {
   return (
     <section id="summary" aria-labelledby="summary-heading" className="min-w-0 scroll-mt-24">
       <Kicker className="mb-2">
-        AI summary <span className="text-muted-soft">//</span> from the reviews
+        AI summary <span aria-hidden="true" className="text-muted-soft">//</span> from the reviews
       </Kicker>
       <h2 id="summary-heading" className="mb-5 font-display text-display-sm text-ink sm:text-display-md">
         What students say
@@ -188,7 +188,7 @@ export function ForumPageView({ code, slug }: { code: string; slug: string }) {
           <Link to="/forum" className={cn("hover:text-ink", tallTargetClass)}>
             Forum
           </Link>{" "}
-          <span className="text-muted-soft">//</span> Course × instructor
+          <span aria-hidden="true" className="text-muted-soft">//</span> Course × instructor
         </Kicker>
         <h1 className="max-w-[22ch] font-display text-display-lg text-ink [text-shadow:0_0_60px_rgb(255_92_112/0.22)] sm:text-display-xl">
           <span className="mb-5 flex">

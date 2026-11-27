@@ -21,7 +21,7 @@ function Part({ id, index, kicker, title, actions, children }: { id: string; ind
       <div className="mb-6 flex flex-wrap items-end justify-between gap-3 border-b border-hairline pb-4">
         <div className="flex min-w-0 flex-col gap-2">
           <Kicker>
-            {String(index).padStart(2, "0")} <span className="text-muted-soft">//</span> {kicker}
+            {String(index).padStart(2, "0")} <span aria-hidden="true" className="text-muted-soft">//</span> {kicker}
           </Kicker>
           <h2 id={`${id}-heading`} className="font-display text-display-sm text-ink sm:text-display-md">
             {title}
@@ -96,7 +96,7 @@ export default function CoursePage() {
           <Link to="/courses" className={cn("hover:text-ink", tallTargetClass)}>
             Catalog
           </Link>{" "}
-          <span className="text-muted-soft">//</span> {c.catalog_year}
+          <span aria-hidden="true" className="text-muted-soft">//</span> {c.catalog_year}
         </Kicker>
         <h1 className="relative max-w-[18ch] font-display text-display-lg text-ink [text-shadow:0_0_60px_rgb(255_92_112/0.22)] sm:text-display-mega">
           <span className="mb-5 flex">

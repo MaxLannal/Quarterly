@@ -196,7 +196,7 @@ export default function ProgramPage() {
           <Link to="/programs" className={cn("hover:text-ink", tallTargetClass)}>
             Programs
           </Link>{" "}
-          <span className="text-muted-soft">//</span> {TYPE_SINGULAR[p.type]}
+          <span aria-hidden="true" className="text-muted-soft">//</span> {TYPE_SINGULAR[p.type]}
         </Kicker>
         <h1 className="max-w-[20ch] font-display text-display-lg text-ink [text-shadow:0_0_60px_rgb(255_92_112/0.22)] sm:text-display-mega">{p.name}</h1>
         <p className="mt-5 max-w-reading text-[19px] leading-[1.55] text-body">
@@ -225,7 +225,7 @@ export default function ProgramPage() {
       <div className="grid gap-12 lg:grid-cols-[minmax(0,2fr)_minmax(320px,1fr)] lg:gap-10">
         <section id="req" aria-labelledby="req-heading" className="min-w-0 scroll-mt-24">
           <div className="mb-6 flex flex-col gap-2 border-b border-hairline pb-4">
-            <Kicker>01 <span className="text-muted-soft">//</span> What it takes</Kicker>
+            <Kicker>01 <span aria-hidden="true" className="text-muted-soft">//</span> What it takes</Kicker>
             <h2 id="req-heading" className="font-display text-display-sm text-ink sm:text-display-md">
               Requirements
             </h2>

@@ -201,7 +201,7 @@ export default function CoursesPage() {
             <Button type="submit" className="px-7">Search</Button>
           </div>
           <p aria-hidden="true" className="mt-3 text-center font-mono text-[11px] uppercase tracking-[0.2em] text-muted">
-            Try a code like <span className="text-body-strong">TEST 20000</span> <span className="px-1.5 text-muted-soft">//</span> a word from a title
+            Try a code like <span className="text-body-strong">TEST 20000</span> <span aria-hidden="true" className="px-1.5 text-muted-soft">//</span> a word from a title
           </p>
           <details className="group mt-5" open={filtered}>
             {/* D11 CS-2: a chevron shows it opens. */}

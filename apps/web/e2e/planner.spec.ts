@@ -144,3 +144,19 @@ test("on a phone, the panel is full screen and closes back to the grid", async (
   await expect(drawer).toBeHidden();
   await expect(page.getByRole("button", { name: "Requirements", exact: true })).toBeFocused();
 });
+
+test("planner: a folder's + adds a course to that quarter (dark glass, SPEC planner grid)", async ({ page }) => {
+  await page.goto("/plan");
+  const add = page.getByRole("button", { name: "Add a course to Winter 2100" });
+  await add.click();
+  const dialog = page.getByRole("dialog", { name: "Add a course to Winter 2100" });
+  await expect(dialog).toBeVisible();
+  const search = dialog.getByRole("combobox");
+  await expect(search).toBeFocused();
+  await search.fill("TEST 20000");
+  await dialog.getByRole("option", { name: /TEST 20000/ }).first().click();
+  await expect(dialog).toBeHidden();
+  await expect(page.getByTestId("quarter-2100-WI").locator('[data-testid="course-card"][data-course="TEST 20000"]')).toBeAttached();
+  await expect(card(page, "TEST 20000")).toHaveCount(1);
+  await expect(add).toBeFocused();
+});

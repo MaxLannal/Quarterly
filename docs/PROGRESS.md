@@ -1,6 +1,8 @@
 # Progress
 
-> **Current state (2026-11-24, after PR #21).** Branch `integration/2026-11-24`, not pushed.
+> **Current state (2026-11-27, dark glass redesign).** Branch `claude/quarterly-ui-redesign-c953e9`, local only (Max: "don't commit anything on github or open prs"). It is `main` (3bbb12f) plus Max's overnight redesign: every page in dark glass, Harper Library's reading room on the homepage, and the planner's quarters as glass folders with classes as files. Details are in "Dark glass redesign" at the end of this file. The design rules are in `docs/DESIGN.md` "Dark glass". Waits for Richard: `docs/OPEN_QUESTIONS.md` DG-1 to DG-3.
+>
+> **Earlier state (2026-11-24, after PR #21).** Branch `integration/2026-11-24`, not pushed.
 > - Max's PR #21 (issues #14 and #16) was merged into `main` first (e2a3e67), as Richard chose.
 > - Then one merge commit (0ce0ac4) brought `main` and `fix/taken-course-grading` into this branch.
 > - The fix branch (41090c9) holds Blocker 2 from the review of #21: a taken course keeps its Pass/Fail grading, units and planner lock.
@@ -1504,3 +1506,58 @@ Richard sent five problems in the chat. `docs/FEEDBACK.md` ("Problems with the c
 
 **Not done.** The planner does not read the course load yet. The planner agent (issue #17) will read it.
 
+## Dark glass redesign (Max, 2026-11-27; branch `claude/quarterly-ui-redesign-c953e9`, local only)
+
+**Request (in chat).** "Reconstruct everything on Quarterly on this UI style… Have the Harper Library at the homepage in this UI as well. Have each quarter in the planner a folder like as shown, and classes as files in it. Be magical, smooth, dark, red, glassy. Mature designs." Max added three references: glass panels over a dark picture, glass folders on red light, and a dark glass sign-in card with a ring of white light. Later messages added:
+- "white light goes together intersection with maroon dark red light, flowing in the background"
+- "Don't just change colors… Change layouts and the design of the boxes, and everything."
+- "don't commit anything on github or open prs, just build"
+
+He also asked for no more than 3 agents at a time.
+
+**How it was built.**
+- The lead built the foundation first: tokens, the Aurora light, the shell, the shared controls, `GlassFolder`/`GlassFile`, then the homepage.
+- Three frontend agents then worked in parallel, each in its own worktree and on its own files. Their branches were merged here:
+  - the planner (`worktree-agent-ac438712bae25f34e`)
+  - the Catalog, course, instructor, program and Forum pages (`worktree-agent-afa05da9f27ff9733`)
+  - sign-in, sign-up, the dashboard, account, the static pages and admin (`worktree-agent-ad2a521fb93348c25`)
+- The only merge conflict was one comment line in `folder.css`.
+
+**What changed.** It is a visual redesign: behaviour, data flow, API calls, accessible names and test ids are unchanged. See `docs/DESIGN.md` "Dark glass" for the full description.
+- The token values moved to dark glass; the names did not change.
+- New fonts: Instrument Serif for headlines and JetBrains Mono for labels, both bundled from npm.
+- The Aurora is the flowing light behind every page. Only transforms animate it, and its rings are drawn with masks, not blur filters.
+- Each page is a smoked-glass pane. Pages enter with opacity and a short rise, and the entrance leaves no transform behind (a leftover transform had trapped fixed overlays).
+- The top bar is a floating glass tab dock over a blur veil. The footer has a horizon wordmark.
+- Cards have a rim of light (`.glass-rim`), and tabs are a glass track.
+- The homepage shows Harper's reading room drawn in code (`features/home/HarperHall.tsx`, `harperGeometry.ts`), with three glass folders below it.
+- The planner draws quarters as folders and courses as files.
+- Behaviour additions:
+  - The planner folder's "+" opens "Add a course to <quarter>" (existing course picker, no new API).
+  - On a phone the plan drawer is portalled to `<body>`.
+- Test infrastructure: each `E2E_PORT` builds into its own `dist-e2e-<port>` folder, so parallel runs do not overwrite each other. eslint ignores those folders.
+- Tests: `e2e/harper.spec.ts` (4 tests) replaces `e2e/course-chapel.spec.ts`. `planner.spec.ts` has a new test for the folder's "+" button (dialog, search focus, the card lands in that quarter, focus returns to "+"). The fonts check in `design.spec.ts` now expects the serif headlines. A unit test was added for `quarterStages`.
+- The chapel code (`features/home/CourseChapel.tsx`, `chapel/`, `public/home/course-chapel.json`, `tools/course-chapel/`) is still in the repository but no longer mounted (DG-1).
+
+**Checks (on the merged branch).**
+- tsc and eslint: clean.
+- vitest: 25 files, 216 tests passed.
+- Playwright (MSW): 102 passed, 0 failed (61 skipped: the screenshot spec, which runs only with `SCREENSHOTS=1`).
+- ruff, ruff format, `api-client-check`, `golden` (PASS=115) and mypy: all passed.
+- pytest: the first run had 792 passed and 1 failed. The failure was the test database dropping its connection ("terminating connection due to administrator command"); no Python changed. The rerun passed: planner_core 184, the other suites 793, 0 failed.
+- `make e2e` (journeys A-D on Docker) was not run: it switches the shared stack to fake AI.
+
+**Screenshots.** `docs/screenshots/dark-glass/` holds every page at 1440 and 390 (61 files) and `index.html`, a gallery to open in a browser. The set is 47 MB, so it is **not committed**. To regenerate it: `cd apps/web && SCREENSHOTS=1 SCREENSHOTS_DIR=dark-glass npx playwright test e2e/screenshots.spec.ts`. In full-page captures the fixed light stops after the first screen, which leaves a darker band about 900px down; a browser does not show it.
+
+**Known issues.**
+- The sign-in button reads in mono capitals ("LOG IN"); its accessible name is unchanged.
+- The Catalog's mono hint wraps onto two lines at 390px.
+- With mock data, rows that have one card leave space to their right.
+- With the planner drawer open at 1024px, long course titles are cut off with "…" (as before).
+
+**Spec review** (spec-reviewer, after the merge): no blockers. Its three findings are fixed:
+- the new test for the "+" button
+- SPEC now says the goal chips sit at the foot of the folder, above the pocket
+- the decorative "//" separators (3.5:1, and read aloud as "slash slash") are now `aria-hidden`
+
+**Cost.** The session's cost hook reported about $216 by the end, including the four agents.
