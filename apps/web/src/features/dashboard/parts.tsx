@@ -75,8 +75,8 @@ export function DashCard({
       data-spotlight=""
       className={cn(
         "flex h-full min-w-0 scroll-mt-24 flex-col",
-        tone === "paper" && "dash-panel",
-        tone === "soft" && "dash-panel dash-panel-soft",
+        tone === "paper" && "dash-panel glass-rim",
+        tone === "soft" && "dash-panel dash-panel-soft glass-rim",
         tone === "ink" && "dash-guide p-6 text-on-dark sm:p-7",
         className,
       )}

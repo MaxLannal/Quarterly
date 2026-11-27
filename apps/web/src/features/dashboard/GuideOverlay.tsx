@@ -66,10 +66,10 @@ export function GuideOverlay({ open, onClose, guide, profile, questions, catalog
       role="dialog"
       aria-modal="true"
       aria-labelledby={titleId}
-      className="fixed inset-0 z-[60] flex animate-fade-in flex-col overflow-y-auto overscroll-contain bg-surface-dark text-on-dark"
+      className="fixed inset-0 z-[60] flex animate-fade-in flex-col overflow-y-auto overscroll-contain dash-room text-on-dark"
     >
       <DriftingWords words={[...profile.programs.map((p) => p.name), ...profile.research_areas]} />
-      <header className="sticky top-0 z-10 flex items-center gap-3 border-b border-on-dark/10 bg-surface-dark/85 px-4 py-2 backdrop-blur sm:px-8">
+      <header className="sticky top-0 z-10 flex items-center gap-3 border-b border-on-dark/10 bg-surface-dark/70 px-4 py-2 backdrop-blur-xl sm:px-8">
         <GuideMark size={18} className={cn("text-primary", thinking && "dash-thinking")} />
         <h2 id={titleId} className="font-display text-title-md text-on-dark">
           Your guide
@@ -93,7 +93,7 @@ export function GuideOverlay({ open, onClose, guide, profile, questions, catalog
         <div className="flex min-w-0 flex-col gap-6">
           {lastStudent && (
             <p className="max-w-[46rem] text-body-sm text-on-dark-soft">
-              <span className="text-caption-uppercase uppercase">You said</span> <span className="italic">“{lastStudent.length > 220 ? `${lastStudent.slice(0, 220)}…` : lastStudent}”</span>
+              <span className="mono-label not-italic">You said</span> <span className="italic">“{lastStudent.length > 220 ? `${lastStudent.slice(0, 220)}…` : lastStudent}”</span>
             </p>
           )}
 
@@ -124,9 +124,9 @@ export function GuideOverlay({ open, onClose, guide, profile, questions, catalog
           </div>
 
           {guide.status === "error" && (
-            <div role="alert" className="flex flex-wrap items-center gap-3 rounded-xl border border-on-dark/15 bg-surface-dark-elevated px-4 py-3 text-body-sm">
+            <div role="alert" className="flex flex-wrap items-center gap-3 rounded-[20px] bg-error-wash px-4 py-3 text-body-sm shadow-[inset_0_0_0_1px_rgb(255_143_128/0.22)]">
               <span className="min-w-0 flex-1">{guide.error}</span>
-              <button type="button" onClick={guide.retry} className="min-h-11 rounded-pill bg-on-dark px-4 text-button text-ink hover:bg-on-dark-soft">
+              <button type="button" onClick={guide.retry} className="min-h-11 rounded-pill bg-ink px-5 text-button text-canvas hover:bg-white">
                 Try again
               </button>
             </div>
@@ -150,7 +150,7 @@ export function GuideOverlay({ open, onClose, guide, profile, questions, catalog
           )}
 
           {turn?.done && !thinking && (
-            <div className="dash-rise flex flex-wrap items-center gap-3 rounded-xl border border-on-dark/15 bg-surface-dark-elevated p-4">
+            <div className="dash-rise glass-rim flex flex-wrap items-center gap-3 rounded-[22px] bg-white/[0.04] p-5">
               <p className="min-w-0 flex-1 text-body-sm text-on-dark">Your guide has no more questions. Accepted answers are already on your dashboard.</p>
               <Link to="/plan" onClick={onClose} className="inline-flex min-h-11 items-center rounded-pill bg-primary px-5 text-button text-on-primary hover:bg-primary-hover">
                 Open the planner
@@ -162,7 +162,7 @@ export function GuideOverlay({ open, onClose, guide, profile, questions, catalog
           )}
 
           <form
-            className="flex items-end gap-2 rounded-xxl border border-on-dark/20 bg-surface-dark-elevated p-2 focus-within:border-on-dark/50"
+            className="flex items-end gap-2 rounded-[26px] bg-black/30 p-2 shadow-[inset_0_0_0_1px_rgb(255_255_255/0.14),inset_0_1px_3px_rgb(0_0_0/0.35)] transition-shadow duration-300 focus-within:shadow-[inset_0_0_0_1px_var(--color-primary),0_0_0_4px_rgb(255_92_112/0.16)]"
             onSubmit={(e) => {
               e.preventDefault();
               send(draft);
@@ -265,10 +265,10 @@ function ProposalCard({ proposal, guide, profile, questions, catalogYear }: { pr
   const proposedProfile = useMemo(() => patched(profile, proposal.patch), [profile, proposal.patch]);
   const [edit, setEdit] = useState<unknown>(() => (question ? (proposedProfile as unknown as Record<string, unknown>)[question.field] : null));
   return (
-    <li className="dash-rise rounded-xl bg-surface-card p-3 text-ink shadow-overlay sm:p-4">
+    <li className="dash-rise glass-raised glass-rim rounded-[22px] p-4 text-ink sm:p-5">
       <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
         <div className="min-w-0 flex-1">
-          <p className="text-[12px] font-bold uppercase tracking-[0.08em] text-primary">{proposal.label}</p>
+          <p className="mono-label text-primary">{proposal.label}</p>
           <p className="text-body-md text-ink">{proposal.value}</p>
         </div>
         {!changing && (
@@ -373,17 +373,17 @@ function ProgressRail({ questions, current, covered, progress }: { questions: Qu
 function AcceptedPanel({ guide }: { guide: Guide }) {
   const { accepted } = guide;
   return (
-    <div className="flex flex-col gap-3 rounded-xxl border border-on-dark/15 bg-surface-dark-elevated/70 p-4">
+    <div className="glass-rim flex flex-col gap-3 rounded-[24px] bg-white/[0.035] p-5">
       <h3 className="font-display text-title-md text-on-dark">Saved to your profile</h3>
       {accepted.length === 0 ? (
         <p className="text-body-sm text-on-dark-soft">Answer with a button or in your own words. Each answer waits for your Accept before it is saved.</p>
       ) : (
         <ul className="flex flex-col gap-1.5">
           {accepted.map((p) => (
-            <li key={p.id} className="flex items-start gap-2 rounded-xl bg-surface-dark px-3 py-2 text-body-sm">
+            <li key={p.id} className="flex items-start gap-2 rounded-[14px] bg-black/25 px-3 py-2.5 text-body-sm">
               <CheckIcon size={14} className="mt-1 shrink-0 text-success" />
               <span className="min-w-0">
-                <span className="block text-[11px] font-semibold uppercase tracking-wider text-on-dark-soft">{p.label}</span>
+                <span className="mono-label block text-on-dark-soft">{p.label}</span>
                 <span className="text-on-dark">{p.value}</span>
               </span>
             </li>

@@ -57,7 +57,7 @@ function LoggedOut() {
   const links = useAuthLinks();
   return (
     <div className={GRID}>
-      <section data-spotlight="" className="dash-panel dash-hero flex flex-col justify-center gap-5 md:col-span-6 xl:col-span-8 xl:min-h-[22rem]">
+      <section data-spotlight="" className="dash-panel glass-rim dash-hero flex flex-col justify-center gap-5 md:col-span-6 xl:col-span-8 xl:min-h-[22rem]">
         <p className="mono-label text-primary">Your Quarterly // Dashboard</p>
         <h1 className="max-w-[16ch] font-display text-[48px] leading-[1.02] tracking-[-1px] text-ink sm:text-[68px] sm:tracking-[-1.4px]">
           Tell Quarterly <em>about you</em>.
@@ -122,7 +122,7 @@ function Preview() {
   return (
     <div aria-hidden="true" className="relative overflow-hidden rounded-[28px] bg-white/[0.02] p-4 shadow-[inset_0_0_0_1px_rgb(255_255_255/0.05)] sm:p-6">
       <div className="dash-preview grid gap-4 md:grid-cols-[1.3fr_1fr]">
-        <div className="dash-panel">
+        <div className="dash-panel glass-rim">
           <p className="font-display text-display-sm text-ink">General Information</p>
           <dl className="mt-4 grid">
             {rows.map(([k, v]) => (
@@ -330,7 +330,7 @@ function ProfileCard({
     ["Courses taken", String(profile.taken_courses.length)],
   ];
   return (
-    <section aria-labelledby="dash-name" data-spotlight="" className="dash-panel dash-hero flex flex-col gap-7 md:col-span-6 xl:col-span-8">
+    <section aria-labelledby="dash-name" data-spotlight="" className="dash-panel glass-rim dash-hero flex flex-col gap-7 md:col-span-6 xl:col-span-8">
       <div className="flex flex-col-reverse gap-6 sm:flex-row sm:items-start sm:justify-between">
         <div className="min-w-0">
           <p className="mono-label text-primary">Profile // Your Quarterly</p>
