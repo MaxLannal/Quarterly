@@ -723,7 +723,7 @@
 
 /* Each page rises out of the glass when it opens. */
 .page-enter {
-  animation: page-enter 520ms var(--ease-out) both;
+  animation: page-enter 520ms var(--ease-out) backwards;
 }
 /* Opacity and a short rise only: a blur over a whole page would cost every frame of the entrance. */
 @keyframes page-enter {

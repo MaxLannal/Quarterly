@@ -54,20 +54,20 @@ test("the DESIGN.md fonts load from the bundle", async ({ page }) => {
   const loaded = await page.evaluate(async () => {
     await document.fonts.ready;
     return {
-      // Redesign 2026-11-20 (docs/DESIGN.md "Maroon and night"): headlines are bold Inter; Newsreader
-      // stays for the wordmark (500) and the italic accent ("within your reach.", 400 italic). A
-      // browser loads only the faces a page uses.
+      // Dark glass (docs/DESIGN.md, 2026-11-27): headlines, the wordmark and the italic accent
+      // ("within your reach.") are Instrument Serif 400; small labels are JetBrains Mono; body is
+      // Inter. A browser loads only the faces a page uses.
       display:
-        document.fonts.check('800 96px "Inter Variable"') &&
-        document.fonts.check('500 28px "Newsreader"') &&
-        document.fonts.check('italic 400 60px "Newsreader"'),
+        document.fonts.check('400 96px "Instrument Serif"') &&
+        document.fonts.check('italic 400 60px "Instrument Serif"') &&
+        document.fonts.check('500 12px "JetBrains Mono Variable"'),
       body: document.fonts.check('400 16px "Inter Variable"'),
       h1: getComputedStyle(document.querySelector("h1") as Element).fontFamily,
     };
   });
   expect(loaded.display).toBe(true);
   expect(loaded.body).toBe(true);
-  expect(loaded.h1).toContain("Inter");
+  expect(loaded.h1).toContain("Instrument Serif");
   expect(fontRequests.length).toBeGreaterThan(0);
   expect(fontRequests.every((p) => p.startsWith("/assets/"))).toBe(true);
 });
