@@ -14,6 +14,7 @@ import { applyStoredChangeSet } from "@/features/generate/deterministic";
 import { opText } from "@/features/planner/context";
 import { termLabel } from "@/features/planner/terms";
 import { ReportBadge } from "@/features/planner/VerifierBadge";
+import "./advisor.css";
 
 type CardState = "proposed" | "applied" | "dismissed";
 type Entry =
@@ -115,8 +116,11 @@ export function ProposalCard({
 }) {
   const phrase = confirmationPhrase(changeSet.ops);
   return (
-    <article className="rounded-xl border border-hairline-strong bg-surface-card p-4 text-body-sm text-ink" aria-label="Proposed change">
-      <h4 className="text-caption-uppercase uppercase text-muted">Proposed change</h4>
+    <article className="glass-rim rounded-[22px] bg-white/[0.045] p-5 text-body-sm text-ink shadow-[0_14px_36px_rgb(0_0_0/0.3)]" aria-label="Proposed change">
+      <h4 className="mono-label flex items-center gap-2 text-muted">
+        <span aria-hidden="true" className="inline-block size-1.5 rounded-pill bg-primary shadow-[0_0_8px_var(--color-primary)]" />
+        Proposed change
+      </h4>
       <ul className="my-2 list-disc pl-5 marker:text-gray-dark">
         {changeSet.ops.map((op, i) => (
           <li key={i}>{opText(op)}</li>
@@ -292,20 +296,23 @@ export function AdvisorPanel({ plan, planId = null, onApply, composerRef, curren
         )}
         <ol className="flex flex-col gap-4" aria-label="Advisor messages" aria-live="polite">
           {entries.length === 0 && (
-            <li className="mx-auto max-w-sm py-8 text-center text-body-sm text-muted">Ask a planning question, for example “Which elective is lighter?”</li>
+            <li className="mx-auto flex max-w-sm flex-col items-center gap-4 py-12 text-center text-body-sm text-muted">
+              <span aria-hidden="true" className="advisor-orb size-14" />
+              Ask a planning question, for example “Which elective is lighter?”
+            </li>
           )}
           {entries.map((entry, i) => (
             <li key={i} className="animate-rise">
               {entry.kind === "user" ? (
                 <div className="flex justify-end">
-                  <div className="max-w-[85%] whitespace-pre-wrap rounded-xl rounded-tr-xs bg-primary-wash px-4 py-2.5 text-body-sm text-ink" data-testid="chat-bubble-user">
+                  <div className="max-w-[85%] whitespace-pre-wrap rounded-[22px] rounded-tr-md bg-[linear-gradient(160deg,rgb(255_92_112/0.24),rgb(150_14_40/0.2))] px-4 py-2.5 text-body-sm text-ink shadow-[inset_0_0_0_1px_rgb(255_120_140/0.3),inset_0_1px_0_rgb(255_255_255/0.1)]" data-testid="chat-bubble-user">
                     <span className="sr-only">You: </span>
                     {entry.text}
                   </div>
                 </div>
               ) : entry.kind === "assistant" ? (
                 <AiRow>
-                  <div className="w-fit max-w-full rounded-xl rounded-tl-xs border border-hairline bg-surface-card px-4 py-2.5 text-body-sm text-body" data-testid="chat-bubble-ai">
+                  <div className="w-fit max-w-full rounded-[22px] rounded-tl-md bg-white/[0.05] px-4 py-2.5 text-body-sm text-body shadow-[inset_0_0_0_1px_rgb(255_255_255/0.08),inset_0_1px_0_rgb(255_255_255/0.08)]" data-testid="chat-bubble-ai">
                     <span className="sr-only">Quarterly (AI): </span>
                     <p className="whitespace-pre-wrap">{entry.text}</p>
                     {entry.citations.length > 0 && (
@@ -344,10 +351,10 @@ export function AdvisorPanel({ plan, planId = null, onApply, composerRef, curren
           {busy && (
             <li role="status" className="animate-fade-in">
               <AiRow>
-                <div className="flex h-10 items-center gap-1 rounded-xl rounded-tl-xs border border-hairline bg-surface-card px-4" data-testid="typing-indicator">
+                <div className="flex h-10 items-center gap-1 rounded-[22px] rounded-tl-md bg-white/[0.05] px-4 shadow-[inset_0_0_0_1px_rgb(255_255_255/0.08)]" data-testid="typing-indicator">
                   <span className="sr-only">The AI is writing…</span>
                   {[0, 150, 300].map((d) => (
-                    <span key={d} aria-hidden="true" className="inline-block size-1.5 animate-typing rounded-pill bg-gray-dark" style={{ animationDelay: `${d}ms` }} />
+                    <span key={d} aria-hidden="true" className="inline-block size-1.5 animate-typing rounded-pill bg-primary shadow-[0_0_8px_rgb(255_92_112/0.6)]" style={{ animationDelay: `${d}ms` }} />
                   ))}
                 </div>
               </AiRow>
@@ -362,11 +369,11 @@ export function AdvisorPanel({ plan, planId = null, onApply, composerRef, curren
           </Notice>
         </div>
       )}
-      <form onSubmit={send} className="border-t border-hairline bg-canvas-soft px-4 py-3 sm:px-6">
+      <form onSubmit={send} className="px-4 pb-4 pt-2 sm:px-6 sm:pb-5">
         <label htmlFor={inputId} className="sr-only">
           Ask the advisor
         </label>
-        <div className="flex items-end gap-2 rounded-xl border border-border-input bg-surface-card py-1 pl-3 pr-1 focus-within:border-primary focus-within:shadow-[inset_0_0_0_1px_var(--color-primary)]">
+        <div className="flex items-end gap-2 rounded-[26px] border border-border-input bg-white/[0.045] py-1 pl-4 pr-1 shadow-[inset_0_1px_2px_rgb(0_0_0/0.3)] transition-[border-color,box-shadow] duration-300 focus-within:border-primary focus-within:shadow-[0_0_0_4px_rgb(255_92_112/0.14)]">
           <textarea
             ref={inputRef}
             id={inputId}
@@ -391,8 +398,8 @@ export function AdvisorPanel({ plan, planId = null, onApply, composerRef, curren
 function AiRow({ children }: { children: ReactNode }) {
   return (
     <div className="flex items-start gap-2.5 pr-6 sm:pr-12">
-      <span aria-hidden="true" className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-full bg-surface-strong text-ink">
-        <SparkIcon size={16} />
+      <span aria-hidden="true" className="advisor-orb mt-0.5 flex size-8 shrink-0 items-center justify-center text-ink">
+        <SparkIcon size={15} />
       </span>
       <div className="min-w-0 flex-1">{children}</div>
     </div>
@@ -409,13 +416,14 @@ export function AdvisorSheet({ open, onClose, ...panel }: AdvisorPanelProps & { 
   const composer = useRef<HTMLTextAreaElement>(null);
   return (
     <TopSheet open={open} onClose={onClose} labelledBy={titleId} describedBy={descId} initialFocus={composer}>
-      <header className="flex items-start gap-3 border-b border-hairline px-4 py-3 sm:px-6 sm:py-4">
-        <span aria-hidden="true" className="mt-1 hidden size-10 shrink-0 items-center justify-center rounded-full bg-primary-wash text-primary sm:flex">
-          <SparkIcon size={20} />
+      <header className="flex items-start gap-3 border-b border-white/[0.07] px-4 py-3 sm:px-6 sm:py-5">
+        <span aria-hidden="true" className="advisor-orb mt-1 hidden size-11 shrink-0 items-center justify-center text-ink sm:flex">
+          <SparkIcon size={19} />
         </span>
         <div className="min-w-0 flex-1">
+          <p className="mono-label text-muted">Advisor // AI</p>
           <div className="flex flex-wrap items-center gap-2">
-            <h2 id={titleId} className="font-display text-display-sm">
+            <h2 id={titleId} className="font-display text-display-sm leading-tight">
               Ask Quarterly
             </h2>
           </div>

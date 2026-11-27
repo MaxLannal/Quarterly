@@ -10,6 +10,7 @@ import {
   planTerms,
   planYearCount,
   QUARTERS,
+  quarterStages,
   resolveTermRef,
   termAt,
   termLabel,
@@ -80,5 +81,20 @@ describe("graduation quarter (FEEDBACK F3)", () => {
     expect(classYearLabel(3, 2)).toBe("Fourth year");
     expect(classYearLabel(5, 1)).toBe("Fifth year");
     expect(classYearLabel(9, 1)).toBe("Year 9");
+  });
+
+  it("stages each quarter against today's quarter (the folder tones)", () => {
+    const terms = ["2026-AU", "2027-WI", "2027-SP", "2027-AU"];
+    expect([...quarterStages(terms, "2027-WI")]).toEqual([
+      ["2026-AU", "past"],
+      ["2027-WI", "now"],
+      ["2027-SP", "ahead"],
+      ["2027-AU", "ahead"],
+    ]);
+    // Today's quarter is not shown (a summer, or a plan that starts later): the first one ahead is "next".
+    expect(quarterStages(terms, "2025-AU").get("2026-AU")).toBe("next");
+    expect(quarterStages(terms, "2025-AU").get("2027-WI")).toBe("ahead");
+    // A finished plan has only past quarters.
+    expect([...quarterStages(terms, "2030-AU").values()].every((s) => s === "past")).toBe(true);
   });
 });

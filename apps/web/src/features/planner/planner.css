@@ -1,0 +1,411 @@
+/*
+ * The planner in dark glass (docs/DESIGN.md "Dark glass", Max 2026-11-27): a composed headline,
+ * one floating glass tool bar, academic years as shelves of quarter folders (components/ui/folder),
+ * classes as files, raised glass drawers. Long, soft easing; reduced motion stops all of it.
+ */
+
+/* ---------- Headline ---------- */
+.planner-title {
+  line-height: 1.02;
+  text-shadow: 0 0 48px rgb(255 92 112 / 0.2);
+}
+.planner-eyebrow-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background: var(--color-primary);
+  box-shadow: 0 0 10px var(--color-primary);
+}
+.planner-fact-sep {
+  color: var(--color-muted);
+  font-size: 12px;
+}
+.planner-chip {
+  background: linear-gradient(180deg, rgb(255 255 255 / 0.06), rgb(255 255 255 / 0.025));
+  box-shadow:
+    inset 0 0 0 1px rgb(255 255 255 / 0.12),
+    inset 0 1px 0 rgb(255 255 255 / 0.08);
+}
+
+/* The plan check's verdict: a luminous glass chip. A dot of light carries the tone; the words say it. */
+.planner-verdict {
+  --dot: var(--color-muted);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 0 18px 0 15px;
+  border-radius: 9999px;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--color-ink);
+  cursor: pointer;
+  background: linear-gradient(180deg, rgb(255 255 255 / 0.08), rgb(255 255 255 / 0.03));
+  box-shadow:
+    inset 0 0 0 1px rgb(255 255 255 / 0.12),
+    inset 0 1px 0 rgb(255 255 255 / 0.12),
+    0 10px 30px rgb(0 0 0 / 0.3);
+  transition:
+    box-shadow 400ms var(--ease-out),
+    background 400ms var(--ease-out),
+    translate 400ms var(--ease-out);
+}
+.planner-verdict:hover {
+  translate: 0 -1px;
+}
+.planner-verdict-dot {
+  width: 8px;
+  height: 8px;
+  flex-shrink: 0;
+  border-radius: 9999px;
+  background: var(--dot);
+  box-shadow:
+    0 0 0 3px color-mix(in srgb, var(--dot) 18%, transparent),
+    0 0 14px var(--dot);
+}
+.planner-verdict[data-tone="valid"] {
+  --dot: var(--color-success);
+  background: linear-gradient(180deg, rgb(185 214 144 / 0.13), rgb(185 214 144 / 0.04));
+  box-shadow:
+    inset 0 0 0 1px rgb(185 214 144 / 0.32),
+    inset 0 1px 0 rgb(255 255 255 / 0.12),
+    0 0 40px rgb(185 214 144 / 0.16),
+    0 10px 30px rgb(0 0 0 / 0.3);
+}
+.planner-verdict[data-tone="warnings"] {
+  --dot: var(--color-warning);
+  color: var(--color-warning);
+  background: linear-gradient(180deg, rgb(242 182 107 / 0.13), rgb(242 182 107 / 0.04));
+  box-shadow:
+    inset 0 0 0 1px rgb(242 182 107 / 0.3),
+    inset 0 1px 0 rgb(255 255 255 / 0.1),
+    0 10px 30px rgb(0 0 0 / 0.3);
+}
+.planner-verdict[data-tone="errors"] {
+  --dot: var(--color-error);
+  color: var(--color-error);
+  background: linear-gradient(180deg, rgb(255 110 95 / 0.15), rgb(255 110 95 / 0.05));
+  box-shadow:
+    inset 0 0 0 1px rgb(255 143 128 / 0.32),
+    inset 0 1px 0 rgb(255 255 255 / 0.1),
+    0 10px 30px rgb(0 0 0 / 0.3);
+}
+.planner-verdict[data-checking="true"] .planner-verdict-dot {
+  animation: planner-pulse 1.4s ease-in-out infinite;
+}
+@keyframes planner-pulse {
+  50% {
+    opacity: 0.35;
+  }
+}
+
+/* ---------- The tool bar: one floating slab of glass, its buttons segments of it ---------- */
+.planner-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+  padding: 6px;
+  border-radius: 26px;
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.07), rgb(255 255 255 / 0.025)),
+    rgb(18 9 12 / 0.55);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.1),
+    0 24px 60px rgb(0 0 0 / 0.42);
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
+  backdrop-filter: blur(20px) saturate(150%);
+}
+.planner-toolbar-sep {
+  width: 1px;
+  height: 24px;
+  margin: 0 6px;
+  background: rgb(255 255 255 / 0.12);
+}
+.planner-seg {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 16px;
+  border-radius: 20px;
+  white-space: nowrap;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--color-body);
+  transition:
+    color 300ms var(--ease-out),
+    background-color 300ms var(--ease-out),
+    box-shadow 300ms var(--ease-out);
+}
+.planner-seg:hover {
+  color: var(--color-ink);
+  background-color: rgb(255 255 255 / 0.06);
+}
+.planner-seg:active {
+  background-color: rgb(255 255 255 / 0.1);
+}
+.planner-seg:focus-visible {
+  outline-offset: -2px;
+}
+/* The tab that is showing in the drawer: lit red glass. */
+.planner-seg[aria-expanded="true"] {
+  color: var(--color-ink);
+  background: linear-gradient(180deg, rgb(255 92 112 / 0.26), rgb(160 16 44 / 0.22));
+  box-shadow:
+    inset 0 0 0 1px rgb(255 120 140 / 0.42),
+    inset 0 1px 0 rgb(255 255 255 / 0.14),
+    0 6px 22px rgb(200 20 50 / 0.25);
+}
+.planner-count {
+  background: rgb(255 110 95 / 0.16);
+  color: var(--color-error);
+}
+
+/* ---------- Years: shelves of folders ---------- */
+.planner-rule {
+  flex: 1;
+  align-self: center;
+  min-width: 40px;
+  height: 1px;
+  background: linear-gradient(90deg, rgb(255 255 255 / 0.18), rgb(255 255 255 / 0.05) 70%, transparent);
+}
+.planner-shelf-row {
+  position: relative;
+  align-items: stretch;
+}
+/* The shelf the folders stand on: a lit line, brightest in the middle, with a faint red spill. */
+.planner-shelf-row::after {
+  content: "";
+  position: absolute;
+  left: -12px;
+  right: -12px;
+  bottom: -18px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.12) 18%, rgb(255 150 165 / 0.24) 50%, rgb(255 255 255 / 0.12) 82%, transparent);
+  pointer-events: none;
+}
+.planner-shelf-row::before {
+  content: "";
+  position: absolute;
+  left: 10%;
+  right: 10%;
+  bottom: -42px;
+  height: 24px;
+  background: radial-gradient(50% 100% at 50% 0%, rgb(255 60 90 / 0.09), transparent 70%);
+  pointer-events: none;
+}
+
+/* ---------- A quarter: its folder ---------- */
+.planner-quarter {
+  position: relative;
+  min-width: 0;
+  height: 100%;
+  container-type: inline-size;
+}
+/* An open card menu reaches over the files below and out of the folder: lift the body over the
+   pocket and the folder over its neighbours (FEEDBACK "Minor issues", 2026-11-16). */
+.planner-quarter:has([role="menu"]) {
+  z-index: 20;
+}
+.planner-quarter:has([role="menu"]) .glass-folder-body {
+  z-index: 3;
+}
+.planner-quarter[data-stage="past"] .glass-folder-back {
+  opacity: 0.55;
+}
+.planner-tab {
+  letter-spacing: -0.01em;
+  padding-top: 2px;
+}
+.planner-folder-body {
+  padding: 16px 12px 66px;
+}
+
+/* "Now", "Next" or "Past", on the folder's shoulder beside the tab. */
+.planner-stage {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--color-muted);
+}
+.planner-stage::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background: currentColor;
+}
+.planner-stage[data-stage="now"],
+.planner-stage[data-stage="next"] {
+  color: #ff9aa8;
+}
+.planner-stage[data-stage="now"]::before,
+.planner-stage[data-stage="next"]::before {
+  box-shadow: 0 0 10px var(--color-primary);
+}
+@container (max-width: 250px) {
+  .planner-stage {
+    display: none;
+  }
+}
+
+.planner-empty {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  min-height: 64px;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 21px;
+  color: var(--color-body);
+}
+.planner-goal {
+  border-radius: 9999px;
+  padding: 2px 10px;
+  font-size: 13px;
+  color: var(--color-body);
+  background: rgb(255 255 255 / 0.06);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.1);
+}
+
+/* The dark glossy square "+" on the pocket (Max's reference). */
+.planner-add {
+  position: relative;
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  overflow: hidden;
+  cursor: pointer;
+  color: var(--color-ink);
+  background: linear-gradient(180deg, #2c1b20, #0e0709 72%);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.24),
+    inset 0 0 0 1px rgb(255 255 255 / 0.1),
+    inset 0 -8px 14px rgb(0 0 0 / 0.35),
+    0 8px 18px rgb(0 0 0 / 0.5);
+  transition:
+    box-shadow 300ms var(--ease-out),
+    translate 300ms var(--ease-out),
+    color 300ms var(--ease-out);
+}
+.planner-add::before {
+  content: "";
+  position: absolute;
+  inset: 1px 1px 52% 1px;
+  border-radius: 13px 13px 8px 8px;
+  background: linear-gradient(180deg, rgb(255 255 255 / 0.17), rgb(255 255 255 / 0.02));
+  pointer-events: none;
+}
+.planner-add svg {
+  position: relative;
+}
+.planner-add:hover {
+  color: #ffffff;
+  translate: 0 -1px;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.28),
+    inset 0 0 0 1px rgb(255 120 140 / 0.55),
+    inset 0 -8px 14px rgb(0 0 0 / 0.35),
+    0 10px 26px rgb(255 60 90 / 0.32);
+}
+.planner-add:active {
+  translate: 0 1px;
+}
+
+/* ---------- A class: its file ---------- */
+.planner-file-slot::before {
+  background: rgb(255 255 255 / 0.035);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.16);
+}
+.planner-file-done::before {
+  background:
+    linear-gradient(180deg, rgb(185 214 144 / 0.08), rgb(255 255 255 / 0.03)),
+    rgb(24 18 18 / 0.6);
+}
+/* Highlighted by the selected issue in the plan check: the sheet takes the red light. */
+.planner-file[data-highlighted="true"] {
+  filter: drop-shadow(0 0 14px rgb(255 60 90 / 0.45));
+}
+.planner-file[data-highlighted="true"]::before {
+  background:
+    linear-gradient(180deg, rgb(255 92 112 / 0.26), rgb(255 92 112 / 0.1)),
+    rgb(40 12 18 / 0.66);
+  box-shadow:
+    inset 0 0 0 1px rgb(255 130 148 / 0.75),
+    inset 0 1px 0 rgb(255 255 255 / 0.18);
+}
+
+/* The file held up under the pointer while dragging: tilted, lifted, a little translucent. */
+.planner-held {
+  rotate: -2.5deg;
+  scale: 1.03;
+  opacity: 0.94;
+  filter: drop-shadow(0 26px 30px rgb(0 0 0 / 0.6)) drop-shadow(0 0 22px rgb(255 60 90 / 0.2));
+  animation: planner-lift 320ms var(--ease-out) both;
+}
+@keyframes planner-lift {
+  from {
+    rotate: 0deg;
+    scale: 1;
+    opacity: 1;
+  }
+}
+
+/* ---------- The drawer ---------- */
+.planner-drawer-tabs [role="tablist"] {
+  padding: 0 10px;
+}
+.planner-drawer-tabs [role="tab"] {
+  padding-inline: 8px;
+  font-size: 15px;
+}
+.planner-label {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  line-height: 1.4;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+/* Progress: a thin luminous red bar (a requirement's courses, a program's whole). */
+.planner-meter {
+  position: relative;
+  height: 3px;
+  border-radius: 9999px;
+  background: rgb(255 255 255 / 0.08);
+  overflow: hidden;
+}
+.planner-meter > span {
+  position: absolute;
+  inset: 0 auto 0 0;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #b3183a, var(--color-primary));
+  box-shadow: 0 0 10px rgb(255 92 112 / 0.7);
+  transition: width 600ms var(--ease-out);
+}
+.planner-meter[data-done="true"] > span {
+  background: linear-gradient(90deg, #7fa35a, var(--color-success));
+  box-shadow: 0 0 10px rgb(185 214 144 / 0.55);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .planner-held {
+    rotate: none;
+    scale: none;
+    animation: none;
+  }
+  .planner-verdict:hover,
+  .planner-add:hover,
+  .planner-add:active {
+    translate: none;
+  }
+}

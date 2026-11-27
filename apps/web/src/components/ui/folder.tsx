@@ -77,7 +77,7 @@ function useSize<T extends HTMLElement>() {
   return [ref, size] as const;
 }
 
-export type FolderTone = "smoke" | "ember" | "garnet";
+export type FolderTone = "smoke" | "ember" | "garnet" | "frost";
 
 export interface GlassFolderProps extends Omit<HTMLAttributes<HTMLDivElement>, "children"> {
   /** On the tab, top-left (for a quarter: its name). */
@@ -88,7 +88,7 @@ export interface GlassFolderProps extends Omit<HTMLAttributes<HTMLDivElement>, "
   pocket?: ReactNode;
   /** The files. */
   children?: ReactNode;
-  /** The art of the back panel: smoked glass, an ember of red light, or deep garnet. */
+  /** The art of the back panel: smoked glass, an ember of red light, deep garnet, or frosted glass. */
   tone?: FolderTone;
   /** A drop target under a dragged file, or the folder in focus: its edge lights red. */
   active?: boolean;

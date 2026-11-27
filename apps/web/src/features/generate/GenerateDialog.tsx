@@ -93,10 +93,13 @@ function GenerateForm({ plan, onSubmit }: { plan: PlanState; onSubmit: (v: Gener
 
   const box = cn(controlClass, controlCompactClass);
   return (
-    <form onSubmit={submit} className="space-y-6 [&>fieldset+fieldset]:border-t [&>fieldset+fieldset]:border-hairline [&>fieldset+fieldset]:pt-5" aria-label="Generate plan options">
+    <form onSubmit={submit} className="space-y-7 [&>fieldset+fieldset]:border-t [&>fieldset+fieldset]:border-white/[0.07] [&>fieldset+fieldset]:pt-6" aria-label="Generate plan options">
       <fieldset>
-        <legend className="flex items-baseline gap-2 text-title-sm text-ink">1. Scope</legend>
-        <p className="text-caption text-muted">Locked and completed courses are kept.</p>
+        <legend className="flex items-baseline gap-2 font-display text-title-md font-normal leading-tight text-ink">
+          <span aria-hidden="true" className="w-7 shrink-0 font-mono text-[12px] font-medium tracking-[0.12em] text-primary">01</span>
+          Scope
+        </legend>
+        <p className="mb-1 pl-9 text-caption text-muted">Locked and completed courses are kept.</p>
         {(
           [
             ["whole", "Whole plan"],
@@ -126,7 +129,10 @@ function GenerateForm({ plan, onSubmit }: { plan: PlanState; onSubmit: (v: Gener
       </fieldset>
 
       <fieldset className="space-y-2">
-        <legend className="flex items-baseline gap-2 text-title-sm text-ink">2. Load and difficulty</legend>
+        <legend className="flex items-baseline gap-2 font-display text-title-md font-normal leading-tight text-ink">
+          <span aria-hidden="true" className="w-7 shrink-0 font-mono text-[12px] font-medium tracking-[0.12em] text-primary">02</span>
+          Load and difficulty
+        </legend>
         <div>
           <label htmlFor={ids.load} className="block text-body-sm text-ink">
             Career-wide load: <strong>{LOAD_LABELS[String(load)]}</strong>
@@ -190,7 +196,10 @@ function GenerateForm({ plan, onSubmit }: { plan: PlanState; onSubmit: (v: Gener
       </fieldset>
 
       <fieldset>
-        <legend className="flex items-baseline gap-2 text-title-sm text-ink">3. Goals</legend>
+        <legend className="flex items-baseline gap-2 font-display text-title-md font-normal leading-tight text-ink">
+          <span aria-hidden="true" className="w-7 shrink-0 font-mono text-[12px] font-medium tracking-[0.12em] text-primary">03</span>
+          Goals
+        </legend>
         {(plan.goals ?? []).length === 0 ? (
           <p className="text-body-sm text-muted">No goals yet. Add them under Goals.</p>
         ) : (
@@ -214,7 +223,10 @@ function GenerateForm({ plan, onSubmit }: { plan: PlanState; onSubmit: (v: Gener
       </fieldset>
 
       <fieldset>
-        <legend className="flex items-baseline gap-2 text-title-sm text-ink">4. Interests</legend>
+        <legend className="flex items-baseline gap-2 font-display text-title-md font-normal leading-tight text-ink">
+          <span aria-hidden="true" className="w-7 shrink-0 font-mono text-[12px] font-medium tracking-[0.12em] text-primary">04</span>
+          Interests
+        </legend>
         <div className="mt-2 flex gap-2">
           <label htmlFor={ids.tag} className="sr-only">
             Interest tag
@@ -247,9 +259,10 @@ function GenerateForm({ plan, onSubmit }: { plan: PlanState; onSubmit: (v: Gener
         </ul>
       </fieldset>
 
-      <div className="border-t border-hairline pt-5">
-        <label htmlFor={ids.variants} className="mb-2 block text-title-sm text-ink">
-          5. Variants
+      <div className="border-t border-white/[0.07] pt-6">
+        <label htmlFor={ids.variants} className="mb-3 flex items-baseline gap-2 font-display text-title-md font-normal leading-tight text-ink">
+          <span aria-hidden="true" className="w-7 shrink-0 font-mono text-[12px] font-medium tracking-[0.12em] text-primary">05</span>
+          Variants
         </label>
         <select id={ids.variants} className={cn(box, "w-28")} value={variants} onChange={(e) => setVariants(Number(e.target.value))}>
           {[1, 2, 3].map((n) => (
@@ -276,9 +289,9 @@ function VariantCard({ v, onApply, onDiscard }: { v: VariantEvent; onApply: (ops
   const hardest = v.metrics.hardest_quarter_hours;
   const rationale = Object.entries(v.rationale).sort(([a], [b]) => compareTerms(a, b));
   return (
-    <article className="animate-rise space-y-3 rounded-xl border border-hairline bg-surface-card p-5" aria-label={`Variant ${v.label}`}>
+    <article className="glass-rim animate-rise space-y-3.5 rounded-[24px] bg-white/[0.04] p-5 shadow-[0_18px_44px_rgb(0_0_0/0.3)] sm:p-6" aria-label={`Variant ${v.label}`}>
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <h3 className="text-title-sm">{v.label}</h3>
+        <h3 className="font-display text-title-md font-normal leading-tight">{v.label}</h3>
         <ReportBadge report={v.report} />
       </div>
       {/* GE-3 (D11): the figures that differ between options read as text, not a muted caption. */}
@@ -307,7 +320,7 @@ function VariantCard({ v, onApply, onDiscard }: { v: VariantEvent; onApply: (ops
       )}
       {showDiff && (
         <div>
-          <h4 className="text-caption-uppercase uppercase text-muted">Changes to your plan</h4>
+          <h4 className="mono-label text-muted">Changes to your plan</h4>
           <ul className="mt-1 list-disc pl-5 text-body-sm marker:text-gray-dark">
             {v.change_set.ops.map((op, i) => (
               <li key={i}>{opText(op)}</li>
@@ -321,7 +334,7 @@ function VariantCard({ v, onApply, onDiscard }: { v: VariantEvent; onApply: (ops
       )}
       {picking && (
         <fieldset>
-          <legend className="text-caption-uppercase uppercase text-muted">Quarters to apply</legend>
+          <legend className="mono-label text-muted">Quarters to apply</legend>
           <div className="grid grid-cols-2 gap-x-2">
             {touched.map((t) => (
               <ChoiceRow key={t} type="checkbox" checked={picked.includes(t)} onChange={(e) => setPicked(e.target.checked ? [...picked, t] : picked.filter((x) => x !== t))}>
@@ -336,7 +349,7 @@ function VariantCard({ v, onApply, onDiscard }: { v: VariantEvent; onApply: (ops
       )}
       {/* GE-1/GE-2 (D11): say what Apply changes, and warn when the option still has errors. Apply is an
           outline button on every option, so the popup never shows two or three maroon primaries. */}
-      <div className="space-y-1 border-t border-hairline pt-3 text-caption text-muted">
+      <div className="space-y-1 border-t border-white/[0.07] pt-3.5 text-caption text-muted">
         <p>
           Changes {touched.length} quarter{touched.length === 1 ? "" : "s"}
           {touched.length > 0 && touched.length <= 4 ? `: ${touched.map(termLabel).join(", ")}` : ""}.
@@ -443,8 +456,9 @@ export function GenerateDialog({ open, onClose, plan, onApply, planId = null }: 
       {phase === "form" && <GenerateForm plan={plan} onSubmit={run} />}
       {phase === "running" && (
         <div role="status" aria-live="polite">
-          <p className="mb-3 text-title-sm">Generating…</p>
-          <ol className="space-y-2 text-body-sm text-body">
+          <p className="mono-label mb-1 text-muted">Solver and verifier</p>
+          <p className="mb-5 font-display text-display-sm">Generating…</p>
+          <ol className="space-y-3 text-body-sm text-body">
             {steps.map((s) => (
               <li key={s.name} className="flex items-center gap-2">
                 {s.status === "done" ? (
@@ -452,7 +466,7 @@ export function GenerateDialog({ open, onClose, plan, onApply, planId = null }: 
                 ) : s.status === "failed" ? (
                   <ErrorIcon className="text-error" />
                 ) : (
-                  <span aria-hidden="true" className="inline-block size-2 animate-pulse rounded-pill bg-primary" />
+                  <span aria-hidden="true" className="mx-1 inline-block size-2 animate-pulse rounded-pill bg-primary shadow-[0_0_12px_var(--color-primary)]" />
                 )}
                 {s.name}
                 <span className="sr-only"> ({s.status})</span>

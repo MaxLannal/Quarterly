@@ -1,31 +1,32 @@
 import { useDroppable } from "@dnd-kit/core";
-import { useEffect, useId, useRef, useState, type ReactNode } from "react";
+import { useEffect, useId, useState } from "react";
 import type { Goal, PlanItem } from "@/api/types";
 import { Button } from "@/components/ui/button";
-import { PencilIcon } from "@/components/ui/icons";
-import {
-  controlClass,
-  controlCompactClass,
-  Input,
-} from "@/components/ui/input";
-import { Badge } from "@/components/ui/misc";
+import { Dialog } from "@/components/ui/dialog";
+import { GlassFolder, type FolderTone } from "@/components/ui/folder";
+import { ErrorIcon, PlusIcon, WarningIcon } from "@/components/ui/icons";
+import { Label } from "@/components/ui/input";
+import { CoursePicker } from "@/features/courses/CoursePicker";
+import { currentTerm } from "@/features/generate/deterministic";
 import { cn } from "@/lib/utils";
-import { usePlanner } from "./context";
+import { issuesForItem, usePlanner } from "./context";
 import { CourseCard } from "./CourseCard";
 import { goalLabel, quarterMetrics, round1 } from "./metrics";
-import { planYears, removeYear } from "./planModel";
+import { addCourseOps, planYears, removeYear } from "./planModel";
+import "./planner.css";
 import {
   academicYear,
   academicYearLabel,
   classYearLabel,
   graduationTerm,
-  isBefore,
   MAX_PLAN_YEARS,
   planTerms,
   QUARTERS,
+  quarterStages,
   resolveTermRef,
   termAt,
   termLabel,
+  type QuarterStage,
 } from "./terms";
 
 function termGoals(goals: Goal[], term: string, entryTerm: string): Goal[] {
@@ -39,247 +40,156 @@ function termGoals(goals: Goal[], term: string, entryTerm: string): Goal[] {
   });
 }
 
-function QuarterCell({ term, items }: { term: string; items: PlanItem[] }) {
-  const { plan, courses, highlight } = usePlanner();
-  const { setNodeRef, isOver } = useDroppable({ id: term, data: { term } });
-  const m = quarterMetrics(items, courses);
-  const goals = termGoals(plan.goals ?? [], term, plan.entry_term);
-  const headingId = `term-${term}`;
-  return (
-    <section
-      ref={setNodeRef}
-      aria-labelledby={headingId}
-      data-testid={`quarter-${term}`}
-      className={cn(
-        "flex min-h-24 min-w-0 flex-col rounded-lg border border-hairline bg-canvas-soft p-2 transition-[border-color,background-color,box-shadow] duration-200 sm:min-h-36",
-        isOver && "border-primary bg-primary-wash shadow-hover",
-        highlight.terms.has(term) &&
-          "ring-2 ring-primary ring-offset-2 ring-offset-canvas",
-      )}
-    >
-      <h4
-        id={headingId}
-        className="mb-2 text-caption-uppercase uppercase text-muted"
-      >
-        {termLabel(term)}
-      </h4>
-      {items.length === 0 ? (
-        // PL-3 (D11): say what is there, not only how to drag.
-        <p className="flex flex-1 items-center justify-center rounded-lg border border-dashed border-hairline-strong p-3 text-center text-caption text-muted">
-          No courses yet
-        </p>
-      ) : (
-        <ul className="flex flex-1 flex-col gap-2">
-          {items.map((item) => (
-            <CourseCard
-              key={item.id ?? `${item.course}-${item.term}`}
-              item={item}
-            />
-          ))}
-        </ul>
-      )}
-      {/* PL-3 (D11): an empty quarter shows no row of zeros; the footer stays for its goals. */}
-      {(items.length > 0 || goals.length > 0) && (
-      <footer
-        className="mt-3 border-t border-hairline pt-2 text-caption tabular-nums text-muted"
-        data-testid={`footer-${term}`}
-      >
-        {items.length > 0 && (
-        <div className="flex flex-wrap gap-x-3">
-          <span>
-            {m.units}
-            {m.unitsPartial ? "+" : ""} units
-          </span>
-          <span>
-            {round1(m.hours)}
-            {m.hoursPartial && m.courses ? "+" : ""} h/wk
-          </span>
-          <span title="Difficulty index: the sum of course difficulty (1–5 each)">
-            Difficulty {round1(m.difficulty)}
-          </span>
-        </div>
-        )}
-        {goals.length > 0 && (
-          <ul
-            className="mt-2 flex flex-wrap gap-1"
-            aria-label={`Goals for ${termLabel(term)}`}
-          >
-            {goals.map((g) => (
-              <li key={g.id}>
-                <Badge casing="normal" className="py-0.5">
-                  {goalLabel(g)}
-                </Badge>
-              </li>
-            ))}
-          </ul>
-        )}
-      </footer>
-      )}
-    </section>
-  );
+/** The folder's tone (docs/DESIGN.md "Dark glass"): the quarter in hand glows ember, Summer is
+ * frosted glass, the rest are smoke (past quarters a little dimmer, planner.css). */
+function toneFor(term: string, stage: QuarterStage): FolderTone {
+  if (stage === "now" || stage === "next") return "ember";
+  if (term.endsWith("-SU")) return "frost";
+  return "smoke";
 }
 
-/** The plan's name as the grid's heading, with a pencil to rename it (FEEDBACK 2026-11-16). */
-function PlanName({
-  name,
-  onRename,
-}: {
-  name: string;
-  onRename: (name: string) => void;
-}) {
-  const [editing, setEditing] = useState(false);
-  const [draft, setDraft] = useState(name);
-  const input = useRef<HTMLInputElement>(null);
-  const inputId = useId();
+const STAGE_LABEL: Record<QuarterStage, string | null> = { now: "Now", next: "Next", past: "Past", ahead: null };
+
+/** "+" on a folder: search the catalog and add a course straight to this quarter. */
+function AddCourseDialog({ term, open, onClose }: { term: string; open: boolean; onClose: () => void }) {
+  const { plan, edit } = usePlanner();
+  const id = useId();
+  // The dialog focuses its first control (Close); the search field is what the student came for.
+  // This runs after the dialog's own focus effect (a parent's effects run after its children's).
   useEffect(() => {
-    if (editing) input.current?.select();
-  }, [editing]);
-  if (editing) {
-    const commit = () => {
-      const next = draft.trim();
-      if (next && next !== name) onRename(next);
-      setEditing(false);
-    };
-    return (
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          commit();
-        }}
-      >
-        <label htmlFor={inputId} className="sr-only">
-          Plan name
-        </label>
-        <Input
-          ref={input}
-          id={inputId}
-          value={draft}
-          maxLength={80}
-          onChange={(e) => setDraft(e.target.value)}
-          onBlur={commit}
-          onKeyDown={(e) => {
-            if (e.key === "Escape") {
-              setDraft(name);
-              setEditing(false);
-            }
-          }}
-          className="w-72 max-w-full font-display text-display-sm"
-        />
-      </form>
-    );
-  }
+    if (open) document.getElementById(id)?.focus();
+  }, [open, id]);
   return (
-    <div className="flex min-w-0 items-center gap-1">
-      <h2 className="truncate font-display text-display-sm sm:text-display-md">
-        {name || "My Plan"}
-      </h2>
-      <button
-        type="button"
-        aria-label="Rename plan"
-        onClick={() => {
-          setDraft(name);
-          setEditing(true);
-        }}
-        className="flex size-11 shrink-0 items-center justify-center rounded-md text-gray-dark transition-colors hover:bg-canvas-soft hover:text-ink"
-      >
-        <PencilIcon size={18} />
-      </button>
-    </div>
+    <Dialog open={open} onClose={onClose} title={`Add a course to ${termLabel(term)}`} description="Type a course code or name, then choose it from the list.">
+      <div className="flex flex-col gap-1.5">
+        <Label htmlFor={id}>Course</Label>
+        <CoursePicker
+          id={id}
+          catalogYear={plan.catalog_year}
+          value=""
+          onChange={(code) => {
+            if (!code) return;
+            edit(addCourseOps(code, term));
+            onClose();
+          }}
+        />
+      </div>
+      <p className="mt-4 text-caption text-muted">Courses that count toward your programs are listed under Requirements.</p>
+    </Dialog>
   );
 }
 
 /**
- * The graduation quarter as a quiet line of text with a pencil, like the plan's name (D8, FEEDBACK
- * "Minor design changes"). The pencil opens the quarter list in place; choosing one applies it,
- * Escape or leaving the list keeps the old one.
+ * One quarter: a glass folder whose files are the quarter's classes (Max, 2026-11-27). The tab
+ * names the quarter; the pocket carries its totals, its issues and the "+" that adds a course.
+ * The whole folder is the drop target, and lights red under a dragged file.
  */
-function GraduationField({
-  value,
-  choices,
-  onChange,
-}: {
-  value: string;
-  choices: string[];
-  onChange: (term: string) => void;
-}) {
-  const [editing, setEditing] = useState(false);
-  const selectId = useId();
-  const select = useRef<HTMLSelectElement>(null);
-  const pencil = useRef<HTMLButtonElement>(null);
-  const wasEditing = useRef(false);
-  useEffect(() => {
-    if (editing) select.current?.focus();
-    else if (wasEditing.current) pencil.current?.focus();
-    wasEditing.current = editing;
-  }, [editing]);
-  if (editing) {
-    return (
-      <div className="flex items-center gap-2 text-caption text-muted">
-        <label htmlFor={selectId}>Graduating in</label>
-        <select
-          ref={select}
-          id={selectId}
-          value={value}
-          onChange={(e) => {
-            onChange(e.target.value);
-            setEditing(false);
-          }}
-          onBlur={() => setEditing(false)}
-          onKeyDown={(e) => {
-            if (e.key === "Escape") setEditing(false);
-          }}
-          className={cn(controlClass, controlCompactClass, "w-40 text-caption pointer-coarse:text-body-md")}
-        >
-          {choices.map((t) => (
-            <option key={t} value={t}>
-              {termLabel(t)}
-            </option>
-          ))}
-        </select>
-      </div>
-    );
-  }
+function QuarterFolder({ term, items, stage }: { term: string; items: PlanItem[]; stage: QuarterStage }) {
+  const { plan, courses, issues, highlight } = usePlanner();
+  const { setNodeRef, isOver } = useDroppable({ id: term, data: { term } });
+  const [adding, setAdding] = useState(false);
+  const m = quarterMetrics(items, courses);
+  const goals = termGoals(plan.goals ?? [], term, plan.entry_term);
+  const mine = items.flatMap((i) => issuesForItem(issues, i));
+  const errors = mine.filter((i) => i.level === "error").length;
+  const warnings = mine.filter((i) => i.level === "warning").length;
+  const headingId = `term-${term}`;
+  const label = termLabel(term);
+  const stageLabel = STAGE_LABEL[stage];
   return (
-    <div
-      className="flex items-center text-caption text-muted"
-      data-testid="graduation"
-      data-term={value}
-    >
-      <span>
-        Graduating in{" "}
-        <span className="font-medium text-body-strong">{termLabel(value)}</span>
-      </span>
-      <button
-        ref={pencil}
-        type="button"
-        aria-label={`Change graduation quarter (${termLabel(value)})`}
-        onClick={() => setEditing(true)}
-        className="flex size-11 shrink-0 items-center justify-center rounded-md text-gray-dark transition-colors hover:bg-canvas-soft hover:text-ink"
+    <section ref={setNodeRef} aria-labelledby={headingId} data-testid={`quarter-${term}`} data-stage={stage} className="planner-quarter">
+      <GlassFolder
+        aside={
+          stageLabel ? (
+            <span className="planner-stage mono-label" data-stage={stage}>
+              {stageLabel}
+            </span>
+          ) : undefined
+        }
+        tone={toneFor(term, stage)}
+        active={isOver || highlight.terms.has(term)}
+        tabRatio={0.6}
+        className="h-full"
+        bodyClassName="planner-folder-body"
+        tab={
+          <h4 id={headingId} className="planner-tab truncate font-display text-[22px] leading-none text-ink">
+            {label}
+          </h4>
+        }
+        pocket={
+          <>
+            {items.length > 0 ? (
+              <div className="flex min-w-0 flex-1 flex-col justify-center gap-0.5" data-testid={`footer-${term}`}>
+                <p className="mono-label truncate text-ink">
+                  {m.units}
+                  {m.unitsPartial ? "+" : ""} units
+                  <span aria-hidden="true" className="px-1.5 text-muted">
+                    ·
+                  </span>
+                  <span className="text-body">
+                    {m.courses} course{m.courses === 1 ? "" : "s"}
+                  </span>
+                </p>
+                <p className="truncate text-[13px] tabular-nums text-muted">
+                  {round1(m.hours)}
+                  {m.hoursPartial && m.courses ? "+" : ""} h/wk
+                  <span aria-hidden="true"> · </span>
+                  <span title="Difficulty index: the sum of course difficulty (1–5 each)">Difficulty {round1(m.difficulty)}</span>
+                </p>
+              </div>
+            ) : (
+              <span className="min-w-0 flex-1" />
+            )}
+            {(errors > 0 || warnings > 0) && (
+              <p className="flex shrink-0 items-center gap-2 text-[13px] font-medium tabular-nums">
+                {errors > 0 && (
+                  <span className="inline-flex items-center gap-1 text-error">
+                    <ErrorIcon size={14} />
+                    {errors}
+                    <span className="sr-only"> {errors === 1 ? "error" : "errors"}</span>
+                  </span>
+                )}
+                {warnings > 0 && (
+                  <span className="inline-flex items-center gap-1 text-warning">
+                    <WarningIcon size={14} className="text-warning-icon" />
+                    {warnings}
+                    <span className="sr-only"> {warnings === 1 ? "warning" : "warnings"}</span>
+                  </span>
+                )}
+              </p>
+            )}
+            <button type="button" className="planner-add" aria-label={`Add a course to ${label}`} aria-haspopup="dialog" onClick={() => setAdding(true)}>
+              <PlusIcon size={18} />
+            </button>
+          </>
+        }
       >
-        <PencilIcon size={15} />
-      </button>
-    </div>
+        {items.length === 0 ? (
+          // PL-3 (D11): say what is there, not only how to drag.
+          <p className="planner-empty">No courses yet</p>
+        ) : (
+          <ul className="flex flex-col gap-2.5">
+            {items.map((item) => (
+              <CourseCard key={item.id ?? `${item.course}-${item.term}`} item={item} />
+            ))}
+          </ul>
+        )}
+        {goals.length > 0 && (
+          <ul className="mt-auto flex flex-wrap gap-1.5 pt-3" aria-label={`Goals for ${label}`}>
+            {goals.map((g) => (
+              <li key={g.id} className="planner-goal">
+                {goalLabel(g)}
+              </li>
+            ))}
+          </ul>
+        )}
+      </GlassFolder>
+      <AddCourseDialog term={term} open={adding} onClose={() => setAdding(false)} />
+    </section>
   );
 }
 
-/** Graduation choices: Autumn, Winter and Spring from the first quarter to one year past the
- * last, never past the longest plan the API accepts. */
-function graduationChoices(entryTerm: string, years: number): string[] {
-  const out: string[] = [];
-  for (let y = 1; y <= Math.min(years + 1, MAX_PLAN_YEARS); y += 1) {
-    for (const q of ["AU", "WI", "SP"] as const) {
-      const t = termAt(entryTerm, y, q);
-      if (!isBefore(t, entryTerm)) out.push(t);
-    }
-  }
-  return out;
-}
-
 interface PlanGridProps {
-  name: string;
-  /** The plan check's verdict, shown beside the name (PL-1, D11). */
-  verdict?: ReactNode;
-  onRename: (name: string) => void;
   showSummer: boolean;
   onToggleSummer: () => void;
   onGraduation: (term: string) => void;
@@ -287,19 +197,11 @@ interface PlanGridProps {
 }
 
 /**
- * The plan grid. Each academic year opens with its Summer (optional, hidden by default), then
- * Autumn, Winter and Spring (FEEDBACK F2). The grid ends at the graduation quarter (F3); items
- * outside it are listed under "Other terms".
+ * The plan grid: each academic year is a shelf of quarter folders. A year opens with its Summer
+ * (optional, hidden by default), then Autumn, Winter and Spring (FEEDBACK F2). The grid ends at
+ * the graduation quarter (F3); items outside it are listed under "Other terms".
  */
-export function PlanGrid({
-  name,
-  verdict,
-  onRename,
-  showSummer,
-  onToggleSummer,
-  onGraduation,
-  onAddYear,
-}: PlanGridProps) {
+export function PlanGrid({ showSummer, onToggleSummer, onGraduation, onAddYear }: PlanGridProps) {
   const { plan } = usePlanner();
   const [yearMsg, setYearMsg] = useState<string | null>(null);
   const items = plan.items ?? [];
@@ -309,11 +211,12 @@ export function PlanGrid({
   const terms = planTerms(plan.entry_term, last);
   const shown = new Set(terms);
   const byTerm = new Map<string, PlanItem[]>();
-  for (const item of items)
-    byTerm.set(item.term, [...(byTerm.get(item.term) ?? []), item]);
+  for (const item of items) byTerm.set(item.term, [...(byTerm.get(item.term) ?? []), item]);
   const outside = items.filter((i) => !shown.has(i.term));
-  const choices = graduationChoices(plan.entry_term, years);
-  if (!choices.includes(last)) choices.push(last);
+  const stages = quarterStages(
+    terms.filter((t) => showSummer || !t.endsWith("-SU")),
+    currentTerm(),
+  );
 
   function removeLastYear() {
     const r = removeYear(plan);
@@ -326,71 +229,43 @@ export function PlanGrid({
   }
 
   return (
-    <div className="flex flex-col gap-5">
-      <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-3">
-        <div className="flex min-w-0 flex-wrap items-center gap-x-3">
-          <PlanName name={name} onRename={onRename} />
-          {verdict}
-        </div>
-        <div className="flex flex-wrap items-center gap-2">
-          <GraduationField
-            value={last}
-            choices={choices}
-            onChange={onGraduation}
-          />
-          <Button
-            variant="outline"
-            onClick={onToggleSummer}
-            aria-pressed={showSummer}
-          >
-            {showSummer ? "Hide Summer" : "Show Summer"}
-          </Button>
-        </div>
+    <div className="flex flex-col gap-12 @container">
+      <div className="-mb-4 flex flex-wrap items-center justify-between gap-3">
+        <p className="mono-label text-muted">
+          {years} year{years === 1 ? "" : "s"}
+          <span aria-hidden="true" className="px-2 text-muted">
+            {"//"}
+          </span>
+          {showSummer ? "Summer, Autumn, Winter, Spring" : "Autumn, Winter, Spring"}
+        </p>
+        <Button variant="outline" size="sm" onClick={onToggleSummer} aria-pressed={showSummer}>
+          {showSummer ? "Hide Summer" : "Show Summer"}
+        </Button>
       </div>
       {Array.from({ length: years }, (_, i) => i + 1).map((y) => {
         const start = academicYear(termAt(plan.entry_term, y, "AU"));
         const summer = termAt(plan.entry_term, y, "SU");
         const summerItems = byTerm.get(summer) ?? [];
-        const yearTerms = QUARTERS.map((q) =>
-          termAt(plan.entry_term, y, q),
-        ).filter((t) => shown.has(t));
-        const visible = yearTerms.filter(
-          (t) => showSummer || !t.endsWith("-SU"),
-        );
+        const yearTerms = QUARTERS.map((q) => termAt(plan.entry_term, y, q)).filter((t) => shown.has(t));
+        const visible = yearTerms.filter((t) => showSummer || !t.endsWith("-SU"));
         return (
-          <section
-            key={y}
-            aria-labelledby={`year-${y}`}
-            data-testid={`year-${y}`}
-          >
-            <h3
-              id={`year-${y}`}
-              className="mb-3 flex flex-wrap items-baseline gap-x-2 font-display text-display-sm"
-            >
-              {classYearLabel(y, level)}{" "}
-              <span className="font-sans text-caption tabular-nums text-muted">
-                {academicYearLabel(start)}
-              </span>
+          <section key={y} aria-labelledby={`year-${y}`} data-testid={`year-${y}`} className="planner-shelf">
+            <div className="mb-6 flex flex-wrap items-baseline gap-x-5 gap-y-1">
+              <h3 id={`year-${y}`} className="flex shrink-0 items-baseline gap-x-3 font-display text-display-sm">
+                {classYearLabel(y, level)}{" "}
+                <span className="mono-label tabular-nums text-muted">{academicYearLabel(start)}</span>
+              </h3>
+              <span aria-hidden="true" className="planner-rule" />
               {!showSummer && summerItems.length > 0 && (
-                <span className="font-sans text-caption text-muted">
-                  {" "}
-                  · {termLabel(summer)}: {summerItems.length} course
+                <span className="mono-label text-muted">
+                  {termLabel(summer)}: {summerItems.length} course
                   {summerItems.length === 1 ? "" : "s"} (hidden)
                 </span>
               )}
-            </h3>
-            <div
-              className={cn(
-                "grid grid-cols-1 gap-3 sm:grid-cols-3",
-                showSummer && "xl:grid-cols-4",
-              )}
-            >
+            </div>
+            <div className={cn("planner-shelf-row grid grid-cols-1 gap-x-5 gap-y-8 @lg:grid-cols-3", showSummer && "@4xl:grid-cols-4")}>
               {visible.map((term) => (
-                <QuarterCell
-                  key={term}
-                  term={term}
-                  items={byTerm.get(term) ?? []}
-                />
+                <QuarterFolder key={term} term={term} items={byTerm.get(term) ?? []} stage={stages.get(term) ?? "ahead"} />
               ))}
             </div>
           </section>
@@ -408,11 +283,7 @@ export function PlanGrid({
           >
             Add a year
           </Button>
-          <Button
-            variant="ghost"
-            onClick={removeLastYear}
-            disabled={years <= 1}
-          >
+          <Button variant="ghost" onClick={removeLastYear} disabled={years <= 1}>
             Remove last year
           </Button>
         </div>
@@ -422,11 +293,14 @@ export function PlanGrid({
       </div>
       {outside.length > 0 && (
         <section aria-labelledby="other-terms" className="animate-fade-in">
-          <h3 id="other-terms" className="font-display text-display-sm">
-            Other terms
-          </h3>
+          <div className="mb-2 flex items-baseline gap-5">
+            <h3 id="other-terms" className="shrink-0 font-display text-display-sm">
+              Other terms
+            </h3>
+            <span aria-hidden="true" className="planner-rule" />
+          </div>
           <p className="text-body-sm text-muted">Outside the quarters above.</p>
-          <ul className="mt-3 grid gap-2 sm:grid-cols-3">
+          <ul className="mt-4 grid gap-3 @lg:grid-cols-3">
             {outside.map((item) => (
               <CourseCard key={item.id} item={item} />
             ))}

@@ -159,3 +159,17 @@ export function classYearLabel(year: number, entryYearLevel: number = 1): string
   const word = ORDINALS[n - 1];
   return word ? `${word} year` : `Year ${n}`;
 }
+
+/** Where a quarter of the plan stands against today's quarter (it sets the quarter folder's tone). */
+export type QuarterStage = "past" | "now" | "next" | "ahead";
+
+/**
+ * Each shown quarter's stage: before today's quarter ("past"), today's quarter itself ("now"),
+ * the first quarter ahead when today's quarter is not shown ("next"), or later ("ahead").
+ */
+export function quarterStages(terms: string[], today: string): Map<string, QuarterStage> {
+  const first = terms.find((t) => !isBefore(t, today));
+  const out = new Map<string, QuarterStage>();
+  for (const t of terms) out.set(t, isBefore(t, today) ? "past" : t === today ? "now" : t === first ? "next" : "ahead");
+  return out;
+}
