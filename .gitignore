@@ -11,6 +11,7 @@ coverage.xml
 htmlcov/
 node_modules/
 apps/web/dist/
+apps/web/dist-e2e-*/
 apps/web/coverage/
 apps/web/test-results/
 apps/web/playwright-report/
