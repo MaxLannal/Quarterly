@@ -238,6 +238,12 @@ export function Planner({ initial, autoGenerate = false, onSetUp }: PlannerProps
   const walk = useWalkthrough(agent.proposals);
   const walkRef = useRef<Walk | null>(null);
   walkRef.current = walk;
+  // The planner agent's proposed courses need their titles too (their blocks show them).
+  const proposedCourses = useCourseMap(
+    agent.proposals.flatMap((p) => p.ops.flatMap((op) => ((op.op === "add" || op.op === "move") && op.course ? [op.course] : []))),
+    plan.catalog_year,
+  );
+  const allCourses = new Map([...proposedCourses, ...courses]);
   const current = walk.current;
   // The walkthrough lights its group; otherwise the group of the block the student clicked.
   const glow = useMemo(() => new Set(current ? current.members.map((m) => m.id) : selectedProposal ? [selectedProposal] : []), [current, selectedProposal]);
@@ -329,7 +335,7 @@ export function Planner({ initial, autoGenerate = false, onSetUp }: PlannerProps
 
   const ctx: PlannerContextValue = {
     plan,
-    courses,
+    courses: allCourses,
     programs: allPrograms,
     issues,
     highlight,

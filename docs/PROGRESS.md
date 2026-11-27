@@ -1700,3 +1700,9 @@ After the placement fix, the next run in the app (LIVE-TEST-REPORT run 12) faile
 - Playwright (MSW): 104 passed, 0 failed.
 - The planner Python tests: 37 passed.
 - The full Python check before this change (ruff, ruff format, mypy, `api-client-check`, `golden` PASS=115, pytest 184 + 856) passed. After it: ruff, mypy and `api-client-check` on the changed modules passed.
+
+## Course names on the blocks; the Docker API rebuilt (Max, 2026-11-27)
+
+- **"Show the name of the course below the course code, in bolded big titles."** On the planner's course files and the planner agent's proposed blocks, the code is now a small grey line, and the course's name sits below it in 15px semibold (up to two lines on a proposed block). Proposed courses had no name before, because `useCourseMap` loaded only the plan's own courses; `Planner.tsx` now also loads the courses of open proposals.
+- **The shared Docker stack (`quarterly`) runs this branch's API and worker** (Max: "Yes, rebuild it"). It was started from the split-screen worktree; `.env` was copied from there (git-ignored, not printed). `docker compose up -d --build --wait api worker`, then the web proxy was recreated (the same image). The database was already at 0012 (head). Checked: the explain step's paragraph instruction and the 1400-character limit are live in the container, `/health` is ok, and `POST /agents/planner` answers. The web container on :5173 still serves the split-screen frontend; the redesign runs on the dev server at :5191 against this API.
+- Checks: tsc, eslint, vitest 245/245, Playwright (MSW) 104 passed.

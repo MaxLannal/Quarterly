@@ -100,7 +100,8 @@ export function CourseCard({ item }: { item: PlanItem }) {
           {item.locked ? <LockIcon size={14} /> : <GripIcon size={14} />}
         </button>
         <div className="flex min-w-0 flex-1 flex-wrap items-baseline gap-x-2 py-1">
-          <span className={cn("font-medium tabular-nums", removal && "line-through")}>{isSlot ? "Requirement slot" : item.course}</span>
+          {/* The code is a small grey line; the course's name below it is the card's title (Max, 2026-11-27). */}
+          <span className={cn("font-medium tabular-nums text-muted", removal && "line-through")}>{isSlot ? "Requirement slot" : item.course}</span>
           {units != null && <span className="text-muted">{units} units</span>}
           {removal && (
             <Badge tone="warning" casing="normal" className="px-2 py-0">
@@ -124,7 +125,7 @@ export function CourseCard({ item }: { item: PlanItem }) {
           <button
             type="button"
             onClick={() => item.course && openDetails(item.course)}
-            className={cn("-mx-3 flex min-h-11 w-[calc(100%+1.5rem)] items-center truncate px-3 text-left text-body hover:underline", removal && "line-through")}
+            className={cn("-mx-3 flex min-h-11 w-[calc(100%+1.5rem)] items-center px-3 text-left text-[15px] font-semibold leading-snug text-ink hover:underline", removal && "line-through")}
             title={course?.title ?? undefined}
           >
             {course?.title || item.course}
