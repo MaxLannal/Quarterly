@@ -3,28 +3,29 @@ import type { CSSProperties, HTMLAttributes, ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 /*
- * DESIGN.md card family. Cards are white on the canvas with a 1px hairline; the only shadow is the
- * hover tier, and only on cards that are links or targets.
+ * DESIGN.md card family ("Dark glass"). Cards are glass tints on the pane with a rim of light (a
+ * 1px gradient ring, `.glass-rim`) instead of a flat border; the only shadow is the hover tier,
+ * and only on cards that are links or targets.
  */
 export const cardVariants = cva("min-w-0 text-ink", {
   variants: {
     variant: {
       /** course-card: a glass tile with a lit top edge, 18px radius, 24px padding. */
-      default: "rounded-xl border border-hairline bg-surface-card p-6 shadow-[inset_0_1px_0_rgb(255_255_255/0.06)]",
+      default: "glass-rim rounded-xl bg-surface-card p-6",
       /** Compact card (menus, dense lists). */
-      compact: "rounded-lg border border-hairline bg-surface-card p-4 shadow-[inset_0_1px_0_rgb(255_255_255/0.05)]",
+      compact: "glass-rim rounded-lg bg-surface-card p-4",
       /** post-card: glass, 32px padding, body text colour. */
-      post: "rounded-xl border border-hairline bg-surface-card p-8 text-body shadow-[inset_0_1px_0_rgb(255_255_255/0.06)]",
+      post: "glass-rim rounded-xl bg-surface-card p-8 text-body",
       /** orb-card: glass with one red bloom inside; pair with one <Orb>. */
-      orb: "relative isolate overflow-hidden rounded-xxl border border-hairline bg-canvas-soft p-8",
+      orb: "glass-rim isolate overflow-hidden rounded-xxl bg-canvas-soft p-8",
       /** featured-card: deep maroon glass, at most one per page. */
       featured:
         "rounded-xl border border-[rgb(255_120_140/0.25)] bg-[linear-gradient(160deg,#7a1228,#3a0712)] p-8 text-on-dark shadow-[inset_0_1px_0_rgb(255_255_255/0.12),0_24px_60px_rgb(120_10_30/0.35)]",
       /** A quiet well for grouped controls (filters, a form step). */
-      well: "rounded-xl border border-hairline bg-canvas-soft p-5",
+      well: "glass-rim rounded-xl bg-canvas-soft p-5",
     },
     interactive: {
-      true: "transition-[box-shadow,border-color,translate] duration-300 hover:-translate-y-0.5 hover:border-hairline-strong hover:shadow-hover focus-within:shadow-hover",
+      true: "transition-[box-shadow,translate] duration-300 hover:-translate-y-0.5 hover:shadow-hover focus-within:shadow-hover",
       false: "",
     },
   },
