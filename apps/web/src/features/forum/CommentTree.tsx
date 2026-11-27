@@ -4,6 +4,7 @@ import { Avatar } from "@/components/ui/card";
 import { Label, Textarea } from "@/components/ui/input";
 import { Badge, ErrorText, Notice } from "@/components/ui/misc";
 import { cn } from "@/lib/utils";
+import "@/features/courses/glass.css";
 import { useCreateComment, type Comment } from "./api";
 import { COLLAPSE_DEPTH, plural, relativeDay } from "./format";
 import { PostBody, ReportDialog, VoteControl } from "./parts";
@@ -123,12 +124,12 @@ function CommentItem({ node, postId, canReply, unfolded }: { node: CommentNode; 
 
   return (
     <li className="min-w-0">
-      <article aria-label={placeholder ? "Hidden comment" : `Comment by ${c.pseudonym}`} className="py-3">
+      <article aria-label={placeholder ? "Hidden comment" : `Comment by ${c.pseudonym}`} className="py-4">
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
           {!placeholder && <Avatar name={c.pseudonym} />}
           <span className={cn("text-body-strong", placeholder ? "text-muted" : "text-ink")}>{c.pseudonym}</span>
           {c.mine && <Badge casing="normal">You</Badge>}
-          <span className="text-caption text-muted">{relativeDay(c.created_day)}</span>
+          <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted">{relativeDay(c.created_day)}</span>
         </div>
         {c.mine && c.moderation_note && (
           <Notice tone={c.status === "removed" ? "error" : "warning"} className="mt-2">
@@ -170,7 +171,7 @@ function CommentItem({ node, postId, canReply, unfolded }: { node: CommentNode; 
       </article>
       {node.children.length > 0 &&
         (foldChildren ? (
-          <div className="border-l border-hairline pl-3 sm:pl-5">
+          <div className="qg-thread pl-4 sm:pl-6">
             <Button variant="link" size="sm" onClick={() => setExpanded(true)}>
               Continue this thread ({plural(countAll(node.children), "more reply", "more replies")})
             </Button>
@@ -196,7 +197,7 @@ export function CommentList({
   unfolded?: boolean;
 }) {
   return (
-    <ul className={cn("flex flex-col", nested ? "border-l border-hairline pl-3 sm:pl-5" : "divide-y divide-hairline")}>
+    <ul className={cn("flex flex-col", nested ? "qg-thread pl-4 sm:pl-6" : "divide-y divide-hairline")}>
       {nodes.map((node) => (
         <CommentItem key={node.comment.id} node={node} postId={postId} canReply={canReply} unfolded={unfolded} />
       ))}

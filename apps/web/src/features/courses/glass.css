@@ -9,44 +9,68 @@
 @layer components {
 
 /* -- a glass tile on the pane ------------------------------------------------------------ */
+/* No border: the edge is a 1px ring of light (::after, the same light as the shared .glass-rim),
+   bright at the top-left and warming to red at the bottom-right. ::before stays free for the
+   pointer spotlight ([data-spotlight]). */
 .qg-tile {
   position: relative;
   border-radius: 24px;
-  border: 1px solid rgb(255 255 255 / 0.085);
   background:
+    var(--qg-edge, linear-gradient(transparent, transparent)) 50% 0 / calc(100% - 64px) 1px no-repeat,
     radial-gradient(120% 80% at 0% 0%, rgb(255 255 255 / 0.05), transparent 55%),
-    linear-gradient(180deg, rgb(255 255 255 / 0.05), rgb(255 255 255 / 0.018));
-  box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 0.08),
-    0 24px 60px -32px rgb(0 0 0 / 0.75);
+    linear-gradient(180deg, rgb(255 255 255 / 0.05), rgb(255 255 255 / 0.016));
+  box-shadow: 0 24px 60px -32px rgb(0 0 0 / 0.75);
 }
-/* A tile that is a link or holds one: lifts 2px, its edge catches the light. */
+.qg-tile::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  padding: 1px;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(
+    155deg,
+    rgb(255 255 255 / 0.2),
+    rgb(255 255 255 / 0.055) 32%,
+    rgb(255 255 255 / 0.03) 66%,
+    rgb(255 92 112 / 0.2)
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box exclude,
+    linear-gradient(#000 0 0);
+  transition: opacity 400ms var(--ease-out);
+}
+/* A tile that is a link or holds one: lifts 2px, its rim brightens and a red glow gathers below. */
 .qg-tile-link {
   transition:
-    translate 400ms var(--ease-out),
-    border-color 300ms var(--ease-out),
-    box-shadow 400ms var(--ease-out);
+    translate 500ms var(--ease-out),
+    box-shadow 500ms var(--ease-out);
 }
 .qg-tile-link:hover,
 .qg-tile-link:focus-within {
   translate: 0 -2px;
-  border-color: rgb(255 255 255 / 0.16);
   box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 0.12),
-    0 30px 70px -28px rgb(0 0 0 / 0.8),
-    0 0 0 1px rgb(255 92 112 / 0.12),
-    0 18px 50px -30px rgb(255 60 90 / 0.45);
+    0 34px 80px -30px rgb(0 0 0 / 0.85),
+    0 22px 60px -34px rgb(255 60 90 / 0.5);
+}
+.qg-tile-link:hover::after,
+.qg-tile-link:focus-within::after {
+  background: linear-gradient(
+    155deg,
+    rgb(255 255 255 / 0.34),
+    rgb(255 255 255 / 0.08) 32%,
+    rgb(255 92 112 / 0.12) 66%,
+    rgb(255 92 112 / 0.5)
+  );
 }
 /* A hairline of red light along the top edge of a tile (one accent, not a bar). */
-.qg-edge::after {
-  content: "";
-  position: absolute;
-  left: 24px;
-  right: 24px;
-  top: -1px;
-  height: 1px;
-  pointer-events: none;
-  background: linear-gradient(90deg, transparent, rgb(255 120 140 / 0.75), transparent);
+.qg-edge {
+  --qg-edge: linear-gradient(90deg, transparent, rgb(255 120 140 / 0.8), transparent);
 }
 
 /* -- two-line glass chips: a tiny mono label over a value ("UNITS / 100") ---------------------- */
@@ -463,5 +487,21 @@
   .qg-tile-link:focus-within {
     translate: none;
   }
+}
+
+/* -- reply threads: a fine luminous guide line down the left of each level ----------------- */
+.qg-thread {
+  position: relative;
+}
+.qg-thread::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 4px;
+  bottom: 16px;
+  width: 1px;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgb(255 120 140 / 0.6), rgb(255 255 255 / 0.12) 38%, rgb(255 255 255 / 0.04));
+  box-shadow: 0 0 10px rgb(255 92 112 / 0.28);
 }
 }
