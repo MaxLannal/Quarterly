@@ -1,9 +1,9 @@
 import { useId, useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { PageContainer, PageHeader } from "@/components/layout/page";
 import { Button } from "@/components/ui/button";
 import { Avatar } from "@/components/ui/card";
 import { api, attempt, type AccountOut } from "@/features/auth/api";
+import { EditorialPage } from "@/features/auth/editorial";
 import { forgetPersonalDevice, signedOut, useSession } from "@/features/auth/session";
 import { FormError, linkClass, Notice, PASSWORD_HINT, passwordProblem, TextField } from "@/features/auth/ui";
 
@@ -41,8 +41,8 @@ function ChangePassword() {
   }
 
   return (
-    <form onSubmit={(e) => void onSubmit(e)} noValidate className="flex flex-col gap-5 rounded-xl border border-hairline bg-surface-card p-6 sm:p-8" aria-labelledby="change-password">
-      <h2 id="change-password" className="font-display text-display-sm">
+    <form onSubmit={(e) => void onSubmit(e)} noValidate id="password" className="editorial-panel glass-rim" aria-labelledby="change-password">
+      <h2 id="change-password" className="editorial-h2 mt-0">
         Change password
       </h2>
       <TextField
@@ -111,8 +111,8 @@ function ExportData({ account }: { account: AccountOut }) {
   }
 
   return (
-    <section aria-labelledby="export-data" className="flex flex-col gap-5 rounded-xl border border-hairline bg-surface-card p-6 sm:p-8">
-      <h2 id="export-data" className="font-display text-display-sm">
+    <section id="export" aria-labelledby="export-data" className="editorial-panel glass-rim">
+      <h2 id="export-data" className="editorial-h2 mt-0">
         Export your data
       </h2>
       <p className="text-body-sm text-muted">Your account details and every plan, as one JSON file.</p>
@@ -172,8 +172,8 @@ function DeleteAccount() {
   ];
 
   return (
-    <form onSubmit={(e) => void onSubmit(e)} noValidate className="flex flex-col gap-5 rounded-xl border border-hairline bg-surface-card p-6 sm:p-8" aria-labelledby="delete-account">
-      <h2 id="delete-account" className="font-display text-display-sm">
+    <form onSubmit={(e) => void onSubmit(e)} noValidate id="delete" className="editorial-panel editorial-panel-danger glass-rim" aria-labelledby="delete-account">
+      <h2 id="delete-account" className="editorial-h2 mt-0">
         Delete account
       </h2>
       <p className="text-body-sm text-body">
@@ -181,9 +181,9 @@ function DeleteAccount() {
         cannot be undone.
       </p>
       <fieldset className="flex flex-col gap-2">
-        <legend className="text-body-sm font-medium">Your forum posts</legend>
+        <legend className="mono-label mb-2 text-body">Your forum posts</legend>
         {options.map((option) => (
-          <div key={option.value} className="flex items-start gap-3 rounded-lg border border-hairline px-4 py-2 has-[:checked]:border-primary has-[:checked]:bg-primary-wash">
+          <div key={option.value} className="flex items-start gap-3 rounded-[20px] bg-white/[0.03] px-4 py-2 shadow-[inset_0_0_0_1px_rgb(255_255_255/0.08)] transition-[background-color,box-shadow] duration-300 has-[:checked]:bg-primary-wash has-[:checked]:shadow-[inset_0_0_0_1px_rgb(255_92_112/0.6),0_0_22px_rgb(255_92_112/0.14)]">
             <input
               id={`${groupId}-${option.value}`}
               type="radio"
@@ -241,8 +241,12 @@ export default function AccountPage() {
   }
 
   return (
-    <PageContainer width="reading" as="section" className="flex flex-col gap-6">
-      <PageHeader title="Account" size="md" className="mb-4" />
+    <EditorialPage
+      eyebrow="Quarterly // Account"
+      title="Account"
+      lede={<p>Your password, your data, and the way out.</p>}
+      index={session.status === "authenticated" ? ACCOUNT_SECTIONS : undefined}
+    >
       {session.status === "loading" ? (
         <p role="status" className="text-muted">
           Loading your account…
@@ -258,12 +262,12 @@ export default function AccountPage() {
       ) : null}
       {session.status === "authenticated" ? (
         <>
-          <div className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-hairline bg-surface-card p-6 sm:px-8">
-            <div className="flex items-center gap-3">
-              <Avatar name={session.account.username} />
-              <p>
-                Logged in as <span className="font-medium">{session.account.username}</span>{" "}
-                <span className="text-muted">(account created {dayInWords(session.account.created_day)})</span>
+          <div id="session" className="editorial-panel editorial-row glass-rim">
+            <div className="flex min-w-0 items-center gap-4">
+              <Avatar name={session.account.username} className="size-12 text-title-sm shadow-[inset_0_0_0_1px_rgb(255_255_255/0.16),0_0_24px_rgb(255_92_112/0.3)]" />
+              <p className="min-w-0 text-body-md text-body">
+                Logged in as <span className="font-medium text-ink">{session.account.username}</span>{" "}
+                <span className="mono-label block pt-1 text-muted">(account created {dayInWords(session.account.created_day)})</span>
               </p>
             </div>
             <Button type="button" variant="outline" disabled={busy} onClick={() => void logOut()}>
@@ -280,9 +284,16 @@ export default function AccountPage() {
           </p>
         </>
       ) : null}
-    </PageContainer>
+    </EditorialPage>
   );
 }
+
+const ACCOUNT_SECTIONS = [
+  { id: "session", label: "Your session" },
+  { id: "password", label: "Change password" },
+  { id: "export", label: "Export your data" },
+  { id: "delete", label: "Delete account" },
+];
 
 /** "2026-11-16" as "Nov 16, 2026" (D11 polish); day-level dates only. */
 function dayInWords(day: string): string {
