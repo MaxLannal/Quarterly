@@ -136,7 +136,7 @@ function MultiField({ question, value, onChange, label, hint }: AnswerControlPro
               type="button"
               aria-pressed={on}
               onClick={() => onChange(on ? chosen.filter((v) => v !== o.value) : question.options.map((x) => x.value).filter((v) => v === o.value || chosen.includes(v)))}
-              className={cn("min-h-11 cursor-pointer rounded-pill border px-4 text-body-sm transition-colors", on ? "border-primary bg-primary-wash text-ink" : "border-hairline-strong bg-surface-card text-ink hover:bg-surface-strong")}
+              className={cn("min-h-11 cursor-pointer rounded-pill px-4 text-body-sm transition-[background-color,box-shadow] duration-300", on ? "bg-primary-wash text-ink shadow-[inset_0_0_0_1px_rgb(255_92_112/0.65),0_0_18px_rgb(255_92_112/0.2)]" : "bg-white/[0.04] text-ink shadow-[inset_0_0_0_1px_rgb(255_255_255/0.12)] hover:bg-white/[0.08]")}
             >
               {o.label}
             </button>
@@ -162,7 +162,7 @@ function ScaleField({ question, value, onChange, label, hint }: AnswerControlPro
             aria-pressed={value === n}
             aria-label={`${n}${n === min && question.ends ? ` (${question.ends.min})` : ""}${n === max && question.ends ? ` (${question.ends.max})` : ""}`}
             onClick={() => onChange(value === n ? null : n)}
-            className={cn("inline-flex size-11 cursor-pointer items-center justify-center rounded-pill border text-body-sm tabular-nums transition-colors", value === n ? "border-primary bg-primary text-on-primary" : "border-hairline-strong bg-surface-card text-ink hover:bg-surface-strong")}
+            className={cn("inline-flex size-11 cursor-pointer items-center justify-center rounded-pill text-body-sm tabular-nums transition-[background-color,box-shadow] duration-300", value === n ? "bg-primary text-on-primary shadow-[0_0_18px_rgb(255_92_112/0.55)]" : "bg-white/[0.04] text-ink shadow-[inset_0_0_0_1px_rgb(255_255_255/0.12)] hover:bg-white/[0.08]")}
           >
             {n}
           </button>
@@ -190,7 +190,7 @@ function ProgramsField({ value, onChange, catalogYear, programNames, layout = "f
   if (layout === "form") {
     return (
       <Group label={label} hint={hint}>
-        <div className="max-h-[22rem] overflow-y-auto rounded-[18px] border border-hairline bg-canvas-soft px-4 py-3">
+        <div className="max-h-[22rem] overflow-y-auto rounded-[22px] bg-black/20 px-4 py-3 shadow-[inset_0_0_0_1px_rgb(255_255_255/0.07),inset_0_1px_3px_rgb(0_0_0/0.3)]">
           <ProgramChecklist catalogYear={catalogYear} selected={selected} onChange={(ids) => onChange(ids.slice(0, 8))} />
         </div>
       </Group>
@@ -200,7 +200,7 @@ function ProgramsField({ value, onChange, catalogYear, programNames, layout = "f
     <div className="flex flex-col gap-2">
       <ul className="flex flex-wrap gap-1.5" aria-label={question.label}>
         {selected.map((p) => (
-          <li key={p} className="rounded-pill bg-surface-strong px-3 py-1 text-body-sm text-ink">
+          <li key={p} className="rounded-pill bg-white/[0.06] px-3 py-1 text-body-sm text-ink shadow-[inset_0_0_0_1px_rgb(255_255_255/0.08)]">
             {programNames?.get(p) ?? p}
           </li>
         ))}
@@ -281,13 +281,13 @@ function TakenCoursesField({ question, set, value, onChange, catalogYear, classY
       {rows.length === 0 ? (
         <p className="text-body-sm text-muted">No courses yet.</p>
       ) : (
-        <div className="overflow-x-auto rounded-[14px] border border-hairline">
+        <div className="overflow-x-auto rounded-[18px] bg-black/15 shadow-[inset_0_0_0_1px_rgb(255_255_255/0.07)]">
           <table className="w-full border-collapse text-left text-body-sm">
             <caption className="sr-only">{question.label}</caption>
             <thead>
-              <tr className="border-b border-hairline bg-canvas-soft">
+              <tr className="border-b border-hairline">
                 {["course", "term", "status", "grade"].map((c) => (
-                  <th key={c} scope="col" className="px-3 py-2 text-caption font-medium text-muted">
+                  <th key={c} scope="col" className="mono-label px-3 py-2.5 font-medium text-muted">
                     {col(c)?.label ?? c}
                   </th>
                 ))}
@@ -321,7 +321,7 @@ function TakenCoursesField({ question, set, value, onChange, catalogYear, classY
         </div>
       )}
       {/* The same box, insets and 44px row button as the credits form (Richard, 2026-11-25). */}
-      <div className="@container rounded-lg border border-hairline bg-canvas-soft p-3" role="group" aria-label="Add a course">
+      <div className="@container rounded-[22px] bg-white/[0.025] p-3.5 shadow-[inset_0_0_0_1px_rgb(255_255_255/0.07)]" role="group" aria-label="Add a course">
         <div className="grid gap-3 @sm:grid-cols-2">
           <div className="@sm:col-span-2">
             <label htmlFor={`${id}-course`} className={labelClass}>
@@ -436,7 +436,7 @@ function TermsAwayField({ question, set, value, onChange, classYear, label, hint
       {rows && rows.length > 0 && (
         <ul className="flex flex-col gap-1.5">
           {rows.map((r, i) => (
-            <li key={`${r.term}-${r.kind}`} className="flex items-center justify-between gap-2 rounded-lg border border-hairline bg-canvas-soft py-0.5 pl-3 pr-1 text-body-sm text-ink">
+            <li key={`${r.term}-${r.kind}`} className="flex items-center justify-between gap-2 rounded-[16px] bg-white/[0.035] py-0.5 pl-3.5 pr-1 text-body-sm text-ink shadow-[inset_0_0_0_1px_rgb(255_255_255/0.06)]">
               <span>
                 {termLabel(r.term)} · {columnLabel(set, "away", r.kind)}
               </span>

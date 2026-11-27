@@ -14,6 +14,7 @@ import {
   PASSWORD_HINT,
   passwordProblem,
   StepHeading,
+  SubmitButton,
   TextField,
 } from "@/features/auth/ui";
 
@@ -120,7 +121,7 @@ export default function LoginPage() {
   }
 
   return (
-    <AuthPage title="Welcome back" subline="Please enter your details to log in.">
+    <AuthPage title="Welcome back" chip="Quarterly.account" subline="Log in to your plans, your dashboard and the forum.">
       <form onSubmit={onSubmit} noValidate className="flex flex-col gap-5">
         {view.name === "login" ? (
           <>
@@ -146,9 +147,7 @@ export default function LoginPage() {
               onChange={(e) => setPassword(e.target.value)}
             />
             <FormError message={formError} />
-            <Button type="submit" disabled={busy}>
-              {busy ? "Logging in…" : "Log in"}
-            </Button>
+            <SubmitButton busy={busy}>{busy ? "Logging in…" : "Log in"}</SubmitButton>
             {/* D11 AU-2: the same link style as "Create an account". */}
             <Button type="button" variant="link" className={linkClass} onClick={() => show({ name: "reset-email" })}>
               Forgot password?
@@ -173,9 +172,7 @@ export default function LoginPage() {
               hint="The @uchicago.edu address you signed up with."
             />
             <FormError message={formError} />
-            <Button type="submit" disabled={busy}>
-              {busy ? "Sending…" : "Send reset code"}
-            </Button>
+            <SubmitButton busy={busy}>{busy ? "Sending…" : "Send reset code"}</SubmitButton>
             <Button type="button" variant="ghost" disabled={busy} onClick={() => show({ name: "login" })}>
               Back to log in
             </Button>
@@ -219,17 +216,15 @@ export default function LoginPage() {
               onChange={(e) => setConfirm(e.target.value)}
             />
             <FormError message={formError} />
-            <Button type="submit" disabled={busy}>
-              {busy ? "Saving…" : "Set new password"}
-            </Button>
+            <SubmitButton busy={busy}>{busy ? "Saving…" : "Set new password"}</SubmitButton>
             <Button type="button" variant="ghost" disabled={busy} onClick={() => show({ name: "reset-email" })}>
               Send a new code
             </Button>
           </>
         ) : null}
       </form>
-      <OrDivider />
-      <p className="text-center text-body-sm text-body">
+      <OrDivider label="New to Quarterly" />
+      <p className="-mt-2 text-center text-body-sm text-body">
         New here?{" "}
         <Link to={keepNext("/signup", params.get("next"))} className={linkClass}>
           Create an account

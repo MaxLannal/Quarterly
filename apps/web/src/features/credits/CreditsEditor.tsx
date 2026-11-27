@@ -100,7 +100,7 @@ function CreditForm({
   return (
     <form
       onSubmit={(e) => void submit(e)}
-      className={cn("@container rounded-lg border border-hairline bg-canvas-soft p-3", className)}
+      className={cn("@container rounded-[22px] bg-white/[0.025] p-3.5 shadow-[inset_0_0_0_1px_rgb(255_255_255/0.07)]", className)}
       aria-label={ariaLabel}
     >
       {/* Richard (2026-11-25): a compact form. The fields keep the reading order Kind,
@@ -235,7 +235,7 @@ export function CreditsEditor({
             ) : (
               <li
                 key={i}
-                className="flex min-h-11 items-center gap-1 rounded-lg border border-hairline bg-canvas-soft pl-3 text-body-sm text-ink"
+                className="flex min-h-11 items-center gap-1 rounded-[16px] bg-white/[0.035] pl-3.5 text-body-sm text-ink shadow-[inset_0_0_0_1px_rgb(255_255_255/0.06)] transition-colors duration-300 hover:bg-white/[0.055]"
               >
                 {/* One line (Richard, 2026-11-25): the name is cut with "…" when it is too long,
                     the units always show, and the whole line is in the tooltip. `w-0` keeps the

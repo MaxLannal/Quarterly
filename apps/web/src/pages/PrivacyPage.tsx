@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
-import { inlineLinkClass, PageContainer, PageHeader } from "@/components/layout/page";
+import { inlineLinkClass } from "@/components/layout/page";
+import { EditorialPage, EditorialSection } from "@/features/auth/editorial";
 import { useQuestions } from "@/features/profile/questions";
 
 /** SPEC "Accounts and anonymity": the "What is stored" table and the honest limits, verbatim in
@@ -57,8 +58,7 @@ const USED_FOR: Record<string, string> = {
 function GeneralInformation() {
   const questions = useQuestions();
   return (
-    <>
-      <h2 className="mt-6 font-display text-display-sm">Your General Information</h2>
+    <EditorialSection id="general-information" n={2} title="Your General Information">
       <p>
         When you are logged in, Quarterly keeps your answers to a short list of questions: the planner uses them for a first
         plan. You can see and change every answer, and export them as one Markdown file, on your{" "}
@@ -69,17 +69,13 @@ function GeneralInformation() {
         your account (one set for all your plans), and is in the export too.
       </p>
       {questions.data ? (
-        <div className="overflow-x-auto rounded-xl border border-hairline bg-surface-card">
-          <table className="w-full border-collapse text-left text-body-sm">
+        <div className="editorial-table glass-rim">
+          <table>
             <caption className="sr-only">The General Information Quarterly stores, and the planning step that uses each answer</caption>
             <thead>
-              <tr className="border-b border-hairline">
-                <th scope="col" className="p-3 text-caption-uppercase uppercase text-muted">
-                  Answer
-                </th>
-                <th scope="col" className="p-3 text-caption-uppercase uppercase text-muted">
-                  Used for
-                </th>
+              <tr>
+                <th scope="col">Answer</th>
+                <th scope="col">Used for</th>
               </tr>
             </thead>
             <tbody>
@@ -87,11 +83,11 @@ function GeneralInformation() {
                 questions.data.questions
                   .filter((q) => q.group === g.id)
                   .map((q) => (
-                    <tr key={q.id} className="border-b border-hairline align-top last:border-b-0">
-                      <th scope="row" className="p-3 font-medium text-ink">
-                        {q.label} <span className="block text-caption font-normal text-muted">{g.title}</span>
+                    <tr key={q.id}>
+                      <th scope="row">
+                        {q.label} <span className="mono-label mt-1 block font-normal text-muted">{g.title}</span>
                       </th>
-                      <td className="p-3">{USED_FOR[q.field] ?? "Today your dashboard guide reads it. The planner agent, not built yet, will read it when it drafts or explains a plan."}</td>
+                      <td>{USED_FOR[q.field] ?? "Today your dashboard guide reads it. The planner agent, not built yet, will read it when it drafts or explains a plan."}</td>
                     </tr>
                   )),
               )}
@@ -102,7 +98,7 @@ function GeneralInformation() {
         <p className="text-body-sm text-muted">The list of questions could not be loaded. Your dashboard shows every answer.</p>
       ) : null}
       <p>Also kept with your account, and part of the account export:</p>
-      <ul className="list-disc pl-6">
+      <ul>
         <li>
           <strong>Your guide&apos;s memory:</strong> which questions it has asked and the last 24 messages of your conversation
           with it (emails and phone numbers removed), so it can pick up where you left off.
@@ -116,14 +112,22 @@ function GeneralInformation() {
           and nothing reads or changes this mark.
         </li>
       </ul>
-    </>
+    </EditorialSection>
   );
 }
 
+const SECTIONS = [
+  { id: "stored", label: "What is stored" },
+  { id: "general-information", label: "Your General Information" },
+  { id: "email", label: "How your email is used" },
+  { id: "limits", label: "The honest limits" },
+  { id: "ai", label: "The AI features" },
+  { id: "export", label: "Export and deletion" },
+];
+
 export default function PrivacyPage() {
   return (
-    <PageContainer width="reading" as="section" className="flex flex-col gap-6 text-body-md text-body [&_strong]:font-medium [&_strong]:text-ink">
-      <PageHeader title="Privacy" description="What Quarterly stores about you, and why." className="mb-2" />
+    <EditorialPage eyebrow="Quarterly // Privacy" title="Privacy" lede={<p>What Quarterly stores about you, and why.</p>} index={SECTIONS}>
       <p>
         Quarterly is built by students, for students. This page says plainly what we keep about you
         and what that means. The short version:{" "}
@@ -133,107 +137,104 @@ export default function PrivacyPage() {
         </strong>
       </p>
 
-      <h2 className="mt-6 font-display text-display-sm">What is stored</h2>
-      <div className="overflow-x-auto rounded-xl border border-hairline bg-surface-card">
-        <table className="w-full border-collapse text-left text-body-sm">
-          <caption className="sr-only">Data Quarterly stores and whether it can be linked to a person</caption>
-          <thead>
-            <tr className="border-b border-hairline">
-              <th scope="col" className="p-3 text-caption-uppercase uppercase text-muted">
-                Data
-              </th>
-              <th scope="col" className="p-3 text-caption-uppercase uppercase text-muted">
-                Stored?
-              </th>
-              <th scope="col" className="p-3 text-caption-uppercase uppercase text-muted">
-                Can it be linked to you?
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {STORED.map((row) => (
-              <tr key={row.data} className="border-b border-hairline align-top last:border-b-0">
-                <th scope="row" className="p-3 font-medium text-ink">
-                  {row.data}
-                </th>
-                <td className="p-3">{row.stored}</td>
-                <td className="p-3">{row.linkable}</td>
+      <EditorialSection id="stored" n={1} title="What is stored">
+        <div className="editorial-table glass-rim">
+          <table>
+            <caption className="sr-only">Data Quarterly stores and whether it can be linked to a person</caption>
+            <thead>
+              <tr>
+                <th scope="col">Data</th>
+                <th scope="col">Stored?</th>
+                <th scope="col">Can it be linked to you?</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {STORED.map((row) => (
+                <tr key={row.data}>
+                  <th scope="row">{row.data}</th>
+                  <td>{row.stored}</td>
+                  <td>{row.linkable}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </EditorialSection>
 
       <GeneralInformation />
 
-      <h2 className="mt-6 font-display text-display-sm">How your email is used</h2>
-      <ul className="list-disc space-y-2 pl-6 marker:text-gray-dark">
-        <li>
-          To check once that you are a UChicago student (a 6-digit code, kept for 10 minutes), and to
-          let you reset a lost password.
-        </li>
-        <li>
-          It is never shown to other users, never written to logs, and never copied into forum, plan
-          or analytics records.
-        </li>
-        <li>One account per email address.</li>
-        <li>
-          Our email provider learns that Quarterly emailed your address. The message contains only
-          the code.
-        </li>
-      </ul>
+      <EditorialSection id="email" n={3} title="How your email is used">
+        <ul>
+          <li>
+            To check once that you are a UChicago student (a 6-digit code, kept for 10 minutes), and to
+            let you reset a lost password.
+          </li>
+          <li>
+            It is never shown to other users, never written to logs, and never copied into forum, plan
+            or analytics records.
+          </li>
+          <li>One account per email address.</li>
+          <li>
+            Our email provider learns that Quarterly emailed your address. The message contains only
+            the code.
+          </li>
+        </ul>
+      </EditorialSection>
 
-      <h2 className="mt-6 font-display text-display-sm">The honest limits</h2>
-      <ul className="list-disc space-y-2 pl-6 marker:text-gray-dark">
-        <li>
-          <strong>The forum is pseudonymous, not anonymous to the people who run Quarterly.</strong>{" "}
-          A builder or administrator who has both the database and the server key can link a post to
-          an account, and so to an email address. We do not do this in normal operation, but you
-          should know it is possible.
-        </li>
-        <li>
-          <strong>If the database leaked</strong>, it would reveal which email addresses have
-          accounts and their plans. Posts on different pages still could not be joined to one account
-          without the server key.
-        </li>
-        <li>
-          What you write can identify you. A pseudonym does not help if a review says which section
-          you sat in and what you said in class.
-        </li>
-        <li>Each forum page gives you a different pseudonym, so readers cannot follow you across pages.</li>
-        <li>
-          If a moderator suspends an account, the day the suspension ends is stored on the account. Someone with a stolen copy of
-          the database could count back from that day to a post removed when the suspension started and guess who wrote it. This
-          only affects removed posts of suspended accounts.
-        </li>
-      </ul>
+      <EditorialSection id="limits" n={4} title="The honest limits">
+        <ul>
+          <li>
+            <strong>The forum is pseudonymous, not anonymous to the people who run Quarterly.</strong>{" "}
+            A builder or administrator who has both the database and the server key can link a post to
+            an account, and so to an email address. We do not do this in normal operation, but you
+            should know it is possible.
+          </li>
+          <li>
+            <strong>If the database leaked</strong>, it would reveal which email addresses have
+            accounts and their plans. Posts on different pages still could not be joined to one account
+            without the server key.
+          </li>
+          <li>
+            What you write can identify you. A pseudonym does not help if a review says which section
+            you sat in and what you said in class.
+          </li>
+          <li>Each forum page gives you a different pseudonym, so readers cannot follow you across pages.</li>
+          <li>
+            If a moderator suspends an account, the day the suspension ends is stored on the account. Someone with a stolen copy of
+            the database could count back from that day to a post removed when the suspension started and guess who wrote it. This
+            only affects removed posts of suspended accounts.
+          </li>
+        </ul>
+      </EditorialSection>
 
-      <h2 className="mt-6 font-display text-display-sm">The AI features</h2>
-      <p>
-        When the AI features are on, what you type to the advisor and your plan are sent to an AI
-        provider (Anthropic, with OpenRouter as a backup) to write the answer, after email
-        addresses and phone numbers are removed. When you talk with your dashboard guide, your
-        General Information (including your credits and your taken courses, but not their grades)
-        and your conversation with the guide are sent the same way, so it can choose and word its
-        next question. Forum posts are sent too, to write the “What students say” summaries and when the
-        advisor looks them up. Your email address is never sent. Advisor chats are
-        kept for 30 days, and are deleted with their plan.
-      </p>
+      <EditorialSection id="ai" n={5} title="The AI features">
+        <p>
+          When the AI features are on, what you type to the advisor and your plan are sent to an AI
+          provider (Anthropic, with OpenRouter as a backup) to write the answer, after email
+          addresses and phone numbers are removed. When you talk with your dashboard guide, your
+          General Information (including your credits and your taken courses, but not their grades)
+          and your conversation with the guide are sent the same way, so it can choose and word its
+          next question. Forum posts are sent too, to write the “What students say” summaries and when the
+          advisor looks them up. Your email address is never sent. Advisor chats are
+          kept for 30 days, and are deleted with their plan.
+        </p>
+      </EditorialSection>
 
-      <h2 className="mt-6 font-display text-display-sm">Export and deletion</h2>
-      <p>
-        On your{" "}
-        <Link to="/account" className={inlineLinkClass}>
-          account page
-        </Link>{" "}
-        you can download your account details, your plans and your student record (your General
-        Information, credits and taken courses, your guide&apos;s memory, what you follow, and your{" "}
-        <code>student.md</code>) as JSON, and delete your account. Your dashboard also downloads{" "}
-        <code>student.md</code> on its own. Deleting removes the account, its email address, your
-        plans, your student record, your guide&apos;s memory and your sessions. You choose whether
-        your forum posts are deleted or kept as “[deleted account]”. Encrypted backups of the
-        database are kept for 14 days, so a deleted account stays in them until they expire.
-      </p>
-    </PageContainer>
+      <EditorialSection id="export" n={6} title="Export and deletion">
+        <p>
+          On your{" "}
+          <Link to="/account" className={inlineLinkClass}>
+            account page
+          </Link>{" "}
+          you can download your account details, your plans and your student record (your General
+          Information, credits and taken courses, your guide&apos;s memory, what you follow, and your{" "}
+          <code>student.md</code>) as JSON, and delete your account. Your dashboard also downloads{" "}
+          <code>student.md</code> on its own. Deleting removes the account, its email address, your
+          plans, your student record, your guide&apos;s memory and your sessions. You choose whether
+          your forum posts are deleted or kept as “[deleted account]”. Encrypted backups of the
+          database are kept for 14 days, so a deleted account stays in them until they expire.
+        </p>
+      </EditorialSection>
+    </EditorialPage>
   );
 }

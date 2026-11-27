@@ -62,9 +62,194 @@
   animation: dash-spin 2.4s linear infinite;
 }
 
+/* ---- the panels (docs/DESIGN.md "Dark glass"): glass on the pane, no hard border, a lit top edge ---- */
+.dash-panel {
+  position: relative;
+  border-radius: 28px;
+  padding: 22px;
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.055), rgb(255 255 255 / 0.018) 70%),
+    rgb(255 255 255 / 0.008);
+  /* The edge is the shared rim of light (`.glass-rim` in index.css, on the same element). */
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.05),
+    0 24px 60px rgb(0 0 0 / 0.28);
+  transition: box-shadow 500ms var(--ease-out);
+}
+@media (min-width: 640px) {
+  .dash-panel {
+    padding: 30px;
+  }
+}
+.dash-panel:hover {
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.08),
+    0 28px 70px rgb(0 0 0 / 0.34);
+}
+.dash-panel-soft {
+  background: rgb(255 255 255 / 0.02);
+}
+/* The hero: a low bloom of red light behind the completeness ring. */
+.dash-hero {
+  background:
+    radial-gradient(42% 70% at 92% 12%, rgb(255 60 90 / 0.13), transparent 70%),
+    radial-gradient(60% 80% at 0% 100%, rgb(120 10 32 / 0.16), transparent 70%),
+    linear-gradient(180deg, rgb(255 255 255 / 0.06), rgb(255 255 255 / 0.018) 70%);
+}
+
+/* The logged-out tiles: no box, a hairline above, the number in red. */
+.dash-feature {
+  padding: 22px 4px 4px;
+  border-top: 1px solid var(--color-hairline);
+}
+
+/* ---- the guide: a distinct card of red glass, floating above the grid ---- */
+.dash-guide {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-radius: 28px;
+  background:
+    radial-gradient(120% 80% at 100% 0%, rgb(232 44 78 / 0.34), transparent 55%),
+    radial-gradient(90% 70% at 0% 100%, rgb(120 10 32 / 0.42), transparent 60%),
+    linear-gradient(165deg, rgb(38 10 17 / 0.96), rgb(16 6 9 / 0.97));
+  box-shadow:
+    inset 0 0 0 1px rgb(255 130 150 / 0.2),
+    inset 0 1px 0 rgb(255 255 255 / 0.14),
+    0 30px 80px rgb(0 0 0 / 0.5),
+    0 12px 50px rgb(200 20 50 / 0.2);
+}
+/* A slow bloom of light drifting inside the guide. */
+.dash-guide::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  width: 70%;
+  aspect-ratio: 1;
+  right: -20%;
+  top: -30%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgb(255 110 130 / 0.28), transparent);
+  filter: blur(20px);
+  pointer-events: none;
+  animation: dash-bloom 18s ease-in-out infinite alternate;
+}
+@keyframes dash-bloom {
+  to {
+    transform: translate(-30%, 25%) scale(1.15);
+  }
+}
+@media (min-width: 1280px) {
+  .dash-guide-float {
+    transform: translateY(-4px);
+  }
+}
+.dash-guide-star {
+  filter: drop-shadow(0 0 6px rgb(255 92 112 / 0.9));
+}
+/* The guide's answers: glass pills. */
+.dash-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+  padding: 0 16px;
+  border-radius: 9999px;
+  background: rgb(255 255 255 / 0.06);
+  box-shadow:
+    inset 0 0 0 1px rgb(255 255 255 / 0.16),
+    inset 0 1px 0 rgb(255 255 255 / 0.08);
+  font-size: var(--text-body-sm);
+  color: var(--color-on-dark);
+}
+.dash-chip-button {
+  min-height: 44px;
+  cursor: pointer;
+  transition:
+    background-color 300ms var(--ease-out),
+    box-shadow 300ms var(--ease-out);
+}
+.dash-chip-button:hover {
+  background: rgb(255 255 255 / 0.12);
+  box-shadow:
+    inset 0 0 0 1px rgb(255 255 255 / 0.3),
+    0 0 18px rgb(255 92 112 / 0.18);
+}
+
+/* ---- quiet answer rows ---- */
+.dash-row {
+  padding: 14px 0;
+  border-bottom: 1px solid var(--color-hairline-soft);
+}
+.dash-row:first-child {
+  padding-top: 2px;
+}
+.dash-row:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+/* The row's actions are quiet text until the row is pointed at or focused. */
+.dash-action {
+  color: var(--color-muted);
+  transition:
+    color 300ms var(--ease-out),
+    background-color 300ms var(--ease-out);
+}
+.dash-row:hover .dash-action,
+.dash-row:focus-within .dash-action,
+.dash-row[data-editing="true"] .dash-action {
+  color: var(--color-ink);
+}
+.dash-row:hover .dash-action.text-primary,
+.dash-row:focus-within .dash-action.text-primary {
+  color: var(--color-primary-hover);
+}
+.dash-action.text-primary {
+  color: var(--color-primary);
+}
+.dash-editor {
+  margin-top: 12px;
+  padding: 16px;
+  border-radius: 20px;
+  background: rgb(0 0 0 / 0.22);
+  box-shadow:
+    inset 0 0 0 1px rgb(255 255 255 / 0.06),
+    inset 0 1px 3px rgb(0 0 0 / 0.3);
+  animation: dash-rise-in 420ms var(--ease-out) both;
+}
+
+/* ---- program progress: a slim bar of red light ---- */
+.dash-bar {
+  height: 4px;
+  overflow: hidden;
+  border-radius: 9999px;
+  background: rgb(255 255 255 / 0.08);
+}
+.dash-bar > div {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, rgb(255 92 112 / 0.55), #ff9aa6);
+  box-shadow: 0 0 12px rgb(255 92 112 / 0.7);
+  transition: width 900ms var(--ease-out);
+}
+
 /* ---- the completeness ring ---- */
 .dash-ring-fill {
-  transition: stroke-dashoffset 900ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  transition: stroke-dashoffset 1200ms var(--ease-out);
+}
+.dash-ring-glow {
+  filter: drop-shadow(0 0 5px rgb(255 92 112 / 0.85)) drop-shadow(0 0 14px rgb(255 92 112 / 0.4));
+}
+.dash-ring-head {
+  filter: drop-shadow(0 0 4px #fff) drop-shadow(0 0 10px rgb(255 92 112 / 0.9));
+}
+
+/* ---- the guide's room (GuideOverlay): the night with its own red light ---- */
+.dash-room {
+  background:
+    radial-gradient(70% 60% at 85% 0%, rgb(150 14 42 / 0.32), transparent 65%),
+    radial-gradient(60% 60% at 0% 100%, rgb(110 10 30 / 0.3), transparent 65%),
+    var(--color-surface-dark);
 }
 
 /* ---- the logged-out preview ---- */

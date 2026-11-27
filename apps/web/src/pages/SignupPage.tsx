@@ -18,6 +18,7 @@ import {
   PASSWORD_HINT,
   passwordProblem,
   StepHeading,
+  SubmitButton,
   TextField,
 } from "@/features/auth/ui";
 
@@ -138,7 +139,9 @@ export default function SignupPage() {
   return (
     <AuthPage
       title="Create an account"
+      chip={STEP_NUMBER[step.name] === 4 ? "Quarterly.profile" : "Quarterly.new_account"}
       eyebrow={`Step ${STEP_NUMBER[step.name]} of 4`}
+      steps={{ current: STEP_NUMBER[step.name], total: 4 }}
       wide={step.name === "about"}
       subline={
         STEP_NUMBER[step.name] === 4
@@ -173,9 +176,7 @@ export default function SignupPage() {
               </Link>
             </p>
             <FormError message={formError} />
-            <Button type="submit" disabled={busy}>
-              {busy ? "Sending…" : "Send code"}
-            </Button>
+            <SubmitButton busy={busy}>{busy ? "Sending…" : "Send code"}</SubmitButton>
           </>
         ) : null}
 
@@ -200,9 +201,7 @@ export default function SignupPage() {
               error={fieldError}
             />
             <FormError message={formError} />
-            <Button type="submit" disabled={busy}>
-              {busy ? "Checking…" : "Verify code"}
-            </Button>
+            <SubmitButton busy={busy}>{busy ? "Checking…" : "Verify code"}</SubmitButton>
             <Button type="button" variant="outline" disabled={busy} onClick={() => void sendCode(true)}>
               Send a new code
             </Button>
@@ -245,9 +244,7 @@ export default function SignupPage() {
               onChange={(e) => setConfirm(e.target.value)}
             />
             <FormError message={formError} />
-            <Button type="submit" disabled={busy}>
-              {busy ? "Creating…" : "Create account"}
-            </Button>
+            <SubmitButton busy={busy}>{busy ? "Creating…" : "Create account"}</SubmitButton>
           </>
         ) : null}
       </form>
@@ -264,8 +261,8 @@ export default function SignupPage() {
       )}
       {step.name === "email" || step.name === "code" || step.name === "account" ? (
         <>
-          <OrDivider />
-          <p className="text-center text-body-sm text-body">
+          <OrDivider label="Have an account" />
+          <p className="-mt-2 text-center text-body-sm text-body">
             Already have an account?{" "}
             <Link to={keepNext("/login", params.get("next"))} className={linkClass}>
               Log in
@@ -290,10 +287,11 @@ function MoreQuestions({ next, onBack }: { next: string; onBack: () => void }) {
         Your guide can ask {count ? `${count} short questions` : "a few short questions"} about your goals, your schedule and how you like to learn. The
         planner uses them too. Skip them if you like: you can answer them later on your dashboard.
       </p>
-      <Button type="button" onClick={() => navigate("/me?guide=1")}>
+      <Button type="button" className="auth-submit mt-1 w-full" onClick={() => navigate("/me?guide=1")}>
         Answer a few more questions
+        <ArrowIcon size={16} />
       </Button>
-      <Button type="button" variant="outline" onClick={() => navigate(next)}>
+      <Button type="button" variant="outline" className="-mt-2 w-full" onClick={() => navigate(next)}>
         Skip for now
       </Button>
     </div>
