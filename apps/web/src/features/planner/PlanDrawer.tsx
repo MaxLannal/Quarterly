@@ -1,4 +1,5 @@
 import { useEffect, useRef, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 import { Button } from "@/components/ui/button";
 import { useFocusTrap } from "@/components/ui/dialog";
 import { CloseIcon } from "@/components/ui/icons";
@@ -64,7 +65,7 @@ export function PlanDrawer({ open, tab, onTab, onClose, tabs, fullScreen }: Plan
     };
   }, [desktop]);
 
-  return (
+  const panel = (
     <section
       ref={ref}
       id={DRAWER_ID}
@@ -73,43 +74,48 @@ export function PlanDrawer({ open, tab, onTab, onClose, tabs, fullScreen }: Plan
       data-state={presence}
       data-testid="plan-drawer"
       className={cn(
-        "flex flex-col bg-surface-card",
+        // A raised glass drawer (docs/DESIGN.md "Dark glass": floating panels use `.glass-raised`).
+        "glass-raised planner-drawer flex flex-col",
         // Phone and tablet: a full-screen panel over the page.
         "fixed inset-0 z-40",
         // Desktop: a sticky column beside the grid.
-        "lg:sticky lg:inset-auto lg:top-4 lg:z-auto lg:h-[calc(100vh-2rem)] lg:w-[380px] lg:shrink-0 lg:rounded-xl lg:border lg:border-hairline lg:shadow-overlay xl:w-[400px]",
+        "lg:sticky lg:inset-auto lg:top-[100px] lg:z-auto lg:h-[calc(100vh-116px)] lg:w-[380px] lg:shrink-0 lg:rounded-[28px] xl:w-[400px]",
         presence === "closing" ? "animate-drawer-out" : "animate-drawer-in",
       )}
       {...(fullScreen ? { role: "dialog", "aria-modal": true } : {})}
     >
+      <div className="flex items-center justify-between gap-3 pb-1 pl-5 pr-2 pt-2">
+        <span className="mono-label flex items-center gap-2 text-muted">
+          <span aria-hidden="true" className="planner-eyebrow-dot" />
+          Plan panel
+        </span>
+        <Button variant="ghost" size="icon" aria-label="Close panel" onClick={onClose} className="shrink-0">
+          <CloseIcon />
+        </Button>
+      </div>
       <Tabs
         label="Plan panel"
         tabs={tabs}
         active={tab}
         onChange={(k) => onTab(k as DrawerTab)}
-        className="flex min-h-0 flex-1 flex-col"
-        panelClassName="min-h-0 flex-1 overflow-y-auto px-4 pb-6 pt-4"
-        end={
-          <Button variant="ghost" size="icon" aria-label="Close panel" onClick={onClose} className="mr-1 shrink-0">
-            <CloseIcon />
-          </Button>
-        }
+        className="planner-drawer-tabs flex min-h-0 flex-1 flex-col"
+        panelClassName="min-h-0 flex-1 overflow-y-auto px-5 pb-8 pt-5"
       />
     </section>
   );
+  // On a phone the panel covers the screen: it is portalled to the body, so no transformed or
+  // filtered ancestor (the page's entrance animation) can become its containing block.
+  return fullScreen ? createPortal(panel, document.body) : panel;
 }
 
-/** Toolbar button that opens the drawer at one tab (and closes it when that tab is showing). */
+/**
+ * Toolbar button that opens the drawer at one tab (and closes it when that tab is showing): a
+ * segment of the planner's glass tool bar (planner.css), lit red while its tab is showing.
+ */
 export function DrawerButton({ active, open, onClick, children }: { active: boolean; open: boolean; onClick: () => void; children: ReactNode }) {
   return (
-    <Button
-      variant="outline"
-      aria-controls={DRAWER_ID}
-      aria-expanded={open && active}
-      onClick={onClick}
-      className={cn(open && active && "bg-primary-wash shadow-[inset_0_0_0_1px_var(--color-primary)] hover:bg-primary-wash")}
-    >
+    <button type="button" aria-controls={DRAWER_ID} aria-expanded={open && active} onClick={onClick} className="planner-seg">
       {children}
-    </Button>
+    </button>
   );
 }

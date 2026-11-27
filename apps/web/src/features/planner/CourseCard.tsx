@@ -58,16 +58,16 @@ export function CourseCard({ item }: { item: PlanItem }) {
         setMenuOpen(true);
       }}
       className={cn(
+        // A file in its quarter's folder (docs/DESIGN.md "Dark glass": `.glass-file`, planner.css).
+        // The coloured left edge is the requirement strip (FEEDBACK "Color strip", 2026-11-16).
         // The card settles into place when it mounts: on load, and after a drop into a new quarter.
-        "relative flex animate-settle flex-col rounded-lg border border-l-[3px] border-hairline bg-surface-card text-caption text-ink transition-[box-shadow,opacity] hover:shadow-hover",
-        isSlot ? "border-dashed border-hairline-strong border-l-hairline-strong bg-canvas-soft" : STRIP_CLASSES[tag?.kind ?? "none"],
-        completed && "bg-canvas-soft",
-        item.id && highlight.items.has(item.id) && "ring-2 ring-primary ring-offset-2 ring-offset-canvas-soft",
+        "glass-file planner-file relative flex animate-settle flex-col border-l-[3px] text-caption text-ink",
+        isSlot ? "planner-file-slot border-l-hairline-strong" : STRIP_CLASSES[tag?.kind ?? "none"],
+        completed && "planner-file-done",
         // While dragging, the drag overlay follows the pointer; the card stays as a faint placeholder.
         isDragging && "opacity-40",
-        // Each card is its own layer (the settle animation keeps its end transform), so a card
-        // further down would paint over this card's open menu: lift the card while it is open
-        // (FEEDBACK "Minor issues", 2026-11-16).
+        // Each card is its own layer, so a card further down would paint over this card's open
+        // menu: lift the card while it is open (FEEDBACK "Minor issues", 2026-11-16).
         menuOpen && "z-30",
       )}
     >
@@ -79,7 +79,7 @@ export function CourseCard({ item }: { item: PlanItem }) {
           type="button"
           aria-label={item.locked ? `${label} is locked` : `Drag ${label}`}
           className={cn(
-            "flex size-11 shrink-0 touch-none items-center justify-center rounded-tl-md text-gray-dark hover:text-ink focus-visible:outline-offset-[-2px]",
+            "flex size-11 shrink-0 touch-none items-center justify-center rounded-tl-[10px] text-gray-dark transition-colors hover:text-ink focus-visible:outline-offset-[-2px]",
             item.locked ? "cursor-not-allowed" : "cursor-grab",
           )}
           {...attributes}
@@ -88,8 +88,8 @@ export function CourseCard({ item }: { item: PlanItem }) {
           {item.locked ? <LockIcon size={14} /> : <GripIcon size={14} />}
         </button>
         <div className="flex min-w-0 flex-1 flex-wrap items-baseline gap-x-2 py-1">
-          <span className="font-medium tabular-nums">{isSlot ? "Requirement slot" : item.course}</span>
-          {units != null && <span className="text-muted">{units} units</span>}
+          <span className="font-mono text-[13px] font-semibold tracking-[0.06em] tabular-nums text-ink">{isSlot ? "Requirement slot" : item.course}</span>
+          {units != null && <span className="font-mono text-[12px] tracking-[0.04em] tabular-nums text-muted">{units} units</span>}
           {completed && (
             <Badge tone="success" casing="normal" className="px-2 py-0">
               Completed
@@ -98,13 +98,13 @@ export function CourseCard({ item }: { item: PlanItem }) {
         </div>
         <Menu label={`Actions for ${label}`} trigger={<MoreIcon />} items={items} open={menuOpen} onOpenChange={setMenuOpen} />
       </div>
-      <div className="min-w-0 px-3 pb-2">
-        <div className="truncate text-body" title={course?.title ?? item.slot_ref ?? undefined}>
+      <div className="min-w-0 px-3.5 pb-3">
+        <div className="truncate text-body-sm font-medium text-ink" title={course?.title ?? item.slot_ref ?? undefined}>
           {isSlot ? item.slot_ref : (course?.title ?? "")}
         </div>
         {tag && <div className="truncate text-muted">{tag.label}</div>}
         {(hours || difficulty) && (
-          <div className="mt-1 flex flex-wrap items-center gap-x-2 tabular-nums text-muted">
+          <div className="mt-1.5 flex flex-wrap items-center gap-x-2.5 tabular-nums text-muted">
             {hours && (
               <span>
                 {isEstimate(hours) ? "~" : ""}
@@ -116,7 +116,7 @@ export function CourseCard({ item }: { item: PlanItem }) {
           </div>
         )}
         {mine.length > 0 && (
-          <ul className="mt-1.5 space-y-1">
+          <ul className="mt-2 space-y-1 border-t border-white/[0.07] pt-2">
             {mine.map((i, n) => {
               // Short form on the card; the full message is in the plan check (FEEDBACK 2026-11-16).
               const short = summarizeIssue(i);

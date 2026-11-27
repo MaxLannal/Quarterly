@@ -28,15 +28,18 @@ import { GenerateDialog } from "@/features/generate/GenerateDialog";
 import { ProgramPickerBody, StatusBadge } from "@/features/programs/ProgramPicker";
 import { useMediaQuery } from "@/lib/motion";
 import { useSession } from "@/lib/session";
+import { cn } from "@/lib/utils";
 import { applyOps, ChangeOpError } from "./changes";
-import { highlightFor, PlannerContext, stripKind, type PlannerContextValue, type RequirementTag } from "./context";
+import { highlightFor, PlannerContext, STRIP_CLASSES, stripKind, type PlannerContextValue, type RequirementTag } from "./context";
 import { GoalsTab } from "./GoalsTab";
 import { IssuesTab } from "./IssuesTab";
 import { storedRemoteId, upsertPlan, type LocalPlan } from "./localPlans";
-import { addCourseOps, editorReducer, initEditor, itemLabel, moveItemOps, type EditResult } from "./planModel";
+import { quarterMetrics } from "./metrics";
+import { addCourseOps, editorReducer, initEditor, itemLabel, moveItemOps, planYears, type EditResult } from "./planModel";
 import { CreditsEditor } from "@/features/credits/CreditsEditor";
 import { DrawerButton, PlanDrawer, type DrawerTab } from "./PlanDrawer";
 import { PlanGrid } from "./PlanGrid";
+import { graduationChoices, PlanHero } from "./PlanHero";
 import { RequirementTree } from "./RequirementTree";
 import { planToSave, recordKey, withRecord } from "./setup";
 import { SetupCard } from "./SetupCard";
@@ -45,7 +48,7 @@ import { graduationTerm, planTerms, termLabel } from "./terms";
 import { useVerify } from "./useVerify";
 import { PlanVerdict } from "./VerifierBadge";
 
-type DragData = { kind: "item"; itemId: string } | { kind: "course"; code: string };
+type DragData = { kind: "item"; itemId: string } | { kind: "course"; code: string; title?: string };
 
 /** Drop on the quarter under the pointer; keyboard drags (no pointer) use the overlap. */
 const collision: CollisionDetection = (args) => {
@@ -108,7 +111,7 @@ export function Planner({ initial, autoGenerate = false, onSetUp }: PlannerProps
   const [generateOpen, setGenerateOpen] = useState(autoGenerate);
   const [drawer, setDrawer] = useState<{ open: boolean; tab: DrawerTab }>({ open: false, tab: "requirements" });
   const [advisorOpen, setAdvisorOpen] = useState(false);
-  const [dragging, setDragging] = useState<string | null>(null);
+  const [dragging, setDragging] = useState<{ id: string; data?: DragData } | null>(null);
   const desktop = useMediaQuery("(min-width: 1024px)");
   const { data: session } = useSession();
   const queryClient = useQueryClient();
@@ -199,7 +202,22 @@ export function Planner({ initial, autoGenerate = false, onSetUp }: PlannerProps
   };
 
   function onDragStart(e: DragStartEvent) {
-    setDragging(nameOf(e.active.id));
+    setDragging({ id: String(e.active.id), data: e.active.data.current as DragData | undefined });
+  }
+
+  /** The file held up under the pointer while dragging: the card's code, title and strip. */
+  function heldFile(d: { id: string; data?: DragData }) {
+    const data = d.data;
+    const item = data?.kind === "item" ? items.find((i) => i.id === data.itemId) : undefined;
+    const code = data?.kind === "course" ? data.code : item?.course;
+    const title = data?.kind === "course" ? data.title : item?.course ? courses.get(item.course)?.title : item?.slot_ref;
+    const kind = code ? (tags.get(code)?.kind ?? "none") : "none";
+    return (
+      <div className={cn("glass-file planner-held flex cursor-grabbing flex-col gap-0.5 border-l-[3px] py-2.5 pl-4 pr-6", STRIP_CLASSES[kind])}>
+        <span className="font-mono text-[13px] font-semibold tracking-[0.06em] tabular-nums text-ink">{code ?? nameOf(d.id)}</span>
+        {title && <span className="max-w-64 truncate text-caption text-body">{title}</span>}
+      </div>
+    );
   }
 
   function onDragEnd(e: DragEndEvent) {
@@ -210,6 +228,11 @@ export function Planner({ initial, autoGenerate = false, onSetUp }: PlannerProps
 
   // Logged in: show the record's credits and taken courses (edited on the dashboard) once loaded.
   // An empty plan is left alone: it shows the card that sets the whole plan up from the record.
+  const totals = quarterMetrics(items, courses);
+  const lastTerm = graduationTerm(plan);
+  const years = planYears(plan);
+  const choices = graduationChoices(plan.entry_term, years);
+  if (!choices.includes(lastTerm)) choices.push(lastTerm);
   const blank = (plan.items ?? []).length === 0 && (plan.programs ?? []).length === 0;
   useEffect(() => {
     if (!session || !profile.data || recordBase !== null || blank) return;
@@ -275,7 +298,10 @@ export function Planner({ initial, autoGenerate = false, onSetUp }: PlannerProps
       label: "Credits",
       content: (
         <div className="space-y-3">
-          <h3 className="text-title-sm">Test, placement and transfer credits</h3>
+          <div>
+            <span className="planner-label">Before you start</span>
+            <h3 className="font-display text-title-md font-normal leading-tight">Test, placement and transfer credits</h3>
+          </div>
           <CreditsEditor credits={plan.credits ?? []} catalogYear={plan.catalog_year} onChange={(credits) => dispatch({ type: "credits", credits })} />
         </div>
       ),
@@ -289,19 +315,25 @@ export function Planner({ initial, autoGenerate = false, onSetUp }: PlannerProps
 
   return (
     <PlannerContext.Provider value={ctx}>
-      <div className="mx-auto flex w-full max-w-tool flex-col gap-3 px-4 pb-16 pt-4 sm:px-6 lg:px-8">
+      <div className="mx-auto flex w-full max-w-tool flex-col gap-5 px-4 pb-20 pt-5 sm:px-6 sm:pt-6 lg:px-10">
         <h1 className="sr-only">Planner</h1>
-        <div className="flex flex-wrap items-start gap-x-8 gap-y-4">
-          <div className="flex min-w-0 flex-col gap-1 self-end">
-            <p className="text-caption text-muted">Not official advising. Confirm with your adviser and My Planner.</p>
-          </div>
-          <div className="flex min-w-0 flex-col gap-1">
-            <span className="text-caption-uppercase uppercase text-muted">Catalog {plan.catalog_year}</span>
-            <ul className="flex flex-wrap items-center gap-2" aria-label="Programs on this plan">
+        <PlanHero
+          name={state.name}
+          onRename={(name) => dispatch({ type: "rename", name })}
+          verdict={<PlanVerdict verify={verify} onOpen={() => setDrawer({ open: true, tab: "issues" })} />}
+          catalogYear={plan.catalog_year}
+          years={years}
+          units={`${totals.units}${totals.unitsPartial ? "+" : ""}`}
+          courses={totals.courses}
+          graduation={lastTerm}
+          graduationChoices={choices}
+          onGraduation={(term) => dispatch({ type: "graduation", term })}
+          programs={
+            <ul className="flex flex-wrap items-center gap-2 xl:justify-end" aria-label="Programs on this plan">
               {(plan.programs ?? []).map((p) => {
                 const summary = allPrograms.find((x) => x.id === p.program_id);
                 return (
-                  <li key={p.program_id} className="flex min-h-11 animate-fade-in items-center gap-1 rounded-pill border border-hairline-strong bg-surface-card pl-4 text-body-sm text-ink">
+                  <li key={p.program_id} className="planner-chip flex min-h-11 animate-fade-in items-center gap-1 rounded-pill pl-4 text-body-sm text-ink">
                     {names.get(p.program_id) ?? p.program_id}
                     {summary && <StatusBadge status={summary.status} />}
                     <Button
@@ -317,19 +349,20 @@ export function Planner({ initial, autoGenerate = false, onSetUp }: PlannerProps
                 );
               })}
               <li>
-                <Button variant="outline" onClick={() => setPickPrograms(true)}>
+                <Button variant="outline" size="sm" onClick={() => setPickPrograms(true)}>
                   + Program
                 </Button>
               </li>
             </ul>
-          </div>
-        </div>
+          }
+        />
 
-        {/* Toolbar: the panels open on demand, so the grid keeps the page (FEEDBACK F4). */}
-        <div className="flex flex-wrap items-center gap-x-2 gap-y-1 border-y border-hairline py-2">
-          {/* D11 adapt: on a phone the panel buttons are one row that scrolls sideways, so the toolbar
-              takes two rows instead of three; from 640px they wrap as before. */}
-          <div className="-mx-4 flex min-w-0 items-center gap-2 overflow-x-auto px-4 py-0.5 [scrollbar-width:none] sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0 [&>*]:shrink-0">
+        {/* Toolbar: one floating glass bar, like a tool palette. The panels open on demand, so the
+            grid keeps the page (FEEDBACK F4). */}
+        <div className="planner-toolbar glass-rim">
+          {/* D11 adapt: on a phone the panel buttons are one row that scrolls sideways; from 640px
+              they wrap. */}
+          <div className="flex min-w-0 items-center gap-1 overflow-x-auto [scrollbar-width:none] sm:flex-wrap sm:overflow-visible [&>*]:shrink-0">
             <DrawerButton active={drawer.tab === "requirements"} open={drawer.open} onClick={() => toggleDrawer("requirements")}>
               Requirements
             </DrawerButton>
@@ -338,31 +371,30 @@ export function Planner({ initial, autoGenerate = false, onSetUp }: PlannerProps
             </DrawerButton>
             <DrawerButton active={drawer.tab === "credits"} open={drawer.open} onClick={() => toggleDrawer("credits")}>
               Credits
-              {(plan.credits ?? []).length > 0 && <span className="text-muted tabular-nums">{(plan.credits ?? []).length}</span>}
+              {(plan.credits ?? []).length > 0 && <span className="font-mono text-[12px] text-muted tabular-nums">{(plan.credits ?? []).length}</span>}
             </DrawerButton>
-            <DrawerButton
-              active={drawer.tab === "issues"}
-              open={drawer.open}
-              onClick={() => toggleDrawer("issues")}
-            >
+            <DrawerButton active={drawer.tab === "issues"} open={drawer.open} onClick={() => toggleDrawer("issues")}>
               Check plan{" "}
               {errorCount > 0 && <span className="sr-only">({errorCount} {errorCount === 1 ? "error" : "errors"})</span>}
               {errorCount > 0 && (
-                <span aria-hidden="true" data-testid="issue-count" className="inline-flex min-w-5 animate-fade-in justify-center rounded-pill bg-error-wash px-1.5 text-caption tabular-nums text-error">
+                <span aria-hidden="true" data-testid="issue-count" className="planner-count inline-flex min-w-5 animate-fade-in justify-center rounded-pill px-1.5 font-mono text-[12px] tabular-nums">
                   {errorCount}
                 </span>
               )}
             </DrawerButton>
-            <Button variant="outline" aria-haspopup="dialog" onClick={() => setAdvisorOpen(true)}>
+            <span aria-hidden="true" className="planner-toolbar-sep" />
+            <button type="button" className="planner-seg planner-seg-ai" aria-haspopup="dialog" onClick={() => setAdvisorOpen(true)}>
               <SparkIcon className="text-primary" />
               Ask Quarterly
-            </Button>
+            </button>
           </div>
-          <div className="flex flex-wrap items-center gap-2 sm:ml-auto">
-            <Button variant="outline" onClick={() => void save()}>
+          <div className="flex flex-wrap items-center gap-1 sm:ml-auto">
+            <button type="button" className="planner-seg" onClick={() => void save()}>
               Save
+            </button>
+            <Button size="sm" className="border-0 px-5" onClick={() => setGenerateOpen(true)}>
+              Generate plan
             </Button>
-            <Button onClick={() => setGenerateOpen(true)}>Generate plan</Button>
           </div>
         </div>
 
@@ -396,12 +428,9 @@ export function Planner({ initial, autoGenerate = false, onSetUp }: PlannerProps
           ))}
 
         <DndContext sensors={sensors} collisionDetection={collision} onDragStart={onDragStart} onDragEnd={onDragEnd} onDragCancel={() => setDragging(null)} accessibility={{ announcements }}>
-          <div className="mt-2 flex items-start gap-6">
+          <div className="mt-3 flex items-start gap-8">
             <section id="plan-grid" aria-label="Plan grid" className="min-w-0 flex-1">
               <PlanGrid
-                name={state.name}
-                verdict={<PlanVerdict verify={verify} onOpen={() => setDrawer({ open: true, tab: "issues" })} />}
-                onRename={(name) => dispatch({ type: "rename", name })}
                 showSummer={showSummer}
                 onToggleSummer={() => setShowSummer(!showSummer)}
                 onGraduation={(term) => dispatch({ type: "graduation", term })}
@@ -417,11 +446,7 @@ export function Planner({ initial, autoGenerate = false, onSetUp }: PlannerProps
               fullScreen={!desktop}
             />
           </div>
-          <DragOverlay dropAnimation={null}>
-            {dragging ? (
-              <div className="cursor-grabbing rounded-lg border border-hairline-strong bg-surface-card px-4 py-2.5 text-body-sm font-semibold tabular-nums text-ink shadow-overlay">{dragging}</div>
-            ) : null}
-          </DragOverlay>
+          <DragOverlay dropAnimation={null}>{dragging ? heldFile(dragging) : null}</DragOverlay>
         </DndContext>
       </div>
 
