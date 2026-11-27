@@ -1,7 +1,7 @@
 // Screenshots of the running mock-data app (dev helper for the dark-glass redesign).
 // Usage: node scripts/shoot.mjs <outDir> <path> [<path> ...]
 //   env: BASE (default http://127.0.0.1:5190), W/H (default 1440x900), FULL=1 for full-page,
-//        WAIT (ms, default 1800), LOGIN=1 to sign in as the mock student first.
+//        WAIT (ms, default 1800), LOGIN=1 to sign in as the mock student first (ADMIN=1: as an admin).
 import { chromium } from "@playwright/test";
 import { mkdirSync } from "node:fs";
 
@@ -14,6 +14,14 @@ mkdirSync(outDir, { recursive: true });
 const browser = await chromium.launch();
 const page = await browser.newPage({ viewport: { width: W, height: H } });
 page.on("pageerror", (e) => console.log("pageerror:", e.message));
+if (process.env.LOGIN === "1" || process.env.ADMIN === "1") {
+  // The same mock sign-in as e2e/helpers.ts logIn().
+  await page.goto(base + "/guidelines", { waitUntil: "networkidle" });
+  await page.evaluate(async (asAdmin) => {
+    if (asAdmin) sessionStorage.setItem("quarterly.mock.admin", "1");
+    await fetch("/api/auth/login", { method: "POST", body: JSON.stringify({ login: "fake-user", password: "x" }) });
+  }, process.env.ADMIN === "1");
+}
 for (const p of paths) {
   await page.goto(base + p, { waitUntil: "networkidle" });
   await page.waitForTimeout(wait);
