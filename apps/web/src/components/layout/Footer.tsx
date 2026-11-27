@@ -44,38 +44,37 @@ const COLUMNS: { title: string; links: { to: string; label: string }[] }[] = [
  * bar and the page content above it (DESIGN.md's 48px would sit 16px to the right of both).
  */
 export function Footer() {
-  // Same width as the top bar: the planner's wider tool width (DF-2) on /plan, 1200px elsewhere.
+  // Same width as the top bar: the planner's wider tool width (DF-2) on /plan, the content width elsewhere.
   const wide = useLocation().pathname === "/plan";
   return (
-    <footer className="text-on-night">
+    <footer className="relative overflow-hidden text-on-night">
       <div
         className={cn(
-          "mx-auto grid w-full grid-cols-2 gap-x-6 gap-y-8 px-4 py-10 sm:px-6 md:grid-cols-[2fr_repeat(4,1fr)] md:gap-10 md:py-12 lg:px-8",
+          "mx-auto grid w-full grid-cols-2 gap-x-6 gap-y-10 px-5 pb-6 pt-16 sm:px-8 md:grid-cols-[2fr_repeat(4,1fr)] md:gap-10 md:pt-24 lg:px-10",
           wide ? "max-w-tool" : "max-w-content",
         )}
       >
-        <div className="col-span-2 max-w-xs md:col-span-1">
-          <p className="flex items-center gap-[3px] font-display text-[34px] leading-none tracking-[-0.5px] text-on-night">
-            Quarterly
-            <span aria-hidden="true" className="mt-3 inline-block size-[7px] rounded-pill bg-primary shadow-[0_0_12px_2px_rgb(255_92_112/0.7)]" />
+        <div className="col-span-2 max-w-sm md:col-span-1">
+          <p className="mono-label flex items-center gap-2 text-on-night-muted">
+            <span aria-hidden="true" className="inline-block size-1.5 rounded-pill bg-primary shadow-[0_0_10px_2px_rgb(255_92_112/0.7)]" />
+            A student project
           </p>
-          <p className="mt-3 text-body-sm text-on-night-muted">
+          <p className="mt-4 text-body-sm text-on-night-soft">
             Quarterly is a student project, not affiliated with the University
             of Chicago. It is not official advising.
           </p>
         </div>
         {COLUMNS.map((col) => (
           <nav key={col.title} aria-label={`${col.title} links`}>
-            <p className="mono-label text-on-night-muted">
-              {col.title}
-            </p>
-            <ul className="mt-3 flex flex-col">
+            <p className="mono-label text-on-night-muted">{col.title}</p>
+            <ul className="mt-4 flex flex-col">
               {col.links.map((l) => (
                 <li key={l.to}>
                   <Link
                     to={l.to}
-                    className="inline-flex min-h-9 items-center rounded-xs text-body-sm text-on-night-soft transition-colors hover:text-primary pointer-coarse:min-h-11"
+                    className="group inline-flex min-h-9 items-center rounded-xs text-body-sm text-on-night-soft transition-colors duration-300 hover:text-on-night pointer-coarse:min-h-11"
                   >
+                    <span aria-hidden="true" className="h-px w-0 bg-primary transition-[width,margin] duration-300 group-hover:mr-2 group-hover:w-3" />
                     {l.label}
                   </Link>
                 </li>
@@ -83,6 +82,10 @@ export function Footer() {
             </ul>
           </nav>
         ))}
+      </div>
+      {/* The wordmark as a horizon: huge, lit from above, sinking into the night (decorative). */}
+      <div aria-hidden="true" className={cn("footer-horizon mx-auto w-full px-3 sm:px-6", wide ? "max-w-tool" : "max-w-content")}>
+        <span className="footer-horizon-word">Quarterly</span>
       </div>
     </footer>
   );

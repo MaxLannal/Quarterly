@@ -94,7 +94,7 @@ function SearchBox() {
           // A quiet filled field (D6, FEEDBACK "Minor design changes"): no outline until it is used;
           // the icon and placeholder say what it is. Focus: white, with the maroon ring.
           // On the frosted bar: a quiet filled pill that turns white, with the maroon halo, in use.
-          "peer min-h-12 w-full min-w-0 rounded-pill border border-hairline bg-white/[0.05] pl-12 pr-4 text-body-md text-ink shadow-[inset_0_1px_2px_rgb(0_0_0/0.35)] transition-[border-color,background-color,box-shadow] duration-200 placeholder:text-muted",
+          "peer min-h-12 w-full min-w-0 rounded-pill border border-hairline-strong bg-[rgb(20_10_13/0.55)] pl-12 pr-4 backdrop-blur-xl text-body-md text-ink shadow-[inset_0_1px_2px_rgb(0_0_0/0.35)] transition-[border-color,background-color,box-shadow] duration-200 placeholder:text-muted",
           "hover:border-hairline-strong hover:bg-white/[0.07] focus-visible:outline-none focus:border-primary/70 focus:bg-white/[0.08] focus:shadow-[0_0_0_4px_rgb(255_92_112/0.14),0_0_30px_rgb(255_92_112/0.2)]",
         )}
       />
@@ -156,12 +156,13 @@ export function TopNav() {
   const panelId = useId();
 
   useEffect(() => setOpen(false), [location.pathname]);
+  const hasSearch = !PAGE_HAS_SEARCH.has(location.pathname);
 
   const account = session ? (
     <Link
       to="/me"
       aria-current={location.pathname === "/me" ? "page" : undefined}
-      className="flex min-h-11 items-center gap-2 rounded-pill bg-white/[0.05] pl-1 pr-1 text-[16px] font-medium text-ink shadow-[inset_0_0_0_1px_var(--color-hairline)] transition-colors hover:bg-white/[0.09] aria-[current=page]:shadow-[inset_0_0_0_1px_rgb(255_92_112/0.45)] lg:pr-4"
+      className="flex min-h-12 items-center gap-2 rounded-pill bg-[rgb(20_10_13/0.55)] pl-1.5 pr-1.5 backdrop-blur-xl text-[16px] font-medium text-ink shadow-[inset_0_0_0_1px_var(--color-hairline)] transition-colors hover:bg-white/[0.09] aria-[current=page]:shadow-[inset_0_0_0_1px_rgb(255_92_112/0.45)] lg:pr-4"
     >
       <Avatar name={session.account.username} />
       {/* Below wide screens the avatar alone keeps the bar on one row; the name stays for screen readers. */}
@@ -175,43 +176,35 @@ export function TopNav() {
   );
 
   return (
-    // A slab of smoked glass the width of the page pane, floating on the night and staying at the
-    // top while the page scrolls (docs/DESIGN.md "Dark glass").
-    <header className="sticky top-0 z-30 px-2 pb-2 pt-2 sm:px-3 sm:pb-3 sm:pt-3 lg:px-5">
-      <div
-        className={cn(
-          "nav-glass mx-auto flex w-full flex-wrap rounded-[22px] sm:rounded-[26px]",
-          "items-center gap-x-2 px-3 sm:px-5 md:min-h-[72px] lg:h-[72px] lg:flex-nowrap lg:px-7",
-        )}
-      >
-        <Wordmark className="mr-2 h-16 md:h-auto" />
+    // Glass floating over the night: the wordmark on its own, the four tabs in a glass dock (centred
+    // on wide screens), search and account on the right. A progressive blur under the bar softens
+    // whatever scrolls beneath it (docs/DESIGN.md "Dark glass").
+    <header className="nav-veil sticky top-0 z-30 px-3 pb-3 pt-3 sm:px-4 lg:px-6">
+      <div className="relative mx-auto flex min-h-14 w-full flex-wrap items-center gap-x-3 gap-y-3 lg:flex-nowrap">
+        <Wordmark className="h-12 px-1" />
         <nav
           id={panelId}
           aria-label="Main"
           className={cn(
-            "items-center gap-1 md:flex",
+            "nav-glass items-center gap-1 rounded-pill p-1.5 md:flex xl:absolute xl:left-1/2 xl:-translate-x-1/2",
             open
-              ? "order-last mb-3 flex w-full flex-col items-stretch border-t border-hairline pt-3 md:order-none md:mb-0 md:w-auto md:flex-row md:items-center md:border-0 md:pt-0"
+              ? "order-last flex w-full flex-col items-stretch rounded-[26px] md:order-none md:w-auto md:flex-row md:items-center md:rounded-pill"
               : "hidden",
           )}
         >
           <NavLinks vertical={open} />
         </nav>
         {/* D11 H-1/CS-1: home and course search have their own search box; one is enough. */}
-        {!PAGE_HAS_SEARCH.has(location.pathname) && (
-          <div
-            className={cn(
-              // Its own row below the links until the bar is wide enough for the links and a search.
-              "order-1 w-full pb-3 lg:order-none lg:ml-auto lg:w-auto lg:max-w-[17rem] lg:flex-1 lg:pb-0",
-            )}
-          >
+        {hasSearch && (
+          // Its own row below until the bar is wide enough for the tabs and a search.
+          <div className="order-1 w-full lg:order-none lg:ml-auto lg:w-[17rem] lg:flex-none">
             <SearchBox />
           </div>
         )}
-        <div className="ml-auto flex items-center gap-1 lg:ml-2">
+        <div className={cn("ml-auto flex items-center gap-2", hasSearch && "lg:ml-0")}>
           {account}
           <Button
-            variant="ghost"
+            variant="outline"
             size="icon"
             className="text-ink md:hidden"
             aria-expanded={open}

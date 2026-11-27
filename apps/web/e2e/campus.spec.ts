@@ -72,7 +72,7 @@ test("sign-in follows the reference card: big title, pill fields, a password tha
   expect(radius).toBe("26px");
 });
 
-test("the homepage can be day or a snowy night, and remembers the choice", async ({ page }) => {
+test("the homepage can be day or night, and remembers the choice", async ({ page }) => {
   await page.goto("/");
   const hero = page.locator("section[data-scene]");
   await expect(hero).toHaveAttribute("data-scene", "day");
