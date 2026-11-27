@@ -172,14 +172,14 @@ interface PlanHeroProps {
 export function PlanHero({ name, onRename, verdict, catalogYear, years, units, courses, graduation, graduationChoices: choices, onGraduation, programs }: PlanHeroProps) {
   return (
     <header className="planner-hero grid gap-x-10 gap-y-6 xl:grid-cols-[minmax(0,1fr)_auto] xl:items-end">
-      <div className="flex min-w-0 flex-col gap-3">
+      <div className="flex min-w-0 flex-col gap-2.5">
         <p className="mono-label flex items-center gap-2 text-muted">
           <span aria-hidden="true" className="planner-eyebrow-dot" />
           Planner
-          <span aria-hidden="true" className="text-muted">
+          <span aria-hidden="true" className="hidden text-muted sm:inline">
             {"//"}
           </span>
-          Four years, quarter by quarter
+          <span className="hidden sm:inline">Four years, quarter by quarter</span>
         </p>
         <div className="flex min-w-0 flex-wrap items-center gap-x-4 gap-y-2">
           <PlanName name={name} onRename={onRename} />

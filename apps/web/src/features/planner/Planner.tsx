@@ -315,7 +315,7 @@ export function Planner({ initial, autoGenerate = false, onSetUp }: PlannerProps
 
   return (
     <PlannerContext.Provider value={ctx}>
-      <div className="mx-auto flex w-full max-w-tool flex-col gap-6 px-4 pb-20 pt-6 sm:px-6 sm:pt-8 lg:px-10">
+      <div className="mx-auto flex w-full max-w-tool flex-col gap-5 px-4 pb-20 pt-5 sm:px-6 sm:pt-6 lg:px-10">
         <h1 className="sr-only">Planner</h1>
         <PlanHero
           name={state.name}
@@ -428,7 +428,7 @@ export function Planner({ initial, autoGenerate = false, onSetUp }: PlannerProps
           ))}
 
         <DndContext sensors={sensors} collisionDetection={collision} onDragStart={onDragStart} onDragEnd={onDragEnd} onDragCancel={() => setDragging(null)} accessibility={{ announcements }}>
-          <div className="mt-4 flex items-start gap-8">
+          <div className="mt-3 flex items-start gap-8">
             <section id="plan-grid" aria-label="Plan grid" className="min-w-0 flex-1">
               <PlanGrid
                 showSummer={showSummer}

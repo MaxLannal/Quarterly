@@ -1,4 +1,5 @@
 import { useEffect, useRef, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 import { Button } from "@/components/ui/button";
 import { useFocusTrap } from "@/components/ui/dialog";
 import { CloseIcon } from "@/components/ui/icons";
@@ -64,7 +65,7 @@ export function PlanDrawer({ open, tab, onTab, onClose, tabs, fullScreen }: Plan
     };
   }, [desktop]);
 
-  return (
+  const panel = (
     <section
       ref={ref}
       id={DRAWER_ID}
@@ -102,6 +103,9 @@ export function PlanDrawer({ open, tab, onTab, onClose, tabs, fullScreen }: Plan
       />
     </section>
   );
+  // On a phone the panel covers the screen: it is portalled to the body, so no transformed or
+  // filtered ancestor (the page's entrance animation) can become its containing block.
+  return fullScreen ? createPortal(panel, document.body) : panel;
 }
 
 /**

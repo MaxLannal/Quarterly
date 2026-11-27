@@ -230,18 +230,6 @@ export function PlanGrid({ showSummer, onToggleSummer, onGraduation, onAddYear }
 
   return (
     <div className="flex flex-col gap-12 @container">
-      <div className="-mb-4 flex flex-wrap items-center justify-between gap-3">
-        <p className="mono-label text-muted">
-          {years} year{years === 1 ? "" : "s"}
-          <span aria-hidden="true" className="px-2 text-muted">
-            {"//"}
-          </span>
-          {showSummer ? "Summer, Autumn, Winter, Spring" : "Autumn, Winter, Spring"}
-        </p>
-        <Button variant="outline" size="sm" onClick={onToggleSummer} aria-pressed={showSummer}>
-          {showSummer ? "Hide Summer" : "Show Summer"}
-        </Button>
-      </div>
       {Array.from({ length: years }, (_, i) => i + 1).map((y) => {
         const start = academicYear(termAt(plan.entry_term, y, "AU"));
         const summer = termAt(plan.entry_term, y, "SU");
@@ -250,17 +238,24 @@ export function PlanGrid({ showSummer, onToggleSummer, onGraduation, onAddYear }
         const visible = yearTerms.filter((t) => showSummer || !t.endsWith("-SU"));
         return (
           <section key={y} aria-labelledby={`year-${y}`} data-testid={`year-${y}`} className="planner-shelf">
-            <div className="mb-6 flex flex-wrap items-baseline gap-x-5 gap-y-1">
-              <h3 id={`year-${y}`} className="flex shrink-0 items-baseline gap-x-3 font-display text-display-sm">
+            <div className="mb-4 flex flex-wrap items-center gap-x-5 gap-y-2">
+              <h3 id={`year-${y}`} className="flex min-w-0 flex-wrap items-baseline gap-x-3 font-display text-display-sm">
                 {classYearLabel(y, level)}{" "}
                 <span className="mono-label tabular-nums text-muted">{academicYearLabel(start)}</span>
+                {!showSummer && summerItems.length > 0 && (
+                  <span className="mono-label text-muted">
+                    {" "}
+                    · {termLabel(summer)}: {summerItems.length} course
+                    {summerItems.length === 1 ? "" : "s"} (hidden)
+                  </span>
+                )}
               </h3>
               <span aria-hidden="true" className="planner-rule" />
-              {!showSummer && summerItems.length > 0 && (
-                <span className="mono-label text-muted">
-                  {termLabel(summer)}: {summerItems.length} course
-                  {summerItems.length === 1 ? "" : "s"} (hidden)
-                </span>
+              {/* The Summer switch sits on the first shelf's line, for the whole grid. */}
+              {y === 1 && (
+                <Button variant="outline" size="sm" onClick={onToggleSummer} aria-pressed={showSummer}>
+                  {showSummer ? "Hide Summer" : "Show Summer"}
+                </Button>
               )}
             </div>
             <div className={cn("planner-shelf-row grid grid-cols-1 gap-x-5 gap-y-8 @lg:grid-cols-3", showSummer && "@4xl:grid-cols-4")}>
