@@ -436,6 +436,8 @@
 }
 
 /* -- entrance: items rise into place one after another ----------------------------------- */
+/* Never inside a closed <details>: its content is skipped (content-visibility), so the animation
+   would never finish and tests that wait for animations would hang. */
 .qg-rise {
   animation: qg-rise 620ms var(--ease-out) both;
   animation-delay: calc(var(--i, 0) * 60ms);

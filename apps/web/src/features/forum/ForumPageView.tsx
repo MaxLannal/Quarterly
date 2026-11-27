@@ -238,7 +238,7 @@ export function ForumPageView({ code, slug }: { code: string; slug: string }) {
                   <ChevronIcon className="size-4 text-muted transition-transform duration-300 group-open:rotate-90 motion-reduce:transition-none" />
                   Rating breakdown
                 </summary>
-                <div className="qg-rise mt-3">
+                <div className="mt-3">
                   <RatingBars distribution={page.rating_distribution ?? {}} />
                 </div>
               </details>

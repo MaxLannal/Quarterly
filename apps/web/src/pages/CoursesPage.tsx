@@ -194,7 +194,7 @@ export default function CoursesPage() {
             <input
               id={field("q")}
               type="search"
-              placeholder="Search by code or title"
+              placeholder="Code or title"
               value={draft.q ?? ""}
               onChange={set("q")}
             />
@@ -215,7 +215,7 @@ export default function CoursesPage() {
                 </span>
               )}
             </summary>
-            <div className="qg-rise mt-4 grid grid-cols-2 gap-2.5 sm:grid-cols-3">
+            <div className="mt-4 grid grid-cols-2 gap-2.5 sm:grid-cols-3">
               <FilterChip id={field("subject")} label="Department" set={!!draft.subject}>
                 <input
                   id={field("subject")}
