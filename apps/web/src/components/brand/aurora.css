@@ -53,22 +53,29 @@
   position: absolute;
   inset: 0;
   border-radius: 50%;
-  /* The ring is the outer band of the circle, --band wide. */
+  /* The ring is the outer band of the circle, --band wide, with a soft bell-shaped cross-section
+     drawn by the mask itself. No filter: a blurred layer that rotates would be re-blurred on every
+     frame, while a masked gradient is drawn once and only turned by the compositor. */
   -webkit-mask: radial-gradient(
     closest-side,
     transparent calc(100% - var(--band)),
-    #000 calc(100% - var(--band) * 0.62),
-    #000 calc(100% - var(--band) * 0.38),
+    rgb(0 0 0 / 0.08) calc(100% - var(--band) * 0.86),
+    rgb(0 0 0 / 0.4) calc(100% - var(--band) * 0.7),
+    #000 calc(100% - var(--band) * 0.52),
+    rgb(0 0 0 / 0.4) calc(100% - var(--band) * 0.32),
+    rgb(0 0 0 / 0.08) calc(100% - var(--band) * 0.15),
     transparent 100%
   );
   mask: radial-gradient(
     closest-side,
     transparent calc(100% - var(--band)),
-    #000 calc(100% - var(--band) * 0.62),
-    #000 calc(100% - var(--band) * 0.38),
+    rgb(0 0 0 / 0.08) calc(100% - var(--band) * 0.86),
+    rgb(0 0 0 / 0.4) calc(100% - var(--band) * 0.7),
+    #000 calc(100% - var(--band) * 0.52),
+    rgb(0 0 0 / 0.4) calc(100% - var(--band) * 0.32),
+    rgb(0 0 0 / 0.08) calc(100% - var(--band) * 0.15),
     transparent 100%
   );
-  filter: blur(var(--blur));
 }
 
 /* White: a faint full ring with a bright comet of light travelling round it (two, opposite, so one
@@ -83,8 +90,7 @@
   --direction: reverse;
 }
 .aurora-ring-white-soft {
-  --band: 7vmax;
-  --blur: 26px;
+  --band: 10vmax;
   background: conic-gradient(
     from 0deg,
     rgb(220 228 255 / 0.1) 0deg,
@@ -98,8 +104,7 @@
   );
 }
 .aurora-ring-white-core {
-  --band: 0.9vmax;
-  --blur: 2px;
+  --band: 1.3vmax;
   background: conic-gradient(
     from 0deg,
     rgb(255 255 255 / 0.08) 0deg,
@@ -123,8 +128,7 @@
   --period: 110s;
 }
 .aurora-ring-red-soft {
-  --band: 9vmax;
-  --blur: 34px;
+  --band: 13vmax;
   background: conic-gradient(
     from 90deg,
     rgb(150 14 40 / 0.18) 0deg,
@@ -137,8 +141,7 @@
   );
 }
 .aurora-ring-red-core {
-  --band: 0.7vmax;
-  --blur: 3px;
+  --band: 1.1vmax;
   background: conic-gradient(
     from 90deg,
     rgb(255 120 140 / 0.06) 0deg,
@@ -161,8 +164,7 @@
   --period: 220s;
 }
 .aurora-ring-haze {
-  --band: 16vmax;
-  --blur: 60px;
+  --band: 26vmax;
   background: conic-gradient(
     from 0deg,
     rgb(110 10 32 / 0.5),

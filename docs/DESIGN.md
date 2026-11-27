@@ -755,7 +755,22 @@ Max asked for this with three reference pictures: floating glass tool panels ove
   - Inputs are dark glass pills with an inset shadow. On focus, the edge turns red with a red halo.
   - Cards are glass tiles with a lit top edge. Cards that are links lift 2px and light up.
   - Any `[data-spotlight]` surface carries a soft red light that follows the pointer (one listener in `AppShell`). It is decorative only.
-- **Floating glass.** The menu bar is a slab of smoked glass (`.nav-glass`). The current tab is a lit glass pill with a point of red light. Menus, dialogs, drawers and the top sheet use `.glass-raised` over a blurred `scrim`.
+- **The top bar** is no longer one slab.
+  - The wordmark stands on its own. The four tabs sit in a glass dock (`.nav-glass`), centred on screens 1280px and wider. The current tab is a lit glass pill with a point of red light.
+  - Search and the account are separate frosted pills on the right.
+  - A progressive blur under the bar (`.nav-veil`), strongest at the top, softens what scrolls beneath.
+  - On a phone, the tabs open as a glass panel under the search.
+- **Floating glass.** Menus, dialogs, drawers and the top sheet use `.glass-raised` over a blurred `scrim`.
+- **Rims of light.** Cards have no flat border. `.glass-rim` draws a 1px gradient ring: bright at the top-left edge, faint along the sides, warming to red at the far corner, and brighter on hover and focus. Use it on any rounded panel.
+- **Tabs** are a glass track; the current tab is a lit pill of glass in it (not an underline).
+- **The footer** puts its link columns over a huge "Quarterly" in the display serif. It is white at the top and fades into the night, like a horizon (decorative, `aria-hidden`).
+- **The homepage** (`pages/HomePage.tsx`, `features/home/HarperHall.tsx`):
+  - The title sits beside a pane of glass turned a few degrees (like the reference's floating canvas). The pane holds the reading room of Harper Memorial Library, drawn in code in one-point perspective (`harperGeometry.ts`): tall pointed windows down both walls, a beamed ceiling, long tables with reading lamps, rows of pendant lights, and window reflections in the polished floor.
+  - By day, sun falls through the south windows in shafts that cross the room, with dust drifting in them. Three groups of shafts dim one after another, as if a cloud passed.
+  - By night (the Day / Night switch stays), the glass turns deep violet, a few stars show in the great window, and the lamps light the room.
+  - Three two-line glass chips float over the picture at different depths, and the pointer tilts the pane a few degrees. Under reduced motion, nothing moves and no dust shows.
+  - Below the hero, "Four years, kept in folders." shows Planner, Catalog and Forum as three glass folders. Each whole folder is one link, and its files say what the part holds (facts about the product only).
+  - The chapel drawn with course titles (`CourseChapel`) is no longer on the page. Its code stays in the repository until Richard decides (FEEDBACK "Course-title chapel on the homepage").
 - **The wordmark** is "Quarterly" in the display serif, with one point of red light after it.
 - **Folders and files** (`components/ui/folder.tsx`).
   - A glass folder has a back panel with a tab on its top-left. The tab slopes down into the body.
