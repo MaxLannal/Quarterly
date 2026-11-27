@@ -17,6 +17,7 @@
 > - **Integration run** (2026-11-24, at the end of the file): **INT-1** (Needs Richard): how long the plan generator can think in the app (4 s now, 20 s in the end-to-end tests).
 > - **Student record and dashboard** (2026-11-24, at the end of the file): **SR-1** to **SR-6**. These are decisions made during the build of Issues #14 and #16. Each has a suggested answer.
 > - **Merge of PR #21** (2026-11-24, at the end of the file): **M21-1** to **M21-3**. These questions came up during the merge of Max's PR #21 into the integration branch. Each has a suggested answer.
+> - **Dark glass redesign** (Max, 2026-11-27, at the end of the file): **DG-1** to **DG-3** (Needs Richard): the homepage picture, the new look for every page, and the homepage's second band. Each has options and a suggested answer.
 > - **"Work these answers create (not started)"** below is a list from 2026-11-14. Some of its items were built since then. Before you start an item, check `docs/PROGRESS.md` and the code.
 >
 > Put new questions at the end of the matching section, in plain language, with a suggested answer (see `CLAUDE.md`, "Working with the owner").
@@ -996,3 +997,27 @@ Resolved in 7fbc438: `GET /me/updates` and `POST /me/updates/seen` are deleted, 
 
 Richard's answer: Yes, we can implement a small fix in the next dashboard PR.
 Not done yet: planned for the next dashboard PR.
+
+## Dark glass redesign (Max, 2026-11-27; branch `claude/quarterly-ui-redesign-c953e9`, not pushed)
+
+Max asked in chat for every page in a dark, red, glassy style, with Harper Library on the homepage and the planner's quarters as folders (docs/DESIGN.md "Dark glass"). It is built on its own branch and is not merged or pushed. To see it, check out the branch or look at the screenshots in `docs/screenshots/dark-glass/`.
+
+**DG-1 (Needs Richard): which picture belongs on the homepage?**
+Your FEEDBACK item "Course-title chapel on the homepage" asked for Rockefeller Chapel drawn with course titles. Max asked for Harper Library's reading room. On this branch the homepage shows Harper; the chapel code is still in the repository but not shown.
+- (a) Keep Harper, and delete the chapel code and its data (`features/home/CourseChapel.tsx`, `features/home/chapel/`, `public/home/course-chapel.json`, `tools/course-chapel/` and their tests). This also closes DF-A1, because the chapel's watermarked photo goes with it.
+- (b) Put the chapel back: show it inside the same tilted glass pane instead of Harper.
+- (c) Keep both: Harper by day and the chapel by night, or the chapel on the About page.
+- Suggested: (a), if you like the new look.
+
+**DG-2 (Needs Richard): should the whole site use the dark glass look?**
+It replaces "Maroon and night" (white page sheets on maroon). Text, links and focus rings keep a contrast of 4.5:1 or better, and nothing moves with reduced motion.
+- (a) Adopt it for every page.
+- (b) Keep the white sheets, and take only some parts (for example, the planner folders and the homepage picture).
+- (c) Offer both, with a light/dark switch. Each colour then needs two values, so every page has to be checked twice.
+- Suggested: decide after you look at the screenshots. (a) is the smallest change from here.
+
+**DG-3 (Needs Richard): may the homepage have a second band?**
+The SPEC homepage was one screen. Under the first screen there is now "Four years, kept in folders.": three glass folders (Planner, Catalog, Forum), each a link, with three facts about that part.
+- (a) Keep it.
+- (b) Remove it, so the homepage is one screen again.
+- Suggested: (a).
