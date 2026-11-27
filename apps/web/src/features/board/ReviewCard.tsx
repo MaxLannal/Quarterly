@@ -13,11 +13,11 @@ export function ReviewCard({ review }: { review: ReviewItem }) {
   return (
     <article
       aria-labelledby={titleId}
-      className="group relative flex flex-col gap-2 rounded-xl border border-hairline bg-surface-card px-4 py-4 transition-shadow hover:shadow-hover focus-within:shadow-hover sm:px-6 sm:py-5"
+      data-spotlight="" className="qg-tile qg-tile-link group flex flex-col gap-3 px-5 py-5 sm:px-8 sm:py-7"
     >
       <div className="flex flex-wrap items-center gap-2">
-        <span className="inline-flex min-h-6 items-center rounded-pill bg-surface-strong px-2.5 text-[12px] font-semibold text-ink">Review</span>
-        <span className="inline-flex min-h-6 items-center gap-1 rounded-pill bg-primary-wash px-2.5 text-[12px] font-semibold tabular-nums text-primary">
+        <span className="inline-flex min-h-6 items-center rounded-pill bg-white/[0.06] px-2.5 font-mono text-[10.5px] font-medium uppercase tracking-[0.14em] text-ink shadow-[inset_0_0_0_1px_rgb(255_255_255/0.12)]">Review</span>
+        <span className="inline-flex min-h-6 items-center gap-1 rounded-pill bg-primary-wash px-2.5 text-[12px] font-semibold tabular-nums text-primary shadow-[inset_0_0_0_1px_rgb(255_120_140/0.3)]">
           <span aria-hidden="true">★</span>
           <span>
             {review.overall}
@@ -27,8 +27,8 @@ export function ReviewCard({ review }: { review: ReviewItem }) {
         </span>
         <span className="text-caption text-muted">{review.would_recommend ? "Would recommend" : "Would not recommend"}</span>
       </div>
-      <h3 id={titleId} className="font-display text-[21px] font-bold leading-snug tracking-[-0.02em] text-ink sm:text-[23px]">
-        <Link to={href} className="rounded-xs decoration-primary/40 underline-offset-4 hover:underline focus-visible:underline">
+      <h3 id={titleId} className="font-display text-[26px] leading-[1.15] tracking-[-0.2px] text-ink sm:text-[30px]">
+        <Link to={href} className="rounded-xs transition-colors duration-300 hover:text-primary-hover focus-visible:text-primary-hover">
           {title}
         </Link>
       </h3>
@@ -37,7 +37,7 @@ export function ReviewCard({ review }: { review: ReviewItem }) {
         <CourseChip course={review.course} />
         <Link
           to={pagePath(review.course.code, review.instructor.slug)}
-          className="relative inline-flex min-h-8 items-center rounded-pill border border-hairline-strong px-3 text-caption text-ink before:absolute before:inset-x-0 before:-inset-y-1.5 hover:border-primary/50"
+          className="relative inline-flex min-h-8 items-center rounded-pill bg-white/[0.04] px-3 text-caption text-ink shadow-[inset_0_0_0_1px_rgb(255_255_255/0.12)] transition-shadow duration-300 before:absolute before:inset-x-0 before:-inset-y-1.5 hover:shadow-[inset_0_0_0_1px_rgb(255_120_140/0.5)]"
         >
           {review.instructor.display_name}
         </Link>
@@ -53,7 +53,7 @@ export function ReviewCard({ review }: { review: ReviewItem }) {
           </>
         )}
       </p>
-      <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
+      <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 border-t border-hairline pt-2">
         <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-caption text-muted">
           <span>
             reviewed by <Handle handle={review.handle} mine={review.is_mine} />

@@ -113,7 +113,7 @@ function ReplyItem({ reply, ctx }: { reply: Reply; ctx: TreeContext }) {
               aria-controls={childrenId}
               className="group mt-1 flex w-7 flex-1 justify-center sm:w-11"
             >
-              <span className="w-px bg-hairline-strong transition-colors group-hover:w-0.5 group-hover:bg-primary" />
+              <span className="w-px bg-[linear-gradient(180deg,rgb(255_120_140/0.55),rgb(255_255_255/0.12)_40%,rgb(255_255_255/0.04))] shadow-[0_0_10px_rgb(255_92_112/0.25)] transition-[background-color,box-shadow] duration-300 group-hover:bg-primary group-hover:shadow-[0_0_12px_rgb(255_92_112/0.8)]" />
             </button>
           )}
         </div>

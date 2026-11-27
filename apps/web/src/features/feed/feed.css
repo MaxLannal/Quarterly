@@ -1,11 +1,70 @@
 /* The Catalog's browse rows (issue #19; the rest of the Feed's motion went with the Feed). index.css
-   stops every animation under prefers-reduced-motion. Transforms only. */
+   stops every animation under prefers-reduced-motion. Transforms only. In the components layer,
+   so Tailwind utilities on the same element still win. */
 
-/* -- a spotlight's art panel breathes a little on hover ------------------------------------ */
+@layer components {
+
+/* -- the row's two glass arrows ------------------------------------------------------------ */
+.feed-arrow {
+  display: inline-flex;
+  width: 44px;
+  height: 44px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  border: 1px solid rgb(255 255 255 / 0.1);
+  background: linear-gradient(180deg, rgb(255 255 255 / 0.07), rgb(255 255 255 / 0.02));
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.09);
+  color: var(--color-body);
+  transition:
+    color 200ms var(--ease-out),
+    border-color 200ms var(--ease-out),
+    box-shadow 300ms var(--ease-out);
+}
+.feed-arrow:hover {
+  color: var(--color-ink);
+  border-color: rgb(255 120 140 / 0.5);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.12),
+    0 6px 22px -8px rgb(255 60 90 / 0.6);
+}
+
+/* -- a spotlight: its art sits inset in the glass like a print under a pane ------------------- */
+.feed-art-frame {
+  position: relative;
+  overflow: hidden;
+  border-radius: 18px;
+  box-shadow:
+    inset 0 0 0 1px rgb(255 255 255 / 0.08),
+    0 18px 40px -22px rgb(0 0 0 / 0.9);
+}
+/* A sheet of glass over the print: a lit top edge and a soft fall to dark at the bottom. */
+.feed-art-frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.1), transparent 22%),
+    linear-gradient(0deg, rgb(8 3 5 / 0.55), transparent 45%);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.18);
+}
 .feed-art {
-  transition: transform 600ms var(--ease-out);
+  transition: transform 900ms var(--ease-out);
 }
 .feed-spotlight:hover .feed-art,
 .feed-spotlight:focus-within .feed-art {
-  transform: scale(1.035);
+  transform: scale(1.045);
+}
+
+/* -- a quote card: the mark is a soft glow of the serif ------------------------------------- */
+.feed-quote-mark {
+  font-family: var(--font-display);
+  font-size: 120px;
+  line-height: 1;
+  color: var(--color-primary);
+  opacity: 0.55;
+  text-shadow: 0 0 30px rgb(255 92 112 / 0.7);
+}
 }
