@@ -536,70 +536,73 @@
   font-size: 1.06em;
 }
 
-/* The homepage title, "The Best of UChicago, within your reach." (HomePage.tsx): three lines that
-   rise into place one after another; the last is italic maroon with a hand-drawn swash under it
-   that draws itself. Reduced motion: everything is simply there. */
+/* The homepage title, "The Best of UChicago, within your reach." (HomePage.tsx): three lines of the
+   display serif that rise out of a blur one after another; the last is the italic in red light with
+   a hand-drawn swash under it that draws itself and glows. Reduced motion: everything is there. */
 .home-title {
   display: flex;
   flex-direction: column;
-  font-size: clamp(56px, 6.4vw, 96px);
-  line-height: 0.95;
-  letter-spacing: -0.045em;
-  font-weight: 800;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(64px, 7.4vw, 132px);
+  line-height: 0.9;
+  letter-spacing: -0.025em;
 }
 .home-title-line {
   display: block;
-  animation: home-title-rise 900ms var(--ease-out, cubic-bezier(0.2, 0.7, 0.2, 1)) both;
+  animation: home-title-rise 1100ms var(--ease-out) both;
 }
 .home-title-lead {
-  font-size: 0.4em;
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  line-height: 1.15;
-  color: var(--color-body-strong);
+  font-size: 0.44em;
+  font-style: italic;
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+  color: var(--color-on-night-muted);
 }
 .home-title-main {
-  animation-delay: 110ms;
+  animation-delay: 120ms;
+  text-shadow: 0 0 60px rgb(255 92 112 / 0.22);
 }
 .home-title-reach {
   position: relative;
   width: max-content;
   max-width: 100%;
-  margin-top: 0.08em;
-  font-size: 0.66em;
-  line-height: 1.05;
-  letter-spacing: -0.02em;
-  animation-delay: 240ms;
+  margin-top: 0.06em;
+  font-size: 0.7em;
+  line-height: 1.02;
+  animation-delay: 260ms;
 }
 .home-title-reach em {
   font-style: italic;
   color: var(--color-primary);
+  text-shadow: 0 0 40px rgb(255 92 112 / 0.45);
 }
 .home-title-swash {
   position: absolute;
   left: 0.05em;
   right: 0;
-  bottom: -0.32em;
+  bottom: -0.28em;
   width: 100%;
-  height: 0.38em;
+  height: 0.34em;
   overflow: visible;
+  filter: drop-shadow(0 0 6px rgb(255 92 112 / 0.8));
 }
 .home-title-swash path {
   fill: none;
   stroke: var(--color-primary);
-  stroke-width: 2.4;
+  stroke-width: 2;
   stroke-linecap: round;
   vector-effect: non-scaling-stroke;
   stroke-dasharray: 360;
   stroke-dashoffset: 360;
-  animation: home-title-draw 1100ms 700ms cubic-bezier(0.6, 0, 0.2, 1) forwards;
-  opacity: 0.75;
+  animation: home-title-draw 1400ms 900ms cubic-bezier(0.6, 0, 0.2, 1) forwards;
+  opacity: 0.9;
 }
 @keyframes home-title-rise {
   from {
     opacity: 0;
     transform: translateY(0.35em);
-    filter: blur(6px);
+    filter: blur(10px);
   }
   to {
     opacity: 1;
