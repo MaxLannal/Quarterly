@@ -725,16 +725,15 @@
 .page-enter {
   animation: page-enter 520ms var(--ease-out) both;
 }
+/* Opacity and a short rise only: a blur over a whole page would cost every frame of the entrance. */
 @keyframes page-enter {
   from {
     opacity: 0;
-    transform: translateY(10px);
-    filter: blur(4px);
+    transform: translateY(12px);
   }
   to {
     opacity: 1;
     transform: none;
-    filter: none;
   }
 }
 
