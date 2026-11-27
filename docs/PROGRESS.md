@@ -1706,3 +1706,30 @@ After the placement fix, the next run in the app (LIVE-TEST-REPORT run 12) faile
 - **"Show the name of the course below the course code, in bolded big titles."** On the planner's course files and the planner agent's proposed blocks, the code is now a small grey line, and the course's name sits below it in 15px semibold (up to two lines on a proposed block). Proposed courses had no name before, because `useCourseMap` loaded only the plan's own courses; `Planner.tsx` now also loads the courses of open proposals.
 - **The shared Docker stack (`quarterly`) runs this branch's API and worker** (Max: "Yes, rebuild it"). It was started from the split-screen worktree; `.env` was copied from there (git-ignored, not printed). `docker compose up -d --build --wait api worker`, then the web proxy was recreated (the same image). The database was already at 0012 (head). Checked: the explain step's paragraph instruction and the 1400-character limit are live in the container, `/health` is ok, and `POST /agents/planner` answers. The web container on :5173 still serves the split-screen frontend; the redesign runs on the dev server at :5191 against this API.
 - Checks: tsc, eslint, vitest 245/245, Playwright (MSW) 104 passed.
+
+## Every GitHub function in the new UI; logins checked on the real stack (Max, 2026-11-27)
+
+**Request.** "Check and make sure every function in the newest github version are up in the new ui web and that it is ready to function for logins."
+
+**GitHub.** After `git fetch`, `origin/main` is still 3bbb12f (2026-11-26), an ancestor of this branch. No remote branch has a commit that this branch lacks.
+
+**Functions compared with GitHub `main`.**
+- `routes.tsx` is unchanged: every page and redirect is there.
+- The web files removed since `main` are `features/advisor/AdvisorPanel`, `features/generate/GenerateDialog` and `features/generate/deterministic` (each with its tests). The split screen replaces them with the planner agent (`POST /agents/planner` in place of `/agents/generate`, `/agents/chat` and `/chat/history`; issues #17 and #18, Max's decisions).
+  - `deterministic.ts` was a build-time switch, off by default (`VITE_GENERATOR_MODE`), that sent the old dialog to the solver alone. The solver endpoint (`POST /plans/generate`, no LLM) is still on the API; no page calls it now.
+- The e2e tests that are gone are the chapel's. Harper's tests replace them, as Max asked. Every other GitHub test is still there; some are renamed for the new look or the walkthrough.
+- The look removed the art panels (`TypeHero` on the Commons pages and the sign-in page). Their course titles could be pointed at and clicked; it was decoration, and nothing else depends on it.
+
+**The new UI on the real stack.** The web container (`quarterly-web-1`, http://localhost:5173) was rebuilt from this branch (`docker compose up -d --build --wait web`), so the real app now serves Simple light with the split screen. The API behind it was rebuilt earlier the same day.
+
+**Logins, end to end on http://localhost:5173.** A Playwright script, not committed because it creates an account, passed every step:
+- a wrong password shows "Wrong username, email or password."
+- sign-up step 1 sends the code (`EMAIL_BACKEND=console`: the code is in the API log, and no email is sent)
+- step 2 verifies the code, step 3 creates the account, step 4 saves About you
+- the top bar shows the account, and the dashboard greets it with the class year
+- Log out returns to the Log in page, with no account in the top bar
+- logging in again with the username works, and the planner opens
+
+The test account was deleted through the delete-account form afterwards, and the database has no test account left. The API's CSRF guard refused a request without the session's `X-CSRF-Token`, as it should.
+
+**Before a real deployment** (the API refuses these in production, `config.py`): `EMAIL_BACKEND=smtp` (not `console`) and `SESSION_COOKIE_SECURE=true`. The local stack runs with `ENVIRONMENT=development`.
