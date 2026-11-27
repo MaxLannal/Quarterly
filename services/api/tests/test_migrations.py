@@ -67,6 +67,8 @@ SPEC_TABLES = {
     # The student record (Issue #14)
     "student_credit",
     "student_course",
+    # The planner agent (issue #17): answers from the planner chat, waiting for the student
+    "profile_proposal",
 }
 
 
@@ -468,4 +470,30 @@ def test_0011_replaces_courses_per_quarter_with_the_course_load(fresh_db_url: st
         assert "courses_per_term" not in columns
     with engine.begin() as conn, pytest.raises(Exception, match="course_load"):
         conn.execute(text("UPDATE student_profile SET course_load = 'heavy'"))
+    engine.dispose()
+
+
+def test_0012_adds_the_planner_agent_columns(fresh_db_url: str) -> None:
+    cfg = alembic_config(fresh_db_url)
+    engine = create_engine(fresh_db_url)
+    command.upgrade(cfg, "head")
+    insp = inspect(engine)
+    assert "interests" in {c["name"] for c in insp.get_columns("student_profile")}
+    assert "state" in {c["name"] for c in insp.get_columns("agent_run")}
+    assert {"run_id", "meta"} <= {c["name"] for c in insp.get_columns("change_set")}
+    assert {c["name"] for c in insp.get_columns("profile_proposal")} == {
+        "id",
+        "account_id",
+        "field",
+        "value",
+        "source",
+        "status",
+        "created_day",
+    }
+    command.downgrade(cfg, "0011")
+    insp = inspect(engine)
+    assert "profile_proposal" not in insp.get_table_names()
+    assert "interests" not in {c["name"] for c in insp.get_columns("student_profile")}
+    assert "run_id" not in {c["name"] for c in insp.get_columns("change_set")}
+    command.upgrade(cfg, "head")
     engine.dispose()

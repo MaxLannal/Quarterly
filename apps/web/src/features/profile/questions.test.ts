@@ -54,9 +54,9 @@ describe("which questions apply", () => {
   it("lists the agent's open questions and the share answered", () => {
     const p = profile({ post_grad_plan: "industry", wants_research: false, class_year: 2030 });
     const left = remainingQuestions(SET, p).map((q) => q.id);
-    expect(left).toEqual(["pace", "course_load", "terms_away", "class_formats", "theory_vs_application"]);
-    // Asked of this student: class year, graduation, programs + 7 step-2 questions (no research areas).
-    expect(completenessOf(SET, p)).toBe(0.3);
+    expect(left).toEqual(["pace", "interests", "course_load", "terms_away", "class_formats", "theory_vs_application"]);
+    // Asked of this student: class year, graduation, programs + 8 step-2 questions (no research areas).
+    expect(completenessOf(SET, p)).toBe(0.273);
   });
 });
 

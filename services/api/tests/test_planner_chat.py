@@ -1,5 +1,6 @@
-"""A2 advisor chat (prompt 07) on the fake 2099-00 fixture, with FakeLLM only: the scope
-gate, citations, history, injections in forum text, and typed confirmations."""
+"""The planner agent's chat mode (issues #17 and #18; the advisor chat of prompt 07 before it)
+on the fake 2099-00 fixture, with FakeLLM only: the scope gate, citations, history,
+injections in forum text, typed confirmations, working information and proposals."""
 
 from __future__ import annotations
 
@@ -11,8 +12,7 @@ from typing import Any
 import pytest
 import sqlalchemy as sa
 from agent_test_support import add_forum, events, of, use_llm
-from api.agents import chat as chat_mod
-from api.agents.tools import A2_TOOLS
+from api.agents.planner import chat as chat_mod
 from api.auth.ratelimit import DAY, Limit
 from api.config import get_settings
 from api.db import models as m
@@ -73,12 +73,13 @@ def chat(
 ) -> list[dict[str, Any]]:
     """`plan`: a saved plan (PlanOut); the request then sends its id and its state."""
     body = {
+        "mode": "chat",
         "plan": state or (plan["state"] if plan else STATE),
         "plan_id": plan["id"] if plan else None,
         "message": message,
         **extra,
     }
-    return events(env.client.post("/agents/chat", json=body, headers=headers or {}))
+    return events(env.client.post("/agents/planner", json=body, headers=headers or {}))
 
 
 def texts(evs: list[dict[str, Any]]) -> list[str]:
@@ -98,7 +99,7 @@ def test_off_topic_and_suspicious_get_fixed_refusals_without_the_main_model(env:
         FakeLLM(
             script={
                 "a2_scope_classifier": [{"label": "off_topic"}, {"label": "suspicious"}],
-                "a2_advisor_chat": [ToolCall("submit_answer", {"text": "x", "citations": []})],
+                "a1_planner_chat": [ToolCall("submit_answer", {"text": "x", "citations": []})],
             }
         ),
     )
@@ -135,7 +136,7 @@ def test_fabricated_citations_are_dropped_and_history_is_kept(env: Env) -> None:
         FakeLLM(
             script={
                 "a2_scope_classifier": [IN_SCOPE, IN_SCOPE],
-                "a2_advisor_chat": [
+                "a1_planner_chat": [
                     [ToolCall("get_plan", {}), ToolCall("get_course", {"code": "TEST 10100"})],
                     ToolCall("submit_answer", answer),
                     ToolCall("submit_answer", {"text": "Second answer.", "citations": []}),
@@ -148,7 +149,7 @@ def test_fabricated_citations_are_dropped_and_history_is_kept(env: Env) -> None:
     assert message["text"] == answer["text"]
     assert message["citations"] == [{"kind": "course", "id": "TEST 10100", "label": "TEST 10100"}]
     # The advisor holds read tools and one draft tool, never a write tool.
-    assert fake.calls[1]["tools"] == [*A2_TOOLS, "submit_answer"]
+    assert fake.calls[1]["tools"] == [*chat_mod.CHAT_TOOLS, "submit_answer"]
     run_id = of(evs, "done")[0]["run_id"]
 
     again = chat(env, "And after that?", headers=headers, plan=plan)
@@ -156,8 +157,10 @@ def test_fabricated_citations_are_dropped_and_history_is_kept(env: Env) -> None:
     second_request = fake.calls[-1]["messages"]
     assert [msg["role"] for msg in second_request] == ["user", "assistant", "user"]
     assert second_request[0]["content"] == "What does TEST 10100 need?"
+    # The newest turn carries the student's record and working information first.
+    assert "# The student's record (student.md)" in second_request[-1]["content"]
 
-    hist = env.client.get(f"/agents/chat/history?plan_id={plan['id']}", headers=headers).json()
+    hist = env.client.get(f"/agents/planner/history?plan_id={plan['id']}", headers=headers).json()
     assert [(e["role"], e["text"]) for e in hist["entries"]] == [
         ("user", "What does TEST 10100 need?"),
         ("assistant", answer["text"]),
@@ -167,12 +170,12 @@ def test_fabricated_citations_are_dropped_and_history_is_kept(env: Env) -> None:
     assert hist["entries"][1]["citations"][0]["id"] == "TEST 10100"
     other = env.browser()
     them = csrf(env.signup("loud-heron", client=other))
-    denied = other.get(f"/agents/chat/history?plan_id={plan['id']}", headers=them)
+    denied = other.get(f"/agents/planner/history?plan_id={plan['id']}", headers=them)
     assert denied.status_code == 404
     with env.db() as db:
         calls = db.scalars(sa.select(m.LlmCall)).all()
-        assert len(calls) == 3 and {c.task for c in calls} == {"a2_advisor_chat"}
-        assert all(c.prompt_version == "a2_chat@1" for c in calls)
+        assert len(calls) == 3 and {c.task for c in calls} == {"a1_planner_chat"}
+        assert all(c.prompt_version == "a1_planner_chat@1" for c in calls)
     # llm_call never holds a user identifier.
     assert set(m.LlmCall.__table__.columns.keys()) == {
         "id", "task", "model", "prompt_version", "in_tokens", "out_tokens", "cost_usd",
@@ -194,7 +197,7 @@ def test_injection_in_forum_text_cannot_cause_a_write(env: Env) -> None:
         FakeLLM(
             script={
                 "a2_scope_classifier": [IN_SCOPE],
-                "a2_advisor_chat": [
+                "a1_planner_chat": [
                     [
                         ToolCall("get_forum_posts", {"code": "TEST 10000", "kind": None}),
                         ToolCall("get_forum_summary", {"code": "TEST 10000"}),
@@ -222,7 +225,7 @@ def test_injection_in_forum_text_cannot_cause_a_write(env: Env) -> None:
 
     # The draft is only a card; the plan is untouched and nothing was applied.
     proposals = of(evs, "proposal")
-    assert len(proposals) == 1 and proposals[0]["change_set"]["status"] == "proposed"
+    assert len(proposals) == 1 and proposals[0]["change_set_id"]
     assert not of(evs, "confirm")
     after = env.client.get(f"/plans/{plan['id']}", headers=headers).json()
     assert after["plan_hash"] == plan["plan_hash"]
@@ -240,7 +243,7 @@ def propose(env: Env, ops: list[dict[str, Any]], **kw: Any) -> dict[str, Any]:
         FakeLLM(
             script={
                 "a2_scope_classifier": [IN_SCOPE],
-                "a2_advisor_chat": [
+                "a1_planner_chat": [
                     ToolCall("propose_change_set", {"ops": ops}),
                     ToolCall("submit_answer", {"text": "Here is a proposal.", "citations": []}),
                 ],
@@ -248,7 +251,9 @@ def propose(env: Env, ops: list[dict[str, Any]], **kw: Any) -> dict[str, Any]:
         ),
     )
     evs = chat(env, "Add an elective for me", **kw)
-    return of(evs, "proposal")[0]["change_set"]  # type: ignore[no-any-return]
+    proposal = of(evs, "proposal")[0]
+    base = (kw.get("plan") or {}).get("plan_hash", HASH)
+    return {"id": proposal["change_set_id"], "base_plan_hash": base, "ops": proposal["ops"]}
 
 
 def apply(env: Env, headers: dict[str, str], plan_id: str, cs: dict[str, Any], text: str) -> Any:
@@ -321,17 +326,16 @@ def test_a_stale_proposal_is_not_confirmed(env: Env) -> None:
 
 def test_confirmations_for_a_plan_in_the_browser(env: Env) -> None:
     latest = {
-        "origin": "chat",
+        "group_id": "chat-1",
         "ops": [{"op": "add", "course": "TEST 20200", "term": "2100-SP"}],
         "base_plan_hash": HASH,
-        "status": "proposed",
     }
-    evs = chat(env, "yes, apply it", latest_proposal=latest)
+    evs = chat(env, "yes, apply it", pending=[latest])
     confirm = of(evs, "confirm")[0]["change_set"]
     assert confirm["id"] is None and confirm["ops"][0]["course"] == "TEST 20200"
-    equal = chat(env, "I agree to add TEST 20200 to Spring 2100", latest_proposal=latest)
+    equal = chat(env, "I agree to add TEST 20200 to Spring 2100", pending=[latest])
     assert of(equal, "confirm")[0]["change_set"]["base_plan_hash"] == HASH
-    stale = chat(env, "apply it", latest_proposal={**latest, "base_plan_hash": "sha256:old"})
+    stale = chat(env, "apply it", pending=[{**latest, "base_plan_hash": "sha256:old"}])
     assert texts(stale) == [chat_mod.STALE]
     assert texts(chat(env, "apply it")) == [chat_mod.NO_PROPOSAL]
     explicit = chat(env, "I agree to move TEST 10100 from Winter 2100 to Spring 2100")
@@ -342,7 +346,7 @@ def test_confirmations_for_a_plan_in_the_browser(env: Env) -> None:
     ]  # fmt: skip
     # An unreadable confirmation gets the help line, never an application.
     use_llm(env, FakeLLM(script={"a2_scope_classifier": [{"label": "confirmation"}]}))
-    vague = chat(env, "yes go ahead and do that", latest_proposal=latest)
+    vague = chat(env, "yes go ahead and do that", pending=[latest])
     assert texts(vague) == [chat_mod.HELP] and not of(vague, "confirm")
 
 
@@ -353,29 +357,34 @@ def test_chat_is_rate_limited(env: Env, monkeypatch: pytest.MonkeyPatch) -> None
     monkeypatch.setattr(agents_router, "CHAT_PER_IP", Limit("agent-chat:ip", 2, DAY))
     for _ in range(2):
         chat(env, "apply it")
-    resp = env.client.post("/agents/chat", json={"plan": STATE, "message": "apply it"})
+    body = {"mode": "chat", "plan": STATE, "message": "apply it"}
+    resp = env.client.post("/agents/planner", json=body)
     assert resp.status_code == 429
 
 
-def test_history_older_than_30_days_is_deleted(env: Env) -> None:
+def test_history_is_kept_while_the_plan_exists(env: Env) -> None:
+    """Issue #17 D1: the planner chat stays for the next visit; Clear chat removes it."""
     headers, plan = saved_plan(env)
     with env.db() as db:
         run = m.AgentRun(
             kind="chat", plan_id=uuid.UUID(plan["id"]), model="x", status="ok",
-            created_day=dt.date.today() - dt.timedelta(days=45),
+            created_day=dt.date.today() - dt.timedelta(days=90),
         )  # fmt: skip
         db.add(run)
         db.flush()
-        old_day = dt.date.today() - dt.timedelta(days=31)
+        old_day = dt.date.today() - dt.timedelta(days=60)
         db.add(m.ChatMessage(run_id=run.id, role="user", content="old", created_day=old_day))
         db.add(m.ChatMessage(run_id=run.id, role="user", content="new"))
         db.commit()
-    hist = env.client.get(f"/agents/chat/history?plan_id={plan['id']}", headers=headers).json()
-    assert [e["text"] for e in hist["entries"]] == ["new"]
     chat(env, "apply it", headers=headers, plan=plan)
-    with env.db() as db:
-        contents = db.scalars(sa.select(m.ChatMessage.content).order_by(m.ChatMessage.id)).all()
-        assert "old" not in contents and contents[0] == "new"
+    url = f"/agents/planner/history?plan_id={plan['id']}"
+    hist = env.client.get(url, headers=headers).json()
+    assert [e["text"] for e in hist["entries"]][:2] == ["old", "new"]
+    assert env.client.delete(url, headers=headers).status_code == 204
+    assert env.client.get(url, headers=headers).json()["entries"] == []
+    other = env.browser()
+    them = csrf(env.signup("loud-heron", client=other))
+    assert other.delete(url, headers=them).status_code == 404
 
 
 def test_deleting_a_plan_deletes_its_chat(env: Env) -> None:
@@ -401,7 +410,7 @@ def test_logged_out_chat_holds_no_forum_tools_and_text_is_scrubbed(env: Env) -> 
         FakeLLM(
             script={
                 "a2_scope_classifier": [IN_SCOPE],
-                "a2_advisor_chat": [ToolCall("submit_answer", {"text": "Sure.", "citations": []})],
+                "a1_planner_chat": [ToolCall("submit_answer", {"text": "Sure.", "citations": []})],
             }
         ),
     )
@@ -416,7 +425,128 @@ def test_logged_out_chat_holds_no_forum_tools_and_text_is_scrubbed(env: Env) -> 
     )
     sent = fake.calls[0]["messages"][0].content
     assert "uchicago.edu" not in sent and "555-0142" not in sent
-    main = next(c for c in fake.calls if c["task"] == "a2_advisor_chat")
+    main = next(c for c in fake.calls if c["task"] == "a1_planner_chat")
     assert "uchicago.edu" not in str(main["messages"])  # the browser's history is scrubbed too
     assert not {"get_forum_posts", "get_forum_summary"} & set(main["tools"])
-    assert set(A2_TOOLS) - {"get_forum_posts", "get_forum_summary"} <= set(main["tools"])
+    assert set(chat_mod.CHAT_TOOLS) - {"get_forum_posts", "get_forum_summary"} <= set(main["tools"])
+
+
+# ------------------------------------------------------------------ the planner (issue #17)
+
+
+def proposal_call(course: str, term: str, **extra: Any) -> ToolCall:
+    return ToolCall(
+        "propose_change_set",
+        {
+            "ops": [add_op(course, term)],
+            "title": f"Add {course}",
+            "kind": "elective",
+            "why": "You said you like testing, and this fits Spring.",
+            "rules": ["G22", "G99"],
+            **extra,
+        },
+    )
+
+
+def test_chat_proposes_one_change_set_per_sequence_with_its_group(env: Env) -> None:
+    headers, plan = saved_plan(env)
+    use_llm(
+        env,
+        FakeLLM(
+            script={
+                "a2_scope_classifier": [IN_SCOPE],
+                "a1_planner_chat": [
+                    [
+                        proposal_call("TEST 20200", "2100-SP"),
+                        proposal_call("TEST 20300", "2100-SP"),
+                    ],
+                    ToolCall("submit_answer", {"text": "Two ideas.", "citations": []}),
+                ],
+            }
+        ),
+    )
+    evs = chat(env, "I hate TEST 10100. Suggest something else.", headers=headers, plan=plan)
+    proposals = of(evs, "proposal")
+    assert [p["title"] for p in proposals] == ["Add TEST 20200", "Add TEST 20300"]
+    first = proposals[0]
+    assert first["kind"] == "elective" and first["why"].startswith("You said")
+    assert [r["id"] for r in first["rules"]] == ["G22"]  # an unknown rule id is dropped
+    assert first["change_set_id"] and first["preview"]["status_after"]
+    hist = env.client.get(f"/agents/planner/history?plan_id={plan['id']}", headers=headers).json()
+    kept = [e for e in hist["entries"] if e["role"] == "proposal"]
+    assert [e["meta"]["title"] for e in kept] == ["Add TEST 20200", "Add TEST 20300"]
+    with env.db() as db:
+        rows = db.scalars(sa.select(m.ChangeSet).where(m.ChangeSet.status == "proposed")).all()
+        assert len(rows) == 2 and all(r.run_id is not None for r in rows)
+
+
+def test_chat_note_preference_goes_to_the_record_or_back_to_the_browser(env: Env) -> None:
+    note = ToolCall(
+        "note_preference",
+        {"text": "I hate  TEST 10100", "kind": "avoid", "courses": ["test 10100"]},
+    )
+    answer = ToolCall("submit_answer", {"text": "Noted.", "citations": []})
+    line = f"- {dt.date.today().isoformat()} · avoid · I hate TEST 10100 [TEST 10100]"
+    use_llm(
+        env,
+        FakeLLM(
+            script={"a2_scope_classifier": [IN_SCOPE] * 2, "a1_planner_chat": [note, answer] * 2}
+        ),
+    )
+    # A plan in the browser: the new working information comes back in `done`.
+    evs = chat(env, "I hate TEST 10100", working_notes="- 2026-11-01 · prefer · mornings")
+    assert of(evs, "done")[0]["working_notes"] == f"- 2026-11-01 · prefer · mornings\n{line}"
+    # Logged in: the line goes into the record (the planner's own memory).
+    headers, plan = saved_plan(env)
+    evs = chat(env, "I hate TEST 10100", headers=headers, plan=plan)
+    assert of(evs, "done")[0]["working_notes"] is None
+    md = env.client.get("/me/profile/export.md", headers=headers).text
+    assert line in md
+
+
+def test_chat_avoid_list_blocks_a_proposal(env: Env) -> None:
+    fake = use_llm(
+        env,
+        FakeLLM(
+            script={
+                "a2_scope_classifier": [IN_SCOPE],
+                "a1_planner_chat": [
+                    proposal_call("TEST 20200", "2100-SP"),
+                    ToolCall("submit_answer", {"text": "Something else then.", "citations": []}),
+                ],
+            }
+        ),
+    )
+    notes = "- 2026-11-20 · avoid · no more of these [TEST 20200]"
+    evs = chat(env, "Add an elective", working_notes=notes)
+    assert not of(evs, "proposal")
+    refused = fake.calls[-1]["messages"][-1]["content"][0]
+    assert refused["is_error"] and "do not want TEST 20200" in refused["content"]
+
+
+def test_chat_explains_with_guideline_and_profile_citations(env: Env) -> None:
+    answer = {
+        "text": "Theory comes before year 3 (G39).",
+        "citations": [
+            {"kind": "guideline", "id": "G39", "label": "x"},
+            {"kind": "guideline", "id": "G99", "label": "x"},
+            {"kind": "profile", "id": "interests", "label": "x"},
+            {"kind": "profile", "id": "pace", "label": "x"},
+        ],
+    }
+    use_llm(
+        env,
+        FakeLLM(
+            script={
+                "a2_scope_classifier": [IN_SCOPE],
+                "a1_planner_chat": [ToolCall("submit_answer", answer)],
+            }
+        ),
+    )
+    evs = chat(env, "Why is TEST 10100 in Winter?", profile_answers={"interests": ["testing"]})
+    cited = [(c["kind"], c["id"], c["label"]) for c in of(evs, "message")[0]["citations"]]
+    assert cited == [
+        ("guideline", "G39", "Guideline G39"),
+        ("profile", "interests", "Your interests"),
+    ]
+    assert not of(evs, "proposal")

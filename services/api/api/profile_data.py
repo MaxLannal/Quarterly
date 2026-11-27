@@ -53,7 +53,7 @@ SCALAR_FIELDS = (
     "working_notes",
 )
 #: The list columns a patch may set (`null` empties them).
-LIST_FIELDS = ("intended_programs", "research_areas")
+LIST_FIELDS = ("intended_programs", "research_areas", "interests")
 #: Answers kept in their own tables.
 TABLE_FIELDS = ("credits", "taken_courses")
 
@@ -336,6 +336,7 @@ def profile_out(db: Session, account: m.Account, row: m.StudentProfile) -> Profi
         pace=row.pace,
         wants_research=row.wants_research,
         research_areas=list(row.research_areas),
+        interests=list(row.interests),
         course_load=row.course_load,
         terms_away=terms_away_of(row),
         class_formats=None if row.class_formats is None else list(row.class_formats),
@@ -450,7 +451,7 @@ def _value_line(
             return [f"{head} None"]
         away = labels.get("away", {})
         return [head] + [f"  - {term_label(t.term)}: {away.get(t.kind, t.kind)}" for t in value]
-    if field == "research_areas":
+    if field in ("research_areas", "interests"):
         return [f"{head} " + "; ".join(_md_text(a) for a in value)]
     if field == "class_formats":
         if not value:
@@ -532,6 +533,7 @@ def export_profile(db: Session, account_id: uuid.UUID) -> dict[str, Any]:
             "pace": row.pace,
             "wants_research": row.wants_research,
             "research_areas": list(row.research_areas),
+            "interests": list(row.interests),
             "course_load": row.course_load,
             "terms_away": row.terms_away,
             "class_formats": None if row.class_formats is None else list(row.class_formats),

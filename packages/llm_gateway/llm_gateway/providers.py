@@ -36,11 +36,18 @@ def _anthropic_tool(spec: ToolSpec) -> dict[str, Any]:
 class AnthropicBackend(Backend):
     name = "anthropic"
 
-    def __init__(self, api_key: str, client: Any | None = None) -> None:
+    def __init__(
+        self, api_key: str, client: Any | None = None, base_url: str | None = None
+    ) -> None:
         if client is None:
             import anthropic
 
-            client = anthropic.Anthropic(api_key=api_key, max_retries=0)
+            # base_url: an Anthropic-compatible proxy (e.g. Teamorouter). Without one, the SDK
+            # still reads ANTHROPIC_BASE_URL from the environment.
+            kwargs: dict[str, Any] = {"api_key": api_key, "max_retries": 0}
+            if base_url:
+                kwargs["base_url"] = base_url
+            client = anthropic.Anthropic(**kwargs)
         self._client = client
 
     def complete(self, request: ModelRequest) -> ModelTurn:

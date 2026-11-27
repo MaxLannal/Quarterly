@@ -4,6 +4,9 @@
  * storage never breaks the planner: the plan simply is not remembered.
  */
 import type { PlanCreate, PlanState } from "@/api/types";
+import type { HistoryEntry } from "@/features/planner-agent/history";
+import type { Proposal } from "@/features/planner-agent/proposals";
+import type { ThreadEntry } from "@/features/planner-agent/thread";
 import { readJson, writeJson } from "@/lib/storage";
 import { termAt } from "./terms";
 
@@ -26,6 +29,13 @@ export interface LocalPlan {
   importedFor?: string[];
   /** Server plan id once saved to an account. */
   remoteId?: string;
+  /** The planner panel (issue #18): its conversation, the open proposals and the edit history. */
+  chat?: ThreadEntry[];
+  proposals?: Proposal[];
+  history?: HistoryEntry[];
+  /** Logged out (issue #17 D2): the working information and General Information answers. */
+  workingNotes?: string;
+  profileAnswers?: Record<string, unknown>;
 }
 
 export interface LocalPlansDoc {

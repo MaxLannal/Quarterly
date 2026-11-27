@@ -85,11 +85,23 @@ export async function plannerWithCourses(page: Page) {
   await expect(card(page, "TEST 10100")).toContainText("Prerequisite not met.");
 }
 
+/** Opens the planner panel (issue #18): beside the grid on a wide screen, a sheet on a phone. */
 export async function openAdvisor(page: Page) {
   await page.getByRole("button", { name: "Ask Quarterly" }).click();
-  const sheet = page.getByRole("dialog", { name: "Ask Quarterly" });
-  await expect(sheet).toBeVisible();
-  return sheet;
+  const panel = page.getByRole("complementary", { name: "Planner panel" }).or(page.getByRole("dialog", { name: "Ask Quarterly" }));
+  await expect(panel).toBeVisible();
+  return panel;
+}
+
+/** Generate plan, then answer the planner's question about interests (the mock asks it). */
+export async function generatePlan(page: Page, interest = "machine learning") {
+  await page.getByRole("button", { name: "Generate plan" }).click();
+  const panel = page.getByRole("complementary", { name: "Planner panel" }).or(page.getByRole("dialog", { name: "Ask Quarterly" }));
+  const question = panel.getByTestId("planner-question");
+  await question.getByLabel("Your answer").fill(interest);
+  await question.getByRole("button", { name: "Send" }).click();
+  await expect(panel.getByTestId("walkthrough")).toBeVisible();
+  return panel;
 }
 
 export async function logIn(page: Page, admin = false) {

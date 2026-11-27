@@ -208,57 +208,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/agents/chat": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Chat */
-        post: operations["chat_agents_chat_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/agents/chat/history": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Chat History */
-        get: operations["chat_history_agents_chat_history_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/agents/generate": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Generate */
-        post: operations["generate_agents_generate_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/agents/interview": {
         parameters: {
             query?: never;
@@ -271,6 +220,44 @@ export interface paths {
         /** Interview */
         post: operations["interview_agents_interview_post"];
         delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/agents/planner": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Planner */
+        post: operations["planner_agents_planner_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/agents/planner/history": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Planner History */
+        get: operations["planner_history_agents_planner_history_get"];
+        put?: never;
+        post?: never;
+        /**
+         * Clear Planner History
+         * @description Clear chat (issue #18): the messages go; open proposals stay on the plan.
+         */
+        delete: operations["clear_planner_history_agents_planner_history_delete"];
         options?: never;
         head?: never;
         patch?: never;
@@ -964,6 +951,58 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/me/profile/proposals": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Profile Proposals */
+        get: operations["list_profile_proposals_me_profile_proposals_get"];
+        put?: never;
+        /** Create Profile Proposal */
+        post: operations["create_profile_proposal_me_profile_proposals_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/profile/proposals/{proposal_id}/accept": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Accept Profile Proposal */
+        post: operations["accept_profile_proposal_me_profile_proposals__proposal_id__accept_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/profile/proposals/{proposal_id}/reject": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Reject Profile Proposal */
+        post: operations["reject_profile_proposal_me_profile_proposals__proposal_id__reject_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/plans": {
         parameters: {
             query?: never;
@@ -1399,11 +1438,6 @@ export interface components {
             /** Units */
             units?: number | null;
         };
-        /**
-         * AgentEvent
-         * @description One Server-Sent Event `data:` payload from /agents/generate or /agents/chat.
-         */
-        AgentEvent: components["schemas"]["StepEvent"] | components["schemas"]["VariantEvent"] | components["schemas"]["InfeasibleEvent"] | components["schemas"]["MessageEvent"] | components["schemas"]["ProposalEvent"] | components["schemas"]["ConfirmEvent"] | components["schemas"]["DoneEvent"] | components["schemas"]["ErrorEvent"];
         /** Assignment */
         Assignment: {
             /** Courses */
@@ -1650,6 +1684,10 @@ export interface components {
              * @default []
              */
             citations: components["schemas"]["Citation"][];
+            /** Meta */
+            meta?: {
+                [key: string]: unknown;
+            } | null;
             /**
              * Role
              * @enum {string}
@@ -1663,7 +1701,7 @@ export interface components {
         };
         /**
          * ChatHistory
-         * @description A saved plan's advisor conversation of the last 30 days, oldest first.
+         * @description A saved plan's planner conversation, oldest first (kept while the plan exists).
          */
         ChatHistory: {
             /**
@@ -1671,22 +1709,6 @@ export interface components {
              * @default []
              */
             entries: components["schemas"]["ChatEntry"][];
-            /** Run Id */
-            run_id?: string | null;
-        };
-        /** ChatRequest */
-        ChatRequest: {
-            /**
-             * History
-             * @default []
-             */
-            history: components["schemas"]["ChatTurn"][];
-            latest_proposal?: components["schemas"]["ChangeSet"] | null;
-            /** Message */
-            message: string;
-            plan: components["schemas"]["PlanState"];
-            /** Plan Id */
-            plan_id?: string | null;
             /** Run Id */
             run_id?: string | null;
         };
@@ -1708,7 +1730,7 @@ export interface components {
              * Kind
              * @enum {string}
              */
-            kind: "attribute" | "post" | "course" | "program" | "summary";
+            kind: "attribute" | "post" | "course" | "program" | "summary" | "profile" | "guideline";
             /** Label */
             label: string;
         };
@@ -2331,6 +2353,20 @@ export interface components {
             score: number;
         };
         /**
+         * Compromise
+         * @description A guideline rule the plan bends, with what was traded.
+         */
+        Compromise: {
+            /** Rule */
+            rule: string;
+            /** Tier */
+            tier: string;
+            /** Traded */
+            traded: string;
+            /** Why */
+            why: string;
+        };
+        /**
          * ConfirmEvent
          * @description The student's message was a typed confirmation of `change_set`. A saved plan applies
          *     it with POST /plans/{id}/changesets/{cs}/apply and `confirmation_text`; a plan that lives
@@ -2773,6 +2809,12 @@ export interface components {
         };
         /** DoneEvent */
         DoneEvent: {
+            /** Placements */
+            placements?: string[] | null;
+            /** Profile Answers */
+            profile_answers?: {
+                [key: string]: unknown;
+            } | null;
             /** Run Id */
             run_id: string;
             /**
@@ -2780,6 +2822,8 @@ export interface components {
              * @enum {string}
              */
             type: "done";
+            /** Working Notes */
+            working_notes?: string | null;
         };
         /** EmailStart */
         EmailStart: {
@@ -2807,6 +2851,8 @@ export interface components {
         ErrorEvent: {
             /** Message */
             message: string;
+            /** Reason */
+            reason?: ("expired" | "unavailable" | "invalid_output" | "budget" | "invalid_plan") | null;
             /**
              * @description discriminator enum property added by openapi-typescript
              * @enum {string}
@@ -3174,62 +3220,6 @@ export interface components {
             variants: components["schemas"]["GeneratedVariant"][];
         };
         /**
-         * GenerateRequest
-         * @description The Generate-plan popup: a form, never free text (SPEC "Generate-plan popup").
-         */
-        GenerateRequest: {
-            /**
-             * Allow Overload
-             * @default false
-             */
-            allow_overload: boolean;
-            /**
-             * Goals
-             * @default []
-             */
-            goals: (components["schemas"]["CourseLoadGoal"] | components["schemas"]["WorkloadHoursGoal"] | components["schemas"]["DifficultyCapGoal"] | components["schemas"]["ChallengeGoal"] | components["schemas"]["ProtectGpaGoal"] | components["schemas"]["GraduateByGoal"] | components["schemas"]["StudyAbroadGoal"] | components["schemas"]["BxmsGoal"] | components["schemas"]["PremedGoal"] | components["schemas"]["InterestGoal"] | components["schemas"]["LightQuarterGoal"] | components["schemas"]["LanguageGoal"])[];
-            /**
-             * Interests
-             * @default []
-             */
-            interests: string[];
-            /**
-             * Load
-             * @default 0
-             */
-            load: number;
-            /** Max Courses Per Term */
-            max_courses_per_term?: number | null;
-            /**
-             * Per Term Load
-             * @default {}
-             */
-            per_term_load: {
-                [key: string]: number;
-            };
-            plan: components["schemas"]["PlanState"];
-            /** Plan Id */
-            plan_id?: string | null;
-            /**
-             * Scope
-             * @default whole
-             * @enum {string}
-             */
-            scope: "whole" | "remaining" | "selected";
-            /**
-             * Selected Terms
-             * @default []
-             */
-            selected_terms: string[];
-            /** Today Term */
-            today_term?: string | null;
-            /**
-             * Variants
-             * @default 2
-             */
-            variants: number;
-        };
-        /**
          * GeneratedVariant
          * @description One generated plan: a proposed change set plus the verified plan it leads to.
          */
@@ -3370,24 +3360,6 @@ export interface components {
             conflicts?: components["schemas"]["Conflict"][];
             /** Message */
             message: string;
-        };
-        /**
-         * InfeasibleEvent
-         * @description No plan meets the request; `message` says why in plain English.
-         */
-        InfeasibleEvent: {
-            /**
-             * Conflicts
-             * @default []
-             */
-            conflicts: components["schemas"]["Conflict"][];
-            /** Message */
-            message: string;
-            /**
-             * @description discriminator enum property added by openapi-typescript
-             * @enum {string}
-             */
-            type: "infeasible";
         };
         /** InstructorCourse */
         InstructorCourse: {
@@ -3602,6 +3574,15 @@ export interface components {
             node_id?: string | null;
             /** Term Ids */
             term_ids?: string[];
+        };
+        /** IssueBrief */
+        IssueBrief: {
+            /** Code */
+            code: string;
+            /** Level */
+            level: string;
+            /** Message */
+            message: string;
         };
         /** ItemsPatch */
         ItemsPatch: {
@@ -4072,6 +4053,18 @@ export interface components {
             /** Email */
             email: string;
         };
+        /**
+         * PendingProposal
+         * @description An open proposal of a plan that lives in the browser ("apply it" names the newest).
+         */
+        PendingProposal: {
+            /** Base Plan Hash */
+            base_plan_hash: string;
+            /** Group Id */
+            group_id: string;
+            /** Ops */
+            ops: (components["schemas"]["AddOp"] | components["schemas"]["MoveOp"] | components["schemas"]["RemoveOp"] | components["schemas"]["LockOp"] | components["schemas"]["UnlockOp"])[];
+        };
         /** PlanComparison */
         PlanComparison: {
             a: components["schemas"]["PlanOut"];
@@ -4103,12 +4096,72 @@ export interface components {
             state: components["schemas"]["PlanState"];
         };
         /**
+         * PlanEvent
+         * @description The whole proposed plan. `verdict` comes from Quarterly's verifier and certificate
+         *     checker only; the model never sets it.
+         */
+        PlanEvent: {
+            /**
+             * Compromises
+             * @default []
+             */
+            compromises: components["schemas"]["Compromise"][];
+            /**
+             * Issues
+             * @default []
+             */
+            issues: components["schemas"]["PlanIssue"][];
+            /** Run Id */
+            run_id: string;
+            /**
+             * Summary
+             * @default
+             */
+            summary: string;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "plan";
+            /**
+             * Verdict
+             * @enum {string}
+             */
+            verdict: "valid" | "invalid";
+        };
+        /**
          * PlanImport
          * @description Logged-out plans from localStorage, imported at login.
          */
         PlanImport: {
             /** Plans */
             plans: components["schemas"]["PlanCreate"][];
+        };
+        /**
+         * PlanIssue
+         * @description A problem in the plan: a verifier issue (V01-V12) or a standard of the student that the
+         *     planner checks itself (S01 a quarter away, S02 over the course load, S03 an avoided course).
+         */
+        PlanIssue: {
+            /** Code */
+            code: string;
+            /**
+             * Course Ids
+             * @default []
+             */
+            course_ids: string[];
+            /**
+             * Level
+             * @enum {string}
+             */
+            level: "error" | "warning" | "info";
+            /** Message */
+            message: string;
+            /**
+             * Term Ids
+             * @default []
+             */
+            term_ids: string[];
         };
         /**
          * PlanItem
@@ -4246,6 +4299,89 @@ export interface components {
             /** Name */
             name?: string | null;
             state?: components["schemas"]["PlanState"] | null;
+        };
+        /**
+         * PlannerEvent
+         * @description One Server-Sent Event `data:` payload from POST /agents/planner.
+         */
+        PlannerEvent: components["schemas"]["StepEvent"] | components["schemas"]["QuestionEvent"] | components["schemas"]["PlanEvent"] | components["schemas"]["PlannerProposalEvent"] | components["schemas"]["MessageEvent"] | components["schemas"]["ConfirmEvent"] | components["schemas"]["DoneEvent"] | components["schemas"]["ErrorEvent"];
+        /**
+         * PlannerProposalEvent
+         * @description One course or sequence, as an unsaved block on the grid. A saved plan has a
+         *     `change_set_id` (Accept = POST /plans/{id}/changesets/{cs}/apply); a plan in the browser
+         *     applies `ops` itself.
+         */
+        PlannerProposalEvent: {
+            /** Base Plan Hash */
+            base_plan_hash?: string | null;
+            /** Change Set Id */
+            change_set_id?: string | null;
+            /**
+             * Citations
+             * @default []
+             */
+            citations: components["schemas"]["Citation"][];
+            /** Group Id */
+            group_id: string;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "major" | "core" | "elective" | "minor" | "replace" | "other";
+            /** Ops */
+            ops: (components["schemas"]["AddOp"] | components["schemas"]["MoveOp"] | components["schemas"]["RemoveOp"] | components["schemas"]["LockOp"] | components["schemas"]["UnlockOp"])[];
+            preview?: components["schemas"]["Verdict"] | null;
+            /**
+             * Rules
+             * @default []
+             */
+            rules: components["schemas"]["RuleRef"][];
+            /** Title */
+            title: string;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "proposal";
+            /** Why */
+            why: string;
+        };
+        /** PlannerRequest */
+        PlannerRequest: {
+            answer?: components["schemas"]["QuestionAnswer"] | null;
+            /**
+             * History
+             * @default []
+             */
+            history: components["schemas"]["ChatTurn"][];
+            /** Message */
+            message?: string | null;
+            /**
+             * Mode
+             * @enum {string}
+             */
+            mode: "generate" | "chat";
+            /**
+             * Pending
+             * @default []
+             */
+            pending: components["schemas"]["PendingProposal"][];
+            plan: components["schemas"]["PlanState"];
+            /** Plan Id */
+            plan_id?: string | null;
+            /**
+             * Profile Answers
+             * @default {}
+             */
+            profile_answers: {
+                [key: string]: unknown;
+            };
+            /** Run Id */
+            run_id?: string | null;
+            /** Today Term */
+            today_term?: string | null;
+            /** Working Notes */
+            working_notes?: string | null;
         };
         /** Policy */
         Policy: {
@@ -4533,6 +4669,11 @@ export interface components {
              */
             intended_programs: string[];
             /**
+             * Interests
+             * @default []
+             */
+            interests: string[];
+            /**
              * @default {
              *       "covered": [],
              *       "turns": []
@@ -4601,6 +4742,8 @@ export interface components {
             follows?: components["schemas"]["Follows"] | null;
             /** Intended Programs */
             intended_programs?: string[] | null;
+            /** Interests */
+            interests?: string[] | null;
             interview?: components["schemas"]["InterviewMemoryPatch"] | null;
             /** Pace */
             pace?: ("early" | "on_time" | "flexible") | null;
@@ -4618,6 +4761,41 @@ export interface components {
             wants_research?: boolean | null;
             /** Working Notes */
             working_notes?: string | null;
+        };
+        /**
+         * ProfileProposalCreate
+         * @description The import on login: a browser plan's answer for an empty field of the record.
+         */
+        ProfileProposalCreate: {
+            /** Field */
+            field: string;
+            /** Value */
+            value: unknown;
+        };
+        /**
+         * ProfileProposalOut
+         * @description A General Information answer from the planner chat, waiting for the student's accept
+         *     (issue #17).
+         */
+        ProfileProposalOut: {
+            /**
+             * Created Day
+             * Format: date
+             */
+            created_day: string;
+            /** Field */
+            field: string;
+            /** Id */
+            id: string;
+            /** Source */
+            source: string;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "proposed" | "accepted" | "rejected";
+            /** Value */
+            value: unknown;
         };
         /** ProgramDetail */
         ProgramDetail: {
@@ -4713,15 +4891,6 @@ export interface components {
             /** Verified By */
             verified_by?: string | null;
         };
-        /** ProposalEvent */
-        ProposalEvent: {
-            change_set: components["schemas"]["ChangeSet"];
-            /**
-             * @description discriminator enum property added by openapi-typescript
-             * @enum {string}
-             */
-            type: "proposal";
-        };
         /** ProtectGpaGoal */
         ProtectGpaGoal: {
             /**
@@ -4807,6 +4976,15 @@ export interface components {
                 [key: string]: boolean;
             } | null;
         };
+        /** QuestionAnswer */
+        QuestionAnswer: {
+            /** Option */
+            option?: string | null;
+            /** Question Id */
+            question_id: string;
+            /** Text */
+            text?: string | null;
+        };
         /** QuestionColumn */
         QuestionColumn: {
             /** Id */
@@ -4818,6 +4996,36 @@ export interface components {
              * @default []
              */
             options: string[];
+        };
+        /**
+         * QuestionEvent
+         * @description The run paused: the page shows the question with its options and an "Other" box, and
+         *     sends the answer back with `run_id`.
+         */
+        QuestionEvent: {
+            /**
+             * Allow Other
+             * @default true
+             */
+            allow_other: boolean;
+            /** Field */
+            field?: string | null;
+            /**
+             * Options
+             * @default []
+             */
+            options: string[];
+            /** Question Id */
+            question_id: string;
+            /** Run Id */
+            run_id: string;
+            /** Text */
+            text: string;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "question";
         };
         /** QuestionGroup */
         QuestionGroup: {
@@ -5084,6 +5292,16 @@ export interface components {
             workload_hours: number;
             /** Would Recommend */
             would_recommend: boolean;
+        };
+        /**
+         * RuleRef
+         * @description A guideline rule that a group follows, with its text for the chip.
+         */
+        RuleRef: {
+            /** Id */
+            id: string;
+            /** Text */
+            text: string;
         };
         /** ScaleEnds */
         ScaleEnds: {
@@ -5459,36 +5677,25 @@ export interface components {
             /** Error Type */
             type: string;
         };
-        /** VariantEvent */
-        VariantEvent: {
-            change_set: components["schemas"]["ChangeSet"];
+        /**
+         * Verdict
+         * @description The verifier's result on the plan after this proposal alone.
+         */
+        Verdict: {
             /**
-             * Citations
+             * New Issues
              * @default []
              */
-            citations: components["schemas"]["Citation"][];
-            /** Label */
-            label: string;
+            new_issues: components["schemas"]["IssueBrief"][];
             /**
-             * Metrics
-             * @default {}
+             * Resolved Issues
+             * @default 0
              */
-            metrics: {
-                [key: string]: number;
-            };
-            /**
-             * Rationale
-             * @default {}
-             */
-            rationale: {
-                [key: string]: string;
-            };
-            report: components["schemas"]["Report"];
-            /**
-             * @description discriminator enum property added by openapi-typescript
-             * @enum {string}
-             */
-            type: "variant";
+            resolved_issues: number;
+            /** Status After */
+            status_after: string;
+            /** Status Before */
+            status_before: string;
         };
         /** VerifyCode */
         VerifyCode: {
@@ -6089,105 +6296,6 @@ export interface operations {
             };
         };
     };
-    chat_agents_chat_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["ChatRequest"];
-            };
-        };
-        responses: {
-            /** @description Server-Sent Events; each `data:` line is one AgentEvent as JSON. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AgentEvent"];
-                    "text/event-stream": unknown;
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    chat_history_agents_chat_history_get: {
-        parameters: {
-            query: {
-                plan_id: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ChatHistory"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    generate_agents_generate_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["GenerateRequest"];
-            };
-        };
-        responses: {
-            /** @description Server-Sent Events; each `data:` line is one AgentEvent as JSON. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AgentEvent"];
-                    "text/event-stream": unknown;
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
     interview_agents_interview_post: {
         parameters: {
             query?: never;
@@ -6219,6 +6327,100 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["ErrorOut"];
                 };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    planner_agents_planner_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PlannerRequest"];
+            };
+        };
+        responses: {
+            /** @description Server-Sent Events; each `data:` line is one PlannerEvent as JSON. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlannerEvent"];
+                    "text/event-stream": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    planner_history_agents_planner_history_get: {
+        parameters: {
+            query: {
+                plan_id: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ChatHistory"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    clear_planner_history_agents_planner_history_delete: {
+        parameters: {
+            query: {
+                plan_id: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Validation Error */
             422: {
@@ -7889,6 +8091,155 @@ export interface operations {
                 };
                 content: {
                     "text/plain": components["schemas"]["ErrorOut"];
+                };
+            };
+        };
+    };
+    list_profile_proposals_me_profile_proposals_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProfileProposalOut"][];
+                };
+            };
+            /** @description Not logged in */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+        };
+    };
+    create_profile_proposal_me_profile_proposals_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ProfileProposalCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProfileProposalOut"];
+                };
+            };
+            /** @description Not logged in */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    accept_profile_proposal_me_profile_proposals__proposal_id__accept_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                proposal_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProfileOut"];
+                };
+            };
+            /** @description Not logged in */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    reject_profile_proposal_me_profile_proposals__proposal_id__reject_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                proposal_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not logged in */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };

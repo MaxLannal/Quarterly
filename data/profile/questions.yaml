@@ -186,6 +186,18 @@ questions:
     when: {wants_research: true}
     step: 2
 
+  # Issue #14 asked for an interests question in all cases (#11 requires academic interests);
+  # the planner agent picks electives and Core choices by it (issue #17, plan-guideline G22).
+  - id: interests
+    group: goals
+    field: interests
+    label: Interests
+    text: Which subjects or topics interest you most?
+    type: list
+    options: []
+    help: Add as many as you like, for example machine learning, philosophy of mind or Chinese.
+    step: 2
+
   # ------------------------------------------------------------------- Scheduling (step 2)
   # Richard (2026-11-25): a course load, not a number of courses. The College's rules are in
   # data/seed/2026-27/college_policy.yaml (full time is 300 or 400 units; 500 units only with

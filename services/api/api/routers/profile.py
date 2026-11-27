@@ -8,9 +8,11 @@ profile facts, and the browser saves what the student keeps (PATCH /me/profile).
 from __future__ import annotations
 
 import logging
+import uuid
 from collections.abc import Iterator
 from typing import Annotated, Any
 
+import sqlalchemy as sa
 from fastapi import APIRouter, Depends, HTTPException, Response
 from fastapi.responses import PlainTextResponse, StreamingResponse
 from llm_gateway.api import LLM, get_llm
@@ -34,6 +36,8 @@ from api.schemas.profile import (
     InterviewRequest,
     ProfileOut,
     ProfilePatch,
+    ProfileProposalCreate,
+    ProfileProposalOut,
 )
 
 router = APIRouter(tags=["profile"])
@@ -182,3 +186,89 @@ def interview(
         use_ai=cached or _within(store, INTERVIEW_PER_ACCOUNT, me),
     )
     return _stream(db, run.events())
+
+
+# ------------------------------------------------------------------------------ proposals
+
+
+def _proposal_out(row: m.ProfileProposal) -> ProfileProposalOut:
+    return ProfileProposalOut(
+        id=str(row.id),
+        field=row.field,
+        value=row.value,
+        source=row.source,
+        status=row.status,
+        created_day=row.created_day,
+    )
+
+
+def _patch_for(field: str, value: Any) -> ProfilePatch:
+    """The answer as a record patch: only fields of the question file, checked like a PATCH."""
+    fields = {q.field for q in question_set().questions if q.type != "table"}
+    if field not in fields:
+        raise HTTPException(status_code=422, detail=f"Unknown field: {field}")
+    try:
+        return ProfilePatch.model_validate({field: value})
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=f"Not a valid answer for {field}.") from exc
+
+
+def _own_proposal(db: Session, me: m.Account, proposal_id: uuid.UUID) -> m.ProfileProposal:
+    row = db.get(m.ProfileProposal, proposal_id)
+    if row is None or row.account_id != me.id:
+        raise HTTPException(status_code=404, detail="Proposal not found.")
+    if row.status != "proposed":
+        raise HTTPException(status_code=409, detail=f"This answer is {row.status}.")
+    return row
+
+
+@router.get("/me/profile/proposals", response_model=list[ProfileProposalOut], responses=AUTH)
+def list_profile_proposals(db: Db, me: Me) -> list[ProfileProposalOut]:
+    rows = db.scalars(
+        sa.select(m.ProfileProposal)
+        .where(m.ProfileProposal.account_id == me.id, m.ProfileProposal.status == "proposed")
+        .order_by(m.ProfileProposal.created_day, m.ProfileProposal.field)
+    ).all()
+    return [_proposal_out(r) for r in rows]
+
+
+@router.post(
+    "/me/profile/proposals", response_model=ProfileProposalOut, status_code=201, responses=AUTH
+)
+def create_profile_proposal(body: ProfileProposalCreate, db: Db, me: Me) -> ProfileProposalOut:
+    _patch_for(body.field, body.value)
+    row = m.ProfileProposal(
+        account_id=me.id,
+        field=body.field,
+        value=body.value,
+        source="import",
+        status="proposed",
+        created_day=data.today(),
+    )
+    db.add(row)
+    db.commit()
+    return _proposal_out(row)
+
+
+@router.post(
+    "/me/profile/proposals/{proposal_id}/accept", response_model=ProfileOut, responses=AUTH
+)
+def accept_profile_proposal(proposal_id: uuid.UUID, db: Db, me: Me) -> ProfileOut:
+    row = _own_proposal(db, me, proposal_id)
+    patch = _patch_for(row.field, row.value)
+    profile = data.ensure_profile(db, me.id)
+    try:
+        data.apply_patch(db, profile, patch)
+    except (data.UnknownProgramError, data.UnknownCourseError) as exc:
+        db.rollback()
+        raise HTTPException(status_code=422, detail="This answer no longer fits.") from exc
+    row.status = "accepted"
+    db.commit()
+    return data.profile_out(db, me, profile)
+
+
+@router.post("/me/profile/proposals/{proposal_id}/reject", status_code=204, responses=AUTH)
+def reject_profile_proposal(proposal_id: uuid.UUID, db: Db, me: Me) -> Response:
+    _own_proposal(db, me, proposal_id).status = "rejected"
+    db.commit()
+    return Response(status_code=204)

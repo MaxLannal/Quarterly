@@ -348,6 +348,24 @@
       "help": "Add as many as you like, for example machine learning theory, ancient Mediterranean trade or condensed matter."
     },
     {
+      "id": "interests",
+      "group": "goals",
+      "field": "interests",
+      "label": "Interests",
+      "text": "Which subjects or topics interest you most?",
+      "type": "list",
+      "options": [],
+      "step": 2,
+      "value": "text",
+      "min": null,
+      "max": null,
+      "ends": null,
+      "when": null,
+      "optional": false,
+      "columns": [],
+      "help": "Add as many as you like, for example machine learning, philosophy of mind or Chinese."
+    },
+    {
       "id": "course_load",
       "group": "scheduling",
       "field": "course_load",

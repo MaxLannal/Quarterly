@@ -8,6 +8,7 @@ import logging
 from collections.abc import Iterable
 from dataclasses import dataclass, field
 from decimal import Decimal
+from functools import lru_cache
 from typing import Any, get_args
 from urllib.parse import quote
 
@@ -24,6 +25,8 @@ from api.schemas.agents import Citation
 logger = logging.getLogger("api.agents")
 
 CITATION_KINDS: tuple[str, ...] = get_args(Citation.model_fields["kind"].annotation)
+#: The newest steps an `agent_run` keeps (a saved plan's chat adds some with every message).
+STEPS_KEPT = 100
 
 
 @dataclass
@@ -53,10 +56,13 @@ class RunLog:
         return models[-1] if models else "none"
 
     def save(self, db: Session, run: m.AgentRun) -> None:
-        run.steps = list(self.steps)
-        run.tokens = self.tokens
-        run.cost_usd = Decimal(f"{self.cost:.4f}")
-        run.model = self.model[:64]
+        """Add this request to the run: a run that paused for an answer, or a saved plan's chat,
+        spans several requests, and each one adds its steps, tokens and cost."""
+        run.steps = [*(run.steps or []), *self.steps][-STEPS_KEPT:]
+        run.tokens = (run.tokens or 0) + self.tokens
+        run.cost_usd = (run.cost_usd or Decimal(0)) + Decimal(f"{self.cost:.4f}")
+        if self.records:  # a request without a model call keeps the model of the last one
+            run.model = self.model[:64]
         today = dt.date.today()
         for r in self.records:
             db.add(
@@ -73,6 +79,7 @@ class RunLog:
                 )
             )
         self.records.clear()
+        self.steps.clear()
 
 
 def new_run(db: Session, kind: str, plan_id: Any | None) -> m.AgentRun:
@@ -101,7 +108,25 @@ def citation_label(kind: str, ident: str) -> str:
         return f"Student post #{ident}"
     if kind == "summary":
         return "What students say"
+    if kind == "profile":
+        label = _field_labels().get(ident)
+        return f"Your {label[0].lower()}{label[1:]}" if label else "Your record"
+    if kind == "guideline":
+        return f"Guideline {ident}"
     return ident  # a course code or a program id
+
+
+@lru_cache(maxsize=1)
+def _field_labels() -> dict[str, str]:
+    from api.profile_questions import question_set
+
+    return {q.field: q.label for q in question_set().questions}
+
+
+def citable_ids(*, profile_fields: Iterable[str], guideline_ids: Iterable[str]) -> set[str]:
+    """The `profile:` and `guideline:` ids a planner answer may cite: the student's answered
+    General Information fields and the rules that exist. Add them to the run's known ids."""
+    return {f"profile:{f}" for f in profile_fields} | {f"guideline:{g}" for g in guideline_ids}
 
 
 def checked_citations(

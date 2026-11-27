@@ -58,7 +58,7 @@ test("minor issues: the heading is the plan's name, renamed with the pencil; Ask
 
   await expect(page.getByRole("button", { name: "AI advisor" })).toHaveCount(0);
   await page.getByRole("button", { name: "Ask Quarterly" }).click();
-  const sheet = page.getByRole("dialog", { name: "Ask Quarterly" });
+  const sheet = page.getByRole("complementary", { name: "Planner panel" });
   await expect(sheet.getByText("Generative AI", { exact: true })).toHaveCount(
     0,
   );

@@ -453,3 +453,28 @@
     transform: translate(-22px, -10px) scale(1.06);
   }
 }
+
+/* The walkthrough's glowing outline on the sequence it explains (issue #18). A static ring with
+   reduced motion. */
+@keyframes glow-pulse {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 2px var(--color-primary),
+      0 0 10px 2px color-mix(in oklab, var(--color-primary) 40%, transparent);
+  }
+  50% {
+    box-shadow:
+      0 0 0 3px var(--color-primary),
+      0 0 22px 6px color-mix(in oklab, var(--color-primary) 28%, transparent);
+  }
+}
+.glow-ring {
+  animation: glow-pulse 1.8s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .glow-ring {
+    animation: none;
+    box-shadow: 0 0 0 3px var(--color-primary);
+  }
+}

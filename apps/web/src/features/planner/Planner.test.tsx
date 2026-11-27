@@ -1,8 +1,13 @@
-import { screen, waitFor, within } from "@testing-library/react";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
+import { StrictMode } from "react";
+import { createMemoryRouter, RouterProvider } from "react-router-dom";
+import { sse } from "@/mocks/agents";
 import { server } from "@/mocks/node";
-import { renderRoute } from "@/test-utils";
+import { routes } from "@/routes";
+import { newQueryClient, renderRoute } from "@/test-utils";
 
 const notBuilt = () => HttpResponse.json({ detail: "Not implemented yet" }, { status: 501 });
 
@@ -10,9 +15,7 @@ describe("Planner with endpoints that are not built yet (501)", () => {
   beforeEach(() => {
     server.use(
       http.post("*/api/verify", notBuilt),
-      http.post("*/api/agents/generate", notBuilt),
-      http.post("*/api/plans/generate", notBuilt),
-      http.post("*/api/agents/chat", notBuilt),
+      http.post("*/api/agents/planner", notBuilt),
       http.get("*/api/catalog-years", notBuilt),
     );
   });
@@ -24,24 +27,60 @@ describe("Planner with endpoints that are not built yet (501)", () => {
     expect(screen.getByText(/The verifier is not available yet/)).toBeInTheDocument();
 
     await user.click(screen.getByRole("button", { name: "Generate plan" }));
-    const dialog = screen.getByRole("dialog", { name: "Generate plan" });
-    await user.click(within(dialog).getByRole("button", { name: "Generate" }));
-    expect(await within(dialog).findByText(/Plan generation is not available yet/)).toBeInTheDocument();
-    await user.click(within(dialog).getByRole("button", { name: "Close" }));
-
-    await user.click(screen.getByRole("button", { name: "Ask Quarterly" }));
-    const advisor = screen.getByRole("dialog", { name: "Ask Quarterly" });
-    expect(within(advisor).queryByText("Generative AI")).not.toBeInTheDocument();
-    expect(within(advisor).getByText(/Answers are written by an AI/)).toBeInTheDocument();
-    await user.type(within(advisor).getByLabelText("Ask the advisor"), "Is TEST 20000 hard?");
-    await user.click(within(advisor).getByRole("button", { name: "Send" }));
-    expect(await within(advisor).findByText(/The advisor is not available yet/)).toBeInTheDocument();
+    const planner = await screen.findByRole("heading", { name: "Ask Quarterly", level: 2 });
+    expect(planner).toBeInTheDocument();
+    expect(await screen.findByText(/The planner is not available yet/)).toBeInTheDocument();
+    expect(screen.getByText(/Answers are written by an AI/)).toBeInTheDocument();
   });
 
   it("falls back to the current academic year when catalog years are unavailable", async () => {
     renderRoute("/plan");
     expect(await screen.findByText(/^Catalog \d{4}-\d{2}$/)).toBeInTheDocument();
   });
+});
+
+describe("Planner opened with ?generate=1", () => {
+  it("starts one generation, also under StrictMode, and drops the parameter so a reload does not start another", async () => {
+    // Live (2026-11-26): StrictMode ran the mount effect twice (two paid runs), and the
+    // parameter stayed in the address, so every reload started one more.
+    let calls = 0;
+    server.use(
+      http.post("*/api/agents/planner", () => {
+        calls += 1;
+        return new HttpResponse("", { headers: { "Content-Type": "text/event-stream" } });
+      }),
+    );
+    const router = createMemoryRouter(routes, { initialEntries: ["/plan?generate=1"] });
+    render(
+      <StrictMode>
+        <QueryClientProvider client={newQueryClient()}>
+          <RouterProvider router={router} />
+        </QueryClientProvider>
+      </StrictMode>,
+    );
+    await screen.findByRole("heading", { name: "Ask Quarterly", level: 2 });
+    await waitFor(() => expect(router.state.location.search).toBe(""));
+    await waitFor(() => expect(calls).toBe(1));
+    await new Promise((r) => setTimeout(r, 50));
+    expect(calls).toBe(1);
+  }, 15_000);
+});
+
+describe("Planner and the math placement", () => {
+  it("adds the placement the student gave the planner to the plan's credits, once", async () => {
+    // The run planned with this placement; the page's plan needs it too, or the proposals
+    // would not fit it (and the plan check would not count the placement).
+    server.use(http.post("*/api/agents/planner", () => sse([{ type: "done", run_id: "r1", placements: ["MATH 15100"] }])));
+    const user = userEvent.setup();
+    renderRoute("/plan");
+    await user.click(await screen.findByRole("button", { name: "Generate plan" }));
+    const placement = { kind: "placement", label: "MATH 15100", maps_to: null, units: 0 };
+    const credits = () => (JSON.parse(localStorage.getItem("quarterly.plans.v1") ?? "{}") as { plans?: { state: { credits?: unknown[] } }[] }).plans?.[0]?.state.credits;
+    await waitFor(() => expect(credits()).toEqual([placement]));
+    await user.click(screen.getByRole("button", { name: "Generate plan" }));
+    await new Promise((r) => setTimeout(r, 100));
+    expect(credits()).toEqual([placement]);
+  }, 15_000);
 });
 
 describe("Planner with mocks", () => {

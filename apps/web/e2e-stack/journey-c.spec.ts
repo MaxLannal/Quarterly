@@ -1,5 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
-import { addCreditOnDashboard, closePanel, expectVariants, gap, generate, gridByTerm, openPanel, setUpPlanFromRecord, signUp, verifierSettled } from "./journey";
+import { addCreditOnDashboard, closePanel, expectProposals, gap, generate, gridByTerm, openPanel, setUpPlanFromRecord, signUp, verifierSettled } from "./journey";
 
 // SPEC "Core user journeys" C: goal-constrained student (study abroad + lighter senior year),
 // real stack, fake LLM. The SPEC example says "Paris, Spring Y2", but the seeded catalog offers
@@ -55,12 +55,11 @@ test("journey C: Paris block in Autumn Y2 and at most 3 courses per quarter in Y
   await expect(page.getByTestId("plan-drawer")).toContainText("Study abroad: civ-abroad-paris-mdd, Autumn 2027");
   await closePanel(page);
 
-  // C3. Generate and apply a verified variant.
-  await page.getByRole("button", { name: "Generate plan" }).click();
-  const { dialog, variants } = await generate(page);
-  await expectVariants(variants);
-  await variants.first().getByRole("button", { name: "Apply", exact: true }).click();
-  await expect(dialog).toBeHidden();
+  // C3. Generate in the planner panel and accept every proposal.
+  const { panel, proposals } = await generate(page);
+  await expectProposals(proposals);
+  await panel.getByRole("button", { name: "Accept all" }).click();
+  await expect(page.getByTestId("proposal-block")).toHaveCount(0);
   await verifierSettled(page);
   const grid = await gridByTerm(page);
 

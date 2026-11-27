@@ -36,9 +36,13 @@ EXPECTED = {
     ("post", "/plans/{plan_id}/changesets/{changeset_id}/discard"),
     # verify, agents
     ("post", "/verify"),
-    ("post", "/agents/generate"),
-    ("post", "/agents/chat"),
-    ("get", "/agents/chat/history"),
+    ("post", "/agents/planner"),
+    ("get", "/agents/planner/history"),
+    ("delete", "/agents/planner/history"),
+    ("get", "/me/profile/proposals"),
+    ("post", "/me/profile/proposals"),
+    ("post", "/me/profile/proposals/{proposal_id}/accept"),
+    ("post", "/me/profile/proposals/{proposal_id}/reject"),
     # forum
     ("get", "/forum/items"),
     ("get", "/forum/stats"),
@@ -118,13 +122,13 @@ def test_openapi_lists_every_endpoint() -> None:
         "Report",
         "Certificate",
         "ChangeSet",
-        "AgentEvent",
+        "PlannerEvent",
         "GoldenPlan" if False else "Issue",
     ):
         assert name in schemas
     assert (
         "text/event-stream"
-        in spec["paths"]["/agents/generate"]["post"]["responses"]["200"]["content"]
+        in spec["paths"]["/agents/planner"]["post"]["responses"]["200"]["content"]
     )
 
 
