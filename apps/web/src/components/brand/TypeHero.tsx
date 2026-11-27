@@ -25,17 +25,17 @@ export function PageTitle({
   return (
     <div className={cn("flex min-w-0 flex-col gap-3", className)}>
       {kicker && (
-        <p className="flex items-center gap-2 text-caption-uppercase uppercase text-primary">
-          <span aria-hidden="true" className="inline-block h-px w-6 bg-primary" />
+        <p className="flex items-center gap-2.5 font-mono text-[11.5px] font-medium uppercase tracking-[0.2em] text-muted">
+          <span aria-hidden="true" className="inline-block h-px w-6 bg-[linear-gradient(90deg,transparent,var(--color-primary))] shadow-[0_0_8px_rgb(255_92_112/0.8)]" />
           {kicker}
         </p>
       )}
       <Tag
         className={cn(
-          "page-title font-display font-extrabold text-ink text-balance",
+          "page-title font-display text-ink text-balance [text-shadow:0_0_60px_rgb(255_92_112/0.22)]",
           size === "lg"
-            ? "text-[46px] leading-[1.02] tracking-[-1.8px] sm:text-[64px] sm:tracking-[-2.6px] xl:text-[72px]"
-            : "text-[36px] leading-[1.06] tracking-[-1.1px] sm:text-display-xl",
+            ? "text-[54px] leading-[1] tracking-[-1.2px] sm:text-[76px] sm:tracking-[-1.8px] xl:text-[92px]"
+            : "text-[42px] leading-[1.04] tracking-[-0.8px] sm:text-display-xl",
         )}
       >
         {title}
@@ -94,6 +94,13 @@ export function TypeHero({
       >
         <GradientArt seed={shape} />
         <TypeScape shape={shape} label={label} words={words} focus={0.5} theme="night" zoom={1.6} />
+        {/* A pane of glass over the picture: a lit rim, a soft fall to dark at the foot, and a
+            two-line glass chip floating in the corner (decorative). */}
+        <span aria-hidden="true" className="glass-rim pointer-events-none absolute inset-0 rounded-[inherit] bg-[linear-gradient(180deg,rgb(255_255_255/0.06),transparent_25%,transparent_65%,rgb(6_2_3/0.55))]" />
+        <span aria-hidden="true" className="glass pointer-events-none absolute bottom-4 left-4 flex flex-col gap-0.5 rounded-[16px] bg-[rgb(12_5_8/0.55)] px-4 py-2.5 shadow-none sm:bottom-6 sm:left-6">
+          <span className="font-mono text-[10px] font-medium uppercase tracking-[0.2em] text-on-night-soft">Drawn with</span>
+          <span className="text-caption font-medium text-ink">Real course titles</span>
+        </span>
       </div>
     </section>
   );
