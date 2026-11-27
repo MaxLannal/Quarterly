@@ -79,8 +79,8 @@ function Related({ thread }: { thread: ThreadDetail }) {
   const items = (related.data?.items ?? []).filter((t) => t.id !== thread.id).slice(0, 5);
   if (!code) return null;
   return (
-    <section className="qg-tile p-6">
-      <h2 className="qg-kicker">More about {code}</h2>
+    <section className="rounded-xl border border-hairline bg-canvas-soft p-5">
+      <h2 className="text-caption-uppercase uppercase text-muted">More about {code}</h2>
       {items.length ? (
         <ul className="mt-2 flex flex-col">
           {items.map((t) => (
@@ -242,7 +242,7 @@ export default function CommonsThreadPage() {
       <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_300px]">
         <div className="flex min-w-0 flex-col gap-6">
           {/* The question */}
-          <article aria-labelledby="question-title" className="qg-tile qg-edge flex gap-2 py-6 pl-1 pr-5 sm:gap-5 sm:py-9 sm:pl-3 sm:pr-10">
+          <article aria-labelledby="question-title" className="flex gap-2 sm:gap-4">
             <div className="shrink-0 pt-1">
               <VoteControl targetType="thread" targetId={detail.id} score={detail.score} myVote={detail.my_vote} mine={detail.is_mine} loggedIn={loggedIn} label="the question" />
             </div>
@@ -258,13 +258,13 @@ export default function CommonsThreadPage() {
               ) : (
                 <>
                   <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-caption text-muted">
-                    <span className="qg-kicker">Question</span>
+                    <span className="text-caption-uppercase uppercase text-primary">Question</span>
                     <span aria-hidden="true">·</span>
                     asked by <Handle handle={detail.handle} op mine={detail.is_mine} />
                     <span aria-hidden="true">·</span>
                     <Day day={detail.created_day} edited={detail.edited_day} />
                   </p>
-                  <h1 id="question-title" className="font-display text-[40px] leading-[1.05] tracking-[-0.6px] text-ink text-balance [text-shadow:0_0_60px_rgb(255_92_112/0.22)] sm:text-[60px] sm:tracking-[-1.2px]">
+                  <h1 id="question-title" className="font-display text-[32px] font-bold leading-[1.1] tracking-[-0.5px] text-ink text-balance sm:text-[44px] sm:tracking-[-1px]">
                     {detail.title}
                   </h1>
                   {detail.body_html && <Body html={detail.body_html} className="max-w-reading" />}
@@ -272,7 +272,7 @@ export default function CommonsThreadPage() {
                     <div className="flex flex-wrap items-center gap-2">
                       {detail.course && <CourseChip course={detail.course} />}
                       {mentions.map((m) => (
-                        <CourseChip key={m.code} course={m} />
+                        <CourseChip key={m.code} course={m} className="border-hairline-strong bg-surface-card" />
                       ))}
                       {detail.tags.map((t) => (
                         <TagChip key={t} tag={t} to={`/forum?tag=${encodeURIComponent(t)}`} />
@@ -344,7 +344,7 @@ export default function CommonsThreadPage() {
                       role="tab"
                       aria-selected={sort === key}
                       onClick={() => setSort(key)}
-                      className={cn("inline-flex min-h-11 items-center rounded-pill px-3 text-caption font-medium", sort === key ? "bg-white/[0.1] text-ink shadow-[inset_0_1px_0_rgb(255_255_255/0.2),inset_0_0_0_1px_rgb(255_255_255/0.14)]" : "text-muted hover:text-ink")}
+                      className={cn("inline-flex min-h-11 items-center rounded-pill px-3 text-caption font-medium", sort === key ? "bg-ink text-on-dark" : "text-body hover:bg-surface-strong")}
                     >
                       {label}
                     </button>
@@ -420,17 +420,18 @@ export default function CommonsThreadPage() {
 
         <aside aria-label="About this question" className="flex flex-col gap-5 lg:sticky lg:top-8 lg:self-start">
           {detail.course && (
-            <section className="qg-tile qg-edge overflow-hidden p-6">
+            <section className="relative overflow-hidden rounded-xl border border-hairline bg-surface-card p-5">
+              <span aria-hidden="true" className="absolute inset-x-0 top-0 h-1 bg-primary" />
               <p className="text-caption font-semibold tabular-nums text-primary">{detail.course.code}</p>
-              <p className="mt-1 font-display text-[26px] leading-tight text-ink">{detail.course.title}</p>
+              <p className="mt-1 font-display text-title-md font-bold text-ink tracking-[-0.02em]">{detail.course.title}</p>
               <Link to={coursePath(detail.course.code)} className="mt-2 inline-flex min-h-11 items-center text-caption font-medium text-primary underline underline-offset-2">
                 Course page, reviews and planner
               </Link>
             </section>
           )}
           <Related thread={detail} />
-          <section className="qg-tile p-6 text-body-sm text-body">
-            <h2 className="qg-kicker">In this thread</h2>
+          <section className="rounded-xl border border-hairline bg-canvas-soft p-5 text-body-sm text-body">
+            <h2 className="text-caption-uppercase uppercase text-muted">In this thread</h2>
             <p className="mt-2">Everyone has a random handle that only exists here. The asker is marked OP.</p>
             <p className="mt-2">
               Be kind and specific. <Link to="/guidelines" className="text-primary underline underline-offset-2">Guidelines</Link>

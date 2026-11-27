@@ -443,7 +443,7 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
       </label>
       <div
         className={cn(
-          "min-w-0 rounded-[22px] border border-hairline-strong bg-white/[0.035] shadow-[inset_0_1px_2px_rgb(0_0_0/0.3)] transition-[border-color,box-shadow] duration-300",
+          "min-w-0 rounded-lg border border-border-input bg-surface-card transition-colors",
           "focus-within:border-primary focus-within:shadow-[inset_0_0_0_1px_var(--color-primary)]",
           (tooLong || error) && "border-error",
           disabled && "opacity-60",
@@ -535,11 +535,11 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
             <div
               style={caretBox ? { top: caretBox.top, left: caretBox.left } : undefined}
               className={cn(
-                "glass-raised z-30 w-[min(22rem,calc(100%-1rem))] overflow-hidden rounded-[20px]",
+                "z-30 w-[min(22rem,calc(100%-1rem))] overflow-hidden rounded-lg border border-hairline bg-surface-card shadow-overlay",
                 caretBox ? "absolute" : "relative mx-2 mb-2",
               )}
             >
-              <p className="px-4 pt-3 font-mono text-[10.5px] font-medium uppercase tracking-[0.16em] text-muted">Courses matching “{mention.query}”</p>
+              <p className="px-4 pt-2 text-caption-uppercase uppercase text-muted">Courses matching “{mention.query}”</p>
               <ul id={listId} role="listbox" aria-label="Matching courses" className="flex flex-col py-1">
                 {options.map((c, i) => (
                   <li

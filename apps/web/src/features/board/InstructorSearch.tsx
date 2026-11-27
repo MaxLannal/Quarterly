@@ -96,7 +96,7 @@ export function InstructorSearch({
         className={cn(controlClass, "pl-9 text-body-sm pointer-coarse:text-body-md")}
       />
       {showList && (
-        <ul id={listId} role="listbox" aria-label="Instructors" className="glass-raised absolute inset-x-0 top-full z-30 mt-2 max-h-80 overflow-y-auto rounded-[20px] py-1 shadow-overlay">
+        <ul id={listId} role="listbox" aria-label="Instructors" className="absolute inset-x-0 top-full z-30 mt-1 max-h-80 overflow-y-auto rounded-lg border border-hairline bg-surface-card py-1 shadow-overlay">
           {options.map((i, n) => (
             <li
               key={i.slug}

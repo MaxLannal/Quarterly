@@ -4,57 +4,46 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 
 /*
- * DESIGN.md buttons: pills, `button` type. Redesign 2026-11-20 ("Maroon and night"): bigger, like
- * the reference's Login pill: 46px tall inside a 52px box, 16px semibold.
- *
- * Accessibility keeps a generous target: the element is 52px tall and draws its pill inside a
- * transparent border (`bg-clip-padding`), so the visible pill is 46px (36px for `sm`, in a 44px
- * box) while the hit area and the bounding box stay larger. Outline pills draw their 1px line as an inset shadow,
- * which sits inside that transparent border. The focus ring is pulled in by the same amount, so
- * it reads as DESIGN.md's "2px ring, 2px offset" around the visible pill.
+ * Buttons ("Simple light", docs/DESIGN.md): soft rounded rectangles, 15px semibold. The main
+ * button is black with white text (one per view); the others are white with a hairline, or bare.
+ * Every button is a 44px target. `sm` draws a 36px button inside a transparent border, so its hit
+ * area stays 44px; the focus ring is pulled in to sit round the drawn button.
  */
 export const buttonVariants = cva(
   [
-    "relative inline-flex shrink-0 cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-pill",
-    // Press feedback: the pill dips to 97% for the 150ms press (instant under reduced motion).
-    "border-transparent bg-clip-padding font-sans text-button transition-[color,background-color,box-shadow,scale] duration-200 active:scale-[0.97]",
+    "relative inline-flex shrink-0 cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-lg",
+    "border-transparent bg-clip-padding font-sans text-button transition-[color,background-color,box-shadow,scale] duration-150 active:scale-[0.98]",
     "disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50",
   ],
   {
     variants: {
       variant: {
-        /** button-primary: one per view. A white pill with a red glow beneath it, like light through
-         * glass (docs/DESIGN.md "Dark glass"); the glow brightens on hover. */
-        // Disabled: a dim glass plate with muted text (still legible), not a faded white that reads as active (D11 AD-4).
+        /** button-primary: black, one per view. Disabled: a grey plate with muted text (D11 AD-4). */
         primary:
-          "bg-ink text-canvas shadow-[0_8px_30px_rgb(255_60_90/0.28),inset_0_-2px_0_rgb(0_0_0/0.08)] hover:bg-white hover:shadow-[0_10px_40px_rgb(255_60_90/0.45),inset_0_-2px_0_rgb(0_0_0/0.08)] active:bg-on-night-soft disabled:bg-surface-strong disabled:text-muted disabled:shadow-none disabled:opacity-100 aria-disabled:bg-surface-strong aria-disabled:text-muted aria-disabled:shadow-none aria-disabled:opacity-100",
-        /** button-outline: a clear glass pill with a lit edge. */
+          "bg-ink text-on-primary hover:bg-primary-hover active:bg-primary-active disabled:bg-surface-strong disabled:text-muted disabled:opacity-100 aria-disabled:bg-surface-strong aria-disabled:text-muted aria-disabled:opacity-100",
+        /** button-outline: white with a hairline. */
         outline:
-          "bg-white/[0.035] text-ink shadow-[inset_0_0_0_1px_var(--color-hairline-strong),inset_0_1px_0_rgb(255_255_255/0.08)] hover:bg-white/[0.08] hover:shadow-[inset_0_0_0_1px_rgb(255_255_255/0.28),inset_0_1px_0_rgb(255_255_255/0.1)] active:bg-white/[0.12]",
-        /** button-tertiary-text: ink text, no chrome (a soft plate on hover only). */
-        ghost: "bg-transparent text-ink hover:bg-surface-strong active:bg-white/[0.12]",
-        /** button-destructive: outline pill with error-coloured text; never an error fill. */
+          "bg-canvas text-ink shadow-[inset_0_0_0_1px_var(--color-hairline-strong)] hover:bg-canvas-soft active:bg-surface-strong",
+        /** button-tertiary-text: no chrome; a soft plate on hover. */
+        ghost: "bg-transparent text-ink hover:bg-surface-strong active:bg-hairline",
+        /** button-destructive: outline with error-coloured text; never an error fill. */
         destructive:
-          "bg-transparent text-error shadow-[inset_0_0_0_1px_var(--color-hairline-strong)] hover:bg-error-wash active:bg-error-wash",
-        /** link-inline as a button: the red light, underlined. */
-        link: "rounded-xs bg-transparent text-primary underline underline-offset-4 hover:text-primary-hover",
-        /** On the night: the same white pill as primary. */
+          "bg-canvas text-error shadow-[inset_0_0_0_1px_var(--color-hairline-strong)] hover:bg-error-wash active:bg-error-wash",
+        /** link-inline as a button. */
+        link: "rounded-xs bg-transparent text-ink underline decoration-hairline-strong underline-offset-4 hover:decoration-ink",
+        /** Kept for older markup that sat on a dark band: now the same as outline. */
         light:
-          "bg-ink text-canvas shadow-[0_8px_30px_rgb(255_60_90/0.28)] hover:bg-white active:bg-on-night-soft",
-        /** On the night: a clear pill with a soft white line. */
+          "bg-canvas text-ink shadow-[inset_0_0_0_1px_var(--color-hairline-strong)] hover:bg-canvas-soft active:bg-surface-strong",
         night:
-          "bg-transparent text-on-night shadow-[inset_0_0_0_1px_rgb(255_255_255/0.3)] hover:bg-on-night/10 active:bg-on-night/15",
-        /** Red glass: for a second strong action beside the white pill (e.g. "Generate"). */
-        glow:
-          "bg-[linear-gradient(180deg,rgb(255_92_112/0.32),rgb(160_16_44/0.32))] text-ink shadow-[inset_0_0_0_1px_rgb(255_120_140/0.45),inset_0_1px_0_rgb(255_255_255/0.18),0_8px_28px_rgb(200_20_50/0.3)] hover:bg-[linear-gradient(180deg,rgb(255_92_112/0.45),rgb(160_16_44/0.42))]",
+          "bg-canvas text-ink shadow-[inset_0_0_0_1px_var(--color-hairline-strong)] hover:bg-canvas-soft active:bg-surface-strong",
       },
       size: {
-        /** 46px pill in a 52px box. */
-        md: "min-h-[52px] border-[3px] px-6 focus-visible:outline-offset-[-1px]",
-        /** 36px pill in a 44px box (chips, dense rows). */
-        sm: "min-h-11 border-4 px-3 text-caption font-semibold focus-visible:outline-offset-[-2px]",
-        /** 44px circle in a 48px box. */
-        icon: "size-12 border-2 p-0 focus-visible:outline-offset-0",
+        /** 44px. */
+        md: "min-h-11 px-5",
+        /** 36px drawn in a 44px box (chips, dense rows). */
+        sm: "min-h-11 border-4 px-3 text-caption font-semibold rounded-[14px] focus-visible:outline-offset-[-2px]",
+        /** 44px square. */
+        icon: "size-11 p-0",
       },
     },
     compoundVariants: [{ variant: "link", size: ["md", "sm"], class: "px-1" }],

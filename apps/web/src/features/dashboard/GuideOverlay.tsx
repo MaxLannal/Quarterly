@@ -66,34 +66,34 @@ export function GuideOverlay({ open, onClose, guide, profile, questions, catalog
       role="dialog"
       aria-modal="true"
       aria-labelledby={titleId}
-      className="fixed inset-0 z-[60] flex animate-fade-in flex-col overflow-y-auto overscroll-contain dash-room text-on-dark"
+      className="fixed inset-0 z-[60] flex animate-fade-in flex-col overflow-y-auto overscroll-contain bg-canvas-soft text-ink"
     >
       <DriftingWords words={[...profile.programs.map((p) => p.name), ...profile.research_areas]} />
-      <header className="sticky top-0 z-10 flex items-center gap-3 border-b border-on-dark/10 bg-surface-dark/70 px-4 py-2 backdrop-blur-xl sm:px-8">
+      <header className="sticky top-0 z-10 flex items-center gap-3 border-b border-hairline bg-canvas/90 px-4 py-2 backdrop-blur sm:px-8">
         <GuideMark size={18} className={cn("text-primary", thinking && "dash-thinking")} />
-        <h2 id={titleId} className="font-display text-title-md text-on-dark">
+        <h2 id={titleId} className="font-display text-title-md text-ink">
           Your guide
         </h2>
         <ProgressRail questions={step2} current={turn?.topic ?? null} covered={covered} progress={progress} />
         <button
           type="button"
           onClick={onClose}
-          className="ml-auto inline-flex min-h-11 items-center gap-2 rounded-pill px-3 text-button text-on-dark hover:bg-on-dark/10"
+          className="ml-auto inline-flex min-h-11 items-center gap-2 rounded-pill px-3 text-button text-ink hover:bg-surface-strong"
           aria-label="Close the guide and go back to your dashboard"
         >
           <span className="hidden sm:inline">Back to your dashboard</span>
           <CloseIcon size={18} />
         </button>
       </header>
-      <div aria-hidden="true" className="sticky top-[61px] z-10 h-0.5 w-full bg-on-dark/10 md:hidden">
+      <div aria-hidden="true" className="sticky top-[61px] z-10 h-0.5 w-full bg-surface-strong md:hidden">
         <div className="h-full bg-primary transition-[width] duration-700" style={{ width: `${Math.round(progress * 100)}%` }} />
       </div>
 
       <div className="relative mx-auto grid w-full max-w-[1200px] flex-1 gap-8 px-4 pb-16 pt-8 sm:px-8 lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-12 lg:pt-14">
         <div className="flex min-w-0 flex-col gap-6">
           {lastStudent && (
-            <p className="max-w-[46rem] text-body-sm text-on-dark-soft">
-              <span className="mono-label not-italic">You said</span> <span className="italic">“{lastStudent.length > 220 ? `${lastStudent.slice(0, 220)}…` : lastStudent}”</span>
+            <p className="max-w-[46rem] text-body-sm text-muted">
+              <span className="text-caption-uppercase uppercase">You said</span> <span className="italic">“{lastStudent.length > 220 ? `${lastStudent.slice(0, 220)}…` : lastStudent}”</span>
             </p>
           )}
 
@@ -108,13 +108,13 @@ export function GuideOverlay({ open, onClose, guide, profile, questions, catalog
           <div className="min-h-[9rem]">
             {turn && !thinking ? (
               <>
-                {turn.retry && <p className="mb-2 text-body-sm text-on-dark-soft">I could not match that to an answer. Pick one of the options, or put it another way.</p>}
+                {turn.retry && <p className="mb-2 text-body-sm text-muted">I could not match that to an answer. Pick one of the options, or put it another way.</p>}
                 <Question key={turn.text} text={turn.text} />
                 <p aria-live="polite" className="sr-only">
                   {turn.retry ? "I could not match that to an answer. " : ""}
                   {turn.text}
                 </p>
-                {question?.help && <p className="mt-3 max-w-[46rem] text-body-sm text-on-dark-soft">{question.help}</p>}
+                {question?.help && <p className="mt-3 max-w-[46rem] text-body-sm text-muted">{question.help}</p>}
               </>
             ) : thinking ? (
               <Thinking steps={guide.steps} />
@@ -124,9 +124,9 @@ export function GuideOverlay({ open, onClose, guide, profile, questions, catalog
           </div>
 
           {guide.status === "error" && (
-            <div role="alert" className="flex flex-wrap items-center gap-3 rounded-[20px] bg-error-wash px-4 py-3 text-body-sm shadow-[inset_0_0_0_1px_rgb(255_143_128/0.22)]">
+            <div role="alert" className="flex flex-wrap items-center gap-3 rounded-xl border border-hairline bg-canvas px-4 py-3 text-body-sm">
               <span className="min-w-0 flex-1">{guide.error}</span>
-              <button type="button" onClick={guide.retry} className="min-h-11 rounded-pill bg-ink px-5 text-button text-canvas hover:bg-white">
+              <button type="button" onClick={guide.retry} className="min-h-11 rounded-lg bg-ink px-4 text-button text-on-primary hover:bg-primary-hover">
                 Try again
               </button>
             </div>
@@ -136,8 +136,8 @@ export function GuideOverlay({ open, onClose, guide, profile, questions, catalog
             <ul className="flex flex-wrap gap-2" aria-label="Courses your guide mentioned">
               {turn.courses.map((c) => (
                 <li key={c.code}>
-                  <Link to={courseHref(c.code)} onClick={onClose} className="inline-flex min-h-11 items-center gap-2 rounded-pill border border-on-dark/25 px-4 text-body-sm text-on-dark hover:bg-on-dark/10">
-                    <span className="font-sans text-caption-uppercase uppercase tabular-nums text-on-dark-soft">{c.code}</span>
+                  <Link to={courseHref(c.code)} onClick={onClose} className="inline-flex min-h-11 items-center gap-2 rounded-pill border border-hairline-strong px-4 text-body-sm text-ink hover:bg-surface-strong">
+                    <span className="font-sans text-caption-uppercase uppercase tabular-nums text-muted">{c.code}</span>
                     <span className="max-w-[18rem] truncate">{c.title}</span>
                   </Link>
                 </li>
@@ -150,19 +150,19 @@ export function GuideOverlay({ open, onClose, guide, profile, questions, catalog
           )}
 
           {turn?.done && !thinking && (
-            <div className="dash-rise glass-rim flex flex-wrap items-center gap-3 rounded-[22px] bg-white/[0.04] p-5">
-              <p className="min-w-0 flex-1 text-body-sm text-on-dark">Your guide has no more questions. Accepted answers are already on your dashboard.</p>
+            <div className="dash-rise flex flex-wrap items-center gap-3 rounded-xl border border-hairline bg-canvas p-4">
+              <p className="min-w-0 flex-1 text-body-sm text-ink">Your guide has no more questions. Accepted answers are already on your dashboard.</p>
               <Link to="/plan" onClick={onClose} className="inline-flex min-h-11 items-center rounded-pill bg-primary px-5 text-button text-on-primary hover:bg-primary-hover">
                 Open the planner
               </Link>
-              <button type="button" onClick={onClose} className="min-h-11 rounded-pill px-4 text-button text-on-dark hover:bg-on-dark/10">
+              <button type="button" onClick={onClose} className="min-h-11 rounded-pill px-4 text-button text-ink hover:bg-surface-strong">
                 Back to your dashboard
               </button>
             </div>
           )}
 
           <form
-            className="flex items-end gap-2 rounded-[26px] bg-black/30 p-2 shadow-[inset_0_0_0_1px_rgb(255_255_255/0.14),inset_0_1px_3px_rgb(0_0_0/0.35)] transition-shadow duration-300 focus-within:shadow-[inset_0_0_0_1px_var(--color-primary),0_0_0_4px_rgb(255_92_112/0.16)]"
+            className="flex items-end gap-2 rounded-xxl border border-hairline-strong bg-canvas p-2 focus-within:border-ink"
             onSubmit={(e) => {
               e.preventDefault();
               send(draft);
@@ -186,13 +186,13 @@ export function GuideOverlay({ open, onClose, guide, profile, questions, catalog
                 }
               }}
               placeholder={thinking ? "Your guide is thinking…" : "Or type your answer…"}
-              className="min-h-11 flex-1 resize-none bg-transparent px-3 py-2.5 text-body-md text-on-dark outline-none placeholder:text-on-dark-soft disabled:opacity-60"
+              className="min-h-11 flex-1 resize-none bg-transparent px-3 py-2.5 text-body-md text-ink outline-none placeholder:text-muted disabled:opacity-60"
             />
-            <button type="submit" disabled={thinking || !draft.trim()} aria-label="Send your answer" className="inline-flex size-11 shrink-0 items-center justify-center rounded-pill bg-primary text-on-primary hover:bg-primary-hover disabled:bg-on-dark/15 disabled:text-on-dark-soft">
+            <button type="submit" disabled={thinking || !draft.trim()} aria-label="Send your answer" className="inline-flex size-11 shrink-0 items-center justify-center rounded-pill bg-primary text-on-primary hover:bg-primary-hover disabled:bg-surface-strong disabled:text-muted">
               <SendIcon size={18} />
             </button>
           </form>
-          <p className="text-caption text-on-dark-soft">
+          <p className="text-caption text-muted">
             {turn?.fallback ? "Your guide is running without the AI right now; it asks the same questions." : "Your guide is an AI and can be wrong."} Nothing is saved until you accept it. Enter sends, Shift+Enter starts a new line.
           </p>
         </div>
@@ -225,7 +225,7 @@ function QuickReplies({ turn, question, multi, picked, setPicked, onSend }: { tu
               aria-pressed={multi ? on : undefined}
               onClick={() => (multi ? setPicked(on ? picked.filter((p) => p !== q) : [...picked, q]) : onSend(q))}
               style={{ "--delay": `${200 + i * 40}ms` } as CSSProperties}
-              className={cn(chip, scale && "w-11 px-0 tabular-nums", on ? "border-primary bg-primary text-on-primary" : "border-on-dark/25 text-on-dark hover:border-on-dark/60 hover:bg-on-dark/10")}
+              className={cn(chip, scale && "w-11 px-0 tabular-nums", on ? "border-primary bg-primary text-on-primary" : "border-hairline-strong text-ink hover:border-ink hover:bg-surface-strong")}
             >
               {multi && on && <CheckIcon size={14} className="mr-1 inline" />}
               {q}
@@ -233,18 +233,18 @@ function QuickReplies({ turn, question, multi, picked, setPicked, onSend }: { tu
           );
         })}
         {multi && (
-          <button type="button" disabled={picked.length === 0} onClick={() => onSend(multiReply(picked, options))} className="min-h-11 rounded-pill bg-primary px-5 text-button text-on-primary hover:bg-primary-hover disabled:bg-on-dark/15 disabled:text-on-dark-soft">
+          <button type="button" disabled={picked.length === 0} onClick={() => onSend(multiReply(picked, options))} className="min-h-11 rounded-pill bg-primary px-5 text-button text-on-primary hover:bg-primary-hover disabled:bg-surface-strong disabled:text-muted">
             Send {picked.length ? `(${picked.length})` : ""}
           </button>
         )}
         {skip && (
-          <button type="button" onClick={() => onSend(SKIP)} className={cn(chip, "border-transparent text-on-dark-soft underline underline-offset-4 hover:bg-on-dark/10 hover:text-on-dark")}>
+          <button type="button" onClick={() => onSend(SKIP)} className={cn(chip, "border-transparent text-muted underline underline-offset-4 hover:bg-surface-strong hover:text-ink")}>
             {SKIP}
           </button>
         )}
       </div>
       {scale && question?.ends && (
-        <p aria-hidden="true" className="flex max-w-[34rem] justify-between text-caption text-on-dark-soft">
+        <p aria-hidden="true" className="flex max-w-[34rem] justify-between text-caption text-muted">
           <span>
             {question.min ?? 1} = {question.ends.min}
           </span>
@@ -265,10 +265,10 @@ function ProposalCard({ proposal, guide, profile, questions, catalogYear }: { pr
   const proposedProfile = useMemo(() => patched(profile, proposal.patch), [profile, proposal.patch]);
   const [edit, setEdit] = useState<unknown>(() => (question ? (proposedProfile as unknown as Record<string, unknown>)[question.field] : null));
   return (
-    <li className="dash-rise glass-raised glass-rim rounded-[22px] p-4 text-ink sm:p-5">
+    <li className="dash-rise rounded-xl bg-surface-card p-3 text-ink shadow-overlay sm:p-4">
       <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
         <div className="min-w-0 flex-1">
-          <p className="mono-label text-primary">{proposal.label}</p>
+          <p className="text-[12px] font-bold uppercase tracking-[0.08em] text-primary">{proposal.label}</p>
           <p className="text-body-md text-ink">{proposal.value}</p>
         </div>
         {!changing && (
@@ -307,7 +307,7 @@ function ProposalCard({ proposal, guide, profile, questions, catalogYear }: { pr
 function Question({ text }: { text: string }) {
   const words = text.split(/\s+/).filter(Boolean);
   return (
-    <p aria-hidden="true" className="max-w-[46rem] font-serif text-[28px] font-light leading-[1.18] tracking-[-0.3px] text-on-dark text-balance sm:text-[40px] sm:leading-[1.12]">
+    <p aria-hidden="true" className="max-w-[46rem] font-serif text-[28px] font-light leading-[1.18] tracking-[-0.3px] text-ink text-balance sm:text-[40px] sm:leading-[1.12]">
       {words.map((w, i) => (
         <Fragment key={i}>
           <span className="dash-word" style={{ "--i": Math.min(i, 60) } as CSSProperties}>
@@ -326,16 +326,16 @@ function Thinking({ steps }: { steps: Guide["steps"] }) {
   for (const s of steps) latest.set(`${s.tool}:${s.label}`, s);
   return (
     <div role="status" aria-live="polite" className="flex flex-col gap-3">
-      <p className="flex items-center gap-3 font-serif text-[26px] font-light italic text-on-dark-soft sm:text-[32px]">
+      <p className="flex items-center gap-3 font-serif text-[26px] font-light italic text-muted sm:text-[32px]">
         <GuideMark size={20} className="dash-thinking text-primary" />
         Your guide is thinking…
       </p>
       {latest.size > 0 && (
-        <ul className="flex flex-col gap-1.5 text-body-sm text-on-dark-soft">
+        <ul className="flex flex-col gap-1.5 text-body-sm text-muted">
           {[...latest.values()].map((s) => (
             <li key={`${s.tool}:${s.label}`} className="dash-rise flex items-center gap-2">
               <span aria-hidden="true" className={cn("inline-flex size-4 items-center justify-center", s.status === "done" ? "text-success" : s.status === "failed" ? "text-error" : "")}>
-                {s.status === "done" ? <CheckIcon size={14} /> : s.status === "failed" ? <CloseIcon size={14} /> : <span className="inline-block size-1.5 animate-pulse rounded-pill bg-on-dark" />}
+                {s.status === "done" ? <CheckIcon size={14} /> : s.status === "failed" ? <CloseIcon size={14} /> : <span className="inline-block size-1.5 animate-pulse rounded-pill bg-ink" />}
               </span>
               {s.label}
             </li>
@@ -357,15 +357,15 @@ function ProgressRail({ questions, current, covered, progress }: { questions: Qu
           const done = covered.has(q.id) && !isCurrent;
           return (
             <li key={q.id} className="flex items-center gap-1" aria-current={isCurrent ? "step" : undefined}>
-              <span className={cn("inline-flex min-h-7 items-center rounded-pill px-2.5 text-[12px] font-medium", isCurrent ? "bg-primary text-on-primary" : done ? "text-on-dark" : "text-on-dark-soft")}>
-                {done && <CheckIcon size={11} className="mr-1 text-on-dark-soft" />}
+              <span className={cn("inline-flex min-h-7 items-center rounded-pill px-2.5 text-[12px] font-medium", isCurrent ? "bg-primary text-on-primary" : done ? "text-ink" : "text-muted")}>
+                {done && <CheckIcon size={11} className="mr-1 text-muted" />}
                 {q.label}
               </span>
             </li>
           );
         })}
       </ol>
-      <span className="text-caption tabular-nums text-on-dark-soft">{pct}%</span>
+      <span className="text-caption tabular-nums text-muted">{pct}%</span>
     </div>
   );
 }
@@ -373,18 +373,18 @@ function ProgressRail({ questions, current, covered, progress }: { questions: Qu
 function AcceptedPanel({ guide }: { guide: Guide }) {
   const { accepted } = guide;
   return (
-    <div className="glass-rim flex flex-col gap-3 rounded-[24px] bg-white/[0.035] p-5">
-      <h3 className="font-display text-title-md text-on-dark">Saved to your profile</h3>
+    <div className="flex flex-col gap-3 rounded-xxl border border-hairline bg-canvas/70 p-4">
+      <h3 className="font-display text-title-md text-ink">Saved to your profile</h3>
       {accepted.length === 0 ? (
-        <p className="text-body-sm text-on-dark-soft">Answer with a button or in your own words. Each answer waits for your Accept before it is saved.</p>
+        <p className="text-body-sm text-muted">Answer with a button or in your own words. Each answer waits for your Accept before it is saved.</p>
       ) : (
         <ul className="flex flex-col gap-1.5">
           {accepted.map((p) => (
-            <li key={p.id} className="flex items-start gap-2 rounded-[14px] bg-black/25 px-3 py-2.5 text-body-sm">
+            <li key={p.id} className="flex items-start gap-2 rounded-xl bg-canvas-soft px-3 py-2 text-body-sm">
               <CheckIcon size={14} className="mt-1 shrink-0 text-success" />
               <span className="min-w-0">
-                <span className="mono-label block text-on-dark-soft">{p.label}</span>
-                <span className="text-on-dark">{p.value}</span>
+                <span className="block text-[11px] font-semibold uppercase tracking-wider text-muted">{p.label}</span>
+                <span className="text-ink">{p.value}</span>
               </span>
             </li>
           ))}
@@ -424,7 +424,7 @@ function DriftingWords({ words }: { words: string[] }) {
           {p.word}
         </span>
       ))}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_40%,transparent_0%,var(--color-surface-dark)_75%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_40%,transparent_0%,var(--color-canvas-soft)_75%)]" />
     </div>
   );
 }

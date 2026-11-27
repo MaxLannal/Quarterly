@@ -72,23 +72,22 @@ export function DashCard({
     <section
       id={id}
       aria-labelledby={headingId}
-      data-spotlight=""
       className={cn(
-        "flex h-full min-w-0 scroll-mt-24 flex-col",
-        tone === "paper" && "dash-panel glass-rim",
-        tone === "soft" && "dash-panel dash-panel-soft glass-rim",
-        tone === "ink" && "dash-guide p-6 text-on-dark sm:p-7",
+        "relative flex h-full min-w-0 scroll-mt-24 flex-col rounded-[22px] border p-4 sm:p-5",
+        tone === "paper" && "border-hairline bg-surface-card",
+        tone === "soft" && "border-hairline bg-canvas-soft",
+        tone === "ink" && "border-transparent bg-surface-dark text-on-dark",
         className,
       )}
     >
-      <div className="mb-4 flex flex-wrap items-start justify-between gap-x-3 gap-y-2">
+      <div className="mb-3 flex flex-wrap items-start justify-between gap-x-3 gap-y-1">
         <div className="min-w-0">
-          {kicker && <p className={cn("mono-label mb-2", tone === "ink" ? "text-on-dark-soft" : "text-primary")}>{kicker}</p>}
-          <Heading id={headingId} className={cn("font-display text-[30px] leading-[1.08] tracking-[-0.3px]", tone === "ink" ? "text-on-dark" : "text-ink")}>
+          {kicker && <p className={cn("mb-0.5 text-[12px] font-bold uppercase tracking-[0.08em]", tone === "ink" ? "text-on-dark-soft" : "text-primary")}>{kicker}</p>}
+          <Heading id={headingId} className={cn("font-display text-[21px] font-bold leading-tight tracking-[-0.02em]", tone === "ink" ? "text-on-dark" : "text-ink")}>
             {title}
           </Heading>
         </div>
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex items-center gap-2">
           {status}
           {actions}
         </div>
@@ -267,56 +266,33 @@ export function Chip({ label, onRemove, tone = "paper", className }: { label: st
   );
 }
 
-/** The share of the General Information answered, as a ring of red light: a faint track, a lit
- * arc with a glow, and a bright point of light at its head. */
+/** The share of the General Information answered, as a maroon ring. */
 export function CompletenessRing({ value, size = 64 }: { value: number; size?: number }) {
-  const gid = useId().replace(/:/g, "");
-  const stroke = size >= 96 ? 5 : 4;
-  const r = size / 2 - stroke - 6;
+  const r = size / 2 - 5;
   const c = 2 * Math.PI * r;
   const pct = Math.round(Math.max(0, Math.min(1, value)) * 100);
-  const big = size >= 96;
-  // The head of the arc (12 o'clock is -90deg).
-  const angle = (pct / 100) * 2 * Math.PI - Math.PI / 2;
-  const hx = size / 2 + r * Math.cos(angle);
-  const hy = size / 2 + r * Math.sin(angle);
   return (
-    <div className={cn("inline-flex items-center gap-4", big && "sm:flex-col sm:gap-2 sm:text-center")}>
-      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} role="img" aria-label={`Your profile is ${pct}% complete`} className="dash-ring shrink-0 overflow-visible">
-        <defs>
-          <linearGradient id={`ring-${gid}`} x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stopColor="#ffb3bd" />
-            <stop offset="1" stopColor="var(--color-primary)" />
-          </linearGradient>
-        </defs>
-        <circle cx={size / 2} cy={size / 2} r={r + stroke + 3} fill="rgb(255 255 255 / 0.02)" stroke="rgb(255 255 255 / 0.06)" strokeWidth="1" />
-        <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="rgb(255 255 255 / 0.09)" strokeWidth={stroke} />
-        {pct > 0 && (
-          <>
-            <circle
-              className="dash-ring-fill dash-ring-glow"
-              cx={size / 2}
-              cy={size / 2}
-              r={r}
-              fill="none"
-              stroke={`url(#ring-${gid})`}
-              strokeWidth={stroke}
-              strokeLinecap="round"
-              strokeDasharray={c}
-              strokeDashoffset={c * (1 - pct / 100)}
-              transform={`rotate(-90 ${size / 2} ${size / 2})`}
-            />
-            <circle className="dash-ring-head" cx={hx} cy={hy} r={stroke * 0.7} fill="#fff" />
-          </>
-        )}
-        <text x="50%" y="50%" textAnchor="middle" dominantBaseline="central" className={cn("fill-ink tabular-nums", big ? "font-display text-[38px]" : "font-sans text-[13px] font-semibold")}>
-          {pct}
-          <tspan className={big ? "fill-muted text-[18px]" : undefined}>%</tspan>
+    <div className="inline-flex items-center gap-3">
+      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} role="img" aria-label={`Your profile is ${pct}% complete`}>
+        <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="var(--color-hairline-strong)" strokeWidth="4" />
+        <circle
+          className="dash-ring-fill"
+          cx={size / 2}
+          cy={size / 2}
+          r={r}
+          fill="none"
+          stroke="var(--color-primary)"
+          strokeWidth="4"
+          strokeLinecap="round"
+          strokeDasharray={c}
+          strokeDashoffset={c * (1 - pct / 100)}
+          transform={`rotate(-90 ${size / 2} ${size / 2})`}
+        />
+        <text x="50%" y="52%" textAnchor="middle" dominantBaseline="middle" className="fill-ink font-sans text-[13px] font-semibold tabular-nums">
+          {pct}%
         </text>
       </svg>
-      <span className={cn("max-w-[11rem] text-caption text-body", big && "mono-label max-w-[9rem] text-muted")}>
-        {pct >= 100 ? "Your profile is complete." : pct === 0 ? "Your profile is empty so far." : "of your profile is complete."}
-      </span>
+      <span className="max-w-[11rem] text-caption text-body">{pct >= 100 ? "Your profile is complete." : pct === 0 ? "Your profile is empty so far." : "of your profile is complete."}</span>
     </div>
   );
 }

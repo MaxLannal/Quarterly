@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { TypeHero } from "@/components/brand/TypeHero";
-import "@/features/courses/glass.css";
 import { EmptyState } from "@/components/layout/page";
 import { Button } from "@/components/ui/button";
 import { SearchIcon } from "@/components/ui/icons";
@@ -54,23 +53,24 @@ function NewPost() {
 function Rail({ popular, onCourse }: { popular: CourseRef[]; onCourse: (c: CourseRef) => void }) {
   return (
     <aside aria-label="About the forum" className="flex flex-col gap-6">
-      <section className="qg-tile qg-edge overflow-hidden p-7">
+      <section className="relative overflow-hidden rounded-xl border border-hairline bg-surface-card p-6">
+        <span aria-hidden="true" className="absolute inset-x-0 top-0 h-1 bg-primary" />
         <h2 className="font-display text-display-sm text-ink">How the forum works</h2>
         <ol className="mt-4 flex flex-col gap-4 text-body-sm text-body">
           <li className="flex gap-3">
-            <span aria-hidden="true" className="w-6 shrink-0 font-display text-[26px] italic leading-none text-primary [text-shadow:0_0_18px_rgb(255_92_112/0.6)]">i.</span>
+            <span aria-hidden="true" className="font-display text-title-md italic text-primary">i.</span>
             <span>
               <strong className="font-medium text-ink">Anonymous, per post.</strong> You get a random handle on each question and each course page, like “Quiet Heron”. Nobody can link your posts across them.
             </span>
           </li>
           <li className="flex gap-3">
-            <span aria-hidden="true" className="w-6 shrink-0 font-display text-[26px] italic leading-none text-primary [text-shadow:0_0_18px_rgb(255_92_112/0.6)]">ii.</span>
+            <span aria-hidden="true" className="font-display text-title-md italic text-primary">ii.</span>
             <span>
               <strong className="font-medium text-ink">The AI answers first, briefly.</strong> Quarterly AI writes a short first answer (60 words at most) from the catalog and earlier questions, and cites its sources. It can be wrong: check, vote and correct it.
             </span>
           </li>
           <li className="flex gap-3">
-            <span aria-hidden="true" className="w-6 shrink-0 font-display text-[26px] italic leading-none text-primary [text-shadow:0_0_18px_rgb(255_92_112/0.6)]">iii.</span>
+            <span aria-hidden="true" className="font-display text-title-md italic text-primary">iii.</span>
             <span>
               <strong className="font-medium text-ink">Be kind and specific.</strong> Talk about courses, not people. Email addresses and phone numbers are removed automatically.
             </span>
@@ -81,8 +81,8 @@ function Rail({ popular, onCourse }: { popular: CourseRef[]; onCourse: (c: Cours
         </Link>
       </section>
       {popular.length > 0 && (
-        <section className="qg-tile p-7">
-          <h2 className="qg-kicker">Popular courses</h2>
+        <section className="rounded-xl border border-hairline bg-canvas-soft p-6">
+          <h2 className="text-caption-uppercase uppercase text-muted">Popular courses</h2>
           <ul className="mt-3 flex flex-wrap gap-2">
             {popular.map((c) => (
               <li key={c.code}>
@@ -90,7 +90,7 @@ function Rail({ popular, onCourse }: { popular: CourseRef[]; onCourse: (c: Cours
                   type="button"
                   onClick={() => onCourse(c)}
                   title={`Posts about ${c.title}`}
-                  className="qg-pill px-3.5 font-mono text-[12px] uppercase tracking-[0.12em] text-ink"
+                  className="inline-flex min-h-11 items-center rounded-pill border border-primary/25 bg-surface-card px-3 text-caption font-semibold tabular-nums text-primary hover:bg-primary-wash"
                 >
                   {c.code}
                 </button>
@@ -247,19 +247,21 @@ export default function CommonsPage() {
       </TypeHero>
 
       <div className="mx-auto w-full max-w-content px-4 pb-24 sm:px-6 lg:px-8">
-        <div className="glass z-20 rounded-[28px] bg-[rgb(14_7_9/0.72)] p-3 sm:sticky sm:top-20 sm:p-4">
+        <div className="z-20 -mx-4 border-b border-hairline bg-canvas/95 px-4 pb-3 pt-3 backdrop-blur supports-[backdrop-filter]:bg-canvas/85 sm:sticky sm:top-0 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
           <div className="flex flex-col gap-3">
             <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
-              <div role="group" aria-label="Show" className="-mx-1 flex max-w-full gap-1.5 overflow-x-auto px-1 py-0.5 [scrollbar-width:none]">
+              <div role="group" aria-label="Show" className="-mx-1 flex max-w-full gap-0.5 overflow-x-auto px-1 [scrollbar-width:none]">
                 {TYPES.map((t) => (
                   <button
                     key={t.label}
                     type="button"
                     aria-pressed={type === t.key}
                     onClick={() => update({ type: t.key })}
-                    className="qg-pill"
+                    className={cn(
+                      "inline-flex min-h-11 shrink-0 items-center rounded-pill px-3.5 text-nav-link transition-colors",
+                      type === t.key ? "bg-ink text-on-dark" : "text-body hover:bg-surface-strong hover:text-ink",
+                    )}
                   >
-                    {type === t.key && <span aria-hidden="true" className="qg-dot" />}
                     {t.label}
                   </button>
                 ))}
@@ -269,7 +271,10 @@ export default function CommonsPage() {
                   type="button"
                   aria-pressed={mine}
                   onClick={() => update({ mine: mine ? null : "1" })}
-                  className="qg-pill"
+                  className={cn(
+                    "inline-flex min-h-11 items-center gap-2 rounded-pill border px-3.5 text-nav-link transition-colors",
+                    mine ? "border-primary bg-primary-wash text-primary" : "border-hairline-strong text-body hover:bg-surface-strong",
+                  )}
                 >
                   My questions
                 </button>
@@ -280,14 +285,14 @@ export default function CommonsPage() {
                 <label htmlFor="commons-search" className="sr-only">
                   Search posts
                 </label>
-                <SearchIcon className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-primary" />
+                <SearchIcon className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
                 <input
                   id="commons-search"
                   type="search"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder="Search reviews and discussions"
-                  className={cn(controlClass, "pl-11 text-body-sm pointer-coarse:text-body-md")}
+                  className={cn(controlClass, "pl-9 text-body-sm pointer-coarse:text-body-md")}
                 />
               </div>
               <CourseSearch
@@ -316,7 +321,10 @@ export default function CommonsPage() {
                     type="button"
                     aria-pressed={subject === s}
                     onClick={() => update({ subject: subject === s ? null : s })}
-                    className="qg-pill px-3.5 font-mono text-[12px] uppercase tracking-[0.14em]"
+                    className={cn(
+                      "inline-flex min-h-11 shrink-0 items-center rounded-pill border px-3 text-caption font-semibold tracking-[0.04em] transition-colors",
+                      subject === s ? "border-primary bg-primary text-on-primary" : "border-hairline-strong bg-surface-card text-ink hover:border-primary/50",
+                    )}
                   >
                     {s}
                   </button>
@@ -328,7 +336,10 @@ export default function CommonsPage() {
                     type="button"
                     aria-pressed={tag === t}
                     onClick={() => update({ tag: tag === t ? null : t })}
-                    className="qg-pill px-3.5 text-caption"
+                    className={cn(
+                      "inline-flex min-h-11 shrink-0 items-center rounded-pill px-3 text-caption transition-colors",
+                      tag === t ? "bg-ink text-on-dark" : "bg-surface-strong text-body hover:bg-hairline",
+                    )}
                   >
                     #{t}
                   </button>
@@ -345,8 +356,8 @@ export default function CommonsPage() {
             <StatsPanel loggedIn={loggedIn} courseHref={courseHref} instructorHref={instructorHref} />
           </div>
           <section aria-labelledby="commons-list-title" className="min-w-0 lg:col-span-2 lg:col-start-2 lg:row-span-2 lg:row-start-1">
-            <div className="mb-6 flex flex-wrap items-baseline justify-between gap-2 border-b border-hairline pb-4">
-              <h2 id="commons-list-title" className="font-display text-display-sm text-ink sm:text-display-md">
+            <div className="mb-4 flex flex-wrap items-baseline justify-between gap-2">
+              <h2 id="commons-list-title" className="font-display text-display-sm text-ink">
                 {heading}
               </h2>
               <p className="text-caption text-muted" aria-live="polite">
@@ -411,7 +422,7 @@ export default function CommonsPage() {
               )
             ) : (
               <>
-                <ol className="flex flex-col gap-4">
+                <ol className="flex flex-col gap-3">
                   {items.map((item) => (
                     <li key={itemKey(item)}>
                       {item.type === "review" ? (

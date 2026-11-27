@@ -1,7 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import "./glass.css";
 
 type Kind = "courses" | "programs";
 
@@ -49,15 +48,14 @@ export function CatalogToggle({ current }: { current: Kind }) {
   useEffect(() => () => void (lastShown = current), [current]);
 
   return (
-    <nav aria-label="Courses or programs" className="qg-seg">
+    <nav aria-label="Courses or programs" className="relative inline-flex rounded-pill bg-surface-strong p-0.5">
       {at && (
         <span
           aria-hidden="true"
           className={cn(
-            // Dark glass: a lit glass thumb in a recessed track. The segments share one width, so
-            // only the transform moves (a long, soft ease).
-            "qg-seg-thumb",
-            at.animate && "transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none",
+            // D11 A-2/A-3: a token shadow; the segments share one width, so only the transform moves.
+            "absolute bottom-0.5 left-0 top-0.5 rounded-pill bg-surface-card shadow-hover ring-1 ring-hairline",
+            at.animate && "transition-transform duration-200 ease-out motion-reduce:transition-none",
           )}
           style={{ transform: `translateX(${at.x}px)`, width: at.w }}
         />
@@ -69,13 +67,12 @@ export function CatalogToggle({ current }: { current: Kind }) {
           to={to}
           aria-current={current === key ? "page" : undefined}
           className={cn(
-            // 38px drawn, 44px to tap: the ::after strip extends the target above and below.
-            "relative z-10 inline-flex h-[38px] w-[7.5rem] items-center justify-center gap-2 rounded-pill text-body-sm font-medium transition-colors duration-300",
-            "after:absolute after:inset-x-0 after:-inset-y-1 after:content-['']",
-            current === key ? "text-ink" : "text-muted hover:text-ink",
+            // 32px drawn, 44px to tap: the ::after strip extends the target above and below.
+            "relative z-10 inline-flex h-8 w-24 items-center justify-center rounded-pill text-caption font-medium transition-colors duration-150",
+            "after:absolute after:inset-x-0 after:-inset-y-1.5 after:content-['']",
+            current === key ? "text-primary" : "text-muted hover:text-ink",
           )}
         >
-          {current === key && <span aria-hidden="true" className="qg-dot" />}
           {label}
         </Link>
       ))}

@@ -57,7 +57,7 @@ function QueueItem({ item, onDone }: { item: ModerationItem; onDone: (message: s
   }
 
   return (
-    <Card as="article" aria-label={`${item.kind} on ${where}`} className="flex flex-col gap-4 rounded-[28px] p-6 sm:p-8">
+    <Card as="article" aria-label={`${item.kind} on ${where}`} className="flex flex-col gap-3">
       <div className="flex flex-wrap items-center gap-2">
         <Badge>{item.kind}</Badge>
         <Badge tone={item.status === "held" ? "warning" : item.status === "removed" ? "error" : "neutral"} casing="normal">
@@ -74,11 +74,11 @@ function QueueItem({ item, onDone }: { item: ModerationItem; onDone: (message: s
           </Badge>
         )}
       </div>
-      <p className="mono-label text-muted">
+      <p className="text-caption text-muted">
         <CourseCode>{item.course_code}</CourseCode> with {item.instructor_name} · {item.pseudonym} · {relativeDay(item.created_day)}
       </p>
-      {item.title && <h2 className="font-display text-[28px] leading-tight text-ink">{item.title}</h2>}
-      <PostBody html={item.body_html} className="rounded-[18px] bg-black/20 p-5 shadow-[inset_0_0_0_1px_rgb(255_255_255/0.06)]" />
+      {item.title && <h2 className="text-title-sm text-ink">{item.title}</h2>}
+      <PostBody html={item.body_html} className="rounded-md bg-canvas-soft p-4" />
       {reports.length > 0 && (
         <ul className="flex flex-col gap-1 text-body-sm text-body">
           {reports.map((r) => (
@@ -170,7 +170,7 @@ export default function AdminModerationPage() {
         <EmptyState title="Nothing to review">The queue is empty.</EmptyState>
       ) : (
         <div className="flex flex-col gap-4">
-          <p className="mono-label text-muted">
+          <p className="text-caption text-muted">
             {plural(queue.data?.total ?? items.length, "item")} waiting
           </p>
           {items.map((item) => (
@@ -196,7 +196,7 @@ function Suspensions({ onDone }: { onDone: (message: string) => void }) {
         Suspensions
       </h2>
       {rows.map((s) => (
-        <Card key={`${s.target_type}-${s.target_id}`} as="article" aria-label={`Suspension from ${s.target_type} ${s.target_id}`} className="flex flex-wrap items-center justify-between gap-3 rounded-[24px]">
+        <Card key={`${s.target_type}-${s.target_id}`} as="article" aria-label={`Suspension from ${s.target_type} ${s.target_id}`} className="flex flex-wrap items-center justify-between gap-3">
           <div className="min-w-0">
             <p className="text-body-sm text-ink">{s.title ?? s.excerpt}</p>
             <p className="text-caption text-muted">

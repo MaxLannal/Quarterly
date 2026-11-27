@@ -11,7 +11,6 @@ import { cn } from "@/lib/utils";
 import { useReport, useVote, type Citation, type CourseRef, type TargetType, type VoteValue } from "./api";
 import { proseClass } from "./markdown";
 import { coursePath, dayWords, threadPath } from "./text";
-import "@/features/courses/glass.css";
 
 export const REPORT_REASONS = [
   "Personal attack or harassment",
@@ -153,7 +152,7 @@ export function Handle({ handle, op, mine, className }: { handle: string; op?: b
 
 export function Day({ day, edited }: { day: string; edited?: string | null }) {
   return (
-    <span className="whitespace-nowrap font-mono text-[11px] uppercase tracking-[0.14em] text-muted">
+    <span className="whitespace-nowrap text-muted">
       {dayWords(day)}
       {edited ? <span title={`Edited ${dayWords(edited)}`}> · edited</span> : null}
     </span>
@@ -168,13 +167,13 @@ export function CourseChip({ course, className }: { course: CourseRef; className
       to={coursePath(course.code)}
       title={course.title}
       className={cn(
-        "inline-flex min-h-8 max-w-full items-center gap-2 rounded-pill bg-[linear-gradient(90deg,rgb(255_92_112/0.16),rgb(255_92_112/0.04))] px-3 text-caption text-body shadow-[inset_0_0_0_1px_rgb(255_120_140/0.28)] transition-[color,box-shadow] duration-300 hover:text-ink hover:shadow-[inset_0_0_0_1px_rgb(255_120_140/0.6)]",
+        "inline-flex min-h-8 max-w-full items-center gap-1.5 rounded-pill border border-primary/25 bg-primary-wash px-3 text-caption text-primary hover:border-primary/50",
         "before:absolute before:inset-x-0 before:-inset-y-1.5 relative", // a 44px target on a 32px chip
         className,
       )}
     >
-      <span className="font-mono text-[11.5px] font-medium uppercase tracking-[0.12em] text-ink">{course.code}</span>
-      <span className="hidden truncate sm:inline">{course.title}</span>
+      <span className="font-semibold tabular-nums">{course.code}</span>
+      <span className="hidden truncate text-primary/80 sm:inline">{course.title}</span>
     </Link>
   );
 }
@@ -182,7 +181,7 @@ export function CourseChip({ course, className }: { course: CourseRef; className
 export function TagChip({ tag, to, active }: { tag: string; to?: string; active?: boolean }) {
   const cls = cn(
     "relative inline-flex min-h-8 items-center rounded-pill px-2.5 text-caption text-body before:absolute before:inset-x-0 before:-inset-y-1.5",
-    active ? "bg-ink text-canvas" : "bg-white/[0.04] shadow-[inset_0_0_0_1px_rgb(255_255_255/0.09)] hover:text-ink hover:shadow-[inset_0_0_0_1px_rgb(255_255_255/0.2)]",
+    active ? "bg-ink text-on-dark" : "bg-surface-strong hover:bg-hairline",
   );
   return to ? (
     <Link to={to} className={cls}>
@@ -229,13 +228,13 @@ export function CitationChips({ citations }: { citations: Citation[] }) {
   if (!citations.length) return null;
   return (
     <div className="flex flex-col gap-2">
-      <p className="qg-kicker">Sources</p>
+      <p className="text-caption-uppercase uppercase text-muted">Sources</p>
       <ul className="flex flex-wrap gap-2">
         {citations.map((c) => {
           const target = citationTarget(c);
           const inner = (
             <>
-              <span className="font-mono text-[10.5px] font-medium uppercase tracking-[0.16em] text-muted">{KIND_LABEL[c.kind]}</span>
+              <span className="text-[11px] font-semibold uppercase tracking-[0.08em] text-muted">{KIND_LABEL[c.kind]}</span>
               <span className="min-w-0 truncate">{c.label}</span>
               {target.href && (
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
@@ -245,7 +244,7 @@ export function CitationChips({ citations }: { citations: Citation[] }) {
             </>
           );
           const cls =
-            "inline-flex min-h-11 max-w-full items-center gap-2 rounded-pill bg-white/[0.04] px-3.5 text-caption text-ink shadow-[inset_0_0_0_1px_rgb(255_255_255/0.1),inset_0_1px_0_rgb(255_255_255/0.08)] transition-[color,box-shadow] duration-300 hover:text-primary-hover hover:shadow-[inset_0_0_0_1px_rgb(255_120_140/0.5)]";
+            "inline-flex min-h-11 max-w-full items-center gap-2 rounded-pill border border-hairline-strong bg-surface-card px-3 text-caption text-ink hover:border-primary/50 hover:text-primary";
           return (
             <li key={`${c.kind}:${c.id}`} className="max-w-full">
               {target.to ? (
@@ -316,7 +315,7 @@ export function useToast() {
   const node = (
     <div aria-live="polite" role="status" className="pointer-events-none fixed inset-x-0 bottom-6 z-40 flex justify-center px-4">
       {message && (
-        <p className="glass-raised pointer-events-auto animate-rise rounded-pill px-5 py-3 text-body-sm text-ink">{message}</p>
+        <p className="pointer-events-auto animate-rise rounded-pill bg-surface-dark px-5 py-3 text-body-sm text-on-dark shadow-overlay">{message}</p>
       )}
     </div>
   );
@@ -448,7 +447,7 @@ export function ReportDialog({
 export function LoginCard({ children, className }: { children?: ReactNode; className?: string }) {
   const links = useAuthLinks();
   return (
-    <div className={cn("flex flex-col items-start gap-3 qg-tile px-6 py-6 sm:flex-row sm:items-center sm:justify-between", className)}>
+    <div className={cn("flex flex-col items-start gap-3 rounded-xl border border-dashed border-hairline-strong bg-canvas-soft px-5 py-5 sm:flex-row sm:items-center sm:justify-between", className)}>
       <p className="text-body-sm text-body">
         {children ?? "Log in to answer. Your name never shows: you get a random handle on each question."}
       </p>

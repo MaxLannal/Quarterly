@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useCatalogYears } from "@/api/hooks";
 import { Button } from "@/components/ui/button";
-import { ArrowIcon } from "@/components/ui/icons";
 import { ChoiceRow } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/misc";
 import { FormError, StepHeading } from "@/features/auth/ui";
@@ -158,10 +157,8 @@ export function AboutYouForm({ onSaved, initial }: { onSaved: (saved: AboutSaved
         </div>
       )}
       <FormError message={error} />
-      {/* The sign-up card's main button (features/auth/auth.css): a white pill in mono capitals. */}
-      <Button type="button" disabled={patch.isPending} onClick={save} className="auth-submit mt-2 w-full">
+      <Button type="button" disabled={patch.isPending} onClick={save}>
         {patch.isPending ? "Saving…" : "Save and continue"}
-        {patch.isPending ? null : <ArrowIcon size={16} />}
       </Button>
     </div>
   );

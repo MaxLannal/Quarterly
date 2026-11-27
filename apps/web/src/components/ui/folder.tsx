@@ -3,9 +3,9 @@ import { cn } from "@/lib/utils";
 import "./folder.css";
 
 /*
- * The glass folder (docs/DESIGN.md "Dark glass", after Max's reference of 2026-11-27): a back panel
+ * The folder (docs/DESIGN.md "Simple light"; Max asked on 2026-11-27 for each quarter as a folder): a back panel
  * with a tab on its top-left that slopes down into the body, the files standing inside it, and a
- * frosted front pocket across the bottom whose top edge steps down from left to right. The files
+ * light grey front pocket across the bottom whose top edge steps down from left to right. The files
  * tuck a few pixels behind the pocket, so they read as inside the folder; nothing they say is
  * covered. The planner draws each quarter as one (classes are its files); the homepage uses three.
  *
@@ -88,7 +88,7 @@ export interface GlassFolderProps extends Omit<HTMLAttributes<HTMLDivElement>, "
   pocket?: ReactNode;
   /** The files. */
   children?: ReactNode;
-  /** The art of the back panel: smoked glass, an ember of red light, deep garnet, or frosted glass. */
+  /** The back panel: white (`smoke`), ink-outlined for the current quarter (`ember`), warm grey (`garnet`) or cool (`frost`). */
   tone?: FolderTone;
   /** A drop target under a dragged file, or the folder in focus: its edge lights red. */
   active?: boolean;
@@ -111,7 +111,7 @@ export function GlassFolder({
 }: GlassFolderProps) {
   const [ref, size] = useSize<HTMLDivElement>();
   const gid = useId().replace(/:/g, "");
-  const tabW = size ? Math.max(120, Math.min(size.w - 90, Math.round(size.w * tabRatio))) : 0;
+  const tabW = size ? Math.max(Math.min(140, size.w - 48), Math.min(size.w - 64, Math.round(size.w * tabRatio))) : 0;
   const back = size ? backPath(size.w, size.h, tabW) : null;
   const pocketD = size ? pocketPath(size.w, Math.round(size.w * 0.42)) : null;
   return (

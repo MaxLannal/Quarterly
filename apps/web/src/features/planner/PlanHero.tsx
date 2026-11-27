@@ -57,7 +57,7 @@ function PlanName({ name, onRename }: { name: string; onRename: (name: string) =
           setDraft(name);
           setEditing(true);
         }}
-        className="flex size-11 shrink-0 items-center justify-center rounded-pill text-gray-dark transition-[color,background-color] duration-300 hover:bg-white/[0.06] hover:text-ink"
+        className="flex size-11 shrink-0 items-center justify-center rounded-pill text-gray-dark transition-[color,background-color] duration-300 hover:bg-surface-strong hover:text-ink"
       >
         <PencilIcon size={18} />
       </button>
@@ -84,7 +84,7 @@ function GraduationField({ value, choices, onChange }: { value: string; choices:
   if (editing) {
     return (
       <div className="flex items-center gap-2">
-        <label htmlFor={selectId} className="mono-label text-muted">
+        <label htmlFor={selectId} className="text-[12px] font-semibold text-muted">
           Graduating in
         </label>
         <select
@@ -112,7 +112,7 @@ function GraduationField({ value, choices, onChange }: { value: string; choices:
   }
   return (
     <div className="flex items-center" data-testid="graduation" data-term={value}>
-      <span className="mono-label text-muted">
+      <span className="text-[12px] font-semibold text-muted">
         Graduating in <span className="text-ink">{termLabel(value)}</span>
       </span>
       <button
@@ -120,7 +120,7 @@ function GraduationField({ value, choices, onChange }: { value: string; choices:
         type="button"
         aria-label={`Change graduation quarter (${termLabel(value)})`}
         onClick={() => setEditing(true)}
-        className="-my-2 flex size-11 shrink-0 items-center justify-center rounded-pill text-gray-dark transition-[color,background-color] duration-300 hover:bg-white/[0.06] hover:text-ink"
+        className="-my-2 flex size-11 shrink-0 items-center justify-center rounded-pill text-gray-dark transition-[color,background-color] duration-300 hover:bg-surface-strong hover:text-ink"
       >
         <PencilIcon size={14} />
       </button>
@@ -165,36 +165,28 @@ interface PlanHeroProps {
 }
 
 /**
- * The planner's headline (docs/DESIGN.md "Dark glass"): a mono eyebrow, the plan's name in the
- * display serif with its verdict, then one mono line of facts (catalog year, length, units,
- * courses, graduation). The programs sit at the right on a wide screen, below on a phone.
+ * The planner's headline (docs/DESIGN.md "Simple light"): the plan's name with its verdict, then
+ * one line of facts (catalog year, length, units, courses, graduation). The programs sit at the
+ * right on a wide screen, below on a phone.
  */
 export function PlanHero({ name, onRename, verdict, catalogYear, years, units, courses, graduation, graduationChoices: choices, onGraduation, programs }: PlanHeroProps) {
   return (
     <header className="planner-hero grid gap-x-10 gap-y-6 xl:grid-cols-[minmax(0,1fr)_auto] xl:items-end">
       <div className="flex min-w-0 flex-col gap-2.5">
-        <p className="mono-label flex items-center gap-2 text-muted">
-          <span aria-hidden="true" className="planner-eyebrow-dot" />
-          Planner
-          <span aria-hidden="true" className="hidden text-muted sm:inline">
-            {"//"}
-          </span>
-          <span className="hidden sm:inline">Four years, quarter by quarter</span>
-        </p>
         <div className="flex min-w-0 flex-wrap items-center gap-x-4 gap-y-2">
           <PlanName name={name} onRename={onRename} />
           {verdict}
         </div>
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-          <span className="mono-label text-muted">Catalog {catalogYear}</span>
+          <span className="text-[12px] font-semibold text-muted">Catalog {catalogYear}</span>
           <Sep />
-          <span className="mono-label text-muted">
+          <span className="text-[12px] font-semibold text-muted">
             {years} year{years === 1 ? "" : "s"}
           </span>
           <Sep />
-          <span className="mono-label text-muted">{units} units</span>
+          <span className="text-[12px] font-semibold text-muted">{units} units</span>
           <Sep />
-          <span className="mono-label text-muted">
+          <span className="text-[12px] font-semibold text-muted">
             {courses} course{courses === 1 ? "" : "s"}
           </span>
           <Sep />
@@ -202,7 +194,7 @@ export function PlanHero({ name, onRename, verdict, catalogYear, years, units, c
         </div>
       </div>
       <div className="flex min-w-0 flex-col gap-2 xl:items-end">
-        <span className="mono-label text-muted">Programs</span>
+        <span className="text-[12px] font-semibold text-muted">Programs</span>
         {programs}
         <p className="text-caption text-muted">Not official advising. Confirm with your adviser and My Planner.</p>
       </div>

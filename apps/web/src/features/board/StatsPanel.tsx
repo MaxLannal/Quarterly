@@ -9,7 +9,6 @@ import { ErrorText } from "@/components/ui/misc";
 import { LoginCard } from "@/features/commons/parts";
 import { plural } from "@/features/forum/format";
 import { cn } from "@/lib/utils";
-import "@/features/courses/glass.css";
 import { PERIODS, score, useForumStats, type ForumStats, type Period, type RankedEntry } from "./api";
 
 function Ranking({
@@ -26,7 +25,7 @@ function Ranking({
   const id = useId();
   return (
     <section aria-labelledby={id} className="flex flex-col gap-1">
-      <h3 id={id} className="qg-kicker">
+      <h3 id={id} className="text-caption-uppercase uppercase text-muted">
         {title}
       </h3>
       {entries.length === 0 ? (
@@ -36,7 +35,7 @@ function Ranking({
           {entries.map((e) => {
             const body = (
               <>
-                <span aria-hidden="true" className="w-6 shrink-0 text-right font-display text-[24px] leading-none tabular-nums text-primary [text-shadow:0_0_14px_rgb(255_92_112/0.5)]">
+                <span aria-hidden="true" className="w-5 shrink-0 text-right text-caption tabular-nums text-muted">
                   {e.rank}
                 </span>
                 <span className="flex min-w-0 flex-1 flex-col">
@@ -58,11 +57,11 @@ function Ranking({
                 </span>
               </>
             );
-            const row = "flex min-h-12 items-center gap-3 py-2";
+            const row = "flex min-h-11 items-center gap-3 py-1.5";
             return (
               <li key={e.id} className="border-b border-hairline last:border-b-0">
                 {href ? (
-                  <Link to={href(e)} className={cn(row, "group -mx-2 rounded-[14px] px-2 transition-colors duration-300 hover:bg-white/[0.04]")}>
+                  <Link to={href(e)} className={cn(row, "group rounded-sm")}>
                     {body}
                   </Link>
                 ) : (
@@ -103,14 +102,14 @@ function Majors({ stats, courseHref }: { stats: ForumStats; courseHref: (code: s
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-center gap-2">
-        <label htmlFor={selectId} className="qg-kicker shrink-0">
+        <label htmlFor={selectId} className="shrink-0 text-caption-uppercase uppercase text-muted">
           Top in the major
         </label>
         <select
           id={selectId}
           value={current.program_id}
           onChange={(e) => setChosen(e.target.value)}
-          className="min-h-11 min-w-0 flex-1 rounded-pill border border-hairline-strong bg-white/[0.04] px-3 text-caption text-ink"
+          className="min-h-11 min-w-0 flex-1 rounded-md border border-hairline-strong bg-surface-card px-2 text-caption text-ink"
         >
           {stats.majors.map((m) => (
             <option key={m.program_id} value={m.program_id}>
@@ -137,13 +136,14 @@ export function StatsPanel({
   const [period, setPeriod] = useState<Period>("quarter");
   const stats = useForumStats(period, loggedIn);
   return (
-    <section aria-labelledby="forum-stats-title" className="qg-tile qg-edge flex flex-col gap-6 overflow-hidden p-6 sm:p-7">
+    <section aria-labelledby="forum-stats-title" className="relative flex flex-col gap-5 overflow-hidden rounded-xl border border-hairline bg-surface-card p-5 sm:p-6">
+      <span aria-hidden="true" className="absolute inset-x-0 top-0 h-1 bg-primary" />
       <div className="flex flex-wrap items-center justify-between gap-2">
         <h2 id="forum-stats-title" className="font-display text-display-sm text-ink">
           Ratings
         </h2>
         {loggedIn && (
-          <div role="group" aria-label="Period" className="qg-seg gap-1">
+          <div role="group" aria-label="Period" className="inline-flex rounded-pill bg-surface-strong p-0.5">
             {PERIODS.map((p) => (
               <button
                 key={p.key}
@@ -151,8 +151,8 @@ export function StatsPanel({
                 aria-pressed={period === p.key}
                 onClick={() => setPeriod(p.key)}
                 className={cn(
-                  "inline-flex min-h-11 items-center rounded-pill px-3 text-caption font-medium transition-[color,background-color,box-shadow] duration-300",
-                  period === p.key ? "bg-white/[0.1] text-ink shadow-[inset_0_1px_0_rgb(255_255_255/0.2),inset_0_0_0_1px_rgb(255_255_255/0.14),0_0_22px_-6px_rgb(255_60_90/0.5)]" : "text-muted hover:text-ink",
+                  "inline-flex min-h-11 items-center rounded-pill px-3 text-caption font-medium transition-colors",
+                  period === p.key ? "bg-surface-card text-primary shadow-hover" : "text-body hover:text-ink",
                 )}
               >
                 {p.label}

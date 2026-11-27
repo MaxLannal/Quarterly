@@ -1,11 +1,13 @@
-import { useId, useState, type FormEvent, type ReactNode } from "react";
+import { useId, useState, type FormEvent } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { isNotAvailable } from "@/api/client";
 import { useCourseSearch, type CourseSearchParams } from "@/api/hooks";
 import type { CourseSummary } from "@/api/types";
 import { Button } from "@/components/ui/button";
-import { ArrowIcon, ChevronIcon, SearchIcon } from "@/components/ui/icons";
+import { ChevronIcon } from "@/components/ui/icons";
 import { EmptyState, inlineLinkClass, PageContainer } from "@/components/layout/page";
+import { Card } from "@/components/ui/card";
+import { controlClass } from "@/components/ui/input";
 import {
   Badge,
   CourseCode,
@@ -16,12 +18,12 @@ import {
 } from "@/components/ui/misc";
 import { useAuthLinks } from "@/features/auth/next";
 import { CatalogToggle } from "@/features/courses/CatalogToggle";
-import { Kicker } from "@/features/courses/Glass";
 import { RatingLine } from "@/features/courses/RatingLine";
 import { useCatalogBrowse, useCourseRatings, type RatingSummary } from "@/features/feed/api";
 import { BrowseRows, browseCodes } from "@/features/feed/BrowseRows";
 import { attribute, isEstimate, round1 } from "@/features/planner/metrics";
 import { useSession } from "@/lib/session";
+import { cn } from "@/lib/utils";
 
 const PAGE = 20;
 const QUARTER_OPTIONS = [
@@ -48,65 +50,34 @@ function paramsFrom(sp: URLSearchParams): CourseSearchParams {
   };
 }
 
-/**
- * A course in the results: a code plate (the subject in mono over the number in the display
- * serif), the title, the student rating line and the quiet facts. The whole tile is the link's
- * target; the link's name stays "CODE · Title".
- */
 export function CourseRow({ c, rating }: { c: CourseSummary; rating?: RatingSummary }) {
   const hours = attribute(c, "workload_hours");
   const diff = attribute(c, "difficulty");
-  const [subject = c.code, number = ""] = c.code.split(" ");
   return (
-    <li data-spotlight="" className="qg-tile qg-tile-link group flex min-w-0 gap-4 p-4 sm:gap-5 sm:p-5">
-      <span
-        aria-hidden="true"
-        className="flex w-[78px] shrink-0 flex-col justify-center rounded-[18px] border border-hairline bg-[linear-gradient(160deg,rgb(255_92_112/0.18),rgb(255_255_255/0.02)_62%)] px-3 py-3 shadow-[inset_0_1px_0_rgb(255_255_255/0.08)] sm:w-[92px]"
+    <Card as="li" interactive className="relative flex flex-col gap-3">
+      <Link
+        to={`/courses/${encodeURIComponent(c.code)}`}
+        className="flex flex-col gap-1 rounded-xs text-ink after:absolute after:inset-0 after:rounded-xl hover:[&>span:last-child]:underline"
       >
-        <span className="font-mono text-[10.5px] font-medium uppercase tracking-[0.18em] text-muted">{subject}</span>
-        <span className="qg-numeral mt-1 text-[28px] sm:text-[32px]">{number}</span>
-      </span>
-      <div className="flex min-w-0 flex-1 flex-col gap-2">
-        <Link
-          to={`/courses/${encodeURIComponent(c.code)}`}
-          className="flex flex-col gap-1 rounded-xs text-ink after:absolute after:inset-0 after:rounded-[24px] hover:[&>span:last-child]:text-primary-hover"
-        >
-          <CourseCode className="sr-only">{c.code}</CourseCode> <span className="sr-only">·</span>{" "}
-          <span className="text-title-md transition-colors duration-300">{c.title}</span>
-        </Link>
-        <RatingLine rating={rating} />
-        <div className="mt-auto flex flex-wrap items-center gap-x-4 gap-y-2 pt-1 text-caption text-muted">
-          <span>{c.units} units</span>
-          {hours && (
-            <span>
-              {isEstimate(hours) ? "~" : ""}
-              {round1(hours.value)} h/wk{isEstimate(hours) ? " (estimate)" : ""}
-            </span>
-          )}
-          {diff && <Dots value={diff.value} label="Difficulty" />}
-          {c.core_tags.map((t) => (
-            <Badge key={t}>Core: {t}</Badge>
-          ))}
-          {c.crosslists.length > 0 && <span>Also {c.crosslists.join(", ")}</span>}
-        </div>
+        <CourseCode>{c.code}</CourseCode> <span className="sr-only">·</span>{" "}
+        <span className="text-title-md underline-offset-4">{c.title}</span>
+      </Link>
+      <RatingLine rating={rating} />
+      <div className="mt-auto flex flex-wrap items-center gap-x-3 gap-y-2 text-caption text-muted">
+        <span>{c.units} units</span>
+        {hours && (
+          <span>
+            {isEstimate(hours) ? "~" : ""}
+            {round1(hours.value)} h/wk{isEstimate(hours) ? " (estimate)" : ""}
+          </span>
+        )}
+        {diff && <Dots value={diff.value} label="Difficulty" />}
+        {c.core_tags.map((t) => (
+          <Badge key={t}>Core: {t}</Badge>
+        ))}
+        {c.crosslists.length > 0 && <span>Also {c.crosslists.join(", ")}</span>}
       </div>
-      <span
-        aria-hidden="true"
-        className="hidden size-11 shrink-0 items-center justify-center self-center rounded-pill border border-hairline text-muted transition-[color,border-color,translate] duration-300 group-hover:translate-x-0.5 group-hover:border-primary/50 group-hover:text-primary sm:inline-flex"
-      >
-        <ArrowIcon size={16} />
-      </span>
-    </li>
-  );
-}
-
-/** A filter as a two-line glass chip: the mono label over its control. */
-function FilterChip({ id, label, set, children }: { id: string; label: string; set: boolean; children: ReactNode }) {
-  return (
-    <div className="qg-filter" data-set={set || undefined}>
-      <label htmlFor={id}>{label}</label>
-      {children}
-    </div>
+    </Card>
   );
 }
 
@@ -114,9 +85,6 @@ function FilterChip({ id, label, set, children }: { id: string; label: string; s
  * The Catalog page (`/courses`, issue #19): the course search with its filters, and before the
  * student searches, the browse rows that replaced the Feed (newly released courses, course
  * spotlights, what students say). Student ratings show on every course for a logged-in student.
- *
- * Dark glass (docs/DESIGN.md): a centred command field of glass with a ring of light round its
- * edge, a mono hint line, the extra filters as two-line glass chips beneath, then editorial rows.
  */
 export default function CoursesPage() {
   const [sp, setSp] = useSearchParams();
@@ -132,7 +100,6 @@ export default function CoursesPage() {
   const filtered = [...sp.entries()].some(
     ([k, v]) => k !== "offset" && k !== "q" && v,
   );
-  const activeFilters = [...sp.entries()].filter(([k, v]) => k !== "offset" && k !== "q" && v).length;
   const q = useCourseSearch(params, searched);
   const browse = useCatalogBrowse(account?.id ?? "anon", !searched && !session.isLoading);
   const shown = searched ? (q.data?.items.map((c) => c.code) ?? []) : browseCodes(browse.data);
@@ -141,6 +108,7 @@ export default function CoursesPage() {
   const ratings = loggedIn ? ratingsQuery.data : undefined;
   const id = useId();
   const field = (k: string) => `${id}-${k}`;
+  const box = controlClass;
 
   function submit(e: FormEvent) {
     e.preventDefault();
@@ -163,62 +131,48 @@ export default function CoursesPage() {
     setLastQ(urlQ);
     setDraft((d) => ({ ...d, q: urlQ }));
   }
-  const year = browse.data?.catalog_year;
-  const offset = params.offset ?? 0;
-  const total = q.data?.total ?? 0;
 
   return (
     <PageContainer>
-      <div className="qg-hero mx-auto flex w-full max-w-[880px] flex-col items-center gap-6 pt-6 text-center sm:pt-14">
+      <div className="mx-auto flex w-full max-w-2xl flex-col items-center gap-5 pt-4 text-center sm:pt-8">
         <CatalogToggle current="courses" />
-        <div className="flex flex-col items-center gap-3">
-          <Kicker>{year ? `The catalog // ${year}` : "The catalog"}</Kicker>
-          <h1 className="font-display text-display-lg text-ink [text-shadow:0_0_60px_rgb(255_92_112/0.25)] sm:text-display-mega">Catalog</h1>
-          <p className="max-w-[34rem] text-body-md text-body">
-            Every course, when it runs, what it leads to, and what students say about it.
-          </p>
-        </div>
+        <h1 className="font-display text-display-md text-ink">Catalog</h1>
         <form
           onSubmit={submit}
-          className="mt-2 w-full text-left"
+          className="w-full text-left"
           aria-label="Course filters"
         >
-          <div className="qg-command">
-            <span aria-hidden="true" className="qg-command-ring">
-              <span />
-            </span>
-            <SearchIcon size={20} className="qg-command-icon" />
+          <div className="flex w-full gap-2">
             <label htmlFor={field("q")} className="sr-only">
               Code or title
             </label>
             <input
               id={field("q")}
               type="search"
+              className={cn(box, "min-w-0 flex-1")}
               placeholder="Code or title"
               value={draft.q ?? ""}
               onChange={set("q")}
             />
-            <Button type="submit" className="px-7">Search</Button>
+            <Button type="submit">Search</Button>
           </div>
-          <p aria-hidden="true" className="mt-3 text-center font-mono text-[11px] uppercase tracking-[0.2em] text-muted">
-            Try a code like <span className="text-body-strong">TEST 20000</span> <span aria-hidden="true" className="px-1.5 text-muted-soft">//</span> a word from a title
-          </p>
-          <details className="group mt-5" open={filtered}>
+          <details className="group mt-3" open={filtered}>
             {/* D11 CS-2: a chevron shows it opens. */}
-            <summary className="qg-pill mx-auto flex w-fit cursor-pointer list-none [&::-webkit-details-marker]:hidden">
-              <ChevronIcon className="size-4 text-muted transition-transform duration-300 group-open:rotate-90 motion-reduce:transition-none" />
+            <summary className="mx-auto flex min-h-11 w-fit cursor-pointer list-none items-center gap-1.5 rounded-md px-2 text-body-sm text-body hover:text-ink [&::-webkit-details-marker]:hidden">
+              <ChevronIcon className="size-4 text-muted transition-transform duration-150 group-open:rotate-90 motion-reduce:transition-none" />
               More filters
-              {activeFilters > 0 && (
-                <span className="inline-flex min-w-5 items-center justify-center rounded-pill bg-primary px-1.5 text-[12px] font-semibold text-on-primary">
-                  <span className="sr-only">, active: </span>
-                  {activeFilters}
-                </span>
-              )}
             </summary>
-            <div className="mt-4 grid grid-cols-2 gap-2.5 sm:grid-cols-3">
-              <FilterChip id={field("subject")} label="Department" set={!!draft.subject}>
+            <div className="mt-2 grid grid-cols-2 gap-x-3 gap-y-4 rounded-lg border border-hairline bg-surface-card p-4 sm:gap-4 lg:grid-cols-3">
+              <div className="flex flex-col gap-1.5">
+                <label
+                  htmlFor={field("subject")}
+                  className="text-caption font-medium text-ink"
+                >
+                  Department
+                </label>
                 <input
                   id={field("subject")}
+                  className={box}
                   placeholder="e.g. CMSC"
                   value={draft.subject ?? ""}
                   onChange={(e) =>
@@ -228,10 +182,17 @@ export default function CoursesPage() {
                     }))
                   }
                 />
-              </FilterChip>
-              <FilterChip id={field("level")} label="Level" set={!!draft.level}>
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label
+                  htmlFor={field("level")}
+                  className="text-caption font-medium text-ink"
+                >
+                  Level
+                </label>
                 <select
                   id={field("level")}
+                  className={box}
                   value={draft.level ?? ""}
                   onChange={set("level")}
                 >
@@ -242,10 +203,17 @@ export default function CoursesPage() {
                     </option>
                   ))}
                 </select>
-              </FilterChip>
-              <FilterChip id={field("quarter")} label="Quarter offered" set={!!draft.quarter}>
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label
+                  htmlFor={field("quarter")}
+                  className="text-caption font-medium text-ink"
+                >
+                  Quarter offered
+                </label>
                 <select
                   id={field("quarter")}
+                  className={box}
                   value={draft.quarter ?? ""}
                   onChange={set("quarter")}
                 >
@@ -255,28 +223,48 @@ export default function CoursesPage() {
                     </option>
                   ))}
                 </select>
-              </FilterChip>
-              <FilterChip id={field("core")} label="Core area" set={!!draft.core_tag}>
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label
+                  htmlFor={field("core")}
+                  className="text-caption font-medium text-ink"
+                >
+                  Core area
+                </label>
                 <input
                   id={field("core")}
+                  className={box}
                   placeholder="e.g. arts"
                   value={draft.core_tag ?? ""}
                   onChange={set("core_tag")}
                 />
-              </FilterChip>
-              <FilterChip id={field("hours")} label="Max hours/week" set={!!draft.max_workload_hours}>
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label
+                  htmlFor={field("hours")}
+                  className="text-caption font-medium text-ink"
+                >
+                  Max hours/week
+                </label>
                 <input
                   id={field("hours")}
                   type="number"
                   min={0}
-                  placeholder="Any"
+                  className={box}
                   value={draft.max_workload_hours ?? ""}
                   onChange={set("max_workload_hours")}
                 />
-              </FilterChip>
-              <FilterChip id={field("diff")} label="Max difficulty" set={!!draft.max_difficulty}>
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label
+                  htmlFor={field("diff")}
+                  className="text-caption font-medium text-ink"
+                >
+                  Max difficulty
+                </label>
                 <select
                   id={field("diff")}
+                  className={box}
                   value={draft.max_difficulty ?? ""}
                   onChange={set("max_difficulty")}
                 >
@@ -287,9 +275,9 @@ export default function CoursesPage() {
                     </option>
                   ))}
                 </select>
-              </FilterChip>
-              <div className="col-span-2 flex flex-wrap items-center justify-center gap-2 pt-2 sm:col-span-3">
-                <Button type="submit" variant="glow">
+              </div>
+              <div className="col-span-2 flex items-end gap-3 lg:col-span-3">
+                <Button type="submit" variant="outline">
                   Apply filters
                 </Button>
                 <Button
@@ -322,7 +310,7 @@ export default function CoursesPage() {
       )}
 
       {searched && (
-        <section aria-label="Results" className="mx-auto mt-14 w-full max-w-[1240px]">
+        <section aria-label="Results" className="mt-10">
           {q.isLoading ? (
             <Spinner label="Searching" />
           ) : q.error ? (
@@ -333,21 +321,14 @@ export default function CoursesPage() {
             )
           ) : (
             <>
-              <div className="flex flex-wrap items-baseline justify-between gap-3 border-b border-hairline pb-4">
-                <p className="font-display text-display-sm text-ink" role="status">
-                  {total} course{total === 1 ? "" : "s"}
-                </p>
-                {total > PAGE && (
-                  <p className="font-mono text-[11.5px] uppercase tracking-[0.18em] text-muted">
-                    {offset + 1}–{Math.min(offset + PAGE, total)} of {total}
-                  </p>
-                )}
-              </div>
-              {total === 0 ? (
+              <p className="text-caption text-muted" role="status">
+                {q.data?.total ?? 0} course{q.data?.total === 1 ? "" : "s"}
+              </p>
+              {(q.data?.total ?? 0) === 0 ? (
                 // D11 CS-4: a way out instead of an empty list and dead paging.
                 <EmptyState
                   title="No courses match"
-                  className="mt-6"
+                  className="mt-4"
                   action={
                     <Button
                       variant="outline"
@@ -363,30 +344,30 @@ export default function CoursesPage() {
                   Try a shorter code or title, or fewer filters.
                 </EmptyState>
               ) : (
-                <ul className="mt-6 grid gap-3 lg:grid-cols-2 lg:gap-4">
-                  {q.data?.items.map((c) => (
-                    <CourseRow key={c.code} c={c} rating={ratings?.[c.code]} />
-                  ))}
-                </ul>
+              <ul className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {q.data?.items.map((c) => (
+                  <CourseRow key={c.code} c={c} rating={ratings?.[c.code]} />
+                ))}
+              </ul>
               )}
               {/* Paging only when there is more than one page. */}
-              {total > PAGE && (
-                <div className="mt-10 flex justify-center gap-3">
-                  <Button
-                    variant="outline"
-                    disabled={offset === 0}
-                    onClick={() => page(Math.max(0, offset - PAGE))}
-                  >
-                    Previous
-                  </Button>
-                  <Button
-                    variant="outline"
-                    disabled={offset + PAGE >= total}
-                    onClick={() => page(offset + PAGE)}
-                  >
-                    Next
-                  </Button>
-                </div>
+              {(q.data?.total ?? 0) > PAGE && (
+              <div className="mt-8 flex gap-3">
+                <Button
+                  variant="outline"
+                  disabled={(params.offset ?? 0) === 0}
+                  onClick={() => page(Math.max(0, (params.offset ?? 0) - PAGE))}
+                >
+                  Previous
+                </Button>
+                <Button
+                  variant="outline"
+                  disabled={(params.offset ?? 0) + PAGE >= (q.data?.total ?? 0)}
+                  onClick={() => page((params.offset ?? 0) + PAGE)}
+                >
+                  Next
+                </Button>
+              </div>
               )}
             </>
           )}

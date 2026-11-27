@@ -2,8 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { tallTargetClass } from "@/components/layout/page";
 import { Button } from "@/components/ui/button";
-import { Avatar } from "@/components/ui/card";
-import "@/features/courses/glass.css";
+import { Avatar, Card } from "@/components/ui/card";
 import { Badge, Dots, ErrorText, Notice } from "@/components/ui/misc";
 import { termLabel } from "@/features/planner/terms";
 import { cn } from "@/lib/utils";
@@ -15,19 +14,15 @@ import { PostBody, ReportDialog, VoteControl } from "./parts";
 /** Pseudonym, day and badges: the post-card header. */
 function Byline({ post }: { post: Post }) {
   return (
-    <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-      <Avatar name={post.pseudonym} className="size-9" />
+    <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+      <Avatar name={post.pseudonym} />
       <span className="text-body-strong text-ink">{post.pseudonym}</span>
       {post.mine && <Badge casing="normal">You</Badge>}
-      <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted">
+      <span className="text-caption text-muted">
         {relativeDay(post.created_day)}
         {post.edited_day ? " · edited" : ""}
       </span>
-      {post.term_taken && (
-        <span className="inline-flex items-center rounded-pill px-3 py-1 text-caption text-body shadow-[inset_0_0_0_1px_rgb(255_255_255/0.1)]">
-          Took it in {termLabel(post.term_taken)}
-        </span>
-      )}
+      {post.term_taken && <Badge casing="normal">Took it in {termLabel(post.term_taken)}</Badge>}
     </div>
   );
 }
@@ -36,53 +31,53 @@ function ReviewFacts({ post }: { post: Post }) {
   const r = post.ratings;
   if (!r) return null;
   return (
-    <dl className="flex flex-wrap gap-2 text-caption">
-      <div className="qg-chip min-h-0 gap-1 rounded-[14px] px-3.5 py-2">
-        <dt className="qg-chip-label">Overall</dt>
-        <dd className="flex items-center gap-1.5 text-caption font-medium text-ink">
+    <dl className="flex flex-wrap gap-x-6 gap-y-2 text-caption text-muted">
+      <div className="flex items-center gap-2">
+        <dt>Overall</dt>
+        <dd className="flex items-center gap-1.5 text-ink">
           <Dots value={r.overall} label="Overall" /> <span aria-hidden="true">{r.overall}</span>
         </dd>
       </div>
-      <div className="qg-chip min-h-0 gap-1 rounded-[14px] px-3.5 py-2">
-        <dt className="qg-chip-label">Difficulty</dt>
-        <dd className="flex items-center gap-1.5 text-caption font-medium text-ink">
+      <div className="flex items-center gap-2">
+        <dt>Difficulty</dt>
+        <dd className="flex items-center gap-1.5 text-ink">
           <Dots value={r.difficulty} label="Difficulty" /> <span aria-hidden="true">{r.difficulty}</span>
         </dd>
       </div>
-      <div className="qg-chip min-h-0 gap-1 rounded-[14px] px-3.5 py-2">
-        <dt className="qg-chip-label">Intensity</dt>
-        <dd className="flex items-center gap-1.5 text-caption font-medium text-ink">
+      <div className="flex items-center gap-2">
+        <dt>Intensity</dt>
+        <dd className="flex items-center gap-1.5 text-ink">
           <Dots value={r.intellectual_intensity} label="Intellectual intensity" /> <span aria-hidden="true">{r.intellectual_intensity}</span>
         </dd>
       </div>
       {r.pace != null && (
-        <div className="qg-chip min-h-0 gap-1 rounded-[14px] px-3.5 py-2">
-          <dt className="qg-chip-label">Pace</dt>
-          <dd className="flex items-center gap-1.5 text-caption font-medium text-ink">
+        <div className="flex items-center gap-2">
+          <dt>Pace</dt>
+          <dd className="flex items-center gap-1.5 text-ink">
             <Dots value={r.pace} label="How fast it moved" /> <span aria-hidden="true">{r.pace}</span>
           </dd>
         </div>
       )}
       {r.grading_strictness != null && (
-        <div className="qg-chip min-h-0 gap-1 rounded-[14px] px-3.5 py-2">
-          <dt className="qg-chip-label">Grading</dt>
-          <dd className="flex items-center gap-1.5 text-caption font-medium text-ink">
+        <div className="flex items-center gap-2">
+          <dt>Grading</dt>
+          <dd className="flex items-center gap-1.5 text-ink">
             <Dots value={r.grading_strictness} label="How strictly it was graded" /> <span aria-hidden="true">{r.grading_strictness}</span>
           </dd>
         </div>
       )}
-      <div className="qg-chip min-h-0 gap-1 rounded-[14px] px-3.5 py-2">
-        <dt className="qg-chip-label">Workload</dt>
-        <dd className="text-caption font-medium tabular-nums text-ink">{r.workload_hours} h/wk</dd>
+      <div className="flex items-center gap-2">
+        <dt>Workload</dt>
+        <dd className="text-ink tabular-nums">{r.workload_hours} h/wk</dd>
       </div>
-      <div className="qg-chip min-h-0 gap-1 rounded-[14px] px-3.5 py-2">
+      <div className="flex items-center gap-2">
         <dt className="sr-only">Recommendation</dt>
-        <dd className="text-caption font-medium text-ink">{r.would_recommend ? "Would recommend" : "Would not recommend"}</dd>
+        <dd className="text-ink">{r.would_recommend ? "Would recommend" : "Would not recommend"}</dd>
       </div>
       {r.grade_bucket && r.grade_bucket !== "prefer not to say" && (
-        <div className="qg-chip min-h-0 gap-1 rounded-[14px] px-3.5 py-2">
-          <dt className="qg-chip-label">Grade</dt>
-          <dd className="text-caption font-medium text-ink">{r.grade_bucket}</dd>
+        <div className="flex items-center gap-2">
+          <dt>Grade</dt>
+          <dd className="text-ink">{r.grade_bucket}</dd>
         </div>
       )}
     </dl>
@@ -140,7 +135,7 @@ export function PostCard({
   const Heading = (["h1", "h2", "h3"] as const)[headingLevel - 1] ?? "h3";
   const headingClass =
     // [overflow-wrap:anywhere]: a long unbroken word in a title wraps instead of widening the page (D11 harden).
-    (headingLevel === 1 ? "font-display text-display-md text-ink sm:text-display-lg" : headingLevel === 2 ? "font-display text-display-sm text-ink" : "font-display text-[28px] leading-[1.15] tracking-[-0.2px] text-ink") +
+    (headingLevel === 1 ? "font-display text-display-sm text-ink sm:text-display-md" : headingLevel === 2 ? "font-display text-display-sm text-ink" : "text-title-sm text-ink") +
     " [overflow-wrap:anywhere]";
   const label = `${post.kind} by ${post.pseudonym}`;
   const title = post.title ?? (post.kind === "review" ? `Review by ${post.pseudonym}` : "Untitled post");
@@ -148,22 +143,18 @@ export function PostCard({
 
   if (editing) {
     return (
-      <article aria-label={`Editing ${label}`} className="glass-raised rounded-[28px] p-6 sm:p-9">
+      <Card as="article" variant="post" aria-label={`Editing ${label}`} className="p-6 sm:p-8">
         <Composer page={page} kind={post.kind} editing={post} onDone={() => setEditing(false)} onCancel={() => setEditing(false)} />
-      </article>
+      </Card>
     );
   }
 
   return (
-    <article
-      aria-labelledby={`post-${post.id}-title`}
-      data-spotlight={threadHref ? "" : undefined}
-      className={cn("qg-tile flex flex-col gap-5 p-6 sm:p-9", threadHref && "qg-tile-link", headingLevel === 1 && "qg-edge")}
-    >
+    <Card as="article" variant="post" aria-labelledby={`post-${post.id}-title`} className="flex flex-col gap-4 p-6 sm:p-8">
       <Byline post={post} />
       <Heading id={`post-${post.id}-title`} className={headingClass}>
         {threadHref && visible ? (
-          <Link to={threadHref} className={cn(tallTargetClass, "rounded-xs transition-colors duration-300 hover:text-primary-hover")}>
+          <Link to={threadHref} className={cn(tallTargetClass, "rounded-xs hover:text-primary hover:underline hover:underline-offset-4")}>
             {title}
           </Link>
         ) : (
@@ -177,7 +168,7 @@ export function PostCard({
         </Notice>
       )}
       <PostBody html={post.body_html ?? ""} />
-      <div className="-mb-2 -ml-2 flex flex-wrap items-center gap-1 border-t border-hairline pt-3">
+      <div className="-mb-2 -ml-2 flex flex-wrap items-center gap-1">
         <VoteControl targetType="post" targetId={post.id} score={post.score} myVote={post.my_vote ?? 0} disabled={!visible} label={label} />
         {visible &&
           (threadHref ? (
@@ -217,6 +208,6 @@ export function PostCard({
       </div>
       {appeal.error && <ErrorText>{appeal.error.message}</ErrorText>}
       <ReportDialog open={reporting} onClose={() => setReporting(false)} targetType="post" targetId={post.id} />
-    </article>
+    </Card>
   );
 }

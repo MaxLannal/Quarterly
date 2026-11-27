@@ -67,9 +67,9 @@ function CheckList({ checks }: { checks: ReviewCheck[] }) {
 function NodeRow({ node }: { node: ReviewNode }) {
   const flags = node.flags ?? [];
   return (
-    <li className="grid gap-3 border-t border-hairline-soft py-5 md:grid-cols-2 md:gap-8">
+    <li className="grid gap-3 border-t border-hairline py-4 md:grid-cols-2 md:gap-6">
       <div className="min-w-0">
-        <p className="mono-label break-words text-muted">{node.path}</p>
+        <p className="break-words font-mono text-caption text-muted">{node.path}</p>
         <p className="text-body-sm text-ink">
           {node.label ? <span className="font-medium">{node.label}: </span> : null}
           {node.summary}
@@ -88,7 +88,7 @@ function NodeRow({ node }: { node: ReviewNode }) {
       </div>
       <figure className="min-w-0">
         {node.quote ? (
-          <blockquote className="border-l border-primary/60 pl-4 font-serif text-body-md italic text-body-strong">“{node.quote}”</blockquote>
+          <blockquote className="border-l-2 border-hairline-strong pl-3 text-body-sm text-body">“{node.quote}”</blockquote>
         ) : (
           <p className="text-body-sm text-error">No source quote.</p>
         )}
@@ -206,7 +206,7 @@ function ReviewCard({ item, onDone }: { item: ReviewItem; onDone: (message: stri
   }
 
   return (
-    <Card as="article" aria-labelledby={`${id}-title`} className="flex flex-col gap-5 rounded-[28px] p-6 sm:p-8">
+    <Card as="article" aria-labelledby={`${id}-title`} className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center gap-2">
         <Badge>{TYPE_LABELS[item.target_type] ?? item.target_type}</Badge>
         {item.decision_hint === "carry_over" && (
@@ -227,7 +227,7 @@ function ReviewCard({ item, onDone }: { item: ReviewItem; onDone: (message: stri
         )}
       </div>
       <div>
-        <h2 id={`${id}-title`} className="font-display text-[30px] leading-tight text-ink">
+        <h2 id={`${id}-title`} className="text-title-sm text-ink">
           {item.title || `${item.target_type} ${item.target_id}`}
         </h2>
         {item.reason && <p className="text-body-sm text-body">{item.reason}</p>}
@@ -235,7 +235,7 @@ function ReviewCard({ item, onDone }: { item: ReviewItem; onDone: (message: stri
       <CheckList checks={item.checks ?? []} />
       {nodes.length > 0 ? (
         <section aria-label="Rule tree with source quotes">
-          <div className="mono-label hidden grid-cols-2 gap-6 pb-3 text-muted md:grid">
+          <div className="hidden grid-cols-2 gap-6 pb-2 text-caption-uppercase uppercase text-muted md:grid">
             <span>Rule</span>
             <span>Source quote</span>
           </div>
@@ -340,7 +340,6 @@ export default function AdminReviewPage() {
   return (
     <PageContainer as="section">
       <PageHeader
-        eyebrow="Admin // Catalog review"
         title={TITLE}
         size="md"
         description="What the catalog pipeline proposed, with the catalog's own words beside each rule. Accept, edit or reject each item. Program rules reach students only after you publish them."
@@ -350,8 +349,8 @@ export default function AdminReviewPage() {
           </Link>
         }
       />
-      <div className="glass-rim mb-8 flex flex-col gap-2 rounded-[24px] bg-white/[0.03] p-4 sm:max-w-sm">
-        <Label htmlFor="review-status" className="mono-label px-1 text-body">Show</Label>
+      <div className="mb-6 flex flex-col gap-1.5 sm:max-w-xs">
+        <Label htmlFor="review-status">Show</Label>
         <Select id="review-status" value={status} onChange={(e) => setStatus(e.target.value as ReviewStatus)}>
           {STATUSES.map((s) => (
             <option key={s.value} value={s.value}>
@@ -371,7 +370,7 @@ export default function AdminReviewPage() {
         <EmptyState title="Nothing here">{status === "open" ? "No item is waiting for a decision." : "No item has this status."}</EmptyState>
       ) : (
         <div className="flex flex-col gap-4">
-          <p className="mono-label text-muted">{plural(queue.data?.total ?? items.length, "item")}</p>
+          <p className="text-caption text-muted">{plural(queue.data?.total ?? items.length, "item")}</p>
           {items.map((item) => (
             <ReviewCard key={item.id} item={item} onDone={setDone} />
           ))}

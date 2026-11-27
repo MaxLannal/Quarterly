@@ -18,12 +18,12 @@ function Band({ id, label, title, children }: { id: string; label: string; title
     <section id={id} aria-labelledby={`${id}-heading`} className="min-w-0 scroll-mt-24">
       <div className="mb-6 flex items-end gap-5">
         <div className="shrink-0">
-          <p className="mono-label text-muted">{label}</p>
+          <p className="text-[12px] font-semibold text-muted">{label}</p>
           <h2 id={`${id}-heading`} className="font-display text-display-sm text-ink">
             {title}
           </h2>
         </div>
-        <span aria-hidden="true" className="mb-4 h-px min-w-10 flex-1 bg-[linear-gradient(90deg,rgb(255_255_255/0.18),rgb(255_255_255/0.04)_70%,transparent)]" />
+        <span aria-hidden="true" className="mb-4 h-px min-w-10 flex-1 bg-surface-strong" />
       </div>
       {children}
     </section>
@@ -38,11 +38,11 @@ function AccountPlans() {
   return (
     <ul className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
       {q.data.map((p) => (
-        <li key={p.id} className="glass-rim flex flex-col gap-1 rounded-[22px] bg-white/[0.04] px-5 py-4 text-body-sm text-body">
+        <li key={p.id} className="border border-hairline flex flex-col gap-1 rounded-[22px] bg-canvas-soft px-5 py-4 text-body-sm text-body">
           <span className="text-body-strong text-ink">
             {p.name} {p.is_primary && "(primary)"}
           </span>
-          <span className="mono-label text-muted">
+          <span className="text-[12px] font-semibold text-muted">
             Catalog {p.catalog_year} · updated {p.updated_day}
           </span>
         </li>
@@ -75,7 +75,7 @@ export default function PlansPage() {
 
   return (
     <PageContainer className="max-w-7xl">
-      <PageHeader eyebrow="Plans // Every version you keep" title="My plans" />
+      <PageHeader title="My plans" />
       <div className="flex flex-col gap-16">
         <Band id="device-plans" label="Kept in this browser" title="On this device">
           {doc.plans.length === 0 ? (
@@ -90,7 +90,7 @@ export default function PlansPage() {
               )}
             </EmptyState>
           ) : (
-            // Each saved plan is a glass folder; its first courses are the files peeking out.
+            // Each saved plan is a folder; its first courses are the files peeking out.
             <ul className="grid gap-x-6 gap-y-10 md:grid-cols-2 xl:grid-cols-3">
               {doc.plans.map((p, index) => {
                 const items = p.state.items ?? [];
@@ -102,16 +102,16 @@ export default function PlansPage() {
                       tone={p.isPrimary ? "ember" : "smoke"}
                       tabRatio={0.55}
                       className="h-full hover:-translate-y-1"
-                      tab={<span className="mono-label truncate text-ink">{p.isPrimary ? "Primary plan" : `Plan ${String(index + 1).padStart(2, "0")}`}</span>}
+                      tab={<span className="text-[12px] font-semibold truncate text-ink">{p.isPrimary ? "Primary plan" : `Plan ${String(index + 1).padStart(2, "0")}`}</span>}
                       aside={
-                        <span className="mono-label text-muted">
+                        <span className="text-[12px] font-semibold text-muted">
                           {items.length} course{items.length === 1 ? "" : "s"}
                         </span>
                       }
                       pocket={
                         <>
-                          <span className="mono-label min-w-0 flex-1 truncate text-muted">From {termLabel(p.state.entry_term)}</span>
-                          <Button variant="glow" size="sm" onClick={() => open(p)}>
+                          <span className="text-[12px] font-semibold min-w-0 flex-1 truncate text-muted">From {termLabel(p.state.entry_term)}</span>
+                          <Button variant="outline" size="sm" onClick={() => open(p)}>
                             Open
                           </Button>
                         </>
@@ -136,7 +136,7 @@ export default function PlansPage() {
                       {shown.length > 0 && (
                         <ul className="mt-3 flex flex-wrap gap-2 px-1" aria-label={`First courses in ${p.name}`}>
                           {shown.map((code, n) => (
-                            <li key={`${code}-${n}`} className="glass-file px-3 py-1.5 pr-5 font-mono text-[12px] font-medium tracking-[0.05em] text-ink">
+                            <li key={`${code}-${n}`} className="glass-file px-3 py-1.5 pr-5 font-mono text-[12px] font-medium text-ink">
                               {code}
                             </li>
                           ))}

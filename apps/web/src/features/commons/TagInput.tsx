@@ -50,7 +50,7 @@ export function TagInput({ value, onChange, suggestions = SUGGESTED_TAGS }: { va
       <label htmlFor={`${id}-tag`} className="text-caption font-medium text-ink">
         Tags <span className="font-normal text-muted">(optional, up to {MAX_TAGS})</span>
       </label>
-      <div className="flex min-h-[52px] flex-wrap items-center gap-1.5 rounded-[26px] border border-hairline-strong bg-white/[0.04] px-3 py-1.5 focus-within:border-primary focus-within:shadow-[inset_0_0_0_1px_var(--color-primary)]">
+      <div className="flex min-h-11 flex-wrap items-center gap-1.5 rounded-md border border-border-input bg-surface-card px-2 py-1 focus-within:border-primary focus-within:shadow-[inset_0_0_0_1px_var(--color-primary)]">
         {value.map((tag) => (
           <span key={tag} className="inline-flex items-center gap-0.5 rounded-pill bg-surface-strong pl-2.5 text-caption text-ink">
             #{tag}

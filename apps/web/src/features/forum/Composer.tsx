@@ -45,8 +45,8 @@ function draftFrom(post?: Post): Draft {
 /** The community rules, shown beside every composer (SPEC "Moderation and community rules"). */
 export function CommunityRules({ className }: { className?: string }) {
   return (
-    <aside aria-label="Community rules" className={cn("qg-tile p-6", className)}>
-      <p className="qg-kicker">Community rules</p>
+    <aside aria-label="Community rules" className={cn("rounded-xl border border-hairline bg-canvas-soft p-5", className)}>
+      <p className="text-caption-uppercase uppercase text-muted">Community rules</p>
       <ul className="mt-2 flex list-disc flex-col gap-1 pl-5 text-body-sm text-body">
         {COMMUNITY_RULES.map((rule) => (
           <li key={rule}>{rule}</li>

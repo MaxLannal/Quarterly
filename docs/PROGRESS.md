@@ -1,6 +1,6 @@
 # Progress
 
-> **Current state (2026-11-27, dark glass redesign).** Branch `claude/quarterly-ui-redesign-c953e9`, local only (Max: "don't commit anything on github or open prs"). It is `main` (3bbb12f) plus Max's overnight redesign: every page in dark glass, Harper Library's reading room on the homepage, and the planner's quarters as glass folders with classes as files. Details are in "Dark glass redesign" at the end of this file. The design rules are in `docs/DESIGN.md` "Dark glass". Waits for Richard: `docs/OPEN_QUESTIONS.md` DG-1 to DG-3.
+> **Current state (2026-11-27, "Simple light" redesign).** Branch `claude/quarterly-ui-redesign-c953e9`, local only (Max: "don't commit anything on github or open prs"). It is `main` (3bbb12f) plus Max's redesign: a sidebar shell, white panels, one font (Figtree) and black as the only accent. Harper Library's reading room is on the homepage, and the planner draws quarters as folders with classes as files. The dark glass version that came first is withdrawn; it is kept as the local tag `dark-glass-v1`. Details: "Simple light (second request)" at the end of this file; the design rules are in `docs/DESIGN.md` "Simple light". Waits for Richard: `docs/OPEN_QUESTIONS.md` DG-1 to DG-3.
 >
 > **Earlier state (2026-11-24, after PR #21).** Branch `integration/2026-11-24`, not pushed.
 > - Max's PR #21 (issues #14 and #16) was merged into `main` first (e2a3e67), as Richard chose.
@@ -1561,3 +1561,39 @@ He also asked for no more than 3 agents at a time.
 - the decorative "//" separators (3.5:1, and read aloud as "slash slash") are now `aria-hidden`
 
 **Cost.** The session's cost hook reported about $216 by the end, including the four agents.
+
+## Simple light (Max, 2026-11-27, second request; same branch, local only)
+
+**Request.** After the dark glass version, Max wrote: "Despite all changes you made it still looks the same as before in the ui of many things, and in terms of color it looks uglier. Just make all ui ux simple as this. Use smooth, not-AI-ish fonts. Don't make it so dark." He sent a reference dashboard: a light sidebar with a black current item, a white panel, white cards with thin borders, one smooth sans.
+
+**How.**
+- The dark version was tagged `dark-glass-v1`.
+- The pages, the shared controls and `index.css` went back to their light 3bbb12f versions. The dark agents' decorative layers (glass, glows, serif and mono, art panels) are not in the new build.
+- What Max had asked for stays, restyled: the Harper homepage, the planner's folders and files, the folder's "+" button and its test, and the e2e build and eslint fixes.
+- A new design system went on top (docs/DESIGN.md "Simple light"):
+  - light tokens and one font (Figtree; Inter, Instrument Serif and JetBrains Mono were removed)
+  - a sidebar shell with a top bar and footer inside the white panel
+  - new buttons, inputs, cards, badges, tabs and dialogs
+  - no art panels in `TypeHero` or on the sign-in pages
+  - planner and folder styles rewritten in light (`planner.css`, `folder.css`)
+  - a light full-screen guide
+  - Harper redrawn in sunlit stone, with a dusk night
+- A one-off script converted the remaining dark utility classes in the planner area (`scratchpad/lighten.py`, not committed).
+
+**Fixes found on the way.**
+- The closed phone sidebar was only moved off screen, not hidden. Its links stayed in the tab order and the accessibility tree; it is now invisible when closed.
+- Day/Night, the planner tool bar and the verdict chip were below 44px; they are now 44px.
+
+**Tests changed.**
+- `design.spec.ts`: fonts (Figtree), and the main button (44px, 12px corners) in place of the 46px pill.
+- `campus.spec.ts`: field radius 12px in place of 26px.
+- `feedback-ui.spec.ts`: the requirement-tree course name is now the 14px caption.
+- `harper.spec.ts`: the new caption, the cards list, no Aurora.
+- The sidebar card's link is "Go to the planner", so it does not clash with "Open the planner" buttons on the pages.
+
+**Checks.**
+- tsc and eslint: clean.
+- vitest: 25 files, 216 tests passed.
+- Playwright (MSW): 103 passed, 0 failed (61 skipped: the screenshot spec).
+- The screenshot spec: 61 of 61 written to `docs/screenshots/simple-light/` (8.4 MB, with `index.html`).
+- `make e2e` (the Docker journeys) was not run.

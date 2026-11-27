@@ -4,7 +4,7 @@ import { CheckIcon, ErrorIcon, InfoIcon, WarningIcon } from "./icons";
 
 /** Semantic tones from DESIGN.md "Semantic". `neutral` is the default badge-pill plate. */
 const BADGE_TONES = {
-  neutral: "bg-surface-strong text-ink shadow-[inset_0_0_0_1px_var(--color-hairline)]",
+  neutral: "bg-surface-strong text-body-strong",
   success: "bg-success-wash text-success",
   warning: "bg-warning-wash text-warning",
   error: "bg-error-wash text-error",
@@ -43,7 +43,7 @@ export function Badge({
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1 whitespace-nowrap rounded-pill px-[10px] py-1",
+        "inline-flex items-center gap-1 whitespace-nowrap rounded-pill px-2.5 py-0.5",
         casing === "upper" ? "text-caption-uppercase uppercase" : "text-caption font-medium",
         BADGE_TONES[tone],
         className,
@@ -56,7 +56,7 @@ export function Badge({
 }
 
 const NOTICE_TONES: Record<Tone, string> = {
-  neutral: "border-hairline bg-white/[0.035]",
+  neutral: "border-hairline bg-canvas-soft",
   success: "border-success/25 bg-success-wash",
   warning: "border-warning/25 bg-warning-wash",
   error: "border-error/30 bg-error-wash",
@@ -84,7 +84,7 @@ export function Notice({
   className?: string;
 }) {
   return (
-    <div role={role} className={cn("flex items-start gap-3 rounded-lg border px-4 py-3 text-body-sm text-ink shadow-[inset_0_1px_0_rgb(255_255_255/0.05)]", NOTICE_TONES[tone], className)}>
+    <div role={role} className={cn("flex items-start gap-3 rounded-lg border px-4 py-3 text-body-sm text-ink", NOTICE_TONES[tone], className)}>
       <span className="mt-[3px] shrink-0">{NOTICE_ICON[tone]}</span>
       <div className="min-w-0 flex-1 [&_a]:text-primary [&_a]:underline [&_a]:underline-offset-2">{children}</div>
     </div>
@@ -104,7 +104,7 @@ export function NotAvailable({ feature, children }: { feature: string; children?
 export function Spinner({ label = "Loading" }: { label?: string }) {
   return (
     <p role="status" className="flex items-center gap-2 text-caption text-muted">
-      <span aria-hidden="true" className="inline-block size-2 animate-pulse rounded-pill bg-primary shadow-[0_0_10px_var(--color-primary)]" />
+      <span aria-hidden="true" className="inline-block size-2 animate-pulse rounded-pill bg-ink" />
       {label}…
     </p>
   );
@@ -130,7 +130,7 @@ export function Dots({ value, max = 5, label }: { value: number; max?: number; l
         <span
           key={i}
           aria-hidden="true"
-          className={cn("inline-block size-1.5 rounded-pill", i < filled ? "bg-primary shadow-[0_0_6px_rgb(255_92_112/0.6)]" : "bg-hairline-strong")}
+          className={cn("inline-block size-1.5 rounded-pill", i < filled ? "bg-primary" : "bg-hairline-strong")}
         />
       ))}
     </span>
@@ -139,5 +139,5 @@ export function Dots({ value, max = 5, label }: { value: number; max?: number; l
 
 /** A course code: caption-uppercase or tabular Inter, never the serif. */
 export function CourseCode({ children, className }: { children: ReactNode; className?: string }) {
-  return <span className={cn("font-mono text-[12.5px] font-medium uppercase tracking-[0.08em] tabular-nums text-muted", className)}>{children}</span>;
+  return <span className={cn("font-sans text-caption font-semibold tabular-nums text-muted", className)}>{children}</span>;
 }

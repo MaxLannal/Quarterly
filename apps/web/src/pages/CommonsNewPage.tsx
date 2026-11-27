@@ -50,8 +50,8 @@ function Similar({ title, course }: { title: string; course: CourseRef | null })
   return (
     <div aria-live="polite" className="min-h-6">
       {items.length > 0 ? (
-        <div className="qg-tile animate-rise px-5 py-4">
-          <p className="qg-kicker">Already asked?</p>
+        <div className="animate-rise rounded-lg border border-hairline bg-canvas-soft px-4 py-3">
+          <p className="text-caption-uppercase uppercase text-muted">Already asked?</p>
           <ul className="mt-1 flex flex-col">
             {items.slice(0, 5).map((t) => (
               <li key={t.id}>
@@ -77,7 +77,8 @@ function Similar({ title, course }: { title: string; course: CourseRef | null })
 function Tips() {
   return (
     <aside aria-label="Tips" className="flex flex-col gap-5 lg:sticky lg:top-8">
-      <section className="qg-tile qg-edge overflow-hidden p-7">
+      <section className="relative overflow-hidden rounded-xl border border-hairline bg-surface-card p-6">
+        <span aria-hidden="true" className="absolute inset-x-0 top-0 h-1 bg-primary" />
         <h2 className="font-display text-display-sm text-ink">A good question</h2>
         <ul className="mt-3 flex list-disc flex-col gap-2 pl-5 text-body-sm text-body">
           <li>Names the course: type a code like CMSC 14100 and pick it.</li>
@@ -85,7 +86,7 @@ function Tips() {
           <li>Asks one thing. Start a new question for the next one.</li>
         </ul>
       </section>
-      <section className="qg-tile flex gap-3 p-6 text-body-sm text-body">
+      <section className="flex gap-3 rounded-xl border border-hairline bg-canvas-soft p-5 text-body-sm text-body">
         <span className="mt-0.5 inline-flex size-8 shrink-0 items-center justify-center rounded-pill bg-primary text-on-primary">
           <ArchGlyph size={18} />
         </span>

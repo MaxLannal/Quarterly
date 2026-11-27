@@ -46,13 +46,9 @@ export function Tabs({ tabs, label, initial, active: controlled, onChange, end, 
 
   return (
     <div className={className}>
-      {/* A glass track; the current tab is a lit pill of glass in it (docs/DESIGN.md "Dark glass"). */}
+      {/* A grey track; the current tab is a white segment (docs/DESIGN.md "Simple light"). */}
       <div className="flex items-center gap-2">
-        <div
-          role="tablist"
-          aria-label={label}
-          className="flex min-w-0 flex-1 gap-1 rounded-pill bg-white/[0.035] p-1 shadow-[inset_0_0_0_1px_var(--color-hairline),inset_0_1px_3px_rgb(0_0_0/0.35)]"
-        >
+        <div role="tablist" aria-label={label} className="flex min-w-0 flex-1 gap-1 rounded-xl bg-surface-strong p-1">
           {tabs.map((t, i) => (
             <button
               key={t.key}
@@ -69,10 +65,8 @@ export function Tabs({ tabs, label, initial, active: controlled, onChange, end, 
               onKeyDown={(e) => onKey(e, i)}
               className={cn(
                 // Phones: 14px and tighter padding, so four tabs and a close button fit 390px (D11 polish).
-                "inline-flex min-h-11 flex-1 cursor-pointer items-center justify-center gap-1.5 whitespace-nowrap rounded-pill px-1.5 text-caption font-medium transition-[color,background-color,box-shadow] duration-300 focus-visible:outline-offset-[-2px] sm:px-3 sm:text-nav-link",
-                active === t.key
-                  ? "bg-white/[0.09] text-ink shadow-[inset_0_0_0_1px_rgb(255_255_255/0.12),inset_0_1px_0_rgb(255_255_255/0.14),0_6px_18px_rgb(0_0_0/0.35)]"
-                  : "text-muted hover:bg-white/[0.04] hover:text-ink",
+                "inline-flex min-h-11 flex-1 cursor-pointer items-center justify-center gap-1.5 whitespace-nowrap rounded-lg px-1.5 text-caption font-medium transition-[color,background-color,box-shadow] duration-150 focus-visible:outline-offset-[-2px] sm:px-3 sm:text-nav-link",
+                active === t.key ? "bg-canvas text-ink shadow-[0_1px_2px_rgb(17_17_17/0.08)]" : "text-muted hover:text-ink",
               )}
             >
               {t.label}

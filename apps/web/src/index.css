@@ -5,14 +5,13 @@
 @custom-variant chapel-side (@media (min-width: 900px) and (min-aspect-ratio: 6/5));
 
 /*
- * Design tokens from docs/DESIGN.md (YAML front matter + "Implementation tokens").
- * docs/DESIGN-IMPLEMENTATION.md maps every DESIGN.md part to the names below.
+ * Design tokens: "Simple light" (Max, 2026-11-27; docs/DESIGN.md). A light grey frame with the
+ * sidebar on it, white panels and cards with soft hairlines, near-black text, and black as the one
+ * accent (the current tab, the main button, focus). One font: Figtree. No serif, no mono, no glow.
  *
- * Tailwind's default palette, radii, shadows and type sizes are cleared so a utility can only
- * name a DESIGN.md token: `bg-canvas`, `text-ink`, `border-hairline`, `rounded-pill`,
- * `shadow-hover`, `text-title-md`, `font-display`. Spacing keeps Tailwind's 4px step, which is
- * DESIGN.md's base unit (1 = xxs 4px, 2 = xs 8px, 3 = sm 12px, 4 = base 16px, 5 = md 20px,
- * 6 = lg 24px, 8 = xl 32px, 12 = xxl 48px, 24 = section 96px).
+ * Tailwind's default palette, radii, shadows and type sizes are cleared so a utility can only name
+ * a token: `bg-canvas`, `text-ink`, `border-hairline`, `rounded-xl`, `text-title-md`. Spacing keeps
+ * Tailwind's 4px step.
  */
 @theme {
   --color-*: initial;
@@ -22,190 +21,176 @@
   --drop-shadow-*: initial;
   --text-*: initial;
 
-  /*
-   * "Red light on dark glass" (Max, 2026-11-27; docs/DESIGN.md "Dark glass"). Every page is a pane
-   * of smoked glass over a black night in which a ring of white light crosses rings of maroon and
-   * crimson light (components/brand/Aurora.tsx). Text is warm white; red is the light itself:
-   * links, the current place, focus, bars and dots. Surfaces that sit on the pane are tints of
-   * white (glass on glass); surfaces that float over content (menus, dialogs) are `surface-raised`.
-   */
-
-  /* Brand & action: the red light. Text-safe on every dark surface (6.6:1 on the canvas). As a
-     fill it carries dark text (`on-primary`). The main button is a white pill (button.tsx). */
-  --color-primary: #ff5c70;
-  --color-primary-hover: #ff7d8d;
-  --color-primary-active: #ff9aa6;
-  --color-primary-wash: rgb(255 92 112 / 0.14);
-  --color-on-primary: #1a0508;
-
-  /* Text: warm whites, all above 4.5:1 on the canvas and on the glass tints. */
-  --color-ink: #f7f0f0;
-  --color-body-strong: #ebe1e2;
-  --color-body: #cdc1c3;
-  --color-muted: #ab9c9f;
-  --color-muted-soft: #6f6366;
-
-  /* Surfaces. `canvas` is solid (the pane's base colour, solid covers); the rest are glass tints. */
-  --color-canvas: #0c0608;
-  --color-canvas-soft: rgb(255 255 255 / 0.03);
-  --color-surface-card: rgb(255 255 255 / 0.045);
-  --color-surface-strong: rgb(255 255 255 / 0.085);
-  /* Floating panels (menus, dialogs, drawers, popovers): nearly opaque smoked glass. */
-  --color-surface-raised: #1a0f12;
-  --color-surface-dark: #0a0506;
-  --color-surface-dark-elevated: #1c1214;
-  --color-surface-inverse: #5e0d1e;
-  --color-on-dark: #ffffff;
-  --color-on-dark-soft: #bcadb0;
-  --color-on-inverse-soft: #f0d6db;
-  /* Behind dialogs and sheets. */
-  --color-scrim: rgb(4 1 2 / 0.64);
-
-  /* Lines: white at low alpha, so they catch the light like the edge of a pane. */
-  --color-hairline: rgb(255 255 255 / 0.09);
-  --color-hairline-soft: rgb(255 255 255 / 0.05);
-  --color-hairline-strong: rgb(255 255 255 / 0.17);
-  --color-border-input: rgb(255 255 255 / 0.4);
-  --color-gray-dark: #918487;
-
-  /* The night and its lights. */
-  --color-night: #060203;
-  --color-night-2: #1a0509;
+  /* The one accent: near black. Links, the current tab, the main button, progress, focus. */
+  --color-primary: #111111;
+  --color-primary-hover: #2b2b2b;
+  --color-primary-active: #000000;
+  --color-primary-wash: #f1f1ef;
+  --color-on-primary: #ffffff;
+  /* UChicago maroon, kept for the few places that name the brand (the wordmark mark). */
   --color-maroon: #800000;
-  --color-maroon-deep: #4a0816;
+
+  /* Text (all 4.5:1 or better on white, except muted-soft, which is decorative). */
+  --color-ink: #111111;
+  --color-body-strong: #2a2a2a;
+  --color-body: #4f4f4f;
+  --color-muted: #6e6e6e;
+  --color-muted-soft: #a8a8a6;
+
+  /* Surfaces. `app` is the frame behind the sidebar and the panel. */
+  --color-app: #f3f3f1;
+  --color-canvas: #ffffff;
+  --color-canvas-soft: #f8f8f7;
+  --color-surface-card: #ffffff;
+  --color-surface-strong: #f1f1ef;
+  --color-surface-dark: #111111;
+  --color-surface-dark-elevated: #1e1e1e;
+  --color-surface-inverse: #111111;
+  --color-on-dark: #ffffff;
+  --color-on-dark-soft: #b5b5b3;
+  --color-on-inverse-soft: #d6d6d4;
+  --color-scrim: rgb(17 17 17 / 0.32);
+
+  /* Lines. */
+  --color-hairline: #e9e9e7;
+  --color-hairline-soft: #f1f1ef;
+  --color-hairline-strong: #d9d9d6;
+  --color-border-input: #8f8f8d;
+  --color-gray-dark: #6e6e6e;
+
+  /* Kept names from earlier designs, mapped to the light frame (footer, auth art, dark panels). */
+  --color-night: #111111;
+  --color-night-2: #1e1e1e;
+  --color-maroon-deep: #5c0a1d;
   --color-crimson: #d9264e;
   --color-coral: #ff9a76;
-  --color-on-night: #ffffff;
-  --color-on-night-soft: #f1d9de;
-  --color-on-night-muted: #b99aa1;
+  --color-on-night: #111111;
+  --color-on-night-soft: #4f4f4f;
+  --color-on-night-muted: #6e6e6e;
 
-  /* Atmospheric orbs: soft red blooms on the dark pane (see .orb below). */
-  --color-orb-lake: #8a1a30;
-  --color-orb-goldenrod: #b8452c;
-  --color-orb-ivy: #5e1422;
-  --color-orb-terracotta: #a8323f;
-  --color-orb-rose: #c4485a;
-  --color-orb-maroon: #8a1428;
+  /* Orbs are off in this design (see .orb). */
+  --color-orb-lake: transparent;
+  --color-orb-goldenrod: transparent;
+  --color-orb-ivy: transparent;
+  --color-orb-terracotta: transparent;
+  --color-orb-rose: transparent;
+  --color-orb-maroon: transparent;
 
-  /* Semantic, lifted for dark surfaces; washes are tints of the same light. */
-  --color-error: #ff8f80;
-  --color-error-wash: rgb(255 110 95 / 0.12);
-  --color-success: #b9d690;
-  --color-success-wash: rgb(170 210 120 / 0.11);
-  --color-warning: #f2b66b;
-  --color-warning-icon: #f2b66b;
-  --color-info: #8fc8ea;
-  --color-warning-wash: rgb(242 182 107 / 0.11);
-  --color-info-wash: rgb(140 199 234 / 0.11);
+  /* Semantic. */
+  --color-error: #b42318;
+  --color-error-wash: #fef3f2;
+  --color-success: #1e7a43;
+  --color-success-wash: #effaf3;
+  --color-warning: #9a5a06;
+  --color-warning-icon: #d98a0b;
+  --color-info: #1f5fbf;
+  --color-warning-wash: #fff8eb;
+  --color-info-wash: #eff5ff;
 
-  /* Data visualization (in this order), lifted for the dark pane. */
-  --color-data-1: #6fb2d6;
-  --color-data-2: #ffb547;
-  --color-data-3: #b9c06e;
-  --color-data-4: #f08a4b;
-  --color-data-5: #c79ab0;
-  --color-data-6: #a7a884;
+  /* Data visualization (in this order): ink first, then the reference's mint, then quiet hues. */
+  --color-data-1: #111111;
+  --color-data-2: #3cc68a;
+  --color-data-3: #6b8afd;
+  --color-data-4: #f2a541;
+  --color-data-5: #b38bd9;
+  --color-data-6: #8a8a87;
 
-  /* Type families (all bundled from npm, see main.tsx; nothing is fetched from another origin).
-     Headlines: Instrument Serif, a tall display serif, at 400 only (font-synthesis is off, so a
-     bold class never fakes a bold). Voices and quotes keep Newsreader. Labels: JetBrains Mono. */
-  --font-display: "Instrument Serif", "Newsreader", Georgia, serif;
-  --font-serif: "Newsreader", "Times New Roman", serif;
-  --font-sans: "Inter Variable", "Inter", system-ui, sans-serif;
-  --font-mono: "JetBrains Mono Variable", ui-monospace, SFMono-Regular, Menlo, monospace;
+  /* One family. `display` and `serif` are kept as names (older markup uses them); both are Figtree. */
+  --font-display: "Figtree Variable", "Figtree", system-ui, sans-serif;
+  --font-serif: "Figtree Variable", "Figtree", system-ui, sans-serif;
+  --font-sans: "Figtree Variable", "Figtree", system-ui, sans-serif;
+  --font-mono: "Figtree Variable", "Figtree", system-ui, sans-serif;
 
-  /* Type scale: `text-<token>` sets size, line height, tracking and weight together */
-  /* The home page's wordmark headline (D2): larger and one step heavier than display-mega. */
-  --text-display-hero: 132px;
-  --text-display-hero--line-height: 1;
-  --text-display-hero--letter-spacing: -3px;
-  --text-display-hero--font-weight: 400;
-  --text-display-mega: 88px;
-  --text-display-mega--line-height: 1.02;
-  --text-display-mega--letter-spacing: -1.8px;
-  --text-display-mega--font-weight: 400;
-  --text-display-xl: 68px;
-  --text-display-xl--line-height: 1.05;
-  --text-display-xl--letter-spacing: -1.3px;
-  --text-display-xl--font-weight: 400;
-  --text-display-lg: 54px;
-  --text-display-lg--line-height: 1.1;
-  --text-display-lg--letter-spacing: -0.9px;
-  --text-display-lg--font-weight: 400;
-  --text-display-md: 44px;
-  --text-display-md--line-height: 1.12;
-  --text-display-md--letter-spacing: -0.6px;
-  --text-display-md--font-weight: 400;
-  --text-display-sm: 33px;
-  --text-display-sm--line-height: 1.2;
+  /* Type scale: medium-weight headings, calm tracking. */
+  --text-display-hero: 60px;
+  --text-display-hero--line-height: 1.05;
+  --text-display-hero--letter-spacing: -1.6px;
+  --text-display-hero--font-weight: 600;
+  --text-display-mega: 52px;
+  --text-display-mega--line-height: 1.08;
+  --text-display-mega--letter-spacing: -1.3px;
+  --text-display-mega--font-weight: 600;
+  --text-display-xl: 42px;
+  --text-display-xl--line-height: 1.1;
+  --text-display-xl--letter-spacing: -1px;
+  --text-display-xl--font-weight: 600;
+  --text-display-lg: 34px;
+  --text-display-lg--line-height: 1.15;
+  --text-display-lg--letter-spacing: -0.7px;
+  --text-display-lg--font-weight: 600;
+  --text-display-md: 28px;
+  --text-display-md--line-height: 1.2;
+  --text-display-md--letter-spacing: -0.5px;
+  --text-display-md--font-weight: 600;
+  --text-display-sm: 22px;
+  --text-display-sm--line-height: 1.3;
   --text-display-sm--letter-spacing: -0.3px;
-  --text-display-sm--font-weight: 400;
-  --text-title-md: 22px;
-  --text-title-md--line-height: 1.35;
+  --text-display-sm--font-weight: 600;
+  --text-title-md: 19px;
+  --text-title-md--line-height: 1.4;
   --text-title-md--letter-spacing: -0.2px;
   --text-title-md--font-weight: 600;
-  --text-title-sm: 19px;
-  --text-title-sm--line-height: 1.42;
+  --text-title-sm: 17px;
+  --text-title-sm--line-height: 1.45;
   --text-title-sm--letter-spacing: -0.1px;
   --text-title-sm--font-weight: 600;
-  --text-body-md: 17px;
-  --text-body-md--line-height: 1.55;
+  --text-body-md: 16px;
+  --text-body-md--line-height: 1.6;
   --text-body-md--letter-spacing: 0;
-  --text-body-strong: 17px;
-  --text-body-strong--line-height: 1.55;
+  --text-body-strong: 16px;
+  --text-body-strong--line-height: 1.6;
   --text-body-strong--letter-spacing: 0;
   --text-body-strong--font-weight: 600;
-  --text-body-sm: 16px;
-  --text-body-sm--line-height: 1.5;
+  --text-body-sm: 15px;
+  --text-body-sm--line-height: 1.55;
   --text-body-sm--letter-spacing: 0;
-  --text-caption: 15px;
+  --text-caption: 14px;
   --text-caption--line-height: 1.5;
   --text-caption--letter-spacing: 0;
   --text-caption-uppercase: 12px;
   --text-caption-uppercase--line-height: 1.4;
-  --text-caption-uppercase--letter-spacing: 1.6px;
+  --text-caption-uppercase--letter-spacing: 0.4px;
   --text-caption-uppercase--font-weight: 600;
-  --text-button: 16px;
+  --text-button: 15px;
   --text-button--line-height: 1;
   --text-button--letter-spacing: 0;
   --text-button--font-weight: 600;
-  --text-nav-link: 16px;
+  --text-nav-link: 15px;
   --text-nav-link--line-height: 1.4;
   --text-nav-link--letter-spacing: 0;
   --text-nav-link--font-weight: 500;
 
-  /* Radii */
+  /* Radii: soft, never pill-heavy. */
   --radius-xs: 6px;
   --radius-sm: 8px;
-  --radius-md: 14px;
-  --radius-lg: 18px;
-  --radius-xl: 24px;
-  --radius-xxl: 32px;
-  /* The page sheet and the art panels (the reference's big rounded card and inner panel). */
-  --radius-sheet: 44px;
-  --radius-art: 36px;
+  --radius-md: 10px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-xxl: 20px;
+  --radius-sheet: 24px;
+  --radius-art: 20px;
   --radius-pill: 9999px;
 
-  /* Elevation: one hover tier and one overlay tier */
-  --shadow-hover: 0 18px 48px rgb(0 0 0 / 0.45), 0 0 0 1px rgb(255 92 112 / 0.16);
-  --shadow-overlay: 0 30px 90px rgb(0 0 0 / 0.6), inset 0 1px 0 rgb(255 255 255 / 0.07);
-  --shadow-sheet: 0 50px 140px rgb(0 0 0 / 0.65), inset 0 1px 0 rgb(255 255 255 / 0.07);
+  /* Elevation: barely there. */
+  --shadow-hover: 0 1px 2px rgb(17 17 17 / 0.04), 0 8px 24px rgb(17 17 17 / 0.06);
+  --shadow-overlay: 0 1px 3px rgb(17 17 17 / 0.06), 0 18px 48px rgb(17 17 17 / 0.14);
+  --shadow-sheet: none;
 
   /* Layout */
   --spacing-section: 96px;
   /* Wider pages (Max, 2026-11-20: "widen everything horizontally in every page"). */
-  --container-content: 1560px;
-  --container-reading: 960px;
-  --container-form: 560px;
+  --container-content: 1240px;
+  --container-reading: 760px;
+  --container-form: 480px;
   /* The planner is a three-rail tool and needs more than the 1200px content width. */
-  --container-tool: 1920px;
+  --container-tool: 1600px;
 
   /* Motion (DESIGN.md "Motion"; docs/DESIGN-IMPLEMENTATION.md "FEEDBACK UI"): 150ms for hover
      and press, 200-250ms for menus, dialogs, drawers and sheets, ease-out entrances. Each
      keyframe ends at `transform: none` so a finished animation leaves no containing block
      behind (the drag overlay is position: fixed). */
   --default-transition-duration: 150ms;
-  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
   --ease-in: cubic-bezier(0.4, 0, 1, 1);
   --animate-fade-in: fade-in 200ms var(--ease-out) both;
   --animate-dialog-in: dialog-in 200ms var(--ease-out) both;
@@ -334,50 +319,39 @@
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    /* Native controls, scrollbars and option lists render dark. */
-    color-scheme: dark;
-    /* Instrument Serif has one weight: never fake a bold or an italic. */
-    font-synthesis: none;
-    scrollbar-color: rgb(255 255 255 / 0.18) transparent;
+    font-feature-settings: "ss01" 0;
+    text-rendering: optimizeLegibility;
   }
 
-  /* The night: near black with a low maroon glow. The moving light is components/brand/Aurora.tsx,
-     fixed behind everything; this gradient is what shows before it paints. */
   body {
-    background-color: var(--color-night);
-    background-image:
-      radial-gradient(1200px 800px at 0% 0%, rgb(110 12 34 / 0.45), transparent 60%),
-      radial-gradient(1000px 800px at 100% 100%, rgb(90 8 26 / 0.4), transparent 60%);
-    background-attachment: fixed;
+    background: var(--color-app);
     color: var(--color-ink);
     font-size: var(--text-body-md);
     line-height: var(--text-body-md--line-height);
-    letter-spacing: var(--text-body-md--letter-spacing);
     font-weight: 400;
   }
 
-  /* Tailwind v4 borders default to currentColor; use the hairline token instead. */
   *,
   ::before,
   ::after {
     border-color: var(--color-hairline);
   }
 
-  /* Focus (all interactive elements): 2px red-light ring, 2px offset. */
+  /* Focus: a 2px ink ring, 2px offset. */
   :focus-visible {
-    outline: 2px solid var(--color-primary);
+    outline: 2px solid var(--color-ink);
     outline-offset: 2px;
   }
 
   input[type="checkbox"],
   input[type="radio"],
   input[type="range"] {
-    accent-color: var(--color-primary);
+    accent-color: var(--color-ink);
   }
 
   ::selection {
-    background: rgb(255 92 112 / 0.38);
-    color: #ffffff;
+    background: #e4e4e1;
+    color: var(--color-ink);
   }
 
   h1,
@@ -387,158 +361,40 @@
     color: var(--color-ink);
   }
 
-  /* Headlines are the display serif; their emphasised words are its italic, lit red. */
+  /* An emphasised word in a heading is the same face in grey: a quiet two-tone title. */
   :where(h1, h2, h3, .page-title, .home-title) em {
-    font-family: var(--font-display);
-    font-style: italic;
-    font-weight: 400;
-    letter-spacing: -0.01em;
-    color: var(--color-primary);
+    font-style: normal;
+    color: var(--color-muted);
   }
 
-  ::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
-  }
-  ::-webkit-scrollbar-thumb {
-    background: rgb(255 255 255 / 0.14);
-    border-radius: 9999px;
-    border: 2px solid transparent;
-    background-clip: padding-box;
-  }
-  ::-webkit-scrollbar-thumb:hover {
-    background-color: rgb(255 255 255 / 0.24);
-  }
-  ::-webkit-scrollbar-track {
-    background: transparent;
+  /* Numbers line up in tables, stats and units. */
+  .tabular-nums,
+  td,
+  th {
+    font-variant-numeric: tabular-nums;
   }
 }
 
 @layer components {
-  /* An atmospheric orb: one orb-* colour as a soft radial bloom, blurred. */
+  /* Orbs (soft colour blooms from an earlier design) are off. */
   .orb {
-    position: absolute;
-    pointer-events: none;
-    border-radius: 9999px;
-    background: radial-gradient(
-      circle at center,
-      color-mix(in srgb, var(--orb-color, var(--color-orb-lake)) 45%, transparent) 0%,
-      transparent 70%
-    );
-    filter: blur(70px);
+    display: none;
   }
 
-  /* Loading skeletons: a glass plate with a slow sheen passing over it. */
+  /* Loading skeletons: grey plates with a slow sheen. */
   .skeleton {
     position: relative;
     overflow: hidden;
-    background: rgb(255 255 255 / 0.05);
-    border-radius: var(--radius-md);
+    background: var(--color-surface-strong);
+    border-radius: var(--radius-lg);
   }
   .skeleton::after {
     content: "";
     position: absolute;
     inset: 0;
     transform: translateX(-100%);
-    background: linear-gradient(100deg, transparent 20%, rgb(255 255 255 / 0.06) 50%, transparent 80%);
-    animation: sheen 1.8s var(--ease-out) infinite;
-  }
-
-  /* Glass on the pane: a lighter tint with a lit top edge. */
-  .glass {
-    background: linear-gradient(180deg, rgb(255 255 255 / 0.075), rgb(255 255 255 / 0.03));
-    border: 1px solid rgb(255 255 255 / 0.1);
-    box-shadow:
-      inset 0 1px 0 rgb(255 255 255 / 0.09),
-      0 18px 50px rgb(0 0 0 / 0.35);
-    -webkit-backdrop-filter: blur(18px) saturate(140%);
-    backdrop-filter: blur(18px) saturate(140%);
-  }
-  /* Glass that floats over content (menus, dialogs, drawers): nearly opaque, heavily frosted. */
-  .glass-raised {
-    background:
-      linear-gradient(180deg, rgb(255 255 255 / 0.06), rgb(255 255 255 / 0.015)),
-      rgb(22 12 15 / 0.9);
-    border: 1px solid rgb(255 255 255 / 0.11);
-    box-shadow:
-      inset 0 1px 0 rgb(255 255 255 / 0.09),
-      0 30px 90px rgb(0 0 0 / 0.6);
-    -webkit-backdrop-filter: blur(28px) saturate(150%);
-    backdrop-filter: blur(28px) saturate(150%);
-  }
-
-  /* A red light that follows the pointer across a glass surface (AppShell sets --spot-x/--spot-y
-     on the hovered [data-spotlight] element). Decorative; nothing depends on it. */
-  [data-spotlight] {
-    position: relative;
-    isolation: isolate;
-  }
-  [data-spotlight]::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    border-radius: inherit;
-    pointer-events: none;
-    opacity: 0;
-    background: radial-gradient(
-      420px circle at var(--spot-x, 50%) var(--spot-y, 50%),
-      rgb(255 92 112 / 0.13),
-      transparent 60%
-    );
-    transition: opacity 300ms var(--ease-out);
-  }
-  [data-spotlight]:hover::before {
-    opacity: 1;
-  }
-
-  /* A rim of light instead of a border: a 1px ring, bright at the top-left edge where the light
-     catches it, faint along the sides, warming to red at the far corner. */
-  .glass-rim {
-    position: relative;
-  }
-  .glass-rim::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    padding: 1px;
-    border-radius: inherit;
-    pointer-events: none;
-    background: linear-gradient(
-      155deg,
-      rgb(255 255 255 / 0.24),
-      rgb(255 255 255 / 0.06) 32%,
-      rgb(255 255 255 / 0.035) 66%,
-      rgb(255 92 112 / 0.24)
-    );
-    -webkit-mask:
-      linear-gradient(#000 0 0) content-box,
-      linear-gradient(#000 0 0);
-    -webkit-mask-composite: xor;
-    mask:
-      linear-gradient(#000 0 0) content-box exclude,
-      linear-gradient(#000 0 0);
-  }
-  .glass-rim[data-spotlight]:hover::after,
-  .glass-rim:focus-within::after {
-    background: linear-gradient(
-      155deg,
-      rgb(255 255 255 / 0.34),
-      rgb(255 255 255 / 0.08) 32%,
-      rgb(255 92 112 / 0.12) 66%,
-      rgb(255 92 112 / 0.5)
-    );
-  }
-
-  /* Small mono labels: "PLANNER // AUTUMN 2026". */
-  .mono-label {
-    font-family: var(--font-mono);
-    font-size: 11.5px;
-    line-height: 1.4;
-    font-weight: 500;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
+    background: linear-gradient(100deg, transparent 20%, rgb(255 255 255 / 0.7) 50%, transparent 80%);
+    animation: sheen 1.6s ease-in-out infinite;
   }
 }
 
@@ -570,100 +426,6 @@
   opacity: 1;
 }
 
-/* The new pages' headlines (components/brand/TypeHero.tsx): emphasised words turn italic maroon. */
-.page-title em {
-  font-size: 1.06em;
-}
-
-/* The homepage title, "The Best of UChicago, within your reach." (HomePage.tsx): three lines of the
-   display serif that rise out of a blur one after another; the last is the italic in red light with
-   a hand-drawn swash under it that draws itself and glows. Reduced motion: everything is there. */
-.home-title {
-  display: flex;
-  flex-direction: column;
-  font-family: var(--font-display);
-  font-weight: 400;
-  font-size: clamp(64px, 7.4vw, 132px);
-  line-height: 0.9;
-  letter-spacing: -0.025em;
-}
-.home-title-line {
-  display: block;
-  animation: home-title-rise 1100ms var(--ease-out) both;
-}
-.home-title-lead {
-  font-size: 0.44em;
-  font-style: italic;
-  letter-spacing: -0.01em;
-  line-height: 1.1;
-  color: var(--color-on-night-muted);
-}
-.home-title-main {
-  animation-delay: 120ms;
-  text-shadow: 0 0 60px rgb(255 92 112 / 0.22);
-}
-.home-title-reach {
-  position: relative;
-  width: max-content;
-  max-width: 100%;
-  margin-top: 0.06em;
-  font-size: 0.7em;
-  line-height: 1.02;
-  animation-delay: 260ms;
-}
-.home-title-reach em {
-  font-style: italic;
-  color: var(--color-primary);
-  text-shadow: 0 0 40px rgb(255 92 112 / 0.45);
-}
-.home-title-swash {
-  position: absolute;
-  left: 0.05em;
-  right: 0;
-  bottom: -0.28em;
-  width: 100%;
-  height: 0.34em;
-  overflow: visible;
-  filter: drop-shadow(0 0 6px rgb(255 92 112 / 0.8));
-}
-.home-title-swash path {
-  fill: none;
-  stroke: var(--color-primary);
-  stroke-width: 2;
-  stroke-linecap: round;
-  vector-effect: non-scaling-stroke;
-  stroke-dasharray: 360;
-  stroke-dashoffset: 360;
-  animation: home-title-draw 1400ms 900ms cubic-bezier(0.6, 0, 0.2, 1) forwards;
-  opacity: 0.9;
-}
-@keyframes home-title-rise {
-  from {
-    opacity: 0;
-    transform: translateY(0.35em);
-    filter: blur(10px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-    filter: none;
-  }
-}
-@keyframes home-title-draw {
-  to {
-    stroke-dashoffset: 0;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .home-title-line {
-    animation: none;
-  }
-  .home-title-swash path {
-    animation: none;
-    stroke-dashoffset: 0;
-  }
-}
-
 /* GradientArt (components/brand/GradientArt.tsx): the folds of light drift slowly. */
 .gradient-art-drift-a {
   transform-box: fill-box;
@@ -690,87 +452,4 @@
   to {
     transform: translate(-22px, -10px) scale(1.06);
   }
-}
-
-/* The menu bar (TopNav): a slab of smoked glass floating over the page, its top edge lit. */
-.nav-glass {
-  background:
-    linear-gradient(180deg, rgb(255 255 255 / 0.07), rgb(255 255 255 / 0.02)),
-    rgb(14 7 9 / 0.62);
-  -webkit-backdrop-filter: blur(24px) saturate(160%);
-  backdrop-filter: blur(24px) saturate(160%);
-  border: 1px solid rgb(255 255 255 / 0.09);
-  box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 0.1),
-    0 18px 50px rgb(0 0 0 / 0.45);
-}
-
-/* The page: one pane of smoked glass over the night (AppShell). The light behind shows faintly
-   through it and fully around it. No backdrop blur: the light is already soft, and blurring a
-   whole page over a moving background would cost every frame. */
-.page-sheet {
-  background:
-    radial-gradient(1200px 500px at 50% -10%, rgb(255 255 255 / 0.035), transparent 70%),
-    linear-gradient(180deg, rgb(16 8 10 / 0.84), rgb(10 5 7 / 0.9));
-  border: 1px solid rgb(255 255 255 / 0.075);
-}
-/* The homepage is the light itself: no pane. */
-.page-sheet[data-bare="true"] {
-  background: transparent;
-  border-color: transparent;
-  box-shadow: none;
-}
-
-/* Each page rises out of the glass when it opens. */
-.page-enter {
-  animation: page-enter 520ms var(--ease-out) backwards;
-}
-/* Opacity and a short rise only: a blur over a whole page would cost every frame of the entrance. */
-@keyframes page-enter {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-/* Under the floating top bar: a progressive blur, strongest at the top, so content that scrolls
-   beneath the wordmark and the dock never competes with them. */
-.nav-veil::before {
-  content: "";
-  position: absolute;
-  inset: 0 0 -28px;
-  z-index: -1;
-  pointer-events: none;
-  background: linear-gradient(180deg, rgb(6 2 3 / 0.78), rgb(6 2 3 / 0.35) 60%, transparent);
-  -webkit-backdrop-filter: blur(16px);
-  backdrop-filter: blur(16px);
-  -webkit-mask-image: linear-gradient(180deg, #000 55%, transparent);
-  mask-image: linear-gradient(180deg, #000 55%, transparent);
-}
-
-/* The footer's horizon: the wordmark, huge, white at the top fading to the night. */
-.footer-horizon {
-  position: relative;
-  height: clamp(90px, 15vw, 230px);
-  overflow: hidden;
-  -webkit-mask-image: linear-gradient(180deg, #000 40%, transparent);
-  mask-image: linear-gradient(180deg, #000 40%, transparent);
-}
-.footer-horizon-word {
-  display: block;
-  font-family: var(--font-display);
-  font-size: clamp(120px, 22vw, 340px);
-  line-height: 0.9;
-  letter-spacing: -0.04em;
-  text-align: center;
-  white-space: nowrap;
-  background: linear-gradient(180deg, rgb(255 255 255 / 0.5), rgb(255 160 175 / 0.16) 45%, transparent 75%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  filter: drop-shadow(0 -10px 40px rgb(255 92 112 / 0.18));
 }

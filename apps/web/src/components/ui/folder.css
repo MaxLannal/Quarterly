@@ -1,9 +1,11 @@
-/* components/ui/folder.tsx: the glass folder and its files. */
+/* components/ui/folder.tsx: the folder and its files ("Simple light", docs/DESIGN.md). A white
+   folder with a hairline outline and a tab, files as white cards with a folded corner, and a light
+   grey pocket across the bottom. */
 .glass-folder {
-  --folder-edge-top: rgb(255 255 255 / 0.34);
-  --folder-edge-mid: rgb(255 255 255 / 0.12);
-  --folder-edge-low: rgb(255 255 255 / 0.05);
-  --folder-pocket-edge: rgb(255 255 255 / 0.22);
+  --folder-edge-top: #dcdcd9;
+  --folder-edge-mid: #e4e4e1;
+  --folder-edge-low: #e4e4e1;
+  --folder-pocket-edge: #e4e4e1;
   position: relative;
   isolation: isolate;
   display: flex;
@@ -11,71 +13,47 @@
   min-width: 0;
   min-height: 220px;
   padding-top: 42px;
-  border-radius: 22px;
-  transition: translate 400ms var(--ease-out), filter 400ms var(--ease-out);
+  border-radius: 16px;
+  transition: translate 200ms var(--ease-out);
 }
+/* The current or next quarter: an ink outline. */
+.glass-folder[data-tone="ember"] {
+  --folder-edge-top: #111111;
+  --folder-edge-mid: #111111;
+  --folder-edge-low: #111111;
+}
+/* A drop target under a dragged file: an ink outline and a grey wash. */
 .glass-folder[data-active="true"] {
-  translate: 0 -2px;
-  --folder-edge-top: rgb(255 140 155 / 0.95);
-  --folder-edge-mid: rgb(255 92 112 / 0.6);
-  --folder-edge-low: rgb(255 92 112 / 0.35);
-  --folder-pocket-edge: rgb(255 140 155 / 0.6);
+  --folder-edge-top: #111111;
+  --folder-edge-mid: #111111;
+  --folder-edge-low: #111111;
+  --folder-pocket-edge: #cfcfcc;
 }
-
-/* The red glow under an active folder. */
+.glass-folder[data-active="true"] .glass-folder-back {
+  background: #f5f5f3;
+}
 .glass-folder::after {
-  content: "";
-  position: absolute;
-  inset: 24px -6px -10px;
-  z-index: -2;
-  border-radius: 28px;
-  background: radial-gradient(60% 60% at 50% 60%, rgb(255 60 90 / 0.45), transparent 70%);
-  filter: blur(22px);
-  opacity: 0;
-  transition: opacity 400ms var(--ease-out);
-  pointer-events: none;
-}
-.glass-folder[data-active="true"]::after {
-  opacity: 1;
+  content: none;
 }
 
-/* The back panel. Before it is measured: a rounded box under the tab row. */
 .glass-folder-back {
   position: absolute;
   inset: 0;
   z-index: -1;
-  border-radius: 22px;
-  background:
-    radial-gradient(110% 70% at 0% 0%, rgb(255 92 112 / 0.1), transparent 55%),
-    linear-gradient(170deg, rgb(255 255 255 / 0.085), rgb(255 255 255 / 0.03) 60%, rgb(255 255 255 / 0.02));
+  border-radius: 16px;
+  background: #ffffff;
+  transition: background 150ms var(--ease-out);
 }
 .glass-folder:not([data-shaped]) .glass-folder-back {
   top: 42px;
   border: 1px solid var(--color-hairline);
 }
-.glass-folder[data-tone="ember"] .glass-folder-back {
-  background:
-    radial-gradient(90% 70% at 18% 8%, rgb(232 44 78 / 0.55), transparent 62%),
-    radial-gradient(80% 80% at 100% 100%, rgb(140 12 38 / 0.65), transparent 65%),
-    radial-gradient(60% 40% at 70% 30%, rgb(255 170 150 / 0.12), transparent 70%),
-    linear-gradient(165deg, #2c0a12, #12060a 70%);
-}
 .glass-folder[data-tone="garnet"] .glass-folder-back {
-  background:
-    radial-gradient(100% 80% at 10% 0%, rgb(160 18 48 / 0.5), transparent 60%),
-    linear-gradient(170deg, rgb(92 10 29 / 0.55), rgb(30 6 12 / 0.6));
+  background: #fafaf9;
 }
-/* Frosted: pale glass, its light gathered at the top (the tab and the shoulder) and fading to the
-   same dark as smoke lower down, so text on the files keeps its contrast. */
-.glass-folder[data-tone="frost"] {
-  --folder-edge-top: rgb(255 255 255 / 0.5);
-  --folder-edge-mid: rgb(255 255 255 / 0.16);
-}
+/* Summer: a faint cool tint. */
 .glass-folder[data-tone="frost"] .glass-folder-back {
-  background:
-    radial-gradient(90% 55% at 15% 0%, rgb(255 255 255 / 0.2), transparent 70%),
-    radial-gradient(70% 50% at 100% 100%, rgb(255 140 155 / 0.07), transparent 70%),
-    linear-gradient(175deg, rgb(255 255 255 / 0.13), rgb(255 255 255 / 0.04) 45%, rgb(255 255 255 / 0.025));
+  background: #f6f8fa;
 }
 .glass-folder-edge {
   position: absolute;
@@ -85,7 +63,6 @@
   overflow: visible;
 }
 
-/* The tab: the folder's name, set on the raised part of the back panel. */
 .glass-folder-tab {
   position: absolute;
   top: 0;
@@ -97,7 +74,7 @@
   height: 42px;
   width: var(--tab-w, 50%);
   min-width: 0;
-  padding: 0 14px 0 18px;
+  padding: 0 14px 0 16px;
 }
 /* Beside the tab, in the open space above the body's top edge (not over the first file's fold). */
 .glass-folder-aside {
@@ -119,10 +96,10 @@
   flex-direction: column;
   gap: 8px;
   min-width: 0;
-  padding: 14px 12px 64px;
+  padding: 12px 12px 64px;
 }
 
-/* The front pocket: frosted smoked glass across the bottom; files tuck 8px behind its high side. */
+/* The pocket: light grey across the bottom, its top edge stepping down from left to right. */
 .glass-folder-pocket {
   position: absolute;
   left: 0;
@@ -135,18 +112,11 @@
 .glass-folder-pocket-glass {
   position: absolute;
   inset: 0;
-  border-radius: 18px 18px 22px 22px;
-  background:
-    linear-gradient(180deg, rgb(255 255 255 / 0.1), rgb(255 255 255 / 0.03) 40%, rgb(0 0 0 / 0.1)),
-    rgb(26 12 16 / 0.62);
-  -webkit-backdrop-filter: blur(12px) saturate(150%);
-  backdrop-filter: blur(12px) saturate(150%);
-  box-shadow: 0 -10px 24px rgb(0 0 0 / 0.25);
+  border-radius: 16px;
+  background: #f6f6f4;
 }
-.glass-folder[data-tone="ember"] .glass-folder-pocket-glass {
-  background:
-    linear-gradient(180deg, rgb(255 255 255 / 0.1), rgb(255 255 255 / 0.02) 45%, rgb(0 0 0 / 0.15)),
-    rgb(24 6 10 / 0.66);
+.glass-folder[data-tone="frost"] .glass-folder-pocket-glass {
+  background: #eef2f6;
 }
 .glass-folder-pocket-edge {
   position: absolute;
@@ -160,21 +130,21 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 0 12px 0 18px;
+  padding: 0 12px 0 16px;
   pointer-events: auto;
 }
 
-/* A file: light glass with a folded corner. Painted by ::before (the sheet) and ::after (the fold). */
+/* A file: a white card with a hairline and a folded top-right corner (pseudo-elements, so the
+   element keeps a normal box for focus rings and dragging). */
 .glass-file {
-  --file-fold: 16px;
+  --file-fold: 14px;
   position: relative;
   isolation: isolate;
   min-width: 0;
-  border-radius: 12px;
+  border-radius: 10px;
   transition:
-    translate 300ms var(--ease-out),
-    filter 300ms var(--ease-out),
-    box-shadow 300ms var(--ease-out);
+    translate 200ms var(--ease-out),
+    box-shadow 200ms var(--ease-out);
 }
 .glass-file::before {
   content: "";
@@ -182,14 +152,10 @@
   inset: 0;
   z-index: -1;
   border-radius: inherit;
-  background:
-    linear-gradient(180deg, rgb(255 255 255 / 0.13), rgb(255 255 255 / 0.065)),
-    rgb(30 18 21 / 0.55);
-  box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 0.16),
-    inset 0 0 0 1px rgb(255 255 255 / 0.08);
+  background: #ffffff;
+  box-shadow: inset 0 0 0 1px #e4e4e1;
   clip-path: polygon(0 0, calc(100% - var(--file-fold)) 0, 100% var(--file-fold), 100% 100%, 0 100%);
-  transition: background 300ms var(--ease-out);
+  transition: box-shadow 150ms var(--ease-out);
 }
 .glass-file::after {
   content: "";
@@ -199,30 +165,20 @@
   width: var(--file-fold);
   height: var(--file-fold);
   z-index: -1;
-  border-bottom-left-radius: 4px;
-  background: linear-gradient(225deg, transparent 50%, rgb(255 255 255 / 0.32) 50%, rgb(255 255 255 / 0.12));
-  box-shadow: -2px 2px 4px rgb(0 0 0 / 0.25);
+  border-bottom-left-radius: 3px;
+  background: linear-gradient(225deg, transparent 50%, #e4e4e1 50%);
   pointer-events: none;
 }
-/* A file lifts a little on hover, as if pulled from its folder. drop-shadow follows the folded
-   silhouette (a box-shadow would show the square corner the fold cuts away). */
-.glass-file:hover {
-  translate: 0 -3px;
-  filter: drop-shadow(0 12px 16px rgb(0 0 0 / 0.42));
-}
 .glass-file:hover::before {
-  background:
-    linear-gradient(180deg, rgb(255 255 255 / 0.17), rgb(255 255 255 / 0.085)),
-    rgb(34 20 24 / 0.6);
+  box-shadow: inset 0 0 0 1px #cfcfcc;
+}
+.glass-file:hover {
+  box-shadow: 0 6px 18px rgb(17 17 17 / 0.06);
 }
 
 @media (prefers-reduced-motion: reduce) {
   .glass-folder,
   .glass-file {
     transition: none;
-  }
-  .glass-folder[data-active="true"],
-  .glass-file:hover {
-    translate: none;
   }
 }

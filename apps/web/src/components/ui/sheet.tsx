@@ -35,7 +35,7 @@ export function TopSheet({ open, onClose, labelledBy, describedBy, initialFocus,
       onClick={(e) => e.target === e.currentTarget && onClose()}
       className={cn(
         "fixed inset-0 z-50 flex justify-center transition-colors duration-200 sm:p-4 sm:pt-0",
-        closing ? "bg-transparent" : "animate-fade-in bg-scrim backdrop-blur-[6px]",
+        closing ? "bg-transparent" : "animate-fade-in bg-scrim",
       )}
     >
       <div
@@ -47,7 +47,7 @@ export function TopSheet({ open, onClose, labelledBy, describedBy, initialFocus,
         tabIndex={-1}
         data-testid="top-sheet"
         className={cn(
-          "glass-raised relative flex h-full w-full max-w-3xl flex-col overflow-hidden text-ink sm:h-[min(88vh,820px)] sm:rounded-b-xxl sm:border-t-0",
+          "relative flex h-full w-full max-w-3xl flex-col overflow-hidden bg-surface-card text-ink shadow-overlay sm:h-[min(88vh,820px)] sm:rounded-b-xxl sm:border sm:border-t-0 sm:border-hairline",
           closing ? "animate-sheet-out" : "animate-sheet-in",
           className,
         )}

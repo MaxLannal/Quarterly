@@ -23,7 +23,7 @@ interface GoalsTabProps {
 function GoalRow({ goal, issues, onRemove }: { goal: Goal; issues: Issue[]; onRemove: () => void }) {
   const mine = issues.filter((i) => i.goal_id === goal.id);
   return (
-    <li className="flex animate-rise items-start justify-between gap-2 rounded-[18px] bg-white/[0.04] py-1 pl-4 pr-1 text-body-sm shadow-[inset_0_1px_0_rgb(255_255_255/0.06)]">
+    <li className="flex animate-rise items-start justify-between gap-2 rounded-[18px] bg-canvas-soft py-1 pl-4 pr-1 text-body-sm ">
       <div className="min-w-0 py-2">
         <div className="text-ink">{goalLabel(goal)}</div>
         {goal.term && <div className="text-caption text-muted">{termLabel(goal.term)}</div>}

@@ -214,7 +214,7 @@ export function Planner({ initial, autoGenerate = false, onSetUp }: PlannerProps
     const kind = code ? (tags.get(code)?.kind ?? "none") : "none";
     return (
       <div className={cn("glass-file planner-held flex cursor-grabbing flex-col gap-0.5 border-l-[3px] py-2.5 pl-4 pr-6", STRIP_CLASSES[kind])}>
-        <span className="font-mono text-[13px] font-semibold tracking-[0.06em] tabular-nums text-ink">{code ?? nameOf(d.id)}</span>
+        <span className="font-mono text-[13px] font-semibold tabular-nums text-ink">{code ?? nameOf(d.id)}</span>
         {title && <span className="max-w-64 truncate text-caption text-body">{title}</span>}
       </div>
     );
@@ -357,9 +357,9 @@ export function Planner({ initial, autoGenerate = false, onSetUp }: PlannerProps
           }
         />
 
-        {/* Toolbar: one floating glass bar, like a tool palette. The panels open on demand, so the
+        {/* Toolbar: one bar of segments on a grey track. The panels open on demand, so the
             grid keeps the page (FEEDBACK F4). */}
-        <div className="planner-toolbar glass-rim">
+        <div className="planner-toolbar border border-hairline">
           {/* D11 adapt: on a phone the panel buttons are one row that scrolls sideways; from 640px
               they wrap. */}
           <div className="flex min-w-0 items-center gap-1 overflow-x-auto [scrollbar-width:none] sm:flex-wrap sm:overflow-visible [&>*]:shrink-0">

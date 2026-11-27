@@ -58,7 +58,7 @@ export function CourseCard({ item }: { item: PlanItem }) {
         setMenuOpen(true);
       }}
       className={cn(
-        // A file in its quarter's folder (docs/DESIGN.md "Dark glass": `.glass-file`, planner.css).
+        // A file in its quarter's folder (docs/DESIGN.md "Dark border border-hairline bg-canvas": `.glass-file`, planner.css).
         // The coloured left edge is the requirement strip (FEEDBACK "Color strip", 2026-11-16).
         // The card settles into place when it mounts: on load, and after a drop into a new quarter.
         "glass-file planner-file relative flex animate-settle flex-col border-l-[3px] text-caption text-ink",
@@ -88,8 +88,8 @@ export function CourseCard({ item }: { item: PlanItem }) {
           {item.locked ? <LockIcon size={14} /> : <GripIcon size={14} />}
         </button>
         <div className="flex min-w-0 flex-1 flex-wrap items-baseline gap-x-2 py-1">
-          <span className="font-mono text-[13px] font-semibold tracking-[0.06em] tabular-nums text-ink">{isSlot ? "Requirement slot" : item.course}</span>
-          {units != null && <span className="font-mono text-[12px] tracking-[0.04em] tabular-nums text-muted">{units} units</span>}
+          <span className="font-mono text-[13px] font-semibold tabular-nums text-ink">{isSlot ? "Requirement slot" : item.course}</span>
+          {units != null && <span className="font-mono text-[12px] tabular-nums text-muted">{units} units</span>}
           {completed && (
             <Badge tone="success" casing="normal" className="px-2 py-0">
               Completed
@@ -116,7 +116,7 @@ export function CourseCard({ item }: { item: PlanItem }) {
           </div>
         )}
         {mine.length > 0 && (
-          <ul className="mt-2 space-y-1 border-t border-white/[0.07] pt-2">
+          <ul className="mt-2 space-y-1 border-t border-hairline pt-2">
             {mine.map((i, n) => {
               // Short form on the card; the full message is in the plan check (FEEDBACK 2026-11-16).
               const short = summarizeIssue(i);

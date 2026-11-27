@@ -722,6 +722,8 @@ combined. Take inspiration from this and apply to every page and every detail").
 
 ## Dark glass (Max, 2026-11-27; branch `claude/quarterly-ui-redesign-c953e9`)
 
+> **Withdrawn the same day.** Max found it "uglier" and still too like the old layouts, and asked for "Simple light" (next section). The dark version is kept as the local tag `dark-glass-v1`.
+
 Max asked for this with three reference pictures: floating glass tool panels over a dark picture, glass folders on a swirl of dark red light, and a dark glass sign-in card with a ring of white light behind it. His words: "Reconstruct everything on Quarterly on this UI style", "Have the Harper Library at the homepage in this UI as well. Have each quarter in the planner a folder like as shown, and classes as files in it. Be magical, smooth, dark, red, glassy. Mature designs", and "white light goes together intersection with maroon dark red light, flowing in the background". Richard has not seen it yet. Where it conflicts with the sections above (including "Maroon and night"), this section describes what is built.
 
 - **The night and its light** (`components/brand/Aurora.tsx`). Every page is on near-black (`night` #060203).
@@ -805,3 +807,41 @@ Max asked for this with three reference pictures: floating glass tool panels ove
     - Each year is a shelf of folders. The current or next quarter is `ember`, summer is `frost`, and past quarters are dimmed.
     - The drag overlay is a file held up, tilted 2.5°. My plans is a grid of glass folders.
   - **One trap:** a finite CSS animation inside a closed `<details>` never ends, and `settle()` in `e2e/helpers.ts` waits for every animation. Keep entrance animations out of collapsed `<details>`.
+
+## Simple light (Max, 2026-11-27, second request; branch `claude/quarterly-ui-redesign-c953e9`)
+
+Max sent a reference dashboard: a light grey sidebar with a black current item, a white panel with thin-bordered white cards, one smooth sans, and almost no colour. His words: "Just make all ui ux simple as this. Use smooth, not-AI-ish fonts. Don't make it so dark." This section replaces "Dark glass" and, where they conflict, "Maroon and night". Richard has not seen it yet (OPEN_QUESTIONS DG-1 to DG-3).
+
+- **The shell** (`AppShell.tsx`, `components/layout/TopNav.tsx`):
+  - The **sidebar** sits on a light grey frame (`app` #f3f3f1). It holds the wordmark (a black tile with a Q, then "Quarterly") and the four main tabs (Dashboard, Planner, Catalog, Forum).
+  - The current main tab is a **black pill** with white text. Every item has a line icon.
+  - A **"Tools"** list follows: My plans, Programs, Instructors, Guidelines. Its current item is a grey plate, so only one black pill ever shows.
+  - A **black card** at the foot leads to the planner.
+  - Each page is in one **white panel** beside the sidebar, with 24px corners and a hairline.
+  - The panel's **top bar** holds the course search (hidden on `/courses`, as before) and the account or "Log in". A slim **footer** inside the panel holds the notice and three links.
+  - **Below 1024px** the sidebar slides in from the left behind a Menu button. When closed it is invisible, so it is out of the tab order.
+- **Colour.**
+  - Near-black `ink` #111 is the one accent: the current tab, the main button, links, progress, focus.
+  - Text greys: `body` #4f4f4f, `muted` #6e6e6e (4.95:1).
+  - Surfaces are white; `surface-strong` #f1f1ef is used for tracks, chips and the search field. Hairlines are #e9e9e7.
+  - Status colours appear only where they mean something: error, warning, success, info.
+  - Maroon remains only as a token (`maroon`), for a later brand mark.
+- **Type.** One family: **Figtree**, a smooth geometric sans (bundled from npm, `@fontsource-variable/figtree`).
+  - Headings are 600 with calm tracking.
+  - An `<em>` in a heading is the same face in grey, for a quiet two-tone title such as "The Best of UChicago, *within your reach.*".
+  - There is no serif, no mono and no italic accent. The names `font-display`, `font-serif` and `font-mono` are kept, but all map to Figtree.
+- **Controls.**
+  - Buttons are 44px soft rectangles (12px corners): black for the main action, white with a hairline for the others.
+  - Inputs are white, 44px, with a hairline. On focus the line turns ink with a soft grey halo.
+  - Tabs, the Day/Night switch and the planner tool bar are grey tracks; the current segment is white.
+  - Cards are white with a hairline and 16px corners. Only cards that are links lift on hover, with a faint shadow.
+  - There are no glows, glass, orbs or art panels. `TypeHero` and the sign-in page lost their art panels.
+- **Pages.**
+  - **The homepage** has the two-tone title, the black and white buttons, and Harper Memorial Library's reading room redrawn in sunlit stone in a white card. The card's caption row holds the Day/Night switch; night turns the room dusk blue with the lamps lit. Below it are three cards (Planner, Catalog, Forum), each with an outlined icon tile, like the reference's stat cards.
+  - **Sign-in and sign-up** are one centred white card under the black Q tile.
+  - **The planner** keeps each quarter as a folder and each class as a file:
+    - White folders with a hairline outline and a tab. The current or next quarter is outlined in ink.
+    - Files are white cards with a folded corner. The pocket is light grey and holds a black "+" button.
+    - The headline is the plan name with a small status pill and a line of facts. The tool bar is a grey track of segments.
+  - **The full-screen guide** on the dashboard is light, not black.
+  - **The rest** keeps its earlier layouts with the new type, colour and controls.

@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 
 /**
  * Day or night on the homepage (Max, 2026-11-20). In Harper's reading room (HarperHall.tsx), day
- * is sunlight falling through the windows in shafts with dust in them; night is deep violet glass,
+ * is sunlight falling through the windows in shafts with dust in them; night is dusk blue glass,
  * a few stars in the great window, and the room lit by its lamps.
  */
 
@@ -31,7 +31,6 @@ export function useScene(): [Scene, (s: Scene) => void] {
 
 /** The Day / Night switch: a small segmented pill at the top right of the hero. */
 export function SceneSwitch({ scene, onChange }: { scene: Scene; onChange: (s: Scene) => void }) {
-  const night = scene === "night";
   const ref = useRef<HTMLDivElement>(null);
   // The chapel behind listens for the pointer on the whole hero: over the switch it names no course.
   useEffect(() => {
@@ -50,13 +49,8 @@ export function SceneSwitch({ scene, onChange }: { scene: Scene; onChange: (s: S
       ref={ref}
       role="radiogroup"
       aria-label="Homepage scene"
-      className={cn(
-        "flex items-center gap-1 rounded-pill border p-1 backdrop-blur-md transition-colors duration-700",
-        // Smoked glass either way; by night the edge warms to lamplight.
-        night
-          ? "border-[rgb(255_200_140/0.3)] bg-[rgb(20_12_24/0.6)] shadow-[0_18px_50px_rgb(0_0_0/0.45)]"
-          : "border-hairline-strong bg-white/[0.05] shadow-[0_18px_50px_rgb(0_0_0/0.45)]",
-      )}
+      // A grey track with the current scene as a white segment (docs/DESIGN.md "Simple light").
+      className="flex items-center gap-1 rounded-xl bg-surface-strong p-1"
     >
       {(["day", "night"] as const).map((s) => {
         const on = scene === s;
@@ -68,12 +62,8 @@ export function SceneSwitch({ scene, onChange }: { scene: Scene; onChange: (s: S
             aria-checked={on}
             onClick={() => onChange(s)}
             className={cn(
-              "inline-flex min-h-11 items-center gap-2 rounded-pill px-4 text-button transition-colors duration-500",
-              on
-                ? night
-                  ? "bg-[#ffc27a] text-[#1a0d08] shadow-[0_0_24px_rgb(255_180_100/0.45)]"
-                  : "bg-ink text-canvas shadow-[0_0_24px_rgb(255_92_112/0.35)]"
-                : "text-muted hover:bg-white/[0.07] hover:text-ink",
+              "inline-flex min-h-11 items-center gap-2 rounded-lg px-3.5 text-caption font-medium transition-[color,background-color,box-shadow] duration-150",
+              on ? "bg-canvas text-ink shadow-[0_1px_2px_rgb(17_17_17/0.08)]" : "text-muted hover:text-ink",
             )}
           >
             {s === "day" ? <SunGlyph /> : <MoonGlyph />}

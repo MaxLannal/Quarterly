@@ -40,7 +40,7 @@ function termGoals(goals: Goal[], term: string, entryTerm: string): Goal[] {
   });
 }
 
-/** The folder's tone (docs/DESIGN.md "Dark glass"): the quarter in hand glows ember, Summer is
+/** The folder's tone (docs/DESIGN.md "Dark border border-hairline bg-canvas"): the quarter in hand glows ember, Summer is
  * frosted glass, the rest are smoke (past quarters a little dimmer, planner.css). */
 function toneFor(term: string, stage: QuarterStage): FolderTone {
   if (stage === "now" || stage === "next") return "ember";
@@ -80,7 +80,7 @@ function AddCourseDialog({ term, open, onClose }: { term: string; open: boolean;
 }
 
 /**
- * One quarter: a glass folder whose files are the quarter's classes (Max, 2026-11-27). The tab
+ * One quarter: a folder whose files are the quarter's classes (Max, 2026-11-27). The tab
  * names the quarter; the pocket carries its totals, its issues and the "+" that adds a course.
  * The whole folder is the drop target, and lights red under a dragged file.
  */
@@ -101,7 +101,7 @@ function QuarterFolder({ term, items, stage }: { term: string; items: PlanItem[]
       <GlassFolder
         aside={
           stageLabel ? (
-            <span className="planner-stage mono-label" data-stage={stage}>
+            <span className="planner-stage text-[12px] font-semibold" data-stage={stage}>
               {stageLabel}
             </span>
           ) : undefined
@@ -112,7 +112,7 @@ function QuarterFolder({ term, items, stage }: { term: string; items: PlanItem[]
         className="h-full"
         bodyClassName="planner-folder-body"
         tab={
-          <h4 id={headingId} className="planner-tab truncate font-display text-[22px] leading-none text-ink">
+          <h4 id={headingId} className="planner-tab truncate text-[17px] font-semibold leading-none text-ink">
             {label}
           </h4>
         }
@@ -120,7 +120,7 @@ function QuarterFolder({ term, items, stage }: { term: string; items: PlanItem[]
           <>
             {items.length > 0 ? (
               <div className="flex min-w-0 flex-1 flex-col justify-center gap-0.5" data-testid={`footer-${term}`}>
-                <p className="mono-label truncate text-ink">
+                <p className="text-[12px] font-semibold truncate text-ink">
                   {m.units}
                   {m.unitsPartial ? "+" : ""} units
                   <span aria-hidden="true" className="px-1.5 text-muted">
@@ -241,9 +241,9 @@ export function PlanGrid({ showSummer, onToggleSummer, onGraduation, onAddYear }
             <div className="mb-4 flex flex-wrap items-center gap-x-5 gap-y-2">
               <h3 id={`year-${y}`} className="flex min-w-0 flex-wrap items-baseline gap-x-3 font-display text-display-sm">
                 {classYearLabel(y, level)}{" "}
-                <span className="mono-label tabular-nums text-muted">{academicYearLabel(start)}</span>
+                <span className="text-[12px] font-semibold tabular-nums text-muted">{academicYearLabel(start)}</span>
                 {!showSummer && summerItems.length > 0 && (
-                  <span className="mono-label text-muted">
+                  <span className="text-[12px] font-semibold text-muted">
                     {" "}
                     · {termLabel(summer)}: {summerItems.length} course
                     {summerItems.length === 1 ? "" : "s"} (hidden)

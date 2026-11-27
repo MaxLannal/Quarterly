@@ -74,10 +74,10 @@ export function CourseSearch({
           {label}
         </span>
         {card ? (
-          <div className="flex min-w-0 items-start justify-between gap-3 rounded-[20px] bg-[linear-gradient(100deg,rgb(255_92_112/0.16),rgb(255_255_255/0.03))] px-4 py-3 shadow-[inset_0_0_0_1px_rgb(255_120_140/0.3)]">
+          <div className="flex min-w-0 items-start justify-between gap-3 rounded-lg border border-primary/25 bg-primary-wash/60 px-4 py-3">
             <div className="min-w-0">
               <p className="text-caption font-semibold tabular-nums text-primary">{value.code}</p>
-              <p className="font-display text-[24px] leading-tight text-ink">{value.title}</p>
+              <p className="font-display text-title-md font-bold text-ink tracking-[-0.02em]">{value.title}</p>
               <Link to={coursePath(value.code)} target="_blank" className="inline-flex min-h-11 items-center text-caption text-primary underline underline-offset-2">
                 Open the course page
               </Link>
@@ -145,7 +145,7 @@ export function CourseSearch({
           id={listId}
           role="listbox"
           aria-label="Courses"
-          className="glass-raised absolute inset-x-0 top-full z-30 mt-2 max-h-80 overflow-y-auto rounded-[20px] py-1 shadow-overlay"
+          className="absolute inset-x-0 top-full z-30 mt-1 max-h-80 overflow-y-auto rounded-lg border border-hairline bg-surface-card py-1 shadow-overlay"
         >
           {options.map((c, i) => (
             <li

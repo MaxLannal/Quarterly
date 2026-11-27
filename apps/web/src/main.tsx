@@ -2,17 +2,9 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-// Fonts are bundled from npm (no CDN, nothing leaves the site's origin): Inter for body and UI,
-// Instrument Serif for headlines and the wordmark, JetBrains Mono for small labels, Newsreader for
-// voices and quotes (docs/DESIGN.md "Dark glass").
-import "@fontsource-variable/inter";
-import "@fontsource/instrument-serif/400.css";
-import "@fontsource/instrument-serif/400-italic.css";
-import "@fontsource-variable/jetbrains-mono";
-import "@fontsource/newsreader/300.css";
-import "@fontsource/newsreader/400.css";
-import "@fontsource/newsreader/500.css";
-import "@fontsource/newsreader/400-italic.css";
+// One font, bundled from npm (no CDN; nothing leaves the site's origin): Figtree, a smooth geometric
+// sans, for every heading, label and paragraph (docs/DESIGN.md "Simple light", Max 2026-11-27).
+import "@fontsource-variable/figtree";
 import "./index.css";
 import { routes } from "./routes";
 

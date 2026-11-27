@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { ArrowIcon } from "@/components/ui/icons";
 import { relativeDay } from "@/features/forum/format";
 import type { CommentItem } from "../api";
-import { CourseChip } from "./parts";
+import { CourseChip, Meta } from "./parts";
 
 const VOICE: Record<CommentItem["voice"], string> = {
   reply: "Answer in the Forum",
@@ -12,39 +12,32 @@ const VOICE: Record<CommentItem["voice"], string> = {
   discussion: "Discussion",
 };
 
-/**
- * `rating`: the course's student rating line (logged in only), from the page.
- * Dark glass: a quiet pane with a glowing serif quote mark, the words in Newsreader italic, the
- * voice in mono beneath a hairline.
- */
+/** `rating`: the course's student rating line (logged in only), from the page. */
 export function CommentCard({ item, rating }: { item: CommentItem; rating?: ReactNode }) {
   const id = useId();
   return (
-    <article aria-labelledby={id} data-spotlight="" className="qg-tile qg-tile-link group flex h-full flex-col p-7">
-      <span aria-hidden="true" className="feed-quote-mark pointer-events-none -mb-12 -ml-1 block h-[72px] select-none">
+    <article aria-labelledby={id} className="relative h-full overflow-hidden rounded-xl border border-hairline bg-surface-card p-6">
+      <span aria-hidden="true" className="pointer-events-none absolute left-4 top-2 h-[84px] select-none overflow-hidden font-serif text-[132px] leading-[1] text-primary/25">
         &ldquo;
       </span>
       <h3 id={id} className="sr-only">
         A student on {item.course.code} {item.course.title}
       </h3>
-      <blockquote className="relative font-serif text-[22px] font-light italic leading-[1.4] text-ink">
+      <blockquote className="relative mt-12 font-serif text-[21px] font-light italic leading-[1.35] text-ink">
         <p>{item.snippet}</p>
       </blockquote>
-      <p className="mt-5 flex flex-wrap items-center gap-x-2 gap-y-1 border-t border-hairline pt-4 font-mono text-[11px] uppercase tracking-[0.16em] text-muted">
-        <span className="normal-case tracking-normal font-sans text-caption font-medium text-body-strong">{item.handle}</span>
-        <span aria-hidden="true">//</span>
+      <Meta>
+        <span className="font-medium text-body-strong">{item.handle}</span>
+        <span aria-hidden="true">·</span>
         <span>{VOICE[item.voice]}</span>
-        <span aria-hidden="true">//</span>
+        <span aria-hidden="true">·</span>
         <span>{relativeDay(item.day)}</span>
-      </p>
-      <div className="mt-4 flex flex-1 flex-col gap-3">
+      </Meta>
+      <div className="mt-4 flex flex-col gap-3">
         <CourseChip code={item.course.code} title={item.course.title} />
         {rating}
-        <Link to={item.href} className="mt-auto inline-flex min-h-11 items-center gap-2 self-start text-button text-ink transition-colors hover:text-primary-hover">
-          Join the discussion
-          <span aria-hidden="true" className="inline-flex size-8 items-center justify-center rounded-pill border border-hairline-strong transition-[translate,border-color] duration-300 group-hover:translate-x-1 group-hover:border-primary/60">
-            <ArrowIcon size={14} />
-          </span>
+        <Link to={item.href} className="inline-flex min-h-11 items-center gap-1.5 self-start text-button text-primary hover:text-primary-hover">
+          Join the discussion <ArrowIcon size={14} />
         </Link>
       </div>
     </article>

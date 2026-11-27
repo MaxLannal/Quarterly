@@ -50,10 +50,10 @@ export default function ComparePlansPage() {
   const pa = plans.find((p) => p.localId === a);
   const pb = plans.find((p) => p.localId === b);
   const d = pa && pb ? diffPlans(pa.state, pb.state) : null;
-  // Each side of the difference is a glass panel; its courses are small files.
+  // Each side of the difference is a panel; its courses are small files.
   const column = (headingId: string, title: string, rows: ReactNode[], accent: string) => (
     <Card as="section" aria-labelledby={headingId} variant="compact" className="rounded-[24px] p-5 sm:p-6">
-      <h2 id={headingId} className="mono-label flex items-center gap-2 text-muted">
+      <h2 id={headingId} className="text-[12px] font-semibold flex items-center gap-2 text-muted">
         <span aria-hidden="true" className={`inline-block size-1.5 shrink-0 rounded-pill ${accent}`} />
         <span className="min-w-0 truncate">{title}</span>
       </h2>
@@ -71,7 +71,7 @@ export default function ComparePlansPage() {
 
   return (
     <PageContainer className="max-w-6xl">
-      <PageHeader eyebrow="Plans // Side by side" title="Compare plans" />
+      <PageHeader title="Compare plans" />
       {plans.length < 2 ? (
         <EmptyState>
           You need two plans to compare.{" "}
@@ -115,37 +115,37 @@ export default function ComparePlansPage() {
                 `Only in ${pa?.name ?? "the first plan"}`,
                 d.onlyA.map((x, i) => (
                   <li key={i} className={row}>
-                    <span className="font-mono text-[13px] font-semibold tracking-[0.04em]">{x.course}</span>
+                    <span className="font-mono text-[13px] font-semibold">{x.course}</span>
                     <span className="text-caption text-muted">· {termLabel(x.term)}</span>
                   </li>
                 )),
-                "bg-primary shadow-[0_0_8px_var(--color-primary)]",
+                "bg-primary ",
               )}
               {column(
                 "only-b",
                 `Only in ${pb?.name ?? "the second plan"}`,
                 d.onlyB.map((x, i) => (
                   <li key={i} className={row}>
-                    <span className="font-mono text-[13px] font-semibold tracking-[0.04em]">{x.course}</span>
+                    <span className="font-mono text-[13px] font-semibold">{x.course}</span>
                     <span className="text-caption text-muted">· {termLabel(x.term)}</span>
                   </li>
                 )),
-                "bg-data-1 shadow-[0_0_8px_var(--color-data-1)]",
+                "bg-data-1 ",
               )}
               {column(
                 "moved",
                 "Different quarter",
                 d.moved.map((x, i) => (
                   <li key={i} className={row}>
-                    <span className="font-mono text-[13px] font-semibold tracking-[0.04em]">{x.course}:</span>
+                    <span className="font-mono text-[13px] font-semibold">{x.course}:</span>
                     <span className="text-caption text-muted">
                       {termLabel(x.a)} → {termLabel(x.b)}
                     </span>
                   </li>
                 )),
-                "bg-warning shadow-[0_0_8px_var(--color-warning)]",
+                "bg-warning ",
               )}
-              <p className="mono-label text-muted md:col-span-3">
+              <p className="text-[12px] font-semibold text-muted md:col-span-3">
                 {d.same} course{d.same === 1 ? " is" : "s are"} the same in both.
               </p>
             </div>

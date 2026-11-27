@@ -70,8 +70,8 @@ function IssuesList({ verify, selected, onSelect }: IssuesTabProps) {
                 key={`${issue.code}-${i}`}
                 className={cn(
                   // PL-5 (D11): no coloured strip; the icon and level label carry the severity.
-                  "animate-rise rounded-[18px] bg-white/[0.04] text-body-sm text-ink shadow-[inset_0_1px_0_rgb(255_255_255/0.06)] transition-[background-color,box-shadow] duration-300",
-                  isSel && "bg-primary-wash shadow-[inset_0_0_0_1px_rgb(255_120_140/0.55),0_0_24px_rgb(255_60_90/0.18)]",
+                  "animate-rise rounded-[18px] bg-canvas-soft text-body-sm text-ink  transition-[background-color,box-shadow] duration-300",
+                  isSel && "bg-primary-wash ",
                 )}
                 style={{ animationDelay: `${Math.min(i, 8) * 30}ms` }}
               >
@@ -79,11 +79,11 @@ function IssuesList({ verify, selected, onSelect }: IssuesTabProps) {
                   type="button"
                   aria-pressed={isSel}
                   onClick={() => onSelect(isSel ? null : issue)}
-                  className="w-full cursor-pointer rounded-[18px] px-4 pb-2 pt-3 text-left transition-colors duration-300 hover:bg-white/[0.035] focus-visible:outline-offset-0"
+                  className="w-full cursor-pointer rounded-[18px] px-4 pb-2 pt-3 text-left transition-colors duration-300 hover:bg-canvas-soft focus-visible:outline-offset-0"
                 >
                   <span
                     className={cn(
-                      "mono-label flex items-center gap-1.5",
+                      "text-[12px] font-semibold flex items-center gap-1.5",
                       issue.level === "error" ? "text-error" : issue.level === "warning" ? "text-warning" : "text-info",
                     )}
                   >

@@ -54,20 +54,15 @@ test("the DESIGN.md fonts load from the bundle", async ({ page }) => {
   const loaded = await page.evaluate(async () => {
     await document.fonts.ready;
     return {
-      // Dark glass (docs/DESIGN.md, 2026-11-27): headlines, the wordmark and the italic accent
-      // ("within your reach.") are Instrument Serif 400; small labels are JetBrains Mono; body is
-      // Inter. A browser loads only the faces a page uses.
-      display:
-        document.fonts.check('400 96px "Instrument Serif"') &&
-        document.fonts.check('italic 400 60px "Instrument Serif"') &&
-        document.fonts.check('500 12px "JetBrains Mono Variable"'),
-      body: document.fonts.check('400 16px "Inter Variable"'),
+      // "Simple light" (docs/DESIGN.md, 2026-11-27): one family, Figtree, for headings and body.
+      display: document.fonts.check('600 52px "Figtree Variable"'),
+      body: document.fonts.check('400 16px "Figtree Variable"'),
       h1: getComputedStyle(document.querySelector("h1") as Element).fontFamily,
     };
   });
   expect(loaded.display).toBe(true);
   expect(loaded.body).toBe(true);
-  expect(loaded.h1).toContain("Instrument Serif");
+  expect(loaded.h1).toContain("Figtree");
   expect(fontRequests.length).toBeGreaterThan(0);
   expect(fontRequests.every((p) => p.startsWith("/assets/"))).toBe(true);
 });
@@ -85,7 +80,7 @@ test("course page: no axe violations", async ({ page }) => {
   await expectNoAxeViolations(page);
 });
 
-test("buttons keep a 44px target; pills are drawn 46px tall", async ({ page }) => {
+test("buttons keep a 44px target; the main button is a 44px soft rectangle", async ({ page }) => {
   for (const path of ["/", "/plan", "/courses", "/courses/TEST%2020000"]) {
     await page.goto(path);
     await expect(page.getByRole("heading", { level: 1 })).toBeAttached();
@@ -105,13 +100,12 @@ test("buttons keep a 44px target; pills are drawn 46px tall", async ({ page }) =
     );
     expect(small, path).toEqual([]);
   }
-  // The primary pill is drawn 46px tall inside its 52px box (the redesign's bigger pills).
+  // The main button is a plain 44px soft rectangle ("Simple light", docs/DESIGN.md).
   await page.goto("/");
-  const pill = page.getByRole("link", { name: "Start planning" });
-  const box = await pill.boundingBox();
-  expect(box?.height).toBeGreaterThanOrEqual(52);
-  const drawn = await pill.evaluate((el) => el.clientHeight); // the padding box, inside the transparent border
-  expect(drawn).toBe(46);
+  const main = page.getByRole("link", { name: "Start planning" });
+  const box = await main.boundingBox();
+  expect(box?.height).toBeGreaterThanOrEqual(44);
+  expect(await main.evaluate((el) => getComputedStyle(el).borderTopLeftRadius)).toBe("12px");
 });
 
 // ------------------------------------------------------------------------------------------

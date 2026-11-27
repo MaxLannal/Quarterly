@@ -54,7 +54,7 @@ export function VerifierBadge({ verify }: { verify: VerifyState }) {
 export function PlanVerdict({ verify, onOpen }: { verify: VerifyState; onOpen: () => void }) {
   const checking = verify.status === "verifying" || (verify.status === "idle" && !verify.report);
   const text = verify.report ? reportText(verify.report) : verify.status === "unavailable" ? "Not checked yet" : checking ? "Checking…" : "Check failed";
-  // A luminous glass chip (planner.css): a dot of light in the verdict's tone, then its words.
+  // A small pill (planner.css): a dot in the verdict's tone, then its words.
   const tone = verify.report ? verify.report.status : verify.status === "error" ? "errors" : "neutral";
   return (
     <button

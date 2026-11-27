@@ -116,9 +116,9 @@ export function ProposalCard({
 }) {
   const phrase = confirmationPhrase(changeSet.ops);
   return (
-    <article className="glass-rim rounded-[22px] bg-white/[0.045] p-5 text-body-sm text-ink shadow-[0_14px_36px_rgb(0_0_0/0.3)]" aria-label="Proposed change">
-      <h4 className="mono-label flex items-center gap-2 text-muted">
-        <span aria-hidden="true" className="inline-block size-1.5 rounded-pill bg-primary shadow-[0_0_8px_var(--color-primary)]" />
+    <article className="border border-hairline rounded-[22px] bg-canvas-soft p-5 text-body-sm text-ink " aria-label="Proposed change">
+      <h4 className="text-[12px] font-semibold flex items-center gap-2 text-muted">
+        <span aria-hidden="true" className="inline-block size-1.5 rounded-pill bg-primary " />
         Proposed change
       </h4>
       <ul className="my-2 list-disc pl-5 marker:text-gray-dark">
@@ -305,14 +305,14 @@ export function AdvisorPanel({ plan, planId = null, onApply, composerRef, curren
             <li key={i} className="animate-rise">
               {entry.kind === "user" ? (
                 <div className="flex justify-end">
-                  <div className="max-w-[85%] whitespace-pre-wrap rounded-[22px] rounded-tr-md bg-[linear-gradient(160deg,rgb(255_92_112/0.24),rgb(150_14_40/0.2))] px-4 py-2.5 text-body-sm text-ink shadow-[inset_0_0_0_1px_rgb(255_120_140/0.3),inset_0_1px_0_rgb(255_255_255/0.1)]" data-testid="chat-bubble-user">
+                  <div className="max-w-[85%] whitespace-pre-wrap rounded-[22px] rounded-tr-md bg-surface-strong px-4 py-2.5 text-body-sm text-ink " data-testid="chat-bubble-user">
                     <span className="sr-only">You: </span>
                     {entry.text}
                   </div>
                 </div>
               ) : entry.kind === "assistant" ? (
                 <AiRow>
-                  <div className="w-fit max-w-full rounded-[22px] rounded-tl-md bg-white/[0.05] px-4 py-2.5 text-body-sm text-body shadow-[inset_0_0_0_1px_rgb(255_255_255/0.08),inset_0_1px_0_rgb(255_255_255/0.08)]" data-testid="chat-bubble-ai">
+                  <div className="w-fit max-w-full rounded-[22px] rounded-tl-md bg-canvas-soft px-4 py-2.5 text-body-sm text-body " data-testid="chat-bubble-ai">
                     <span className="sr-only">Quarterly (AI): </span>
                     <p className="whitespace-pre-wrap">{entry.text}</p>
                     {entry.citations.length > 0 && (
@@ -351,10 +351,10 @@ export function AdvisorPanel({ plan, planId = null, onApply, composerRef, curren
           {busy && (
             <li role="status" className="animate-fade-in">
               <AiRow>
-                <div className="flex h-10 items-center gap-1 rounded-[22px] rounded-tl-md bg-white/[0.05] px-4 shadow-[inset_0_0_0_1px_rgb(255_255_255/0.08)]" data-testid="typing-indicator">
+                <div className="flex h-10 items-center gap-1 rounded-[22px] rounded-tl-md bg-canvas-soft px-4 " data-testid="typing-indicator">
                   <span className="sr-only">The AI is writing…</span>
                   {[0, 150, 300].map((d) => (
-                    <span key={d} aria-hidden="true" className="inline-block size-1.5 animate-typing rounded-pill bg-primary shadow-[0_0_8px_rgb(255_92_112/0.6)]" style={{ animationDelay: `${d}ms` }} />
+                    <span key={d} aria-hidden="true" className="inline-block size-1.5 animate-typing rounded-pill bg-primary " style={{ animationDelay: `${d}ms` }} />
                   ))}
                 </div>
               </AiRow>
@@ -373,7 +373,7 @@ export function AdvisorPanel({ plan, planId = null, onApply, composerRef, curren
         <label htmlFor={inputId} className="sr-only">
           Ask the advisor
         </label>
-        <div className="flex items-end gap-2 rounded-[26px] border border-border-input bg-white/[0.045] py-1 pl-4 pr-1 shadow-[inset_0_1px_2px_rgb(0_0_0/0.3)] transition-[border-color,box-shadow] duration-300 focus-within:border-primary focus-within:shadow-[0_0_0_4px_rgb(255_92_112/0.14)]">
+        <div className="flex items-end gap-2 rounded-[26px] border border-border-input bg-canvas-soft py-1 pl-4 pr-1 transition-[border-color,box-shadow] duration-300 focus-within:border-primary ">
           <textarea
             ref={inputRef}
             id={inputId}
@@ -416,12 +416,11 @@ export function AdvisorSheet({ open, onClose, ...panel }: AdvisorPanelProps & { 
   const composer = useRef<HTMLTextAreaElement>(null);
   return (
     <TopSheet open={open} onClose={onClose} labelledBy={titleId} describedBy={descId} initialFocus={composer}>
-      <header className="flex items-start gap-3 border-b border-white/[0.07] px-4 py-3 sm:px-6 sm:py-5">
+      <header className="flex items-start gap-3 border-b border-hairline px-4 py-3 sm:px-6 sm:py-5">
         <span aria-hidden="true" className="advisor-orb mt-1 hidden size-11 shrink-0 items-center justify-center text-ink sm:flex">
           <SparkIcon size={19} />
         </span>
         <div className="min-w-0 flex-1">
-          <p className="mono-label text-muted">Advisor // AI</p>
           <div className="flex flex-wrap items-center gap-2">
             <h2 id={titleId} className="font-display text-display-sm leading-tight">
               Ask Quarterly

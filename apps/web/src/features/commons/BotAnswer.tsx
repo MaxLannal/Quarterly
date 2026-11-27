@@ -41,7 +41,7 @@ export function BotSteps({ steps, busy }: { steps: BotStep[]; busy?: boolean }) 
         {busy ? "The AI is already answering this question…" : steps.length ? "Looking things up…" : "Reading the question…"}
       </p>
       {steps.length > 0 && (
-        <ol className="qg-thread flex flex-col gap-1.5 pl-4">
+        <ol className="flex flex-col gap-1.5 border-l border-hairline pl-4">
           {steps.map((s, i) => (
             <li key={`${s.tool}-${i}`} className="flex animate-rise items-center gap-2 text-caption text-body">
               <span className="inline-flex w-3.5 justify-center">
@@ -62,7 +62,7 @@ export function BotSteps({ steps, busy }: { steps: BotStep[]; busy?: boolean }) 
 function Header({ day, edited, compact }: { day?: string; edited?: string | null; compact?: boolean }) {
   return (
     <header className="flex flex-wrap items-center gap-x-3 gap-y-1">
-      <span className={cn("inline-flex items-center justify-center rounded-pill bg-[radial-gradient(circle_at_30%_25%,#ffb3be,#ff5c70_45%,#a3122f)] text-on-primary shadow-[0_0_22px_-2px_rgb(255_60_90/0.7),inset_0_1px_0_rgb(255_255_255/0.4)]", compact ? "size-7" : "size-10")}>
+      <span className={cn("inline-flex items-center justify-center rounded-pill bg-primary text-on-primary", compact ? "size-7" : "size-9")}>
         <ArchGlyph size={compact ? 16 : 20} />
       </span>
       <div className="flex min-w-0 flex-col">
@@ -115,9 +115,9 @@ export function BotAnswerCard({
   return (
     <section
       aria-labelledby={`bot-${thread.id}`}
-      className="qg-tile relative overflow-clip bg-[radial-gradient(90%_120%_at_0%_0%,rgb(255_92_112/0.13),transparent_60%)] py-6 pl-7 pr-6 sm:py-8 sm:pl-10 sm:pr-9"
+      className="relative overflow-clip rounded-xl border border-hairline bg-surface-card py-5 pl-6 pr-5 sm:py-6 sm:pl-8 sm:pr-7"
     >
-      <span aria-hidden="true" className="absolute inset-y-6 left-0 w-px bg-primary shadow-[0_0_14px_2px_rgb(255_92_112/0.7)]" />
+      <span aria-hidden="true" className="absolute inset-y-0 left-0 w-1 bg-primary" />
       <span aria-hidden="true" className="pointer-events-none absolute -right-16 -top-20 size-56 rounded-pill bg-primary/5 blur-2xl" />
       <h2 id={`bot-${thread.id}`} className="sr-only">
         Quarterly AI's answer
@@ -189,7 +189,7 @@ export function BotAnswerCard({
 
 export function AcceptedMark() {
   return (
-    <span className="inline-flex min-h-7 items-center gap-1 rounded-pill bg-success px-2.5 text-[12px] font-semibold text-on-primary">
+    <span className="inline-flex min-h-7 items-center gap-1 rounded-pill bg-success px-2.5 text-[12px] font-semibold text-on-dark">
       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" aria-hidden="true">
         <path d="M5 12.5l4.5 4.5L19 7.5" />
       </svg>
@@ -201,8 +201,8 @@ export function AcceptedMark() {
 /** A bot reply inside the tree (summoned with @quarterly), or its live run. */
 export function BotReplyInline({ reply, steps, busy, error }: { reply?: Reply; steps?: BotStep[]; busy?: boolean; error?: string }) {
   return (
-    <div className="relative overflow-clip rounded-[18px] bg-[linear-gradient(100deg,rgb(255_92_112/0.1),rgb(255_255_255/0.02)_60%)] py-4 pl-5 pr-4 shadow-[inset_0_0_0_1px_rgb(255_120_140/0.16)]">
-      <span aria-hidden="true" className="absolute inset-y-3 left-0 w-px bg-primary shadow-[0_0_10px_rgb(255_92_112/0.8)]" />
+    <div className="relative overflow-clip rounded-lg border border-hairline bg-canvas-soft py-3 pl-5 pr-4">
+      <span aria-hidden="true" className="absolute inset-y-0 left-0 w-[3px] bg-primary" />
       <div className="flex flex-col gap-3">
         <Header compact day={reply?.created_day} edited={reply?.edited_day} />
         {reply ? (

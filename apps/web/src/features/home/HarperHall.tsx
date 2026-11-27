@@ -3,14 +3,14 @@ import { buildHall, CX, CY, VH, VW } from "./harperGeometry";
 import type { Scene } from "./NightScene";
 import "./harper.css";
 
-const SPINE_TONES = ["#3a1519", "#57202a", "#2a1012", "#6b2a2e"];
+const SPINE_TONES = ["#a8957f", "#8f7b68", "#bfae98", "#7d6c5d"];
 
 /**
- * Harper Memorial Library's reading room, drawn in light (the homepage hero, Max 2026-11-27):
+ * Harper Memorial Library's reading room, drawn in sunlit stone (the homepage, Max 2026-11-27):
  * the long hall in perspective, tall pointed windows down both walls, the beamed ceiling, long
  * tables with reading lamps and rows of pendant lights. By day, sun falls through the south
  * windows in shafts that cross the room to the floor, dust drifting in them; a passing cloud dims
- * the shafts one after another. By night the windows go to deep violet and the lamps take over.
+ * the shafts one after another. By night the room goes to dusk blue and the lamps take over.
  * Three stacked SVG layers (the room, the light, the dust) so the moving parts never repaint the
  * room. Reduced motion: still light, no dust.
  */
@@ -30,56 +30,53 @@ export function HarperHall({ scene }: { scene: Scene }) {
       >
         <defs>
           <linearGradient id="hh-wall-l" x1="0" y1="0" x2={CX} y2="0" gradientUnits="userSpaceOnUse">
-            <stop offset="0" stopColor="#070304" />
-            <stop offset="0.6" stopColor="#170a0c" />
-            <stop offset="1" stopColor="#3a161b" />
+            <stop offset="0" stopColor="#d9d2c6" />
+            <stop offset="0.6" stopColor="#e7e1d7" />
+            <stop offset="1" stopColor="#f4f1eb" />
           </linearGradient>
           <linearGradient id="hh-wall-r" x1={VW} y1="0" x2={CX} y2="0" gradientUnits="userSpaceOnUse">
-            <stop offset="0" stopColor="#060203" />
-            <stop offset="0.6" stopColor="#150809" />
-            <stop offset="1" stopColor="#36141a" />
+            <stop offset="0" stopColor="#cfc7ba" />
+            <stop offset="0.6" stopColor="#e1dbd0" />
+            <stop offset="1" stopColor="#f1ede6" />
           </linearGradient>
           <linearGradient id="hh-ceil" x1="0" y1="0" x2="0" y2={CY - 80} gradientUnits="userSpaceOnUse">
-            <stop offset="0" stopColor="#050203" />
-            <stop offset="1" stopColor="#2c1015" />
+            <stop offset="0" stopColor="#bdb3a5" />
+            <stop offset="1" stopColor="#e9e4dc" />
           </linearGradient>
           <linearGradient id="hh-floor" x1="0" y1={VH} x2="0" y2={CY + 50} gradientUnits="userSpaceOnUse">
-            <stop offset="0" stopColor="#040102" />
-            <stop offset="0.7" stopColor="#140708" />
-            <stop offset="1" stopColor="#24100f" />
+            <stop offset="0" stopColor="#c9bfb1" />
+            <stop offset="0.7" stopColor="#ddd6cb" />
+            <stop offset="1" stopColor="#ece8e1" />
           </linearGradient>
           <linearGradient id="hh-glass-day" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stopColor="#fffaf8" />
-            <stop offset="0.3" stopColor="#ffe1e4" />
-            <stop offset="0.72" stopColor="#ff8a9b" />
-            <stop offset="1" stopColor="#b51d3b" />
+            <stop offset="0" stopColor="#ffffff" />
+            <stop offset="0.55" stopColor="#f6f9fc" />
+            <stop offset="1" stopColor="#dfe8f1" />
           </linearGradient>
           <linearGradient id="hh-glass-day-shade" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stopColor="#f6eef8" />
-            <stop offset="0.45" stopColor="#d9a7b6" />
-            <stop offset="1" stopColor="#7a1d36" />
+            <stop offset="0" stopColor="#fbfcfd" />
+            <stop offset="0.5" stopColor="#e9eef3" />
+            <stop offset="1" stopColor="#ccd7e2" />
           </linearGradient>
           <linearGradient id="hh-glass-night" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stopColor="#3a2a5c" />
-            <stop offset="0.55" stopColor="#1f1433" />
-            <stop offset="1" stopColor="#3d0f22" />
+            <stop offset="0" stopColor="#40507a" />
+            <stop offset="0.55" stopColor="#2b3757" />
+            <stop offset="1" stopColor="#3a3550" />
           </linearGradient>
           <radialGradient id="hh-bloom" cx={hall.bloom[0]} cy={hall.bloom[1]} r="400" gradientUnits="userSpaceOnUse">
-            <stop offset="0" stopColor="#fffaf8" stopOpacity="0.8" />
-            <stop offset="0.14" stopColor="#ffd2d8" stopOpacity="0.28" />
-            <stop offset="0.5" stopColor="#d9264e" stopOpacity="0.08" />
-            <stop offset="1" stopColor="#d9264e" stopOpacity="0" />
+            <stop offset="0" stopColor="#ffffff" stopOpacity="0.9" />
+            <stop offset="0.2" stopColor="#ffffff" stopOpacity="0.35" />
+            <stop offset="1" stopColor="#ffffff" stopOpacity="0" />
           </radialGradient>
           <radialGradient id="hh-bloom-night" cx={hall.bloom[0]} cy={hall.bloom[1]} r="420" gradientUnits="userSpaceOnUse">
-            <stop offset="0" stopColor="#8f7cc8" stopOpacity="0.35" />
-            <stop offset="0.4" stopColor="#5a2a6a" stopOpacity="0.12" />
-            <stop offset="1" stopColor="#5a2a6a" stopOpacity="0" />
+            <stop offset="0" stopColor="#9fb0d8" stopOpacity="0.3" />
+            <stop offset="1" stopColor="#9fb0d8" stopOpacity="0" />
           </radialGradient>
           <radialGradient id="hh-lamp">
-            <stop offset="0" stopColor="#fff6ec" />
-            <stop offset="0.18" stopColor="#ffd9c4" stopOpacity="0.85" />
-            <stop offset="0.45" stopColor="#ff7a8c" stopOpacity="0.25" />
-            <stop offset="1" stopColor="#ff5c70" stopOpacity="0" />
+            <stop offset="0" stopColor="#fff8e8" />
+            <stop offset="0.2" stopColor="#ffe9bf" stopOpacity="0.8" />
+            <stop offset="0.5" stopColor="#ffd28a" stopOpacity="0.22" />
+            <stop offset="1" stopColor="#ffd28a" stopOpacity="0" />
           </radialGradient>
           <clipPath id="hh-floor-clip">
             <path d={hall.floor} />
@@ -100,7 +97,7 @@ export function HarperHall({ scene }: { scene: Scene }) {
         <path d={hall.floor} fill="url(#hh-floor)" />
         <path d={hall.wallLeft} fill="url(#hh-wall-l)" />
         <path d={hall.wallRight} fill="url(#hh-wall-r)" />
-        <path d={hall.farWall} fill="#2e1116" />
+        <path d={hall.farWall} fill="#efeae2" />
 
         {/* The great window at the far end, and its bloom. */}
         <path d={hall.farWindow} className="hh-day" fill="url(#hh-glass-day)" />
@@ -110,7 +107,7 @@ export function HarperHall({ scene }: { scene: Scene }) {
             <circle key={i} cx={x} cy={y} r={i % 4 === 0 ? 1.4 : 0.8} fill="#fff4e8" opacity={0.75} />
           ))}
         </g>
-        <path d={hall.farLeads} stroke="#14070a" strokeWidth="1.2" fill="none" opacity="0.8" />
+        <path d={hall.farLeads} stroke="#8d847a" strokeWidth="1" fill="none" opacity="0.6" />
 
         {/* The windows and the great window, mirrored in the polished floor. */}
         <g clipPath="url(#hh-floor-clip)">
@@ -131,9 +128,9 @@ export function HarperHall({ scene }: { scene: Scene }) {
         </g>
 
         {/* Ceiling beams and the two long beams. */}
-        <path d={hall.beamsUnder} fill="#3b1a1f" opacity="0.9" />
-        <path d={hall.beamsFront} fill="#0b0405" />
-        <path d={hall.ribs} fill="#120607" />
+        <path d={hall.beamsUnder} fill="#9b9084" opacity="0.9" />
+        <path d={hall.beamsFront} fill="#6f665c" />
+        <path d={hall.ribs} fill="#7d7469" />
 
         {/* Bookcases under the windows. */}
         <g opacity="0.85">
@@ -141,26 +138,29 @@ export function HarperHall({ scene }: { scene: Scene }) {
             <path key={i} d={s.d} stroke={SPINE_TONES[s.tone]} strokeWidth="1.4" />
           ))}
         </g>
-        <path d={hall.shelves} stroke="#4a2026" strokeWidth="1" fill="none" opacity="0.7" />
+        <path d={hall.shelves} stroke="#8d8276" strokeWidth="1" fill="none" opacity="0.7" />
+
+        {/* Night: a dusk wash over the stone (the glass and the lamps are drawn over it). */}
+        <rect className="hh-night" x="0" y="0" width={VW} height={VH} fill="#1f2638" opacity="0.62" />
 
         {/* The windows: lit jamb, glass (day and night), leads and tracery. */}
         {hall.windows.map((w, i) => (
           <g key={i}>
-            <path d={w.jamb} fill={w.side === "left" ? "#4a1d24" : "#2a0f14"} />
+            <path d={w.jamb} fill={w.side === "left" ? "#e9e3da" : "#c9c0b3"} />
             <path d={w.glass} className="hh-day" fill={w.side === "left" ? "url(#hh-glass-day)" : "url(#hh-glass-day-shade)"} opacity={w.side === "left" ? 1 : 0.62} />
             <path d={w.glass} className="hh-night" fill="url(#hh-glass-night)" opacity={0.95} />
-            <path d={w.leads} stroke="#12060a" strokeWidth={Math.max(0.6, 26 / w.depth)} fill="none" opacity="0.75" />
-            <path d={w.rose} stroke="#12060a" strokeWidth={Math.max(0.6, 22 / w.depth)} fill="none" opacity="0.8" />
+            <path d={w.leads} stroke="#8a8279" strokeWidth={Math.max(0.5, 20 / w.depth)} fill="none" opacity="0.55" />
+            <path d={w.rose} stroke="#8a8279" strokeWidth={Math.max(0.5, 18 / w.depth)} fill="none" opacity="0.6" />
           </g>
         ))}
 
         {/* Tables. */}
-        <path d={hall.tableLegs} stroke="#1a0b0d" strokeWidth="2" fill="none" />
-        <path d={hall.tablesSide} fill="#0d0506" />
-        <path d={hall.tablesTop} fill="#2a1114" stroke="#7a3a40" strokeOpacity="0.55" strokeWidth="1" />
+        <path d={hall.tableLegs} stroke="#7a6f63" strokeWidth="2" fill="none" />
+        <path d={hall.tablesSide} fill="#8f8376" />
+        <path d={hall.tablesTop} fill="#b6aa9b" stroke="#d8cfc3" strokeOpacity="0.8" strokeWidth="1" />
 
         {/* Pendant cords. */}
-        <path d={hall.cords} stroke="#26100f" strokeWidth="1" fill="none" opacity="0.8" />
+        <path d={hall.cords} stroke="#6f665c" strokeWidth="1" fill="none" opacity="0.6" />
 
         <rect className="hh-day" x="0" y="0" width={VW} height={VH} fill="url(#hh-bloom)" style={{ mixBlendMode: "screen" }} />
         <rect className="hh-night" x="0" y="0" width={VW} height={VH} fill="url(#hh-bloom-night)" style={{ mixBlendMode: "screen" }} />
@@ -174,9 +174,9 @@ export function HarperHall({ scene }: { scene: Scene }) {
               .filter((s) => s.group === g)
               .map((s) => (
                 <linearGradient key={s.id} id={`hh-${s.id}`} x1={s.from[0]} y1={s.from[1]} x2={s.to[0]} y2={s.to[1]} gradientUnits="userSpaceOnUse">
-                  <stop offset="0" stopColor="#fff6f4" stopOpacity="0.3" />
-                  <stop offset="0.5" stopColor="#ffd0d6" stopOpacity="0.1" />
-                  <stop offset="1" stopColor="#ff8a9b" stopOpacity="0.03" />
+                  <stop offset="0" stopColor="#ffffff" stopOpacity="0.55" />
+                  <stop offset="0.5" stopColor="#ffffff" stopOpacity="0.22" />
+                  <stop offset="1" stopColor="#ffffff" stopOpacity="0.06" />
                 </linearGradient>
               ))}
             <filter id={`hh-blur-${g}`} x="-10%" y="-10%" width="120%" height="120%">
@@ -189,7 +189,7 @@ export function HarperHall({ scene }: { scene: Scene }) {
               .map((s) => (
                 <g key={s.id}>
                   <path d={s.d} fill={`url(#hh-${s.id})`} />
-                  <path d={s.pool} fill="#ffe2e6" opacity="0.07" />
+                  <path d={s.pool} fill="#ffffff" opacity="0.35" />
                 </g>
               ))}
           </g>

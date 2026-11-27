@@ -74,8 +74,8 @@ export function PlanDrawer({ open, tab, onTab, onClose, tabs, fullScreen }: Plan
       data-state={presence}
       data-testid="plan-drawer"
       className={cn(
-        // A raised glass drawer (docs/DESIGN.md "Dark glass": floating panels use `.glass-raised`).
-        "glass-raised planner-drawer flex flex-col",
+        // A raised border border-hairline bg-canvas drawer (docs/DESIGN.md "Dark border border-hairline bg-canvas": floating panels use `.border border-hairline bg-canvas shadow-overlay`).
+        "border border-hairline bg-canvas shadow-overlay planner-drawer flex flex-col",
         // Phone and tablet: a full-screen panel over the page.
         "fixed inset-0 z-40",
         // Desktop: a sticky column beside the grid.
@@ -85,7 +85,7 @@ export function PlanDrawer({ open, tab, onTab, onClose, tabs, fullScreen }: Plan
       {...(fullScreen ? { role: "dialog", "aria-modal": true } : {})}
     >
       <div className="flex items-center justify-between gap-3 pb-1 pl-5 pr-2 pt-2">
-        <span className="mono-label flex items-center gap-2 text-muted">
+        <span className="text-[12px] font-semibold flex items-center gap-2 text-muted">
           <span aria-hidden="true" className="planner-eyebrow-dot" />
           Plan panel
         </span>
@@ -110,7 +110,7 @@ export function PlanDrawer({ open, tab, onTab, onClose, tabs, fullScreen }: Plan
 
 /**
  * Toolbar button that opens the drawer at one tab (and closes it when that tab is showing): a
- * segment of the planner's glass tool bar (planner.css), lit red while its tab is showing.
+ * segment of the planner's tool bar (planner.css), white while its tab is showing.
  */
 export function DrawerButton({ active, open, onClick, children }: { active: boolean; open: boolean; onClick: () => void; children: ReactNode }) {
   return (

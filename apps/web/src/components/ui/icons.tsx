@@ -161,3 +161,52 @@ export const EyeOffIcon = (p: IconProps) => (
     <path d="M9.9 9.9a3 3 0 0 0 4.2 4.2" />
   </Svg>
 );
+
+/* Sidebar icons ("Simple light"): the same 24px grid and strokes. */
+export const HomeIcon = (p: IconProps) => (
+  <Svg {...p}>
+    <path d="M4 10.5 12 4l8 6.5V19a1 1 0 0 1-1 1h-4.5v-5.5h-5V20H5a1 1 0 0 1-1-1z" />
+  </Svg>
+);
+export const FolderIcon = (p: IconProps) => (
+  <Svg {...p}>
+    <path d="M3.5 7.5A1.5 1.5 0 0 1 5 6h4.2l1.8 2H19a1.5 1.5 0 0 1 1.5 1.5v8A1.5 1.5 0 0 1 19 19H5a1.5 1.5 0 0 1-1.5-1.5z" />
+  </Svg>
+);
+export const BookIcon = (p: IconProps) => (
+  <Svg {...p}>
+    <path d="M5 5.5A1.5 1.5 0 0 1 6.5 4H19v14H6.5A1.5 1.5 0 0 0 5 19.5z" />
+    <path d="M5 19.5A1.5 1.5 0 0 0 6.5 21H19v-3" />
+  </Svg>
+);
+export const ChatIcon = (p: IconProps) => (
+  <Svg {...p}>
+    <path d="M5 5h14a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1h-8l-4.5 3.5V16H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1z" />
+  </Svg>
+);
+export const LayersIcon = (p: IconProps) => (
+  <Svg {...p}>
+    <path d="m12 4 8 4-8 4-8-4z" />
+    <path d="m4 12 8 4 8-4" />
+    <path d="m4 16 8 4 8-4" />
+  </Svg>
+);
+export const CapIcon = (p: IconProps) => (
+  <Svg {...p}>
+    <path d="m3 9 9-4.5L21 9l-9 4.5z" />
+    <path d="M7 11v4.5c1.5 1.3 3.2 2 5 2s3.5-.7 5-2V11" />
+  </Svg>
+);
+export const UsersIcon = (p: IconProps) => (
+  <Svg {...p}>
+    <circle cx="9" cy="8.5" r="3.5" />
+    <path d="M3 19.5c.6-3 3-5 6-5s5.4 2 6 5" />
+    <path d="M15.5 5.2a3.5 3.5 0 0 1 0 6.6M17.5 14.8c1.8.6 3 2.2 3.5 4.7" />
+  </Svg>
+);
+export const ShieldIcon = (p: IconProps) => (
+  <Svg {...p}>
+    <path d="M12 3.5 19 6v5.5c0 4.3-2.9 7.6-7 9-4.1-1.4-7-4.7-7-9V6z" />
+    <path d="m9 12 2.2 2.2L15.5 10" />
+  </Svg>
+);

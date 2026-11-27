@@ -8,7 +8,6 @@ import { CommentForm, CommentTree } from "@/features/forum/CommentTree";
 import { pagePath } from "@/features/forum/format";
 import { LoginRequired } from "@/features/forum/parts";
 import { PostCard } from "@/features/forum/PostCard";
-import "@/features/courses/glass.css";
 
 function Thread({ code, slug, id }: { code: string; slug: string; id: number }) {
   const page = useForumPage(code, slug);
@@ -44,11 +43,9 @@ function Thread({ code, slug, id }: { code: string; slug: string; id: number }) 
   const visible = p.status === "visible";
   const comments = p.comments ?? [];
   return (
-    <PageContainer as="article" width="reading" className="flex flex-col gap-10 sm:pt-12">
-      <Link to={back} className="qg-pill self-start">
-        <span aria-hidden="true" className="text-primary">←</span>
-        <span className="font-mono text-[12px] uppercase tracking-[0.14em] text-ink">{page.data.course_code}</span>
-        <span>with {page.data.instructor.display_name}</span>
+    <PageContainer as="article" width="reading" className="flex flex-col gap-8">
+      <Link to={back} className={standaloneLinkClass}>
+        ← {page.data.course_code} with {page.data.instructor.display_name}
       </Link>
       <PostCard
         post={p}
@@ -58,7 +55,7 @@ function Thread({ code, slug, id }: { code: string; slug: string; id: number }) 
         onDeleted={() => navigate(back)}
       />
       <Section id="comments" title={`Comments (${p.n_comments ?? 0})`}
-        description={comments.length > 0 ? "Best first." : undefined} size="md">
+        description={comments.length > 0 ? "Best first." : undefined} size="sm">
         <div className="flex flex-col gap-6">
           {visible ? (
             <div ref={replyRef}>

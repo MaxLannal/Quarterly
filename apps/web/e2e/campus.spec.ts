@@ -58,7 +58,7 @@ test("the dashboard invites a logged-out visitor, and shows the identity card on
   await expect(page.getByText("fake-user").first()).toBeVisible();
 });
 
-test("sign-in follows the reference card: big title, pill fields, a password that can be shown", async ({
+test("sign-in is one simple card: a title, plain fields, a password that can be shown", async ({
   page,
 }) => {
   await page.goto("/login");
@@ -69,7 +69,7 @@ test("sign-in follows the reference card: big title, pill fields, a password tha
   await page.getByRole("button", { name: "Show characters" }).click();
   await expect(password).toHaveAttribute("type", "text");
   const radius = await password.evaluate((el) => getComputedStyle(el).borderTopLeftRadius);
-  expect(radius).toBe("26px");
+  expect(radius).toBe("12px"); // "Simple light": soft 12px fields
 });
 
 test("the homepage can be day or night, and remembers the choice", async ({ page }) => {

@@ -58,7 +58,7 @@ function TreeCourse({ course }: { course: CourseSummary }) {
     <li
       ref={setNodeRef}
       data-testid="tree-course"
-      className={cn("flex animate-rise items-center rounded-[14px] transition-colors duration-300 hover:bg-white/[0.045]", isDragging && "opacity-40")}
+      className={cn("flex animate-rise items-center rounded-[14px] transition-colors duration-300 hover:bg-canvas-soft", isDragging && "opacity-40")}
     >
       <button
         type="button"
@@ -70,7 +70,7 @@ function TreeCourse({ course }: { course: CourseSummary }) {
         <GripIcon size={14} />
       </button>
       <div className="min-w-0 flex-1 py-1">
-        <div className="whitespace-nowrap font-mono text-[13.5px] font-semibold tracking-[0.04em] tabular-nums text-ink">{course.code}</div>
+        <div className="whitespace-nowrap font-mono text-[13.5px] font-semibold tabular-nums text-ink">{course.code}</div>
         <div className="truncate text-caption text-muted" title={course.title}>
           {course.title}
         </div>
@@ -121,7 +121,7 @@ function TreeNode({ entry, programId, catalogYear, progress, open, toggle }: Nod
         type="button"
         aria-expanded={expanded}
         onClick={() => toggle(entry.path)}
-        className="flex min-h-11 w-full cursor-pointer items-start gap-2 rounded-[14px] px-2 py-2.5 text-left transition-colors duration-300 hover:bg-white/[0.045] focus-visible:outline-offset-0"
+        className="flex min-h-11 w-full cursor-pointer items-start gap-2 rounded-[14px] px-2 py-2.5 text-left transition-colors duration-300 hover:bg-canvas-soft focus-visible:outline-offset-0"
       >
         <span className="mt-0.5 shrink-0 text-gray-dark">
           <ChevronIcon open={expanded} />
@@ -134,7 +134,7 @@ function TreeNode({ entry, programId, catalogYear, progress, open, toggle }: Nod
         <Progress p={progress.get(entry.path)} />
       </button>
       {expanded && (
-        <div className="ml-[17px] animate-fade-in border-l border-white/[0.07] pl-2">
+        <div className="ml-[17px] animate-fade-in border-l border-hairline pl-2">
           {hasChildren ? (
             <ul className="flex flex-col">
               {entry.children.map((c) => (

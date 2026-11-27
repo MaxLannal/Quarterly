@@ -11,12 +11,12 @@ export function CourseChip({ code, title, className }: { code: string; title?: s
       to={courseHref(code)}
       className={cn(
         "inline-flex min-h-11 max-w-full items-center gap-2 rounded-pill border-2 border-transparent bg-clip-padding",
-        "bg-white/[0.05] px-3.5 text-caption text-body shadow-[inset_0_0_0_1px_rgb(255_255_255/0.09),inset_0_1px_0_rgb(255_255_255/0.08)] transition-[color,box-shadow] duration-300 hover:text-ink hover:shadow-[inset_0_0_0_1px_rgb(255_120_140/0.45),inset_0_1px_0_rgb(255_255_255/0.1)]",
+        "bg-surface-strong px-3 text-caption text-ink transition-colors hover:bg-primary-wash hover:text-primary",
         className,
       )}
       title={title ? `${code} ${title}` : code}
     >
-      <span className="shrink-0 font-mono text-[11.5px] font-medium uppercase tracking-[0.12em] text-ink">{code}</span>
+      <span className="shrink-0 text-caption-uppercase uppercase">{code}</span>
       {title && <span className="truncate">{title}</span>}
     </Link>
   );
@@ -27,11 +27,11 @@ export function ReasonChip({ children, dark = false }: { children: ReactNode; da
   return (
     <p
       className={cn(
-        "inline-flex max-w-full items-center gap-2 rounded-pill px-3 py-1 text-caption font-medium shadow-[inset_0_0_0_1px_rgb(255_120_140/0.22)]",
-        dark ? "bg-surface-card/90 text-primary" : "bg-[linear-gradient(90deg,rgb(255_92_112/0.16),rgb(255_92_112/0.05))] text-primary",
+        "inline-flex max-w-full items-center gap-2 rounded-pill px-3 py-1 text-caption font-medium",
+        dark ? "bg-surface-card/90 text-primary" : "bg-primary-wash text-primary",
       )}
     >
-      <span aria-hidden="true" className="qg-dot" />
+      <span aria-hidden="true" className="inline-block size-1.5 shrink-0 rounded-pill bg-primary" />
       <span className="min-w-0">{children}</span>
     </p>
   );
