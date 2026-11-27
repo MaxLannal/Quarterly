@@ -86,10 +86,12 @@
   min-width: 0;
   padding: 0 14px 0 18px;
 }
+/* Beside the tab, in the open air over the body's top edge. */
 .glass-folder-aside {
   position: absolute;
-  top: 48px;
-  right: 12px;
+  top: 0;
+  right: 14px;
+  height: 42px;
   z-index: 3;
   display: flex;
   align-items: center;
