@@ -69,7 +69,7 @@ export function Dialog({ open, onClose, title, description, children, className 
 
   if (!open) return null;
   return createPortal(
-    <div className="fixed inset-0 z-50 flex animate-fade-in items-end justify-center bg-ink/40 p-0 sm:items-center sm:p-4">
+    <div className="fixed inset-0 z-50 flex animate-fade-in items-end justify-center bg-scrim p-0 backdrop-blur-[6px] sm:items-center sm:p-4">
       <div
         ref={ref}
         role="dialog"
@@ -78,7 +78,7 @@ export function Dialog({ open, onClose, title, description, children, className 
         aria-describedby={description ? descId : undefined}
         tabIndex={-1}
         className={cn(
-          "max-h-[92vh] w-full max-w-lg animate-dialog-in overflow-y-auto rounded-t-xxl border border-hairline bg-surface-card p-5 text-ink shadow-overlay sm:rounded-xl sm:p-6",
+          "glass-raised max-h-[92vh] w-full max-w-lg animate-dialog-in overflow-y-auto rounded-t-xxl p-5 text-ink sm:rounded-xxl sm:p-7",
           className,
         )}
       >

@@ -181,7 +181,7 @@ export function CourseChip({ course, className }: { course: CourseRef; className
 export function TagChip({ tag, to, active }: { tag: string; to?: string; active?: boolean }) {
   const cls = cn(
     "relative inline-flex min-h-8 items-center rounded-pill px-2.5 text-caption text-body before:absolute before:inset-x-0 before:-inset-y-1.5",
-    active ? "bg-ink text-on-dark" : "bg-surface-strong hover:bg-hairline",
+    active ? "bg-ink text-canvas" : "bg-surface-strong hover:bg-hairline",
   );
   return to ? (
     <Link to={to} className={cls}>

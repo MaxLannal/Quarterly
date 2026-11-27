@@ -55,15 +55,18 @@ export function Footer() {
         )}
       >
         <div className="col-span-2 max-w-xs md:col-span-1">
-          <p className="font-serif text-[28px] font-medium tracking-[-0.4px] text-on-night">Quarterly</p>
-          <p className="mt-2 text-body-sm text-on-night-soft">
+          <p className="flex items-center gap-[3px] font-display text-[34px] leading-none tracking-[-0.5px] text-on-night">
+            Quarterly
+            <span aria-hidden="true" className="mt-3 inline-block size-[7px] rounded-pill bg-primary shadow-[0_0_12px_2px_rgb(255_92_112/0.7)]" />
+          </p>
+          <p className="mt-3 text-body-sm text-on-night-muted">
             Quarterly is a student project, not affiliated with the University
             of Chicago. It is not official advising.
           </p>
         </div>
         {COLUMNS.map((col) => (
           <nav key={col.title} aria-label={`${col.title} links`}>
-            <p className="text-caption-uppercase uppercase text-on-night-muted">
+            <p className="mono-label text-on-night-muted">
               {col.title}
             </p>
             <ul className="mt-3 flex flex-col">
@@ -71,7 +74,7 @@ export function Footer() {
                 <li key={l.to}>
                   <Link
                     to={l.to}
-                    className="inline-flex min-h-9 items-center rounded-xs text-body-sm text-on-night-soft hover:text-on-night hover:underline pointer-coarse:min-h-11"
+                    className="inline-flex min-h-9 items-center rounded-xs text-body-sm text-on-night-soft transition-colors hover:text-primary pointer-coarse:min-h-11"
                   >
                     {l.label}
                   </Link>

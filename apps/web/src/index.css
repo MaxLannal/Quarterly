@@ -22,114 +22,124 @@
   --drop-shadow-*: initial;
   --text-*: initial;
 
-  /* Brand & action */
-  --color-primary: #800000;
-  --color-primary-hover: #6c0000;
-  --color-primary-active: #5a0000;
-  --color-primary-wash: #f5ebeb;
-  --color-on-primary: #ffffff;
+  /*
+   * "Red light on dark glass" (Max, 2026-11-27; docs/DESIGN.md "Dark glass"). Every page is a pane
+   * of smoked glass over a black night in which a ring of white light crosses rings of maroon and
+   * crimson light (components/brand/Aurora.tsx). Text is warm white; red is the light itself:
+   * links, the current place, focus, bars and dots. Surfaces that sit on the pane are tints of
+   * white (glass on glass); surfaces that float over content (menus, dialogs) are `surface-raised`.
+   */
 
-  /* Text */
-  --color-ink: #111111;
-  --color-body-strong: #262626;
-  --color-body: #4d4d4d;
-  --color-muted: #6b6b6b;
-  --color-muted-soft: #adadad;
+  /* Brand & action: the red light. Text-safe on every dark surface (6.6:1 on the canvas). As a
+     fill it carries dark text (`on-primary`). The main button is a white pill (button.tsx). */
+  --color-primary: #ff5c70;
+  --color-primary-hover: #ff7d8d;
+  --color-primary-active: #ff9aa6;
+  --color-primary-wash: rgb(255 92 112 / 0.14);
+  --color-on-primary: #1a0508;
 
-  /* Surfaces. Redesign 2026-11-20 (docs/DESIGN.md "Maroon and night"): pages are white sheets on a
-     maroon-and-black night; the sheet is pure white like the reference card. */
-  --color-canvas: #ffffff;
-  --color-canvas-soft: #faf7f7;
-  --color-surface-card: #ffffff;
-  --color-surface-strong: #f4eff0;
-  --color-surface-dark: #111111;
-  --color-surface-dark-elevated: #1f1f1f;
-  --color-surface-inverse: #800000;
+  /* Text: warm whites, all above 4.5:1 on the canvas and on the glass tints. */
+  --color-ink: #f7f0f0;
+  --color-body-strong: #ebe1e2;
+  --color-body: #cdc1c3;
+  --color-muted: #ab9c9f;
+  --color-muted-soft: #6f6366;
+
+  /* Surfaces. `canvas` is solid (the pane's base colour, solid covers); the rest are glass tints. */
+  --color-canvas: #0c0608;
+  --color-canvas-soft: rgb(255 255 255 / 0.03);
+  --color-surface-card: rgb(255 255 255 / 0.045);
+  --color-surface-strong: rgb(255 255 255 / 0.085);
+  /* Floating panels (menus, dialogs, drawers, popovers): nearly opaque smoked glass. */
+  --color-surface-raised: #1a0f12;
+  --color-surface-dark: #0a0506;
+  --color-surface-dark-elevated: #1c1214;
+  --color-surface-inverse: #5e0d1e;
   --color-on-dark: #ffffff;
-  --color-on-dark-soft: #adadad;
-  --color-on-inverse-soft: #f0e0e0;
+  --color-on-dark-soft: #bcadb0;
+  --color-on-inverse-soft: #f0d6db;
+  /* Behind dialogs and sheets. */
+  --color-scrim: rgb(4 1 2 / 0.64);
 
-  /* Lines */
-  --color-hairline: #ece5e6;
-  --color-hairline-soft: #f4eff0;
-  --color-hairline-strong: #d9cfd1;
-  --color-border-input: #8a8a8a;
-  --color-gray-dark: #767676;
+  /* Lines: white at low alpha, so they catch the light like the edge of a pane. */
+  --color-hairline: rgb(255 255 255 / 0.09);
+  --color-hairline-soft: rgb(255 255 255 / 0.05);
+  --color-hairline-strong: rgb(255 255 255 / 0.17);
+  --color-border-input: rgb(255 255 255 / 0.4);
+  --color-gray-dark: #918487;
 
-  /* The night around the sheets: maroon and black, with crimson and coral light (GradientArt). */
-  --color-night: #12040a;
-  --color-night-2: #2b0711;
-  --color-maroon-deep: #5c0a1d;
+  /* The night and its lights. */
+  --color-night: #060203;
+  --color-night-2: #1a0509;
+  --color-maroon: #800000;
+  --color-maroon-deep: #4a0816;
   --color-crimson: #d9264e;
   --color-coral: #ff9a76;
   --color-on-night: #ffffff;
   --color-on-night-soft: #f1d9de;
-  --color-on-night-muted: #c99ea8;
+  --color-on-night-muted: #b99aa1;
 
-  /* Atmospheric orbs: soft radial blooms only (see .orb below) */
-  --color-orb-lake: #5b8fa8;
-  --color-orb-goldenrod: #ffb547;
-  --color-orb-ivy: #adb17d;
-  --color-orb-terracotta: #d49464;
-  --color-orb-rose: #b1746f;
-  /* Derived: maroon (#800000) at 70% on the canvas, for the home hero (D10, FEEDBACK "Minor design changes"). */
-  --color-orb-maroon: #a44a4a;
+  /* Atmospheric orbs: soft red blooms on the dark pane (see .orb below). */
+  --color-orb-lake: #8a1a30;
+  --color-orb-goldenrod: #b8452c;
+  --color-orb-ivy: #5e1422;
+  --color-orb-terracotta: #a8323f;
+  --color-orb-rose: #c4485a;
+  --color-orb-maroon: #8a1428;
 
-  /* Semantic */
-  --color-error: #8f3931;
-  --color-error-wash: #f6efef;
-  --color-success: #616530;
-  --color-success-wash: #f2f3ee;
-  --color-warning: #9a5324;
-  --color-warning-icon: #c68220;
-  --color-info: #155f83;
-  /* DESIGN.md gives no wash for warning and info; these are derived from the token itself at
-     the same 8% mix DESIGN.md uses for primary-wash (no new hex). */
-  --color-warning-wash: color-mix(in srgb, #9a5324 8%, #ffffff);
-  --color-info-wash: color-mix(in srgb, #155f83 8%, #ffffff);
+  /* Semantic, lifted for dark surfaces; washes are tints of the same light. */
+  --color-error: #ff8f80;
+  --color-error-wash: rgb(255 110 95 / 0.12);
+  --color-success: #b9d690;
+  --color-success-wash: rgb(170 210 120 / 0.11);
+  --color-warning: #f2b66b;
+  --color-warning-icon: #f2b66b;
+  --color-info: #8fc8ea;
+  --color-warning-wash: rgb(242 182 107 / 0.11);
+  --color-info-wash: rgb(140 199 234 / 0.11);
 
-  /* Data visualization (in this order) */
-  --color-data-1: #155f83;
-  --color-data-2: #ffa319;
-  --color-data-3: #8a9045;
-  --color-data-4: #c16622;
-  --color-data-5: #725663;
-  --color-data-6: #58593f;
+  /* Data visualization (in this order), lifted for the dark pane. */
+  --color-data-1: #6fb2d6;
+  --color-data-2: #ffb547;
+  --color-data-3: #b9c06e;
+  --color-data-4: #f08a4b;
+  --color-data-5: #c79ab0;
+  --color-data-6: #a7a884;
 
-  /* Type families (fonts are bundled from npm, see main.tsx) */
-  /* Headlines are bold Inter (the reference's "Welcome home"); Newsreader stays for the wordmark
-     and the italic maroon accent words (`em` in headlines). */
-  --font-display: "Inter Variable", "Inter", system-ui, sans-serif;
+  /* Type families (all bundled from npm, see main.tsx; nothing is fetched from another origin).
+     Headlines: Instrument Serif, a tall display serif, at 400 only (font-synthesis is off, so a
+     bold class never fakes a bold). Voices and quotes keep Newsreader. Labels: JetBrains Mono. */
+  --font-display: "Instrument Serif", "Newsreader", Georgia, serif;
   --font-serif: "Newsreader", "Times New Roman", serif;
   --font-sans: "Inter Variable", "Inter", system-ui, sans-serif;
-  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-mono: "JetBrains Mono Variable", ui-monospace, SFMono-Regular, Menlo, monospace;
 
   /* Type scale: `text-<token>` sets size, line height, tracking and weight together */
   /* The home page's wordmark headline (D2): larger and one step heavier than display-mega. */
-  --text-display-hero: 112px;
+  --text-display-hero: 132px;
   --text-display-hero--line-height: 1;
-  --text-display-hero--letter-spacing: -4px;
-  --text-display-hero--font-weight: 800;
-  --text-display-mega: 72px;
+  --text-display-hero--letter-spacing: -3px;
+  --text-display-hero--font-weight: 400;
+  --text-display-mega: 88px;
   --text-display-mega--line-height: 1.02;
-  --text-display-mega--letter-spacing: -2.6px;
-  --text-display-mega--font-weight: 800;
-  --text-display-xl: 56px;
+  --text-display-mega--letter-spacing: -1.8px;
+  --text-display-mega--font-weight: 400;
+  --text-display-xl: 68px;
   --text-display-xl--line-height: 1.05;
-  --text-display-xl--letter-spacing: -1.9px;
-  --text-display-xl--font-weight: 750;
-  --text-display-lg: 42px;
+  --text-display-xl--letter-spacing: -1.3px;
+  --text-display-xl--font-weight: 400;
+  --text-display-lg: 54px;
   --text-display-lg--line-height: 1.1;
-  --text-display-lg--letter-spacing: -1.2px;
-  --text-display-lg--font-weight: 700;
-  --text-display-md: 36px;
+  --text-display-lg--letter-spacing: -0.9px;
+  --text-display-lg--font-weight: 400;
+  --text-display-md: 44px;
   --text-display-md--line-height: 1.12;
-  --text-display-md--letter-spacing: -0.9px;
-  --text-display-md--font-weight: 700;
-  --text-display-sm: 28px;
+  --text-display-md--letter-spacing: -0.6px;
+  --text-display-md--font-weight: 400;
+  --text-display-sm: 33px;
   --text-display-sm--line-height: 1.2;
-  --text-display-sm--letter-spacing: -0.5px;
-  --text-display-sm--font-weight: 650;
+  --text-display-sm--letter-spacing: -0.3px;
+  --text-display-sm--font-weight: 400;
   --text-title-md: 22px;
   --text-title-md--line-height: 1.35;
   --text-title-md--letter-spacing: -0.2px;
@@ -151,10 +161,10 @@
   --text-caption: 15px;
   --text-caption--line-height: 1.5;
   --text-caption--letter-spacing: 0;
-  --text-caption-uppercase: 13px;
+  --text-caption-uppercase: 12px;
   --text-caption-uppercase--line-height: 1.4;
-  --text-caption-uppercase--letter-spacing: 1px;
-  --text-caption-uppercase--font-weight: 700;
+  --text-caption-uppercase--letter-spacing: 1.6px;
+  --text-caption-uppercase--font-weight: 600;
   --text-button: 16px;
   --text-button--line-height: 1;
   --text-button--letter-spacing: 0;
@@ -177,9 +187,9 @@
   --radius-pill: 9999px;
 
   /* Elevation: one hover tier and one overlay tier */
-  --shadow-hover: 0 12px 32px rgba(70, 6, 22, 0.08);
-  --shadow-overlay: 0 24px 64px rgba(30, 2, 10, 0.2);
-  --shadow-sheet: 0 40px 120px rgba(0, 0, 0, 0.45);
+  --shadow-hover: 0 18px 48px rgb(0 0 0 / 0.45), 0 0 0 1px rgb(255 92 112 / 0.16);
+  --shadow-overlay: 0 30px 90px rgb(0 0 0 / 0.6), inset 0 1px 0 rgb(255 255 255 / 0.07);
+  --shadow-sheet: 0 50px 140px rgb(0 0 0 / 0.65), inset 0 1px 0 rgb(255 255 255 / 0.07);
 
   /* Layout */
   --spacing-section: 96px;
@@ -195,7 +205,7 @@
      keyframe ends at `transform: none` so a finished animation leaves no containing block
      behind (the drag overlay is position: fixed). */
   --default-transition-duration: 150ms;
-  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in: cubic-bezier(0.4, 0, 1, 1);
   --animate-fade-in: fade-in 200ms var(--ease-out) both;
   --animate-dialog-in: dialog-in 200ms var(--ease-out) both;
@@ -323,17 +333,21 @@
   html {
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* Native controls, scrollbars and option lists render dark. */
+    color-scheme: dark;
+    /* Instrument Serif has one weight: never fake a bold or an italic. */
+    font-synthesis: none;
+    scrollbar-color: rgb(255 255 255 / 0.18) transparent;
   }
 
-  /* The night (docs/DESIGN.md "Maroon and night"): maroon and black with crimson light, fixed
-     behind the page sheet, the top bar and the footer. */
+  /* The night: near black with a low maroon glow. The moving light is components/brand/Aurora.tsx,
+     fixed behind everything; this gradient is what shows before it paints. */
   body {
     background-color: var(--color-night);
     background-image:
-      radial-gradient(1100px 760px at 6% -10%, rgb(150 18 48 / 0.55), transparent 62%),
-      radial-gradient(900px 720px at 104% 16%, rgb(92 10 29 / 0.75), transparent 60%),
-      radial-gradient(1000px 900px at 62% 118%, rgb(217 38 78 / 0.22), transparent 62%),
-      linear-gradient(165deg, #5c0a1d 0%, #2b0711 50%, #12040a 100%);
+      radial-gradient(1200px 800px at 0% 0%, rgb(110 12 34 / 0.45), transparent 60%),
+      radial-gradient(1000px 800px at 100% 100%, rgb(90 8 26 / 0.4), transparent 60%);
     background-attachment: fixed;
     color: var(--color-ink);
     font-size: var(--text-body-md);
@@ -349,13 +363,12 @@
     border-color: var(--color-hairline);
   }
 
-  /* Focus (all interactive elements): 2px maroon ring, 2px offset. */
+  /* Focus (all interactive elements): 2px red-light ring, 2px offset. */
   :focus-visible {
     outline: 2px solid var(--color-primary);
     outline-offset: 2px;
   }
 
-  /* Native checkboxes, radios and range sliders take the accent color. */
   input[type="checkbox"],
   input[type="radio"],
   input[type="range"] {
@@ -363,11 +376,10 @@
   }
 
   ::selection {
-    background: var(--color-primary-wash);
-    color: var(--color-ink);
+    background: rgb(255 92 112 / 0.38);
+    color: #ffffff;
   }
 
-  /* Display headings never bold; course codes never in the serif (see components). */
   h1,
   h2,
   h3,
@@ -375,35 +387,125 @@
     color: var(--color-ink);
   }
 
-  /* Headlines are bold sans; their emphasised words are the serif italic in maroon (the accent
-     of every page title, "within your reach.", "Ask anything"). */
+  /* Headlines are the display serif; their emphasised words are its italic, lit red. */
   :where(h1, h2, h3, .page-title, .home-title) em {
-    font-family: var(--font-serif);
+    font-family: var(--font-display);
     font-style: italic;
     font-weight: 400;
     letter-spacing: -0.01em;
     color: var(--color-primary);
   }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgb(255 255 255 / 0.14);
+    border-radius: 9999px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: rgb(255 255 255 / 0.24);
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
 }
 
 @layer components {
-  /* An atmospheric orb: one orb-* color as a soft radial bloom, 40% at the center, blurred. */
+  /* An atmospheric orb: one orb-* colour as a soft radial bloom, blurred. */
   .orb {
     position: absolute;
     pointer-events: none;
     border-radius: 9999px;
     background: radial-gradient(
       circle at center,
-      color-mix(in srgb, var(--orb-color, var(--color-orb-lake)) 40%, transparent) 0%,
+      color-mix(in srgb, var(--orb-color, var(--color-orb-lake)) 45%, transparent) 0%,
       transparent 70%
     );
     filter: blur(70px);
   }
 
-  /* Loading skeletons: surface-strong plates. */
+  /* Loading skeletons: a glass plate with a slow sheen passing over it. */
   .skeleton {
-    background: var(--color-surface-strong);
+    position: relative;
+    overflow: hidden;
+    background: rgb(255 255 255 / 0.05);
     border-radius: var(--radius-md);
+  }
+  .skeleton::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(100deg, transparent 20%, rgb(255 255 255 / 0.06) 50%, transparent 80%);
+    animation: sheen 1.8s var(--ease-out) infinite;
+  }
+
+  /* Glass on the pane: a lighter tint with a lit top edge. */
+  .glass {
+    background: linear-gradient(180deg, rgb(255 255 255 / 0.075), rgb(255 255 255 / 0.03));
+    border: 1px solid rgb(255 255 255 / 0.1);
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.09),
+      0 18px 50px rgb(0 0 0 / 0.35);
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
+    backdrop-filter: blur(18px) saturate(140%);
+  }
+  /* Glass that floats over content (menus, dialogs, drawers): nearly opaque, heavily frosted. */
+  .glass-raised {
+    background:
+      linear-gradient(180deg, rgb(255 255 255 / 0.06), rgb(255 255 255 / 0.015)),
+      rgb(22 12 15 / 0.9);
+    border: 1px solid rgb(255 255 255 / 0.11);
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.09),
+      0 30px 90px rgb(0 0 0 / 0.6);
+    -webkit-backdrop-filter: blur(28px) saturate(150%);
+    backdrop-filter: blur(28px) saturate(150%);
+  }
+
+  /* A red light that follows the pointer across a glass surface (AppShell sets --spot-x/--spot-y
+     on the hovered [data-spotlight] element). Decorative; nothing depends on it. */
+  [data-spotlight] {
+    position: relative;
+    isolation: isolate;
+  }
+  [data-spotlight]::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 0;
+    background: radial-gradient(
+      420px circle at var(--spot-x, 50%) var(--spot-y, 50%),
+      rgb(255 92 112 / 0.13),
+      transparent 60%
+    );
+    transition: opacity 300ms var(--ease-out);
+  }
+  [data-spotlight]:hover::before {
+    opacity: 1;
+  }
+
+  /* Small mono labels: "PLANNER // AUTUMN 2026". */
+  .mono-label {
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    line-height: 1.4;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+}
+
+@keyframes sheen {
+  to {
+    transform: translateX(100%);
   }
 }
 
@@ -548,13 +650,48 @@
   }
 }
 
-/* The menu bar (TopNav): frosted white glass the width of the page sheet, on the maroon frame. */
+/* The menu bar (TopNav): a slab of smoked glass floating over the page, its top edge lit. */
 .nav-glass {
-  background: rgb(255 255 255 / 0.84);
-  -webkit-backdrop-filter: blur(20px) saturate(170%);
-  backdrop-filter: blur(20px) saturate(170%);
-  border: 1px solid rgb(255 255 255 / 0.7);
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.07), rgb(255 255 255 / 0.02)),
+    rgb(14 7 9 / 0.62);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  backdrop-filter: blur(24px) saturate(160%);
+  border: 1px solid rgb(255 255 255 / 0.09);
   box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 0.95),
-    0 14px 44px rgb(30 0 8 / 0.28);
+    inset 0 1px 0 rgb(255 255 255 / 0.1),
+    0 18px 50px rgb(0 0 0 / 0.45);
+}
+
+/* The page: one pane of smoked glass over the night (AppShell). The light behind shows faintly
+   through it and fully around it. No backdrop blur: the light is already soft, and blurring a
+   whole page over a moving background would cost every frame. */
+.page-sheet {
+  background:
+    radial-gradient(1200px 500px at 50% -10%, rgb(255 255 255 / 0.035), transparent 70%),
+    linear-gradient(180deg, rgb(16 8 10 / 0.84), rgb(10 5 7 / 0.9));
+  border: 1px solid rgb(255 255 255 / 0.075);
+}
+/* The homepage is the light itself: no pane. */
+.page-sheet[data-bare="true"] {
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}
+
+/* Each page rises out of the glass when it opens. */
+.page-enter {
+  animation: page-enter 520ms var(--ease-out) both;
+}
+@keyframes page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
 }

@@ -719,3 +719,48 @@ combined. Take inspiration from this and apply to every page and every detail").
 - The transfer questions in step 4 have no box of their own. Their fields line up with the fields above.
 - The kind labels are "AP exam", "Placement" and "Transfer".
 
+
+## Dark glass (Max, 2026-11-27; branch `claude/quarterly-ui-redesign-c953e9`)
+
+Max asked for this with three reference pictures: floating glass tool panels over a dark picture, glass folders on a swirl of dark red light, and a dark glass sign-in card with a ring of white light behind it. His words: "Reconstruct everything on Quarterly on this UI style", "Have the Harper Library at the homepage in this UI as well. Have each quarter in the planner a folder like as shown, and classes as files in it. Be magical, smooth, dark, red, glassy. Mature designs", and "white light goes together intersection with maroon dark red light, flowing in the background". Richard has not seen it yet. Where it conflicts with the sections above (including "Maroon and night"), this section describes what is built.
+
+- **The night and its light** (`components/brand/Aurora.tsx`). Every page is on near-black (`night` #060203).
+  - Behind it, a ring of white light crosses a ring of crimson light. A wide ring of maroon haze and two slow red blooms sit under both.
+  - A bright arc travels slowly round each ring (110-220 s a turn). Where white crosses red, the two add up to a rose-white glow.
+  - Film grain stops banding; a vignette keeps the edges black.
+  - Only transforms animate, so the browser moves cached layers and does not repaint. With reduced motion, the light holds still.
+  - The light is dimmer behind pages covered by a pane. It is at full strength on the homepage and on sign-in and sign-up.
+- **The pane.** Each page is one pane of smoked glass (`.page-sheet`, about 86% opaque) with a lit hairline edge, 44px corners and a deep shadow.
+  - The light shows faintly through the pane and fully around it.
+  - The pane has no backdrop blur: blurring a whole page over a moving background would cost every frame.
+  - The homepage has no pane (`data-bare`).
+  - A page rises out of the glass when it opens (`.page-enter`, 520 ms).
+- **Colour** (tokens in `index.css`; the names did not change, the values did):
+  - Text is warm white: `ink` #f7f0f0, `body` #cdc1c3, `muted` #ab9c9f. Each is 4.5:1 or better on the pane and on its glass tints.
+  - Red is the light itself: `primary` #ff5c70 (6.6:1 on the pane) for links, the current place, focus rings, bars and dots. As a fill, it carries dark text (`on-primary`).
+  - Surfaces on the pane are tints of white (`surface-card` 4.5%, `surface-strong` 8.5%, `canvas-soft` 3%). Surfaces that float over content use `surface-raised` (#1a0f12) or the `.glass-raised` class.
+  - `canvas` (#0c0608) is solid, for covers.
+  - Lines are white at low alpha (`hairline` 9%, `hairline-strong` 17%), so they catch the light like the edge of a pane.
+  - Semantic colours and the data colours are lifted so they read on dark. Their washes are tints of the same light.
+  - Scrims use `scrim` (never `ink`, which is now white). The pair `bg-ink` + `text-on-dark` would now be white on white: use `bg-ink text-canvas`.
+- **Type.**
+  - Headlines use Instrument Serif at 400 (`font-display`; the `text-display-*` sizes are about 20% larger than the old bold Inter, because the serif's x-height is lower). Their `<em>` words are its italic, lit red.
+  - `font-synthesis` is off, so a bold class never fakes a bold serif.
+  - Body and controls stay Inter. Voices and quotes keep Newsreader (`font-serif`).
+  - Small labels (eyebrows, course codes, footer column titles, dates) are JetBrains Mono capitals, widely spaced (`.mono-label`, `Eyebrow`, `CourseCode`), like "PLANNER // AUTUMN 2026".
+  - All fonts are bundled from npm, so nothing is fetched from another origin.
+- **Controls.**
+  - The main button is a white pill with dark text and a red glow beneath it. The glow brightens on hover.
+  - `outline` is a clear glass pill with a lit edge. `glow` is red glass, for a second strong action.
+  - Inputs are dark glass pills with an inset shadow. On focus, the edge turns red with a red halo.
+  - Cards are glass tiles with a lit top edge. Cards that are links lift 2px and light up.
+  - Any `[data-spotlight]` surface carries a soft red light that follows the pointer (one listener in `AppShell`). It is decorative only.
+- **Floating glass.** The menu bar is a slab of smoked glass (`.nav-glass`). The current tab is a lit glass pill with a point of red light. Menus, dialogs, drawers and the top sheet use `.glass-raised` over a blurred `scrim`.
+- **The wordmark** is "Quarterly" in the display serif, with one point of red light after it.
+- **Folders and files** (`components/ui/folder.tsx`).
+  - A glass folder has a back panel with a tab on its top-left. The tab slopes down into the body.
+  - The files stand inside it. A frosted front pocket runs across the bottom, and its top edge steps down from left to right. The files tuck 8px behind the pocket, so nothing they say is covered.
+  - Tones: `smoke`, `ember` (red light) and `garnet`. A drop target lights its edge red and glows (`active`).
+  - A file (`.glass-file`) is a sheet of light glass with a folded top-right corner. It is painted by pseudo-elements, so the element keeps a normal box for focus rings and dragging.
+  - The planner draws each quarter as a folder and each class as a file in it.
+- **Motion.** The ease is `cubic-bezier(0.16, 1, 0.3, 1)`: long and soft. Hover and press take 150-300 ms, entrances 400-520 ms. Reduced motion stops all of it.

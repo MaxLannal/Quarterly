@@ -17,31 +17,36 @@ export const buttonVariants = cva(
   [
     "relative inline-flex shrink-0 cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-pill",
     // Press feedback: the pill dips to 97% for the 150ms press (instant under reduced motion).
-    "border-transparent bg-clip-padding font-sans text-button transition-[color,background-color,box-shadow,scale] active:scale-[0.97]",
+    "border-transparent bg-clip-padding font-sans text-button transition-[color,background-color,box-shadow,scale] duration-200 active:scale-[0.97]",
     "disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50",
   ],
   {
     variants: {
       variant: {
-        /** button-primary: maroon pill, one per view. */
-        // Disabled: a grey plate with muted text (still legible, 4.7:1), not a faded maroon that reads as active (D11 AD-4).
+        /** button-primary: one per view. A white pill with a red glow beneath it, like light through
+         * glass (docs/DESIGN.md "Dark glass"); the glow brightens on hover. */
+        // Disabled: a dim glass plate with muted text (still legible), not a faded white that reads as active (D11 AD-4).
         primary:
-          "bg-primary text-on-primary hover:bg-primary-hover active:bg-primary-active disabled:bg-surface-strong disabled:text-muted disabled:opacity-100 aria-disabled:bg-surface-strong aria-disabled:text-muted aria-disabled:opacity-100",
-        /** button-outline: transparent pill, 1px hairline-strong line, ink text. */
+          "bg-ink text-canvas shadow-[0_8px_30px_rgb(255_60_90/0.28),inset_0_-2px_0_rgb(0_0_0/0.08)] hover:bg-white hover:shadow-[0_10px_40px_rgb(255_60_90/0.45),inset_0_-2px_0_rgb(0_0_0/0.08)] active:bg-on-night-soft disabled:bg-surface-strong disabled:text-muted disabled:shadow-none disabled:opacity-100 aria-disabled:bg-surface-strong aria-disabled:text-muted aria-disabled:shadow-none aria-disabled:opacity-100",
+        /** button-outline: a clear glass pill with a lit edge. */
         outline:
-          "bg-transparent text-ink shadow-[inset_0_0_0_1px_var(--color-hairline-strong)] hover:bg-surface-strong active:bg-hairline",
+          "bg-white/[0.035] text-ink shadow-[inset_0_0_0_1px_var(--color-hairline-strong),inset_0_1px_0_rgb(255_255_255/0.08)] hover:bg-white/[0.08] hover:shadow-[inset_0_0_0_1px_rgb(255_255_255/0.28),inset_0_1px_0_rgb(255_255_255/0.1)] active:bg-white/[0.12]",
         /** button-tertiary-text: ink text, no chrome (a soft plate on hover only). */
-        ghost: "bg-transparent text-ink hover:bg-surface-strong active:bg-hairline",
-        /** button-destructive: outline pill with error-colored text; never an error fill. */
+        ghost: "bg-transparent text-ink hover:bg-surface-strong active:bg-white/[0.12]",
+        /** button-destructive: outline pill with error-coloured text; never an error fill. */
         destructive:
           "bg-transparent text-error shadow-[inset_0_0_0_1px_var(--color-hairline-strong)] hover:bg-error-wash active:bg-error-wash",
-        /** link-inline as a button: maroon, underlined. */
+        /** link-inline as a button: the red light, underlined. */
         link: "rounded-xs bg-transparent text-primary underline underline-offset-4 hover:text-primary-hover",
-        /** On the night background: a white pill with maroon text. */
-        light: "bg-on-night text-primary hover:bg-on-night-soft active:bg-on-night-soft",
-        /** On the night background: a clear pill with a soft white line. */
+        /** On the night: the same white pill as primary. */
+        light:
+          "bg-ink text-canvas shadow-[0_8px_30px_rgb(255_60_90/0.28)] hover:bg-white active:bg-on-night-soft",
+        /** On the night: a clear pill with a soft white line. */
         night:
-          "bg-transparent text-on-night shadow-[inset_0_0_0_1px_rgb(255_255_255/0.35)] hover:bg-on-night/10 active:bg-on-night/15",
+          "bg-transparent text-on-night shadow-[inset_0_0_0_1px_rgb(255_255_255/0.3)] hover:bg-on-night/10 active:bg-on-night/15",
+        /** Red glass: for a second strong action beside the white pill (e.g. "Generate"). */
+        glow:
+          "bg-[linear-gradient(180deg,rgb(255_92_112/0.32),rgb(160_16_44/0.32))] text-ink shadow-[inset_0_0_0_1px_rgb(255_120_140/0.45),inset_0_1px_0_rgb(255_255_255/0.18),0_8px_28px_rgb(200_20_50/0.3)] hover:bg-[linear-gradient(180deg,rgb(255_92_112/0.45),rgb(160_16_44/0.42))]",
       },
       size: {
         /** 46px pill in a 52px box. */

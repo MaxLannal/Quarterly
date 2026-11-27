@@ -259,7 +259,7 @@ export default function CommonsPage() {
                     onClick={() => update({ type: t.key })}
                     className={cn(
                       "inline-flex min-h-11 shrink-0 items-center rounded-pill px-3.5 text-nav-link transition-colors",
-                      type === t.key ? "bg-ink text-on-dark" : "text-body hover:bg-surface-strong hover:text-ink",
+                      type === t.key ? "bg-ink text-canvas" : "text-body hover:bg-surface-strong hover:text-ink",
                     )}
                   >
                     {t.label}
@@ -338,7 +338,7 @@ export default function CommonsPage() {
                     onClick={() => update({ tag: tag === t ? null : t })}
                     className={cn(
                       "inline-flex min-h-11 shrink-0 items-center rounded-pill px-3 text-caption transition-colors",
-                      tag === t ? "bg-ink text-on-dark" : "bg-surface-strong text-body hover:bg-hairline",
+                      tag === t ? "bg-ink text-canvas" : "bg-surface-strong text-body hover:bg-hairline",
                     )}
                   >
                     #{t}

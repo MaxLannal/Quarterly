@@ -9,21 +9,22 @@ import { cn } from "@/lib/utils";
 export const cardVariants = cva("min-w-0 text-ink", {
   variants: {
     variant: {
-      /** course-card: white, 16px radius, 24px padding. */
-      default: "rounded-xl border border-hairline bg-surface-card p-6",
-      /** Compact card (menus, dense lists): 12px radius, 16px padding. */
-      compact: "rounded-lg border border-hairline bg-surface-card p-4",
-      /** post-card: white, 16px radius, 32px padding, body text color. */
-      post: "rounded-xl border border-hairline bg-surface-card p-8 text-body",
-      /** orb-card: canvas-soft, 24px radius, 32px padding; pair with one <Orb>. */
-      orb: "relative isolate overflow-hidden rounded-xxl bg-canvas-soft p-8",
-      /** featured-card: the maroon inversion, at most one per page. */
-      featured: "rounded-xl bg-surface-inverse p-8 text-on-primary",
+      /** course-card: a glass tile with a lit top edge, 18px radius, 24px padding. */
+      default: "rounded-xl border border-hairline bg-surface-card p-6 shadow-[inset_0_1px_0_rgb(255_255_255/0.06)]",
+      /** Compact card (menus, dense lists). */
+      compact: "rounded-lg border border-hairline bg-surface-card p-4 shadow-[inset_0_1px_0_rgb(255_255_255/0.05)]",
+      /** post-card: glass, 32px padding, body text colour. */
+      post: "rounded-xl border border-hairline bg-surface-card p-8 text-body shadow-[inset_0_1px_0_rgb(255_255_255/0.06)]",
+      /** orb-card: glass with one red bloom inside; pair with one <Orb>. */
+      orb: "relative isolate overflow-hidden rounded-xxl border border-hairline bg-canvas-soft p-8",
+      /** featured-card: deep maroon glass, at most one per page. */
+      featured:
+        "rounded-xl border border-[rgb(255_120_140/0.25)] bg-[linear-gradient(160deg,#7a1228,#3a0712)] p-8 text-on-dark shadow-[inset_0_1px_0_rgb(255_255_255/0.12),0_24px_60px_rgb(120_10_30/0.35)]",
       /** A quiet well for grouped controls (filters, a form step). */
       well: "rounded-xl border border-hairline bg-canvas-soft p-5",
     },
     interactive: {
-      true: "transition-shadow hover:shadow-hover focus-within:shadow-hover",
+      true: "transition-[box-shadow,border-color,translate] duration-300 hover:-translate-y-0.5 hover:border-hairline-strong hover:shadow-hover focus-within:shadow-hover",
       false: "",
     },
   },
@@ -34,7 +35,7 @@ type CardProps = HTMLAttributes<HTMLElement> &
   VariantProps<typeof cardVariants> & { as?: "div" | "section" | "article" | "li" | "aside" | "figure" };
 
 export function Card({ as: Tag = "div", variant, interactive, className, ...props }: CardProps) {
-  return <Tag className={cn(cardVariants({ variant, interactive }), className)} {...props} />;
+  return <Tag data-spotlight={interactive ? "" : undefined} className={cn(cardVariants({ variant, interactive }), className)} {...props} />;
 }
 
 export type OrbColor = "lake" | "goldenrod" | "ivy" | "terracotta" | "rose" | "maroon";
@@ -65,7 +66,7 @@ export function Avatar({ name, className }: { name: string; className?: string }
     .map((p) => p[0]?.toUpperCase())
     .join("");
   return (
-    <span aria-hidden="true" className={cn("inline-flex size-8 shrink-0 items-center justify-center rounded-pill bg-surface-strong text-caption-uppercase text-ink", className)}>
+    <span aria-hidden="true" className={cn("inline-flex size-8 shrink-0 items-center justify-center rounded-pill bg-[linear-gradient(160deg,rgb(255_92_112/0.35),rgb(120_10_32/0.5))] text-caption-uppercase text-ink shadow-[inset_0_0_0_1px_rgb(255_255_255/0.14)]", className)}>
       {initials || "?"}
     </span>
   );
@@ -74,7 +75,7 @@ export function Avatar({ name, className }: { name: string; className?: string }
 /** A stat for attribute grids: caption label over a title value. */
 export function Stat({ label, value, children }: { label: ReactNode; value: ReactNode; children?: ReactNode }) {
   return (
-    <div className="rounded-lg bg-canvas-soft p-4">
+    <div className="rounded-lg border border-hairline-soft bg-canvas-soft p-4">
       <dt className="text-caption text-muted">{label}</dt>
       <dd className="mt-0.5 text-title-sm tabular-nums">{value}</dd>
       {children}

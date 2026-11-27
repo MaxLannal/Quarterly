@@ -79,7 +79,7 @@ export function Menu({ label, trigger, items, open, onOpenChange, className }: M
           aria-label={label}
           tabIndex={-1}
           onKeyDown={onKeyDown}
-          className="absolute right-0 z-40 mt-1 min-w-52 rounded-lg border border-hairline bg-surface-card p-1 shadow-overlay"
+          className="glass-raised absolute right-0 z-40 mt-1 min-w-52 animate-rise rounded-lg p-1"
         >
           {items.map((item) => (
             <button

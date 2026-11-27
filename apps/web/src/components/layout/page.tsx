@@ -29,9 +29,9 @@ export function PageContainer({
   return <Tag className={cn("mx-auto w-full px-4 pb-16 pt-6 sm:px-6 sm:pt-8 lg:px-8", WIDTHS[width], className)}>{children}</Tag>;
 }
 
-/** Section label: caption-uppercase, muted (e.g. "COURSE", "STEP 2 OF 5"). */
+/** Section label: small mono capitals, widely spaced, muted (e.g. "COURSE", "STEP 2 OF 5"). */
 export function Eyebrow({ children, className, as: Tag = "p" }: { children: ReactNode; className?: string; as?: "p" | "span" | "div" }) {
-  return <Tag className={cn("text-caption-uppercase uppercase text-muted", className)}>{children}</Tag>;
+  return <Tag className={cn("mono-label text-muted", className)}>{children}</Tag>;
 }
 
 const TITLE_SIZES = {
@@ -41,8 +41,8 @@ const TITLE_SIZES = {
 } as const;
 
 /**
- * Page header: optional eyebrow, a Newsreader 300 h1, a body-md description and actions.
- * Display type is never bold.
+ * Page header: optional mono eyebrow, a display-serif h1 with a faint red halo, a body-md
+ * description and actions. Display type is never bold.
  */
 export function PageHeader({
   eyebrow,
@@ -66,7 +66,7 @@ export function PageHeader({
   return (
     <header className={cn("mb-6 flex flex-col gap-3", className)}>
       {eyebrow && <Eyebrow>{eyebrow}</Eyebrow>}
-      <h1 className={cn("font-display text-ink", TITLE_SIZES[size])}>{title}</h1>
+      <h1 className={cn("font-display text-ink [text-shadow:0_0_42px_rgb(255_92_112/0.18)]", TITLE_SIZES[size])}>{title}</h1>
       {meta && <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-caption text-muted">{meta}</div>}
       {description && <div className="max-w-reading text-body-md text-body">{description}</div>}
       {actions && <div className="flex flex-wrap items-center gap-3">{actions}</div>}
@@ -122,10 +122,10 @@ export function Section({
   );
 }
 
-/** Empty state: a dashed hairline plate, muted text, an optional action. */
+/** Empty state: a dashed glass plate, muted text, an optional action. */
 export function EmptyState({ title, children, action, className }: { title?: ReactNode; children?: ReactNode; action?: ReactNode; className?: string }) {
   return (
-    <div className={cn("flex flex-col items-start gap-2 rounded-xl border border-dashed border-hairline-strong bg-canvas-soft px-5 py-6", className)}>
+    <div className={cn("flex flex-col items-start gap-2 rounded-xl border border-dashed border-hairline-strong bg-white/[0.025] px-5 py-6", className)}>
       {title && <p className="text-body-strong text-ink">{title}</p>}
       {children && <div className="text-body-sm text-muted [&_a]:text-primary [&_a]:underline [&_a]:underline-offset-2">{children}</div>}
       {action}
@@ -149,8 +149,8 @@ export function LoadingState({ label, lines = 3, className }: { label: string; l
   );
 }
 
-/** link-inline: maroon, underlined. Standalone links also get a 44px target. */
-export const inlineLinkClass = "rounded-xs text-primary underline underline-offset-2 hover:text-primary-hover";
+/** link-inline: the red light, underlined. Standalone links also get a 44px target. */
+export const inlineLinkClass = "rounded-xs text-primary underline decoration-primary/40 underline-offset-[3px] transition-colors hover:text-primary-hover hover:decoration-primary-hover";
 export const standaloneLinkClass = cn(inlineLinkClass, "inline-flex min-h-11 items-center");
 /**
  * A 44px target for a link that sits in a dense line (meta rows, list titles) without moving the

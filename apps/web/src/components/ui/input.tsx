@@ -10,10 +10,10 @@ import { ErrorIcon } from "./icons";
 export const controlClass = cn(
   // Redesign 2026-11-20: pills like the reference's Email and Password fields (26px radius: a
   // pill on one line, a soft rounded box when taller), 52px tall, a soft maroon halo on focus.
-  "min-h-[52px] w-full min-w-0 rounded-[26px] border border-hairline-strong bg-surface-card px-5 py-3 font-sans text-body-md text-ink",
+  "min-h-[52px] w-full min-w-0 rounded-[26px] border border-hairline-strong bg-white/[0.04] px-5 py-3 font-sans text-body-md text-ink shadow-[inset_0_1px_2px_rgb(0_0_0/0.3)]",
   "placeholder:text-muted transition-[border-color,box-shadow]",
-  "focus-visible:outline-none focus:border-primary focus:shadow-[0_0_0_4px_var(--color-primary-wash)]",
-  "disabled:cursor-not-allowed disabled:bg-surface-strong disabled:text-muted",
+  "hover:border-white/30 focus-visible:outline-none focus:border-primary focus:bg-white/[0.06] focus:shadow-[0_0_0_4px_rgb(255_92_112/0.16),0_0_28px_rgb(255_92_112/0.18)]",
+  "disabled:cursor-not-allowed disabled:bg-white/[0.02] disabled:text-muted",
   "aria-[invalid=true]:border-error",
 );
 

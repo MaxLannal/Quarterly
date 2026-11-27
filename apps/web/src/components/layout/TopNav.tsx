@@ -45,19 +45,23 @@ const NAV: { to: string; label: string; current: (path: string) => boolean }[] =
     },
   ];
 
-/** The text wordmark (DESIGN.md "Brand & logo": no university marks), set in Newsreader 500 so it
- * holds its own in the bar (D4, FEEDBACK "Minor design changes"). */
+/** The text wordmark (DESIGN.md "Brand & logo": no university marks), set in the display serif with
+ * one point of red light after it (docs/DESIGN.md "Dark glass"). */
 export function Wordmark({ className }: { className?: string }) {
   return (
     <Link
       to="/"
       className={cn(
-        // The serif wordmark, in ink on the frosted bar (docs/DESIGN.md "Maroon and night").
-        "flex min-h-11 shrink-0 items-center rounded-xs font-serif text-[30px] font-medium tracking-[-0.4px] text-ink",
+        // The display-serif wordmark in warm white on the smoked-glass bar.
+        "group flex min-h-11 shrink-0 items-center gap-[3px] rounded-xs font-display text-[33px] leading-none tracking-[-0.5px] text-ink",
         className,
       )}
     >
       Quarterly
+      <span
+        aria-hidden="true"
+        className="mt-3 inline-block size-[7px] rounded-pill bg-primary shadow-[0_0_12px_2px_rgb(255_92_112/0.7)] transition-transform duration-300 group-hover:scale-125"
+      />
     </Link>
   );
 }
@@ -90,8 +94,8 @@ function SearchBox() {
           // A quiet filled field (D6, FEEDBACK "Minor design changes"): no outline until it is used;
           // the icon and placeholder say what it is. Focus: white, with the maroon ring.
           // On the frosted bar: a quiet filled pill that turns white, with the maroon halo, in use.
-          "peer min-h-12 w-full min-w-0 rounded-pill border border-transparent bg-surface-strong/80 pl-12 pr-4 text-body-md text-ink transition-colors duration-150 placeholder:text-muted",
-          "hover:border-hairline hover:bg-surface-strong focus-visible:outline-none focus:border-primary focus:bg-surface-card focus:shadow-[0_0_0_4px_var(--color-primary-wash)]",
+          "peer min-h-12 w-full min-w-0 rounded-pill border border-hairline bg-white/[0.05] pl-12 pr-4 text-body-md text-ink shadow-[inset_0_1px_2px_rgb(0_0_0/0.35)] transition-[border-color,background-color,box-shadow] duration-200 placeholder:text-muted",
+          "hover:border-hairline-strong hover:bg-white/[0.07] focus-visible:outline-none focus:border-primary/70 focus:bg-white/[0.08] focus:shadow-[0_0_0_4px_rgb(255_92_112/0.14),0_0_30px_rgb(255_92_112/0.2)]",
         )}
       />
       <Button
@@ -119,12 +123,19 @@ function NavLinks({ vertical = false }: { vertical?: boolean }) {
             to={item.to}
             aria-current={current ? "page" : undefined}
             className={cn(
-              // Larger words; the current page is a soft rose wash, not a solid red.
-              "flex min-h-11 items-center rounded-pill px-4 text-[18px] font-medium tracking-[-0.01em] text-body-strong transition-colors hover:bg-surface-strong hover:text-ink md:px-2.5 xl:px-4",
+              // The current page is a lit glass pill with a point of red light; the others are quiet.
+              "relative flex min-h-11 items-center gap-2 rounded-pill px-4 text-[17px] font-medium tracking-[-0.01em] text-muted transition-[color,background-color,box-shadow] duration-200 hover:bg-white/[0.06] hover:text-ink md:px-3 xl:px-4",
               vertical && "w-full md:w-auto",
-              current && "bg-primary-wash text-primary hover:bg-primary-wash",
+              current &&
+                "bg-white/[0.08] text-ink shadow-[inset_0_0_0_1px_rgb(255_255_255/0.1),inset_0_1px_0_rgb(255_255_255/0.12)] hover:bg-white/[0.1]",
             )}
           >
+            {current && (
+              <span
+                aria-hidden="true"
+                className="size-1.5 rounded-pill bg-primary shadow-[0_0_10px_2px_rgb(255_92_112/0.65)]"
+              />
+            )}
             {item.label}
           </Link>
         );
@@ -150,22 +161,22 @@ export function TopNav() {
     <Link
       to="/me"
       aria-current={location.pathname === "/me" ? "page" : undefined}
-      className="flex min-h-11 items-center gap-2 rounded-pill bg-surface-strong/80 pl-1 pr-1 text-[17px] font-medium text-ink hover:bg-surface-strong aria-[current=page]:bg-primary-wash aria-[current=page]:text-primary lg:pr-4"
+      className="flex min-h-11 items-center gap-2 rounded-pill bg-white/[0.05] pl-1 pr-1 text-[16px] font-medium text-ink shadow-[inset_0_0_0_1px_var(--color-hairline)] transition-colors hover:bg-white/[0.09] aria-[current=page]:shadow-[inset_0_0_0_1px_rgb(255_92_112/0.45)] lg:pr-4"
     >
-      <Avatar name={session.account.username} className="bg-primary-wash text-primary" />
+      <Avatar name={session.account.username} />
       {/* Below wide screens the avatar alone keeps the bar on one row; the name stays for screen readers. */}
       <span className="max-lg:sr-only">{session.account.username}</span>
     </Link>
   ) : AUTH_PAGES.has(location.pathname) ? null : (
     // D11 AU-3: no "Log in" pill on the login and sign-up pages themselves.
-    <Button asChild variant="outline" className="bg-surface-card">
+    <Button asChild variant="outline">
       <Link to={authLinks.login}>Log in</Link>
     </Button>
   );
 
   return (
-    // A frosted white bar the width of the page sheet, floating on the maroon frame and staying at
-    // the top while the page scrolls (Max, 2026-11-20: "less out of place", larger words).
+    // A slab of smoked glass the width of the page pane, floating on the night and staying at the
+    // top while the page scrolls (docs/DESIGN.md "Dark glass").
     <header className="sticky top-0 z-30 px-2 pb-2 pt-2 sm:px-3 sm:pb-3 sm:pt-3 lg:px-5">
       <div
         className={cn(

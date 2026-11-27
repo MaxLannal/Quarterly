@@ -9,7 +9,7 @@ function Badge({ tone, children }: { tone: "answered" | "accepted" | "ai" | "ope
     <span
       className={cn(
         "inline-flex min-h-6 items-center gap-1 rounded-pill px-2.5 text-[12px] font-semibold",
-        tone === "accepted" && "bg-success text-on-dark",
+        tone === "accepted" && "bg-success text-on-primary",
         tone === "answered" && "bg-success-wash text-success",
         tone === "ai" && "bg-primary-wash text-primary",
         tone === "open" && "border border-dashed border-hairline-strong text-muted",

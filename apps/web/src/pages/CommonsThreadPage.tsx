@@ -344,7 +344,7 @@ export default function CommonsThreadPage() {
                       role="tab"
                       aria-selected={sort === key}
                       onClick={() => setSort(key)}
-                      className={cn("inline-flex min-h-11 items-center rounded-pill px-3 text-caption font-medium", sort === key ? "bg-ink text-on-dark" : "text-body hover:bg-surface-strong")}
+                      className={cn("inline-flex min-h-11 items-center rounded-pill px-3 text-caption font-medium", sort === key ? "bg-ink text-canvas" : "text-body hover:bg-surface-strong")}
                     >
                       {label}
                     </button>

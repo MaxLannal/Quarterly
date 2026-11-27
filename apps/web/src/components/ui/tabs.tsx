@@ -65,7 +65,7 @@ export function Tabs({ tabs, label, initial, active: controlled, onChange, end, 
               className={cn(
                 // Phones: 14px and tighter padding, so four tabs and a close button fit 390px (D11 polish).
                 "-mb-px inline-flex min-h-11 flex-1 cursor-pointer items-center justify-center gap-1.5 whitespace-nowrap border-b-2 px-1.5 text-caption font-medium transition-colors focus-visible:outline-offset-[-2px] sm:px-3 sm:text-nav-link",
-                active === t.key ? "border-primary text-ink" : "border-transparent text-muted hover:text-ink",
+                active === t.key ? "border-primary text-ink [box-shadow:0_8px_16px_-12px_var(--color-primary)]" : "border-transparent text-muted hover:text-ink",
               )}
             >
               {t.label}
