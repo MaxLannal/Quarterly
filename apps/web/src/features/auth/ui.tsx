@@ -1,6 +1,4 @@
 import { useEffect, useId, useRef, useState, type InputHTMLAttributes, type ReactNode } from "react";
-import { GradientArt } from "@/components/brand/GradientArt";
-import { TypeScape } from "@/components/brand/TypeScape";
 import { Eyebrow, standaloneLinkClass } from "@/components/layout/page";
 import { CheckIcon, ErrorIcon, EyeIcon, EyeOffIcon, MailIcon } from "@/components/ui/icons";
 import { controlClass, FieldError, FieldHint, Label } from "@/components/ui/input";
@@ -101,22 +99,9 @@ export function StepHeading({ children }: { children: ReactNode }) {
   );
 }
 
-/** The brand emblem above the sign-in title: a Gothic window in maroon (the reference's house). */
-function ArchMark() {
-  return (
-    <svg aria-hidden="true" width="44" height="52" viewBox="0 0 44 52" className="text-primary">
-      <path d="M4 50V22C4 11 12 3 22 2c10 1 18 9 18 20v28z" fill="currentColor" />
-      <path d="M10 50V23c0-7 5-12.5 12-13.5 7 1 12 6.5 12 13.5v27z" fill="#fff" opacity=".18" />
-      <path d="M22 10v40M10 30h24" stroke="#fff" strokeWidth="2" opacity=".55" />
-      <circle cx="22" cy="21" r="4.5" fill="none" stroke="#fff" strokeWidth="2" opacity=".7" />
-    </svg>
-  );
-}
-
 /**
- * Sign-up and login (docs/DESIGN.md "Maroon and night", after the reference login card): on the
- * white sheet, the form centred on the left under a maroon emblem and a big bold title; on the
- * right a rounded art panel with a Gothic window drawn in glowing course titles (wide screens).
+ * Sign-up and login ("Simple light", docs/DESIGN.md): one white card with a hairline, centred in the
+ * panel, the black Q tile above a medium-weight title.
  */
 export function AuthPage({
   title,
@@ -134,34 +119,17 @@ export function AuthPage({
   wide?: boolean;
 }) {
   return (
-    <section className="mx-auto grid w-full max-w-content gap-6 p-3 sm:p-5 lg:min-h-[760px] lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-8">
-      <div className="flex flex-col justify-center px-3 py-10 sm:px-10 lg:py-16">
-        <div className={cn("mx-auto flex w-full flex-col gap-8", wide ? "max-w-[36rem]" : "max-w-[30rem]")}>
-          <div className="flex flex-col items-center gap-4 text-center">
-            <ArchMark />
-            {eyebrow && <Eyebrow>{eyebrow}</Eyebrow>}
-            <h1 className="font-display text-[44px] font-extrabold leading-[1.02] tracking-[-1.8px] sm:text-[54px]">
-              {title}
-            </h1>
-            {subline && <p className="text-body-md text-body">{subline}</p>}
-          </div>
-          <div className="flex flex-col gap-5">{children}</div>
+    <section className="flex w-full justify-center px-4 py-10 sm:px-6 lg:py-16">
+      <div className={cn("flex w-full flex-col gap-7 rounded-xxl border border-hairline bg-canvas p-6 sm:p-9", wide ? "max-w-[38rem]" : "max-w-[32rem]")}>
+        <div className="flex flex-col items-center gap-3 text-center">
+          <span aria-hidden="true" className="flex size-11 items-center justify-center rounded-xl bg-ink text-[20px] font-semibold text-on-primary">
+            Q
+          </span>
+          {eyebrow && <Eyebrow>{eyebrow}</Eyebrow>}
+          <h1 className="text-display-md">{title}</h1>
+          {subline && <p className="text-body-sm text-muted">{subline}</p>}
         </div>
-      </div>
-      <div className="relative isolate hidden overflow-hidden rounded-art shadow-overlay lg:block">
-        <GradientArt seed={title} />
-        <TypeScape
-          shape="arch"
-          theme="night"
-          zoom={1.7}
-          focus={0.5}
-          label="A Gothic window drawn with the titles of real courses"
-        />
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-night via-night/80 to-transparent px-9 pb-9 pt-24">
-          <p className="font-serif text-[28px] italic leading-snug text-on-night">
-            Every course of the College, in one place you can plan from.
-          </p>
-        </div>
+        <div className="flex flex-col gap-5">{children}</div>
       </div>
     </section>
   );

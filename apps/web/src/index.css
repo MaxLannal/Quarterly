@@ -5,14 +5,13 @@
 @custom-variant chapel-side (@media (min-width: 900px) and (min-aspect-ratio: 6/5));
 
 /*
- * Design tokens from docs/DESIGN.md (YAML front matter + "Implementation tokens").
- * docs/DESIGN-IMPLEMENTATION.md maps every DESIGN.md part to the names below.
+ * Design tokens: "Simple light" (Max, 2026-11-27; docs/DESIGN.md). A light grey frame with the
+ * sidebar on it, white panels and cards with soft hairlines, near-black text, and black as the one
+ * accent (the current tab, the main button, focus). One font: Figtree. No serif, no mono, no glow.
  *
- * Tailwind's default palette, radii, shadows and type sizes are cleared so a utility can only
- * name a DESIGN.md token: `bg-canvas`, `text-ink`, `border-hairline`, `rounded-pill`,
- * `shadow-hover`, `text-title-md`, `font-display`. Spacing keeps Tailwind's 4px step, which is
- * DESIGN.md's base unit (1 = xxs 4px, 2 = xs 8px, 3 = sm 12px, 4 = base 16px, 5 = md 20px,
- * 6 = lg 24px, 8 = xl 32px, 12 = xxl 48px, 24 = section 96px).
+ * Tailwind's default palette, radii, shadows and type sizes are cleared so a utility can only name
+ * a token: `bg-canvas`, `text-ink`, `border-hairline`, `rounded-xl`, `text-title-md`. Spacing keeps
+ * Tailwind's 4px step.
  */
 @theme {
   --color-*: initial;
@@ -22,180 +21,176 @@
   --drop-shadow-*: initial;
   --text-*: initial;
 
-  /* Brand & action */
-  --color-primary: #800000;
-  --color-primary-hover: #6c0000;
-  --color-primary-active: #5a0000;
-  --color-primary-wash: #f5ebeb;
+  /* The one accent: near black. Links, the current tab, the main button, progress, focus. */
+  --color-primary: #111111;
+  --color-primary-hover: #2b2b2b;
+  --color-primary-active: #000000;
+  --color-primary-wash: #f1f1ef;
   --color-on-primary: #ffffff;
+  /* UChicago maroon, kept for the few places that name the brand (the wordmark mark). */
+  --color-maroon: #800000;
 
-  /* Text */
+  /* Text (all 4.5:1 or better on white, except muted-soft, which is decorative). */
   --color-ink: #111111;
-  --color-body-strong: #262626;
-  --color-body: #4d4d4d;
-  --color-muted: #6b6b6b;
-  --color-muted-soft: #adadad;
+  --color-body-strong: #2a2a2a;
+  --color-body: #4f4f4f;
+  --color-muted: #6e6e6e;
+  --color-muted-soft: #a8a8a6;
 
-  /* Surfaces. Redesign 2026-11-20 (docs/DESIGN.md "Maroon and night"): pages are white sheets on a
-     maroon-and-black night; the sheet is pure white like the reference card. */
+  /* Surfaces. `app` is the frame behind the sidebar and the panel. */
+  --color-app: #f3f3f1;
   --color-canvas: #ffffff;
-  --color-canvas-soft: #faf7f7;
+  --color-canvas-soft: #f8f8f7;
   --color-surface-card: #ffffff;
-  --color-surface-strong: #f4eff0;
+  --color-surface-strong: #f1f1ef;
   --color-surface-dark: #111111;
-  --color-surface-dark-elevated: #1f1f1f;
-  --color-surface-inverse: #800000;
+  --color-surface-dark-elevated: #1e1e1e;
+  --color-surface-inverse: #111111;
   --color-on-dark: #ffffff;
-  --color-on-dark-soft: #adadad;
-  --color-on-inverse-soft: #f0e0e0;
+  --color-on-dark-soft: #b5b5b3;
+  --color-on-inverse-soft: #d6d6d4;
+  --color-scrim: rgb(17 17 17 / 0.32);
 
-  /* Lines */
-  --color-hairline: #ece5e6;
-  --color-hairline-soft: #f4eff0;
-  --color-hairline-strong: #d9cfd1;
-  --color-border-input: #8a8a8a;
-  --color-gray-dark: #767676;
+  /* Lines. */
+  --color-hairline: #e9e9e7;
+  --color-hairline-soft: #f1f1ef;
+  --color-hairline-strong: #d9d9d6;
+  --color-border-input: #8f8f8d;
+  --color-gray-dark: #6e6e6e;
 
-  /* The night around the sheets: maroon and black, with crimson and coral light (GradientArt). */
-  --color-night: #12040a;
-  --color-night-2: #2b0711;
+  /* Kept names from earlier designs, mapped to the light frame (footer, auth art, dark panels). */
+  --color-night: #111111;
+  --color-night-2: #1e1e1e;
   --color-maroon-deep: #5c0a1d;
   --color-crimson: #d9264e;
   --color-coral: #ff9a76;
-  --color-on-night: #ffffff;
-  --color-on-night-soft: #f1d9de;
-  --color-on-night-muted: #c99ea8;
+  --color-on-night: #111111;
+  --color-on-night-soft: #4f4f4f;
+  --color-on-night-muted: #6e6e6e;
 
-  /* Atmospheric orbs: soft radial blooms only (see .orb below) */
-  --color-orb-lake: #5b8fa8;
-  --color-orb-goldenrod: #ffb547;
-  --color-orb-ivy: #adb17d;
-  --color-orb-terracotta: #d49464;
-  --color-orb-rose: #b1746f;
-  /* Derived: maroon (#800000) at 70% on the canvas, for the home hero (D10, FEEDBACK "Minor design changes"). */
-  --color-orb-maroon: #a44a4a;
+  /* Orbs are off in this design (see .orb). */
+  --color-orb-lake: transparent;
+  --color-orb-goldenrod: transparent;
+  --color-orb-ivy: transparent;
+  --color-orb-terracotta: transparent;
+  --color-orb-rose: transparent;
+  --color-orb-maroon: transparent;
 
-  /* Semantic */
-  --color-error: #8f3931;
-  --color-error-wash: #f6efef;
-  --color-success: #616530;
-  --color-success-wash: #f2f3ee;
-  --color-warning: #9a5324;
-  --color-warning-icon: #c68220;
-  --color-info: #155f83;
-  /* DESIGN.md gives no wash for warning and info; these are derived from the token itself at
-     the same 8% mix DESIGN.md uses for primary-wash (no new hex). */
-  --color-warning-wash: color-mix(in srgb, #9a5324 8%, #ffffff);
-  --color-info-wash: color-mix(in srgb, #155f83 8%, #ffffff);
+  /* Semantic. */
+  --color-error: #b42318;
+  --color-error-wash: #fef3f2;
+  --color-success: #1e7a43;
+  --color-success-wash: #effaf3;
+  --color-warning: #9a5a06;
+  --color-warning-icon: #d98a0b;
+  --color-info: #1f5fbf;
+  --color-warning-wash: #fff8eb;
+  --color-info-wash: #eff5ff;
 
-  /* Data visualization (in this order) */
-  --color-data-1: #155f83;
-  --color-data-2: #ffa319;
-  --color-data-3: #8a9045;
-  --color-data-4: #c16622;
-  --color-data-5: #725663;
-  --color-data-6: #58593f;
+  /* Data visualization (in this order): ink first, then the reference's mint, then quiet hues. */
+  --color-data-1: #111111;
+  --color-data-2: #3cc68a;
+  --color-data-3: #6b8afd;
+  --color-data-4: #f2a541;
+  --color-data-5: #b38bd9;
+  --color-data-6: #8a8a87;
 
-  /* Type families (fonts are bundled from npm, see main.tsx) */
-  /* Headlines are bold Inter (the reference's "Welcome home"); Newsreader stays for the wordmark
-     and the italic maroon accent words (`em` in headlines). */
-  --font-display: "Inter Variable", "Inter", system-ui, sans-serif;
-  --font-serif: "Newsreader", "Times New Roman", serif;
-  --font-sans: "Inter Variable", "Inter", system-ui, sans-serif;
-  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+  /* One family. `display` and `serif` are kept as names (older markup uses them); both are Figtree. */
+  --font-display: "Figtree Variable", "Figtree", system-ui, sans-serif;
+  --font-serif: "Figtree Variable", "Figtree", system-ui, sans-serif;
+  --font-sans: "Figtree Variable", "Figtree", system-ui, sans-serif;
+  --font-mono: "Figtree Variable", "Figtree", system-ui, sans-serif;
 
-  /* Type scale: `text-<token>` sets size, line height, tracking and weight together */
-  /* The home page's wordmark headline (D2): larger and one step heavier than display-mega. */
-  --text-display-hero: 112px;
-  --text-display-hero--line-height: 1;
-  --text-display-hero--letter-spacing: -4px;
-  --text-display-hero--font-weight: 800;
-  --text-display-mega: 72px;
-  --text-display-mega--line-height: 1.02;
-  --text-display-mega--letter-spacing: -2.6px;
-  --text-display-mega--font-weight: 800;
-  --text-display-xl: 56px;
-  --text-display-xl--line-height: 1.05;
-  --text-display-xl--letter-spacing: -1.9px;
-  --text-display-xl--font-weight: 750;
-  --text-display-lg: 42px;
-  --text-display-lg--line-height: 1.1;
-  --text-display-lg--letter-spacing: -1.2px;
-  --text-display-lg--font-weight: 700;
-  --text-display-md: 36px;
-  --text-display-md--line-height: 1.12;
-  --text-display-md--letter-spacing: -0.9px;
-  --text-display-md--font-weight: 700;
-  --text-display-sm: 28px;
-  --text-display-sm--line-height: 1.2;
-  --text-display-sm--letter-spacing: -0.5px;
-  --text-display-sm--font-weight: 650;
-  --text-title-md: 22px;
-  --text-title-md--line-height: 1.35;
+  /* Type scale: medium-weight headings, calm tracking. */
+  --text-display-hero: 60px;
+  --text-display-hero--line-height: 1.05;
+  --text-display-hero--letter-spacing: -1.6px;
+  --text-display-hero--font-weight: 600;
+  --text-display-mega: 52px;
+  --text-display-mega--line-height: 1.08;
+  --text-display-mega--letter-spacing: -1.3px;
+  --text-display-mega--font-weight: 600;
+  --text-display-xl: 42px;
+  --text-display-xl--line-height: 1.1;
+  --text-display-xl--letter-spacing: -1px;
+  --text-display-xl--font-weight: 600;
+  --text-display-lg: 34px;
+  --text-display-lg--line-height: 1.15;
+  --text-display-lg--letter-spacing: -0.7px;
+  --text-display-lg--font-weight: 600;
+  --text-display-md: 28px;
+  --text-display-md--line-height: 1.2;
+  --text-display-md--letter-spacing: -0.5px;
+  --text-display-md--font-weight: 600;
+  --text-display-sm: 22px;
+  --text-display-sm--line-height: 1.3;
+  --text-display-sm--letter-spacing: -0.3px;
+  --text-display-sm--font-weight: 600;
+  --text-title-md: 19px;
+  --text-title-md--line-height: 1.4;
   --text-title-md--letter-spacing: -0.2px;
   --text-title-md--font-weight: 600;
-  --text-title-sm: 19px;
-  --text-title-sm--line-height: 1.42;
+  --text-title-sm: 17px;
+  --text-title-sm--line-height: 1.45;
   --text-title-sm--letter-spacing: -0.1px;
   --text-title-sm--font-weight: 600;
-  --text-body-md: 17px;
-  --text-body-md--line-height: 1.55;
+  --text-body-md: 16px;
+  --text-body-md--line-height: 1.6;
   --text-body-md--letter-spacing: 0;
-  --text-body-strong: 17px;
-  --text-body-strong--line-height: 1.55;
+  --text-body-strong: 16px;
+  --text-body-strong--line-height: 1.6;
   --text-body-strong--letter-spacing: 0;
   --text-body-strong--font-weight: 600;
-  --text-body-sm: 16px;
-  --text-body-sm--line-height: 1.5;
+  --text-body-sm: 15px;
+  --text-body-sm--line-height: 1.55;
   --text-body-sm--letter-spacing: 0;
-  --text-caption: 15px;
+  --text-caption: 14px;
   --text-caption--line-height: 1.5;
   --text-caption--letter-spacing: 0;
-  --text-caption-uppercase: 13px;
+  --text-caption-uppercase: 12px;
   --text-caption-uppercase--line-height: 1.4;
-  --text-caption-uppercase--letter-spacing: 1px;
-  --text-caption-uppercase--font-weight: 700;
-  --text-button: 16px;
+  --text-caption-uppercase--letter-spacing: 0.4px;
+  --text-caption-uppercase--font-weight: 600;
+  --text-button: 15px;
   --text-button--line-height: 1;
   --text-button--letter-spacing: 0;
   --text-button--font-weight: 600;
-  --text-nav-link: 16px;
+  --text-nav-link: 15px;
   --text-nav-link--line-height: 1.4;
   --text-nav-link--letter-spacing: 0;
   --text-nav-link--font-weight: 500;
 
-  /* Radii */
+  /* Radii: soft, never pill-heavy. */
   --radius-xs: 6px;
   --radius-sm: 8px;
-  --radius-md: 14px;
-  --radius-lg: 18px;
-  --radius-xl: 24px;
-  --radius-xxl: 32px;
-  /* The page sheet and the art panels (the reference's big rounded card and inner panel). */
-  --radius-sheet: 44px;
-  --radius-art: 36px;
+  --radius-md: 10px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-xxl: 20px;
+  --radius-sheet: 24px;
+  --radius-art: 20px;
   --radius-pill: 9999px;
 
-  /* Elevation: one hover tier and one overlay tier */
-  --shadow-hover: 0 12px 32px rgba(70, 6, 22, 0.08);
-  --shadow-overlay: 0 24px 64px rgba(30, 2, 10, 0.2);
-  --shadow-sheet: 0 40px 120px rgba(0, 0, 0, 0.45);
+  /* Elevation: barely there. */
+  --shadow-hover: 0 1px 2px rgb(17 17 17 / 0.04), 0 8px 24px rgb(17 17 17 / 0.06);
+  --shadow-overlay: 0 1px 3px rgb(17 17 17 / 0.06), 0 18px 48px rgb(17 17 17 / 0.14);
+  --shadow-sheet: none;
 
   /* Layout */
   --spacing-section: 96px;
   /* Wider pages (Max, 2026-11-20: "widen everything horizontally in every page"). */
-  --container-content: 1560px;
-  --container-reading: 960px;
-  --container-form: 560px;
+  --container-content: 1240px;
+  --container-reading: 760px;
+  --container-form: 480px;
   /* The planner is a three-rail tool and needs more than the 1200px content width. */
-  --container-tool: 1920px;
+  --container-tool: 1600px;
 
   /* Motion (DESIGN.md "Motion"; docs/DESIGN-IMPLEMENTATION.md "FEEDBACK UI"): 150ms for hover
      and press, 200-250ms for menus, dialogs, drawers and sheets, ease-out entrances. Each
      keyframe ends at `transform: none` so a finished animation leaves no containing block
      behind (the drag overlay is position: fixed). */
   --default-transition-duration: 150ms;
-  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
   --ease-in: cubic-bezier(0.4, 0, 1, 1);
   --animate-fade-in: fade-in 200ms var(--ease-out) both;
   --animate-dialog-in: dialog-in 200ms var(--ease-out) both;
@@ -323,51 +318,42 @@
   html {
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: "ss01" 0;
+    text-rendering: optimizeLegibility;
   }
 
-  /* The night (docs/DESIGN.md "Maroon and night"): maroon and black with crimson light, fixed
-     behind the page sheet, the top bar and the footer. */
   body {
-    background-color: var(--color-night);
-    background-image:
-      radial-gradient(1100px 760px at 6% -10%, rgb(150 18 48 / 0.55), transparent 62%),
-      radial-gradient(900px 720px at 104% 16%, rgb(92 10 29 / 0.75), transparent 60%),
-      radial-gradient(1000px 900px at 62% 118%, rgb(217 38 78 / 0.22), transparent 62%),
-      linear-gradient(165deg, #5c0a1d 0%, #2b0711 50%, #12040a 100%);
-    background-attachment: fixed;
+    background: var(--color-app);
     color: var(--color-ink);
     font-size: var(--text-body-md);
     line-height: var(--text-body-md--line-height);
-    letter-spacing: var(--text-body-md--letter-spacing);
     font-weight: 400;
   }
 
-  /* Tailwind v4 borders default to currentColor; use the hairline token instead. */
   *,
   ::before,
   ::after {
     border-color: var(--color-hairline);
   }
 
-  /* Focus (all interactive elements): 2px maroon ring, 2px offset. */
+  /* Focus: a 2px ink ring, 2px offset. */
   :focus-visible {
-    outline: 2px solid var(--color-primary);
+    outline: 2px solid var(--color-ink);
     outline-offset: 2px;
   }
 
-  /* Native checkboxes, radios and range sliders take the accent color. */
   input[type="checkbox"],
   input[type="radio"],
   input[type="range"] {
-    accent-color: var(--color-primary);
+    accent-color: var(--color-ink);
   }
 
   ::selection {
-    background: var(--color-primary-wash);
+    background: #e4e4e1;
     color: var(--color-ink);
   }
 
-  /* Display headings never bold; course codes never in the serif (see components). */
   h1,
   h2,
   h3,
@@ -375,35 +361,46 @@
     color: var(--color-ink);
   }
 
-  /* Headlines are bold sans; their emphasised words are the serif italic in maroon (the accent
-     of every page title, "within your reach.", "Ask anything"). */
+  /* An emphasised word in a heading is the same face in grey: a quiet two-tone title. */
   :where(h1, h2, h3, .page-title, .home-title) em {
-    font-family: var(--font-serif);
-    font-style: italic;
-    font-weight: 400;
-    letter-spacing: -0.01em;
-    color: var(--color-primary);
+    font-style: normal;
+    color: var(--color-muted);
+  }
+
+  /* Numbers line up in tables, stats and units. */
+  .tabular-nums,
+  td,
+  th {
+    font-variant-numeric: tabular-nums;
   }
 }
 
 @layer components {
-  /* An atmospheric orb: one orb-* color as a soft radial bloom, 40% at the center, blurred. */
+  /* Orbs (soft colour blooms from an earlier design) are off. */
   .orb {
-    position: absolute;
-    pointer-events: none;
-    border-radius: 9999px;
-    background: radial-gradient(
-      circle at center,
-      color-mix(in srgb, var(--orb-color, var(--color-orb-lake)) 40%, transparent) 0%,
-      transparent 70%
-    );
-    filter: blur(70px);
+    display: none;
   }
 
-  /* Loading skeletons: surface-strong plates. */
+  /* Loading skeletons: grey plates with a slow sheen. */
   .skeleton {
+    position: relative;
+    overflow: hidden;
     background: var(--color-surface-strong);
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-lg);
+  }
+  .skeleton::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(100deg, transparent 20%, rgb(255 255 255 / 0.7) 50%, transparent 80%);
+    animation: sheen 1.6s ease-in-out infinite;
+  }
+}
+
+@keyframes sheen {
+  to {
+    transform: translateX(100%);
   }
 }
 
@@ -427,97 +424,6 @@
 }
 .course-chapel-label[data-visible="true"] {
   opacity: 1;
-}
-
-/* The new pages' headlines (components/brand/TypeHero.tsx): emphasised words turn italic maroon. */
-.page-title em {
-  font-size: 1.06em;
-}
-
-/* The homepage title, "The Best of UChicago, within your reach." (HomePage.tsx): three lines that
-   rise into place one after another; the last is italic maroon with a hand-drawn swash under it
-   that draws itself. Reduced motion: everything is simply there. */
-.home-title {
-  display: flex;
-  flex-direction: column;
-  font-size: clamp(56px, 6.4vw, 96px);
-  line-height: 0.95;
-  letter-spacing: -0.045em;
-  font-weight: 800;
-}
-.home-title-line {
-  display: block;
-  animation: home-title-rise 900ms var(--ease-out, cubic-bezier(0.2, 0.7, 0.2, 1)) both;
-}
-.home-title-lead {
-  font-size: 0.4em;
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  line-height: 1.15;
-  color: var(--color-body-strong);
-}
-.home-title-main {
-  animation-delay: 110ms;
-}
-.home-title-reach {
-  position: relative;
-  width: max-content;
-  max-width: 100%;
-  margin-top: 0.08em;
-  font-size: 0.66em;
-  line-height: 1.05;
-  letter-spacing: -0.02em;
-  animation-delay: 240ms;
-}
-.home-title-reach em {
-  font-style: italic;
-  color: var(--color-primary);
-}
-.home-title-swash {
-  position: absolute;
-  left: 0.05em;
-  right: 0;
-  bottom: -0.32em;
-  width: 100%;
-  height: 0.38em;
-  overflow: visible;
-}
-.home-title-swash path {
-  fill: none;
-  stroke: var(--color-primary);
-  stroke-width: 2.4;
-  stroke-linecap: round;
-  vector-effect: non-scaling-stroke;
-  stroke-dasharray: 360;
-  stroke-dashoffset: 360;
-  animation: home-title-draw 1100ms 700ms cubic-bezier(0.6, 0, 0.2, 1) forwards;
-  opacity: 0.75;
-}
-@keyframes home-title-rise {
-  from {
-    opacity: 0;
-    transform: translateY(0.35em);
-    filter: blur(6px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-    filter: none;
-  }
-}
-@keyframes home-title-draw {
-  to {
-    stroke-dashoffset: 0;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .home-title-line {
-    animation: none;
-  }
-  .home-title-swash path {
-    animation: none;
-    stroke-dashoffset: 0;
-  }
 }
 
 /* GradientArt (components/brand/GradientArt.tsx): the folds of light drift slowly. */
@@ -548,13 +454,27 @@
   }
 }
 
-/* The menu bar (TopNav): frosted white glass the width of the page sheet, on the maroon frame. */
-.nav-glass {
-  background: rgb(255 255 255 / 0.84);
-  -webkit-backdrop-filter: blur(20px) saturate(170%);
-  backdrop-filter: blur(20px) saturate(170%);
-  border: 1px solid rgb(255 255 255 / 0.7);
-  box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 0.95),
-    0 14px 44px rgb(30 0 8 / 0.28);
+/* The walkthrough's glowing outline on the sequence it explains (issue #18). A static ring with
+   reduced motion. */
+@keyframes glow-pulse {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 2px var(--color-primary),
+      0 0 10px 2px color-mix(in oklab, var(--color-primary) 40%, transparent);
+  }
+  50% {
+    box-shadow:
+      0 0 0 3px var(--color-primary),
+      0 0 22px 6px color-mix(in oklab, var(--color-primary) 28%, transparent);
+  }
+}
+.glow-ring {
+  animation: glow-pulse 1.8s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .glow-ring {
+    animation: none;
+    box-shadow: 0 0 0 3px var(--color-primary);
+  }
 }

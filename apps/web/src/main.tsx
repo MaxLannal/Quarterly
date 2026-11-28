@@ -2,14 +2,9 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-// Fonts are bundled from npm (no CDN): Inter for body/UI, Newsreader 300 for display.
-import "@fontsource-variable/inter";
-import "@fontsource/newsreader/300.css";
-// 400: the home wordmark (D2); 500: the top-bar wordmark (D4). FEEDBACK "Minor design changes".
-import "@fontsource/newsreader/400.css";
-import "@fontsource/newsreader/500.css";
-// 400 italic: the maroon accent words of the headlines (TypeHero, the homepage title).
-import "@fontsource/newsreader/400-italic.css";
+// One font, bundled from npm (no CDN; nothing leaves the site's origin): Figtree, a smooth geometric
+// sans, for every heading, label and paragraph (docs/DESIGN.md "Simple light", Max 2026-11-27).
+import "@fontsource-variable/figtree";
 import "./index.css";
 import { routes } from "./routes";
 

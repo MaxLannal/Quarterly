@@ -27,6 +27,7 @@ STEP_2 = [
     "pace",
     "wants_research",
     "research_areas",
+    "interests",
     "course_load",
     "terms_away",
     "class_formats",
@@ -54,6 +55,7 @@ FULL: dict[str, Any] = {
     "terms_away": [{"term": "2027-AU", "kind": "abroad"}],
     "class_formats": ["seminar", "lab", "seminar"],
     "theory_vs_application": 7,
+    "interests": [" machine learning ", "Philosophy of mind", "machine learning"],
 }
 
 
@@ -101,7 +103,8 @@ def test_the_questions_are_public_and_come_from_the_question_file(env: Env) -> N
         "undecided",
     ]
     # Max's #14 D2: no freeform interests or humanities question.
-    assert not {"interests", "humanities"} & {q["id"] for q in body["questions"]}
+    # The old freeform humanities field is gone; interests is a General Information list now.
+    assert "humanities" not in {q["id"] for q in body["questions"]}
 
 
 def test_the_mock_copy_of_the_question_file_is_current() -> None:
@@ -203,8 +206,11 @@ def test_patch_validation(env: Env, bad: dict[str, Any]) -> None:
 
 def test_old_freeform_fields_are_not_kept(env: Env) -> None:
     headers = login(env)
-    body = patch(env, headers, {"interests": ["Physics"], "portrait": {"headline": "x"}}).json()
-    assert "interests" not in body and "portrait" not in body
+    body = patch(env, headers, {"portrait": {"headline": "x"}}).json()
+    assert "portrait" not in body
+    # Interests came back as a General Information question (issue #14 D2: "Interests stay in
+    # all cases"; issue #17 picks courses by them), not as the old freeform field.
+    assert patch(env, headers, {"interests": ["Physics"]}).json()["interests"] == ["Physics"]
     # "Courses per quarter" became "course load" (Richard, 2026-11-25, migration 0011).
     body = patch(env, headers, {"courses_per_term": 4}).json()
     assert "courses_per_term" not in body and body["course_load"] is None
@@ -355,3 +361,29 @@ def test_export_profile_has_the_record_without_the_email(env: Env) -> None:
     assert profile["student_md"].startswith("# Student record\n")
     assert set(out) == {"profile"}  # the routes went in issue #15
     assert "heron" not in repr(out) and "@" not in repr(out)
+
+
+def test_questions_have_interests() -> None:
+    q = next(q for q in question_set().questions if q.id == "interests")
+    assert (q.field, q.group, q.type, q.step) == ("interests", "goals", "list", 2)
+    assert q.when is None
+
+
+def test_student_md_lists_interests(env: Env) -> None:
+    headers = login(env)
+    assert "- Interests: Not answered" in env.client.get("/me/profile/export.md").text
+    patch(env, headers, {"interests": ["machine learning", "philosophy of mind"]})
+    text = env.client.get("/me/profile/export.md").text
+    goals = text.split("### Goals", 1)[1].split("###", 1)[0]
+    assert "- Interests: machine learning; philosophy of mind" in goals
+
+
+def test_patch_profile_sets_interests(env: Env) -> None:
+    headers = login(env)
+    patch(env, headers, FULL)
+    assert env.client.get("/me/profile").json()["interests"] == [
+        "machine learning",
+        "Philosophy of mind",
+    ]
+    patch(env, headers, {"interests": None})
+    assert env.client.get("/me/profile").json()["interests"] == []

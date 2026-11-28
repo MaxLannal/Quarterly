@@ -287,3 +287,28 @@ The values come from the ledger, at list prices, with prompt caching on.
   - G1 gives the solver a scripted preference list, which is exactly the adversarial input.
   - Both passed. Every variant passed verification. The app refused the write tool and the finished-plan answer.
 - **The guard refused no case.** Each phase stopped itself before its forecast would break a cap. The guard refused nothing, so no live call was cut off part-way.
+
+## Planner agent on Opus 5.5 through Teamorouter (2026-11-26, issues #17 and #18)
+
+Max approved about 5-10 live plans, up to about $15. Script: `scripts/planner_live.py` (invented fixture students, a throwaway database with the 2026-27 seed, the real gateway with `ANTHROPIC_BASE_URL=https://api.teamorouter.com`). Teamorouter accepted every request field the gateway sends (adaptive thinking, `output_config.effort`, strict tools, `cache_control`, the `fallbacks` beta): a free `GET /v1/models` and three one-cent probes showed it.
+
+| Run | Student | What happened | Seconds | Cost |
+|---|---|---|---|---|
+| 1 | cs-first-year | The first model question (CS BS specialization), then the script stopped (no answer yet). | 16 | $0.12 |
+| 2 | cs-first-year + chat | Two questions answered; the fill ended at once (`budget_tool_calls`: more than 4 lookups). The chat turn failed the same way. | 91 | $0.46 |
+| 3-4 | chat only | "Why is the intro sequence important for me?" was refused by the scope gate (fixed: `a2_scope` v2). "I hate Language and the Human…" recorded an avoid line and proposed Philosophical Perspectives, citing the interest in philosophy of mind. | 38 | $0.13 |
+| 5-7 | cs-first-year | Placements were not in the agent's input, so it asked about calculus (fixed). The fill ended on the tool budget at 12 lookups, then was cut off at `max_tokens` 16000 (fixed: 32000). | 472 | $1.68 |
+| 8 | cs-first-year | **Valid plan** (verifier + certificate), 13 groups, 3 rules bent and listed; every reason names the student's interests or goals with checked citations. 15 model calls: most were lookups before the plan. | 735 | $2.78 |
+
+Fixes after run 8: the requirements brief names each candidate's prerequisites, lookups are capped at 6, and a fill whose lookups run out is asked once more without tools.
+
+| 9 | cs-first-year + chat | After those fixes: **valid plan**, 14 groups (Human Being and Citizen for the interest in philosophy of mind, the machine learning specialization for the interest in machine learning), 2 rules bent and listed. The chat answered "I hate Language and the Human" truthfully (the plan did not have it) and recorded the avoid line. | 420 + 31 | $2.37 |
+
+| 10 | the app at localhost:5173, logged out (CS BS + Core, no placement) | The page ran two generations at once (StrictMode ran the auto-generate twice). The second asked about the calculus placement and courses per quarter, then failed at "Writing your plan": 3 calls, 214 s, then the 300 s step limit. | 214 | $1.19 |
+| 11 | replay of run 10's writing step (`scratchpad/repro_fill.py`) | The solver proved before writing that no plan fits: with no placement, no calculus course can be planned. The model worked on the impossible plan until the step limit (`budget_seconds`). Fixed: the placement is asked first and reaches the plan. | 314 | $0.72 |
+
+| 12 | the app, logged out, after the placement fix (Max) | Placement asked and answered, then two model questions. Writing: the lookups ran out, the retry without tools submitted a plan, the check (or the schema) rejected it twice, and the whole plan was thrown away (`invalid_output`; what was rejected was not logged then). | about 220 | $1.18 |
+| 13 | replay shaped like run 12 (`scratchpad/repro2.py`) | Passed: 44 courses in 17 groups, check OK. But writing took 297 s of its 300, and the plan's note was 544 of its 600 characters: either limit, crossed twice, ends a run. Fixed: a twice-rejected plan is kept without the courses at fault, free text is clipped, writing has 600 s, and failures log what was rejected. | 320 | $1.35 |
+
+Total for all runs and probes: about $12.25 of the $15 approved (runs 10-13 and about $0.28 of chat in the demo included). Observations for tuning (OPEN_QUESTIONS PL17-1): a whole plan still takes about 7 minutes and $2 on Opus 5.5; two reasons in run 9 named a bent rule that the compromise list did not (G11), and one said no quarter holds two reading-heavy Core courses while its first Autumn held Humanities and Civilization. The verdict is never affected: it comes from the verifier and the certificate.
+

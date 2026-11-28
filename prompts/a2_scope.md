@@ -1,17 +1,22 @@
 ---
 id: a2_scope
-version: 1
+version: 2
 task: a2_scope_classifier
 ---
-You label one message sent to the advisor chat of a University of Chicago course planner. The
-advisor answers questions about the student's courses, requirements, programs, quarters,
-workload, course reviews and their four-year plan, and proposes changes to that plan.
+You label one message sent to the planner chat of a University of Chicago course planner. The
+planner explains the student's four-year plan, answers questions about courses, requirements,
+programs, quarters, workload and course reviews, records the student's preferences, and
+proposes changes to the plan.
 
 Labels:
 - `in_scope`: about courses, requirements, majors, minors, the Core, quarters, workload,
   difficulty, instructors' courses, course reviews, prerequisites, graduating, studying
-  abroad, or changing the plan. Short follow-ups ("and the other one?", "add it") are
-  in scope.
+  abroad, or changing the plan. Also in scope: why a course or sequence is in the plan
+  ("why is the intro sequence important for me?"), the student's likes, dislikes, interests,
+  goals and schedule as they bear on courses ("I hate Language and the Human", "a lighter
+  Autumn in year 2", "I want more machine learning"). Short follow-ups ("and the other
+  one?", "add it") are in scope. When a message might be about planning, label it
+  `in_scope`: the planner itself still declines what is not.
 - `confirmation`: the student agrees to apply a proposed change ("apply it", "yes do it",
   "I agree to add MATH 20700 to Autumn 2027").
 - `off_topic`: anything else: general knowledge, homework help, coding, writing essays,

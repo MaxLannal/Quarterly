@@ -16,7 +16,7 @@ import { termLabel } from "./terms";
 function Progress({ p }: { p: NodeProgress | undefined }) {
   if (!p) return null;
   return (
-    <span className={cn("inline-flex shrink-0 items-center gap-1 text-caption tabular-nums", p.satisfied ? "text-success" : "text-muted")} data-testid="node-progress">
+    <span className={cn("inline-flex shrink-0 items-center gap-1 font-mono text-[12.5px] tabular-nums", p.satisfied ? "text-success" : "text-muted")} data-testid="node-progress">
       {p.satisfied && <CheckIcon size={14} />}
       {Math.min(p.have, p.need)} of {p.need}
       <span className="sr-only"> {p.unit}</span>
@@ -24,31 +24,53 @@ function Progress({ p }: { p: NodeProgress | undefined }) {
   );
 }
 
+/** The same progress as a thin luminous bar (planner.css); decorative, the words above carry it. */
+function Meter({ p, className }: { p: NodeProgress | undefined; className?: string }) {
+  if (!p || p.need <= 0) return null;
+  const share = Math.min(1, p.have / p.need);
+  return (
+    <span aria-hidden="true" className={cn("planner-meter block", className)} data-done={p.satisfied ? "true" : undefined}>
+      <span style={{ width: `${Math.round(share * 100)}%` }} />
+    </span>
+  );
+}
+
+const KIND_LABEL: Record<StripKind, string> = {
+  major: "Major",
+  second_major: "Second major",
+  core: "Core",
+  minor: "Minor",
+  abroad: "Study abroad",
+  graduate: "Graduate",
+  preprofessional: "Pre-professional",
+  none: "Program",
+};
+
 /** One course in the tree: code in bold, name in small text; drag it or press Add. */
 function TreeCourse({ course }: { course: CourseSummary }) {
   const { openAddTo, plan } = usePlanner();
   const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
     id: `new:${course.code}`,
-    data: { kind: "course", code: course.code },
+    data: { kind: "course", code: course.code, title: course.title },
   });
   const placed = (plan.items ?? []).find((i) => i.course === course.code);
   return (
     <li
       ref={setNodeRef}
       data-testid="tree-course"
-      className={cn("flex animate-rise items-center rounded-md transition-colors hover:bg-canvas-soft", isDragging && "opacity-40")}
+      className={cn("flex animate-rise items-center rounded-[14px] transition-colors duration-300 hover:bg-canvas-soft", isDragging && "opacity-40")}
     >
       <button
         type="button"
         aria-label={`Drag ${course.code} onto the plan`}
-        className="flex size-11 shrink-0 cursor-grab touch-none items-center justify-center rounded-md text-gray-dark hover:text-ink focus-visible:outline-offset-[-2px]"
+        className="flex size-11 shrink-0 cursor-grab touch-none items-center justify-center rounded-[14px] text-gray-dark transition-colors hover:text-ink focus-visible:outline-offset-[-2px]"
         {...attributes}
         {...listeners}
       >
         <GripIcon size={14} />
       </button>
       <div className="min-w-0 flex-1 py-1">
-        <div className="whitespace-nowrap text-body-sm font-semibold tabular-nums text-ink">{course.code}</div>
+        <div className="whitespace-nowrap font-mono text-[13.5px] font-semibold tabular-nums text-ink">{course.code}</div>
         <div className="truncate text-caption text-muted" title={course.title}>
           {course.title}
         </div>
@@ -99,7 +121,7 @@ function TreeNode({ entry, programId, catalogYear, progress, open, toggle }: Nod
         type="button"
         aria-expanded={expanded}
         onClick={() => toggle(entry.path)}
-        className="flex min-h-11 w-full cursor-pointer items-start gap-1.5 rounded-md py-1.5 pl-1 pr-2 text-left transition-colors hover:bg-canvas-soft focus-visible:outline-offset-0"
+        className="flex min-h-11 w-full cursor-pointer items-start gap-2 rounded-[14px] px-2 py-2.5 text-left transition-colors duration-300 hover:bg-canvas-soft focus-visible:outline-offset-0"
       >
         <span className="mt-0.5 shrink-0 text-gray-dark">
           <ChevronIcon open={expanded} />
@@ -107,11 +129,12 @@ function TreeNode({ entry, programId, catalogYear, progress, open, toggle }: Nod
         <span className="min-w-0 flex-1">
           <span className="block text-body-sm font-medium text-ink">{entry.label}</span>
           <span className="block text-caption text-muted">{describe(entry)}</span>
+          <Meter p={progress.get(entry.path)} className="mt-2.5 max-w-56" />
         </span>
         <Progress p={progress.get(entry.path)} />
       </button>
       {expanded && (
-        <div className="ml-[13px] animate-fade-in border-l border-hairline pl-2">
+        <div className="ml-[17px] animate-fade-in border-l border-hairline pl-2">
           {hasChildren ? (
             <ul className="flex flex-col">
               {entry.children.map((c) => (
@@ -149,13 +172,25 @@ function ProgramTree({ program, kind, progress }: { program: ProgramDetail; kind
   // The root is the program itself: its children are the tree's first level.
   const top = tree.children.length > 0 ? tree.children : [tree];
   return (
-    <section aria-label={program.name} className={cn("border-l-[3px] pl-3", STRIP_CLASSES[kind])} data-kind={kind}>
-      <h3 className="flex flex-wrap items-center gap-x-2 gap-y-1 text-title-sm">
-        <span className="min-w-0 flex-1">{program.name}</span>
-        {program.status !== "published" && <Badge tone="warning" casing="normal">Not yet hand-checked</Badge>}
-        <Progress p={progress.get(tree.path)} />
-      </h3>
-      <ul className="mt-1 flex flex-col">
+    <section aria-label={program.name} data-kind={kind}>
+      <div className="flex items-start gap-3 px-2">
+        {/* The program's strip: the same colour as its courses' files (FEEDBACK "Color strip"). */}
+        <span aria-hidden="true" className={cn("mt-1 h-10 shrink-0 rounded-pill border-l-[3px]", STRIP_CLASSES[kind])} />
+        <div className="min-w-0 flex-1">
+          <span className="planner-label">{KIND_LABEL[kind]}</span>
+          <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+            <h3 className="min-w-0 font-display text-title-md font-normal leading-tight">{program.name}</h3>
+            <Progress p={progress.get(tree.path)} />
+          </div>
+          <Meter p={progress.get(tree.path)} className="mt-2.5" />
+          {program.status !== "published" && (
+            <Badge tone="warning" casing="normal" className="mt-2.5">
+              Not yet hand-checked
+            </Badge>
+          )}
+        </div>
+      </div>
+      <ul className="mt-3 flex flex-col">
         {top.map((e) => (
           <TreeNode key={e.path} entry={e} programId={program.id} catalogYear={program.catalog_year} progress={progress} open={open} toggle={toggle} />
         ))}
@@ -176,7 +211,7 @@ export function RequirementTree({ details, progress, onAddProgram }: Requirement
   const ids = details.map((d) => d.id);
   const types = new Map(details.flatMap((d) => (d.data ? [[d.id, d.data.type] as const] : [])));
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-8">
       {details.length === 0 && <EmptyState>Add a program to see its requirements.</EmptyState>}
       {details.map((d) =>
         d.isLoading ? (

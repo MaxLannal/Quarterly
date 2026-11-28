@@ -1,5 +1,5 @@
 import { api, ApiError, NotAvailableError } from "./client";
-import type { AgentEvent, ChatRequest, GenerateRequest } from "./types";
+import type { PlannerEvent, PlannerRequest } from "./types";
 
 /**
  * Splits a Server-Sent Events text stream into the JSON payloads of its `data:` lines.
@@ -35,10 +35,6 @@ export async function* readSse<T>(stream: ReadableStream<Uint8Array>): AsyncGene
   }
 }
 
-async function* readEvents(stream: ReadableStream<Uint8Array>): AsyncGenerator<AgentEvent> {
-  yield* readSse<AgentEvent>(stream);
-}
-
 /** The body of a streamed response, or the error the request failed with. */
 export function checkStream(response: Response, stream: ReadableStream<Uint8Array> | null | undefined) {
   if (response.status === 501) throw new NotAvailableError();
@@ -46,14 +42,12 @@ export function checkStream(response: Response, stream: ReadableStream<Uint8Arra
   return stream;
 }
 
-/** POST /agents/generate, yielding each AgentEvent as it arrives. */
-export async function* streamGenerate(body: GenerateRequest, signal?: AbortSignal) {
-  const { data, response } = await api.POST("/agents/generate", { body, parseAs: "stream", signal });
-  yield* readEvents(checkStream(response, data));
-}
+/** A planner request: the mode and the plan, the rest optional (the server has defaults). */
+export type PlannerBody = Pick<PlannerRequest, "mode" | "plan"> & Partial<Omit<PlannerRequest, "mode" | "plan">>;
 
-/** POST /agents/chat, yielding each AgentEvent as it arrives. */
-export async function* streamChat(body: ChatRequest, signal?: AbortSignal) {
-  const { data, response } = await api.POST("/agents/chat", { body, parseAs: "stream", signal });
-  yield* readEvents(checkStream(response, data));
+/** POST /agents/planner (issue #17), yielding each PlannerEvent as it arrives. */
+export async function* streamPlanner(body: PlannerBody, signal?: AbortSignal): AsyncGenerator<PlannerEvent> {
+  const full: PlannerRequest = { history: [], pending: [], profile_answers: {}, ...body };
+  const { data, response } = await api.POST("/agents/planner", { body: full, parseAs: "stream", signal });
+  yield* readSse<PlannerEvent>(checkStream(response, data));
 }

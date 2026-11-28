@@ -17,6 +17,7 @@
 > - **Integration run** (2026-11-24, at the end of the file): **INT-1** (Needs Richard): how long the plan generator can think in the app (4 s now, 20 s in the end-to-end tests).
 > - **Student record and dashboard** (2026-11-24, at the end of the file): **SR-1** to **SR-6**. These are decisions made during the build of Issues #14 and #16. Each has a suggested answer.
 > - **Merge of PR #21** (2026-11-24, at the end of the file): **M21-1** to **M21-3**. These questions came up during the merge of Max's PR #21 into the integration branch. Each has a suggested answer.
+> - **Redesign** (Max, 2026-11-27, at the end of the file): **DG-1** to **DG-3** (Needs Richard): the homepage picture, the new "Simple light" look with a sidebar, and the homepage cards. Each has options and a suggested answer.
 > - **"Work these answers create (not started)"** below is a list from 2026-11-14. Some of its items were built since then. Before you start an item, check `docs/PROGRESS.md` and the code.
 >
 > Put new questions at the end of the matching section, in plain language, with a suggested answer (see `CLAUDE.md`, "Working with the owner").
@@ -996,3 +997,47 @@ Resolved in 7fbc438: `GET /me/updates` and `POST /me/updates/seen` are deleted, 
 
 Richard's answer: Yes, we can implement a small fix in the next dashboard PR.
 Not done yet: planned for the next dashboard PR.
+
+## Redesign (Max, 2026-11-27; branch `claude/quarterly-ui-redesign-c953e9`, not pushed)
+
+Max asked in chat for a full redesign. A dark glass version came first; he then replaced it with "Simple light", after a reference dashboard (docs/DESIGN.md). It is built on its own branch and is not merged or pushed. To see it, check out the branch or open `docs/screenshots/simple-light/index.html`.
+
+**DG-1 (Needs Richard): which picture belongs on the homepage?**
+Your FEEDBACK item "Course-title chapel on the homepage" asked for Rockefeller Chapel drawn with course titles. Max asked for Harper Library's reading room. On this branch the homepage shows Harper, drawn in sunlit stone in a white card; the chapel code is still in the repository but not shown.
+- (a) Keep Harper, and delete the chapel code and its data (`features/home/CourseChapel.tsx`, `features/home/chapel/`, `public/home/course-chapel.json`, `tools/course-chapel/` and their tests). This also closes DF-A1, because the chapel's watermarked photo goes with it.
+- (b) Put the chapel back in the same white card instead of Harper.
+- (c) Keep both: Harper by day and the chapel by night, or the chapel on the About page.
+- Suggested: (a), if you like the new look.
+
+**DG-2 (Needs Richard): should the whole site use "Simple light"?**
+It replaces "Maroon and night" (white page sheets on maroon):
+- The top bar becomes a sidebar on a light grey frame, with each page in one white panel.
+- One font, Figtree, replaces Inter and Newsreader.
+- Black becomes the only accent; maroon is no longer used.
+Text keeps a contrast of 4.5:1 or better, and every control is a 44px target.
+- (a) Adopt it as it is.
+- (b) Adopt it, with maroon in place of black as the accent (the current tab, the main button, links). It is one token to change.
+- (c) Keep "Maroon and night".
+- Suggested: (a) or (b). (b) keeps the UChicago colour.
+
+**DG-3 (Needs Richard): may the homepage be longer than one screen?**
+The SPEC homepage was one screen. It now has the picture card under the title, and three cards below it (Planner, Catalog, Forum), each a link.
+- (a) Keep it.
+- (b) Make it one screen again: a smaller picture and no cards.
+- Suggested: (a).
+## Planner split screen and planner agent (issues #17 and #18, 2026-11-26)
+
+Max answered the open decisions before the build: port the degree-plan-agent harness; #18 D1, proposals stay until accepted or rejected; #17 D1, keep the chat while the plan exists, with Clear chat; #17 D2, logged-out students can use the agent. The items below are defaults taken during the build. Each has a suggested answer.
+
+- **PL18-1. Where a saved plan's edit history lives.** Now on this device only, with the plan's local copy. *Suggested:* keep for the demo; store it on the server (a `plan_edit` table) if students switch devices.
+- **PL18-2. Course details as a third panel.** Issue #18 asks for a third panel on wide screens. Now the details are a view inside the right panel ("← Chat"), because a third column beside the panel leaves the four year-columns too narrow. *Suggested:* keep; or open details in place of the grid's last column.
+- **PL18-3. The walkthrough starts on its own** after each generation, with Skip tour and "Walk me through it" to replay. *Suggested:* keep.
+- **PL17-1. Time and cost of a first plan on Opus 5.5.** Live, a CS BS plan took about 12 minutes and $2.80 before the brief listed prerequisites (docs/LIVE-TEST-REPORT.md). *Options:* (a) keep Opus for both steps; (b) Opus for the plan, Sonnet 5.5 for the questions and the explanations (about half the cost); (c) a lower effort. *Suggested:* (b) after one more live comparison.
+- **PL17-2. `evals/live/run.py`** still drives the removed `/agents/generate` and `/agents/chat`. `evals/run.py` (the offline and the paid A1/A2 sets) moved to `/agents/planner`. *Suggested:* port the live suite before the next paid live run.
+- **PL17-3. Guideline rule G07** (Bx/MS students finish the Core and the other requirements before the last year) comes from the degree-plan-agent prototype without a source page. *Suggested:* Richard confirms it or gives the page; until then it is a hard rule only for Bx/MS plans.
+- **PL17-4. A plan without a major.** The planner says "use + Program" instead of asking for the intended programs, because its proposals cannot change the plan's programs. *Suggested:* keep; the setup card already fills the programs from the record.
+- **PL17-5. Interests in the dashboard guide** come after research areas (so the guide still opens with "After graduation"). *Suggested:* keep.
+- **PL17-7. "I have not taken the placement yet"** plans from the lowest math placement the requirements accept (MATH 13100 for the CS BS) and says so in the chat, because a course that needs a placement is never planned without one (strict reading). An answer typed under Other that names none of the offered placements is read the same way. *Suggested:* keep; or plan from MATH 15100, the usual first-year entry, with the same notice.
+- **PL17-8. The placement question offers only MATH placements.** CMSC 14200-14400 and PHYS 14100 also have placements in the catalog data, but they only let a student skip ahead, so no plan needs them. *Suggested:* keep; ask about them only if Richard wants the planner to skip courses by placement.
+- **PL17-6. The e2e journeys (`e2e-stack/`)** were not run in this build: `make e2e` replaces the Docker stack that other sessions on this machine use. *Suggested:* run `make e2e`, then `make up`, before the merge.
+

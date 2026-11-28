@@ -1,85 +1,30 @@
-import { Link, useLocation } from "react-router-dom";
-import { cn } from "@/lib/utils";
+import { Link } from "react-router-dom";
 
-// The same sections as the top bar (D11 C-1): Plan, Catalog, Forum, and the site itself.
-const COLUMNS: { title: string; links: { to: string; label: string }[] }[] = [
-  {
-    title: "Plan",
-    links: [
-      { to: "/plan", label: "Planner" },
-      { to: "/plans", label: "My plans" },
-      { to: "/me", label: "Your dashboard" },
-    ],
-  },
-  {
-    title: "Catalog",
-    links: [
-      { to: "/courses", label: "Course search" },
-      { to: "/programs", label: "Program explorer" },
-    ],
-  },
-  {
-    title: "Forum",
-    links: [
-      { to: "/forum", label: "Questions" },
-      { to: "/instructors", label: "Course reviews" },
-      { to: "/guidelines", label: "Community guidelines" },
-    ],
-  },
-  {
-    title: "Quarterly",
-    links: [
-      { to: "/about", label: "About Quarterly" },
-      { to: "/privacy", label: "Privacy" },
-    ],
-  },
+const LINKS = [
+  { to: "/about", label: "About" },
+  { to: "/privacy", label: "Privacy" },
+  { to: "/guidelines", label: "Community guidelines" },
 ];
 
-/**
- * Compact link rows (D3, FEEDBACK "Minor design changes"): 32px with a mouse, 44px targets on touch
- * screens (`pointer-coarse`); on a phone the link columns sit two across.
- *
- * footer: canvas, body-sm in the body color, link columns, 64px top and bottom at desktop. The
- * side padding is the page gutter (16/24/32px), so the footer's left edge lines up with the top
- * bar and the page content above it (DESIGN.md's 48px would sit 16px to the right of both).
- */
+/** The panel's foot: the notice on every page (no University marks) and three links. 44px targets on touch (D3). */
 export function Footer() {
-  // Same width as the top bar: the planner's wider tool width (DF-2) on /plan, 1200px elsewhere.
-  const wide = useLocation().pathname === "/plan";
   return (
-    <footer className="text-on-night">
-      <div
-        className={cn(
-          "mx-auto grid w-full grid-cols-2 gap-x-6 gap-y-8 px-4 py-10 sm:px-6 md:grid-cols-[2fr_repeat(4,1fr)] md:gap-10 md:py-12 lg:px-8",
-          wide ? "max-w-tool" : "max-w-content",
-        )}
-      >
-        <div className="col-span-2 max-w-xs md:col-span-1">
-          <p className="font-serif text-[28px] font-medium tracking-[-0.4px] text-on-night">Quarterly</p>
-          <p className="mt-2 text-body-sm text-on-night-soft">
-            Quarterly is a student project, not affiliated with the University
-            of Chicago. It is not official advising.
-          </p>
-        </div>
-        {COLUMNS.map((col) => (
-          <nav key={col.title} aria-label={`${col.title} links`}>
-            <p className="text-caption-uppercase uppercase text-on-night-muted">
-              {col.title}
-            </p>
-            <ul className="mt-3 flex flex-col">
-              {col.links.map((l) => (
-                <li key={l.to}>
-                  <Link
-                    to={l.to}
-                    className="inline-flex min-h-9 items-center rounded-xs text-body-sm text-on-night-soft hover:text-on-night hover:underline pointer-coarse:min-h-11"
-                  >
-                    {l.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </nav>
-        ))}
+    <footer className="mt-auto border-t border-hairline px-4 py-5 sm:px-6 lg:px-8">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <p className="text-caption text-muted">
+          Quarterly is a student project, not affiliated with the University of Chicago. It is not official advising.
+        </p>
+        <nav aria-label="Site links">
+          <ul className="flex flex-wrap gap-x-5">
+            {LINKS.map((l) => (
+              <li key={l.to}>
+                <Link to={l.to} className="inline-flex min-h-9 items-center rounded-xs text-caption text-body hover:text-ink hover:underline pointer-coarse:min-h-11">
+                  {l.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
       </div>
     </footer>
   );

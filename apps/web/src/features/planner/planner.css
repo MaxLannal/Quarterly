@@ -1,0 +1,303 @@
+/*
+ * The planner ("Simple light", docs/DESIGN.md): a plain headline with a line of facts, one tool
+ * bar of segments on a grey track, each year a row of folders (features/planner/PlanGrid.tsx), each
+ * class a file in its quarter's folder. Monochrome; status colours only where they carry meaning.
+ */
+
+/* ---------- Headline ---------- */
+.planner-title {
+  letter-spacing: -0.02em;
+}
+.planner-eyebrow-dot {
+  display: none;
+}
+.planner-fact-sep {
+  color: var(--color-muted-soft);
+}
+.planner-chip {
+  border-radius: 9999px;
+  background: var(--color-surface-strong);
+  padding: 2px 10px;
+}
+
+/* The plan check's verdict: a small pill; a dot carries the tone and the words say it. */
+.planner-verdict {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 16px;
+  border-radius: 9999px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-ink);
+  background: var(--color-surface-strong);
+  cursor: pointer;
+  transition: background-color 150ms var(--ease-out);
+}
+.planner-verdict:hover {
+  background: #e8e8e5;
+}
+.planner-verdict-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 9999px;
+  background: var(--color-muted);
+}
+.planner-verdict[data-tone="valid"] {
+  color: var(--color-success);
+  background: var(--color-success-wash);
+}
+.planner-verdict[data-tone="valid"] .planner-verdict-dot {
+  background: var(--color-success);
+}
+.planner-verdict[data-tone="warnings"] {
+  color: var(--color-warning);
+  background: var(--color-warning-wash);
+}
+.planner-verdict[data-tone="warnings"] .planner-verdict-dot {
+  background: var(--color-warning-icon);
+}
+.planner-verdict[data-tone="errors"] {
+  color: var(--color-error);
+  background: var(--color-error-wash);
+}
+.planner-verdict[data-tone="errors"] .planner-verdict-dot {
+  background: var(--color-error);
+}
+.planner-verdict[data-checking="true"] .planner-verdict-dot {
+  animation: planner-pulse 1.2s ease-in-out infinite;
+}
+@keyframes planner-pulse {
+  50% {
+    opacity: 0.3;
+  }
+}
+
+/* ---------- The tool bar: segments on one grey track ---------- */
+.planner-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 14px;
+  background: var(--color-surface-strong);
+}
+.planner-toolbar-sep {
+  width: 1px;
+  height: 22px;
+  margin: 0 4px;
+  background: var(--color-hairline-strong);
+}
+.planner-seg {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 14px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--color-body);
+  cursor: pointer;
+  transition:
+    color 150ms var(--ease-out),
+    background-color 150ms var(--ease-out),
+    box-shadow 150ms var(--ease-out);
+}
+.planner-seg:hover {
+  color: var(--color-ink);
+  background: rgb(255 255 255 / 0.6);
+}
+.planner-seg:active {
+  background: #ffffff;
+}
+.planner-seg:focus-visible {
+  outline-offset: -2px;
+}
+/* The tab that is showing in the drawer: a white segment. */
+.planner-seg[aria-expanded="true"] {
+  color: var(--color-ink);
+  background: #ffffff;
+  box-shadow: 0 1px 2px rgb(17 17 17 / 0.08);
+}
+.planner-count {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* ---------- Years: rows of folders ---------- */
+.planner-rule {
+  height: 1px;
+  background: var(--color-hairline);
+}
+.planner-shelf-row {
+  position: relative;
+}
+.planner-shelf-row::after,
+.planner-shelf-row::before {
+  content: none;
+}
+
+/* ---------- A quarter: its folder ---------- */
+.planner-quarter {
+  position: relative;
+  min-width: 0;
+  height: 100%;
+  container-type: inline-size;
+}
+/* An open card menu reaches over the files below and out of the folder: lift the body over the
+   pocket and the folder over its neighbours (FEEDBACK "Minor issues", 2026-11-16). */
+.planner-quarter:has([role="menu"]) {
+  z-index: 20;
+}
+.planner-quarter:has([role="menu"]) .glass-folder-body {
+  z-index: 3;
+}
+.planner-quarter[data-stage="past"] .glass-folder-body {
+  opacity: 0.7;
+}
+.planner-tab {
+  letter-spacing: -0.01em;
+  padding-top: 2px;
+}
+.planner-folder-body {
+  padding: 12px 12px 66px;
+}
+
+/* "Now", "Next" or "Past", beside the tab. */
+.planner-stage {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-muted);
+}
+.planner-stage::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background: var(--color-muted-soft);
+}
+.planner-stage[data-stage="now"],
+.planner-stage[data-stage="next"] {
+  color: var(--color-ink);
+}
+.planner-stage[data-stage="now"]::before,
+.planner-stage[data-stage="next"]::before {
+  background: var(--color-ink);
+}
+@container (max-width: 250px) {
+  .planner-stage {
+    display: none;
+  }
+}
+
+.planner-empty {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  min-height: 64px;
+  font-size: 14px;
+  color: var(--color-muted);
+}
+.planner-goal {
+  border-radius: 9999px;
+  padding: 2px 10px;
+  font-size: 13px;
+  color: var(--color-body);
+  background: var(--color-surface-strong);
+}
+
+/* The "+" on the pocket: a black square, like the reference's black buttons. */
+.planner-add {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  cursor: pointer;
+  color: #ffffff;
+  background: var(--color-ink);
+  transition: background-color 150ms var(--ease-out);
+}
+.planner-add:hover {
+  background: var(--color-primary-hover);
+}
+.planner-add:active {
+  background: #000000;
+}
+
+/* ---------- A class: its file ---------- */
+.planner-file-slot::before {
+  background: var(--color-canvas-soft);
+  box-shadow: inset 0 0 0 1px var(--color-hairline);
+}
+.planner-file-done::before {
+  background: #fbfdfb;
+}
+/* Highlighted by the selected issue in the plan check: an ink outline. */
+.planner-file[data-highlighted="true"]::before {
+  box-shadow: inset 0 0 0 2px var(--color-ink);
+}
+
+/* The file held up under the pointer while dragging: tilted and lifted. */
+.planner-held {
+  rotate: -2deg;
+  scale: 1.02;
+  filter: drop-shadow(0 18px 24px rgb(17 17 17 / 0.16));
+  animation: planner-lift 200ms var(--ease-out) both;
+}
+@keyframes planner-lift {
+  from {
+    rotate: 0deg;
+    scale: 1;
+  }
+}
+
+/* ---------- The drawer ---------- */
+.planner-drawer-tabs [role="tablist"] {
+  margin: 0 10px;
+}
+.planner-drawer-tabs [role="tab"] {
+  padding-inline: 8px;
+  font-size: 15px;
+}
+.planner-label {
+  font-size: 12px;
+  line-height: 1.4;
+  font-weight: 600;
+  color: var(--color-muted);
+}
+/* Progress: a thin bar (a requirement's courses, a program's whole). */
+.planner-meter {
+  position: relative;
+  height: 4px;
+  border-radius: 9999px;
+  background: var(--color-surface-strong);
+  overflow: hidden;
+}
+.planner-meter > span {
+  position: absolute;
+  inset: 0 auto 0 0;
+  border-radius: inherit;
+  background: var(--color-ink);
+  transition: width 400ms var(--ease-out);
+}
+.planner-meter[data-done="true"] > span {
+  background: var(--color-success);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .planner-held {
+    rotate: 0deg;
+    scale: 1;
+    animation: none;
+  }
+}

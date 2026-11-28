@@ -414,6 +414,12 @@ class ChangeSet(Base):
         sa.ForeignKey("plan.id", ondelete="CASCADE"), index=True
     )
     origin: Mapped[str] = mapped_column(sa.String(16))
+    #: The planner run that drafted it (issue #17). Planner change sets re-base onto later edits.
+    run_id: Mapped[uuid.UUID | None] = mapped_column(
+        sa.ForeignKey("agent_run.id", ondelete="SET NULL")
+    )
+    #: The planner group: {group_id, title, kind, why, citations, rules}.
+    meta: Mapped[dict[str, Any] | None] = mapped_column(JSONB)
     ops: Mapped[list[dict[str, Any]]] = mapped_column(JSONB)
     base_plan_hash: Mapped[str] = mapped_column(sa.String(80))
     preview_report: Mapped[dict[str, Any] | None] = mapped_column(JSONB)
@@ -434,6 +440,9 @@ class AgentRun(Base):
     steps: Mapped[list[dict[str, Any]]] = mapped_column(JSONB, server_default="[]")
     tokens: Mapped[int] = mapped_column(server_default="0")
     cost_usd: Mapped[Decimal | None] = mapped_column(sa.Numeric(10, 4))
+    #: A paused planner run (waiting for the student's answer): its RunState. Cleared when the
+    #: run ends; expires after `state_ttl_days` (data/planner/config.yaml).
+    state: Mapped[dict[str, Any] | None] = mapped_column(JSONB)
     created_day: Mapped[dt.date] = mapped_column(server_default=TODAY)
 
 
@@ -687,6 +696,8 @@ class StudentProfile(Base):
     pace: Mapped[str | None] = mapped_column(sa.String(16))
     wants_research: Mapped[bool | None]
     research_areas: Mapped[list[str]] = _texts()
+    #: Academic interests (issue #14); [] = not answered.
+    interests: Mapped[list[str]] = _texts()
     # Scheduling.
     #: conservative / normal / ambitious (0011 replaced the number of courses per quarter).
     course_load: Mapped[str | None] = mapped_column(sa.String(16))
@@ -847,4 +858,24 @@ class CommonsReport(Base):
     reason: Mapped[str] = mapped_column(sa.Text)
     reporter_ref: Mapped[str | None] = mapped_column(sa.String(64))
     status: Mapped[str] = mapped_column(sa.String(16), server_default="open")
+    created_day: Mapped[dt.date] = mapped_column(server_default=TODAY)
+
+
+class ProfileProposal(Base):
+    """A General Information answer from the planner chat, waiting for the student to accept it
+    on the dashboard (issue #17). The value is the answer as the field stores it."""
+
+    __tablename__ = "profile_proposal"
+    __table_args__ = (
+        sa.CheckConstraint("status IN ('proposed', 'accepted', 'rejected')", name="status"),
+    )
+    id: Mapped[uuid.UUID] = _uuid()
+    account_id: Mapped[uuid.UUID] = mapped_column(
+        sa.ForeignKey("account.id", ondelete="CASCADE"), index=True
+    )
+    field: Mapped[str] = mapped_column(sa.String(48))
+    value: Mapped[Any] = mapped_column(JSONB)
+    #: planner_chat | import (a logged-out answer copied at login).
+    source: Mapped[str] = mapped_column(sa.String(24), server_default="planner_chat")
+    status: Mapped[str] = mapped_column(sa.String(16), server_default="proposed")
     created_day: Mapped[dt.date] = mapped_column(server_default=TODAY)

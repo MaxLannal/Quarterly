@@ -2,18 +2,24 @@ import { useDroppable } from "@dnd-kit/core";
 import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 import type { Goal, PlanItem } from "@/api/types";
 import { Button } from "@/components/ui/button";
-import { PencilIcon } from "@/components/ui/icons";
+import { Dialog } from "@/components/ui/dialog";
+import { GlassFolder } from "@/components/ui/folder";
+import { PencilIcon, PlusIcon } from "@/components/ui/icons";
 import {
   controlClass,
   controlCompactClass,
   Input,
+  Label,
 } from "@/components/ui/input";
 import { Badge } from "@/components/ui/misc";
 import { cn } from "@/lib/utils";
 import { usePlanner } from "./context";
+import { CoursePicker } from "@/features/courses/CoursePicker";
+import { ProposalBlock } from "@/features/planner-agent/ProposalBlock";
+import "./planner.css";
 import { CourseCard } from "./CourseCard";
 import { goalLabel, quarterMetrics, round1 } from "./metrics";
-import { planYears, removeYear } from "./planModel";
+import { addCourseOps, planYears, removeYear } from "./planModel";
 import {
   academicYear,
   academicYearLabel,
@@ -39,71 +45,103 @@ function termGoals(goals: Goal[], term: string, entryTerm: string): Goal[] {
   });
 }
 
+/** "+" on a folder: search the catalog and add a course straight to this quarter. */
+function AddCourseDialog({ term, open, onClose }: { term: string; open: boolean; onClose: () => void }) {
+  const { plan, edit } = usePlanner();
+  const id = useId();
+  // The dialog focuses its first control (Close); the search field is what the student came for.
+  // This runs after the dialog's own focus effect (a parent's effects run after its children's).
+  useEffect(() => {
+    if (open) document.getElementById(id)?.focus();
+  }, [open, id]);
+  return (
+    <Dialog open={open} onClose={onClose} title={`Add a course to ${termLabel(term)}`} description="Type a course code or name, then choose it from the list.">
+      <div className="flex flex-col gap-1.5">
+        <Label htmlFor={id}>Course</Label>
+        <CoursePicker
+          id={id}
+          catalogYear={plan.catalog_year}
+          value=""
+          onChange={(code) => {
+            if (!code) return;
+            edit(addCourseOps(code, term));
+            onClose();
+          }}
+        />
+      </div>
+      <p className="mt-4 text-caption text-muted">Courses that count toward your programs are listed under Requirements.</p>
+    </Dialog>
+  );
+}
+
+/**
+ * One quarter: a folder whose files are the quarter's classes (Max, 2026-11-27; docs/DESIGN.md
+ * "Simple light"), stacked in its year's column. The tab names the quarter; the pocket is the
+ * quarter footer (units, hours, difficulty) with a "+" that adds a course. The whole folder is the
+ * drop target, and its outline turns ink under a dragged course or when an issue points at it.
+ * The planner agent's proposals sit among the files as dashed blocks (issue #18).
+ */
 function QuarterCell({ term, items }: { term: string; items: PlanItem[] }) {
-  const { plan, courses, highlight } = usePlanner();
+  const { plan, courses, highlight, proposals } = usePlanner();
+  const proposed = (proposals.get(term) ?? []).filter((b) => b.action !== "remove");
   const { setNodeRef, isOver } = useDroppable({ id: term, data: { term } });
+  const [adding, setAdding] = useState(false);
   const m = quarterMetrics(items, courses);
   const goals = termGoals(plan.goals ?? [], term, plan.entry_term);
   const headingId = `term-${term}`;
+  const label = termLabel(term);
+  const summer = term.endsWith("-SU");
   return (
-    <section
-      ref={setNodeRef}
-      aria-labelledby={headingId}
-      data-testid={`quarter-${term}`}
-      className={cn(
-        "flex min-h-24 min-w-0 flex-col rounded-lg border border-hairline bg-canvas-soft p-2 transition-[border-color,background-color,box-shadow] duration-200 sm:min-h-36",
-        isOver && "border-primary bg-primary-wash shadow-hover",
-        highlight.terms.has(term) &&
-          "ring-2 ring-primary ring-offset-2 ring-offset-canvas",
-      )}
-    >
-      <h4
-        id={headingId}
-        className="mb-2 text-caption-uppercase uppercase text-muted"
+    <section ref={setNodeRef} aria-labelledby={headingId} data-testid={`quarter-${term}`} className="planner-quarter">
+      <GlassFolder
+        tone={summer ? "frost" : "smoke"}
+        active={isOver || highlight.terms.has(term)}
+        tabRatio={0.66}
+        className="h-full min-h-[200px]"
+        tab={
+          <h4 id={headingId} className="planner-tab truncate text-[15px] font-semibold leading-none text-ink">
+            {label}
+          </h4>
+        }
+        pocket={
+          <>
+            {/* PL-3 (D11): an empty quarter shows no row of zeros. */}
+            {items.length > 0 ? (
+              <div className="min-w-0 flex-1 text-[12.5px] leading-tight tabular-nums text-muted" data-testid={`footer-${term}`}>
+                <p className="truncate font-semibold text-ink">
+                  {m.units}
+                  {m.unitsPartial ? "+" : ""} units
+                </p>
+                <p className="truncate">
+                  {round1(m.hours)}
+                  {m.hoursPartial && m.courses ? "+" : ""} h/wk ·{" "}
+                  <span title="Difficulty index: the sum of course difficulty (1–5 each)">Difficulty {round1(m.difficulty)}</span>
+                </p>
+              </div>
+            ) : (
+              <span className="flex-1" />
+            )}
+            <button type="button" className="planner-add" aria-label={`Add a course to ${label}`} aria-haspopup="dialog" onClick={() => setAdding(true)}>
+              <PlusIcon size={18} />
+            </button>
+          </>
+        }
       >
-        {termLabel(term)}
-      </h4>
-      {items.length === 0 ? (
-        // PL-3 (D11): say what is there, not only how to drag.
-        <p className="flex flex-1 items-center justify-center rounded-lg border border-dashed border-hairline-strong p-3 text-center text-caption text-muted">
-          No courses yet
-        </p>
-      ) : (
-        <ul className="flex flex-1 flex-col gap-2">
-          {items.map((item) => (
-            <CourseCard
-              key={item.id ?? `${item.course}-${item.term}`}
-              item={item}
-            />
-          ))}
-        </ul>
-      )}
-      {/* PL-3 (D11): an empty quarter shows no row of zeros; the footer stays for its goals. */}
-      {(items.length > 0 || goals.length > 0) && (
-      <footer
-        className="mt-3 border-t border-hairline pt-2 text-caption tabular-nums text-muted"
-        data-testid={`footer-${term}`}
-      >
-        {items.length > 0 && (
-        <div className="flex flex-wrap gap-x-3">
-          <span>
-            {m.units}
-            {m.unitsPartial ? "+" : ""} units
-          </span>
-          <span>
-            {round1(m.hours)}
-            {m.hoursPartial && m.courses ? "+" : ""} h/wk
-          </span>
-          <span title="Difficulty index: the sum of course difficulty (1–5 each)">
-            Difficulty {round1(m.difficulty)}
-          </span>
-        </div>
+        {items.length === 0 && proposed.length === 0 ? (
+          // PL-3 (D11): say what is there, not only how to drag.
+          <p className="planner-empty">No courses yet</p>
+        ) : (
+          <ul className="flex flex-col gap-2">
+            {items.map((item) => (
+              <CourseCard key={item.id ?? `${item.course}-${item.term}`} item={item} />
+            ))}
+            {proposed.map((b) => (
+              <ProposalBlock key={`${b.proposalId}-${b.course}`} block={b} />
+            ))}
+          </ul>
         )}
         {goals.length > 0 && (
-          <ul
-            className="mt-2 flex flex-wrap gap-1"
-            aria-label={`Goals for ${termLabel(term)}`}
-          >
+          <ul className="mt-1 flex flex-wrap gap-1" aria-label={`Goals for ${label}`}>
             {goals.map((g) => (
               <li key={g.id}>
                 <Badge casing="normal" className="py-0.5">
@@ -113,8 +151,8 @@ function QuarterCell({ term, items }: { term: string; items: PlanItem[] }) {
             ))}
           </ul>
         )}
-      </footer>
-      )}
+      </GlassFolder>
+      <AddCourseDialog term={term} open={adding} onClose={() => setAdding(false)} />
     </section>
   );
 }
@@ -300,7 +338,7 @@ export function PlanGrid({
   onGraduation,
   onAddYear,
 }: PlanGridProps) {
-  const { plan } = usePlanner();
+  const { plan, proposals, openSummers, setSummerOpen } = usePlanner();
   const [yearMsg, setYearMsg] = useState<string | null>(null);
   const items = plan.items ?? [];
   const last = graduationTerm(plan);
@@ -347,55 +385,61 @@ export function PlanGrid({
           </Button>
         </div>
       </div>
-      {Array.from({ length: years }, (_, i) => i + 1).map((y) => {
-        const start = academicYear(termAt(plan.entry_term, y, "AU"));
-        const summer = termAt(plan.entry_term, y, "SU");
-        const summerItems = byTerm.get(summer) ?? [];
-        const yearTerms = QUARTERS.map((q) =>
-          termAt(plan.entry_term, y, q),
-        ).filter((t) => shown.has(t));
-        const visible = yearTerms.filter(
-          (t) => showSummer || !t.endsWith("-SU"),
-        );
-        return (
-          <section
-            key={y}
-            aria-labelledby={`year-${y}`}
-            data-testid={`year-${y}`}
-          >
-            <h3
-              id={`year-${y}`}
-              className="mb-3 flex flex-wrap items-baseline gap-x-2 font-display text-display-sm"
-            >
-              {classYearLabel(y, level)}{" "}
-              <span className="font-sans text-caption tabular-nums text-muted">
-                {academicYearLabel(start)}
-              </span>
-              {!showSummer && summerItems.length > 0 && (
-                <span className="font-sans text-caption text-muted">
-                  {" "}
-                  · {termLabel(summer)}: {summerItems.length} course
-                  {summerItems.length === 1 ? "" : "s"} (hidden)
-                </span>
-              )}
-            </h3>
-            <div
-              className={cn(
-                "grid grid-cols-1 gap-3 sm:grid-cols-3",
-                showSummer && "xl:grid-cols-4",
-              )}
-            >
-              {visible.map((term) => (
-                <QuarterCell
-                  key={term}
-                  term={term}
-                  items={byTerm.get(term) ?? []}
-                />
-              ))}
-            </div>
-          </section>
-        );
-      })}
+      {/* Issue #18: one column per academic year, each stacking its quarters (Summer, collapsed
+          unless it is used, then Autumn, Winter and Spring). The columns follow the space the
+          grid has (the planner panel takes a third of a wide screen), and a fifth year scrolls
+          sideways. */}
+      <div className="@container">
+        <div
+          data-testid="year-columns"
+          className="grid grid-cols-1 gap-4 @lg:grid-cols-2 @3xl:auto-cols-[minmax(11rem,1fr)] @3xl:grid-flow-col @3xl:grid-cols-none @3xl:overflow-x-auto @3xl:pb-2"
+        >
+          {Array.from({ length: years }, (_, i) => i + 1).map((y) => {
+            const start = academicYear(termAt(plan.entry_term, y, "AU"));
+            const summer = termAt(plan.entry_term, y, "SU");
+            const summerUsed =
+              (byTerm.get(summer) ?? []).length > 0 || (proposals.get(summer) ?? []).length > 0;
+            const summerShown = shown.has(summer) && (showSummer || summerUsed || openSummers.has(y));
+            const yearTerms = QUARTERS.map((q) => termAt(plan.entry_term, y, q)).filter(
+              (t) => shown.has(t) && !t.endsWith("-SU"),
+            );
+            return (
+              <section
+                key={y}
+                aria-labelledby={`year-${y}`}
+                data-testid={`year-${y}`}
+                className="flex min-w-0 flex-col gap-3"
+              >
+                <h3
+                  id={`year-${y}`}
+                  className="flex flex-wrap items-baseline gap-x-2 font-display text-title-md"
+                >
+                  {classYearLabel(y, level)}{" "}
+                  <span className="font-sans text-caption tabular-nums text-muted">
+                    {academicYearLabel(start)}
+                  </span>
+                </h3>
+                {summerShown ? (
+                  <QuarterCell term={summer} items={byTerm.get(summer) ?? []} />
+                ) : (
+                  shown.has(summer) && (
+                    <button
+                      type="button"
+                      onClick={() => setSummerOpen(y, true)}
+                      className="flex min-h-11 items-center rounded-lg border border-dashed border-hairline px-3 text-caption text-muted transition-colors hover:border-hairline-strong hover:text-ink"
+                    >
+                      + {termLabel(summer)}
+                    </button>
+                  )
+                )}
+                {yearTerms.map((term) => (
+                  <QuarterCell key={term} term={term} items={byTerm.get(term) ?? []} />
+                ))}
+              </section>
+            );
+          })}
+        </div>
+      </div>
       <div className="flex flex-col gap-2">
         <div className="flex flex-wrap gap-2">
           <Button

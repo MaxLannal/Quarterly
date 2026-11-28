@@ -1,5 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
-import { card, closePanel, gap, openPanel, setUpPlanFromRecord, signUp, verifierSettled } from "./journey";
+import { card, closePanel, gap, generate, openPanel, setUpPlanFromRecord, signUp, verifierSettled } from "./journey";
 
 // SPEC "Core user journeys" B: transfer student targeting CS BS + Math BS and the Bx/MS
 // (real stack, fake LLM).
@@ -47,13 +47,9 @@ test("journey B: transfer student with CS BS + Math BS + Bx/MS sees what cannot 
   // B4. Generate: with three programs in nine quarters nothing fits, and the answer is a precise
   // list of the rules in conflict: shared-course (double-count) limits, the College unit limit
   // (overload), and whether the quarters left are enough to graduate.
-  await page.getByRole("button", { name: "Generate plan" }).click();
-  const dialog = page.getByRole("dialog", { name: "Generate plan" });
-  await dialog.getByRole("checkbox", { name: "Allow a 500-unit quarter where the rules permit it" }).check();
-  await dialog.getByRole("button", { name: "Generate", exact: true }).click();
-  const results = dialog.getByRole("region", { name: "Generated variants" });
-  await expect(results).toBeVisible({ timeout: 150_000 });
-  const notice = results.getByRole("status").filter({ hasText: "No plan fits all of these settings." });
+  // Issue #17: the planner agent tells the student before it writes the closest plan.
+  const { panel } = await generate(page, "algorithms");
+  const notice = panel.getByTestId("chat-bubble-ai").filter({ hasText: "No plan fits all of these rules." });
   await expect(notice).toBeVisible();
   for (const rule of [
     "The limits on courses shared between your programs",
@@ -66,20 +62,19 @@ test("journey B: transfer student with CS BS + Math BS + Bx/MS sees what cannot 
   ]) {
     await expect(notice).toContainText(rule);
   }
-  await expect(results.getByRole("article")).toHaveCount(0);
-  gap("B4: no variant is generated for this transfer case, so the verifier's per-plan overload and double-count issues are only shown as the generator's conflict list.");
+  gap("B4: the 500-unit overload option of the old Generate popup is gone; the planner agent plans within the College's unit limit.");
+  await panel.getByRole("button", { name: "Reject all" }).click();
   await page.keyboard.press("Escape");
-  await expect(dialog).toBeHidden();
   await verifierSettled(page);
 
   // B5. Advisor chat: the answer cites the course, then drafts a change set; the student
   // confirms by typing the confirmation sentence, and the change is applied to the plan.
   await page.getByRole("button", { name: "Ask Quarterly" }).click();
-  const sheet = page.getByRole("dialog", { name: "Ask Quarterly" });
-  const input = sheet.getByLabel("Ask the advisor");
+  const sheet = page.getByRole("complementary", { name: "Planner panel" }).or(page.getByRole("dialog", { name: "Ask Quarterly" }));
+  const input = sheet.getByLabel("Ask or tell the planner");
   await input.fill("Is Honors Analysis (MATH 20700) worth it if I want ML research?");
   await input.press("Enter");
-  const proposal = sheet.getByRole("article", { name: "Proposed change" });
+  const proposal = sheet.getByRole("article", { name: "Proposal: Add MATH 20700" });
   await expect(proposal).toContainText(/Add MATH 20700 to (Autumn|Winter|Spring) \d{4}/, { timeout: 60_000 });
   await expect(sheet.getByText("MATH 20700 is a good fit for that goal.")).toBeVisible();
   const phrase = (await proposal.innerText()).match(/Or type “(I agree to [^”]+)”/)?.[1];
@@ -89,7 +84,7 @@ test("journey B: transfer student with CS BS + Math BS + Bx/MS sees what cannot 
   // until it ends); the card can show before that (integration run 2026-11-24).
   await expect(sheet.getByRole("button", { name: "Send", exact: true })).toBeEnabled();
   await input.press("Enter");
-  await expect(proposal).toContainText("Applied.");
   await expect(card(page, "MATH 20700")).toBeAttached();
+  await expect(proposal).toHaveCount(0); // accepted: the card leaves the conversation
   gap("B5: with the fake LLM the answer cites the course only; forum evidence in answers needs the real model (not run: API hold).");
 });

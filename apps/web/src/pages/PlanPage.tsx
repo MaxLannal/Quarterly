@@ -8,7 +8,21 @@ import { Planner } from "@/features/planner/Planner";
 import { defaultCatalogYear } from "@/features/planner/terms";
 
 export default function PlanPage() {
-  const [params] = useSearchParams();
+  const [params, setParams] = useSearchParams();
+  // ?generate=1 (the onboarding wizard's last step) starts one generation: read it once, then
+  // drop it from the address, so a reload does not start another paid run.
+  const [generateFromUrl] = useState(() => params.get("generate") === "1");
+  useEffect(() => {
+    if (!params.has("generate")) return;
+    setParams(
+      (p) => {
+        const next = new URLSearchParams(p);
+        next.delete("generate");
+        return next;
+      },
+      { replace: true },
+    );
+  }, [params, setParams]);
   const years = useCatalogYears();
   const [local, setLocal] = useState<LocalPlan | null>(() => activePlan());
   // A plan set up from the student record reopens the planner (a new key), with the generator
@@ -40,7 +54,7 @@ export default function PlanPage() {
     <Planner
       key={`${local.localId}:${setUp.version}`}
       initial={local}
-      autoGenerate={setUp.version > 0 ? setUp.generate : params.get("generate") === "1"}
+      autoGenerate={setUp.version > 0 ? setUp.generate : generateFromUrl}
       onSetUp={(plan, generate) => {
         const next = { ...plan, updatedDay: today() };
         upsertPlan(next);

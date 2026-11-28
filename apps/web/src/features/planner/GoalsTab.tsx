@@ -23,7 +23,7 @@ interface GoalsTabProps {
 function GoalRow({ goal, issues, onRemove }: { goal: Goal; issues: Issue[]; onRemove: () => void }) {
   const mine = issues.filter((i) => i.goal_id === goal.id);
   return (
-    <li className="flex animate-rise items-start justify-between gap-2 rounded-lg border border-hairline bg-surface-card py-1 pl-3 pr-1 text-body-sm">
+    <li className="flex animate-rise items-start justify-between gap-2 rounded-[18px] bg-canvas-soft py-1 pl-4 pr-1 text-body-sm ">
       <div className="min-w-0 py-2">
         <div className="text-ink">{goalLabel(goal)}</div>
         {goal.term && <div className="text-caption text-muted">{termLabel(goal.term)}</div>}
@@ -57,9 +57,10 @@ export function GoalsTab({ goals, entryTerm, terms, issues, programs, planProgra
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-9">
       <section aria-labelledby="career-goals">
-        <h3 id="career-goals" className="text-title-sm">
+        <span className="planner-label">Across the plan</span>
+        <h3 id="career-goals" className="font-display text-title-md font-normal leading-tight">
           Career goals
         </h3>
         {career.length === 0 ? (
@@ -80,7 +81,8 @@ export function GoalsTab({ goals, entryTerm, terms, issues, programs, planProgra
         </div>
       </section>
       <section aria-labelledby="term-goals">
-        <h3 id="term-goals" className="text-title-sm">
+        <span className="planner-label">One quarter</span>
+        <h3 id="term-goals" className="font-display text-title-md font-normal leading-tight">
           Quarter goals
         </h3>
         {perTerm.length === 0 ? (

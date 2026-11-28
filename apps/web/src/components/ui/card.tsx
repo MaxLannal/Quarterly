@@ -3,27 +3,27 @@ import type { CSSProperties, HTMLAttributes, ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 /*
- * DESIGN.md card family. Cards are white on the canvas with a 1px hairline; the only shadow is the
- * hover tier, and only on cards that are links or targets.
+ * Card family ("Simple light"): white with a 1px hairline and 16px corners; the only shadow is a
+ * faint hover lift, and only on cards that are links or targets.
  */
 export const cardVariants = cva("min-w-0 text-ink", {
   variants: {
     variant: {
-      /** course-card: white, 16px radius, 24px padding. */
+      /** course-card: white, 16px radius, 24px padding, a hairline. */
       default: "rounded-xl border border-hairline bg-surface-card p-6",
-      /** Compact card (menus, dense lists): 12px radius, 16px padding. */
+      /** Compact card (menus, dense lists). */
       compact: "rounded-lg border border-hairline bg-surface-card p-4",
-      /** post-card: white, 16px radius, 32px padding, body text color. */
-      post: "rounded-xl border border-hairline bg-surface-card p-8 text-body",
-      /** orb-card: canvas-soft, 24px radius, 32px padding; pair with one <Orb>. */
-      orb: "relative isolate overflow-hidden rounded-xxl bg-canvas-soft p-8",
-      /** featured-card: the maroon inversion, at most one per page. */
-      featured: "rounded-xl bg-surface-inverse p-8 text-on-primary",
-      /** A quiet well for grouped controls (filters, a form step). */
-      well: "rounded-xl border border-hairline bg-canvas-soft p-5",
+      /** post-card: white, 28px padding, body text colour. */
+      post: "rounded-xl border border-hairline bg-surface-card p-7 text-body",
+      /** orb-card (orbs are off): a soft grey card. */
+      orb: "relative isolate overflow-hidden rounded-xl bg-canvas-soft p-7",
+      /** featured-card: black, at most one per page (like the reference's "Download App" card). */
+      featured: "rounded-xl bg-surface-inverse p-7 text-on-dark",
+      /** A quiet grey well for grouped controls (filters, a form step). */
+      well: "rounded-xl bg-canvas-soft p-5",
     },
     interactive: {
-      true: "transition-shadow hover:shadow-hover focus-within:shadow-hover",
+      true: "transition-[box-shadow,border-color] duration-200 hover:border-hairline-strong hover:shadow-hover focus-within:shadow-hover",
       false: "",
     },
   },
@@ -65,7 +65,7 @@ export function Avatar({ name, className }: { name: string; className?: string }
     .map((p) => p[0]?.toUpperCase())
     .join("");
   return (
-    <span aria-hidden="true" className={cn("inline-flex size-8 shrink-0 items-center justify-center rounded-pill bg-surface-strong text-caption-uppercase text-ink", className)}>
+    <span aria-hidden="true" className={cn("inline-flex size-8 shrink-0 items-center justify-center rounded-pill bg-ink text-[12px] font-semibold text-on-primary", className)}>
       {initials || "?"}
     </span>
   );
@@ -74,9 +74,9 @@ export function Avatar({ name, className }: { name: string; className?: string }
 /** A stat for attribute grids: caption label over a title value. */
 export function Stat({ label, value, children }: { label: ReactNode; value: ReactNode; children?: ReactNode }) {
   return (
-    <div className="rounded-lg bg-canvas-soft p-4">
+    <div className="rounded-lg border border-hairline bg-canvas p-4">
       <dt className="text-caption text-muted">{label}</dt>
-      <dd className="mt-0.5 text-title-sm tabular-nums">{value}</dd>
+      <dd className="mt-1 text-[24px] font-semibold leading-tight tracking-[-0.4px] tabular-nums">{value}</dd>
       {children}
     </div>
   );

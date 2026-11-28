@@ -25,12 +25,21 @@ def test_no_agent_tool_schema_puts_an_enum_on_a_list_of_types() -> None:
     Invalid schema: Enum value 'AU' does not match declared type ['string', 'null']" (the
     `quarter` filter of search_courses). FakeLLM never sees tool schemas, so only a live call
     showed it."""
-    import api.agents.chat as chat
-    import api.agents.generate as generate
+    import api.agents.planner.chat as chat
+    import api.agents.planner.state as state
     from api.agents.tools import TOOLS
+    from llm_gateway.loop import submit_schema
+    from llm_gateway.types import SubmitTool
 
     schemas: dict[str, Any] = {name: make(MagicMock()).input_schema for name, make in TOOLS.items()}
-    for module in (generate, chat):
+    for model in (
+        state.QuestionsSubmission,
+        state.PlanSubmission,
+        state.RepairSubmission,
+        state.ExplanationsSubmission,
+    ):
+        schemas[model.__name__] = submit_schema(SubmitTool("x", "x", model))
+    for module in (chat,):
         for attr in dir(module):
             value = getattr(module, attr)
             if attr.endswith("_SCHEMA") and isinstance(value, dict):
@@ -59,31 +68,27 @@ def test_the_scope_classifier_has_room_for_its_answer() -> None:
     assert load_routing().route("a2_scope_classifier").max_tokens >= 4 * used
 
 
-def test_a1_output_limits_leave_room_for_both_answers() -> None:
-    """Live finding (phase 1): with the per-step limits of prompt 13 (preferences 1500,
-    rationale 1200), every rationale was cut off mid-answer (stop_reason max_tokens, an empty
-    submit_rationale) on Sonnet 5.5 and Opus 5.5, so no plan got its rationale; and on Opus
-    5.5, whose thinking cannot be turned off, submit_preferences was cut off too, so A1 fell
-    back to the default ranking. The recordings are the real answers."""
+def test_planner_output_limits_leave_room_for_thinking_and_a_whole_plan() -> None:
+    """Live finding (phase 1, the old A1): per-step limits of 1500 and 1200 cut every answer
+    off on Opus 5.5, whose thinking cannot be turned off. The recordings are the real answers;
+    the planner's generation route writes a whole plan in one call, so its cap must leave at
+    least 2.5 times the largest cut-off answer, and the chat route at least that much for one
+    answer with three proposals."""
     import json
     from pathlib import Path
 
-    from api.agents import generate
+    from llm_gateway.routing import load_routing
 
-    limits = {
-        "submit_preferences": generate.PREFERENCES_MAX_TOKENS,
-        "submit_rationale": generate.RATIONALE_MAX_TOKENS,
-    }
-    seen: dict[str, int] = {}
+    used = 0
     for name in ("a1-p1-undecided-sonnet.json", "a1-p2-cs-math-bxms-opus.json"):
         for pair in json.loads((Path(__file__).parent / "fixtures" / "live" / name).read_text()):
             r = pair["response"]
-            for call in r["tool_calls"]:
-                if call["name"] in limits and r["stop_reason"] == "max_tokens":
-                    seen[call["name"]] = max(seen.get(call["name"], 0), r["usage"]["output_tokens"])
-    assert set(seen) == {"submit_preferences", "submit_rationale"}  # both were cut off live
-    for tool, used in seen.items():
-        assert limits[tool] >= 2.5 * used, (tool, limits[tool], used)
+            if r["stop_reason"] == "max_tokens":
+                used = max(used, r["usage"]["output_tokens"])
+    assert used
+    routing = load_routing()
+    assert routing.route("a1_planner_agent").max_tokens >= 2.5 * used
+    assert routing.route("a1_planner_chat").max_tokens >= 2.5 * used
 
 
 def test_the_test_run_cannot_reach_a_real_model() -> None:

@@ -5,7 +5,7 @@ import globals from "globals";
 import tseslint from "typescript-eslint";
 
 export default tseslint.config(
-  { ignores: ["dist", "coverage", "test-results", "playwright-report", "src/api/schema.d.ts"] },
+  { ignores: ["dist", "dist-e2e-*", "coverage", "test-results", "playwright-report", "src/api/schema.d.ts"] },
   {
     extends: [js.configs.recommended, ...tseslint.configs.recommended, jsxA11y.flatConfigs.recommended],
     files: ["**/*.{ts,tsx}"],

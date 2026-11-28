@@ -35,7 +35,7 @@ export function TopSheet({ open, onClose, labelledBy, describedBy, initialFocus,
       onClick={(e) => e.target === e.currentTarget && onClose()}
       className={cn(
         "fixed inset-0 z-50 flex justify-center transition-colors duration-200 sm:p-4 sm:pt-0",
-        closing ? "bg-ink/0" : "animate-fade-in bg-ink/40",
+        closing ? "bg-transparent" : "animate-fade-in bg-scrim",
       )}
     >
       <div

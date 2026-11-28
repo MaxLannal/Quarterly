@@ -2,10 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 
 /**
- * Day or night on the homepage (Max, 2026-11-20). The scene is painted entirely in the chapel's
- * course titles (chapel/renderer.ts): at night the sky's titles turn a deep blue with a few starry
- * letters and a moon, snow falls as bright letters drifting down, the lawn is under snow, and the
- * two street lamps (drawn in titles by day as well) glow orange and warm the snow below them.
+ * Day or night on the homepage (Max, 2026-11-20). In Harper's reading room (HarperHall.tsx), day
+ * is sunlight falling through the windows in shafts with dust in them; night is dusk blue glass,
+ * a few stars in the great window, and the room lit by its lamps.
  */
 
 export type Scene = "day" | "night";
@@ -32,7 +31,6 @@ export function useScene(): [Scene, (s: Scene) => void] {
 
 /** The Day / Night switch: a small segmented pill at the top right of the hero. */
 export function SceneSwitch({ scene, onChange }: { scene: Scene; onChange: (s: Scene) => void }) {
-  const night = scene === "night";
   const ref = useRef<HTMLDivElement>(null);
   // The chapel behind listens for the pointer on the whole hero: over the switch it names no course.
   useEffect(() => {
@@ -51,12 +49,8 @@ export function SceneSwitch({ scene, onChange }: { scene: Scene; onChange: (s: S
       ref={ref}
       role="radiogroup"
       aria-label="Homepage scene"
-      className={cn(
-        "flex items-center gap-1 rounded-pill border p-1 backdrop-blur-md transition-colors duration-700",
-        night
-          ? "border-[rgb(255_200_140/0.35)] bg-[rgb(14_19_48/0.92)] shadow-overlay"
-          : "border-hairline bg-surface-card/90 shadow-hover",
-      )}
+      // A grey track with the current scene as a white segment (docs/DESIGN.md "Simple light").
+      className="flex items-center gap-1 rounded-xl bg-surface-strong p-1"
     >
       {(["day", "night"] as const).map((s) => {
         const on = scene === s;
@@ -68,14 +62,8 @@ export function SceneSwitch({ scene, onChange }: { scene: Scene; onChange: (s: S
             aria-checked={on}
             onClick={() => onChange(s)}
             className={cn(
-              "inline-flex min-h-11 items-center gap-2 rounded-pill px-4 text-button transition-colors duration-500",
-              on
-                ? night
-                  ? "bg-[#ffb35c] text-[#141b3a]"
-                  : "bg-primary text-on-primary"
-                : night
-                  ? "text-on-night/80 hover:bg-on-night/15"
-                  : "text-body-strong hover:bg-surface-strong",
+              "inline-flex min-h-11 items-center gap-2 rounded-lg px-3.5 text-caption font-medium transition-[color,background-color,box-shadow] duration-150",
+              on ? "bg-canvas text-ink shadow-[0_1px_2px_rgb(17_17_17/0.08)]" : "text-muted hover:text-ink",
             )}
           >
             {s === "day" ? <SunGlyph /> : <MoonGlyph />}

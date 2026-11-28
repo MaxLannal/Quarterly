@@ -6,11 +6,12 @@ from __future__ import annotations
 
 import datetime as dt
 from collections.abc import Iterable
-from typing import Annotated, Literal, Self
+from typing import Annotated, Any, Literal, Self
 
 from planner_core.models import Grading
 from pydantic import (
     BaseModel,
+    ConfigDict,
     Field,
     RootModel,
     field_serializer,
@@ -205,6 +206,7 @@ class ProfileOut(BaseModel):
     pace: Pace | None = None
     wants_research: bool | None = None
     research_areas: list[str] = []
+    interests: list[str] = []
     # Scheduling.
     course_load: CourseLoad | None = None
     terms_away: list[TermAway] | None = None
@@ -260,6 +262,7 @@ class ProfilePatch(BaseModel):
     pace: Pace | None = None
     wants_research: bool | None = None
     research_areas: Items | None = None
+    interests: Items | None = None
     course_load: CourseLoad | None = None
     terms_away: list[TermAway] | None = Field(default=None, max_length=MAX_TERMS_AWAY)
     class_formats: list[ClassFormat] | None = Field(default=None, max_length=4)
@@ -269,7 +272,7 @@ class ProfilePatch(BaseModel):
     interview: InterviewMemoryPatch | None = None
     follows: Follows | None = None
 
-    @field_validator("research_areas")
+    @field_validator("research_areas", "interests")
     @classmethod
     def _items(cls, value: list[str] | None) -> list[str] | None:
         return None if value is None else clean_items(value)
@@ -383,3 +386,25 @@ class InterviewEvent(
     ]
 ):
     """One Server-Sent Event `data:` payload from /agents/interview."""
+
+
+class ProfileProposalOut(BaseModel):
+    """A General Information answer from the planner chat, waiting for the student's accept
+    (issue #17)."""
+
+    id: str
+    field: str
+    value: Any
+    #: planner_chat | import (an answer given while logged out, copied at login).
+    source: str
+    status: Literal["proposed", "accepted", "rejected"]
+    created_day: dt.date
+
+
+class ProfileProposalCreate(BaseModel):
+    """The import on login: a browser plan's answer for an empty field of the record."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    field: str = Field(max_length=48)
+    value: Any

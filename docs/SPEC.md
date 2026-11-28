@@ -196,11 +196,11 @@ The site has 16 page types. The planner, the generate popup, the advisor chat an
 
 The design canvas has mockups of six key screens, with sample data: [QuadPlan — screen mockups](https://claude.ai/artifact/U46qMrKwDcMToNGW5bWJQR) (planner with advisor chat, generate popup, course page, course × instructor forum, onboarding goals, anonymous sign-up).
 
-**Top bar (issue #15):** four tabs, in this order: **Dashboard** (`/me`), **Planner** (`/plan`), **Catalog** (`/courses`) and **Forum** (`/forum`). The homepage is not a tab. The "Quarterly" wordmark links to it. No page has a floating companion.
+**Main navigation (issue #15; a sidebar since 2026-11-27, docs/DESIGN.md "Simple light"):** four tabs, in this order: **Dashboard** (`/me`), **Planner** (`/plan`), **Catalog** (`/courses`) and **Forum** (`/forum`). The homepage is not a tab. The "Quarterly" wordmark links to it. No page has a floating companion.
 
 | Route | Page | Login | Purpose |
 | --- | --- | --- | --- |
-| `/` | Home | No | Not a tab: the wordmark in the top bar links here. Title "The Best of UChicago, *within your reach.*". It shows "Start planning" (a link to `/signup` when logged out, to `/plan` when logged in, issue #16) and "Explore the catalog" (a link to `/courses`, issue #19). Since issue #15, there is no question bar and there are no "Try" questions. The course search of the top bar shows here on every screen size. Behind the buttons, Rockefeller Chapel fills the first screen. It is drawn with the titles of real catalog courses (`/home/course-chapel.json`, made by `tools/course-chapel/build.py`), in maroon, black and white. The letters have depth and follow the pointer. The sun moves over the carved stone. Clouds and a soft glint drift across it without input. A lens lifts and magnifies the letters under the pointer. The title under the mouse shows its code and opens its course page. With reduced motion or without a GPU, the picture is still. |
+| `/` | Home | No | Not a tab: the wordmark in the top bar links here. Title "The Best of UChicago, *within your reach.*". It shows "Start planning" (a link to `/signup` when logged out, to `/plan` when logged in, issue #16) and "Explore the catalog" (a link to `/courses`, issue #19). Since issue #15, there is no question bar and there are no "Try" questions. The course search of the top bar shows here on every screen size. Under the title and buttons, a white card holds the reading room of Harper Memorial Library, drawn in code (Max, 2026-11-27; docs/DESIGN.md "Simple light"). Sunlight falls through its windows by day, and lamps light it by night (a Day / Night switch in the card's caption row, remembered on the device). With reduced motion, nothing moves. Below the card, three cards (Planner, Catalog, Forum) each link to their part. (The Rockefeller Chapel drawn with course titles is no longer on the page; its code stays until Richard decides, OPEN_QUESTIONS DG-1.) |
 | `/ask` | (redirect) | No | Redirects to `/plan`. Issue #15 removed the Ask page and its chatbot. The planner page is the only place where a student talks to the planner agent ("Ask Quarterly"). |
 | `/me` | Your dashboard | Yes | The student record (Issue #14, #16). It shows: a Profile card (name, class year, the email read from the account, intended programs, program progress, "Complete your profile"). The General Information in four groups (Academic background, Goals, Scheduling, Learning preferences). The student can edit each answer in place or through the dashboard agent (`POST /agents/interview`). The agent asks the step-2 questions one at a time, with their options as buttons, and proposes each answer for the student to accept. "Your plan": a read-only summary of the primary plan, with a link to the planner. "Export my information (.md)" (`GET /me/profile/export.md`). There are no routes and no "At a glance" (issue #15 removed them, because the planner makes every plan proposal). There is no "What's new" (issue #16 D5). |
 | `/feed` | (redirect) | No | Redirects to `/courses`. Issue #19 removed the Feed page. Its course spotlights and student quotes are browse rows of the Catalog. Its floating words, ticker, focus chips, book shelf, word clouds, open questions, program cards and AI notes (`POST /agents/feed-notes`, task `a8_feed_notes`) are gone. |
@@ -234,14 +234,16 @@ The design canvas has mockups of six key screens, with sample data: [QuadPlan �
   - Each course shows its code in bold, with its name in small text. Each node shows a subtle "n of m".
   - The student can drag any course onto the grid.
   - **Check plan** opens Issues.
-- **Center, the grid (the main width):**
-  - One row for each academic year, from the entry quarter to the graduation quarter.
-  - An academic year has the order Summer, Autumn, Winter, Spring. The summer *before* autumn is part of it (Summer 2026 is in 2026–27). There is no summer after the last spring.
-  - Summer is collapsed by default.
+- **Left, the grid (the full width while the panel is closed; issue #18):**
+  - One column for each academic year, from the entry quarter to the graduation quarter. The columns follow the width the grid has: four in a row when there is room, two, or one on a phone; a fifth year scrolls sideways.
+  - Each column stacks its quarters: Summer, Autumn, Winter, Spring. The summer *before* autumn is part of it (Summer 2026 is in 2026–27). There is no summer after the last spring.
+  - Summer is a thin "+ Summer YYYY" row until it holds a course or a proposal, the student opens it, or Show Summer is on.
   - The label of a year is the class year ("Second year" for the first year of a second-year transfer).
   - The `graduation_term` of the plan sets its end. By default, it is the Spring of the last year, counted from the entry level (four years for a first-year, three for a second-year transfer). **Add a year**, **Remove last year** (only when that year is empty) and **Graduating in** (an Autumn, Winter or Spring) change it.
-  - A course card shows the code, short title, units, a color stripe for the requirement that it fills, estimated hours/week and difficulty dots.
-  - Each quarter footer shows the units, total hours/week, a difficulty index and the goal chips of that quarter.
+  - Each quarter is drawn as a folder (Max, 2026-11-27; docs/DESIGN.md "Simple light"), stacked in its year's column. Its name is on the tab, and a small "Now", "Next" or "Past" label sits beside it. The whole folder is the drop target.
+  - Each course is a file in its quarter's folder. The code is a small grey line and the course's name sits below it as the card's bold title, also on the planner agent's proposed blocks (Max, 2026-11-27). A course card shows the code, short title, units and a color stripe for the requirement that it fills. Hours/week and difficulty are in its tooltip and in the details panel (the columns are narrow). The title opens the course details in the panel.
+  - **Proposals** of the planner agent are dashed blocks named after their group ("Proposed"), in their quarters; a proposed removal strikes the course through. They stay until the student accepts or rejects them, also after a reload (issue #18 D1). Clicking one selects its card in the panel.
+  - The folder's front pocket is the quarter footer. It shows the units, total hours/week, a difficulty index, the goal chips of that quarter, and a "+" button that opens "Add a course to <quarter>" (the course picker).
 - **Advisor** (opens from the top, separate from the drawer): it has a clear label as generative AI ("Generative AI", "Answers are written by an AI and can be wrong"). It has a chat layout: message bubbles for the student and the AI, a typing indicator during streaming, citation chips and proposal cards.
 - **Motion:** subtle transitions for the drawer, the advisor, dialogs and course cards. With `prefers-reduced-motion`, all are off.
 - **Interactions:**
@@ -252,34 +254,14 @@ The design canvas has mockups of six key screens, with sample data: [QuadPlan �
 - **States:** empty (requirement slots show as dashed cards), verifying, valid, warnings, errors. Read-only for a shared snapshot.
 - **API:** `GET /plans/{id}`, `PATCH /plans/{id}/items`, `POST /verify`, `POST /agents/generate` (SSE), `POST /agents/chat` (SSE), `POST /plans/{id}/changesets/{cs}/apply`.
 
-### Generate-plan popup
+### Planner panel (issue #18)
 
-The popup is a form, never a free-text prompt. Thus every input maps to a typed parameter.
-
-1. **Scope:** the full plan, the remaining quarters, or selected quarters. Locked and completed courses stay.
-2. **Load and difficulty:** a career-wide slider (lighter ↔ heavier), with optional overrides for each quarter. The maximum number of courses in a quarter. Permit a 500-unit quarter only where the rules permit it.
-3. **Goals:** filled from the Goals tab, and editable (graduate by, study abroad block, Bx/MS application, pre-med sequence, protect GPA, "challenge me").
-4. **Interests:** tags ("ML", "philosophy of mind", "Chinese") that the generator uses to select electives.
-5. **Variants:** 1–3.
-
-Then a progress view streams the steps of the agent ("Loading requirements → Choosing electives → Solving → Verifying → Writing rationale").
-
-The result shows each variant with:
-
-- A diff against the current plan.
-- Its verifier badge.
-- Metrics (average hours, hardest quarter).
-- A one-line rationale for each quarter.
-
-Buttons: **Apply**, **See changes** (with **Choose quarters to apply** inside it), **Discard**. Above them, a line tells which quarters Apply changes. An option that still has errors says so.
-
-### Advisor chat (right rail)
-
-- The advisor answers only planning questions. Off-topic requests get a one-line refusal.
-- Each factual claim has a citation chip: a course attribute ("MATH 20700 · workload 18 h/wk · n=34") or a forum post.
-- Changes come as a **proposal card**: a list of add/move/remove operations, and the verdict of the verifier on the plan after the change.
-  - **Apply** applies it.
-  - An explicit typed confirmation ("I agree to add MATH 20700 to Autumn Y2") also works. The server checks that it agrees with the card.
+- Hidden by default; **Generate plan** and **Ask Quarterly** open it, and it reopens on this device while proposals are pending. From 1024px it takes the right third beside the grid; below, it is a full-screen sheet. Opening moves the focus into it; Escape hides it.
+- Titled "Ask Quarterly" (no "Generative AI" badge, FEEDBACK 2026-11-16), with "Answers are written by an AI and can be wrong. Not official advising."
+- The conversation: the student's messages (working information, questions), the agent's answers with citation chips (`course`, `post`, `summary`, `attribute`, `program`, `profile` → the field on the dashboard, `guideline` → the rule's text), the steps of a run, questions (option buttons and an "Other" box), the plan's verdict, and one proposal card per course or sequence that the student asked for in the chat: its courses and quarters, "Why this for you", sources, the guideline rules it follows, **Accept** / **Reject** (or "This proposal no longer fits your plan" and **Ask again**). A first plan (from Generate plan) is one card in the chat, not one card per group: its verdict and summary, **Walk me through it**, **Keep this plan** (applies every group at once) and **Discard** (Max, 2026-11-27). **Accept all** / **Reject all** act on the chat's open proposals; **Clear chat** (behind a confirm; proposals stay). New proposals are announced in an `aria-live` region.
+- Accept: a saved plan uses `POST /plans/{id}/changesets/{cs}/apply` (planner change sets re-base; 409 = stale); other plans apply the ops in the browser. Accepted courses are locked. Typed confirmations ("apply it", "I agree to …") still work.
+- **Walkthrough** (Max, 2026-11-27: "no need to accept/reject one by one"): after a generation, the panel walks through the plan's main sequences one at a time, majors first, then the Core, then minors, earliest quarter first. A main sequence is a major, Core or minor group of two or more courses; single courses and electives share one last step. Each step shows "Sequence n of N", the sequence's name and one paragraph from the planner agent (what the sequence is about, then why it suits this student and why these quarters, guideline G46), and the sequence's blocks glow on the grid (a static ring with reduced motion). There is no course list or source chip in the card, and nothing is accepted per step. **Back** / **Next** move along, **Keep this plan** applies every group at once, **Skip tour** leaves the plan proposed, and the end of the tour offers **Keep this plan** again. **Walk me through it** replays it.
+- **Course details** (a click on a course title) and **History** (every edit, newest first, each with **Revert**, which applies the inverse ops) are views of the panel with "← Chat". The history is kept with the plan on this device.
 
 ### Course page (`/courses/{code}`)
 
@@ -459,7 +441,8 @@ The model has nine groups of tables. The key of the catalog, schedule and progra
 | Table | Key fields | Notes |
 | --- | --- | --- |
 | `account` | `id`, `username`, `email` (unique, lowercase), `email_verified_day`, `password_hash` (argon2id) or passkey credential, `role` (user, curator, admin), `status`, `created_day` | The email is stored as decision 5 tells. It is never logged and never copied to other tables. |
-| `student_profile` | `account_id`, the General Information answers (`class_year`, `expected_graduation_term`, `intended_programs`, `entry_term`, `entry_year_level`, `post_grad_plan`, `pace`, `wants_research`, `research_areas`, `course_load`, `terms_away`, `class_formats`, `theory_vs_application`), `working_notes`, `interview` (the memory of the dashboard agent), `follows`, `updates_seen` | The student record (Issue #14. `feed_categories` was dropped with the Feed, issue #19). NULL = not answered. It never holds the email. |
+| `profile_proposal` | `account_id`, `field`, `value`, `source` (`planner_chat`, `import`), `status` (`proposed`, `accepted`, `rejected`), `created_day` | An answer from the planner chat (or a logged-out plan at login) that waits for the student's accept on the dashboard (issue #17). |
+| `student_profile` | `account_id`, the General Information answers (`class_year`, `expected_graduation_term`, `intended_programs`, `entry_term`, `entry_year_level`, `post_grad_plan`, `pace`, `wants_research`, `research_areas`, `interests`, `course_load`, `terms_away`, `class_formats`, `theory_vs_application`), `working_notes`, `interview` (the memory of the dashboard agent), `follows`, `updates_seen` | The student record (Issue #14. `feed_categories` was dropped with the Feed, issue #19). NULL = not answered. It never holds the email. |
 | `student_credit` | `account_id`, `kind` (AP, placement, transfer), `label`, `maps_to_course_id`, `units` | The credits of the record. Every saved plan reads them (they are not part of one plan now). A label has a maximum of 120 characters (emails and phone numbers removed). A credit has a maximum of 1000 units. When a plan is saved, the app clips the credit of the plan to these limits. |
 | `student_course` | `account_id`, `course_id`, `term_id`, `status` (completed, in_progress), `grade` (none for a course in progress), `grading` (letter, pass_fail), `units`, `locked` | Taken courses. Each keeps the grading, units and lock of the plan item. Thus a Pass/Fail course never counts where a letter grade is required (V12), after an edit of the record on the dashboard or a save from the planner. Every saved plan shows them as completed or in-progress items (id `t<id>`). A plan save writes them back. A new plan never overwrites a record that already has taken courses. When the planner opens, it shows the credits and taken courses of the record. Unless the student changed them in the planner, a save writes the current ones of the record. (Thus an old copy never undoes a change made on the dashboard.) A save never removes taken courses from before the first quarter of the plan. |
 
@@ -775,8 +758,8 @@ Prices are list prices for each million input / output tokens, from the [models 
 | E2 program enumerator | `claude-opus-5-5` | $4 / $20 | Cross-checks of many pages. |
 | E1 prerequisite sentence → DSL | `claude-haiku-5-5` | from $0.10 / $0.50 | High volume, short inputs. |
 | E4 back-translation judge, scraper repair | `claude-sonnet-5-5` | $2 / $10 | Medium difficulty, fast. |
-| A1 plan generator | `claude-sonnet-5-5` (thinking between tools) | $2 / $10 | Tool use and judgment on electives. Every plan is still verified and certified, so the cheaper model is sufficient (Richard, 2026-11-16, after the live test). |
-| A2 advisor chat | `claude-sonnet-5-5` (escalate to Opus 5.5 for whole-plan comparisons) | $2 / $10 | Interactive latency. |
+| A1 planner agent, generate (`a1_planner_agent`) | `claude-opus-5-5`, effort medium, 32000 tokens | $4 / $20 | Writes, checks and repairs a whole plan (Max, 2026-11-26, issue #17). Through Teamorouter (`ANTHROPIC_BASE_URL`). |
+| A1 planner agent, chat (`a1_planner_chat`) | `claude-opus-5-5`, effort low | $4 / $20 | The same agent in the chat beside the plan; `a2_scope_classifier` (Haiku 5.5) still gates each message. |
 | A3 forum extraction / summaries | Haiku 5.5 / Sonnet 5.5 |  | Nightly batch. |
 | A4 moderation | `claude-haiku-5-5` |  | Runs on every AI summary (not on the posts of students, P08-1). |
 
@@ -792,53 +775,24 @@ OpenRouter is a fallback. `llm_gateway` maps each model to its OpenRouter name. 
 - **Prompt caching** for system prompts, the DSL schema and catalog excerpts.
 - **Versioned prompts** in `prompts/*.md`. A new version must pass the eval set of that agent.
 
-### A1. Plan generator (Generate-plan popup)
+### A1. Planner agent (issues #17 and #18)
 
-The LLM chooses *what is worth taking*. The solver decides *where it fits*. The verifier decides *whether it is valid*.
+One agent writes the first plan and changes it in the chat; it replaced the plan generator and the advisor chat. Its rules are `data/planner/plan-guideline.md` (tiered rules `G01`…: program completion, offerings and sequences, the student's standards, interests, the shape of a good plan, CS major facts, explaining choices, changing the plan in chat), its limits `data/planner/config.yaml`. Code: `services/api/api/agents/planner/`; endpoint `POST /agents/planner` (docs/CONTRACTS.md "Planner agent").
 
-```text
-Plan generator harness (see the diagram in the shared doc)
+**Generate** (a port of the degree-plan-agent harness):
 
- Generate form -> 1 Load (code) -> 2 Compile goals (code) -> 3 Pick electives (LLM)
-   [fail -> default preferences]                                    |
-                                                                    v
- 7 Proposal card  <- 6 Explain (LLM) <- 5 Verify (code) <- 4 Solve (CP-SAT, code)
- [nothing saved     [fail -> no         [fail -> alert,    [no plan -> plain-language
-  before Apply]      rationale]          drop variant]      reason why]
-```
+1. **Read (code).** `student.md` (the saved record, or a browser plan's answers), the working information, the plan (completed, locked, placements, credits).
+2. **Ask.** An empty answer that planning needs (`interests`) is asked with the question file's text, without a model. So is the math placement, when the student has no way into math (no math placement or placement credit, and no MATH course taken or credited) and a course of an unmet requirement needs a placement: the options are the MATH placements those courses accept, lowest first, plus "I have not taken the placement yet" (the plan then starts at the lowest one, and the planner says so). The run plans with the answer as a placement credit, and `done.placements` tells the page to add the same credit to the plan. Then the model may ask up to 2 multiple-choice questions where the record is silent on a real fork. Before each question the run is saved in `agent_run.state` and the stream ends; the answer continues it (it does not count toward the rate limit). A logged-in student's answer is stored as a `profile_proposal` to accept on the dashboard. A plan without a major gets "use + Program" instead.
+3. **Check what can fit (code).** The solver runs as a feasibility oracle (its plan is not used); the requirements brief lists each unmet requirement with candidates, their usual quarters and prerequisites.
+4. **Write (model).** One `submit_plan` with every quarter, grouped by sequence; a check rejects unknown codes, quarters outside the plan, completed courses and a course in two groups (one repair turn). A second plan with such problems is kept without the courses at fault, which the verifier and the repair rounds then see as missing; a title, reason or note past its length is clipped, not rejected. If the lookups run out, it is asked once more without tools. Writing has its own time limit (`write_seconds`, 600 s; other steps 300 s).
+5. **Check (code).** `verify_checked` + `check_certificate()`, plus the student's standards the verifier does not cover: S01 a course in a quarter away, S02 a quarter above the chosen course load, S03 a course on the working information's avoid list.
+6. **Repair (model, at most 5 rounds).** Fewest ops, bend the lowest tier, record each bend; stop when the same errors come back 3 rounds in a row; then up to 2 rounds on warnings V04/V10/V11.
+7. **Explain (model).** "Why this for you" for each group, naming an interest, goal or standard, with citations that are checked.
+8. **Return.** A `plan` event (the verdict comes only from step 5) and one `proposal` per group (a `change_set` for a saved plan); unlocked existing courses the plan drops are one more group, "Courses this plan replaces". The model never says a plan is valid.
 
-Only steps 3 and 6 call a model. Each has a fallback. Thus a failed LLM call makes the result less good, but does not break it.
+**Chat:** typed confirmations (no model), the scope gate, then the agent with the read tools, `preview_ops`, `propose_change_set` (one course or sequence, at most 3 an answer, never an avoided course), `note_preference` (one dated line in the working information: `- YYYY-MM-DD · kind · text [CODES]`; logged in it goes to `student_profile.working_notes`, else back to the browser) and `submit_answer`. History is kept while the plan exists; Clear chat deletes it.
 
-1. **Load (code).** The plan state, programs, goals, locked items, the eligible courses for each unmet requirement node, attributes and offering patterns. The plan can already hold something that the catalog does not know (a credit mapped to an unknown code, a completed course from a different catalog). In that case, the run stops with "Fix these first, then generate again: ...", which names it.
-2. **Compile goals (code).** Each goal becomes solver bounds, rewards or penalties, as in the goal table above.
-3. **Choose electives (LLM).** For each unmet `select` node (often 30–100 candidates), the agent uses `search_courses`, `get_course` and `get_forum_summary`. It ranks a maximum of 8 preferred courses, each with a one-line reason. Then it calls `submit_preferences`. Budget: 12 tool calls.
-4. **Solve (code).** CP-SAT puts courses into terms. Constraints: prerequisite order, `p_offered` ≥ 0.3, loads, hard goals, program satisfaction (the V07 model), locked items. Objective: preference weights + goal rewards − penalties for workload spikes. Each extra variant must be different from the earlier ones in at least 4 placements.
-5. **Verify (code).** The full verifier and the certificate check run on every variant. A failure here is a bug. It raises an alert, and the variant is dropped. If all variants are dropped, the student sees what the check found, never only "this is a bug".
-6. **Explain (LLM).** The agent writes a rationale of 25 words or fewer for each quarter, and cites tool results. The server checks that the course set did not change. If it changed, the server discards the rationale and keeps the plan.
-7. **Return** each variant as a proposed `change_set`, streamed over SSE.
-
-**Fallbacks:**
-- If step 3 fails: default preferences (interest-tag match, then forum `recommend_rate`).
-- If step 6 fails: show the plan without a rationale.
-- If the solver finds no plan, it tells why in plain terms ("Graduating by Spring 2029 needs 5 more courses than your remaining quarters allow").
-
-**Cost and limits:**
-- Approximately $0.25 for each generation at list prices (rough estimate: \~40k cached input and \~5k output tokens on Opus 5.5).
-- Limit: 10 generations for each account for each day.
-- Logged-out users get 3. The rate limit uses an IP counter in Redis that expires after 24 hours and is never written to disk.
-
-### A2. Advisor chat
-
-- **Scope gate:** a Haiku 5.5 pre-classifier gives each message a label: `in_scope`, `off_topic`, `confirmation` or `suspicious`. Off-topic messages get a fixed one-line refusal, without a call to the main model.
-- **Read tools:** `get_plan`, `preview_ops` (runs the verifier on hypothetical edits and saves nothing), `search_courses`, `get_course`, `get_program`, `get_forum_summary`, `get_forum_posts`, `compare_courses`.
-- **Draft tool:** `propose_change_set(ops)` stores a `change_set` with status `proposed` and its verifier preview. The UI shows a proposal card.
-- **No write tool.** The model never applies anything. A change is applied only in one of two cases:
-  - (a) The student clicks **Apply** on a card.
-  - (b) The student types an explicit command ("I agree to add MATH 20700 and CMSC 27100 to Autumn 2027"). A deterministic parser changes the text into operations. The server applies them only if two conditions are true:
-    - They are equal to the operations of the latest proposal, or they are fully explicit.
-    - The plan did not change since then (`base_plan_hash`).
-- **Answers** use a schema `{text, citations[]}`. Citation chips link to attribute values or forum posts.
-- **History** stays for each plan for 30 days.
+**Limits and cost.** Generation 10 per account per day, 3 per client address logged out; chat 60 / 30. Live (2026-11-26, Teamorouter): a whole CS BS plan took 15 model calls, about $2.80 and 12 minutes before the brief listed prerequisites; see docs/LIVE-TEST-REPORT.md.
 
 ### E1–E4. Ingestion agents
 

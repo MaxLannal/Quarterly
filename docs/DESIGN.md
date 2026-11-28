@@ -643,6 +643,13 @@ Richard's FEEDBACK "Minor design changes" overrides the rules above only in thes
 - **Top-bar search.** A filled `surface-strong` field. It has no outline until the user hovers over it or focuses it. The icon and the placeholder identify it.
 - **Footer links.** 32px rows with a mouse. 44px targets on touch screens.
 
+## Planner split screen (Max, issue #18, 2026-11-26)
+
+- **Year columns.** The plan grid shows one column per academic year, each stacking Summer (a 44px dashed "+ Summer YYYY" row until used), Autumn, Winter and Spring. The columns follow the grid's own width (container queries), so they stay readable with the panel open: four columns of about 200px at 1440px.
+- **Panel.** The planner panel is the right third from 1024px (min 22rem, max 38rem), sticky, `bg-canvas` with a hairline border and `shadow-overlay`; a full-screen sheet below 1024px. It keeps the chat look of FEEDBACK F4 (bubbles, the AI avatar, the typing dots) and the title "Ask Quarterly" without a badge (FEEDBACK 2026-11-16).
+- **Proposals.** A proposed course is a dashed 2px `primary/50` block on `primary-wash`, with a "Proposed" badge; a proposed removal strikes the existing card through with a warning badge.
+- **Glow.** The walkthrough lights the current group with `glow-ring`: a maroon ring with a soft maroon halo that breathes over 1.8s. With reduced motion it is a static 3px maroon ring.
+
 ## Maroon and night (Max, 2026-11-20; branch `feature/best-of-uchicago`)
 
 Max requested this with a reference login card ("Have words bigger and background colors maroon and black
@@ -719,3 +726,129 @@ combined. Take inspiration from this and apply to every page and every detail").
 - The transfer questions in step 4 have no box of their own. Their fields line up with the fields above.
 - The kind labels are "AP exam", "Placement" and "Transfer".
 
+
+## Dark glass (Max, 2026-11-27; branch `claude/quarterly-ui-redesign-c953e9`)
+
+> **Withdrawn the same day.** Max found it "uglier" and still too like the old layouts, and asked for "Simple light" (next section). The dark version is kept as the local tag `dark-glass-v1`.
+
+Max asked for this with three reference pictures: floating glass tool panels over a dark picture, glass folders on a swirl of dark red light, and a dark glass sign-in card with a ring of white light behind it. His words: "Reconstruct everything on Quarterly on this UI style", "Have the Harper Library at the homepage in this UI as well. Have each quarter in the planner a folder like as shown, and classes as files in it. Be magical, smooth, dark, red, glassy. Mature designs", and "white light goes together intersection with maroon dark red light, flowing in the background". Richard has not seen it yet. Where it conflicts with the sections above (including "Maroon and night"), this section describes what is built.
+
+- **The night and its light** (`components/brand/Aurora.tsx`). Every page is on near-black (`night` #060203).
+  - Behind it, a ring of white light crosses a ring of crimson light. A wide ring of maroon haze and two slow red blooms sit under both.
+  - A bright arc travels slowly round each ring (110-220 s a turn). Where white crosses red, the two add up to a rose-white glow.
+  - Film grain stops banding; a vignette keeps the edges black.
+  - Only transforms animate, so the browser moves cached layers and does not repaint. With reduced motion, the light holds still.
+  - The light is dimmer behind pages covered by a pane. It is at full strength on the homepage and on sign-in and sign-up.
+- **The pane.** Each page is one pane of smoked glass (`.page-sheet`, about 86% opaque) with a lit hairline edge, 44px corners and a deep shadow.
+  - The light shows faintly through the pane and fully around it.
+  - The pane has no backdrop blur: blurring a whole page over a moving background would cost every frame.
+  - The homepage has no pane (`data-bare`).
+  - A page rises out of the glass when it opens (`.page-enter`, 520 ms).
+- **Colour** (tokens in `index.css`; the names did not change, the values did):
+  - Text is warm white: `ink` #f7f0f0, `body` #cdc1c3, `muted` #ab9c9f. Each is 4.5:1 or better on the pane and on its glass tints.
+  - Red is the light itself: `primary` #ff5c70 (6.6:1 on the pane) for links, the current place, focus rings, bars and dots. As a fill, it carries dark text (`on-primary`).
+  - Surfaces on the pane are tints of white (`surface-card` 4.5%, `surface-strong` 8.5%, `canvas-soft` 3%). Surfaces that float over content use `surface-raised` (#1a0f12) or the `.glass-raised` class.
+  - `canvas` (#0c0608) is solid, for covers.
+  - Lines are white at low alpha (`hairline` 9%, `hairline-strong` 17%), so they catch the light like the edge of a pane.
+  - Semantic colours and the data colours are lifted so they read on dark. Their washes are tints of the same light.
+  - Scrims use `scrim` (never `ink`, which is now white). The pair `bg-ink` + `text-on-dark` would now be white on white: use `bg-ink text-canvas`.
+- **Type.**
+  - Headlines use Instrument Serif at 400 (`font-display`; the `text-display-*` sizes are about 20% larger than the old bold Inter, because the serif's x-height is lower). Their `<em>` words are its italic, lit red.
+  - `font-synthesis` is off, so a bold class never fakes a bold serif.
+  - Body and controls stay Inter. Voices and quotes keep Newsreader (`font-serif`).
+  - Small labels (eyebrows, course codes, footer column titles, dates) are JetBrains Mono capitals, widely spaced (`.mono-label`, `Eyebrow`, `CourseCode`), like "PLANNER // AUTUMN 2026".
+  - All fonts are bundled from npm, so nothing is fetched from another origin.
+- **Controls.**
+  - The main button is a white pill with dark text and a red glow beneath it. The glow brightens on hover.
+  - `outline` is a clear glass pill with a lit edge. `glow` is red glass, for a second strong action.
+  - Inputs are dark glass pills with an inset shadow. On focus, the edge turns red with a red halo.
+  - Cards are glass tiles with a lit top edge. Cards that are links lift 2px and light up.
+  - Any `[data-spotlight]` surface carries a soft red light that follows the pointer (one listener in `AppShell`). It is decorative only.
+- **The top bar** is no longer one slab.
+  - The wordmark stands on its own. The four tabs sit in a glass dock (`.nav-glass`), centred on screens 1280px and wider. The current tab is a lit glass pill with a point of red light.
+  - Search and the account are separate frosted pills on the right.
+  - A progressive blur under the bar (`.nav-veil`), strongest at the top, softens what scrolls beneath.
+  - On a phone, the tabs open as a glass panel under the search.
+- **Floating glass.** Menus, dialogs, drawers and the top sheet use `.glass-raised` over a blurred `scrim`.
+- **Rims of light.** Cards have no flat border. `.glass-rim` draws a 1px gradient ring: bright at the top-left edge, faint along the sides, warming to red at the far corner, and brighter on hover and focus. Use it on any rounded panel.
+- **Tabs** are a glass track; the current tab is a lit pill of glass in it (not an underline).
+- **The footer** puts its link columns over a huge "Quarterly" in the display serif. It is white at the top and fades into the night, like a horizon (decorative, `aria-hidden`).
+- **The homepage** (`pages/HomePage.tsx`, `features/home/HarperHall.tsx`):
+  - The title sits beside a pane of glass turned a few degrees (like the reference's floating canvas). The pane holds the reading room of Harper Memorial Library, drawn in code in one-point perspective (`harperGeometry.ts`): tall pointed windows down both walls, a beamed ceiling, long tables with reading lamps, rows of pendant lights, and window reflections in the polished floor.
+  - By day, sun falls through the south windows in shafts that cross the room, with dust drifting in them. Three groups of shafts dim one after another, as if a cloud passed.
+  - By night (the Day / Night switch stays), the glass turns deep violet, a few stars show in the great window, and the lamps light the room.
+  - Three two-line glass chips float over the picture at different depths, and the pointer tilts the pane a few degrees. Under reduced motion, nothing moves and no dust shows.
+  - Below the hero, "Four years, kept in folders." shows Planner, Catalog and Forum as three glass folders. Each whole folder is one link, and its files say what the part holds (facts about the product only).
+  - The chapel drawn with course titles (`CourseChapel`) is no longer on the page. Its code stays in the repository until Richard decides (FEEDBACK "Course-title chapel on the homepage").
+- **The wordmark** is "Quarterly" in the display serif, with one point of red light after it.
+- **Folders and files** (`components/ui/folder.tsx`).
+  - A glass folder has a back panel with a tab on its top-left. The tab slopes down into the body.
+  - The files stand inside it. A frosted front pocket runs across the bottom, and its top edge steps down from left to right. The files tuck 8px behind the pocket, so nothing they say is covered.
+  - Tones: `smoke`, `ember` (red light) and `garnet`. A drop target lights its edge red and glows (`active`).
+  - A file (`.glass-file`) is a sheet of light glass with a folded top-right corner. It is painted by pseudo-elements, so the element keeps a normal box for focus rings and dragging.
+  - The planner draws each quarter as a folder and each class as a file in it.
+- **Motion.** The ease is `cubic-bezier(0.16, 1, 0.3, 1)`: long and soft. Hover and press take 150-300 ms, entrances 400-520 ms. Reduced motion stops all of it.
+- **Pages** (built by three parallel agents on 2026-11-27, merged into this branch):
+  - **Sign-in and sign-up** are the reference itself, with Quarterly's own words:
+    - One large dark glass card floats centred on the light, with no pane. A lit arc travels round its edge.
+    - Inside the card: a mono chip ("QUARTERLY.ACCOUNT"), a big serif title, mono capital field labels, pill fields, a mono divider, and a full-width white pill.
+    - Mono captions sit in the page corners (`aria-hidden`). Sign-up has a glass step strip ("Step N of 4") over a glowing progress line. There are no social buttons, because Quarterly has no social login.
+  - **The dashboard** is a bento of glass panels:
+    - A hero panel: a serif greeting, a mono stats strip, and the completeness ring as red light.
+    - The guide as a separate card of red glass.
+    - The questions as quiet numbered rows, whose actions light up on hover.
+  - **About, Privacy and Account** share an editorial reading layout (`features/auth/editorial.tsx`): a mono eyebrow, a serif title and lede, a narrow column, numbered sections, and glass tables. Privacy and Account have a sticky "On this page" index at 1200px and wider. The 404 page is a lone glass folder, "ERROR // 404", lit by a breathing red light.
+  - **The Catalog** is a centred cover:
+    - The glass Courses/Programs switch, a large serif "Catalog", and a glass command field with a ring of light travelling round its edge.
+    - A mono hint, and filter chips.
+    - Browse rows as magazine sections ("01 // NEW THIS YEAR").
+    - The shared kit is in `features/courses/Glass.tsx` and `glass.css`: two-line fact chips, a mono kicker, a rating ring, meters, and luminous reply guide lines.
+  - **Course, instructor and program pages** are magazine covers:
+    - A mono code chip, a huge serif title, the course number faintly in outline behind it, and facts as two-line glass chips.
+    - A two-column body with numbered sections, and a sticky glass side card (rating ring, meters, Add to plan).
+    - A program's requirements are a glass folder with one file per part.
+  - **The Forum** has editorial glass cards, the AI answer lit by a thin red line, and the composer as a floating raised pane.
+  - **The planner**:
+    - A composed headline: a mono eyebrow, the plan name in serif, the verdict as a luminous glass chip, and a mono line of facts.
+    - One floating glass tool bar; the drawer's tab that is open lights up as red glass.
+    - Each year is a shelf of folders. The current or next quarter is `ember`, summer is `frost`, and past quarters are dimmed.
+    - The drag overlay is a file held up, tilted 2.5°. My plans is a grid of glass folders.
+  - **One trap:** a finite CSS animation inside a closed `<details>` never ends, and `settle()` in `e2e/helpers.ts` waits for every animation. Keep entrance animations out of collapsed `<details>`.
+
+## Simple light (Max, 2026-11-27, second request; branch `claude/quarterly-ui-redesign-c953e9`)
+
+Max sent a reference dashboard: a light grey sidebar with a black current item, a white panel with thin-bordered white cards, one smooth sans, and almost no colour. His words: "Just make all ui ux simple as this. Use smooth, not-AI-ish fonts. Don't make it so dark." This section replaces "Dark glass" and, where they conflict, "Maroon and night". Richard has not seen it yet (OPEN_QUESTIONS DG-1 to DG-3).
+
+- **The shell** (`AppShell.tsx`, `components/layout/TopNav.tsx`):
+  - The **sidebar** sits on a light grey frame (`app` #f3f3f1). It holds the wordmark (a black tile with a Q, then "Quarterly") and the four main tabs (Dashboard, Planner, Catalog, Forum).
+  - The current main tab is a **black pill** with white text. Every item has a line icon.
+  - A **"Tools"** list follows: My plans, Programs, Instructors, Guidelines. Its current item is a grey plate, so only one black pill ever shows.
+  - A **black card** at the foot leads to the planner.
+  - Each page is in one **white panel** beside the sidebar, with 24px corners and a hairline.
+  - The panel's **top bar** holds the course search (hidden on `/courses`, as before) and the account or "Log in". A slim **footer** inside the panel holds the notice and three links.
+  - **Below 1024px** the sidebar slides in from the left behind a Menu button. When closed it is invisible, so it is out of the tab order.
+- **Colour.**
+  - Near-black `ink` #111 is the one accent: the current tab, the main button, links, progress, focus.
+  - Text greys: `body` #4f4f4f, `muted` #6e6e6e (4.95:1).
+  - Surfaces are white; `surface-strong` #f1f1ef is used for tracks, chips and the search field. Hairlines are #e9e9e7.
+  - Status colours appear only where they mean something: error, warning, success, info.
+  - Maroon remains only as a token (`maroon`), for a later brand mark.
+- **Type.** One family: **Figtree**, a smooth geometric sans (bundled from npm, `@fontsource-variable/figtree`).
+  - Headings are 600 with calm tracking.
+  - An `<em>` in a heading is the same face in grey, for a quiet two-tone title such as "The Best of UChicago, *within your reach.*".
+  - There is no serif, no mono and no italic accent. The names `font-display`, `font-serif` and `font-mono` are kept, but all map to Figtree.
+- **Controls.**
+  - Buttons are 44px soft rectangles (12px corners): black for the main action, white with a hairline for the others.
+  - Inputs are white, 44px, with a hairline. On focus the line turns ink with a soft grey halo.
+  - Tabs, the Day/Night switch and the planner tool bar are grey tracks; the current segment is white.
+  - Cards are white with a hairline and 16px corners. Only cards that are links lift on hover, with a faint shadow.
+  - There are no glows, glass, orbs or art panels. `TypeHero` and the sign-in page lost their art panels.
+- **Pages.**
+  - **The homepage** has the two-tone title, the black and white buttons, and Harper Memorial Library's reading room redrawn in sunlit stone in a white card. The card's caption row holds the Day/Night switch; night turns the room dusk blue with the lamps lit. Below it are three cards (Planner, Catalog, Forum), each with an outlined icon tile, like the reference's stat cards.
+  - **Sign-in and sign-up** are one centred white card under the black Q tile.
+  - **The planner** is the split screen of issues #17 and #18 (four year-columns, the planner agent's panel on the right, proposals as dashed blocks, the walkthrough's ring, course details and history). Within it, each quarter is a folder and each class a file:
+    - White folders with a hairline outline and a tab. The current or next quarter is outlined in ink.
+    - Files are white cards with a folded corner. The pocket is light grey and holds a black "+" button.
+    - The headline is the plan name with a small status pill and a line of facts. The tool bar is a grey track of segments.
+  - **The full-screen guide** on the dashboard is light, not black.
+  - **The rest** keeps its earlier layouts with the new type, colour and controls.

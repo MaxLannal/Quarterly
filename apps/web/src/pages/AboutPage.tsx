@@ -38,9 +38,8 @@ export default function AboutPage() {
         .
       </p>
       <p>
-        The drawing of Rockefeller Chapel on the home page is made of the
-        titles of courses in the 2026-27 College Catalog. Point at a title to
-        see which course it is.
+        The reading room of Harper Memorial Library on the home page is an
+        original drawing, made in code for Quarterly. It is not a photograph.
       </p>
     </PageContainer>
   );

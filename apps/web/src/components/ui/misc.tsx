@@ -4,7 +4,7 @@ import { CheckIcon, ErrorIcon, InfoIcon, WarningIcon } from "./icons";
 
 /** Semantic tones from DESIGN.md "Semantic". `neutral` is the default badge-pill plate. */
 const BADGE_TONES = {
-  neutral: "bg-surface-strong text-ink",
+  neutral: "bg-surface-strong text-body-strong",
   success: "bg-success-wash text-success",
   warning: "bg-warning-wash text-warning",
   error: "bg-error-wash text-error",
@@ -43,7 +43,7 @@ export function Badge({
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1 whitespace-nowrap rounded-pill px-[10px] py-1",
+        "inline-flex items-center gap-1 whitespace-nowrap rounded-pill px-2.5 py-0.5",
         casing === "upper" ? "text-caption-uppercase uppercase" : "text-caption font-medium",
         BADGE_TONES[tone],
         className,
@@ -104,7 +104,7 @@ export function NotAvailable({ feature, children }: { feature: string; children?
 export function Spinner({ label = "Loading" }: { label?: string }) {
   return (
     <p role="status" className="flex items-center gap-2 text-caption text-muted">
-      <span aria-hidden="true" className="inline-block size-2 animate-pulse rounded-pill bg-gray-dark" />
+      <span aria-hidden="true" className="inline-block size-2 animate-pulse rounded-pill bg-ink" />
       {label}…
     </p>
   );
@@ -139,5 +139,5 @@ export function Dots({ value, max = 5, label }: { value: number; max?: number; l
 
 /** A course code: caption-uppercase or tabular Inter, never the serif. */
 export function CourseCode({ children, className }: { children: ReactNode; className?: string }) {
-  return <span className={cn("font-sans text-caption-uppercase uppercase tabular-nums text-muted", className)}>{children}</span>;
+  return <span className={cn("font-sans text-caption font-semibold tabular-nums text-muted", className)}>{children}</span>;
 }

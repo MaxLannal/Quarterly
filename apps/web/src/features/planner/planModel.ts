@@ -119,6 +119,8 @@ export type EditorAction =
   | { type: "programs"; programs: PlanProgram[] }
   | { type: "goals"; goals: Goal[] }
   | { type: "credits"; credits: Credit[] }
+  /** The math placement the student gave the planner: a placement credit each, added once. */
+  | { type: "addPlacements"; codes: string[] }
   | { type: "graduation"; term: string }
   | { type: "addYear" }
   | { type: "removeYear" }
@@ -193,6 +195,12 @@ export function editorReducer(state: EditorState, action: EditorAction): EditorS
       return { ...state, plan: { ...state.plan, goals: action.goals }, revision: state.revision + 1 };
     case "credits":
       return withPlan(state, { ...state.plan, credits: action.credits });
+    case "addPlacements": {
+      const credits = state.plan.credits ?? [];
+      const have = new Set([...(state.plan.placements ?? []), ...credits.filter((c) => c.kind === "placement").map((c) => c.label)]);
+      const added = [...new Set(action.codes)].filter((code) => !have.has(code)).map((label): Credit => ({ kind: "placement", label, maps_to: null, units: 0 }));
+      return added.length ? withPlan(state, { ...state.plan, credits: [...credits, ...added] }) : state;
+    }
     case "graduation":
       if (action.term.endsWith("-SU")) return { ...state, error: "You cannot graduate in a Summer quarter." };
       if (isBefore(action.term, state.plan.entry_term)) return { ...state, error: "Your last quarter cannot be before your first." };

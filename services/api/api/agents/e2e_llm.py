@@ -3,10 +3,12 @@
 It never calls a provider. Each request gets an answer built from the request itself, so every
 agent runs through the real loop (tools, validation, citations checked against tool results):
 
-- A1 preferences: for each requirement listed, the first candidates it needs.
-- A1 rationale: one short note per quarter of every variant, citing a course in it.
-- A2 advisor: looks up the first course code the student names, drafts adding it to the
-  plan's last listed quarter, then answers citing that course.
+- Planner agent (generate): no questions; a plan built from the requirements brief (each
+  unmet requirement takes its first candidates in later quarters where they are offered; it
+  may not verify, and the repair rounds change nothing); one reason per group that names the
+  student's first interest.
+- Planner chat: looks up the first course code the student names and proposes adding it to
+  the plan's last listed quarter; "I hate <code>" records an avoid preference instead.
 - Scope gate, moderation, forum extraction, summaries and cold-start estimates: fixed safe
   answers.
 
@@ -22,8 +24,6 @@ from llm_gateway.api import FakeLLM, ToolCall
 
 CODE = re.compile(r"\b[A-Z]{2,5} \d{5}\b")
 TERM = re.compile(r"\b(\d{4})-(AU|WI|SP)\b")
-NODE_LINE = re.compile(r"^- (\S+) \(.*?\): needs (\d+) more; \d+ candidates: (.*)$")
-QUARTER_LINE = re.compile(r"^- (\d{4}-(?:AU|WI|SP|SU)) \([^)]*\): (.*)$")
 POST_ID = re.compile(r'<untrusted_source id="(?:post-)?(\d+)"')
 
 
@@ -61,38 +61,105 @@ def _student_message(messages: list[Any]) -> str:
     return content if isinstance(content, str) else _text([first])
 
 
-def _preferences(text: str) -> ToolCall:
-    nodes = []
-    for line in text.splitlines():
-        m = NODE_LINE.match(line.strip())
-        if m:
-            node_id, need, rest = m.group(1), int(m.group(2)), m.group(3)
-            codes = list(dict.fromkeys(CODE.findall(rest)))[: max(1, need)]
-            picks = [{"code": c, "score": 80, "reason": "Fits the stated goals."} for c in codes]
-            nodes.append({"node_id": node_id, "picks": picks})
-    return ToolCall("submit_preferences", {"nodes": nodes[:20]})
+BRIEF_LINE = re.compile(r"^- (\S+) \((.*?)\): need (\d+)")
+CANDIDATE = re.compile(r"([A-Z]{2,5} \d{5}) \[([^\]]*)\]")
+PROGRAM = re.compile(r"^## (\S+?):")
+INTERESTS = re.compile(r"^- Interests: (.+)$", re.MULTILINE)
+QUARTER_ORDER = {"WI": 0, "SP": 1, "SU": 2, "AU": 3}
 
 
-def _rationale(text: str) -> ToolCall:
-    variants: list[dict[str, Any]] = []
-    for line in text.splitlines():
-        head = re.match(r"^(Option [A-C])\b", line.strip())
-        if head:
-            variants.append({"label": head.group(1), "quarters": []})
+def _term_key(term: str) -> tuple[int, int]:
+    return int(term[:4]), QUARTER_ORDER[term[5:]]
+
+
+def _planner_fill(text: str) -> ToolCall:
+    """A plan built from the requirements brief: each unmet requirement takes its first
+    candidates, in strictly later quarters (so a sequence stays in order), in a quarter the
+    candidate is usually offered, at most four courses a quarter."""
+    head = text.split("# Quarters to plan", 1)[-1].split("#", 1)[0]
+    terms = sorted(set(re.findall(r"\d{4}-(?:AU|WI|SP)", head)), key=_term_key)
+    load: dict[str, int] = {t: 0 for t in terms}
+    used: set[str] = set()
+    groups: list[dict[str, Any]] = []
+    program = ""
+    lines = text.splitlines()
+    for n, line in enumerate(lines):
+        if m := PROGRAM.match(line.strip()):
+            program = m.group(1)
             continue
-        m = QUARTER_LINE.match(line.strip())
-        if m and variants:
-            codes = list(dict.fromkeys(CODE.findall(m.group(2))))
-            note = "Keeps the load even and moves the programs forward."
-            variants[-1]["quarters"].append(
-                {"term": m.group(1), "courses": codes, "text": note,
-                 "citations": [f"course:{codes[0]}"] if codes else []}
-            )  # fmt: skip
-    return ToolCall("submit_rationale", {"variants": variants})
+        m = BRIEF_LINE.match(line.strip())
+        if not m or n + 1 >= len(lines) or "candidates:" not in lines[n + 1]:
+            continue
+        label, need = m.group(2), int(m.group(3))
+        placed: list[dict[str, str]] = []
+        after = -1
+        for code, offered in CANDIDATE.findall(lines[n + 1]):
+            if len(placed) >= need or code in used:
+                continue
+            quarters = (
+                set(offered.split("/"))
+                if "/" in offered or offered in QUARTER_ORDER
+                else {"AU", "WI", "SP"}
+            )
+            slot = next(
+                (i for i, t in enumerate(terms) if i > after and t[5:] in quarters and load[t] < 4),
+                None,
+            )
+            if slot is None:
+                continue
+            term = terms[slot]
+            load[term] += 1
+            used.add(code)
+            after = slot
+            placed.append({"code": code, "term": term})
+        if placed:
+            groups.append(
+                {
+                    "id": f"g{len(groups) + 1}",
+                    "title": label[:80] or "Requirement",
+                    "kind": "core" if program == "core" else "major",
+                    "courses": placed,
+                    "why": "This meets a requirement early, in the quarters it is usually offered.",
+                    "rules": ["G01", "G08"],
+                }
+            )
+    return ToolCall("submit_plan", {"groups": groups[:24] or [], "notes": ""})
 
 
-def _advisor(messages: list[Any]) -> Any:
-    question = _student_message(messages)
+def _planner_explain(text: str) -> ToolCall:
+    interests = INTERESTS.search(text)
+    topic = interests.group(1).split(";")[0].strip() if interests else "your goals"
+    ids = list(dict.fromkeys(re.findall(r"\((g\d+)\)", text)))
+    return ToolCall(
+        "submit_explanations",
+        {
+            "groups": [
+                {
+                    "id": gid,
+                    "why": f"You said you are interested in {topic}. This group builds toward it.",
+                    "citations": ["profile:interests"] if interests else [],
+                }
+                for gid in ids
+            ]
+        },
+    )
+
+
+def _planner(tools: set[str], text: str) -> Any:
+    if "submit_questions" in tools:
+        return ToolCall("submit_questions", {"questions": []})
+    if "submit_plan" in tools:
+        return _planner_fill(text)
+    if "submit_repair" in tools:
+        return ToolCall("submit_repair", {"summary": "No change.", "ops": [], "bent": []})
+    return _planner_explain(text)
+
+
+def _planner_chat(messages: list[Any]) -> Any:
+    """Names a course code: drafts adding it to the plan's last quarter. Says it hates a
+    course: notes the preference first."""
+    text = _text(messages)
+    question = text.rsplit("# Message", 1)[-1]
     codes = CODE.findall(question)
     done = _tool_results(messages)
     code = codes[0] if codes else None
@@ -101,20 +168,33 @@ def _advisor(messages: list[Any]) -> Any:
             "submit_answer",
             {"text": "Ask me about a course by its code, for example CMSC 14100.", "citations": []},
         )
+    hate = "hate" in question.lower() or "don't want" in question.lower()
+    if done == 0 and hate:
+        return ToolCall(
+            "note_preference", {"text": question.strip()[:200], "kind": "avoid", "courses": [code]}
+        )
+    if hate:
+        return ToolCall(
+            "submit_answer",
+            {"text": f"Noted: I will not propose {code} again.", "citations": []},
+        )
     if done == 0:
         return [ToolCall("get_plan", {}), ToolCall("get_course", {"code": code})]
     if done <= 2:
-        terms = sorted(
-            {f"{y}-{q}" for y, q in TERM.findall(_text(messages))},
-            key=lambda t: (int(t[:4]), {"WI": 0, "SP": 1, "AU": 3}[t[5:]]),
-        )
+        terms = sorted({f"{y}-{q}" for y, q in TERM.findall(text)}, key=_term_key)
         term = terms[-1] if terms else "2028-AU"
         op = {"op": "add", "course": code, "term": term, "from_term": None, "to_term": None}
-        return ToolCall("propose_change_set", {"ops": [op]})
-    text = (
-        f"{code} is a good fit for that goal. I drafted a change that adds it to your plan; "
-        "check the card and apply it if you agree."
-    )
+        return ToolCall(
+            "propose_change_set",
+            {
+                "ops": [op],
+                "title": f"Add {code}",
+                "kind": "elective",
+                "why": f"{code} fits what you asked for.",
+                "rules": ["G22"],
+            },
+        )
+    text = f"{code} is a good fit for that goal. I proposed adding it; accept it beside the plan."
     return ToolCall(
         "submit_answer",
         {"text": text, "citations": [{"kind": "course", "id": code, "label": code}]},
@@ -125,12 +205,10 @@ def _answer(call: dict[str, Any]) -> Any:
     task, messages = call["task"], call.get("messages") or []
     text = _text(messages)
     tools = set(call.get("tools") or [])
-    if task.startswith("a1_"):
-        if "submit_rationale" in tools:
-            return _rationale(text)
-        return _preferences(text)
-    if task in ("a2_advisor_chat", "a2_advisor_escalation"):
-        return _advisor(messages)
+    if task == "a1_planner_agent":  # the requirements brief is in the system prompt
+        return _planner(tools, f"{call.get('system') or ''}\n{text}")
+    if task == "a1_planner_chat":
+        return _planner_chat(messages)
     if task == "a2_scope_classifier":
         return {"label": "suspicious" if "system prompt" in text.lower() else "in_scope"}
     if task == "a4_moderation":

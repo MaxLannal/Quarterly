@@ -78,13 +78,12 @@ test.describe("F2: Summer opens the academic year", () => {
       0,
     );
 
-    // Hidden Summer still says what it holds.
+    // Issue #18: a Summer that holds a course stays shown when the others are collapsed.
     await page.getByRole("button", { name: "Hide Summer" }).click();
     await expect(
-      page.getByRole("heading", {
-        name: /First year 2099–00 · Summer 2099: 1 course \(hidden\)/,
-      }),
-    ).toBeVisible();
+      page.getByTestId("year-1").getByTestId("quarter-2099-SU"),
+    ).toContainText("TEST 10000");
+    await expect(page.getByRole("button", { name: "+ Summer 2100" })).toBeVisible();
   });
 });
 
@@ -240,7 +239,7 @@ test.describe("F4: planner layout", () => {
     expect(code?.text).toBe("TEST 10000");
     expect(code?.weight).toBeGreaterThanOrEqual(600);
     expect(name?.text).toBe("Fake Introduction I");
-    expect(name?.size).toBe("15px"); // the caption size of the redesign's bigger type
+    expect(name?.size).toBe("14px"); // the caption size of "Simple light" (docs/DESIGN.md)
     await expect(
       drawer.getByRole("button", { name: /^Fake introductory sequence/ }),
     ).toContainText("0 of 3");
@@ -301,16 +300,15 @@ test.describe("F4: planner layout", () => {
     await expect(page.getByTestId("verifier-badge")).toContainText("error");
   });
 
-  test("Ask Quarterly opens from the top, says it is AI, and reads as a chat", async ({
+  test("Ask Quarterly opens beside the plan, says it is AI, and reads as a chat", async ({
     page,
   }) => {
     await page.goto("/plan");
     const sheet = await openAdvisor(page);
-    await sheet.evaluate((el) =>
-      Promise.all(el.getAnimations().map((a) => a.finished)),
-    );
+    // Issue #18: the right third of a wide screen, beside the grid.
     const box = await sheet.boundingBox();
-    expect(Math.round(box?.y ?? -1)).toBe(0);
+    const viewport = page.viewportSize();
+    expect((box?.x ?? 0) > (viewport?.width ?? 0) / 2).toBe(true);
     // FEEDBACK 2026-11-16: "Ask Quarterly", without the grey "Generative AI" badge.
     await expect(
       sheet.getByRole("heading", { name: "Ask Quarterly" }),
@@ -321,9 +319,9 @@ test.describe("F4: planner layout", () => {
     await expect(
       sheet.getByText("Answers are written by an AI and can be wrong."),
     ).toBeVisible();
-    await expect(sheet.getByLabel("Ask the advisor")).toBeFocused();
-    await sheet.getByLabel("Ask the advisor").fill("Is TEST 20000 hard?");
-    await sheet.getByLabel("Ask the advisor").press("Enter");
+    await expect(sheet.getByLabel("Ask or tell the planner")).toBeFocused();
+    await sheet.getByLabel("Ask or tell the planner").fill("Is TEST 20000 hard?");
+    await sheet.getByLabel("Ask or tell the planner").press("Enter");
     await expect(sheet.getByTestId("chat-bubble-user")).toHaveText(
       "You: Is TEST 20000 hard?",
     );
@@ -334,7 +332,7 @@ test.describe("F4: planner layout", () => {
     const ai = await sheet.getByTestId("chat-bubble-ai").first().boundingBox();
     expect(user && ai && user.x + user.width > ai.x + ai.width - 1).toBe(true);
     expect(ai?.x, JSON.stringify({ user, ai })).toBeLessThan(user?.x ?? 0);
-    await sheet.getByRole("button", { name: "Close" }).click();
+    await sheet.getByRole("button", { name: "Close planner" }).click();
     await expect(sheet).toBeHidden();
     await expect(
       page.getByRole("button", { name: "Ask Quarterly" }),
@@ -355,7 +353,7 @@ test.describe("F5: text", () => {
     );
     await page.getByRole("button", { name: "Generate plan" }).click();
     await expect(
-      page.getByRole("dialog", { name: "Generate plan" }),
+      page.getByRole("heading", { name: "Ask Quarterly" }),
     ).toBeVisible();
     await expect(page.getByText("A form, not a prompt")).toHaveCount(0);
     await page.keyboard.press("Escape");
@@ -413,9 +411,9 @@ test.describe("F6: motion", () => {
       "drawer-in",
     );
     await page.getByRole("button", { name: "Ask Quarterly" }).click();
-    await expect(page.getByTestId("top-sheet")).toHaveCSS(
+    await expect(page.locator("#planner-panel")).toHaveCSS(
       "animation-name",
-      "sheet-in",
+      "fade-in",
     );
   });
 
@@ -435,14 +433,14 @@ test.describe("F6: motion", () => {
     );
     await expect(card(page, "TEST 10000")).toHaveCSS("animation-name", "none");
     const sheet = await openAdvisor(page);
-    await expect(page.getByTestId("top-sheet")).toHaveCSS(
+    await expect(page.locator("#planner-panel")).toHaveCSS(
       "animation-name",
       "none",
     );
     // No animation is running anywhere on the page.
     expect(await page.evaluate(() => document.getAnimations().length)).toBe(0);
     // Closing is immediate (no exit animation to wait for).
-    await sheet.getByRole("button", { name: "Close" }).click();
-    await expect(page.getByTestId("top-sheet")).toBeHidden({ timeout: 100 });
+    await sheet.getByRole("button", { name: "Close planner" }).click();
+    await expect(page.locator("#planner-panel")).toBeHidden({ timeout: 100 });
   });
 });

@@ -63,7 +63,7 @@ TASK = "a6_interview"
 PROMPT = "a6_interview"
 #: No tools: the agent reads the student's record and words (untrusted) and holds nothing.
 BUDGET = Budget(tool_calls=0, tokens=40_000, seconds=30)
-HISTORY_TURNS = 16
+HISTORY_TURNS = 20  # the start + 9 questions with their replies (interests made it 9)
 MAX_WORDS = 100
 WELCOME_TTL_S = 6 * 3600
 
@@ -848,6 +848,7 @@ class Facts(BaseModel):
     pace: str | None = None
     wants_research: bool | None = None
     research_areas: list[str] = []
+    interests: list[str] = []
     course_load: str | None = None
     terms_away: list[AwayFact] | None = None
     class_formats: list[str] | None = None
@@ -903,6 +904,7 @@ def turn_schema() -> dict[str, Any]:
                     "pace": _nullable({"type": "string", "enum": options("pace")}),
                     "wants_research": {"type": ["boolean", "null"]},
                     "research_areas": {"type": "array", "items": {"type": "string"}},
+                    "interests": {"type": "array", "items": {"type": "string"}},
                     "course_load": _nullable({"type": "string", "enum": options("course_load")}),
                     "terms_away": _nullable(
                         {

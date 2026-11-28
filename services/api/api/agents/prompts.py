@@ -36,7 +36,7 @@ def prompts_dir() -> Path:
     for base in (Path(__file__).resolve(), Path.cwd()):
         for folder in (base, *base.parents):
             candidate = folder / "prompts"
-            if (candidate / "a2_chat.md").is_file():
+            if (candidate / "a1_planner.md").is_file():
                 return candidate
     raise FileNotFoundError("prompts/ not found (set PROMPTS_DIR)")
 

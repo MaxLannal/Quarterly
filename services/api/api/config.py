@@ -45,6 +45,9 @@ class Settings(BaseSettings):
     # LLM agents (prompt 07)
     anthropic_api_key: SecretStr = SecretStr("")
     openrouter_api_key: SecretStr = SecretStr("")
+    #: An Anthropic-compatible proxy such as Teamorouter (https://api.teamorouter.com). Empty:
+    #: the Anthropic API (or the SDK's own ANTHROPIC_BASE_URL lookup).
+    anthropic_base_url: str = ""
     #: Send requests to the model providers. Off until Richard lifts the hold on API calls
     #: (CLAUDE.md, 2026-11-14): with it off the agents take their fallbacks (default elective
     #: ranking, no rationale; the advisor answers only typed confirmations).

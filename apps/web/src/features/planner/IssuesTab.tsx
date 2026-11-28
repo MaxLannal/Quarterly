@@ -23,9 +23,12 @@ interface IssuesTabProps {
 /** The plan check: the verifier's status, then its issues. Opened from "Check plan" (FEEDBACK F4). */
 export function IssuesTab(props: IssuesTabProps) {
   return (
-    <div className="space-y-3">
-      <div className="flex items-center justify-between gap-2">
-        <h3 className="text-title-sm">Plan check</h3>
+    <div className="space-y-4">
+      <div className="flex items-end justify-between gap-2">
+        <div>
+          <span className="planner-label">Verifier</span>
+          <h3 className="font-display text-title-md font-normal leading-tight">Plan check</h3>
+        </div>
         <VerifierBadge verify={props.verify} />
       </div>
       <IssuesList {...props} />
@@ -58,7 +61,7 @@ function IssuesList({ verify, selected, onSelect }: IssuesTabProps) {
       {issues.length === 0 ? (
         <EmptyState>No issues found.</EmptyState>
       ) : (
-        <ul className="space-y-2" aria-label="Verifier issues">
+        <ul className="space-y-2.5" aria-label="Verifier issues">
           {issues.map((issue, i) => {
             const isSel = selected === issue;
             const short = summarizeIssue(issue);
@@ -67,8 +70,8 @@ function IssuesList({ verify, selected, onSelect }: IssuesTabProps) {
                 key={`${issue.code}-${i}`}
                 className={cn(
                   // PL-5 (D11): no coloured strip; the icon and level label carry the severity.
-                  "animate-rise rounded-lg border border-hairline bg-surface-card text-body-sm text-ink",
-                  isSel && "border-primary bg-primary-wash",
+                  "animate-rise rounded-[18px] bg-canvas-soft text-body-sm text-ink  transition-[background-color,box-shadow] duration-300",
+                  isSel && "bg-primary-wash ",
                 )}
                 style={{ animationDelay: `${Math.min(i, 8) * 30}ms` }}
               >
@@ -76,21 +79,21 @@ function IssuesList({ verify, selected, onSelect }: IssuesTabProps) {
                   type="button"
                   aria-pressed={isSel}
                   onClick={() => onSelect(isSel ? null : issue)}
-                  className="w-full cursor-pointer rounded-t-lg px-3 pb-1 pt-2 text-left transition-colors hover:bg-canvas-soft focus-visible:outline-offset-0"
+                  className="w-full cursor-pointer rounded-[18px] px-4 pb-2 pt-3 text-left transition-colors duration-300 hover:bg-canvas-soft focus-visible:outline-offset-0"
                 >
                   <span
                     className={cn(
-                      "flex items-center gap-1.5 text-caption-uppercase uppercase",
+                      "text-[12px] font-semibold flex items-center gap-1.5",
                       issue.level === "error" ? "text-error" : issue.level === "warning" ? "text-warning" : "text-info",
                     )}
                   >
                     {issue.level === "error" ? <ErrorIcon size={14} /> : issue.level === "warning" ? <WarningIcon size={14} className="text-warning-icon" /> : <InfoIcon size={14} />}
                     {issue.level}
                   </span>
-                  <span className="mt-0.5 block">{short.list}</span>
+                  <span className="mt-1 block">{short.list}</span>
                 </button>
                 {(short.link || hasDetails(issue)) && (
-                  <div className="flex flex-wrap items-baseline gap-x-3 px-3 pb-2 text-caption">
+                  <div className="flex flex-wrap items-baseline gap-x-3 px-4 pb-2 text-caption">
                     {short.link && (
                       <Link to={short.link.href} className={cn(inlineLinkClass, "inline-flex min-h-11 items-center")}>
                         {short.link.label}

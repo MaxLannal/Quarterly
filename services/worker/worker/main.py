@@ -75,7 +75,7 @@ async def weekly_schedule_watch(ctx: dict[str, Any]) -> str:
 
 async def daily_chat_purge(ctx: dict[str, Any]) -> str:
     """Advisor chat history is kept 30 days (SPEC `chat_message`), even if nobody chats."""
-    from api.agents.chat import purge_old_history
+    from api.agents.planner.chat import purge_old_history
     from api.db.session import get_engine
     from sqlalchemy.orm import Session
 

@@ -1,6 +1,6 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page } from "@playwright/test";
-import { addCourseViaTree, addProgram, card, closePanel, logIn, openAdvisor, openPanel, plannerWithCourses, settle } from "./helpers";
+import { addCourseViaTree, addProgram, card, closePanel, generatePlan, logIn, openPanel, plannerWithCourses, settle } from "./helpers";
 
 // Design foundation (docs/DESIGN.md, docs/DESIGN-IMPLEMENTATION.md): self-hosted fonts and assets,
 // accessible pages, 44px targets.
@@ -54,20 +54,15 @@ test("the DESIGN.md fonts load from the bundle", async ({ page }) => {
   const loaded = await page.evaluate(async () => {
     await document.fonts.ready;
     return {
-      // Redesign 2026-11-20 (docs/DESIGN.md "Maroon and night"): headlines are bold Inter; Newsreader
-      // stays for the wordmark (500) and the italic accent ("within your reach.", 400 italic). A
-      // browser loads only the faces a page uses.
-      display:
-        document.fonts.check('800 96px "Inter Variable"') &&
-        document.fonts.check('500 28px "Newsreader"') &&
-        document.fonts.check('italic 400 60px "Newsreader"'),
-      body: document.fonts.check('400 16px "Inter Variable"'),
+      // "Simple light" (docs/DESIGN.md, 2026-11-27): one family, Figtree, for headings and body.
+      display: document.fonts.check('600 52px "Figtree Variable"'),
+      body: document.fonts.check('400 16px "Figtree Variable"'),
       h1: getComputedStyle(document.querySelector("h1") as Element).fontFamily,
     };
   });
   expect(loaded.display).toBe(true);
   expect(loaded.body).toBe(true);
-  expect(loaded.h1).toContain("Inter");
+  expect(loaded.h1).toContain("Figtree");
   expect(fontRequests.length).toBeGreaterThan(0);
   expect(fontRequests.every((p) => p.startsWith("/assets/"))).toBe(true);
 });
@@ -85,7 +80,7 @@ test("course page: no axe violations", async ({ page }) => {
   await expectNoAxeViolations(page);
 });
 
-test("buttons keep a 44px target; pills are drawn 46px tall", async ({ page }) => {
+test("buttons keep a 44px target; the main button is a 44px soft rectangle", async ({ page }) => {
   for (const path of ["/", "/plan", "/courses", "/courses/TEST%2020000"]) {
     await page.goto(path);
     await expect(page.getByRole("heading", { level: 1 })).toBeAttached();
@@ -105,13 +100,12 @@ test("buttons keep a 44px target; pills are drawn 46px tall", async ({ page }) =
     );
     expect(small, path).toEqual([]);
   }
-  // The primary pill is drawn 46px tall inside its 52px box (the redesign's bigger pills).
+  // The main button is a plain 44px soft rectangle ("Simple light", docs/DESIGN.md).
   await page.goto("/");
-  const pill = page.getByRole("link", { name: "Start planning" });
-  const box = await pill.boundingBox();
-  expect(box?.height).toBeGreaterThanOrEqual(52);
-  const drawn = await pill.evaluate((el) => el.clientHeight); // the padding box, inside the transparent border
-  expect(drawn).toBe(46);
+  const main = page.getByRole("link", { name: "Start planning" });
+  const box = await main.boundingBox();
+  expect(box?.height).toBeGreaterThanOrEqual(44);
+  expect(await main.evaluate((el) => getComputedStyle(el).borderTopLeftRadius)).toBe("12px");
 });
 
 // ------------------------------------------------------------------------------------------
@@ -150,19 +144,15 @@ for (const size of [
       await closePanel(page);
       await expectNoSeriousAxeViolations(page);
 
-      await page.getByRole("button", { name: "Generate plan" }).click();
-      const dialog = page.getByRole("dialog", { name: "Generate plan" });
-      await expectNoSeriousAxeViolations(page, '[role="dialog"]');
-      await dialog.getByRole("button", { name: "Generate" }).click();
-      await expect(dialog.getByRole("article", { name: "Variant Fake balanced" })).toBeVisible();
-      await expectNoSeriousAxeViolations(page, '[role="dialog"]');
-      await page.keyboard.press("Escape");
-      await expect(dialog).toBeHidden();
+      const planner = await generatePlan(page);
+      await expect(planner.getByTestId("walkthrough")).toBeVisible();
+      await expectNoSeriousAxeViolations(page);
+      await planner.getByRole("button", { name: "Skip tour" }).click();
 
-      const sheet = await openAdvisor(page);
-      await sheet.getByLabel("Ask the advisor").fill("Please add a lighter elective");
+      const sheet = planner;
+      await sheet.getByLabel("Ask or tell the planner").fill("Please add a lighter elective");
       await sheet.getByRole("button", { name: "Send" }).click();
-      await expect(sheet.getByRole("article", { name: "Proposed change" })).toBeVisible();
+      await expect(sheet.getByRole("article", { name: "Proposal: Add TEST 25200" })).toBeVisible();
       // Forum citations become links once the post and its page load (forum reads need a login).
       await expect(sheet.getByRole("link", { name: "Student post #3" })).toHaveAttribute("href", `${FORUM}/t/3`);
       await expect(sheet.getByRole("link", { name: "What students say" })).toHaveAttribute("href", FORUM);

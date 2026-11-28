@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/card";
 import { Field, Select } from "@/components/ui/input";
 import { loadPlans } from "@/features/planner/localPlans";
 import { compareTerms, termLabel } from "@/features/planner/terms";
+import "@/components/ui/folder.css";
 
 interface Diff {
   onlyA: { course: string; term: string }[];
@@ -49,21 +50,27 @@ export default function ComparePlansPage() {
   const pa = plans.find((p) => p.localId === a);
   const pb = plans.find((p) => p.localId === b);
   const d = pa && pb ? diffPlans(pa.state, pb.state) : null;
-  const column = (headingId: string, title: string, rows: ReactNode[]) => (
-    <Card as="section" aria-labelledby={headingId} variant="compact" className="p-5">
-      <h2 id={headingId} className="text-caption-uppercase uppercase text-muted">
-        {title}
+  // Each side of the difference is a panel; its courses are small files.
+  const column = (headingId: string, title: string, rows: ReactNode[], accent: string) => (
+    <Card as="section" aria-labelledby={headingId} variant="compact" className="rounded-[24px] p-5 sm:p-6">
+      <h2 id={headingId} className="text-[12px] font-semibold flex items-center gap-2 text-muted">
+        <span aria-hidden="true" className={`inline-block size-1.5 shrink-0 rounded-pill ${accent}`} />
+        <span className="min-w-0 truncate">{title}</span>
       </h2>
+      <p className="mt-2 font-display text-display-sm leading-none text-ink" aria-hidden="true">
+        {rows.length}
+      </p>
       {rows.length === 0 ? (
         <p className="mt-3 text-body-sm text-muted">None</p>
       ) : (
-        <ul className="mt-2 divide-y divide-hairline text-body-sm text-ink">{rows}</ul>
+        <ul className="mt-4 flex flex-col gap-2 text-body-sm text-ink">{rows}</ul>
       )}
     </Card>
   );
+  const row = "glass-file flex flex-wrap items-baseline gap-x-2 py-2 pl-3 pr-6";
 
   return (
-    <PageContainer className="max-w-4xl">
+    <PageContainer className="max-w-6xl">
       <PageHeader title="Compare plans" />
       {plans.length < 2 ? (
         <EmptyState>
@@ -75,7 +82,7 @@ export default function ComparePlansPage() {
         </EmptyState>
       ) : (
         <div className="flex flex-col gap-8">
-          <Card variant="well" className="grid gap-4 sm:grid-cols-2">
+          <Card variant="well" className="grid gap-4 rounded-[26px] sm:grid-cols-2 sm:p-6">
             <Field label="Plan A" htmlFor={`${id}-a`}>
               <Select id={`${id}-a`} value={a} onChange={(e) => setA(e.target.value)}>
                 {plans.map((p) => (
@@ -97,40 +104,48 @@ export default function ComparePlansPage() {
           </Card>
           {d && d.onlyA.length + d.onlyB.length + d.moved.length === 0 && (
             // D11 MP-3: one sentence when there is nothing to compare.
-            <p role="status" className="text-body-sm text-body">
+            <p role="status" className="font-display text-title-md font-normal text-body">
               Same courses in the same quarters: {d.same} course{d.same === 1 ? "" : "s"} in both plans.
             </p>
           )}
           {d && d.onlyA.length + d.onlyB.length + d.moved.length > 0 && (
-            <div className="grid gap-4 sm:grid-cols-3">
+            <div className="grid gap-5 md:grid-cols-3">
               {column(
                 "only-a",
                 `Only in ${pa?.name ?? "the first plan"}`,
                 d.onlyA.map((x, i) => (
-                  <li key={i} className="py-2">
-                    {x.course} · {termLabel(x.term)}
+                  <li key={i} className={row}>
+                    <span className="font-mono text-[13px] font-semibold">{x.course}</span>
+                    <span className="text-caption text-muted">· {termLabel(x.term)}</span>
                   </li>
                 )),
+                "bg-primary ",
               )}
               {column(
                 "only-b",
                 `Only in ${pb?.name ?? "the second plan"}`,
                 d.onlyB.map((x, i) => (
-                  <li key={i} className="py-2">
-                    {x.course} · {termLabel(x.term)}
+                  <li key={i} className={row}>
+                    <span className="font-mono text-[13px] font-semibold">{x.course}</span>
+                    <span className="text-caption text-muted">· {termLabel(x.term)}</span>
                   </li>
                 )),
+                "bg-data-1 ",
               )}
               {column(
                 "moved",
                 "Different quarter",
                 d.moved.map((x, i) => (
-                  <li key={i} className="py-2">
-                    {x.course}: {termLabel(x.a)} → {termLabel(x.b)}
+                  <li key={i} className={row}>
+                    <span className="font-mono text-[13px] font-semibold">{x.course}:</span>
+                    <span className="text-caption text-muted">
+                      {termLabel(x.a)} → {termLabel(x.b)}
+                    </span>
                   </li>
                 )),
+                "bg-warning ",
               )}
-              <p className="text-body-sm text-muted sm:col-span-3">
+              <p className="text-[12px] font-semibold text-muted md:col-span-3">
                 {d.same} course{d.same === 1 ? " is" : "s are"} the same in both.
               </p>
             </div>

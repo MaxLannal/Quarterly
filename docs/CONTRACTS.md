@@ -41,9 +41,13 @@ All stubs return `501 {"detail": "Not implemented yet (prompt NN)"}` after reque
 | POST | `/plans/generate?mode=deterministic` | `GenerateLocal {plan, options: GenerateOptions}` | `GenerateOut` (change sets without ids, nothing saved) | No (rate-limited) | 06 |
 | POST | `/plans/{plan_id}/generate?mode=deterministic` | `GenerateOptions` | `GenerateOut` (each variant stored as a proposed change set) | Yes | 06 |
 | POST | `/verify` | `VerifyRequest {plan: PlanState, options}` | `Report` | No | 02 |
-| POST | `/agents/generate` | `GenerateRequest` | SSE stream of `AgentEvent` | No (rate-limited) | 06/07 |
-| POST | `/agents/chat` | `ChatRequest` | SSE stream of `AgentEvent` | No (rate-limited) | 07 |
-| GET | `/agents/chat/history?plan_id` | | `ChatHistory` | Yes | 07 |
+| POST | `/agents/planner` | `PlannerRequest` | SSE stream of `PlannerEvent` (replaces `/agents/generate` and `/agents/chat`) | No (rate-limited) | Issue #17 |
+| GET | `/agents/planner/history?plan_id` | | `ChatHistory` (kept while the plan exists) | Yes | Issue #17 |
+| DELETE | `/agents/planner/history?plan_id` | | 204 (Clear chat) | Yes | Issue #18 |
+| GET | `/me/profile/proposals` | | `list[ProfileProposalOut]` (answers from the planner chat, status `proposed`) | Yes | Issue #17 |
+| POST | `/me/profile/proposals` | `ProfileProposalCreate` (`{field, value}`, a field of the question file) | `ProfileProposalOut` (the import on login) | Yes | Issue #17 |
+| POST | `/me/profile/proposals/{id}/accept` | | `ProfileOut` | Yes | Issue #17 |
+| POST | `/me/profile/proposals/{id}/reject` | | 204 | Yes | Issue #17 |
 | GET | `/forum/pages?course&instructor`, `/forum/pages/{page_id}` | | `ForumPageOut` | Yes | 08 |
 | GET / POST | `/forum/pages/{page_id}/posts?kind&sort&term` | `PostCreate` | `Page[PostOut]` / `PostOut` | Yes | 08 |
 | GET / PATCH / DELETE | `/forum/posts/{post_id}` | `PostUpdate` | `PostDetail` / `PostOut` / 204 | Yes | 08 |
@@ -510,6 +514,40 @@ The 20 synthetic profiles in `services/api/tests/test_generate_profiles.py` each
 - `make evals` refuses to run without `CONFIRM_SPEND=yes`.
 
 **Frontend.** `VITE_GENERATOR_MODE` now has the default `agent`. The agent mocks for vitest and e2e are in `apps/web/src/mocks/agents.ts`.
+
+## Planner agent (issues #17 and #18)
+
+One agent writes the first plan and changes it in the chat. Its rules are `data/planner/plan-guideline.md` (rules `G01`...), its limits `data/planner/config.yaml`. Routes: `a1_planner_agent` (generation) and `a1_planner_chat`, both Opus 5.5; `a2_scope_classifier` still gates chat messages.
+
+**`POST /agents/planner`.** Body `PlannerRequest`:
+- `mode`: `generate` or `chat`. `plan`: the plan as the page has it. `plan_id`: a saved plan of the caller (another account's plan is a 404).
+- Chat: `message`. Generate: optional `run_id` + `answer` to continue a run that paused for a question.
+- A plan in the browser also sends `history` (last 12 turns), `pending` (open proposals), `profile_answers` (General Information answers it holds) and `working_notes`.
+
+**Events** (`PlannerEvent`, one per `data:` line):
+
+| type | fields | meaning |
+|---|---|---|
+| `step` | `name`, `status` (`started`, `done`, `failed`) | progress: "Reading your information", "Checking what can fit", "Writing your plan", "Checking the plan", "Fixing the plan (round n)", "Explaining each choice" |
+| `question` | `run_id`, `question_id`, `field` (a General Information field, or null), `text`, `options[]`, `allow_other` | the run paused; the page shows option buttons and an "Other" box, then sends `run_id` + `answer` |
+| `plan` | `run_id`, `verdict` (`valid`, `invalid`), `issues[]` (`PlanIssue`), `compromises[]`, `summary` | the whole proposed plan. `verdict` comes only from `verify_checked` + `check_certificate()` |
+| `proposal` | `change_set_id` (saved plan) or null, `group_id`, `title`, `kind` (`major`, `core`, `elective`, `minor`, `replace`, `other`), `ops[]`, `why`, `citations[]`, `rules[]` (`{id, text}`), `preview` (`Verdict`), `base_plan_hash` (a browser plan sends it back in `pending`) | one course or sequence as unsaved blocks |
+| `message` | `text`, `citations[]` | a chat answer |
+| `confirm` | `change_set`, `confirmation_text` | a typed confirmation (as before) |
+| `done` | `run_id`, `working_notes` and `profile_answers` (browser plans: the new working information, and this run's answers as their fields store them), `placements` (the math placement the student gave: the page adds each as a placement credit, the plan the proposals were made for) | the end of the stream |
+| `error` | `message`, `reason` (`expired`, `unavailable`, `invalid_output`, `budget`, `invalid_plan`) | the run stopped; `expired` = start again |
+
+**Questions and resume.** Before planning, the agent asks for an empty General Information answer that planning needs (`intended_programs`, `interests`, `expected_graduation_term`), with the question and options from `data/profile/questions.yaml`, then at most 2 questions of its own. Before each question the server saves the run in `agent_run.state` and ends the stream. A resume does not count toward the rate limit. A state older than one day gives `error {reason: "expired"}`. A logged-in student's answer is stored as a `profile_proposal` (accepted on the dashboard); the run uses it at once.
+
+**Citations.** Kinds `profile` (`profile:interests`, only a field the student answered; the chip links to `/me#field-<field>`) and `guideline` (`guideline:G07`, only a rule that exists) join `course`, `post`, `summary`, `attribute`, `program`. The server rebuilds every label.
+
+**Proposals and re-base.** Each group is its own change set (`origin` `generate` or `chat`, with `run_id` and `meta`). Apply (`POST /plans/{id}/changesets/{cs}/apply`): for a change set with a `run_id`, a different plan hash no longer makes it stale by itself. If its ops still apply to the current plan, they are applied; if not, it becomes `stale` and the answer is 409 "This proposal no longer fits your plan." Change sets without a `run_id` and typed confirmations keep the strict hash check. Browser plans follow the same rule with `applyOps()`.
+
+**Working information.** The chat tool `note_preference {text, kind: avoid|prefer|schedule|other, courses[]}` adds the line `- YYYY-MM-DD · kind · text [CODES]` to `student_profile.working_notes` (saved plan) or returns the new text in `done.working_notes` (browser plan). `avoid` lines with course codes are a list that the planner never proposes again.
+
+**History.** A saved plan's planner chat is kept while the plan exists (`DELETE` clears it). A plan in the browser keeps its chat in `localStorage`.
+
+**Limits.** Generation (a new `generate` request): 10 per account per day, 3 per client address logged out. Chat: 60 / 30.
 
 ## Forum -> course attributes (prompt 11)
 

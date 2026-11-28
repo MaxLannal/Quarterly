@@ -54,15 +54,20 @@ export function VerifierBadge({ verify }: { verify: VerifyState }) {
 export function PlanVerdict({ verify, onOpen }: { verify: VerifyState; onOpen: () => void }) {
   const checking = verify.status === "verifying" || (verify.status === "idle" && !verify.report);
   const text = verify.report ? reportText(verify.report) : verify.status === "unavailable" ? "Not checked yet" : checking ? "Checking…" : "Check failed";
+  // A small pill (planner.css): a dot in the verdict's tone, then its words.
+  const tone = verify.report ? verify.report.status : verify.status === "error" ? "errors" : "neutral";
   return (
     <button
       type="button"
       onClick={onOpen}
       data-testid="plan-verdict"
+      data-tone={tone}
+      data-checking={checking ? "true" : undefined}
       aria-label={`Plan check: ${text}. Open the plan check`}
-      className="inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-pill px-1 transition-opacity hover:opacity-80"
+      className="planner-verdict"
     >
-      {verify.report ? <ReportBadge report={verify.report} /> : <Badge tone="neutral" casing="normal">{text}</Badge>}
+      <span aria-hidden="true" className="planner-verdict-dot" />
+      {text}
       {checking && verify.report && <span className="text-caption text-muted">checking…</span>}
     </button>
   );

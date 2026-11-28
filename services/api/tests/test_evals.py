@@ -55,7 +55,7 @@ def test_one_live_pass_on_a_fake_gateway(monkeypatch: pytest.MonkeyPatch, tmp_pa
     fake = FakeLLM(
         script={
             "a2_scope_classifier": [{"label": "off_topic"}, {"label": "in_scope"}] * 2,
-            "a2_advisor_chat": [answer, answer],
+            "a1_planner_chat": [answer, answer],
         }
     )
     import llm_gateway.gateway as gateway

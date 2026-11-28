@@ -126,7 +126,7 @@ def test_the_rule_guide_asks_every_question_in_order(env: Env, kept: bool) -> No
     t = talk.say("Graduate school")
     assert sent(t) == {"post_grad_plan": "grad_school"} and t["answered"] == "post_grad_plan"
     assert t["topic"] == "pace" and t["quick_replies"] == PACE_CHIPS
-    assert t["progress"] == pytest.approx(round(1 / 7, 3))
+    assert t["progress"] == pytest.approx(round(1 / 8, 3))
     assert t["text"].startswith("Graduate school: noted.")
 
     t = talk.say("early")
@@ -136,10 +136,14 @@ def test_the_rule_guide_asks_every_question_in_order(env: Env, kept: bool) -> No
     t = talk.say("Yes")
     assert sent(t) == {"wants_research": True} and t["topic"] == "research_areas"
     assert t["quick_replies"] == ["Skip"]
-    assert t["progress"] == pytest.approx(round(3 / 8, 3))  # research areas now apply
+    assert t["progress"] == pytest.approx(round(3 / 9, 3))  # research areas now apply
 
     t = talk.say("machine learning theory, condensed matter")
     assert sent(t) == {"research_areas": ["Machine learning theory", "Condensed matter"]}
+    assert t["topic"] == "interests" and t["quick_replies"] == ["Skip"]
+
+    t = talk.say("robotics and philosophy of mind")
+    assert sent(t) == {"interests": ["Robotics", "Philosophy of mind"]}
     assert t["topic"] == "course_load"
     assert t["quick_replies"] == LOAD_CHIPS
 
@@ -176,8 +180,8 @@ def test_no_to_research_skips_the_research_areas(env: Env) -> None:
         *guide("pace"),
     ]
     t = ask(env, headers, "reply", "Flexible", history)
-    assert t["topic"] == "course_load"  # research_areas never asked
-    assert t["progress"] == pytest.approx(round(3 / 7, 3))
+    assert t["topic"] == "interests"  # research_areas never asked
+    assert t["progress"] == pytest.approx(round(3 / 8, 3))
 
 
 def test_an_unclear_answer_is_asked_again_and_skip_moves_on(env: Env) -> None:
@@ -190,7 +194,7 @@ def test_an_unclear_answer_is_asked_again_and_skip_moves_on(env: Env) -> None:
     assert t["quick_replies"] == PLAN_CHIPS and "didn't catch" in t["text"]
     t = talk.say("Skip")
     assert t["retry"] is False and t["answered"] is None and sent(t) == {}
-    assert t["topic"] == "pace" and t["progress"] == pytest.approx(round(1 / 7, 3))
+    assert t["topic"] == "pace" and t["progress"] == pytest.approx(round(1 / 8, 3))
     # A retry in the history does not count as covered; the skip does.
     t = talk.say("on time")
     assert t["topic"] == "wants_research"
@@ -211,7 +215,7 @@ def test_start_resumes_after_the_record_and_the_memory(env: Env) -> None:
     )
     t = ask(env, headers, "start")
     assert t["topic"] == "wants_research" and t["text"].startswith("Welcome back.")
-    assert t["progress"] == pytest.approx(round(2 / 7, 3))
+    assert t["progress"] == pytest.approx(round(2 / 8, 3))
 
 
 def test_research_areas_follow_a_yes_in_the_record_and_merge(env: Env) -> None:
@@ -245,6 +249,7 @@ def test_reply_after_the_wrapup_stays_done(env: Env) -> None:
             "post_grad_plan": "industry",
             "pace": "early",
             "wants_research": False,
+            "interests": ["robotics"],
             "course_load": "ambitious",
             "terms_away": [],
             "class_formats": [],
@@ -335,7 +340,7 @@ def test_the_model_reads_a_skip(env: Env) -> None:
     use_llm(env, script(turn("No problem. How fast?", "pace", skipped=True)))
     t = ask(env, headers, "reply", "I'd prefer to keep that private", guide("post_grad_plan"))
     assert t["topic"] == "pace" and sent(t) == {} and t["retry"] is False
-    assert t["progress"] == pytest.approx(round(1 / 7, 3))
+    assert t["progress"] == pytest.approx(round(1 / 8, 3))
 
 
 def test_an_unsupported_answer_gets_a_repair_then_a_retry(env: Env) -> None:
@@ -430,6 +435,7 @@ def test_the_wrapup_with_a_model(env: Env) -> None:
             "post_grad_plan": "industry",
             "pace": "early",
             "wants_research": False,
+            "interests": ["robotics"],
             "course_load": "ambitious",
             "terms_away": [],
             "class_formats": ["lab"],

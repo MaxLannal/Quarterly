@@ -36,30 +36,38 @@ def env() -> Iterator[Env]:
             yield e
 
 
-def test_generate_gets_preferences_and_a_rationale(env: Env) -> None:
-    evs = events(env.client.post("/agents/generate", json={"plan": PLAN, "variants": 2}))
-    variants = of(evs, "variant")
-    assert variants and not of(evs, "error")
-    rationale = variants[0]["rationale"]
-    # term -> one line: the fake rationale passed the server's checks
-    assert rationale and all(t[:4].isdigit() and text for t, text in rationale.items())
-    assert "Choosing electives" in {e["name"] for e in of(evs, "step") if e["status"] == "done"}
+def test_planner_generates_grouped_proposals_with_reasons(env: Env) -> None:
+    body = {
+        "mode": "generate",
+        "plan": PLAN,
+        "profile_answers": {"interests": ["machine learning"]},
+    }
+    evs = events(env.client.post("/agents/planner", json=body))
+    assert of(evs, "plan") and not of(evs, "error")
+    proposals = of(evs, "proposal")
+    assert proposals and all(p["ops"] for p in proposals)
+    # The fake explanation passed the server's checks: it names the interest and cites it.
+    assert any("machine learning" in p["why"] for p in proposals)
+    assert any(c["id"] == "interests" for p in proposals for c in p["citations"])
+    done = {e["name"] for e in of(evs, "step") if e["status"] == "done"}
+    assert {"Writing your plan", "Explaining each choice"} <= done
 
 
-def test_advisor_answers_with_a_citation_and_a_proposal(env: Env) -> None:
+def test_planner_chat_answers_with_a_citation_and_a_proposal(env: Env) -> None:
     headers = csrf(env.signup("e2e-heron"))
     plan = env.client.post("/plans", json={"name": "Main", "state": PLAN}, headers=headers).json()
     body = {
+        "mode": "chat",
         "plan": plan["state"],
         "plan_id": plan["id"],
         "message": "Is MATH 20700 worth it for ML?",
     }
-    evs = events(env.client.post("/agents/chat", json=body, headers=headers))
+    evs = events(env.client.post("/agents/planner", json=body, headers=headers))
     message = of(evs, "message")[-1]
     assert "MATH 20700" in message["text"]
     assert [c["id"] for c in message["citations"]] == ["MATH 20700"]
-    proposal = of(evs, "proposal")[0]["change_set"]
-    assert proposal["status"] == "proposed" and proposal["ops"][0]["course"] == "MATH 20700"
+    proposal = of(evs, "proposal")[0]
+    assert proposal["change_set_id"] and proposal["ops"][0]["course"] == "MATH 20700"
 
 
 def test_fake_mode_is_refused_outside_development() -> None:

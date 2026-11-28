@@ -54,6 +54,7 @@ Write down each thing that you see: something that is broken, something that is 
   - Mouse and fingers: The letters under the pointer lift and become larger, as through a glass ball. A short wake follows the pointer. There are no ripples and no rainbow colours, because of the owner's second note ("more solemn, serious"). The title under the mouse changes to ink, and a label shows its code and full title. A click opens that course. With reduced motion, or on a computer without a graphics processor, the scene is a still picture. The label and the click continue to work.
   - This scene replaces the ASCII scene. Thus these parts are gone: the time-of-day and weather versions, the swaying trees, the shooting stars and the birds. The About page does not credit Open-Meteo now. The drawing still comes from the watermarked demo photo (OPEN_QUESTIONS DF-A1).
   - Proof: `layout.test.ts` (14), `test_course_chapel_data.py` (2), e2e `course-chapel.spec.ts` (5).
+- Note (2026-11-27): On Max's redesign branch `claude/quarterly-ui-redesign-c953e9` (not pushed), the homepage shows Harper Library's reading room instead of the chapel. Max asked for it. The chapel code stays in the repository but is not shown; that branch replaces `course-chapel.spec.ts` with `harper.spec.ts`. Needs Richard: which picture to keep (`docs/OPEN_QUESTIONS.md` DG-1).
 
 ## Later
 

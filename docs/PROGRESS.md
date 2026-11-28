@@ -1,6 +1,15 @@
 # Progress
 
-> **Current state (2026-11-24, after PR #21).** Branch `integration/2026-11-24`, not pushed.
+> **Current state (2026-11-27, "Simple light" redesign).** Branch `claude/quarterly-ui-redesign-c953e9`, local only (Max: "don't commit anything on github or open prs"). It is `main` (3bbb12f) plus Max's redesign: a sidebar shell, white panels, one font (Figtree) and black as the only accent. Harper Library's reading room is on the homepage, and the planner draws quarters as folders with classes as files. The dark glass version that came first is withdrawn; it is kept as the local tag `dark-glass-v1`. Details: "Simple light (second request)" at the end of this file; the design rules are in `docs/DESIGN.md` "Simple light". Waits for Richard: `docs/OPEN_QUESTIONS.md` DG-1 to DG-3. It also holds the planner split screen and planner agent (issues #17 and #18, branch `claude/planner-page-course-design-2a45cb` with its last uncommitted fixes), restyled in Simple light.
+>
+> **Earlier state (2026-11-26, issues #17 and #18; merged into the redesign branch on 2026-11-27).** Branch `claude/planner-page-course-design-2a45cb`, not pushed, on top of `main` (3bbb12f, PR #22).
+> - One planner agent (`POST /agents/planner`, Opus 5.5 through Teamorouter) writes the first plan from the student record and `data/planner/plan-guideline.md`, verifies and repairs it, explains each group, and changes it in the chat. It replaced the A1 generator and the A2 advisor.
+> - The planner page has four year-columns and the planner panel ("Ask Quarterly") in the right third: proposals as unsaved blocks, a glowing walkthrough of each sequence, course details, and an edit history with Revert.
+> - Design: `docs/superpowers/specs/2026-11-26-planner-split-screen-design.md`; plan: `docs/superpowers/plans/2026-11-26-planner-split-screen.md`. Section "Planner split screen and planner agent" at the end of this file has the details. Open defaults: OPEN_QUESTIONS PL17-1 to PL17-6 and PL18-1 to PL18-3.
+> - Not run here: `make e2e` (journeys A-D on the shared Docker stack) and `make migrate` on that stack (migration 0012).
+> - Live failure in the app, fixed (2026-11-26): with no math placement the CS BS was impossible and the writing step timed out; the planner now asks for the placement first and the page adds it to the plan. Also fixed: a reload or StrictMode started extra paid generations, resumed runs lost their token count, failure reasons were logged below the API's level. Details: "Live failure: no math placement" at the end of this file.
+>
+> **Earlier state (2026-11-24, after PR #21).** Branch `integration/2026-11-24`, not pushed.
 > - Max's PR #21 (issues #14 and #16) was merged into `main` first (e2a3e67), as Richard chose.
 > - Then one merge commit (0ce0ac4) brought `main` and `fix/taken-course-grading` into this branch.
 > - The fix branch (41090c9) holds Blocker 2 from the review of #21: a taken course keeps its Pass/Fail grading, units and planner lock.
@@ -1504,3 +1513,223 @@ Richard sent five problems in the chat. `docs/FEEDBACK.md` ("Problems with the c
 
 **Not done.** The planner does not read the course load yet. The planner agent (issue #17) will read it.
 
+## Dark glass redesign (Max, 2026-11-27; branch `claude/quarterly-ui-redesign-c953e9`, local only)
+
+**Request (in chat).** "Reconstruct everything on Quarterly on this UI style… Have the Harper Library at the homepage in this UI as well. Have each quarter in the planner a folder like as shown, and classes as files in it. Be magical, smooth, dark, red, glassy. Mature designs." Max added three references: glass panels over a dark picture, glass folders on red light, and a dark glass sign-in card with a ring of white light. Later messages added:
+- "white light goes together intersection with maroon dark red light, flowing in the background"
+- "Don't just change colors… Change layouts and the design of the boxes, and everything."
+- "don't commit anything on github or open prs, just build"
+
+He also asked for no more than 3 agents at a time.
+
+**How it was built.**
+- The lead built the foundation first: tokens, the Aurora light, the shell, the shared controls, `GlassFolder`/`GlassFile`, then the homepage.
+- Three frontend agents then worked in parallel, each in its own worktree and on its own files. Their branches were merged here:
+  - the planner (`worktree-agent-ac438712bae25f34e`)
+  - the Catalog, course, instructor, program and Forum pages (`worktree-agent-afa05da9f27ff9733`)
+  - sign-in, sign-up, the dashboard, account, the static pages and admin (`worktree-agent-ad2a521fb93348c25`)
+- The only merge conflict was one comment line in `folder.css`.
+
+**What changed.** It is a visual redesign: behaviour, data flow, API calls, accessible names and test ids are unchanged. See `docs/DESIGN.md` "Dark glass" for the full description.
+- The token values moved to dark glass; the names did not change.
+- New fonts: Instrument Serif for headlines and JetBrains Mono for labels, both bundled from npm.
+- The Aurora is the flowing light behind every page. Only transforms animate it, and its rings are drawn with masks, not blur filters.
+- Each page is a smoked-glass pane. Pages enter with opacity and a short rise, and the entrance leaves no transform behind (a leftover transform had trapped fixed overlays).
+- The top bar is a floating glass tab dock over a blur veil. The footer has a horizon wordmark.
+- Cards have a rim of light (`.glass-rim`), and tabs are a glass track.
+- The homepage shows Harper's reading room drawn in code (`features/home/HarperHall.tsx`, `harperGeometry.ts`), with three glass folders below it.
+- The planner draws quarters as folders and courses as files.
+- Behaviour additions:
+  - The planner folder's "+" opens "Add a course to <quarter>" (existing course picker, no new API).
+  - On a phone the plan drawer is portalled to `<body>`.
+- Test infrastructure: each `E2E_PORT` builds into its own `dist-e2e-<port>` folder, so parallel runs do not overwrite each other. eslint ignores those folders.
+- Tests: `e2e/harper.spec.ts` (4 tests) replaces `e2e/course-chapel.spec.ts`. `planner.spec.ts` has a new test for the folder's "+" button (dialog, search focus, the card lands in that quarter, focus returns to "+"). The fonts check in `design.spec.ts` now expects the serif headlines. A unit test was added for `quarterStages`.
+- The chapel code (`features/home/CourseChapel.tsx`, `chapel/`, `public/home/course-chapel.json`, `tools/course-chapel/`) is still in the repository but no longer mounted (DG-1).
+
+**Checks (on the merged branch).**
+- tsc and eslint: clean.
+- vitest: 25 files, 216 tests passed.
+- Playwright (MSW): 102 passed, 0 failed (61 skipped: the screenshot spec, which runs only with `SCREENSHOTS=1`).
+- ruff, ruff format, `api-client-check`, `golden` (PASS=115) and mypy: all passed.
+- pytest: the first run had 792 passed and 1 failed. The failure was the test database dropping its connection ("terminating connection due to administrator command"); no Python changed. The rerun passed: planner_core 184, the other suites 793, 0 failed.
+- `make e2e` (journeys A-D on Docker) was not run: it switches the shared stack to fake AI.
+
+**Screenshots.** `docs/screenshots/dark-glass/` holds every page at 1440 and 390 (61 files) and `index.html`, a gallery to open in a browser. The set is 47 MB, so it is **not committed**. To regenerate it: `cd apps/web && SCREENSHOTS=1 SCREENSHOTS_DIR=dark-glass npx playwright test e2e/screenshots.spec.ts`. In full-page captures the fixed light stops after the first screen, which leaves a darker band about 900px down; a browser does not show it.
+
+**Known issues.**
+- The sign-in button reads in mono capitals ("LOG IN"); its accessible name is unchanged.
+- The Catalog's mono hint wraps onto two lines at 390px.
+- With mock data, rows that have one card leave space to their right.
+- With the planner drawer open at 1024px, long course titles are cut off with "…" (as before).
+
+**Spec review** (spec-reviewer, after the merge): no blockers. Its three findings are fixed:
+- the new test for the "+" button
+- SPEC now says the goal chips sit at the foot of the folder, above the pocket
+- the decorative "//" separators (3.5:1, and read aloud as "slash slash") are now `aria-hidden`
+
+**Cost.** The session's cost hook reported about $216 by the end, including the four agents.
+
+## Simple light (Max, 2026-11-27, second request; same branch, local only)
+
+**Request.** After the dark glass version, Max wrote: "Despite all changes you made it still looks the same as before in the ui of many things, and in terms of color it looks uglier. Just make all ui ux simple as this. Use smooth, not-AI-ish fonts. Don't make it so dark." He sent a reference dashboard: a light sidebar with a black current item, a white panel, white cards with thin borders, one smooth sans.
+
+**How.**
+- The dark version was tagged `dark-glass-v1`.
+- The pages, the shared controls and `index.css` went back to their light 3bbb12f versions. The dark agents' decorative layers (glass, glows, serif and mono, art panels) are not in the new build.
+- What Max had asked for stays, restyled: the Harper homepage, the planner's folders and files, the folder's "+" button and its test, and the e2e build and eslint fixes.
+- A new design system went on top (docs/DESIGN.md "Simple light"):
+  - light tokens and one font (Figtree; Inter, Instrument Serif and JetBrains Mono were removed)
+  - a sidebar shell with a top bar and footer inside the white panel
+  - new buttons, inputs, cards, badges, tabs and dialogs
+  - no art panels in `TypeHero` or on the sign-in pages
+  - planner and folder styles rewritten in light (`planner.css`, `folder.css`)
+  - a light full-screen guide
+  - Harper redrawn in sunlit stone, with a dusk night
+- A one-off script converted the remaining dark utility classes in the planner area (`scratchpad/lighten.py`, not committed).
+
+**Fixes found on the way.**
+- The closed phone sidebar was only moved off screen, not hidden. Its links stayed in the tab order and the accessibility tree; it is now invisible when closed.
+- Day/Night, the planner tool bar and the verdict chip were below 44px; they are now 44px.
+
+**Tests changed.**
+- `design.spec.ts`: fonts (Figtree), and the main button (44px, 12px corners) in place of the 46px pill.
+- `campus.spec.ts`: field radius 12px in place of 26px.
+- `feedback-ui.spec.ts`: the requirement-tree course name is now the 14px caption.
+- `harper.spec.ts`: the new caption, the cards list, no Aurora.
+- The sidebar card's link is "Go to the planner", so it does not clash with "Open the planner" buttons on the pages.
+
+**Checks.**
+- tsc and eslint: clean.
+- vitest: 25 files, 216 tests passed.
+- Playwright (MSW): 103 passed, 0 failed (61 skipped: the screenshot spec).
+- The screenshot spec: 61 of 61 written to `docs/screenshots/simple-light/` (8.4 MB, with `index.html`).
+- `make e2e` (the Docker journeys) was not run.
+## Planner split screen and planner agent (issues #17 and #18, 2026-11-26)
+
+Max (the human builder on both issues) answered before the build: port the degree-plan-agent harness; #18 D1, proposals stay until accepted or rejected; #17 D1, keep the chat while the plan exists, with Clear chat; #17 D2, logged-out students can use the agent; live calls approved (about 5-10 plans, up to $15).
+
+**What changed**
+- `data/planner/plan-guideline.md`: 55 tiered rules (hard, strong, preference, tiebreak) in nine sections: program completion, offerings and sequences, the student's standards, interests, the shape of a good plan, CS major facts, explaining choices, changing the plan in chat. Ported from the prototype's principles and planning facts, with catalog quotes from the seed. `data/planner/config.yaml` holds the limits.
+- `services/api/api/agents/planner/`: `guideline.py`, `brief.py` (unmet requirements with candidates, usual quarters and prerequisites), `standards.py` (S01 quarter away, S02 course load, S03 avoid list), `state.py`, `harness.py` (generate mode), `chat.py` (the former advisor chat, now the planner chat with `note_preference`).
+- `POST /agents/planner` replaced `/agents/generate` and `/agents/chat`; `GET`/`DELETE /agents/planner/history`; `GET`/`POST /me/profile/proposals` and accept/reject. Planner change sets re-base on apply while their ops fit, else they go stale; accepted courses are locked.
+- Migration 0012: `student_profile.interests` (the General Information question #14 asked for), `agent_run.state`, `change_set.run_id`/`meta`, `profile_proposal`.
+- `llm_routing.yaml`: `a1_planner_agent` (Opus 5.5, effort medium, 32000 tokens) and `a1_planner_chat` (Opus 5.5, effort low); the A1/A2 routes are gone. The Anthropic backend takes `ANTHROPIC_BASE_URL` (Teamorouter).
+- Web: `features/planner-agent/` (panel, proposals, walkthrough, history, details, citation chips); `PlanGrid` in year columns; `GenerateDialog` and the advisor sheet removed.
+
+**Live runs (Teamorouter, Opus 5.5).** Results and costs in `docs/LIVE-TEST-REPORT.md` ("Planner agent"). The runs found and fixed: the tool budget ended the fill (now 6 lookups, prerequisites in the brief, and one more ask without tools), the 16000-token cap cut the whole plan off (now 32000), the scope gate refused a "why" question (prompt v2), and placements were missing from the agent's input.
+
+**Checks.** See the end of this section (make check output).
+
+**Not done here.** `make e2e` and `make up` (the Docker stack is shared with other sessions); `evals/live/run.py` still drives the removed endpoints (PL17-2).
+
+### Live failure: no math placement (2026-11-26)
+
+In the app at localhost:5173 (logged out, the CS BS and the Core, live Opus), Generate plan failed at "Writing your plan" with "The planner can't write a plan right now". What the records showed (`agent_run`, `llm_call`, and a replay of the writing step, LIVE-TEST-REPORT runs 10-11):
+- The plan had no math placement, so no calculus course could be planned (MATH 13100 needs a placement, MATH 15100 needs MATH 13100 or a placement). The solver proved that no plan fits; the run went on to write the closest plan, as journey B wants, and Opus used the whole 300-second step on it (`budget_seconds`). The student's answer to the model's own calculus question stayed in the prompt text and never reached the plan.
+- StrictMode ran the page's auto-generate effect twice, so `/plan?generate=1` started two paid runs, and `?generate=1` stayed in the address, so every reload started another.
+- Each request of a run overwrote its tokens, cost and steps (a paused run showed 0 tokens), and the fill's failure reason was logged at INFO, below the API's level.
+
+Fixed, each with a test that failed first (Max chose "Ask it first" and "Fix all three"):
+- `brief.math_placements` and `PlannerRun._placement_question`: with no way into math (no math placement or placement credit, no MATH course taken or credited), the planner asks for the placement before any model call. "Not taken yet" plans from the lowest one and says so (OPEN_QUESTIONS PL17-7). The run plans with the answer as a placement credit; `done.placements` makes the page add the same credit (`addPlacements` in the plan editor), so the proposals fit the page's plan.
+- `PlanPage` reads `?generate=1` once and drops it; the Planner starts at most one generation on mount.
+- `RunLog.save` adds each request's steps (the last 100), tokens and cost to the run; failure reasons are warnings.
+
+After the placement fix, the next run in the app (LIVE-TEST-REPORT run 12) failed at "Writing your plan" with `invalid_output`: the plan was rejected twice (by the check or the schema; the rejection was not logged yet) and thrown away. A replay shaped like it (run 13) passed, but used 297 s of the writing step's 300 and wrote a note of 544 of its 600 characters. Fixed, each with a test that failed first: a twice-rejected plan is kept without the courses at fault (`PlannerRun._kept`; the verifier and the repair rounds see what is missing), free text in a plan (title, reason, note, rule list) is clipped instead of rejected, writing has `write_seconds` (600 s), and a failed step logs what was rejected.
+
+## The planner split screen brought into the redesign (Max, 2026-11-27)
+
+**Request.** "Is the planner split screen function also in? Get that in as well. Make sure every function in the newest old ui version is in."
+
+**What "the newest old UI version" was.** The local branch `claude/planner-page-course-design-2a45cb` (issues #17 and #18, 16 commits on `main`, never pushed), plus about 580 lines of uncommitted fixes in its worktree (the last changes of that session: the planner agent's harness, brief, chat and state, the API schema and client, `Planner.tsx`, `planModel.ts`, `PlanPage.tsx`, and the docs).
+
+**How it came in.**
+- The branch was merged here. Its uncommitted fixes were applied from a patch (`git diff` of that worktree), so that worktree was not touched.
+- Conflicts:
+  - `AdvisorPanel` and `GenerateDialog`: the newer version removes them on purpose (the planner agent replaces A1 and A2), so the deletion was taken.
+  - `Planner.tsx`, `PlanGrid.tsx`, `CourseCard.tsx`: the newer version was taken as the base, and the Simple light look was then put back on it:
+    - each quarter is a `GlassFolder` in its year's column
+    - each course card is a `.glass-file`
+    - the agent's proposals are dashed blocks among the files
+    - the folder pocket holds the units, hours, difficulty and the "+" add button (re-added, with its test)
+    - the tool bar is the grey track of segments (Requirements, Goals, Credits, Check plan, Ask Quarterly, History, Save, Generate plan)
+  - `index.css`: the walkthrough's `glow-ring` was kept and the old frosted bar dropped.
+  - Docs: both sides kept.
+- `PlanHero.tsx` (the dark version's headline) and `advisor.css` were removed, because nothing uses them.
+- `apps/web/demo-cs.html` (a local demo that loads the CS plan from live run 9) was copied but not committed.
+
+**Not merged, and flagged.** Branch `claude/open-decision-meaning-70518f` has two commits that are not in `main`:
+- 7b1f58e (guide proposals clearing the record): `main` has the same fix as 7fbc438.
+- 3c91650 ("Transfer students: count their transfer credit, name the free summers"): it changes the generator in `planner_core` and the agents. It is backend logic and not part of the newest UI. It waits for a decision.
+
+**Checks.**
+- eslint and tsc: clean.
+- vitest: 28 files, 243 tests passed.
+- Playwright (MSW): 104 passed, 0 failed.
+- The Python checks are recorded below.
+- On real data (the running API on :8000 already serves `POST /agents/planner`), the planner shows the split screen with the folders.
+
+## A first plan is walked through, not accepted group by group (Max, 2026-11-27)
+
+**Request.** "For the initial plan, no need to accept/reject one by one. Too cumbersome, just propose and walk through the main sequences one by one, highlight the sequence, and generate a paragraph on what the sequence is about, then the student clicks next, and explain a little about the next sequence." Then, of the course list and source chips in the walkthrough card: "Get these things out."
+
+**Built.**
+- **Walkthrough** (`features/planner-agent/Walkthrough.tsx`, `useWalkthrough.ts` `walkSteps`):
+  - One step per main sequence: a major, Core or minor group with two or more courses. Single courses and electives share one last step.
+  - Each step shows "Sequence n of N", the name and the agent's paragraph, and the grid lights the sequence.
+  - Back and Next move along. "Keep this plan" applies every group at once (applying stays the student's action, CLAUDE.md), and "Skip tour" leaves the plan proposed.
+  - There is no Accept or Reject per step, no course list and no source chips. The panel scrolls the card into view at each step.
+  - On the CS demo plan the tour is 10 steps (14 groups before).
+- **Chat** (`PlannerPanel.tsx`):
+  - A first plan is one card: the verdict, the summary, Walk me through it, Keep this plan and Discard. Its groups no longer appear as cards with Accept and Reject, and once kept they leave no "accepted or rejected" lines.
+  - The Accept all / Reject all bar now acts on chat proposals only.
+  - A proposal asked for in the chat keeps its own Accept and Reject.
+- **Planner agent:**
+  - The explain step (`harness.py` `_explain`) asks for one paragraph of four to six sentences per group: what the sequence is about (what the courses cover and how they build on each other), then why it suits this student and why these quarters.
+  - Guideline G46 (`data/planner/plan-guideline.md`) and `prompts/a1_planner.md` say the same.
+  - `ExplainedGroup.why` allows 1400 characters, and a longer paragraph is clipped rather than refused.
+  - No paid model call was made. The tests use the fake LLM, and the demo shows the old live run's shorter reasons until the next live generation.
+
+**Tests.**
+- `Walkthrough.test.tsx`: no Accept or Reject in the card; Keep this plan applies everything; the end of the tour; the grouping into main sequences.
+- `PlannerPanel.test.tsx`: the plan card's Keep this plan and Discard; the bar only for chat proposals.
+- `agents.spec.ts` and `planner.spec.ts`: Keep this plan, Sequence n of N, no source chips in the card.
+
+**Checks.**
+- tsc and eslint: clean.
+- vitest: 28 files, 245 tests passed.
+- Playwright (MSW): 104 passed, 0 failed.
+- The planner Python tests: 37 passed.
+- The full Python check before this change (ruff, ruff format, mypy, `api-client-check`, `golden` PASS=115, pytest 184 + 856) passed. After it: ruff, mypy and `api-client-check` on the changed modules passed.
+
+## Course names on the blocks; the Docker API rebuilt (Max, 2026-11-27)
+
+- **"Show the name of the course below the course code, in bolded big titles."** On the planner's course files and the planner agent's proposed blocks, the code is now a small grey line, and the course's name sits below it in 15px semibold (up to two lines on a proposed block). Proposed courses had no name before, because `useCourseMap` loaded only the plan's own courses; `Planner.tsx` now also loads the courses of open proposals.
+- **The shared Docker stack (`quarterly`) runs this branch's API and worker** (Max: "Yes, rebuild it"). It was started from the split-screen worktree; `.env` was copied from there (git-ignored, not printed). `docker compose up -d --build --wait api worker`, then the web proxy was recreated (the same image). The database was already at 0012 (head). Checked: the explain step's paragraph instruction and the 1400-character limit are live in the container, `/health` is ok, and `POST /agents/planner` answers. The web container on :5173 still serves the split-screen frontend; the redesign runs on the dev server at :5191 against this API.
+- Checks: tsc, eslint, vitest 245/245, Playwright (MSW) 104 passed.
+
+## Every GitHub function in the new UI; logins checked on the real stack (Max, 2026-11-27)
+
+**Request.** "Check and make sure every function in the newest github version are up in the new ui web and that it is ready to function for logins."
+
+**GitHub.** After `git fetch`, `origin/main` is still 3bbb12f (2026-11-26), an ancestor of this branch. No remote branch has a commit that this branch lacks.
+
+**Functions compared with GitHub `main`.**
+- `routes.tsx` is unchanged: every page and redirect is there.
+- The web files removed since `main` are `features/advisor/AdvisorPanel`, `features/generate/GenerateDialog` and `features/generate/deterministic` (each with its tests). The split screen replaces them with the planner agent (`POST /agents/planner` in place of `/agents/generate`, `/agents/chat` and `/chat/history`; issues #17 and #18, Max's decisions).
+  - `deterministic.ts` was a build-time switch, off by default (`VITE_GENERATOR_MODE`), that sent the old dialog to the solver alone. The solver endpoint (`POST /plans/generate`, no LLM) is still on the API; no page calls it now.
+- The e2e tests that are gone are the chapel's. Harper's tests replace them, as Max asked. Every other GitHub test is still there; some are renamed for the new look or the walkthrough.
+- The look removed the art panels (`TypeHero` on the Commons pages and the sign-in page). Their course titles could be pointed at and clicked; it was decoration, and nothing else depends on it.
+
+**The new UI on the real stack.** The web container (`quarterly-web-1`, http://localhost:5173) was rebuilt from this branch (`docker compose up -d --build --wait web`), so the real app now serves Simple light with the split screen. The API behind it was rebuilt earlier the same day.
+
+**Logins, end to end on http://localhost:5173.** A Playwright script, not committed because it creates an account, passed every step:
+- a wrong password shows "Wrong username, email or password."
+- sign-up step 1 sends the code (`EMAIL_BACKEND=console`: the code is in the API log, and no email is sent)
+- step 2 verifies the code, step 3 creates the account, step 4 saves About you
+- the top bar shows the account, and the dashboard greets it with the class year
+- Log out returns to the Log in page, with no account in the top bar
+- logging in again with the username works, and the planner opens
+
+The test account was deleted through the delete-account form afterwards, and the database has no test account left. The API's CSRF guard refused a request without the session's `X-CSRF-Token`, as it should.
+
+**Before a real deployment** (the API refuses these in production, `config.py`): `EMAIL_BACKEND=smtp` (not `console`) and `SESSION_COOKIE_SECURE=true`. The local stack runs with `ENVIRONMENT=development`.

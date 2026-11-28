@@ -126,6 +126,7 @@ def build_gateway(
     *,
     anthropic_api_key: str,
     openrouter_api_key: str,
+    anthropic_base_url: str | None = None,
     sink: CallSink = log_sink,
     routing: Routing | None = None,
 ) -> Gateway | None:
@@ -133,7 +134,11 @@ def build_gateway(
     if not anthropic_api_key and not openrouter_api_key:
         return None
     routing = routing or load_routing()
-    primary: Any = AnthropicBackend(anthropic_api_key) if anthropic_api_key else None
+    primary: Any = (
+        AnthropicBackend(anthropic_api_key, base_url=anthropic_base_url)
+        if anthropic_api_key
+        else None
+    )
     fallback: Any = (
         OpenRouterBackend(openrouter_api_key)
         if openrouter_api_key and routing.providers.fallback == "openrouter"

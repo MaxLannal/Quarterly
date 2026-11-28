@@ -6,6 +6,7 @@ import {
   addCourseViaTree,
   closePanel,
   logIn,
+  generatePlan,
   openAdvisor,
   openPanel,
   plannerWithCourses,
@@ -230,32 +231,26 @@ const SHOTS: Shot[] = [
     },
   },
   {
+    // Issue #18: the first plan, with its walkthrough lighting the first sequence.
     name: "plan-generate",
-    dialog: true,
     run: async (p) => {
       await p.goto("/plan");
-      await p.getByRole("button", { name: "Generate plan" }).click();
-      const dialog = p.getByRole("dialog", { name: "Generate plan" });
-      await dialog.getByRole("button", { name: "Generate" }).click();
-      await expect(
-        dialog.getByRole("article", { name: "Variant Fake balanced" }),
-      ).toBeVisible();
+      await generatePlan(p);
     },
   },
   {
-    // FEEDBACK F4: the AI advisor slides down from the top, labelled as generative AI.
+    // Issue #18: the planner chat beside the plan, with a proposal for one course.
     name: "plan-advisor",
-    dialog: true,
     run: async (p) => {
       await logIn(p);
       await fillPlanner(p);
       const sheet = await openAdvisor(p);
       await sheet
-        .getByLabel("Ask the advisor")
+        .getByLabel("Ask or tell the planner")
         .fill("Please add a lighter elective");
       await sheet.getByRole("button", { name: "Send" }).click();
       await expect(
-        sheet.getByRole("article", { name: "Proposed change" }),
+        sheet.getByRole("article", { name: "Proposal: Add TEST 25200" }),
       ).toBeVisible();
       await expect(
         sheet.getByRole("link", { name: "Student post #3" }),

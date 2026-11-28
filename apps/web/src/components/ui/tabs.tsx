@@ -46,8 +46,9 @@ export function Tabs({ tabs, label, initial, active: controlled, onChange, end, 
 
   return (
     <div className={className}>
-      <div className="flex items-center gap-1 border-b border-hairline">
-        <div role="tablist" aria-label={label} className="flex min-w-0 flex-1 gap-1">
+      {/* A grey track; the current tab is a white segment (docs/DESIGN.md "Simple light"). */}
+      <div className="flex items-center gap-2">
+        <div role="tablist" aria-label={label} className="flex min-w-0 flex-1 gap-1 rounded-xl bg-surface-strong p-1">
           {tabs.map((t, i) => (
             <button
               key={t.key}
@@ -64,8 +65,8 @@ export function Tabs({ tabs, label, initial, active: controlled, onChange, end, 
               onKeyDown={(e) => onKey(e, i)}
               className={cn(
                 // Phones: 14px and tighter padding, so four tabs and a close button fit 390px (D11 polish).
-                "-mb-px inline-flex min-h-11 flex-1 cursor-pointer items-center justify-center gap-1.5 whitespace-nowrap border-b-2 px-1.5 text-caption font-medium transition-colors focus-visible:outline-offset-[-2px] sm:px-3 sm:text-nav-link",
-                active === t.key ? "border-primary text-ink" : "border-transparent text-muted hover:text-ink",
+                "inline-flex min-h-11 flex-1 cursor-pointer items-center justify-center gap-1.5 whitespace-nowrap rounded-lg px-1.5 text-caption font-medium transition-[color,background-color,box-shadow] duration-150 focus-visible:outline-offset-[-2px] sm:px-3 sm:text-nav-link",
+                active === t.key ? "bg-canvas text-ink shadow-[0_1px_2px_rgb(17_17_17/0.08)]" : "text-muted hover:text-ink",
               )}
             >
               {t.label}

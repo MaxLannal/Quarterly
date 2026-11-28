@@ -1,5 +1,6 @@
 import { createContext, useContext } from "react";
 import type { ChangeOp, CourseDetail, Issue, PlanItem, PlanState, ProgramSummary } from "@/api/types";
+import type { ProposedBlock } from "@/features/planner-agent/proposals";
 import type { EditResult } from "./planModel";
 import { termLabel } from "./terms";
 
@@ -22,6 +23,18 @@ export interface PlannerContextValue {
   applyOps: (ops: ChangeOp[]) => void;
   openMoveTo: (item: PlanItem) => void;
   openAddTo: (course: string) => void;
+  /** Unsaved planner proposals as blocks, keyed by quarter (issue #18). */
+  proposals: Map<string, ProposedBlock[]>;
+  /** Proposal id -> its group title, the blocks' accessible name. */
+  proposalTitles: Map<string, string>;
+  /** The proposals the walkthrough lights up (a glowing outline). */
+  glow: Set<string>;
+  selectProposal: (id: string) => void;
+  /** Opens the course details panel. */
+  openDetails: (code: string) => void;
+  /** Years (1-based) whose collapsed Summer the student or the walkthrough opened. */
+  openSummers: Set<number>;
+  setSummerOpen: (year: number, open: boolean) => void;
 }
 
 export const PlannerContext = createContext<PlannerContextValue | null>(null);

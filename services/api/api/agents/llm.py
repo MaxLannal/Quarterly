@@ -54,6 +54,7 @@ def configure_llm(settings: Settings) -> bool:
     gateway = build_gateway(
         anthropic_api_key=settings.anthropic_api_key.get_secret_value(),
         openrouter_api_key=settings.openrouter_api_key.get_secret_value(),
+        anthropic_base_url=settings.anthropic_base_url or None,
         sink=db_sink,
     )
     if gateway is None:
